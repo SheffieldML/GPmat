@@ -2,8 +2,7 @@ function g = ivmNegGradientNoise(params, model, prior)
 
 % IVMNEGGRADIENTNOISE Wrapper function for calling noise param gradients.
 
-% NOISE
-
+% IVM
 
 model.noise = noiseExpandParam(model.noise, params);
 g = - noiseGradientParam(model.noise, model.mu, model.varSigma, model.y);
