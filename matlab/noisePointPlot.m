@@ -4,6 +4,10 @@ function noisePointPlot(noise, X, y,  ...
 
 % NOISEPOINTPLOT 
 
+% NOISE
+
 feval([noise.type 'NoisePointPlot'], noise, X, y, ...
       fontName, fontSize, ...
       markerSize, lineWidth);
+
+set(gca, 'fontname', fontName, 'fontsize', fontSize);
