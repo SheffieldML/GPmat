@@ -4,6 +4,8 @@ function [params, names] = gaussianNoiseExtractParam(noise)
 
 % NOISE
 
+% NOISE
+
 
 params = [noise.bias noise.sigma2];
 

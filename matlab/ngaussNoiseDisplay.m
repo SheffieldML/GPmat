@@ -4,6 +4,8 @@ function ngaussNoiseDisplay(noise)
 
 % NOISE
 
+% NOISE
+
 
 
 for i = 1:noise.numProcess

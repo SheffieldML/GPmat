@@ -4,6 +4,8 @@ function [params, names] = probitNoiseExtractParam(noise)
 
 % NOISE
 
+% NOISE
+
 
 params = [noise.bias];
 

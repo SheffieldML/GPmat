@@ -4,6 +4,8 @@ function [dlnZ_dmu, dlnZ_dvs] = mgaussianNoiseGradVals(noise, mu, varsigma, y)
 
 % NOISE
 
+% NOISE
+
 
 D = size(y, 2);
 nu = zeros(size(y));

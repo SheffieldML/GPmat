@@ -4,6 +4,8 @@ function noise = noiseCreate(noiseType, y)
 
 % NOISE
 
+% NOISE
+
 
 if iscell(noiseType)
   % compound noise type

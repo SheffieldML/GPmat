@@ -4,6 +4,8 @@ function [dlnZ_dmu, dlnZ_dvs] = cmpndNoiseGradVals(noise, mu, varsigma, y)
 
 % NOISE
 
+% NOISE
+
 
 startVal = 1;
 endVal = 0;

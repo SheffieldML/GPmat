@@ -4,6 +4,8 @@ function g = probitNoiseGradientParam(noise, mu, varsigma, y)
 
 % NOISE
 
+% NOISE
+
 
 c = y./sqrt(noise.sigma2 + varsigma);
 for i = 1:size(mu, 2)

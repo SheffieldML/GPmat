@@ -4,6 +4,8 @@ function L = mgaussianLikelihood(noise, mu, varsigma, y)
 
 % NOISE
 
+% NOISE
+
 
 
 N = size(y, 1);

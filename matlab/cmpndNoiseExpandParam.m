@@ -4,6 +4,8 @@ function noise = cmpndNoiseExpandParam(noise, params)
 
 % NOISE
 
+% NOISE
+
 
 params = params*noise.paramGroups';
 startVal = 1;

@@ -4,6 +4,8 @@ function noise = ngaussNoiseParamInit(noise, y)
 
 % NOISE
 
+% NOISE
+
 
 
 if nargin > 1

@@ -4,6 +4,8 @@ function [dlnZ_dmu, dlnZ_dvs] = probitNoiseGradVals(noise, mu, varsigma, y)
 
 % NOISE
 
+% NOISE
+
 
 D = size(mu, 2);
 c = y./sqrt(noise.sigma2+varsigma);

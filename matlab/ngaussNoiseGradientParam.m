@@ -4,6 +4,8 @@ function g = ngaussNoiseGradientParam(noise, mu, varsigma, y)
 
 % NOISE
 
+% NOISE
+
 
 
 D = size(y, 2);

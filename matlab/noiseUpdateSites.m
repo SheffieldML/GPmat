@@ -4,6 +4,8 @@ function [m, beta] = noiseUpdateSites(noise, g, nu, mu, varSigma, y);
 
 % NOISE
 
+% NOISE
+
 
 if noise.updateSites
   % The noise model has it's own code for site updates.

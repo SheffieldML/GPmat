@@ -4,5 +4,7 @@ function L = ngaussLogLikelihood(noise, mu, varsigma, y)
 
 % NOISE
 
+% NOISE
+
 
 L = gaussianLogLikelihood(noise, mu, varsigma, y);

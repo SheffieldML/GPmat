@@ -4,5 +4,7 @@ function y = ngaussNoiseOut(noise, mu, varsigma)
 
 % NOISE
 
+% NOISE
+
 
 y = gaussianNoiseOut(noise, mu, varsigma);

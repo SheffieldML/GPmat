@@ -4,6 +4,8 @@ function noise = noiseParamInit(noise, y)
 
 % NOISE
 
+% NOISE
+
 
 % If this flag is set then the noise model leads to constant values of
 % beta (e.g. a Gaussian with constant variance for each data-point &

@@ -4,6 +4,8 @@ function [g, nu] = cmpndNoiseNuG(noise, mu, varSigma, y)
 
 % NOISE
 
+% NOISE
+
 
 g = zeros(size(mu));
 nu = zeros(size(g));

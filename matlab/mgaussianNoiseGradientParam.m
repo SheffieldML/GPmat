@@ -4,6 +4,8 @@ function g = mgaussianNoiseGradientParam(noise, mu, varsigma, y)
 
 % NOISE
 
+% NOISE
+
 
 
 D = size(y, 2);

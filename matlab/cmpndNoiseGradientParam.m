@@ -4,6 +4,8 @@ function g = cmpndNoiseGradientParam(noise, mu, varsigma, y)
 
 % NOISE
 
+% NOISE
+
 
 g = zeros(1, noise.nParams);
 startVal = 1;

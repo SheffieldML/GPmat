@@ -4,6 +4,8 @@ function g = orderedNoiseGradientParam(noise, mu, varsigma, y)
 
 % NOISE
 
+% NOISE
+
 
 D = size(y, 2);
 c = 1./sqrt(noise.variance + varsigma);

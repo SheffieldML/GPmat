@@ -4,6 +4,8 @@ function noise = orderedNoiseExpandParam(noise, params)
 
 % NOISE
 
+% NOISE
+
 
 noise.bias = params(1:noise.numProcess);
 noise.widths = params(noise.numProcess+1:end)';

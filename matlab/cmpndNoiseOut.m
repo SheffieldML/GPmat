@@ -4,6 +4,8 @@ function y = cmpndNoiseOut(noise, mu, varsigma)
 
 % NOISE
 
+% NOISE
+
 
 y = zeros(size(mu));
 for i = 1:length(noise.comp)

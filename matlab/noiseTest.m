@@ -4,6 +4,8 @@ function noise = noiseTest(noiseType);
 
 % NOISE
 
+% NOISE
+
 
 if iscell(noiseType)
   % compound noise type

@@ -4,6 +4,8 @@ function [params, names] = orderedNoiseExtractParam(noise)
 
 % NOISE
 
+% NOISE
+
 params = [noise.bias noise.widths(:)'];
 if nargout > 1
   for i = 1:noise.numProcess

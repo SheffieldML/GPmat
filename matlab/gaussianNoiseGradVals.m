@@ -4,6 +4,8 @@ function [dlnZ_dmu, dlnZ_dvs] = gaussianNoiseGradVals(noise, mu, varsigma, y)
 
 % NOISE
 
+% NOISE
+
 
 
 D = size(y, 2);

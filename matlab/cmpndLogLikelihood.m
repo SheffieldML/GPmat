@@ -4,6 +4,8 @@ function L = cmpndLogLikelihood(noise, mu, varsigma, y)
 
 % NOISE
 
+% NOISE
+
 
 L = 0;
 for i = 1:length(noise.comp)

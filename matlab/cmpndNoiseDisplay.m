@@ -4,6 +4,8 @@ function cmpndNoiseDisplay(noise)
 
 % NOISE
 
+% NOISE
+
 
 for i = 1:length(noise.comp)
   noiseDisplay(noise.comp{i});

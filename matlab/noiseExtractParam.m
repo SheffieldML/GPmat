@@ -4,6 +4,8 @@ function [params, names] = noiseExtractParam(noise)
 
 % NOISE
 
+% NOISE
+
 
 if nargout < 2
   params = feval([noise.type 'NoiseExtractParam'], noise);

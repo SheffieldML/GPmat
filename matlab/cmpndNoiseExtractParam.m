@@ -4,6 +4,8 @@ function params = cmpndNoiseExtractParam(noise)
 
 % NOISE
 
+% NOISE
+
 
 params = zeros(1, noise.nParams);
 startVal = 1;

@@ -4,6 +4,8 @@ function [m, beta] = cmpndNoiseSites(noise, g, nu, mu, varSigma, y)
 
 % NOISE
 
+% NOISE
+
 
 m = zeros(size(g));
 beta = zeros(size(m));

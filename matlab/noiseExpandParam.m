@@ -4,6 +4,8 @@ function noise = noiseExpandParam(noise, params)
 
 % NOISE
 
+% NOISE
+
 if isfield(noise, 'transforms')
   for i = 1:length(noise.transforms)
     index = noise.transforms(i).index;

@@ -4,6 +4,8 @@ function noise = gaussianNoiseExpandParam(noise, params)
 
 % NOISE
 
+% NOISE
+
 
 noise.bias = params(1:end-1);
 noise.sigma2 = params(end);

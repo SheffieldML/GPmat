@@ -4,6 +4,8 @@ function noise = mgaussianNoiseExpandParam(noise, params)
 
 % NOISE
 
+% NOISE
+
 
 noise.bias = params(1:noise.numProcess);
 noise.sigma2 = params(noise.numProcess+1:end);

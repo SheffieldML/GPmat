@@ -4,6 +4,8 @@ function noise = orderedNoiseParamInit(noise, y)
 
 % NOISE
 
+% NOISE
+
 
 if nargin > 1
   noise.C = max(max(y))+1;

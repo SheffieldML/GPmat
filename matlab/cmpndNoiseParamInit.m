@@ -4,6 +4,8 @@ function noise = cmpndNoiseParamInit(noise, y)
 
 % NOISE
 
+% NOISE
+
 
 if nargin > 1
   if length(noise.comp) ~= size(y, 2)

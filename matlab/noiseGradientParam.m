@@ -4,6 +4,8 @@ function g = noiseGradientParam(noise, mu, varsigma, y)
 
 % NOISE
 
+% NOISE
+
 
 g = feval([noise.type 'NoiseGradientParam'], noise, mu, varsigma, y);
 

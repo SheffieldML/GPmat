@@ -4,5 +4,7 @@ function [m, beta] = ngaussNoiseSites(noise, g, nu, mu, varSigma, y)
 
 % NOISE
 
+% NOISE
+
 
 [m, beta] = gaussianNoiseSites(noise, g, nu, mu, varSigma, y);

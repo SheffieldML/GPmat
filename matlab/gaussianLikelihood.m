@@ -4,6 +4,8 @@ function L = gaussianLikelihood(noise, mu, varsigma, y)
 
 % NOISE
 
+% NOISE
+
 
 N = size(y, 1);
 D = size(y, 2);

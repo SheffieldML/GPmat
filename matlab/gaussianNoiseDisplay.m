@@ -4,6 +4,8 @@ function gaussianNoiseDisplay(noise)
 
 % NOISE
 
+% NOISE
+
 
 for i = 1:noise.numProcess
   fprintf('Gaussian bias on process %d: %2.4f\n', i, noise.bias(i))

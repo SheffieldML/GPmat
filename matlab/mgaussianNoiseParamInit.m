@@ -4,6 +4,8 @@ function noise = mgaussianNoiseParamInit(noise, y)
 
 % NOISE
 
+% NOISE
+
 
 
 if nargin > 1

@@ -4,6 +4,8 @@ function [params, names] = ngaussNoiseExtractParam(noise)
 
 % NOISE
 
+% NOISE
+
 
 params = [noise.bias];
 

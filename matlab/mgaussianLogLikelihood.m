@@ -4,6 +4,8 @@ function L = mgaussianLogLikelihood(noise, mu, varsigma, y)
 
 % NOISE
 
+% NOISE
+
 
 N = size(mu, 1);
 D = size(mu, 2);

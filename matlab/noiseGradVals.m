@@ -4,6 +4,8 @@ function [dlnZ_dmu, dlnZ_dvs] = noiseGradVals(noise, mu, varsigma, y)
 
 % NOISE
 
+% NOISE
+
 
 [dlnZ_dmu, dlnZ_dvs] = feval([noise.type 'NoiseGradVals'], noise, mu, ...
                              varsigma, y);

@@ -4,6 +4,8 @@ function [nu, g] = orderedNoiseUpdateParams(noise, mu, varsigma, y, index)
 
 % NOISE
 
+% NOISE
+
 
 [g, dlnZ_dvs] = orderedNoiseGradVals(noise, mu(index, :), ...
                                             varsigma(index, :), ...

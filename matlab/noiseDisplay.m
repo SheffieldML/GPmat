@@ -4,5 +4,7 @@ function noiseDisplay(noise)
 
 % NOISE
 
+% NOISE
+
 
 feval([noise.type 'NoiseDisplay'], noise)

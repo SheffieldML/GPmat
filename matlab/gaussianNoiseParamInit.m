@@ -4,6 +4,8 @@ function noise = gaussianNoiseParamInit(noise, y)
 
 % NOISE
 
+% NOISE
+
 
 if nargin > 1
   noise.bias = mean(y);

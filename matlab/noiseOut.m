@@ -4,5 +4,7 @@ function y = noiseOut(noise, mu, varsigma);
 
 % NOISE
 
+% NOISE
+
 
 y = feval([noise.type 'NoiseOut'], noise, mu, varsigma);

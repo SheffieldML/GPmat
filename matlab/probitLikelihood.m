@@ -4,6 +4,8 @@ function L = probitLikelihood(noise, mu, varsigma, y)
 
 % NOISE
 
+% NOISE
+
 D = size(y, 2);
 for i = 1:D
   mu(:, i) = mu(:, i) + noise.bias(i);

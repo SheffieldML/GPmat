@@ -4,6 +4,8 @@ function probitNoiseDisplay(noise)
 
 % NOISE
 
+% NOISE
+
 
 for i = 1:noise.numProcess
   fprintf('Probit bias on process %d: %2.4f\n', i, noise.bias(i))

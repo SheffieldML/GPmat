@@ -4,6 +4,8 @@ function [g, nu] = gaussianNoiseNuG(noise, mu, varSigma, y)
 
 % NOISE
 
+% NOISE
+
 
 
 D = size(y, 2);
