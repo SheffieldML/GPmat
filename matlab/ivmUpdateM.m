@@ -45,6 +45,7 @@ for c = 1:length(model.Sigma)
   if any(model.varSigma(:, c)<0)
     minVar = min(model.varSigma(:, c));
     warning(['Minimum variance ' num2str(minVar)])
+    model.varSigma(find(model.varSigma(:, c) < 0), c) = 0;
   end
   % Seems like this variance can go as low as 1e-13 in, for example, demRegression1.m
   %~/

@@ -4,8 +4,9 @@ function [X, y, XTest, yTest] = ivmLoadData(dataset)
 
 % IVM
 
-randn('seed', 1e5)
-rand('seed', 1e5)
+seedVal = 1e5;
+randn('seed', seedVal)
+rand('seed', seedVal)
 switch dataset
  case 'usps'
   load ../data/usps_train

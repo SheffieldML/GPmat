@@ -22,7 +22,10 @@ switch model.selectionCriterion
  case 'entropy' 
   delta = ivmComputeInfoChange(model, add);
   [infoChange, indexSelect] = max(delta);
-  if sum(delta==infoChange)==length(delta);
-    indexSelect = ceil(rand(1)*length(delta));
+  numSelect = sum(delta==infoChange);
+  if numSelect>1
+    index1 = find(delta==infoChange);
+    index1Select = ceil(rand(1)*numSelect);
+    indexSelect = index1(index1Select);
   end
 end
