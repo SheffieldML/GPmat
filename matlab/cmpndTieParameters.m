@@ -4,8 +4,6 @@ function model = cmpndTieParameters(model, paramsList)
 
 % OPTIMI
 
-% OPTIMI
-
 colToDelete = [];
 for i = 1:length(paramsList)
 
@@ -24,3 +22,7 @@ for i = 1:length(paramsList)
 end
 
 model.paramGroups(:, colToDelete) = [];
+if isfield(model, 'nParams')
+  % Update to the new number of parameters.
+  model.nParams = size(model.paramGroups, 2);
+end

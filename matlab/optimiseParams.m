@@ -1,15 +1,9 @@
 function model = optimiseParams(component, optimiser, objective, ...
-                                gradient, options, model, prior);
+                                gradient, options, model);
 
 % OPTIMISEPARAMS Optimise parameters.
 
-% OPTIMI
-
 % OPTIM
-
-if nargin < 5
-  prior = 0;
-end
 
 
 params = feval([component 'ExtractParam'], getfield(model, component));
@@ -22,7 +16,7 @@ if options(1)
   end
 end
 
-params = feval(optimiser, objective, params, options, gradient, model, prior);
+params = feval(optimiser, objective, params, options, gradient, model);
 
 model = setfield(model, ...
                  component, ...

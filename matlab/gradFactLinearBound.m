@@ -2,8 +2,6 @@ function y = gradFactLinearBound(x)
 
 % GRADFACTLINEARBOUND Gradient multiplier for linear bound.
 
-% OPTIMI
-
 
 limVal = 36;
 index = find(x>limVal);

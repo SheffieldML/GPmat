@@ -2,8 +2,6 @@ function y = linearBound(x, transform)
 
 % LINEARBOUND Constrains a parameter to be positive.
 
-% OPTIMI
-
 y = zeros(size(x));
 limVal = 36;
 switch transform

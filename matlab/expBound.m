@@ -2,7 +2,6 @@ function y = expBound(x, transform)
 
 % EXPBOUND Constrains a parameter to be positive through exponentiation.
 
-% OPTIMI
 
 limVal = 36;
 switch transform

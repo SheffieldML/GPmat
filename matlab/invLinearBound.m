@@ -2,8 +2,6 @@ function y = invLinearBound(x)
 
 % LINEARBOUND Constrains a parameter to be positive.
 
-% OPTIMI
-
 limVal = 36;
 index = find(x<-limVal);
 y(index) = eps;

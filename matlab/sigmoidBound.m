@@ -2,8 +2,6 @@ function y = sigmoidBound(x)
 
 % SIGMOIDBOUND Constrains a parameter to be between 0 and 1.
 
-% OPTIMI
-
 limValue = 36;
 index = find(x<-limValue);
 y(index) = eps;
