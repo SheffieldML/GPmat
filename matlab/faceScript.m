@@ -94,5 +94,5 @@ theta = exp(lntheta);
 [K, invK] = computeKernel(X, theta);
 
 % Visualise the results
-gplvmvisualise(X, Y, invK, theta, [], meanData, 1:numData, 'facePatchVisualise', 'facePatchModify', patches);
+mocapVisualise(X, Y, invK, theta, [], meanData, 1:numData, 'facePatchVisualise', 'facePatchModify', patches);
 

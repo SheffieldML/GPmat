@@ -1,4 +1,4 @@
-% DEMSWAGGER1 Demonstrate motion capture on swagger data.
+% DEMSWAGGER1 Demonstrate motion capture on swagger data --- uses recent GPLVM toolbox..
 
 % MOCAP
 

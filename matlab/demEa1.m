@@ -112,7 +112,7 @@ labelInfo(9).text = 'Transition';
 labelInfo(9).indices = [28:29 39 48 59 69 79]';
 
 % Visualise the results
-gplvmFaceVisualise(X, Y, invK, theta, [], meanData, 1:numData, ...
+mocapFaceVisualise(X, Y, invK, theta, [], meanData, 1:numData, ...
                    labelInfo, 'face2DVisualise', 'face2DModify', patches);
 
 %save demEa1.mat X Y invK theta meanData patches

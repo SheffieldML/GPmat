@@ -58,7 +58,7 @@ params = [X(:)' lntheta];
 options = foptions;
 options(1) = 1;
 options(9) = 0;
-options(14) = 20000;
+options(14) = 50; %20000;
 
 % by not passing X to scg it is automatically optimised
 params = scg('gplvmlikelihood', params, options, 'gplvmgradient', Y);
@@ -70,6 +70,6 @@ theta = exp(lntheta);
 [K, invK] = computeKernel(X, theta);
 
 % Visualise the results
-gplvmvisualise(X, Y, invK, theta, ones(size(Y, 1), 1), meanData, 1:numData, 'stickVisualise', 'stickModify', connect);
+mocapVisualise(X, Y, invK, theta, ones(size(Y, 1), 1), meanData, 1:numData, 'stickVisualise', 'stickModify', connect);
 
-save demHorse.mat X Y invK theta meanData numData connect
+%save demHorse.mat X Y invK theta meanData numData connect

@@ -69,6 +69,6 @@ theta = exp(lntheta);
 [K, invK] = computeKernel(X, theta);
 
 % Visualise the results
-gplvmvisualise(X, Y, invK, theta, ones(size(Y, 1), 1), meanData, 1:numData, 'stickVisualise', 'stickModify', connect);
+mocapVisualise(X, Y, invK, theta, ones(size(Y, 1), 1), meanData, 1:numData, 'stickVisualise', 'stickModify', connect);
 
 save demEaStick.mat X Y invK theta meanData numData connect

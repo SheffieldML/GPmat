@@ -24,5 +24,5 @@ labelInfo(9).indices = [28:29 39 48 59 69 79]';
 
 numData = size(Y, 1);
 % Visualise the results
-gplvmFaceVisualise(X, Y, invK, theta, [], meanData, 1:numData, ...
+mocapFaceVisualise(X, Y, invK, theta, [], meanData, 1:numData, ...
                    labelInfo, 'face2DVisualise', 'face2DModify', patches);

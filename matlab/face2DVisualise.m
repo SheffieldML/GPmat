@@ -41,8 +41,8 @@ ylabel('z')
 zlabel('y')
 %set(gca, 'cameraposition', [0  40 0])
 axis off
-set(gcf, 'WindowButtonMotionFcn', 'facePatchCallBack(''move'')')
-set(gcf, 'WindowButtonDownFcn', 'facePatchCallBack(''click'')')
+set(gcf, 'WindowButtonMotionFcn', 'facePatchCallback(''move'')')
+set(gcf, 'WindowButtonDownFcn', 'facePatchCallback(''click'')')
 PATCHINFO.drawFigure = gcf;
 PATCHINFO.plotAxes = gca;
 PATCHINFO.indicatorPoint = line(0, 0, ...
