@@ -2,7 +2,6 @@ function gX = computeGradKernel(x, lntheta, type, x2)
 
 % COMPUTEGRADKERNEL Compute the gradient of kernel given wrt X.
 
-% IVM
 
 %/~ This function should return something with same number of columns as
 %X and the same number of rows as x2 which means its the size of x2

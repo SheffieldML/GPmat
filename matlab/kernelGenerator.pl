@@ -22,7 +22,11 @@ my %files =
 "${prefix}KernGradient.m",
 "function g = ${prefix}KernGradient(kern, x, covGrad)\n\n% ${ucPrefix}KERNGRADIENT Gradient of $longName kernel's parameters.\n\n% IVM\n",
 "${prefix}KernParamInit.m", 
-"function kern = ${prefix}KernParamInit(kern)\n\n% ${ucPrefix}KERNPARAMINIT $longName kernel parameter initialisation.\n\n% IVM\n\nkern.");
+"function kern = ${prefix}KernParamInit(kern)\n\n% ${ucPrefix}KERNPARAMINIT $longName kernel parameter initialisation.\n\n% IVM\n\nkern.",
+"${prefix}KernGradX.m", 
+"function gX = ${prefix}KernGradX(x, kern, X2)\n\n% ${ucPrefix}KERNGRADX Gradient of $longName kernel with respect to a point x.\n\n% IVM\n\ngX =",
+"${prefix}KernDiagGradX.m", 
+"function gX = ${prefix}KernDiagGradX(x, kern)\n\n% ${ucPrefix}KERNDIAGGRADX Gradient of $longName kernel's diagonal with respect to a point x.\n\n% IVM\n\ngX =");
 
 my @fileNames = keys %files; 
 

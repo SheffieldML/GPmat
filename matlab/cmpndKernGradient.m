@@ -13,3 +13,4 @@ for i = 1:length(kern.comp)
                                       kern.comp{i}, x, covGrad);
   startVal = endVal + 1;
 end
+g = g*kern.paramGroups;

@@ -4,6 +4,7 @@ function kern = cmpndKernExpandParam(params, kern)
 
 % IVM
 
+params = params*kern.paramGroups';
 startVal = 1;
 endVal = 0;
 kern.whiteVariance = 0;

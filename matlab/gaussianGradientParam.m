@@ -17,4 +17,4 @@ u = u.*nu;
 gbias = sum(u, 1);
 gsigma2 = sum(nu - u.*u, 1);
 gsigma2 = -0.5*gsigma2.*model.noise.sigma2;
-g = [gbias gsigma2];
+g = [gbias sum(gsigma2)];

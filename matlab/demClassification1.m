@@ -11,17 +11,17 @@ y = [ones(200, 1); -ones(100, 1)];
 
 noiseModel = 'heaviside';
 selectionCriterion = 'entropy';
-kernelType = {'rbf', 'mlp', 'bias', 'white'};
+kernelType = {'rbfard', 'linard', 'bias', 'white'};
 %kernelType = 'rbf';%{'ard', 'rbf'};
 prior = 0;
 display = 1;
 dVal = 100;
 
 model = ivm(X, y, kernelType, noiseModel, selectionCriterion, dVal);
+model.kern = cmpndTieParameters(model.kern, {[3, 6], [4, 7]});
 %model.kern.comp{1}.weightVariance = 10;
 %model.kern.comp{1}.biasVariance = 10;
 
-model.kern.comp{3}.inverseWidth = 10;
 for i = 1:4
   if display > 1
     clf
