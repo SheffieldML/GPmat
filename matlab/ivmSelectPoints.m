@@ -2,6 +2,8 @@ function model = ivmSelectPoints(model, display)
 
 % IVMSELECTPOINT Selects the point for an IVM.
 
+% IVM
+
 tol = 1e-4;
 if nargin < 2
   display = 1;

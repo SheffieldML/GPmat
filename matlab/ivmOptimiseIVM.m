@@ -1,6 +1,6 @@
 function model = ivmOptimiseIVM(model, display)
 
-% IVMOPTIMISEIVM Optimises an IVM model.
+% IVMOPTIMISEIVM Selects the points for an IVM model.
 
 % IVM
 
@@ -10,6 +10,13 @@ end
 tol = 1e-4;
 model = ivmInit(model);
 numData = size(model.X, 1);
+
+if model.d > numData
+  warning('Active set size is larger than data-set, resetting to data-set size');
+  model.d = numData;
+end
+
+% Start with all data-points inactive.
 model.J = 1:numData;
 
 % Set first infoChange to NaN

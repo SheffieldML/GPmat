@@ -11,42 +11,43 @@ selectionCriterion = 'entropy';
 
 % Just use the rbf ard kernel.
 kernelType = {'rbfard', 'linard', 'white'};
-prior = 0;
-display = 2;
+
+options = ivmOptions;
+options.display = 2;
 dVal = 50;
 
 
 % Initialise the IVM model.
 model = ivm(X, y, kernelType, noiseModel, selectionCriterion, dVal);
 model.kern = cmpndTieParameters(model.kern, {[3, 6], [4, 7]});
-if display > 1
+if options.display > 1
   ivm3dPlot(model, 'surf', i);
   colormap bone
   shading interp  
   drawnow
 end
 
-for i = 1:4
+for i = 1:options.extIters
   % Plot the data.
   % Select the active set.
-  model = ivmOptimiseIVM(model, display);
-  if display > 1
+  model = ivmOptimiseIVM(model, options.display);
+  if options.display > 1
     ivm3dPlot(model, 'surf', i);
     colormap bone
     shading interp  
     drawnow
   end
   % Optimise kernel parameters.
-  model = ivmOptimiseKernel(model, prior, display, 100);
+  model = ivmOptimiseKernel(model, options.display, options.kernIters);
 
 end
-model = ivmOptimiseIVM(model, display);
-if display > 1
+model = ivmOptimiseIVM(model, options.display);
+if options.display > 1
   ivm3dPlot(model, 'surf', i);
   colormap bone
   shading interp  
 end
 % Show the active points.
-model = ivmOptimiseIVM(model, display);
+model = ivmOptimiseIVM(model, options.display);
 
 ivmDisplay(model);

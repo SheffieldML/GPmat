@@ -2,6 +2,8 @@ function model = ivmDowndateM(model, index)
 
 % IVMDOWNDATEM Remove point from M, L, mu and varSigma.
 
+% IVM
+
 d = model.d;
 k = find(model.I == index);
 for c = 1:length(model.Sigma)

@@ -3,6 +3,7 @@ function model = ivmUpdateM(model, index)
 % IVMUPDATEM Update matrix M, L, v and mu.
 
 % IVM
+
 activePoint = length(model.I)+1;
 
 % Compute the kernel(s) at the new point.

@@ -1,17 +1,14 @@
-function model = ivmOptimiseNoise(model, prior, display, iters);
+function model = ivmOptimiseNoise(model, display, iters);
 
 % IVMOPTIMISENOISE Optimise the noise parameters.
 
 % IVM
 
 
-if nargin < 4
+if nargin < 3
   iters = 500;
-  if nargin < 3
+  if nargin < 2
     display = 1;
-    if nargin < 2
-      prior = 0;
-    end
   end
 end
 options = foptions;
@@ -21,4 +18,4 @@ end
 options(14) = iters;
 
 model = optimiseParams('noise', 'scg', 'ivmNegLogLikelihood', ...
-                       'ivmNegGradientNoise', options, model, prior);
+                       'ivmNegGradientNoise', options, model);

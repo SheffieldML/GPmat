@@ -1,4 +1,4 @@
-function e = ivmNegLogLikelihood(params, model, prior)
+function e = ivmNegLogLikelihood(params, model)
 
 % IVMNEGLOGLIKELIHOOD Wrapper function for calling ivm likelihoods.
 
@@ -6,7 +6,3 @@ function e = ivmNegLogLikelihood(params, model, prior)
 
 model.noise = noiseExpandParam(model.noise, params);
 e = - ivmLogLikelihood(model);
-
-if prior
-  e =e +0.5*params*params';
-end

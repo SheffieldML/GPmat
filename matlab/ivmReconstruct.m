@@ -4,6 +4,7 @@ function model = ivmReconstruct(kern, noise, ivmInfo, X, y)
 
 % IVM
 
+model.type = 'ivm';
 
 model.X = X;
 model.y = y;

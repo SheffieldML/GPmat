@@ -13,8 +13,8 @@ rand('seed', 1e5)
 capitalName = dataSetName;
 capitalName(1) = upper(capitalName(1));
 dVal = 500;
-prior = 0;
-display = 0;
+
+options = ivmOptions;
 kernelType = {'rbfard', 'lin', 'bias', 'white'};
 
 noiseModel = 'probit';
@@ -44,7 +44,7 @@ for trainData = 0:9
   % Train the IVM.
   model = ivmRun(X, y(:, index), kernelType, ...
                  noiseModel, selectionCriterion, dVal, ...
-                 prior, display, 100, 5, tieIndices);
+                 options);
   
   % Make prediction for this digit.
   [mu(:, index), varSigma(:, index)] = ivmPosteriorMeanVar(model, XTest);

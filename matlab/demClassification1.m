@@ -15,9 +15,10 @@ selectionCriterion = 'entropy';
 
 % Use a combination of an MLP and linear ARD kernel.
 kernelType = {'mlpard', 'linard', 'white'};
-prior = 0;
-display = 2;
 dVal = 100;
+
+options = ivmOptions;
+options.display = 2;
 
 % Initialise the model.
 model = ivm(X, y, kernelType, noiseModel, selectionCriterion, dVal);
@@ -28,23 +29,23 @@ model.kern = cmpndTieParameters(model.kern, {[4, 7], [5, 8]});
 if display > 1
   ivm3dPlot(model, 'ivmContour', i);
 end
-for i = 1:4
+for i = 1:options.extIters;
 
   % Select the active set.
-  model = ivmOptimiseIVM(model, display);
+  model = ivmOptimiseIVM(model, options.display);
   % Plot the data.
   if display > 1
     ivm3dPlot(model, 'ivmContour', i);
   end
   % Optimise the kernel parameters.
-  model = ivmOptimiseKernel(model, prior, display, 100);
+  model = ivmOptimiseKernel(model, options.display, options.kernIters);
 end
-model = ivmOptimiseIVM(model, display);
+model = ivmOptimiseIVM(model, options.display);
 if display > 1
     ivm3dPlot(model, 'ivmContour', i);
 end
 % display active points.
-model = ivmOptimiseIVM(model, display);
+model = ivmOptimiseIVM(model, options.display);
 
 % Display the final model.
 ivmDisplay(model);

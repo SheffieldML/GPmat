@@ -1,10 +1,11 @@
-function   [indexSelect, infoChange] = ivmSelectPoint(model, add);
+function [indexSelect, infoChange] = ivmSelectPoint(model, add);
 
-% IVMSELECTPOINT Choose a point for inclusion from the inactive set.
+% IVMSELECTPOINT Choose a point for inclusion or removal.
 
 % IVM
 
 if nargin < 2
+  % If add is 1, then we are including a point.
   add = 1;
 end
 
