@@ -4,6 +4,8 @@ function l = invgammaPriorLogProb(prior, x)
 
 % PRIOR
 
+% PRIOR
+
 
 % Compute log prior
 D = length(x);

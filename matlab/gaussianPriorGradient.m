@@ -4,6 +4,8 @@ function g = gaussianPriorGradient(prior, x)
 
 % PRIOR
 
+% PRIOR
+
 
 % Compute gradient of prior
 g = -prior.precision*x;

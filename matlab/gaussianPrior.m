@@ -4,6 +4,8 @@ function y = gaussianPrior(x, transform)
 
 % PRIOR
 
+% PRIOR
+
 
 limVal = 36;
 y = zeros(size(x));

@@ -4,6 +4,8 @@ function [params, names] = invgammaPriorExtractParam(prior)
 
 % PRIOR
 
+% PRIOR
+
 
 params = [prior.a prior.b];
 if nargout > 1

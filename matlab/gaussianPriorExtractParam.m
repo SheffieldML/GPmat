@@ -4,6 +4,8 @@ function [params, names] = gaussianPriorExtractParam(prior)
 
 % PRIOR
 
+% PRIOR
+
 
 params = prior.precision;
 if nargout > 1

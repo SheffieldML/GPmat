@@ -4,6 +4,8 @@ function prior = priorExpandParam(prior, params)
 
 % PRIOR
 
+% PRIOR
+
 if isfield(prior, 'transforms')
   for i = 1:length(prior.transforms)
     index = prior.transforms(i).index;

@@ -4,6 +4,8 @@ function prior = gaussianPriorParamInit(prior)
 
 % PRIOR
 
+% PRIOR
+
 
 prior.precision = 1;
 

@@ -4,6 +4,8 @@ function g = invgammaPriorGradient(prior, x)
 
 % PRIOR
 
+% PRIOR
+
 
 % Compute gradient of prior
 D = length(x);

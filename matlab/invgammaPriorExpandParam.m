@@ -4,6 +4,8 @@ function prior = invgammaPriorExpandParam(prior, params)
 
 % PRIOR
 
+% PRIOR
+
 
 prior.a = params(1);
 prior.b = params(2);
