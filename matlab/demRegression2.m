@@ -26,7 +26,7 @@ if options.display > 1
   drawnow
 end
 
-for i = 1:optins.extIters;
+for i = 1:options.extIters;
   % Plot the data.
   % Select the active set.
   model = ivmOptimiseIVM(model, options.display);
