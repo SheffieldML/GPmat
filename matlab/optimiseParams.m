@@ -3,7 +3,7 @@ function model = optimiseParams(component, optimiser, objective, ...
 
 % OPTIMISEPARAMS Optimise parameters.
 
-% OPTIM
+% OPTIMI
 
 
 params = feval([component 'ExtractParam'], getfield(model, component));
