@@ -26,7 +26,7 @@ model = ivm(X, y, kernelType, noiseModel, selectionCriterion, dVal);
 % Constrain the ARD parameters in the MLP and linear kernels to be the same.
 model.kern = cmpndTieParameters(model.kern, {[4, 7], [5, 8]});
 
-if display > 1
+if options.display > 1
   ivm3dPlot(model, 'ivmContour', i);
 end
 for i = 1:options.extIters;
@@ -34,14 +34,14 @@ for i = 1:options.extIters;
   % Select the active set.
   model = ivmOptimiseIVM(model, options.display);
   % Plot the data.
-  if display > 1
+  if options.display > 1
     ivm3dPlot(model, 'ivmContour', i);
   end
   % Optimise the kernel parameters.
   model = ivmOptimiseKernel(model, options.display, options.kernIters);
 end
 model = ivmOptimiseIVM(model, options.display);
-if display > 1
+if options.display > 1
     ivm3dPlot(model, 'ivmContour', i);
 end
 % display active points.

@@ -1,4 +1,4 @@
-function options = ivmOptions
+function options = ivmOptions(varargin)
 
 % IVMOPTIONS Initialise an options structure.
 
