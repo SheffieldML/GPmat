@@ -4,9 +4,6 @@ function [k, n2] = rbfKernCompute(kern, x, x2)
 
 % KERN
 
-% KERN
-
-
 if nargin < 3
   n2 = dist2(x, x);
   wi2 = (.5 .* kern.inverseWidth);

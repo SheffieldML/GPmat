@@ -4,9 +4,6 @@ function kern = rbfardKernParamInit(kern)
 
 % KERN
 
-% KERN
-
-
 % This parameter is restricted positive.
 kern.inverseWidth = 1;
 kern.variance = 1;

@@ -4,9 +4,6 @@ function kern = linKernParamInit(kern)
 
 % KERN
 
-% KERN
-
-
 kern.variance = 1;
 kern.nParams = 1;
 

@@ -4,10 +4,6 @@ function [k, n2] = rbfardKernCompute(kern, x, x2)
 
 % KERN
 
-% KERN
-
-
-
 scales = sparse(diag(sqrt(kern.inputScales)));
 x = x*scales;
     

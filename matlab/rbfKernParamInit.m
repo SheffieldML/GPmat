@@ -4,9 +4,6 @@ function kern = rbfKernParamInit(kern)
 
 % KERN
 
-% KERN
-
-
 kern.inverseWidth = 1;
 kern.variance = 1;
 kern.nParams = 2;
