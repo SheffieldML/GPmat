@@ -2,6 +2,7 @@ function vectorModify(handle, values, names, connect)
 
 % VECTORMODIFY Helper code for visualisation of vectorial data.
 
+% MOCAP
 
 vals = reshape(values, size(values, 2)/3, 3);
 

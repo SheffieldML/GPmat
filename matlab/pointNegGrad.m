@@ -2,6 +2,8 @@ function g = pointNegGrad(x, y, X, A, theta, invK, m, C) %(x_i, i, A, invK, X, Y
 
 % POINTNEGGRAD Compute gradient of data-point likelihood wrt x.
 
+% MOCAP
+
 if nargin < 7
   m = [0 0];
   C = [1 0; 0 1];

@@ -2,6 +2,8 @@ function Ainv = pdinv(A);
 
 % PDINV Computes the inverse of a positive definite matrix
 
+% MOCAP
+
 numData = size(A, 1);
 try
   U = chol(A);

@@ -1,3 +1,9 @@
+function [Y, connections] = mocapBvhParser(fileName)
+
+% MOCAPBVHPARSER Parser of bvh files.
+
+% MOCAP
+
 lastToken = '';
 jointNo = 1;
 
