@@ -2,6 +2,8 @@ function facePatchModify(handle, vals, patches)
 
 % FACEPATCHMODIFY Helper code for visualisation of a face.
 
+% MOCAP
+
 numMark = size(vals, 2)/3;
 valsx = vals(1, 1:numMark);
 valsy = vals(1, numMark+1:2*numMark);

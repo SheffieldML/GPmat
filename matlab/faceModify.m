@@ -2,6 +2,7 @@ function faceModify(handle, values, connect)
 
 % FACEMODIFY Helper code for visualisation of a face.
 
+% MOCAP
 
 vals = reshape(values, size(values, 2)/3, 3);
 

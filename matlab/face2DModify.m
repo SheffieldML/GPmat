@@ -2,6 +2,8 @@ function face2DModify(handle, vals, patches)
 
 % FACE2DMODIFY Helper code for visualisation of a face.
 
+% MOCAP
+
 global PATCHINFO
 numMark = size(vals, 2)/3;
 valsx = vals(1, 1:numMark);
