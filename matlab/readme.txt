@@ -1,0 +1,30 @@
+This toolbox implements the different kernels. At the time of writing two toolboxes make use of KERN, IVM vs 0.31 and FBD vs 0.2.
+
+Interaction with the toolbox is done through the interface files which are prefixed by kern. The toolbox is designed to allow linear combinations of kernels with a minimum of fuss (using the cmpnd kernel).
+
+The toolbox was spun out of the IVM toolbox, and most of the files are based on files in IVM 0.221.
+
+Kernel Types
+------------
+
+Several example kernels are given:
+
+     'ard' For backward compatability with the ard kernel in IVM 0.1. It combines linear and rbf ard kernels.
+
+     'sqexp' For backwards compatability this is equivalent to the 'rbf' kernel in IVM 0.1.
+
+     'mlp', 'mlpard' The multi-layer perceptron kernel from Williams' Computing with infinite networks paper. An ARD version is also provided.
+
+     'rbf', 'rbfard' The standard radial basis function kernel and an ARD version.
+
+     'lin', 'linard' A linear kernel and an ARD version.
+
+     'white' Is just a white noise kernel. It is not designed to be used alone, but as an element in the compound kernel
+
+     'bias' is for adding a bias variance term to the kernel (a positive offset) on it's own it is not a valid kernel.
+
+     'cmpnd' The compound kernel is for creating new kernels which are linear combinations of other kernels.
+
+The perl script for generating code for new kernels is kernelGenerator.pl
+
+It is run with two arguments, the first is the short name for the noise model, e.g. rbf, the second is the long name, e.g. radial\ basis\ function.
