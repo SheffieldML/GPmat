@@ -1,6 +1,6 @@
 % DEMORDERED1 Run a demonstration of the ordered categories noise model.
 
-% NOISE
+% IVM
 
 
 randn('seed', 1e6)
