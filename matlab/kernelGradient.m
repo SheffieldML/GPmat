@@ -17,8 +17,15 @@ m = model.m(model.I, :);
 model.kern = kernExpandParam(model.kern, params);
 K = kernCompute(model.kern, x);
 g = zeros(size(params));
+
+if strcmp(model.noise.type, 'gaussian')
+  invK = pdinv(K+diag(1./model.beta(model.I, 1)));
+end
+
 for j = 1:size(m, 2)
-  invK = pdinv(K+diag(1./model.beta(model.I, j)));
+  if ~strcmp(model.noise.type, 'gaussian')
+    invK = pdinv(K+diag(1./model.beta(model.I, j)));
+  end
   covGrad = covarianceGradient(invK, m(:, j));
   g = g + kernGradient(model.kern, x, covGrad);
 end  

@@ -11,9 +11,13 @@ end
 if add
   switch model.selectionCriterion
    case 'entropy'
-    
-    delta = -.5*sum(log2(1-model.varSigma(model.J, :).* ...
-		     model.nu(model.J, :)+1e-300), 2);
+    if strcmp(model.noise.type, 'gaussian')
+      delta = -.5*size(model.y, 2).*sum(log2(1-model.varSigma(model.J, 1).* ...
+                           model.nu(model.J, 1)+1e-300), 2);
+    else
+      delta = -.5*sum(log2(1-model.varSigma(model.J, :).* ...
+                           model.nu(model.J, :)+1e-300), 2);
+    end
    otherwise
     error(['Selection criterion ' model.selectionCriterion ' not yet implemented'])
   end

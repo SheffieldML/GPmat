@@ -12,9 +12,6 @@ end
 %/~model = ivmUpdateNuG(model, i);
 %~/
 model = ivmUpdateSites(model, i);
-if ~flag
-  return
-end
 model = ivmUpdateM(model, i);
 
 % Remove point from the non-active set and place in the active.
