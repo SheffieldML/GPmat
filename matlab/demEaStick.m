@@ -1,5 +1,7 @@
 % DEMEASTICK The demonstration of the stick man running for EA.
 
+% MOCAP
+
 % Keep results consistent each time run
 rand('seed', 1e5)
 randn('seed', 1e5)
