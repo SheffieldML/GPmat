@@ -27,10 +27,12 @@ model.J = [];
 if strcmp(noiseType, 'gaussian')
   model.Sigma.M = [];
   model.Sigma.L = [];
+  model.Sigma.robust = 0;
 else
   for i = 1:size(y, 2)
     model.Sigma(i).M = [];
     model.Sigma(i).L = [];
+    model.Sigma(i).robust = 1;
   end
 end
 model.selectionCriterion = selectionCriterion;

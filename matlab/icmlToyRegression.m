@@ -1,6 +1,10 @@
 % ICMTOYREGRESSION Time the point-set IVM and simple sub-sampling.
 
-generatePsRegressionData
+%/~
+importTool('ivm');
+%~/
+
+generateMtRegressionData
 numTrials = 10;
 initTheta = [10 10 10 10];
 kernelType = 'rbf';
@@ -18,17 +22,17 @@ for dnum = 1:length(dVec)
   fprintf('Size of active set %d\n', d)
   for trials = 1:numTrials
     initTime = cputime;
-    models = psivm(X, y, kernelType, noiseType, 'none', d);
+    models = mtivm(X, y, kernelType, noiseType, 'none', d);
     models.lntheta = log(initTheta);
-    models = psivmOptimise(models, prior, display, innerIters, outerIters);
-    thetaIVM{dnum, trials} = exp(models.lntheta);
+    models = mtivmOptimise(models, prior, display, innerIters, outerIters);
+    paramsIVM{dnum, trials} = kernExtractParam(models.task(1).kern);
     timeIVM(dnum, trials) = cputime - initTime;
 
-    testModels = psivm(testX, testY, kernelType, noiseType, 'none', d);
-    llIVM(dnum, trials) = -pskernelObjective(log(thetaIVM{dnum, trials}), models, prior); %testX, ...
+    testModels = mtivm(testX, testY, kernelType, noiseType, 'none', d);
+    llIVM(dnum, trials) = -mtkernelObjective(paramsIVM{dnum, trials}, models, prior); %testX, ...
 %					  testY, 0);
     fprintf('Trial iteration %d complete\n', trials)
-    fprintf('Theta %2.4f \n', thetaIVM{dnum, trials})
+    fprintf('Theta %2.4f \n', paramsIVM{dnum, trials})
     fprintf('Likelihood %2.4f Time %2.4f\n', llIVM(dnum, trials), timeIVM(dnum, trials))
   end
 end
@@ -49,25 +53,22 @@ for sampNum = 1:length(sampsVec);
     initTime = cputime;
     models =  gpPsRun(Xsamp, ysamp, kernelType, noiseType, ...
 					initTheta, prior, display, iters);
-    thetaSub{sampNum, trials} = exp(models.lntheta);
-    testModels = psivm(testX, testY, kernelType, noiseType, 'none', []);
-    testModels.lntheta = models.lntheta;
-    testModels = psivmInit(testModels);
-    llSub(sampNum, trials) = -pskernelObjective(log(thetaSub{sampNum, trials}), testModels, prior); %testX, ...
+    paramsSub{sampNum, trials} = kernExtractParam(models.task(1).kern);
+    testModels = mtivm(testX, testY, kernelType, noiseType, 'none', []);
+    testModels = mtivmInit(testModels);
+    llSub(sampNum, trials) = -mtkernelObjective(paramsSub{sampNum, trials}, testModels, prior); %testX, ...
 
     timeSub(sampNum, trials) = cputime - initTime;
-    llSub(sampNum, trials) = -pskernelObjective(log(thetaSub{sampNum, ...
-		    trials}), testModels);
     fprintf('Trial iteration %d complete\n', trials)
-    fprintf('Theta %2.4f \n', thetaSub{sampNum, trials})
+    fprintf('Theta %2.4f \n', paramsSub{sampNum, trials})
     fprintf('Likelihood %2.4f Time %2.4f\n', llSub(sampNum, trials), timeSub(sampNum, trials))
-    %    displayTasks(Xsamp, ysamp, thetaSub);
+    %    displayTasks(Xsamp, ysamp, paramsSub);
   end
 end
 
 
-save('icmlToyRegressionResults.mat', 'timeIVM', 'timeSub', 'llIVM', 'llSub', 'thetaIVM', ...
-     'thetaSub', 'dVec', 'sampsVec')
+save('icmlMtRegressionResults.mat', 'timeIVM', 'timeSub', 'llIVM', 'llSub', 'paramsIVM', ...
+     'paramsSub', 'dVec', 'sampsVec')
 
 
 icmlRegressionResults

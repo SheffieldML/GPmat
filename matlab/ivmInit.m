@@ -36,25 +36,26 @@ model.mu = zeros(numData, numOut);
 model.g = zeros(numData, numOut);
 model.nu = zeros(numData, numOut);
 
-% Initialise site precision and mean
-switch model.noise.type  
+%/~
+% % Initialise site precision and mean
+% switch model.noise.type  
  
- case {'probit', 'multiprobit'}
+%  case {'probit', 'multiprobit'}
 
-  model.u = zeros(numData, numOut);
-  model.c = zeros(numData, numOut);
+%   model.u = zeros(numData, numOut);
+%   model.c = zeros(numData, numOut);
  
- case 'heaviside'
-  model.u = zeros(numData, numOut);
-  model.c = zeros(numData, numOut);
+%  case 'heaviside'
+%   model.u = zeros(numData, numOut);
+%   model.c = zeros(numData, numOut);
 
- case 'ordered'
-  model.u = zeros(numData, numOut);
-  model.c = zeros(numData, numOut);
+%  case 'ordered'
+%   model.u = zeros(numData, numOut);
+%   model.c = zeros(numData, numOut);
 
   
 
-end
-
+% end
+%~/
 model = ivmUpdateNuG(model, 1:numData);
 

@@ -9,7 +9,6 @@ if nargin < 3
 end
 x = model.X(model.I, :);
 m = model.m(model.I, :);
-params=log(thetaConstrain(exp(params)));
 model.kern = kernExpandParam(params, model.kern);
 K = kernCompute(x, model.kern);
 f = 0;
@@ -18,6 +17,6 @@ for i = 1:size(m, 2)
   f = f -.5*logdet(K, UC) - .5*m(:, i)'*invK*m(:, i);
 end
 if prior
-  f = f - sum(lntheta);
+  f = f - sum(params);
 end
 f = -f;

@@ -1,7 +1,8 @@
-function params = sqexpKernExtractParam(kern)
+function [params, transform] = sqexpKernExtractParam(kern)
 
 % SQEXPKERNEXTRACTPARAM Extract parameters from squared exponential kernel structure.
 
 % IVM
 
-params = log([kern.inverseWidth kern.rbfVariance kern.biasVariance kern.whiteVariance]);
+params = log([kern.inverseWidth kern.rbfVariance ...
+          kern.biasVariance kern.whiteVariance]);

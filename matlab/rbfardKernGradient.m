@@ -13,5 +13,5 @@ g(2) =  sum(sum(covGrad.*k));
 for i = 1:size(x, 2)
   g(2 + i)  =  -(sum(covGradK*(x(:, i).*x(:, i))) ...
                  -x(:, i)'*covGradK*x(:, i)) ...
-      *kern.inputScales(i)*kern.inverseWidth;
+      *kern.inputScales(i)*(1-kern.inputScales(i))*kern.inverseWidth;
 end

@@ -4,4 +4,4 @@ function params = rbfardKernExtractParam(kern)
 
 % IVM
 
-params = log([kern.inverseWidth kern.variance kern.inputScales]);
+params = [log([kern.inverseWidth kern.variance]) invSigmoid(kern.inputScales)];

@@ -6,4 +6,4 @@ function kern = rbfardKernExpandParam(params, kern)
 
 kern.inverseWidth = exp(params(1));
 kern.variance = exp(params(2));
-kern.inputScales = exp(params(3:end));
+kern.inputScales = sigmoid(params(3:end));

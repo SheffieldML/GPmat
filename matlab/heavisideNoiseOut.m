@@ -7,4 +7,4 @@ D = size(mu, 2);
 for i = 1:D
   mu(:, i) = mu(:, i) + noise.bias(i);
 end
-y = mu > 0;
+y = sign(mu);

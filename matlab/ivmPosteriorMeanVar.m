@@ -13,17 +13,30 @@ diagK = kernDiagCompute(X, model.kern);
 varsigma = zeros(numData, D);
 mu = zeros(numData, D);
 
+
 if strcmp(model.noise.type, 'gaussian')
-  Lk = model.Sigma.Linv*kX;
-  Kinvk = model.Sigma.Linv'*Lk;
+  if ~model.Sigma.robust
+    Lk = model.Sigma.Linv*kX;
+    Kinvk = model.Sigma.Linv'*Lk;
+  else
+    diagB = diag(sqrt(model.beta(model.I, :)));
+    Lk = model.Sigma.Linv*diagB*kX;
+    Kinvk = model.Sigma.Linv'*diagB*Lk;
+  end
   for n = 1:numData
     varsigma(n, :) = repmat(diagK(n) - Lk(:, n)'*Lk(:, n), 1, D);
   end
 end
 for i = 1:D
   if ~strcmp(model.noise.type, 'gaussian')
-    Lk = model.Sigma(i).Linv*kX;
-    Kinvk = model.Sigma(i).Linv'*Lk;
+    if ~model.Sigma(i).robust
+      Lk = model.Sigma(i).Linv*kX;
+      Kinvk = model.Sigma(i).Linv'*Lk;
+    else
+      diagB = diag(sqrt(model.beta(model.I, i)));
+      Lk = model.Sigma(i).Linv*diagB*kX;
+      Kinvk = model.Sigma(i).Linv'*diagB*Lk;
+    end
     for n = 1:numData
       varsigma(n, i) = diagK(n) - Lk(:, n)'*Lk(:, n); 
     end

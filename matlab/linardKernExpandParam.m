@@ -6,4 +6,4 @@ function kern = linardKernExpandParam(params, kern)
 
 
 kern.variance = exp(params(1));
-kern.inputScales = exp(params(2:end));
+kern.inputScales = sigmoid(params(2:end));

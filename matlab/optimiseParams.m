@@ -1,5 +1,5 @@
 function model = optimiseParams(component, optimiser, objective, ...
-                                      gradient, options, model, prior);
+                                gradient, options, model, prior);
 
 % OPTIMISEPARAMS Optimise parameters.
 
@@ -22,4 +22,8 @@ end
 
 params = feval(optimiser, objective, params, options, gradient, model, prior);
 
-model = setfield(model, component, feval([component 'ExpandParam'], params, getfield(model, component)));
+model = setfield(model, ...
+                 component, ...
+                 feval([component 'ExpandParam'], ...
+                       params, ...
+                       getfield(model, component)));

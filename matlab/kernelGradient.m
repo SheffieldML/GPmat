@@ -10,7 +10,6 @@ end
 
 x = model.X(model.I, :);
 m = model.m(model.I, :);
-params = log(thetaConstrain(exp(params)));
 model.kern = kernExpandParam(params, model.kern);
 K = kernCompute(x, model.kern);
 g = zeros(size(params));
