@@ -2,6 +2,11 @@
 
 % IVM
 
+importTool('prior');
+importTool('kern');
+importTool('noise');
+importTool('optimi');
+
 dataSetName = 'usps';
 experimentNo = 1;
 

@@ -30,12 +30,10 @@ model.noise = noiseCreate(noiseType, y);
 if model.noise.spherical
   model.Sigma.M = [];
   model.Sigma.L = [];
-  model.Sigma.robust = 0;
 else
   for i = 1:size(y, 2)
     model.Sigma(i).M = [];
     model.Sigma(i).L = [];
-    model.Sigma(i).robust = 0;
   end
 end
 model.selectionCriterion = selectionCriterion;

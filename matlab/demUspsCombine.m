@@ -1,8 +1,9 @@
 % DEMUSPSCOMBINE Select between MLP and RBF and RBF ard network predictors.
 
-% IVM
-
-% RBF experiments
+importTool('prior');
+importTool('kern');
+importTool('noise');
+importTool('optimi');
 
 [X, y, XTest, yTest] = ivmLoadData('usps');
 

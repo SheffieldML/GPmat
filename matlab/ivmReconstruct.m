@@ -32,14 +32,12 @@ if model.noise.spherical
                        + diag(1./model.beta(model.I)))';
   model.Sigma.Linv = eye(size(model.Sigma.L))/model.Sigma.L;
   model.Sigma.M = model.Sigma.Linv*model.kern.Kstore';
-  model.Sigma.robust = 0;
 else
   for i = 1:size(y, 2)
     model.Sigma(i).L = chol(model.kern.Kstore(model.I, :) ...
                             + diag(1./model.beta(model.I, i)))';
     model.Sigma(i).Linv = eye(size(model.Sigma(i).L))/model.Sigma(i).L;
     model.Sigma(i).M = model.Sigma(i).Linv*model.kern.Kstore';
-    model.Sigma(i).robust = 0;
   end
 end
 model.d = length(model.I);

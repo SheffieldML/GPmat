@@ -13,7 +13,8 @@ end
                    model.mu(index, :), model.varSigma(index, :), ...
                    model.y(index, :));
 
-if any(model.nu(index, :)< 0) 
+
+if strcmp(model.noise.type, 'cmpnd') & any(model.nu(index, :)< 0) 
   if model.noise.logconcave
     warning('nu less than zero in log concave model.')
   else

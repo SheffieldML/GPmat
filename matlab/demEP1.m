@@ -13,7 +13,7 @@ selectionCriterion = 'entropy';
 kernelType = 'ARD';
 prior = 0;
 display = 2;
-dVal = 30;
+dVal = 100;
 
 model = ivm(X, y, kernelType, noiseModel, selectionCriterion, dVal)
 if display > 1
@@ -24,7 +24,7 @@ if display > 1
   pointsPos = plot(X(find(y==1), 1), X(find(y==1), 2), 'ro');
   set(pointsNeg, 'erasemode', 'xor')
 end
-model = ivmOptimiseIVM(model, display);
+model = ivmSelectPoints(model, display);
 b = model.beta;
 counter = 0;
 

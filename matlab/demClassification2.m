@@ -2,6 +2,11 @@
 
 % IVM
 
+importTool('prior');
+importTool('kern');
+importTool('noise');
+importTool('optimi');
+
 noiseModel = 'probit';
 selectionCriterion = 'entropy';
 kernelType = {'rbf', 'white'};

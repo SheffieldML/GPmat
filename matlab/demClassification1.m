@@ -2,6 +2,11 @@
 
 % IVM
 
+importTool('prior');
+importTool('kern');
+importTool('noise');
+importTool('optimi');
+
 randn('seed', 1e6)
 rand('seed', 1e6)
 
@@ -68,6 +73,12 @@ end
 model = ivmOptimiseIVM(model, display);
 % Display the final model.
 ivmDisplay(model);
+
+
+closeTool('prior');
+closeTool('kern');
+closeTool('noise');
+closeTool('optimi');
 
 
 

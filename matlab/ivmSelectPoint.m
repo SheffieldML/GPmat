@@ -1,15 +1,26 @@
-function   [indexSelect, infoChange] = ivmSelectPoint(model);
+function   [indexSelect, infoChange] = ivmSelectPoint(model, add);
 
 % IVMSELECTPOINT Choose a point for inclusion from the inactive set.
 
 % IVM
 
+if nargin < 2
+  add = 1;
+end
+
 switch model.selectionCriterion
  case 'random'
-  indexSelect = ceil(rand(1)*length(model.J));
-  infoChange = -.5*log2(1-model.varSigma(indexSelect)*model.nu(indexSelect));
+  if add
+    indexSelect = ceil(rand(1)*length(model.J));
+    infoChange = -.5*sum(log2(1-model.varSigma(indexSelect, :)* ...
+                              model.nu(indexSelect, :)), 2);
+  else
+    indexSelect = ceil(rand(1)*length(model.I));
+    infoChange = -.5*sum(log2(1-model.varSigma(indexSelect, :)* ...
+                          model.beta(indexSelect, :)+1e-300), 2);
+  end
  case 'entropy' 
-  delta = computeInfoChange(model);
+  delta = ivmComputeInfoChange(model, add);
   [infoChange, indexSelect] = max(delta);
   if sum(delta==infoChange)==length(delta);
     indexSelect = ceil(rand(1)*length(delta));

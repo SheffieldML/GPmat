@@ -8,6 +8,12 @@ if isempty(index)
   error(['Point ' num2str(i) ' is not in active set']);
 end
 
-model = downdateM(model, i);
 
-model = feval([model.noise.type 'UpdateParams'], model, model.J);
+model = ivmDowndateNuG(model, i);
+model = ivmDowndateM(model, i);
+model = ivmDowndateSites(model, i);
+
+model.I(index) = [];
+model.J = [model.J i];
+
+model = ivmUpdateNuG(model, i);

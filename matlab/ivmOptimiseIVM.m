@@ -53,7 +53,11 @@ for k = 1:dVal
     end
     if display > 1
       if size(model.X, 2) == 2
-        switch model.noise.type
+	type = model.noise.type;
+	if strcmp(type, 'cmpnd')
+	  type = model.noise.comp{1}.type;
+	end
+        switch type
           case {'probit', 'ordered', 'ncnm'}
            figure(1)
            a = plot(model.X(dataIndexSelect, 1), ...
@@ -88,4 +92,3 @@ for k = 1:dVal
     end
   end
 end
-

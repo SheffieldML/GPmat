@@ -15,61 +15,26 @@ end
 % Compute the values of M for the new point
 for c = 1:length(model.Sigma)
   if length(model.I) > 0
-    if ~model.Sigma(c).robust
-      a = model.Sigma(c).M(:, index);
-      s = model.kern.Kstore(:, activePoint)' - a'*model.Sigma(c).M;
-      lValInv = sqrt(model.nu(index, c));
-      %/~
-      % If Nu is so low then the included data-point isn't really useful.
-      if lValInv < 1e-16
-        warning(['Square root of nu is ' num2str(lValInv)])
-      end
-      %~/
-      model.Sigma(c).M = [model.Sigma(c).M; lValInv*s];
-      ainv = (-a*lValInv)'/model.Sigma(c).L;
-      model.Sigma(c).L = [[model.Sigma(c).L; a'] [zeros(length(model.I),1); 1/lValInv]];
-      model.Sigma(c).Linv = [[model.Sigma(c).Linv; ainv] [zeros(length(model.I),1); lValInv]];
-      %/~
-      %model.Sigma(c).Linv = eye(size(model.Sigma(c).L))/model.Sigma(c).L;
-      %~/
-    else
-      a = model.Sigma(c).M(:, index);
-      s = model.kern.Kstore(:, activePoint)' - a'*model.Sigma(c).M;
-      sqrtBeta = sqrt(model.beta(index, c));
-      a = a*sqrtBeta;
-      sqrtNu = sqrt(model.nu(index, c));
-      if sqrtBeta == sqrtNu
-        lValInv = 1;
-      else
-        lValInv = sqrtNu/sqrtBeta;
-      end
-      model.Sigma(c).M = [model.Sigma(c).M; sqrtNu*s];
-      ainv = (-a*lValInv)'/model.Sigma(c).L;
-      model.Sigma(c).L = [[model.Sigma(c).L; a'] [zeros(length(model.I),1); 1/lValInv]];
-      model.Sigma(c).Linv = [[model.Sigma(c).Linv; ainv] [zeros(length(model.I),1); lValInv]];
+    a = model.Sigma(c).M(:, index);
+    s = model.kern.Kstore(:, activePoint)' - a'*model.Sigma(c).M;
+    lValInv = sqrt(model.nu(index, c));
+    %/~
+    % If Nu is so low then the included data-point isn't really useful.
+    if lValInv < 1e-16
+      warning(['Square root of nu is ' num2str(lValInv)])
     end
+    %~/
+    model.Sigma(c).M = [model.Sigma(c).M; lValInv*s];
+    ainv = (-a*lValInv)'/model.Sigma(c).L;
+    model.Sigma(c).L = [[model.Sigma(c).L; a'] [zeros(length(model.I),1); 1/lValInv]];
+    model.Sigma(c).Linv = [[model.Sigma(c).Linv; ainv] [zeros(length(model.I),1); lValInv]];
   else
     s = model.kern.Kstore(:, 1)';
-    if ~model.Sigma(c).robust
-      lValInv = sqrt(model.nu(index, c));
-      model.Sigma(c).M = [lValInv*s];
-      
-      model.Sigma(c).L = 1/lValInv;
-      model.Sigma(c).Linv = lValInv;
-    else
-      sqrtNu = sqrt(model.nu(index,c));
-      model.Sigma(c).M = [sqrtNu*s];
-      sqrtBeta = sqrt(model.beta(index, c));
-      if sqrtBeta == sqrtNu
-        lValInv = 1;
-      else
-        lValInv = sqrtNu/sqrt(model.beta(index,c)); 
-      end
-      % = sqrt(nu)*sqrt(beta)
-      
-      model.Sigma(c).L = 1/lValInv;
-      model.Sigma(c).Linv = lValInv;
-    end
+    lValInv = sqrt(model.nu(index, c));
+    model.Sigma(c).M = [lValInv*s];
+    
+    model.Sigma(c).L = 1/lValInv;
+    model.Sigma(c).Linv = lValInv;
   end
     
   %/~
