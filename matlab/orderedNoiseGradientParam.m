@@ -25,24 +25,20 @@ for j = 1:D
     end
     u = mu(index, j).*c(index, j);
     uprime = (mu(index, j) - noise.widths(y(index, j))).*c(index, j);
-    denom = (cumGaussian(u) - cumGaussian(uprime))+eps;
-    gnoise.bias(j) = gnoise.bias(j) ...
-        + sum(c(index, j) ...
-              .*(ngaussian(u) - ngaussian(uprime))...
-              ./denom);
+    B1 = gaussOverDiffCumGaussian(u, uprime, 1);   
+    B2 = gaussOverDiffCumGaussian(u, uprime, 2);
+    gnoise.bias(j) = gnoise.bias(j) + sum(c(index, j).*(B1 - B2));
     for cat = 1:noise.C-2
       
       subIndex = find(y(index, j) == cat);
       if ~isempty(subIndex)
         addpart = sum(c(index(subIndex), j)...
-                      .*gaussOverDiffCumGaussian(u(subIndex), ...
-                                                 uprime(subIndex), 2));
+                      .*B2(subIndex));
         gnoise.widths(1:cat) = gnoise.widths(1:cat) ...
             + repmat(addpart, cat, 1);
         if(cat > 1)
           addpart = sum(c(index(subIndex), j)...
-                        .*gaussOverDiffCumGaussian(u(subIndex), ...
-                                                   uprime(subIndex), 1));
+                        .*B1(subIndex));
           gnoise.widths(1:cat-1) = gnoise.widths(1:cat-1) ...
               - repmat(addpart, cat-1, 1);
         end
@@ -66,7 +62,6 @@ for j = 1:D
   end
 end
 if length(noise.widths>0)
-  gnoise.widths = gnoise.widths.*gradFactLinearBound(noise.widths)';
   g = [gnoise.bias gnoise.widths(:)'];
 else
   g = gnoise.bias;

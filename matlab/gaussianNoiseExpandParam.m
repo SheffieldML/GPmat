@@ -5,4 +5,4 @@ function noise = gaussianNoiseExpandParam(noise, params)
 % IVM
 
 noise.bias = params(1:end-1);
-noise.sigma2 = expBound(params(end));
+noise.sigma2 = params(end);

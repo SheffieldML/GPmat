@@ -19,10 +19,6 @@ if display
 end
 options(14) = iters;
 
+
 model = optimiseParams('kern', 'scg', 'kernelObjective', ...
                        'kernelGradient', options, model, prior);
-
-%/~model.kern.lntheta = scg('kernelObjective', model.kern.lntheta, options,...
-%    'kernelGradient', model, prior);
-%model.kern.lntheta=log(thetaConstrain(exp(model.kern.lntheta)));
-%~/

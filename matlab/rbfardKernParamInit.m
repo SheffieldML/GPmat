@@ -11,5 +11,8 @@ kern.variance = 1;
 kern.inputScales = 0.999*ones(1, kern.inputDimension);
 kern.nParams = 2 + kern.inputDimension;
 
-% Set to 1 to use log(1+exp(a)) to transform parameters in stead of exp(a)
-kern.linearBound = 1;
+
+kern.transforms(1).index = [1 2];
+kern.transforms(1).type = 'negLogLogit';
+kern.transforms(2).index = [3:kern.nParams];
+kern.transforms(2).type = 'sigmoid';

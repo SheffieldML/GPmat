@@ -4,23 +4,24 @@ function model = ivmUpdateM(model, index)
 
 % IVM
 activePoint = length(model.I)+1;
+
+% Compute the kernel(s) at the new point.
+model.kern.Kstore(:, activePoint) = kernCompute(model.kern, model.X, ...
+                                                    model.X(index, :));
+if isfield(model.kern, 'whiteVariance')
+  model.kern.Kstore(index, activePoint) = model.kern.Kstore(index, activePoint) ...
+      + model.kern.whiteVariance;
+end
+% Compute the values of M for the new point
 for c = 1:length(model.Sigma)
   if length(model.I) > 0
-    
-    model.kern.Kstore(:, activePoint) = kernCompute(model.kern, model.X, ...
-                                                    model.X(index, :));
-    % Add diagonal term from white noise processes
-    if isfield(model.kern, 'whiteVariance')
-      model.kern.Kstore(index, activePoint) = model.kern.Kstore(index, activePoint) ...
-          + model.kern.whiteVariance;
-    end
     if ~model.Sigma(c).robust
       a = model.Sigma(c).M(:, index);
       s = model.kern.Kstore(:, activePoint)' - a'*model.Sigma(c).M;
       lValInv = sqrt(model.nu(index, c));
       %/~
       % If Nu is so low then the included data-point isn't really useful.
-      if lValInv < 1e-6
+      if lValInv < 1e-16
         warning(['Square root of nu is ' num2str(lValInv)])
       end
       %~/
@@ -48,20 +49,14 @@ for c = 1:length(model.Sigma)
       model.Sigma(c).Linv = [[model.Sigma(c).Linv; ainv] [zeros(length(model.I),1); lValInv]];
     end
   else
-    model.kern.Kstore(:, 1) = kernCompute(model.kern, model.X, model.X(index, :));
-    
-    if isfield(model.kern, 'whiteVariance')
-      model.kern.Kstore(index, 1) = model.kern.Kstore(index, 1) + model.kern.whiteVariance;
-    end
+    s = model.kern.Kstore(:, 1)';
     if ~model.Sigma(c).robust
-      s = model.kern.Kstore(:, 1)';
       lValInv = sqrt(model.nu(index, c));
       model.Sigma(c).M = [lValInv*s];
       
       model.Sigma(c).L = 1/lValInv;
       model.Sigma(c).Linv = lValInv;
     else
-      s = model.kern.Kstore(:, 1)';
       sqrtNu = sqrt(model.nu(index,c));
       model.Sigma(c).M = [sqrtNu*s];
       sqrtBeta = sqrt(model.beta(index, c));

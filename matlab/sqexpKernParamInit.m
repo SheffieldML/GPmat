@@ -10,5 +10,6 @@ kern.whiteVariance = 1;
 kern.biasVariance = 1;
 kern.nParams = 4;
 
-% Set to 1 to use log(1+exp(a)) to transform parameters in stead of exp(a)
-kern.linearBound = 1;
+
+kern.transforms(1).index = [1 2 3 4];
+kern.transforms(1).type = 'negLogLogit';

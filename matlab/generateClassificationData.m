@@ -26,9 +26,6 @@ catch
     rand('seed', seed)
     numIn = 2;
     N = 500;
-    trueTheta = [10 100 0.01 0];
-    trueTheta = thetaConstrain(trueTheta);
-    trueLntheta = log(trueTheta);
     
     X = zeros(N, numIn);
     X = rand(N, numIn);
@@ -40,8 +37,6 @@ catch
     K = kernCompute(kern, X);
     u = real(gaussSamp(K, 1)');
   
-%    K = kernel(X, trueLntheta, 'rbf');
-%    u = gaussSamp(K, 1)';
     p = cumGaussian(u);
     y = 2*(rand(size(u))>p)-1;
   end

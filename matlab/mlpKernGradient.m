@@ -24,12 +24,8 @@ g(2) = sum(sum((1./denom ...
  
 g(3) = sum(sum(k.*covGrad))/kern.variance;
 
-if kern.linearBound
-  g(1) = g(1)*gradFactLinearBound(kern.weightVariance);
-  g(2) = g(2)*gradFactLinearBound(kern.biasVariance);
-  g(3) = g(3)*gradFactLinearBound(kern.variance);
-else
-  g(1) = g(1)*kern.weightVariance;
-  g(2) = g(2)*kern.biasVariance;
-  g(3) = g(3)*kern.variance;
+%/~
+if any(isnan(g))
+  warning('g is NaN')
 end
+%~/

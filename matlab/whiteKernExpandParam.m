@@ -4,8 +4,4 @@ function kern = whiteKernExpandParam(kern, params)
 
 % IVM
 
-if kern.linearBound
-  kern.variance = linearBound(params(1));
-else
-  kern.variance = expBound(params(1));
-end
+kern.variance = params(1);

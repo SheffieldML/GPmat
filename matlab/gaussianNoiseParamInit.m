@@ -10,7 +10,11 @@ if nargin > 1
 else 
   noise.bias = zeros(1, noise.numProcess);
 end
+
 noise.sigma2 = 1;
+
+noise.transforms.index = noise.numProcess+1;
+noise.transforms.type = 'exp';
 noise.nParams = 1 + noise.numProcess;
 
 % Can handle missing values?

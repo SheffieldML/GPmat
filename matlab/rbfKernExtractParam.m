@@ -4,8 +4,4 @@ function params = rbfKernExtractParam(kern)
 
 % IVM
 
-if kern.linearBound
-  params = log(exp([kern.inverseWidth kern.variance])-1);
-else
-  params = log([kern.inverseWidth kern.variance]);
-end
+params = [kern.inverseWidth kern.variance];

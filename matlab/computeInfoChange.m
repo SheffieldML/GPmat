@@ -13,7 +13,7 @@ if add
    case 'entropy'
     
     delta = -.5*sum(log2(1-model.varSigma(model.J, :).* ...
-		     model.nu(model.J, :)), 2);
+		     model.nu(model.J, :)+1e-300), 2);
    otherwise
     error(['Selection criterion ' model.selectionCriterion ' not yet implemented'])
   end
@@ -22,7 +22,7 @@ else
   switch model.selectionCriterion
    case 'entropy'
     delta = -.5*sum(log2(1-model.varSigma(model.I, :).*model.beta(model.I, ...
-						  :)), 2);
+						  :)+1e-300), 2);
    otherwise
     error(['Selection criterion ' model.selectionCriterion ' not yet implemented'])
     

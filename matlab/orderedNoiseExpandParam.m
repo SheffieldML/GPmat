@@ -5,4 +5,4 @@ function noise = orderedNoiseExpandParam(noise, params)
 % IVM
 
 noise.bias = params(1:noise.numProcess);
-noise.widths = linearBound(params(noise.numProcess+1:end))';
+noise.widths = params(noise.numProcess+1:end)';

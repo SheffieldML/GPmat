@@ -16,8 +16,8 @@ model.beta = [];
 model.nu = zeros(size(y));
 model.g = zeros(size(y));
 
-model.kern = kernelCreate(X, kernelType);
-
+model.kern = kernCreate(X, kernelType);
+  
 model.varSigma = zeros(size(y));
 model.mu = zeros(size(y));
 

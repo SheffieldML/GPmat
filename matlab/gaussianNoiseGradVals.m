@@ -12,4 +12,4 @@ for i = 1:D
   dlnZ_dmu(:, i) = y(:, i) - mu(:, i) - noise.bias(i);
 end
 dlnZ_dmu = dlnZ_dmu.*nu;
-dlnZ_dvs = -.5*nu+.5*dlnZ_dmu.*dlnZ_dmu;
+dlnZ_dvs = 0.5*(dlnZ_dmu.*dlnZ_dmu - nu);

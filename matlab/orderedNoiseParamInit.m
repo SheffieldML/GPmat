@@ -14,14 +14,17 @@ if nargin > 1
 else
   noise.bias = repmat(1/2, 1, noise.numProcess);
 end
+noise.nParams = noise.C-2 + noise.numProcess;
 
 if noise.C > 2
   noise.widths = repmat(1/(noise.C-2), noise.C-2, 1);
+  noise.transforms.index = [noise.numProcess+1:noise.nParams];
+  noise.transforms.type = 'negLogLogit';
 else 
   noise.widths = [];
 end
-noise.nParams = noise.C-2 + noise.numProcess;
 noise.variance = 1;
 
 % Can handle missing values?
 noise.missing = 1;
+

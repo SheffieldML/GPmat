@@ -64,16 +64,7 @@ for k = 1:dVal
            b = text(model.X(dataIndexSelect, 1)+labelGap, ...
                     model.X(dataIndexSelect, 2), num2str(k), 'erasemode', ...
                     'xor');
-           try
-             et = toc;
-             if et < 0.1
-               pause(0.1-et)
-             else
-               drawnow
-             end
-             tic;
-           catch    
-           end
+           drawnow
          case 'gaussian'
            figure(1)
            a = plot3(model.X(dataIndexSelect, 1), ...
@@ -84,17 +75,8 @@ for k = 1:dVal
            b = text(model.X(dataIndexSelect, 1)+labelGap, ...
                     model.X(dataIndexSelect, 2), model.y(dataIndexSelect), ...
                     num2str(k), 'erasemode', 'xor');
-           try
-             et = toc;
-             if et < 0.1
-               pause(0.1-et)
-             else
-               drawnow
-             end
-             tic
-           catch
-           end
-         end
+           drawnow
+        end
       else
 	subplot(10, 10, rem(k-1, 100)+1);
 	image(round(reshape(model.X(dataIndexSelect, :), 20, 20)*64))

@@ -11,13 +11,13 @@ catch
     randn('seed', 1e5)
     rand('seed', 1e5)
     numIn = 2;
-    N = 1000;
+    N = 500;
     X = zeros(N, numIn);
     X(1:floor(N/2), :) = ...
       randn(floor(N/2), numIn)*.25+1;
     X(floor(N/2)+1:end, :) = ...
 	randn(ceil(N/2), numIn)*.25-1;
-    kern = kernelCreate(X, 'rbfard');
+    kern = kernCreate(X, 'rbfard');
     kern.variance = 1;
     kern.inverseWidth = 20;
     kern.inputScales = [0 0.999];

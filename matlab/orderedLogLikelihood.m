@@ -23,19 +23,9 @@ for j = 1:D
   if ~isempty(index)
     for i = index'
       mu(i, j) = mu(i, j) + noise.bias(j) - sum(noise.widths(1:y(i, j)-1));
-      %make use of fact that
-      %.5*erfcx(-sqrt(2)/2*x)=exp(.5*x*x)*cumGaussian(x) ...
       u = mu(i, j).*c(i, j);
-      u2 = u.*u;
       uprime = (mu(i, j) - noise.widths(y(i, j))).* c(i, j); 
-      uprime2 = uprime*uprime;
-      if uprime > 0
-        L = L +log(.5) -0.5*u2 + log(erfcx(-fact*u) - exp(.5*u2-.5* ...
-                                                          uprime2)*erfcx(-fact*uprime)+eps);
-      else
-        L = L + lnCumGaussian(uprime) + log(exp(lnCumGaussian(u)-lnCumGaussian(uprime)) ...
-                                            - 1);
-      end
+      L = L - log(gaussOverDiffCumGaussian(u, uprime, 1)+1e-300) - .5*u.*u - .5*log(2*pi);
     end
   end
   % Highest category
@@ -48,5 +38,3 @@ for j = 1:D
   end
 end
   
-  
-%  L = sum(sum(log(orderedLikelihood(noise, mu, varsigma, y))));

@@ -10,7 +10,7 @@ end
 %~/
 
 if nargin < 3
-  prior = 1;
+  prior = 0;
 end
 x = model.X(model.I, :);
 m = model.m(model.I, :);
