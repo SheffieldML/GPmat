@@ -5,5 +5,8 @@ function noise = orderedNoiseExpandParam(params, noise)
 % IVM
 
 noise.eta = 1/noise.C*sigmoid(params(1));
+if noise.eta + 1e-6 > 1/noise.C
+  noise.eta = 1/noise.C - 1e-6;
+end
 noise.bias = params(2:noise.numProcess+1);
 noise.widths = exp(params(noise.numProcess+2:end))';

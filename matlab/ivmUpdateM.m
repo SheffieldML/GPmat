@@ -1,6 +1,6 @@
-function model = updateM(model, index)
+function model = ivmUpdateM(model, index)
 
-% UPDATEM Update matrix M, L, v and mu.
+% IVMUPDATEM Update matrix M, L, v and mu.
 
 % IVM
 activePoint = length(model.I)+1;
@@ -9,6 +9,7 @@ for c = 1:length(model.Sigma)
     
     model.kern.Kstore(:, activePoint) = kernCompute(model.X, model.kern, ...
                                                       model.X(index, :));
+    % Add diagonal term from white noise processes
     if isfield(model.kern, 'whiteVariance')
       model.kern.Kstore(index, activePoint) = model.kern.Kstore(index, activePoint) ...
           + model.kern.whiteVariance;

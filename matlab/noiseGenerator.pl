@@ -26,10 +26,7 @@ my %files =
 "${prefix}NoiseOut.m", 
 "function y = ${prefix}NoiseOut(noise, mu, varsigma)\n\n% ${ucPrefix}NOISEOUT Ouput from ${longName}.\n\n% IVM\n\n",
 "${prefix}NoiseExtractParam.m",
-"function [params, names] = ${prefix}NoiseExtractParam(noise)\n\n% ${ucPrefix}NOISEEXTRACTPARAM Extract parameters from ${longName}.\n\n% IVM\n\nparams = [noise.bias];","${prefix}NoiseUpdateParams.m",
- "function [nu, g] = ${prefix}NoiseUpdateParams(noise, mu, varsigma, y, index)\n\n% ${ucPrefix}NOISEUPDATEPARAMS Update parameters for ${longName}.\n\n% IVM\n[g, dlnZ_dvs] = ${prefix}NoiseGradVals(noise, mu(index, :), ...\n
-                                            varsigma(index, :), ...\n
-                                            y(index, :));\n\nnu = g.*g - 2*dlnZ_dvs;");
+"function [params, names] = ${prefix}NoiseExtractParam(noise)\n\n% ${ucPrefix}NOISEEXTRACTPARAM Extract parameters from ${longName}.\n\n% IVM\n\nparams = [noise.bias];");
 
 my @fileNames = keys %files; 
 

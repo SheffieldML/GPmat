@@ -108,5 +108,7 @@ for j = 1:D
   end
 end
 gnoise.widths = gnoise.widths.*noise.widths;
-gnoise.eta = (gnoise.eta).*(noise.eta);
+gnoise.eta = gnoise.eta.*noise.eta;
+%gnoise.eta = gnoise.eta.*(noise.eta.*(1-noise.C*noise.eta));
+%gnoise.bias = (1gnoise.bias;
 g = [gnoise.eta gnoise.bias gnoise.widths(:)'];

@@ -4,4 +4,4 @@ function y = cumGaussian(x)
 
 % IVM
 
-y = 0.5*(1+myerf(sqrt(2)/2*x));
+y = 0.5*(1+erf(sqrt(2)/2*x));

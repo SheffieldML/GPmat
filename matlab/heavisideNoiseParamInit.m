@@ -13,6 +13,6 @@ else
   noise.bias = zeros(1, noise.numProcess);
 end
 
-noise.eta = repmat(0.01, 1, noise.numProcess);
+noise.eta = 0.01;
 noise.nParams = length(noise.bias) + length(noise.eta);
   

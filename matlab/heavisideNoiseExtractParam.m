@@ -4,7 +4,7 @@ function [params, names] = heavisideNoiseExtractParam(noise)
 
 % IVM
 
-params = [invSigmoid(noise.eta) noise.bias];
+params = [invSigmoid(2*noise.eta) noise.bias];
 
 if nargout > 1
   names{1} = 'inv logistic of eta';

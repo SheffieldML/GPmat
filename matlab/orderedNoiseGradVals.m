@@ -2,7 +2,7 @@ function [dlnZ_dmu, dlnZ_dvs] = orderedNoiseGradVals(noise, mu, varsigma, y)
 
 % ORDEREDNOISEGRADVALS Gradient wrt mu and varsigma of log-likelihood for ordered categorical noise model.
 
-% IVM1
+% IVM
 
 D = size(y, 2);
 c = 1./sqrt(varsigma);

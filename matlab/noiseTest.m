@@ -15,9 +15,13 @@ noise.C = 10;
 noise.numProcess = 3;
 numData = 10;
 noise = noiseParamInit(noise);
+if isfield(noise, 'bias')
+  noise.bias = randn(size(noise.bias))*.1;
+end
 %noise.eta = 1e-10;% 1/(2*noise.C);
 mu = randn(numData, noise.numProcess);
 varsigma = randn(numData, noise.numProcess).^2;
+varsigma(1, 1) = 2e-6;
 y = noiseOut(noise, mu, varsigma);
 epsilon = 1e-6;
 fprintf('y values\n');
@@ -85,13 +89,17 @@ varsigma = origVarsigma;
 gVarsigmaDiff = .5*(Lplus - Lminus)/epsilon;
 
 
-
 [g, gvs] = noiseGradVals(noise, mu, varsigma, y);
 
 vsMaxDiff = max(max(abs(gvs-gVarsigmaDiff)));
 muMaxDiff = max(max(abs(g-gMuDiff)));
 
-
+if vsMaxDiff > 1e-7
+  disp(y)
+  disp(varsigma)
+  disp(mu)
+  disp(gvs -gVarsigmaDiff)
+end
 fprintf('Param max diff: %2.6f.\n', paramMaxDiff)
 fprintf('Mu max diff: %2.6f.\n', muMaxDiff)
 fprintf('Varsigma max diff: %2.6f.\n', vsMaxDiff)

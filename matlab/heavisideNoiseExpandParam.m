@@ -5,6 +5,6 @@ function noise = heavisideNoiseExpandParam(params, noise)
 % IVM
 
 
-noise.eta = sigmoid(params(1:length(noise.eta)));
-noise.bias = params(length(noise.eta)+1:end);
+noise.eta = 0.5*sigmoid(params(1));
+noise.bias = params(2:end);
 

@@ -9,9 +9,10 @@ if isempty(index)
   error(['Point ' num2str(i) ' is not in inactive set'])
 end
 
-model = ivmUpdateNuG(model, i);
-model = updateSites(model, i);
-model = updateM(model, i);
+%/~model = ivmUpdateNuG(model, i);
+%~/
+model = ivmUpdateSites(model, i);
+model = ivmUpdateM(model, i);
 
 % Remove point from the non-active set and place in the active.
 model.J(index) = [];

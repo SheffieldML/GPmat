@@ -25,9 +25,9 @@ end
 for k = 1:dVal
     
   [indexSelect, infoChange(k)] = selectPoint(model);
-  i = model.J(indexSelect);
+  dataIndexSelect = model.J(indexSelect);
   
-  model = ivmAddPoint(model, i);
+  model = ivmAddPoint(model, dataIndexSelect);
   
   if display
     logLikelihoods = log(ivmLikelihoods(model));
@@ -48,28 +48,30 @@ for k = 1:dVal
             + sum(...
                 sign(model.mu(model.J, i)+model.noise.bias(i)) ...
                 ~=model.y(model.J, i) & model.y(model.J, i)==1);
-        fprintf(', falsePos %2.4f, truePos %2.4f\n', ...
-                sum(falsePositives(k))./sum(sum(model.y==-1)), ...
-                sum(truePositives(k))./sum(sum(model.y==-1)));
       end
+      fprintf(', falsePos %2.4f, truePos %2.4f\n', ...
+              sum(falsePositives(k))./sum(sum(model.y==-1)), ...
+              sum(truePositives(k))./sum(sum(model.y==1)));
      otherwise
       fprintf('\n');
     end
     if display > 1
       if size(model.X, 2) == 2
-	figure(2)
-	plot(logLikelihoodRemain)
-	
+%/~	figure(2)
+%	plot(logLikelihoodRemain)
+%~/	
 	figure(1)
-	a = plot(model.X(i, 1), model.X(i, 2), 'o');
+	a = plot(model.X(dataIndexSelect, 1), ...
+                 model.X(dataIndexSelect, 2), 'o');
 	set(a, 'erasemode', 'xor')
 	xlim = get(gca, 'xlim');
 	labelGap = (xlim(2) - xlim(1)) * 0.025;
-	b = text(model.X(i, 1)+labelGap, model.X(i, 2), num2str(k));
+	b = text(model.X(dataIndexSelect, 1)+labelGap, ...
+                 model.X(dataIndexSelect, 2), num2str(k));
 	set(b, 'erasemode', 'xor')
       else
 	subplot(10, 10, rem(k-1, 100)+1);
-	image(round(reshape(model.X(i, :), 20, 20)*64))
+	image(round(reshape(model.X(dataIndexSelect, :), 20, 20)*64))
 	axis image
 	axis off
       end
