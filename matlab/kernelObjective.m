@@ -18,13 +18,14 @@ model.kern = kernExpandParam(model.kern, params);
 K = kernCompute(model.kern, x);
 f = 0;
 
-if strcmp(model.noise.type, 'gaussian')
+if model.noise.spherical
+  % there is only one value for all beta
   [invK, UC] = pdinv(K+diag(1./model.beta(model.I, 1)));
   logDetTerm = logdet(K, UC);
 end
   
 for i = 1:size(m, 2)
-  if ~strcmp(model.noise.type, 'gaussian')
+  if ~model.noise.spherical
     [invK, UC] = pdinv(K+diag(1./model.beta(model.I, i)));
     logDetTerm = logdet(K, UC);
   end

@@ -18,3 +18,6 @@ noise.nParams = noise.numProcess;
 
 % Can handle missing values?
 noise.missing = 0;
+
+% Noise model leads to constant value of beta.
+noise.spherical = 1;

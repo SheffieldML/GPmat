@@ -5,7 +5,7 @@ function L = ivmLogLikelihood(model, x, y);
 % IVM
 
 if nargin < 3
-  % This implies evaluate for the traing data.
+  % This implies evaluate for the training data.
   mu = model.mu;
   varsigma = model.varSigma;
   y = model.y;

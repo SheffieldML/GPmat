@@ -11,9 +11,10 @@ end
 if add
   switch model.selectionCriterion
    case 'entropy'
-    if strcmp(model.noise.type, 'gaussian')
+    if model.noise.spherical
+      % Noise model leads to constant values for beta.
       delta = -.5*size(model.y, 2).*sum(log2(1-model.varSigma(model.J, 1).* ...
-                           model.nu(model.J, 1)+1e-300), 2);
+                                             model.nu(model.J, 1)+1e-300), 2);
     else
       delta = -.5*sum(log2(1-model.varSigma(model.J, :).* ...
                            model.nu(model.J, :)+1e-300), 2);

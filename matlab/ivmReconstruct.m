@@ -27,7 +27,7 @@ if isfield(model.kern, 'whiteVariance')
 end
 model.kern.diagK = kernDiagCompute(model.kern, model.X);
 
-if strcmp(model.noise.type, 'gaussian')
+if model.noise.spherical
   model.Sigma.L = chol(model.kern.Kstore(model.I, :) ...
                        + diag(1./model.beta(model.I)))';
   model.Sigma.Linv = eye(size(model.Sigma.L))/model.Sigma.L;

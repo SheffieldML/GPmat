@@ -18,12 +18,13 @@ model.kern = kernExpandParam(model.kern, params);
 K = kernCompute(model.kern, x);
 g = zeros(size(params));
 
-if strcmp(model.noise.type, 'gaussian')
+if model.noise.spherical
+  % there is only one value for all beta
   invK = pdinv(K+diag(1./model.beta(model.I, 1)));
 end
 
 for j = 1:size(m, 2)
-  if ~strcmp(model.noise.type, 'gaussian')
+  if ~model.noise.spherical
     invK = pdinv(K+diag(1./model.beta(model.I, j)));
   end
   covGrad = covarianceGradient(invK, m(:, j));

@@ -24,9 +24,9 @@ model.mu = zeros(size(y));
 model.I = [];
 model.J = [];
 
-model.alphaComputed = 0;
+model.noise = noiseCreate(noiseType, y); 
 
-if strcmp(noiseType, 'gaussian')
+if model.noise.spherical
   model.Sigma.M = [];
   model.Sigma.L = [];
   model.Sigma.robust = 0;
@@ -39,7 +39,6 @@ else
 end
 model.selectionCriterion = selectionCriterion;
 
-model.noise = noiseCreate(noiseType, y); 
 
 switch selectionCriterion
  case 'none'
