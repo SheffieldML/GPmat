@@ -23,7 +23,7 @@ if noise.C > 2
 else 
   noise.widths = [];
 end
-noise.variance = 1;
+noise.variance = 0.1;
 
 % Can handle missing values?
 noise.missing = 1;

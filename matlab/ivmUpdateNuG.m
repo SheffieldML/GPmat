@@ -13,7 +13,7 @@ end
                    model.mu(index, :), model.varSigma(index, :), ...
                    model.y(index, :));
 %/~
-if any(model.nu(index, :)< 0)
+if any(model.nu(index, :)< 0) & model.noise.logconcave
   warning('nu less than zero')
 end
 %~/

@@ -11,6 +11,13 @@ function model = ivmUpdateSites(model, index)
                      model.y(index, :));
 
 
-if any(model.beta<0)
-  warning('Beta less than zero')
+if any(model.beta<0) 
+  if model.noise.logconcave
+    error('Beta less than zero for log concave model.')
+  else
+    indices = find(model.beta < 0);
+    model.beta(indices) = 0;
+    model.m(indices) = 0;
+    fprintf('Beta less than zero .... fixing to zero.\n')
+  end
 end

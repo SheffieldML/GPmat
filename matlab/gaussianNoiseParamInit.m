@@ -11,7 +11,7 @@ else
   noise.bias = zeros(1, noise.numProcess);
 end
 
-noise.sigma2 = 1;
+noise.sigma2 = eps;
 
 noise.transforms.index = noise.numProcess+1;
 noise.transforms.type = 'exp';

@@ -25,7 +25,7 @@ noiseModel = 'ordered';
 selectionCriterion = 'entropy';
 % Use a kernel consisting of an RBF ard kernel, a linear ard kernel and a
 % bias term.
-kernelType = {'rbfard', 'linard', 'bias'};
+kernelType = {'rbfard', 'linard', 'bias', 'white'};
 prior = 0;
 display = 2;
 dVal = 100;

@@ -6,7 +6,7 @@ noiseModel = 'gaussian';
 selectionCriterion = 'entropy';
 
 % Just use the rbf ard kernel.
-kernelType = 'rbfard';
+kernelType = {'rbfard', 'white'};
 prior = 0;
 display = 2;
 dVal = 50;

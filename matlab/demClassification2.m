@@ -4,7 +4,7 @@
 
 noiseModel = 'probit';
 selectionCriterion = 'entropy';
-kernelType = 'rbf';
+kernelType = {'rbf', 'white'};
 prior = 0;
 display = 2;
 dVal = 200;

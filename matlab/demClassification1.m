@@ -14,7 +14,7 @@ noiseModel = 'probit';
 selectionCriterion = 'entropy';
 
 % Use a combination of an MLP and linear ARD kernel.
-kernelType = {'mlpard', 'linard'};
+kernelType = {'mlpard', 'linard', 'white'};
 prior = 0;
 display = 2;
 dVal = 100;

@@ -8,6 +8,7 @@ function noise = noiseParamInit(noise, y)
 % beta (e.g. a Gaussian with constant variance for each data-point &
 % dimension). The default setting is set here as false.
 noise.spherical = 0;
+noise.logconcave = 1;
 
 if nargin > 1
   noise = feval([noise.type 'NoiseParamInit'], noise, y);

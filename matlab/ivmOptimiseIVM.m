@@ -55,7 +55,7 @@ for k = 1:dVal
     if display > 1
       if size(model.X, 2) == 2
         switch model.noise.type
-          case {'probit', 'ordered'}
+          case {'probit', 'ordered', 'ncnm'}
            figure(1)
            a = plot(model.X(dataIndexSelect, 1), ...
                     model.X(dataIndexSelect, 2), 'o', 'erasemode', 'xor');
