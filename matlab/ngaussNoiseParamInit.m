@@ -12,7 +12,7 @@ else
   noise.bias = zeros(1, noise.numProcess);
 end
 
-noise.sigma2 = 1e-16;
+noise.sigma2 = 1e-6;
 
 noise.nParams = noise.numProcess;
 
