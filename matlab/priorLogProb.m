@@ -4,8 +4,5 @@ function l = priorLogProb(prior, x)
 
 % PRIOR
 
-% PRIOR
-
-
 % Compute log prior
 l = feval([prior.type 'PriorLogProb'], prior, x);

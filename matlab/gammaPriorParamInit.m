@@ -4,9 +4,6 @@ function prior = gammaPriorParamInit(prior)
 
 % PRIOR
 
-% PRIOR
-
-
 prior.a = 1e-6;
 prior.b = 1e-6;
 

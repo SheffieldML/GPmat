@@ -4,9 +4,6 @@ function prior = priorTest(priorType);
 
 % PRIOR
 
-% PRIOR
-
-
 prior.type = priorType;
 prior = priorParamInit(prior);
 

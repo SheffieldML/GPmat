@@ -4,8 +4,5 @@ function g = gammaPriorGradient(prior, x)
 
 % PRIOR
 
-% PRIOR
-
-
 % Compute gradient of prior
 g = (prior.a-1)./x-prior.b;

@@ -4,9 +4,6 @@ function [params, names] = gammaPriorExtractParam(prior)
 
 % PRIOR
 
-% PRIOR
-
-
 params = [prior.a prior.b];
 if nargout > 1
   names = {'gamma a', 'gamma b'};

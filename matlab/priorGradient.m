@@ -4,6 +4,4 @@ function g = priorGradient(prior, params)
 
 % PRIOR
 
-% PRIOR
-
 g = feval([prior.type 'PriorGradient'], prior, params);

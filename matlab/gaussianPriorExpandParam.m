@@ -4,7 +4,4 @@ function prior = gaussianPriorExpandParam(prior, params)
 
 % PRIOR
 
-% PRIOR
-
-
 prior.precision = params(1);

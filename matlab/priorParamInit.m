@@ -4,7 +4,4 @@ function prior = priorParamInit(prior)
 
 % PRIOR
 
-% PRIOR
-
-
 prior = feval([prior.type 'PriorParamInit'], prior);

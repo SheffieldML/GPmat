@@ -4,9 +4,6 @@ function [params, names] = priorExtractParam(prior)
 
 % PRIOR
 
-% PRIOR
-
-
 if nargout < 2
   params = feval([prior.type 'PriorExtractParam'], prior);
 else
