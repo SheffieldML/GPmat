@@ -20,15 +20,15 @@ f = 0;
 
 if strcmp(model.noise.type, 'gaussian')
   [invK, UC] = pdinv(K+diag(1./model.beta(model.I, 1)));
-  logDetTerm = logDet(K, UC);
+  logDetTerm = logdet(K, UC);
 end
   
 for i = 1:size(m, 2)
   if ~strcmp(model.noise.type, 'gaussian')
     [invK, UC] = pdinv(K+diag(1./model.beta(model.I, i)));
-    logDetTerm = logDet(K, UC);
+    logDetTerm = logdet(K, UC);
   end
-    f = f -.5*logDetTerm- .5*m(:, i)'*invK*m(:, i);
+  f = f -.5*logDetTerm- .5*m(:, i)'*invK*m(:, i);
 end
 if prior
   f = f - sum(params);
