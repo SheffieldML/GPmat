@@ -26,8 +26,8 @@ if length(model.Sigma)>1
       Kinvgk = model.Sigma(i).Linv'*diagB*(model.Sigma(i).Linv*gX);
     end
     gsigmavar(:, i) = diaggK' - 2*Kinvgk'*kX;
+    gmu(:, i) = Kinvgk'*model.m(model.I, i); 
   end 
-  gmu(:, i) = Kinvgk'*model.m(model.I, i); 
 else
   if ~model.Sigma.robust
     Kinvgk = model.Sigma.Linv'*(model.Sigma.Linv*gX);

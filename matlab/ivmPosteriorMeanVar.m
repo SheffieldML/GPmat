@@ -29,8 +29,8 @@ if length(model.Sigma) > 1
     for n = 1:numData
       varsigma(n, i) = diagK(n) - Lk(:, n)'*Lk(:, n); 
     end
+    mu(:, i) = Kinvk'*model.m(model.I, i);
   end
-  mu(:, i) = Kinvk'*model.m(model.I, i);
 else
   if ~model.Sigma.robust
     Lk = model.Sigma.Linv*kX;
