@@ -8,4 +8,4 @@ D = size(y, 2);
 for i = 1:D
   mu(:, i) = mu(:, i) + noise.bias(i);
 end
-L = sum(sum(lnCumGaussian((y.*mu)./(sqrt(1+varsigma)))));
+L = sum(sum(lnCumGaussian((y.*mu)./(sqrt(noise.sigma2+varsigma)))));

@@ -7,4 +7,4 @@ D = size(y, 2);
 for i = 1:D
   mu(:, i) = mu(:, i) + noise.bias(i);
 end
-L = cumGaussian((y.*mu)./(sqrt(1+varsigma)));
+L = cumGaussian((y.*mu)./(sqrt(noise.sigma2+varsigma)));
