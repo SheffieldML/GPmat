@@ -1,0 +1,9 @@
+function k = rbfKernDiagCompute(kern, x)
+
+% RBFKERNDIAGCOMPUTE Compute diagonal of rbf kernel.
+
+% KERN
+
+
+rbfPart = ones(size(x, 1), 1);
+k = rbfPart*kern.variance;
