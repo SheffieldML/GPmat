@@ -1,7 +1,7 @@
-function L = orderedLogLikelihood(X, Y, model)
+function L = orderedLogLikelihood(noise, mu, varsigma, y)
 
-% ORDEREDLOGLIKELIHOOD Log-likelihood of data under Ordered categorical model.
+% ORDEREDLOGLIKELIHOOD Log-likelihood of data under ordered categorical noise model.
 
 % IVM
 
-L = sum(sum(log(orderedLikelihood(X, Y, model))));
+L = sum(sum(log(orderedLikelihood(noise, mu, varsigma, y))));

@@ -8,7 +8,7 @@ if nargin < 3
   varsigma = model.varSigma;
   y = model.y;
 else
-  [mu, varsigma] = ivmPosteriorMeanVar(x, model);
+  [mu, varsigma] = ivmPosteriorMeanVar(model, x);
 end
 
 L = noiseLikelihood(model.noise, mu, varsigma, y);

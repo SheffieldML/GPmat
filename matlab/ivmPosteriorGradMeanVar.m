@@ -1,4 +1,4 @@
-function [gmu, gsigmavar] = ivmPosteriorGradMeanVar(X, model);
+function [gmu, gsigmavar] = ivmPosteriorGradMeanVar(model, X);
 
 % IVMPOSTERIORGRADMEANVAR Gradient of mean and variances of the posterior wrt X.
 

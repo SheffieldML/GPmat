@@ -1,7 +1,21 @@
-function model = orderedNoiseParamInit(model)
+function noise = orderedNoiseParamInit(noise, y)
 
-% ORDEREDNOISEPARAMINIT Ordered categorical model's parameter initialisation.
+% ORDEREDNOISEPARAMINIT Ordered categorical noise model's parameter initialisation.
 
 % IVM
 
-model.noise.
+if nargin > 1
+  noise.C = max(max(y))+1;
+  noise.numProcess = size(y, 2);
+  noise.bias = mean(y);
+else
+  noise.bias = repmat(1/2, 1, noise.numProcess);
+end
+
+if noise.C > 2
+  noise.widths = repmat(1/(noise.C-2), noise.C-2, 1);
+else 
+  noise.widths = [];
+end
+noise.nParams = 1 + noise.C-2 + noise.numProcess;
+noise.eta = 0.01/noise.C; 

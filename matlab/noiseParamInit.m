@@ -4,4 +4,8 @@ function noise = noiseParamInit(noise, y)
 
 % IVM
 
-noise = feval([noise.type 'NoiseParamInit'], noise, y);
+if nargin > 1
+  noise = feval([noise.type 'NoiseParamInit'], noise, y);
+else
+  noise = feval([noise.type 'NoiseParamInit'], noise);
+end

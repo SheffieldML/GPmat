@@ -18,6 +18,7 @@ for c = 1:length(model.Sigma)
     s = model.kern.Kstore(:, activePoint)' - a'*model.Sigma(c).M;
     sqrtNu = sqrt(model.nu(index, c));
     %/~
+    % If Nu is so low then the included data-point isn't really useful.
     if sqrtNu < 1e-6
       warning(['Square root of nu is ' num2str(sqrtNu)])
     end

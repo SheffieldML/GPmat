@@ -1,4 +1,4 @@
-function [mu, varsigma] = ivmPosteriorMeanVar(X, model);
+function [mu, varsigma] = ivmPosteriorMeanVar(model, X);
 
 % IVMPOSTERIORMEANVAR Mean and variances of the posterior at points given b X.
 

@@ -13,4 +13,5 @@ if iscell(noiseType)
 else
   noise.type = noiseType;
 end
+
 noise = noiseParamInit(noise, y);

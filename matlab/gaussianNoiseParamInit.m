@@ -4,6 +4,11 @@ function noise = gaussianNoiseParamInit(noise, y)
 
 % IVM
 
+if nargin > 1
+  noise.bias = mean(y);
+  noise.numProcess = size(y, 2);
+else 
+  noise.bias = zeros(1, noise.numProcess);
+end
 noise.sigma2 = 1;
-noise.bias = mean(y);
-noise.nParams = 1 + size(y, 2);
+noise.nParams = 1 + noise.numProcess;

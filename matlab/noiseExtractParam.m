@@ -1,7 +1,11 @@
-function params = noiseExtractParam(model)
+function [params, names] = noiseExtractParam(model)
 
 % NOISEEXTRACTPARAM Extract the noise model's parameters.
 
 % IVM
 
-params = feval([model.type 'NoiseExtractParam'], model);
+if nargout < 2
+  params = feval([model.type 'NoiseExtractParam'], model);
+else
+  [params, names] = feval([model.type 'NoiseExtractParam'], model);
+end
