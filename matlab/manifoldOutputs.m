@@ -2,6 +2,8 @@ function [meanOut, varOut] = manifoldOutputs(X2, X, Y, theta, invK)
 
 % MANIFOLDOUTPUTS Evaluate the manifold output for datapoints X.
 
+% MOCAP 
+
 global LINEAR
 
 dataDim = size(Y, 2);
