@@ -58,7 +58,7 @@ params = [X(:)' lntheta];
 options = foptions;
 options(1) = 1;
 options(9) = 0;
-options(14) = 50; %20000;
+options(14) = 20000;
 
 % by not passing X to scg it is automatically optimised
 params = scg('gplvmlikelihood', params, options, 'gplvmgradient', Y);
