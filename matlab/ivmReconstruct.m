@@ -39,7 +39,7 @@ else
                             + diag(1./model.beta(model.I, i)))';
     model.Sigma(i).Linv = eye(size(model.Sigma(i).L))/model.Sigma(i).L;
     model.Sigma(i).M = model.Sigma(i).Linv*model.kern.Kstore';
-    model.Sigma(i).robust = 1;
+    model.Sigma(i).robust = 0;
   end
 end
 model.d = length(model.I);

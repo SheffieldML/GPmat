@@ -23,6 +23,7 @@ switch model.selectionCriterion
   model.I = [];
 end
 
+model.terminate = 0;
 
 % Initialise parameters
 model.kern.diagK = kernDiagCompute(model.kern, model.X);

@@ -12,8 +12,11 @@ end
     noiseUpdateNuG(model.noise, ...
                    model.mu(index, :), model.varSigma(index, :), ...
                    model.y(index, :));
-%/~
-if any(model.nu(index, :)< 0) & model.noise.logconcave
-  warning('nu less than zero')
+
+if any(model.nu(index, :)< 0) 
+  if model.noise.logconcave
+    warning('nu less than zero in log concave model.')
+  else
+    fprintf('nu less than zero\n')
+  end
 end
-%~/

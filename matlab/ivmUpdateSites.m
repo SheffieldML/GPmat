@@ -18,5 +18,6 @@ if any(model.beta<0)
     indices = find(model.beta < 0);
     model.beta(indices) = 1e-6;
     fprintf('Beta less than zero .... fixing to 1e-6.\n')
+    %model.terminate = 1;
   end
 end

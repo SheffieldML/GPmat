@@ -26,7 +26,6 @@ for k = 1:dVal
     
   [indexSelect, infoChange(k)] = ivmSelectPoint(model);
   dataIndexSelect = model.J(indexSelect);
-  
   model = ivmAddPoint(model, dataIndexSelect);
   if display
     logLikelihood = ivmLogLikelihood(model);

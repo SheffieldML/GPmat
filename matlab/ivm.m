@@ -3,7 +3,8 @@ function model = ivm(X, y, kernelType, noiseType, selectionCriterion, d)
 % IVM Initialise an IVM model.
 
 % IVM
-% Version 0.1
+
+model.terminate = 0;
 
 model.d = d;
 
@@ -34,7 +35,7 @@ else
   for i = 1:size(y, 2)
     model.Sigma(i).M = [];
     model.Sigma(i).L = [];
-    model.Sigma(i).robust = 1;
+    model.Sigma(i).robust = 0;
   end
 end
 model.selectionCriterion = selectionCriterion;
