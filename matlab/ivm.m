@@ -24,6 +24,8 @@ model.mu = zeros(size(y));
 model.I = [];
 model.J = [];
 
+model.alphaComputed = 0;
+
 if strcmp(noiseType, 'gaussian')
   model.Sigma.M = [];
   model.Sigma.L = [];

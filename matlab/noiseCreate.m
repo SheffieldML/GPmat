@@ -24,7 +24,7 @@ else
 end
 
 % Check if the model has bespoke nu and g update code.
-if exist(['ivm' noiseType 'NoiseNuG'])==2
+if exist([noiseType 'NoiseNuG'])==2
   noise.updateNuG = 1;
 else
   noise.updateNuG = 0;

@@ -6,7 +6,7 @@ function [g, nu] = gaussianNoiseNuG(noise, mu, varSigma, y)
 
 
 D = size(y, 2);
-nu = 1./(noise.sigma2+varsigma);
+nu = 1./(noise.sigma2+varSigma);
 g = zeros(size(nu));
 for i = 1:D
   g(:, i) = y(:, i) - mu(:, i) - ...
