@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
-# FOr creating files for new kernels use kernelGenerator.pl {kernelName}
+# FOr creating files for new kernels. Run as 
+# perl kernelGenerator.pl {kernel short name} {kernel long name}
 use warnings;
 use strict;
 

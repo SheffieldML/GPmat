@@ -1,6 +1,5 @@
 % DEMDIGITS Try the IVM on some digits data.
 
-% IVM
 
 load ../data/usps_train
 X = ALL_DATA;

@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
-# FOr creating files for new kernels use kernelGenerator.pl {kernelName}
+# FOr creating files for new noise models. Run as 
+# perl noiseGenerator.pl {noise model short name} {noise model long name}
 use warnings;
 use strict;
 
