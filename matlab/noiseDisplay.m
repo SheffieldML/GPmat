@@ -1,5 +1,7 @@
 function noiseDisplay(noise)
 
-% KERNDISPLAY Display the parameters of the noise model.
+% NOISEDISPLAY Display the parameters of the noise model.
+
+% IVM
 
 feval([noise.type 'NoiseDisplay'], noise)

@@ -14,9 +14,9 @@ catch
     N = 500;
     X = zeros(N, numIn);
     X(1:floor(N/2), :) = ...
-      randn(floor(N/2), numIn)*.25+1;
+      randn(floor(N/2), numIn)*.5+1;
     X(floor(N/2)+1:end, :) = ...
-	randn(ceil(N/2), numIn)*.25-1;
+	randn(ceil(N/2), numIn)*.5-1;
     kern = kernCreate(X, 'rbfard');
     kern.variance = 1;
     kern.inverseWidth = 20;
