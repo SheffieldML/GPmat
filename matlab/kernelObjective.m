@@ -31,7 +31,7 @@ for i = 1:size(m, 2)
   end
   f = f -.5*logDetTerm- .5*m(:, i)'*invK*m(:, i);
 end
-if prior
-  f = f - sum(params);
-end
+f = f + kernPriorLogProb(model.kern);
+
+
 f = -f;

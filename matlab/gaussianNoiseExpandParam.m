@@ -1,6 +1,6 @@
 function noise = gaussianNoiseExpandParam(noise, params)
 
-% GAUSSIANNOISEEXPANDPARAM Expand probit noise structure from param vector.
+% GAUSSIANNOISEEXPANDPARAM Expand Gaussian noise structure from param vector.
 
 % IVM
 

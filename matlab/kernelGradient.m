@@ -30,8 +30,6 @@ for j = 1:size(m, 2)
   covGrad = covarianceGradient(invK, m(:, j));
   g = g + kernGradient(model.kern, x, covGrad);
 end  
-if prior
-  g = g - 1;
-end
+g = g + kernPriorGradient(model.kern);
 g = -g;
 
