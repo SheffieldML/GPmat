@@ -43,4 +43,4 @@ else
   end
 end
 model.d = length(model.I);
-
+[model.mu, model.varSigma] = ivmPosteriorMeanVar(model, X);
