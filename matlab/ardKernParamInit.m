@@ -4,6 +4,8 @@ function kern = ardKernParamInit(kern)
 
 % KERN
 
+% KERN
+
 
 kern.inverseWidth = 1;
 kern.rbfVariance = 1;

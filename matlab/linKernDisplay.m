@@ -4,5 +4,7 @@ function linKernDisplay(kern)
 
 % KERN
 
+% KERN
+
 
 fprintf('Linear kernel Variance: %2.4f\n', kern.variance)

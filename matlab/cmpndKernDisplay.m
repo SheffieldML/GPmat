@@ -4,6 +4,8 @@ function cmpndKernDisplay(kern)
 
 % KERN
 
+% KERN
+
 
 for i = 1:length(kern.comp)
   kernDisplay(kern.comp{i});

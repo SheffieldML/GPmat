@@ -4,5 +4,7 @@ function gX = linKernGradX(kern, x, X2)
 
 % KERN
 
+% KERN
+
 
 gX = kern.variance.*X2;

@@ -4,5 +4,7 @@ function params = whiteKernExtractParam(kern)
 
 % KERN
 
+% KERN
+
 
 params = kern.variance;

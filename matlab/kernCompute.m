@@ -4,6 +4,8 @@ function k = kernCompute(kern, x, x2)
 
 % KERN
 
+% KERN
+
 
 if nargin < 3
   k = feval([kern.type 'KernCompute'], kern, x);

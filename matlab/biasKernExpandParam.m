@@ -4,5 +4,7 @@ function kern = biasKernExpandParam(kern, params)
 
 % KERN
 
+% KERN
+
 
 kern.variance = params(1);

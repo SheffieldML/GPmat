@@ -4,6 +4,8 @@ function g = pskernelGradient(lntheta, models, prior)
 
 % KERN
 
+% KERN
+
 % PSIVM
 
 if nargin < 3

@@ -4,6 +4,8 @@ function rbfardKernDisplay(kern)
 
 % KERN
 
+% KERN
+
 
 fprintf('RBF ARD Variance: %2.4f\n', kern.variance)
 fprintf('RBF ARD inverse width: %2.4f\n', kern.inverseWidth)

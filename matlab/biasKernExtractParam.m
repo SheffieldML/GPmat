@@ -4,5 +4,7 @@ function params = biasKernExtractParam(kern)
 
 % KERN
 
+% KERN
+
 
 params = kern.variance;

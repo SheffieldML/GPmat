@@ -4,5 +4,7 @@ function params = linardKernExtractParam(kern)
 
 % KERN
 
+% KERN
+
 
 params = [kern.variance kern.inputScales];

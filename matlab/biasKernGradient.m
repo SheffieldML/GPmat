@@ -4,4 +4,6 @@ function g = biasKernGradient(kern, x, covGrad)
 
 % KERN
 
+% KERN
+
 g = sum(sum(covGrad));

@@ -4,6 +4,8 @@ function [params, names] = kernExtractParam(kern)
 
 % KERN
 
+% KERN
+
 
 params = feval([kern.type 'KernExtractParam'], kern);
 %/~

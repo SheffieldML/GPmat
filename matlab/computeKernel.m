@@ -4,6 +4,8 @@ function [kx, rbfPart, linearPart, n2] = computeKernel(x, lntheta, type, x2)
 
 % KERN
 
+% KERN
+
 lntheta=log(thetaConstrain(exp(lntheta)));
 theta = exp(lntheta);
 

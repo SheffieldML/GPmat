@@ -4,6 +4,8 @@ function gX = ardKernGradX(kern, x, X2)
 
 % KERN
 
+% KERN
+
 
 scales = sparse(diag(kern.inputScales));
 

@@ -4,6 +4,8 @@ function kern = cmpndKernParamInit(kern)
 
 % KERN
 
+% KERN
+
 
 kern.nParams = 0;
 kern.transforms = [];

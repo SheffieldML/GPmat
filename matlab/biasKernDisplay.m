@@ -4,5 +4,7 @@ function biasKernDisplay(kern)
 
 % KERN
 
+% KERN
+
 
 fprintf('Bias Variance: %2.4f\n', kern.variance)

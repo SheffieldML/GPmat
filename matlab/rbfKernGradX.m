@@ -4,6 +4,8 @@ function gX = rbfKernGradX(kern, x, x2)
 
 % KERN
 
+% KERN
+
 
 gX = zeros(size(x2));
 n2 = dist2(x2, x);

@@ -4,6 +4,8 @@ function k = cmpndKernCompute(kern, x, x2)
 
 % KERN
 
+% KERN
+
 
 if nargin > 2
   k = kernCompute(kern.comp{1}, x, x2);

@@ -4,6 +4,8 @@ function sqexpKernDisplay(kern)
 
 % KERN
 
+% KERN
+
 
 fprintf('RBF Variance: %2.4f\n', kern.rbfVariance)
 fprintf('RBF inverse width: %2.4f\n', kern.inverseWidth)

@@ -4,6 +4,8 @@ function gX = ardKernDiagGradX(kern, x)
 
 % KERN
 
+% KERN
+
 
 
 gX = 2*kern.linearVariance*x.*kern.inputScales;

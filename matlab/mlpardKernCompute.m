@@ -4,6 +4,8 @@ function [k, innerProd, arg, denom, numer, vec] = mlpardKernCompute(kern, x, x2)
 
 % KERN
 
+% KERN
+
 
 
 scales = sparse(diag(sqrt(kern.inputScales)));

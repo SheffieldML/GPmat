@@ -4,5 +4,7 @@ function gX = biasKernDiagGradX(kern, x)
 
 % KERN
 
+% KERN
+
 
 gX = zeros(size(x));

@@ -4,5 +4,7 @@ function k = biasKernDiagCompute(kern, x)
 
 % KERN
 
+% KERN
+
 
 k = repmat(kern.variance, size(x, 1), 1);

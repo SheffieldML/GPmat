@@ -4,6 +4,8 @@ function kern = whiteKernParamInit(kern)
 
 % KERN
 
+% KERN
+
 
 kern.variance = 1;
 kern.nParams = 1;

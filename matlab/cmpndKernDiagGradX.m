@@ -4,6 +4,8 @@ function gX = cmpndKernDiagGradX(kern, x)
 
 % KERN
 
+% KERN
+
 
 gX = kernDiagGradX(kern.comp{1}, x);
 for i = 2:length(kern.comp)

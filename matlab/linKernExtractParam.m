@@ -4,5 +4,7 @@ function params = linKernExtractParam(kern)
 
 % KERN
 
+% KERN
+
 
 params = kern.variance;

@@ -4,6 +4,8 @@ function params = ardKernExtractParam(kern)
 
 % KERN
 
+% KERN
+
 
 params = [kern.inverseWidth kern.rbfVariance ...
           kern.biasVariance kern.whiteVariance ...

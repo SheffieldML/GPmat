@@ -4,6 +4,8 @@ function kern = kernExpandParam(kern, params)
 
 % KERN
 
+% KERN
+
 
 % Check if parameters are being optimised in a transformed space.
 if isfield(kern, 'transforms')

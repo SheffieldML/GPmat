@@ -4,6 +4,8 @@ function kern = kernTest(kernType);
 
 % KERN
 
+% KERN
+
 
 numData = 20;
 numIn = 2;

@@ -4,6 +4,8 @@ function gX = linardKernDiagGradX(kern, x)
 
 % KERN
 
+% KERN
+
 
 
 gX = 2*kern.variance*x.*kern.inputScales;

@@ -4,6 +4,8 @@ function f = kernelObjective(params, model, prior)
 
 % KERN
 
+% KERN
+
 %/~
 if any(isnan(params))
   warning('Parameter is NaN')

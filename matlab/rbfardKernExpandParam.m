@@ -4,6 +4,8 @@ function kern = rbfardKernExpandParam(kern, params)
 
 % KERN
 
+% KERN
+
 kern.inverseWidth = params(1);
 kern.variance = params(2);
 kern.inputScales = params(3:end);

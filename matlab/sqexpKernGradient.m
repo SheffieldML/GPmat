@@ -4,6 +4,8 @@ function g = sqexpKernGradient(kern, x, covGrad)
 
 % KERN
 
+% KERN
+
 
 
 [k, rbfPart, dist2xx] = sqexpKernCompute(kern, x);

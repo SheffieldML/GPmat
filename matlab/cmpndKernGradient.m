@@ -4,6 +4,8 @@ function g = cmpndKernGradient(kern, x, covGrad)
 
 % KERN
 
+% KERN
+
 
 g = zeros(1, kern.nParams);
 startVal = 1;

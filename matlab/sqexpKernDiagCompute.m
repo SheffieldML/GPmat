@@ -4,6 +4,8 @@ function k = sqexpKernDiagCompute(kern, x)
 
 % KERN
 
+% KERN
+
 
 rbfPart = ones(size(x, 1), 1);
 k = rbfPart*(kern.rbfVariance + kern.whiteVariance) + kern.biasVariance;

@@ -4,6 +4,8 @@ function k = whiteKernCompute(kern, x, x2)
 
 % KERN
 
+% KERN
+
 
 if nargin < 3
   k = kern.variance*speye(size(x, 1));

@@ -4,6 +4,8 @@ function [k, rbfPart, linearPart, n2] = ardKernCompute(kern, x, x2)
 
 % KERN
 
+% KERN
+
 
 scales = diag(sqrt(kern.inputScales));
 x = x*scales;

@@ -4,6 +4,8 @@ function g = ardKernGradient(kern, x, covGrad)
 
 % KERN
 
+% KERN
+
 
 [k, rbfPart, linearPart, dist2xx] = ardKernCompute(kern, x);
 g(1) = - .5*sum(sum(covGrad.*rbfPart.*dist2xx));

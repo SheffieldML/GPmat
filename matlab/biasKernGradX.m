@@ -4,5 +4,7 @@ function gX = biasKernGradX(kern, x, X2)
 
 % KERN
 
+% KERN
+
 
 gX = zeros(size(X2));

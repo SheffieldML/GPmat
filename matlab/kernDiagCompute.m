@@ -4,6 +4,8 @@ function k = kernDiagCompute(kern, x, x2)
 
 % KERN
 
+% KERN
+
 
 if nargin < 3
   k = feval([kern.type 'KernDiagCompute'], kern, x);

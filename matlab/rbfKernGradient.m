@@ -4,6 +4,8 @@ function g = rbfKernGradient(kern, x, covGrad)
 
 % KERN
 
+% KERN
+
 
 [k, dist2xx] = rbfKernCompute(kern, x);
 g(1) = - .5*sum(sum(covGrad.*k.*dist2xx));

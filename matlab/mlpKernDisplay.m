@@ -4,6 +4,8 @@ function mlpKernDisplay(kern)
 
 % KERN
 
+% KERN
+
 
 fprintf('MLP kernel Variance: %2.4f\n', kern.variance)
 fprintf('MLP weight variance: %2.4f\n', kern.weightVariance)

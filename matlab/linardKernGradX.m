@@ -4,6 +4,8 @@ function gX = linardKernGradX(kern, x, X2)
 
 % KERN
 
+% KERN
+
 
 scales = sparse(diag(kern.inputScales));
 X2 = X2*scales;

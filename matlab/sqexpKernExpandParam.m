@@ -4,6 +4,8 @@ function kern = sqexpKernExpandParam(kern, params)
 
 % KERN
 
+% KERN
+
 kern.inverseWidth = params(1);
 kern.rbfVariance = params(2);
 kern.biasVariance = params(3);

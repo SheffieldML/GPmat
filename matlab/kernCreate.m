@@ -4,6 +4,8 @@ function kern = kernCreate(X, kernelType)
 
 % KERN
 
+% KERN
+
 
 kern.Kstore = [];
 kern.diagK = [];

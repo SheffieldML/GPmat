@@ -4,6 +4,8 @@ function g = mlpKernGradient(kern, x, covGrad)
 
 % KERN
 
+% KERN
+
 
 [k, innerProd, arg, denom, numer] = mlpKernCompute(kern, x);
 denom3 = denom.*denom.*denom;

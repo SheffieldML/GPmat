@@ -4,6 +4,8 @@ function kern = biasKernParamInit(kern)
 
 % KERN
 
+% KERN
+
 
 kern.variance = 1;
 kern.nParams = 1;

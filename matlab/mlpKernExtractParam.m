@@ -4,6 +4,8 @@ function params = mlpKernExtractParam(kern)
 
 % KERN
 
+% KERN
+
 
 params = [kern.weightVariance kern.biasVariance kern.variance];
 

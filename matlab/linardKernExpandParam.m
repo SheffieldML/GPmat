@@ -4,6 +4,8 @@ function kern = linardKernExpandParam(kern, params)
 
 % KERN
 
+% KERN
+
 
 kern.variance = params(1);
 kern.inputScales = params(2:end);

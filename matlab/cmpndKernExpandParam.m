@@ -4,6 +4,8 @@ function kern = cmpndKernExpandParam(kern, params)
 
 % KERN
 
+% KERN
+
 
 params = params*kern.paramGroups';
 startVal = 1;

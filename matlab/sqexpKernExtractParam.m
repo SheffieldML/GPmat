@@ -4,6 +4,8 @@ function [params, transform] = sqexpKernExtractParam(kern)
 
 % KERN
 
+% KERN
+
 
 params = [kern.inverseWidth kern.rbfVariance kern.biasVariance ...
           kern.whiteVariance];

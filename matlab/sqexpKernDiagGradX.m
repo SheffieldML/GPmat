@@ -4,5 +4,7 @@ function gX = sqexpKernDiagGradX(kern, x)
 
 % KERN
 
+% KERN
+
 
 gX = zeros(size(x));

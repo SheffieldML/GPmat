@@ -4,6 +4,8 @@ function kern = linardKernParamInit(kern)
 
 % KERN
 
+% KERN
+
 
 % This parameters is restricted positive.
 kern.variance = 1;

@@ -4,5 +4,7 @@ function params = rbfardKernExtractParam(kern)
 
 % KERN
 
+% KERN
+
 
 params = [kern.inverseWidth kern.variance kern.inputScales];

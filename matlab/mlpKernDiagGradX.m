@@ -4,6 +4,8 @@ function gX = mlpKernDiagGradX(kern, x)
 
 % KERN
 
+% KERN
+
 
 innerProd = x*x';  
 numer = innerProd*kern.weightVariance + kern.biasVariance;

@@ -4,5 +4,7 @@ function whiteKernDisplay(kern)
 
 % KERN
 
+% KERN
+
 
 fprintf('White Noise Variance: %2.4f\n', kern.variance)

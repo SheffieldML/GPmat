@@ -4,6 +4,8 @@ function kern = mlpardKernParamInit(kern)
 
 % KERN
 
+% KERN
+
 
 kern.weightVariance = 10;
 kern.biasVariance = 10;

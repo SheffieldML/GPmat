@@ -4,5 +4,7 @@ function gX = whiteKernDiagGradX(kern, x)
 
 % KERN
 
+% KERN
+
 
 gX = zeros(size(x));

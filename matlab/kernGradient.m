@@ -4,6 +4,8 @@ function g = kernGradient(kern, x, covGrad)
 
 % KERN
 
+% KERN
+
 
 g = feval([kern.type 'KernGradient'], kern, x, covGrad);
 
