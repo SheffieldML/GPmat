@@ -12,7 +12,7 @@ dVal = 200;
 generateClassificationData;
 
 % Initialise the IVM.
-model = ivm(X, y, kernelType, noiseModel, selectionCriterion, dVal)
+model = ivm(X, y, kernelType, noiseModel, selectionCriterion, dVal);
 for i = 1:4
   if display > 1
     clf
