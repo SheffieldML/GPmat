@@ -9,9 +9,9 @@ if size(X, 1) > 1
   error('This function only handles one data-point at a time')
 end
 
-gX = kernGradX(X, model.kern, model.X(model.I, :));
-kX = kernCompute(X, model.kern, model.X(model.I, :))';
-diaggK = kernDiagGradX(X, model.kern);
+gX = kernGradX(model.kern, X, model.X(model.I, :));
+kX = kernCompute(model.kern, X, model.X(model.I, :))';
+diaggK = kernDiagGradX(model.kern, X);
 
 
 gmu = zeros(size(X, 2), D);
@@ -21,7 +21,7 @@ if strcmp(model.noise.type, 'gaussian')
     Kinvgk = model.Sigma.Linv'*model.Sigma.Linv*gX;
   else
     diagB = diag(model.beta(model.I, :));
-    Kinvgk = model.Sigma.Linv'diagB*model.Sigma.Linv*gX;
+    Kinvgk = model.Sigma.Linv'*diagB*model.Sigma.Linv*gX;
   end
   gsigmavar = repmat(diaggK' - 2*Kinvgk'*kX, 1, D);
 end
@@ -31,7 +31,7 @@ for i = 1:D
       Kinvgk = model.Sigma(i).Linv'*model.Sigma(i).Linv*gX;
     else
       diagB = diag(model.beta(model.I, i));
-      Kinvgk = model.Sigma(i).Linv'diagB*model(i).Sigma.Linv*gX;
+      Kinvgk = model.Sigma(i).Linv'*diagB*model.Sigma(i).Linv*gX;
     end
     gsigmavar(:, i) = diaggK' - 2*Kinvgk'*kX;
   end 

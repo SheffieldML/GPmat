@@ -4,7 +4,6 @@
 
 seed = 1e5;
 try
-  % load nothingmate
   load classificationData.mat 
 catch
 
@@ -33,10 +32,17 @@ catch
     
     X = zeros(N, numIn);
     X = rand(N, numIn);
+
+    kern = kernelCreate(X, 'rbf');
+    kern.variance = 100;
+    kern.inverseWidth = 10;
+    
+    K = kernCompute(kern, X);
+    u = real(gaussSamp(K, 1)');
   
-    K = kernel(X, trueLntheta, 'rbf');
-    u = gaussSamp(K, 1)';
-    p = cummGaussian(u);
+%    K = kernel(X, trueLntheta, 'rbf');
+%    u = gaussSamp(K, 1)';
+    p = cumGaussian(u);
     y = 2*(rand(size(u))>p)-1;
   end
 

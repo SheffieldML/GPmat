@@ -1,12 +1,8 @@
-function noise = orderedNoiseExpandParam(params, noise)
+function noise = orderedNoiseExpandParam(noise, params)
 
 % ORDEREDNOISEEXPANDPARAM Expand ordered categorical noise model's structure from param vector.
 
 % IVM
 
-noise.eta = 1/noise.C*sigmoid(params(1));
-if noise.eta + 1e-6 > 1/noise.C
-  noise.eta = 1/noise.C - 1e-6;
-end
-noise.bias = params(2:noise.numProcess+1);
-noise.widths = exp(params(noise.numProcess+2:end))';
+noise.bias = params(1:noise.numProcess);
+noise.widths = linearBound(params(noise.numProcess+1:end))';

@@ -1,9 +1,12 @@
-function kern = linardKernExpandParam(params, kern)
+function kern = linardKernExpandParam(kern, params)
 
 % LINARDKERNEXPANDPARAM Create kernel structure from linear ARD's parameters.
 
 % IVM
 
-
-kern.variance = exp(params(1));
-kern.inputScales = sigmoid(params(2:end));
+if kern.linearBound
+  kern.variance = linearBound(params(1));
+else
+  kern.variance = expBound(params(1));
+end
+kern.inputScales = sigmoidBound(params(2:end));

@@ -1,7 +1,8 @@
-function gX = linardKernDiagGradX(x, kern)
+function gX = linardKernDiagGradX(kern, x)
 
 % LINARDKERNDIAGGRADX Gradient of linear ARD kernel's diagonal with respect to a point x.
 
 % IVM
 
-error('linardKernDiagGradX not yet implemented');
+
+gX = 2*kern.variance*x.*kern.inputScales;

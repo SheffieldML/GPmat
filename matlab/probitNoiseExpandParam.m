@@ -1,4 +1,4 @@
-function noise = probitNoiseExpandParam(params, noise)
+function noise = probitNoiseExpandParam(noise, params)
 
 % PROBITNOISEEXPANDPARAM Expand probit noise structure from param vector.
 

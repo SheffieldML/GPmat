@@ -1,4 +1,4 @@
-function gX = whiteKernGradX(x, kern, X2)
+function gX = whiteKernGradX(kern, x, X2)
 
 % WHITEKERNGRADX Gradient of white noise kernel with respect to a point x.
 

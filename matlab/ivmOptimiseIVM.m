@@ -24,30 +24,27 @@ end
 
 for k = 1:dVal
     
-  [indexSelect, infoChange(k)] = selectPoint(model);
+  [indexSelect, infoChange(k)] = ivmSelectPoint(model);
   dataIndexSelect = model.J(indexSelect);
   
   model = ivmAddPoint(model, dataIndexSelect);
-  
   if display
-    logLikelihoods = log(ivmLikelihoods(model));
-    dLogLikelihood(k) = sum(sum(logLikelihoods));
-    logLikelihoodRemain(k) = sum(sum(logLikelihoods(model.J, :)));
+    logLikelihood = ivmLogLikelihood(model);
     fprintf('%ith inclusion, remaining log Likelihood %2.4f', ...
-            k, logLikelihoodRemain(k))
+            k, logLikelihood)
     switch model.noise.type
-     case {'probit', 'heaviside'}
+     case {'probit'}
       falsePositives(k) = 0;
       truePositives(k) = 0;
       for i = 1:size(model.y, 2)
         falsePositives(k) = falsePositives(k) ...
             + sum(...
-                sign(model.mu(model.J, i)+model.noise.bias(i)) ...
-                ~=model.y(model.J, i) & model.y(model.J, i)==-1);
+                sign(model.mu(:, i)+model.noise.bias(i)) ...
+                ~=model.y(:, i) & model.y(:, i)==-1);
         truePositives(k) = truePositives(k) ...
             + sum(...
-                sign(model.mu(model.J, i)+model.noise.bias(i)) ...
-                ~=model.y(model.J, i) & model.y(model.J, i)==1);
+                sign(model.mu(:, i)+model.noise.bias(i)) ...
+                ~=model.y(:, i) & model.y(:, i)==1);
       end
       fprintf(', falsePos %2.4f, truePos %2.4f\n', ...
               sum(falsePositives(k))./sum(sum(model.y==-1)), ...
@@ -57,25 +54,55 @@ for k = 1:dVal
     end
     if display > 1
       if size(model.X, 2) == 2
-%/~	figure(2)
-%	plot(logLikelihoodRemain)
-%~/	
-	figure(1)
-	a = plot(model.X(dataIndexSelect, 1), ...
-                 model.X(dataIndexSelect, 2), 'o');
-	set(a, 'erasemode', 'xor')
-	xlim = get(gca, 'xlim');
-	labelGap = (xlim(2) - xlim(1)) * 0.025;
-	b = text(model.X(dataIndexSelect, 1)+labelGap, ...
-                 model.X(dataIndexSelect, 2), num2str(k));
-	set(b, 'erasemode', 'xor')
+        switch model.noise.type
+          case {'probit', 'ordered'}
+           figure(1)
+           a = plot(model.X(dataIndexSelect, 1), ...
+                    model.X(dataIndexSelect, 2), 'o', 'erasemode', 'xor');
+           xlim = get(gca, 'xlim');
+           labelGap = (xlim(2) - xlim(1)) * 0.025;
+           b = text(model.X(dataIndexSelect, 1)+labelGap, ...
+                    model.X(dataIndexSelect, 2), num2str(k), 'erasemode', ...
+                    'xor');
+           try
+             et = toc;
+             if et < 0.1
+               pause(0.1-et)
+             else
+               drawnow
+             end
+             tic;
+           catch    
+           end
+         case 'gaussian'
+           figure(1)
+           a = plot3(model.X(dataIndexSelect, 1), ...
+                    model.X(dataIndexSelect, 2), model.y(dataIndexSelect), ...
+                     'o', 'erasemode', 'xor');
+           xlim = get(gca, 'xlim');
+           labelGap = (xlim(2) - xlim(1)) * 0.025;
+           b = text(model.X(dataIndexSelect, 1)+labelGap, ...
+                    model.X(dataIndexSelect, 2), model.y(dataIndexSelect), ...
+                    num2str(k), 'erasemode', 'xor');
+           try
+             et = toc;
+             if et < 0.1
+               pause(0.1-et)
+             else
+               drawnow
+             end
+             tic
+           catch
+           end
+         end
       else
 	subplot(10, 10, rem(k-1, 100)+1);
 	image(round(reshape(model.X(dataIndexSelect, :), 20, 20)*64))
 	axis image
 	axis off
+        drawnow
       end
-      drawnow 
+      
     end
   end
 end

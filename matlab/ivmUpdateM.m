@@ -7,7 +7,7 @@ activePoint = length(model.I)+1;
 for c = 1:length(model.Sigma)
   if length(model.I) > 0
     
-    model.kern.Kstore(:, activePoint) = kernCompute(model.X, model.kern, ...
+    model.kern.Kstore(:, activePoint) = kernCompute(model.kern, model.X, ...
                                                     model.X(index, :));
     % Add diagonal term from white noise processes
     if isfield(model.kern, 'whiteVariance')
@@ -37,14 +37,18 @@ for c = 1:length(model.Sigma)
       sqrtBeta = sqrt(model.beta(index, c));
       a = a*sqrtBeta;
       sqrtNu = sqrt(model.nu(index, c));
-      lValInv = sqrtNu/sqrtBeta;
+      if sqrtBeta == sqrtNu
+        lValInv = 1;
+      else
+        lValInv = sqrtNu/sqrtBeta;
+      end
       model.Sigma(c).M = [model.Sigma(c).M; sqrtNu*s];
       ainv = (-a*lValInv)'/model.Sigma(c).L;
       model.Sigma(c).L = [[model.Sigma(c).L; a'] [zeros(length(model.I),1); 1/lValInv]];
       model.Sigma(c).Linv = [[model.Sigma(c).Linv; ainv] [zeros(length(model.I),1); lValInv]];
     end
   else
-    model.kern.Kstore(:, 1) = kernCompute(model.X, model.kern, model.X(index, :));
+    model.kern.Kstore(:, 1) = kernCompute(model.kern, model.X, model.X(index, :));
     
     if isfield(model.kern, 'whiteVariance')
       model.kern.Kstore(index, 1) = model.kern.Kstore(index, 1) + model.kern.whiteVariance;
@@ -60,7 +64,12 @@ for c = 1:length(model.Sigma)
       s = model.kern.Kstore(:, 1)';
       sqrtNu = sqrt(model.nu(index,c));
       model.Sigma(c).M = [sqrtNu*s];
-      lValInv = sqrtNu/sqrt(model.beta(index,c)); 
+      sqrtBeta = sqrt(model.beta(index, c));
+      if sqrtBeta == sqrtNu
+        lValInv = 1;
+      else
+        lValInv = sqrtNu/sqrt(model.beta(index,c)); 
+      end
       % = sqrt(nu)*sqrt(beta)
       
       model.Sigma(c).L = 1/lValInv;

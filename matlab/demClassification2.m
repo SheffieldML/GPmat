@@ -8,7 +8,7 @@ kernelType = 'rbf';
 prior = 0;
 display = 2;
 dVal = 200;
-% Sample a regression data-set.
+% Sample a classification data-set.
 generateClassificationData;
 
 model = ivm(X, y, kernelType, noiseModel, selectionCriterion, dVal)
@@ -23,6 +23,8 @@ for i = 1:4
   end
   model = ivmOptimiseIVM(model, display);
   model = ivmOptimiseKernel(model, prior, display, 100);
+  model = ivmOptimiseIVM(model, display);
+  model = ivmOptimiseNoise(model, prior, display, 100);
 end
 
 model = ivmOptimiseIVM(model, display);

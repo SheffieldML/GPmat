@@ -1,11 +1,11 @@
-function k = kernGradX(x, kern, x2)
+function g = kernGradX(kern, x, x2)
 
 % KERNGRADX Compute the gradient of the  kernel wrt X.
 
 % IVM
 
 if nargin < 3
-  k = feval([kern.type 'KernGradX'], x, kern);
+  g = feval([kern.type 'KernGradX'], kern, x);
 else
-  k = feval([kern.type 'KernGradX'], x, kern, x2);
+  g = feval([kern.type 'KernGradX'], kern, x, x2);
 end

@@ -1,6 +1,6 @@
 function y = cumGaussian(x)
 
-% CUMGAUSSIAN Cummulative distribution for Gaussian.
+% CUMGAUSSIAN Cumulative distribution for Gaussian.
 
 % IVM
 

@@ -4,7 +4,7 @@ function e = negNoiseLogLikelihood(params, model, prior)
 
 % IVM
 
-model.noise = noiseExpandParam(params, model.noise);
+model.noise = noiseExpandParam(model.noise, params);
 e = - feval([model.noise.type 'LogLikelihood'], [], [], model);
 
 if prior

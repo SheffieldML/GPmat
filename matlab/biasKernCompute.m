@@ -1,4 +1,4 @@
-function k = biasKernCompute(x, kern, x2)
+function k = biasKernCompute(kern, x, x2)
 
 % BIASKERNCOMPUTE Compute the bias kernel given the parameters and X.
 

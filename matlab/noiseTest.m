@@ -2,6 +2,8 @@ function noise = noiseTest(noiseType);
 
 % NOISETEST Run some tests on the specified noise model.
 
+% IVM
+
 if iscell(noiseType)
   % compound noise type
   noise.type = 'cmpnd';
@@ -11,53 +13,80 @@ if iscell(noiseType)
 else
   noise.type = noiseType;
 end
-noise.C = 10;
 noise.numProcess = 3;
-numData = 10;
+numData = 20;
+
+noise.C = 10;
+noise.numData = numData;
 noise = noiseParamInit(noise);
-if isfield(noise, 'bias')
-  noise.bias = randn(size(noise.bias))*.1;
-end
-%noise.eta = 1e-10;% 1/(2*noise.C);
-mu = randn(numData, noise.numProcess);
-varsigma = randn(numData, noise.numProcess).^2;
-varsigma(1, 1) = 2e-6;
+% Set the parameters randomly.
+params = noiseExtractParam(noise);
+params = randn(size(params))./sqrt(randn(size(params)).^2);
+noise = noiseExpandParam(noise, params);
+
+mu = randn(numData, noise.numProcess).*sqrt(1./(randn(numData,noise.numProcess).^2));
+
+varsigma1 = 1./(randn(numData, noise.numProcess).^2);
+varsigma2 = (randn(numData, noise.numProcess).^2);
+varsigmaSwitch = rand(numData, noise.numProcess)> 0.5;
+varsigma = varsigmaSwitch.*varsigma1 + (1-varsigmaSwitch).*varsigma2;
 y = noiseOut(noise, mu, varsigma);
-epsilon = 1e-6;
+
+mu = randn(numData, noise.numProcess).*sqrt(1./(randn(numData,noise.numProcess).^2));
+
+varsigma1 = 1./(randn(numData, noise.numProcess).^2);
+varsigma2 = (randn(numData, noise.numProcess).^2);
+varsigmaSwitch = rand(numData, noise.numProcess)> 0.5;
+varsigma = varsigmaSwitch.*varsigma1 + (1-varsigmaSwitch).*varsigma2;
+
+% Test for missing variables
+if noise.missing
+  index = randperm(size(y, 1)*size(y, 2));
+  index = index(1:3);
+  y(index) = NaN;
+end
+  
+fprintf('mu values\n');
+disp(mu)
+fprintf('varsigma values\n');
+disp(varsigma)
 fprintf('y values\n');
 disp(y)
+epsilon = 1e-6;
 params = noiseExtractParam(noise);
 origParams = params;
 for i = 1:length(params);
   params = origParams;
   params(i) = origParams(i) + epsilon;
-  noise = noiseExpandParam(params, noise);
+  noise = noiseExpandParam(noise, params);
   Lplus(i) = noiseLogLikelihood(noise, mu, varsigma, y);
   params(i) = origParams(i) - epsilon;
-  noise = noiseExpandParam(params, noise);
+  noise = noiseExpandParam(noise, params);
   Lminus(i) = noiseLogLikelihood(noise, mu, varsigma, y);
 end
 params = origParams;
-noise = noiseExpandParam(params, noise);
+noise = noiseExpandParam(noise, params);
 [void, names] = noiseExtractParam(noise);
 gLDiff = .5*(Lplus - Lminus)/epsilon;
 g = noiseGradientParam(noise, mu, varsigma, y);
 
 paramMaxDiff = max(max(abs(gLDiff-g)));
-% l = 0;
-% for i = 1:length(names)
-%   if l < length(names{i})
-%     l = length(names{i});
-%   end
-% end
-
-% fprintf([char(repmat(32, 1, l)) '\tanalytic   diffs     delta\n']);
-% for i = 1:length(names)
-%   spaceLen = l - length(names{i});
-%   space = char(repmat(32, 1, spaceLen));
-%   fprintf([space names{i} ':\t%4.6f\t%4.6f\t%4.6f\n'], ...
-%            g(i), gLDiff(i), gLDiff(i) - g(i));
-% end
+if paramMaxDiff > 2*epsilon
+  l = 0;
+  for i = 1:length(names)
+    if l < length(names{i})
+      l = length(names{i});
+    end
+  end
+  
+  fprintf([char(repmat(32, 1, l)) '\tanalytic   diffs     delta\n']);
+  for i = 1:length(names)
+    spaceLen = l - length(names{i});
+    space = char(repmat(32, 1, spaceLen));
+    fprintf([space names{i} ':\t%4.6f\t%4.6f\t%4.6f\n'], ...
+            g(i), gLDiff(i), gLDiff(i) - g(i));
+  end
+end
 Lplus = zeros(size(mu));
 Lminus = zeros(size(mu));
 origMu = mu;
@@ -95,9 +124,17 @@ vsMaxDiff = max(max(abs(gvs-gVarsigmaDiff)));
 muMaxDiff = max(max(abs(g-gMuDiff)));
 
 if vsMaxDiff > 1e-7
+  fprintf('y\n')
   disp(y)
+  fprintf('varsigma\n')
   disp(varsigma)
+  fprintf('mu\n')
   disp(mu)
+  fprintf('gvs\n')
+  disp(gvs)
+  fprintf('diffs vs\n')
+  disp(gVarsigmaDiff)
+  fprintf('gvs -diffvgs\n')
   disp(gvs -gVarsigmaDiff)
 end
 fprintf('Param max diff: %2.6f.\n', paramMaxDiff)

@@ -13,3 +13,6 @@ else
   noise.bias = zeros(1, noise.numProcess);
 end
 noise.nParams = noise.numProcess;
+
+% Can handle missing values?
+noise.missing = 0;

@@ -1,4 +1,4 @@
-function k = linardKernCompute(x, kern, x2)
+function k = linardKernCompute(kern, x, x2)
 
 % LINARDKERNCOMPUTE Compute the linear ARD kernel given the parameters and X.
 

@@ -1,7 +1,7 @@
-function kern = kernExpandParam(params, kern)
+function kern = kernExpandParam(kern, params)
 
 % KERNEXPANDPARAM Expand parameters to form a kernel structure.
 
 % IVM
 
-kern = feval([kern.type 'KernExpandParam'], params,  kern);
+kern = feval([kern.type 'KernExpandParam'], kern, params);

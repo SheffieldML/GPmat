@@ -1,4 +1,4 @@
-function [k, n2] = rbfKernCompute(x, kern, x2)
+function [k, n2] = rbfKernCompute(kern, x, x2)
 
 % RBFKERNCOMPUTE Compute the kernel given the parameters and X.
 

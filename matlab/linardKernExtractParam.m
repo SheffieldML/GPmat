@@ -4,4 +4,8 @@ function params = linardKernExtractParam(kern)
 
 % IVM
 
-params = [log(kern.variance) invSigmoid(kern.inputScales)];
+if kern.linearBound
+  params = [log(exp(kern.variance)-1) invSigmoid(kern.inputScales)];
+else
+  params = [log(kern.variance) invSigmoid(kern.inputScales)];
+end

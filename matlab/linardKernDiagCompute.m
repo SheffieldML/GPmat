@@ -1,4 +1,4 @@
-function k = linardKernDiagCompute(x, kern)
+function k = linardKernDiagCompute(kern, x)
 
 % LINARDKERNDIAGCOMPUTE Compute diagonal of linear ARD kernel.
 

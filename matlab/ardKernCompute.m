@@ -1,4 +1,4 @@
-function [k, rbfPart, linearPart, n2] = ardKernCompute(x, kern, x2)
+function [k, rbfPart, linearPart, n2] = ardKernCompute(kern, x, x2)
 
 % ARDKERNCOMPUTE Compute the kernel given the parameters and X.
 

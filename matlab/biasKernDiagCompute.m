@@ -1,4 +1,4 @@
-function k = biasKernDiagCompute(x, kern)
+function k = biasKernDiagCompute(kern, x)
 
 % BIASKERNDIAGCOMPUTE Compute diagonal of bias kernel.
 

@@ -4,7 +4,7 @@ function g = negIvmGradientNoise(params, model, prior)
 
 % IVM
 
-model.noise = noiseExpandParam(params, model.noise);
+model.noise = noiseExpandParam(model.noise, params);
 g = - noiseGradientParam(model.noise, model.mu, model.varSigma, model.y);
 
 if prior

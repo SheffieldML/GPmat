@@ -1,4 +1,4 @@
-function k = rbfKernDiagCompute(x, kern)
+function k = rbfKernDiagCompute(kern, x)
 
 % RBFKERNDIAGCOMPUTE Compute diagonal of rbf kernel.
 

@@ -9,7 +9,7 @@ D = size(y, 2);
 L = zeros(size(mu));
 L(find(isnan(y))) = 1;
 
-c = 1./sqrt(varsigma);
+c = 1./sqrt(noise.variance + varsigma);
 for j = 1:D
   % Do lowest category first
   index = find(y(:, j) == 0);
@@ -38,6 +38,6 @@ for j = 1:D
     L(index, j) = cumGaussian(mu(index, j).*c(index, j));
   end
 end
-for j = 1:D
-  L(:, j) = (1-noise.C*noise.eta)*L(:, j)+noise.eta;
-end
+%/~ for j = 1:D
+%   L(:, j) = (1-noise.C*noise.eta)*L(:, j)+noise.eta;
+%~/ end

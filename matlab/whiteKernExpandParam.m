@@ -1,7 +1,11 @@
-function kern = whiteKernExpandParam(params, kern)
+function kern = whiteKernExpandParam(kern, params)
 
 % WHITEKERNEXPANDPARAM Create kernel structure from white noise's parameters.
 
 % IVM
 
-kern.variance = exp(params(1));
+if kern.linearBound
+  kern.variance = linearBound(params(1));
+else
+  kern.variance = expBound(params(1));
+end

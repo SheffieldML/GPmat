@@ -25,7 +25,7 @@ end
 
 
 % Initialise parameters
-model.kern.diagK = kernDiagCompute(model.X, model.kern);
+model.kern.diagK = kernDiagCompute(model.kern, model.X);
 
 model.m = sparse(zeros(numData, numOut));
 model.beta = sparse(zeros(numData, numOut));

@@ -1,4 +1,4 @@
-function k = mlpKernDiagCompute(x, kern)
+function k = mlpKernDiagCompute(kern, x)
 
 % MLPKERNDIAGCOMPUTE Compute diagonal of multi-layer perceptron kernel.
 

@@ -1,11 +1,11 @@
-function k = kernDiagGradX(x, kern, x2)
+function k = kernDiagGradX(kern, x, x2)
 
 % KERNDIAGGRADX Compute the gradient of the  kernel wrt X.
 
 % IVM
 
 if nargin < 3
-  k = feval([kern.type 'KernDiagGradX'], x, kern);
+  k = feval([kern.type 'KernDiagGradX'], kern, x);
 else
-  k = feval([kern.type 'KernDiagGradX'], x, kern, x2);
+  k = feval([kern.type 'KernDiagGradX'], kern, x, x2);
 end

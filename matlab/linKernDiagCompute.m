@@ -1,4 +1,4 @@
-function k = linKernDiagCompute(x, kern)
+function k = linKernDiagCompute(kern, x)
 
 % LINKERNDIAGCOMPUTE Compute diagonal of linear kernel.
 

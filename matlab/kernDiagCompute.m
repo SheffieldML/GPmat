@@ -1,11 +1,11 @@
-function k = kernDiagCompute(x, kern, x2)
+function k = kernDiagCompute(kern, x, x2)
 
 % KERNELCOMPUTE Compute the kernel given the parameters and X.
 
 % IVM
 
 if nargin < 3
-  k = feval([kern.type 'KernDiagCompute'], x, kern);
+  k = feval([kern.type 'KernDiagCompute'], kern, x);
 else
-  k = feval([kern.type 'KernDiagCompute'], x, kern, x2);
+  k = feval([kern.type 'KernDiagCompute'], kern, x, x2);
 end

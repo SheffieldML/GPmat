@@ -6,9 +6,9 @@ function [mu, varsigma] = ivmPosteriorMeanVar(model, X);
 
 D = size(model.y, 2);
 numData = size(X, 1);
-kX = kernCompute(X, model.kern, model.X(model.I, :))';
+kX = kernCompute(model.kern, X, model.X(model.I, :))';
 
-diagK = kernDiagCompute(X, model.kern);
+diagK = kernDiagCompute(model.kern, X);
 
 varsigma = zeros(numData, D);
 mu = zeros(numData, D);

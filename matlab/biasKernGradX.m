@@ -1,4 +1,4 @@
-function gX = biasKernGradX(x, kern, X2)
+function gX = biasKernGradX(kern, x, X2)
 
 % BIASKERNGRADX Gradient of bias kernel with respect to a point x.
 

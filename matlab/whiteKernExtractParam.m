@@ -4,4 +4,8 @@ function params = whiteKernExtractParam(kern)
 
 % IVM
 
-params = log(kern.variance);
+if kern.linearBound
+  params = log(exp(kern.variance)-1);
+else
+  params = log(kern.variance);
+end

@@ -1,4 +1,4 @@
-function gX = rbfKernGradX(x, kern, x2)
+function gX = rbfKernGradX(kern, x, x2)
 
 % RBFKERNGRADX Gradient of Radial basis function kernel with respect to a point X.
 

@@ -1,17 +1,17 @@
-function k = cmpndKernCompute(x, kern, x2)
+function k = cmpndKernCompute(kern, x, x2)
 
 % CMPNDKERNCOMPUTE Compute the kernel given the parameters and X.
 
 % IVM
 
 if nargin > 2
-  k = kernCompute(x, kern.comp{1}, x2);
+  k = kernCompute(kern.comp{1}, x, x2);
   for i = 2:length(kern.comp)
-    k  = k + kernCompute(x, kern.comp{i}, x2);
+    k  = k + kernCompute(kern.comp{i}, x, x2);
   end
 else
-  k  = kernCompute(x, kern.comp{1});
+  k  = kernCompute(kern.comp{1}, x);
   for i = 2:length(kern.comp)
-    k  = k + kernCompute(x, kern.comp{i});
+    k  = k + kernCompute(kern.comp{i}, x);
   end
 end

@@ -1,8 +1,13 @@
-function kern = rbfKernExpandParam(params, kern)
+function kern = rbfKernExpandParam(kern, params)
 
 % RBFKERNEXPANDPARAM Create kernel structure from rbf parameters.
 
 % IVM
 
-kern.inverseWidth = exp(params(1));
-kern.variance = exp(params(2));
+if kern.linearBound
+  params = linearBound(params);
+else
+  params = expBound(params);
+end
+kern.inverseWidth = params(1);
+kern.variance = params(2);

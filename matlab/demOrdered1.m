@@ -22,7 +22,7 @@ y = [zeros(dataPerCat, 1); ...
 
 noiseModel = 'ordered';
 selectionCriterion = 'entropy';
-kernelType = {'rbfard', 'linard', 'white'};
+kernelType = {'rbfard', 'linard', 'bias'};
 %kernelType = {'linard', 'bias', 'white'};
 prior = 0;
 display = 2;

@@ -1,9 +1,13 @@
-function kern = rbfardKernExpandParam(params, kern)
+function kern = rbfardKernExpandParam(kern, params)
 
 % RBFARDKERNEXPANDPARAM Create kernel structure from radial basis function ARD's parameters.
 
 % IVM
-
-kern.inverseWidth = exp(params(1));
-kern.variance = exp(params(2));
-kern.inputScales = sigmoid(params(3:end));
+if kern.linearBound
+  params(1:2) = linearBound(params(1:2));
+else
+  params(1:2) = expBound(params(1:2));
+end
+kern.inverseWidth = params(1);
+kern.variance = params(2);
+kern.inputScales = sigmoidBound(params(3:end));

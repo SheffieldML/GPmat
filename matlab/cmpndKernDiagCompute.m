@@ -1,9 +1,9 @@
-function k = cmpndKernDiagCompute(x, kern)
+function k = cmpndKernDiagCompute(kern, x)
 
 % CMPNDKERNDIAGCOMPUTE Compute diagonal of compound kernel.
 
 % IVM
-k = kernDiagCompute(x, kern.comp{1});
+k = kernDiagCompute(kern.comp{1}, x);
 for i = 2:length(kern.comp)
-  k  = k + kernDiagCompute(x, kern.comp{i});
+  k  = k + kernDiagCompute(kern.comp{i}, x);
 end

@@ -1,4 +1,4 @@
-function [k, innerProd, arg, denom, numer] = mlpKernCompute(x, kern, x2)
+function [k, innerProd, arg, denom, numer] = mlpKernCompute(kern, x, x2)
 
 % MLPKERNCOMPUTE Compute the multi-layer perceptron kernel given the parameters and X.
 
@@ -10,7 +10,7 @@ if nargin < 3
   vec = diag(numer) + 1;
   denom = sqrt(vec*vec');
   arg = numer./denom;
-  k = kern.variance*asin(numer./denom);
+  k = kern.variance*asin(arg);
 else
   innerProd = x*x2';  
   numer = innerProd*kern.weightVariance + kern.biasVariance;
@@ -18,5 +18,5 @@ else
   vec2 = sum(x2.*x2, 2)*kern.weightVariance + kern.biasVariance + 1;
   denom = sqrt(vec1*vec2');
   arg = numer./denom;
-  k = kern.variance*asin(numer./denom);
+  k = kern.variance*asin(arg);
 end

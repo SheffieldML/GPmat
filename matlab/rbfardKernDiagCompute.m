@@ -1,4 +1,4 @@
-function k = rbfardKernDiagCompute(x, kern)
+function k = rbfardKernDiagCompute(kern, x)
 
 % RBFARDKERNDIAGCOMPUTE Compute diagonal of radial basis function ARD kernel.
 

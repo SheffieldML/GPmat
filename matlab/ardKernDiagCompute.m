@@ -1,4 +1,4 @@
-function k = ardKernDiagCompute(x, kern)
+function k = ardKernDiagCompute(kern, x)
 
 % ARDKERNDIAGCOMPUTE Compute diagonal of ard kernel.
 

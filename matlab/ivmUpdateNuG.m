@@ -9,10 +9,19 @@ function model = ivmUpdateNuG(model, index)
 %           model.varSigma, model.y, ...
 % ~/          index);
 
+if nargin < 2
+  index = 1:size(model.y, 1);
+end
 [model.g(index, :), dlnZ_dvs] = feval([model.noise.type 'NoiseGradVals'], ...
                                       model.noise, ...
                                       model.mu(index, :), ...
                                       model.varSigma(index, :), ...
                                       model.y(index, :));
 
-model.nu(index, :) = model.g(index, :).*model.g(index, :) - 2*dlnZ_dvs;
+nu = model.g(index, :).*model.g(index, :) - 2*dlnZ_dvs;
+nu(find(abs(nu) < eps)) = eps;
+model.nu(index, :) = nu;
+if any(model.nu(index, :)< 0)
+  warning('nu less than zero')
+end
+

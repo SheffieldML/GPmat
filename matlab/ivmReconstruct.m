@@ -18,25 +18,28 @@ model.J = ivmInfo.J;
 model.m = ivmInfo.m;
 model.beta = ivmInfo.beta;
 
-model.kern.Kstore = kernCompute(model.X, ...
-                                model.kern, ...
+model.kern.Kstore = kernCompute(model.kern, model.X, ...
                                 model.X(model.I, :));
-model.kern.Kstore(model.I, 1:model.d) = ...
-    model.kern.Kstore(model.I, 1:model.d) ...
-    + model.kern.whiteVariance;
-model.kern.diagK = kernDiagCompute(model.X, model.kern);
+if isfield(model.kern, 'whiteVariance')
+  model.kern.Kstore(model.I, 1:model.d) = ...
+      model.kern.Kstore(model.I, 1:model.d) ...
+      + model.kern.whiteVariance;
+end
+model.kern.diagK = kernDiagCompute(model.kern, model.X);
 
 if strcmp(model.noise.type, 'gaussian')
   model.Sigma.L = chol(model.kern.Kstore(model.I, :) ...
                        + diag(1./model.beta(model.I)))';
   model.Sigma.Linv = eye(size(model.Sigma.L))/model.Sigma.L;
   model.Sigma.M = model.Sigma.Linv*model.kern.Kstore';
+  model.Sigma.robust = 0;
 else
   for i = 1:size(y, 2)
     model.Sigma(i).L = chol(model.kern.Kstore(model.I, :) ...
                             + diag(1./model.beta(model.I, i)))';
     model.Sigma(i).Linv = eye(size(model.Sigma(i).L))/model.Sigma(i).L;
-    model.Sigma(i).M = model.Sigma.Linv*model.kern.Kstore';
+    model.Sigma(i).M = model.Sigma(i).Linv*model.kern.Kstore';
+    model.Sigma(i).robust = 1;
   end
 end
 model.d = length(model.I);

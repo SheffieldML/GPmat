@@ -1,4 +1,4 @@
-function k = whiteKernCompute(x, kern, x2)
+function k = whiteKernCompute(kern, x, x2)
 
 % WHITEKERNCOMPUTE Compute the white noise kernel given the parameters and X.
 

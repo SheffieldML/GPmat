@@ -12,3 +12,6 @@ else
 end
 noise.sigma2 = 1;
 noise.nParams = 1 + noise.numProcess;
+
+% Can handle missing values?
+noise.missing = 0;

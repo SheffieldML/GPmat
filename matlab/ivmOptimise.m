@@ -8,6 +8,7 @@ function model = ivmOptimise(model, prior, display, innerIters, ...
 % Run IVM
 for i = 1:outerIters
   model = ivmOptimiseIVM(model, display);
-  model = ivmOptimiseNoise(model, prior, display, innerIters);
   model = ivmOptimiseKernel(model, prior, display, innerIters);
+  model = ivmOptimiseIVM(model, display);
+  model = ivmOptimiseNoise(model, prior, display, innerIters);
 end

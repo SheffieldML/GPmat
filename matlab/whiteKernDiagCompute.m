@@ -1,4 +1,4 @@
-function k = whiteKernDiagCompute(x, kern)
+function k = whiteKernDiagCompute(kern, x)
 
 % WHITEKERNDIAGCOMPUTE Compute diagonal of white noise kernel.
 

@@ -1,4 +1,4 @@
-function k = sqexpKernDiagCompute(x, kern)
+function k = sqexpKernDiagCompute(kern, x)
 
 % SQEXPKERNDIAGCOMPUTE Compute diagonal of squared exponential kernel.
 

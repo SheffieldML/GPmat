@@ -5,8 +5,17 @@ function g = sqexpKernGradient(kern, x, covGrad)
 % IVM
 
 
-[k, rbfPart, dist2xx] = sqexpKernCompute(x, kern);
-g(1) = - .5*sum(sum(covGrad.*rbfPart.*dist2xx))*kern.inverseWidth;
-g(2) =  sum(sum(covGrad.*rbfPart));
-g(3) =  sum(sum(covGrad.*eye(size(x, 1))))*kern.whiteVariance;
-g(4) =  sum(sum(covGrad))*kern.biasVariance;
+[k, rbfPart, dist2xx] = sqexpKernCompute(kern, x);
+g(1) = - .5*sum(sum(covGrad.*rbfPart.*dist2xx));
+g(2) =  sum(sum(covGrad.*rbfPart))/kern.rbfVariance;
+g(3) =  trace(covGrad);
+g(4) =  sum(sum(covGrad));
+
+factorVector = [kern.inverseWidth kern.rbfVariance ...
+                kern.whiteVariance kern.biasVariance];
+if kern.linearBound
+  factors = gradFactLinearBound(factorVector);
+  g = g.*factors;
+else
+  g = g.*factorsVector;
+end

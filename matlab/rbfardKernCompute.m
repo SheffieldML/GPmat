@@ -1,4 +1,4 @@
-function [k, n2] = rbfardKernCompute(x, kern, x2)
+function [k, n2] = rbfardKernCompute(kern, x, x2)
 
 % RBFARDKERNCOMPUTE Compute the radial basis function ARD kernel given the parameters and X.
 

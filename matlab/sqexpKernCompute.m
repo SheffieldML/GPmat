@@ -1,4 +1,4 @@
-function [k, rbfPart, n2] = sqexpKernCompute(x, kern, x2)
+function [k, rbfPart, n2] = sqexpKernCompute(kern, x, x2)
 
 % SQEXPKERNCOMPUTE Compute the squared exponential kernel given the parameters and X.
 

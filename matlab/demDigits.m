@@ -12,7 +12,7 @@ kernelType = {'rbfard', 'lin', 'bias', 'white'}
 %kernelType = {'rbf', 'bias', 'white'}
 
 
-noiseModel = 'heaviside';
+noiseModel = 'probit';
 selectionCriterion = 'entropy';
 load ../data/usps_test
 xTest = ALL_DATA;

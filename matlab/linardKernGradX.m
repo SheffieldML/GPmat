@@ -1,7 +1,10 @@
-function gX = linardKernGradX(x, kern, X2)
+function gX = linardKernGradX(kern, x, X2)
 
 % LINARDKERNGRADX Gradient of linear ARD kernel with respect to a point x.
 
 % IVM
 
-gX =
+scales = sparse(diag(kern.inputScales));
+X2 = X2*scales;
+
+gX = kern.variance.*X2;
