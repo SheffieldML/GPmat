@@ -4,9 +4,6 @@ function noise = gaussianNoiseParamInit(noise, y)
 
 % NOISE
 
-% NOISE
-
-
 if nargin > 1
   noise.bias = mean(y);
   noise.numProcess = size(y, 2);
@@ -14,7 +11,7 @@ else
   noise.bias = zeros(1, noise.numProcess);
 end
 
-noise.sigma2 = eps;
+noise.sigma2 = 1e-6;
 
 noise.transforms.index = noise.numProcess+1;
 noise.transforms.type = 'exp';

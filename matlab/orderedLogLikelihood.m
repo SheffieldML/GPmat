@@ -4,10 +4,6 @@ function L = orderedLogLikelihood(noise, mu, varsigma, y)
 
 % NOISE
 
-% NOISE
-
-
-
 D = size(y, 2);
 
 L = 0;
@@ -28,7 +24,7 @@ for j = 1:D
       mu(i, j) = mu(i, j) + noise.bias(j) - sum(noise.widths(1:y(i, j)-1));
       u = mu(i, j).*c(i, j);
       uprime = (mu(i, j) - noise.widths(y(i, j))).* c(i, j); 
-      L = L - log(gaussOverDiffCumGaussian(u, uprime, 1)+1e-300) - .5*u.*u - .5*log(2*pi);
+      L = L - lnDiffCumGaussian(u, uprime); 
     end
   end
   % Highest category

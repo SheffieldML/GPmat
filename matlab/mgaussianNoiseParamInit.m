@@ -4,20 +4,16 @@ function noise = mgaussianNoiseParamInit(noise, y)
 
 % NOISE
 
-% NOISE
-
-
-
 if nargin > 1
   noise.numProcess = size(y, 2);
   noise.bias = zeros(1, noise.numProcess);
   for i = 1:size(y, 2)
     noise.bias(i) = mean(y(find(~isnan(y(:, i))), i));
   end
-  noise.sigma2 = ones(1, size(y, 2));
+  noise.sigma2 = repmat(1e-6, 1, noise.numProcess);
 else 
   noise.bias = zeros(1, noise.numProcess);
-  noise.sigma2 = ones(1, noise.numProcess);
+  noise.sigma2 = repmat(1e-6, 1, noise.numProcess);
 end
 noise.nParams = 2*noise.numProcess;
 

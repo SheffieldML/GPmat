@@ -4,8 +4,5 @@ function g = noiseGradX(noise, mu, varsigma, dmu, dvs, y);
 
 % NOISE
 
-% NOISE
-
-
 [dlnZ_dmu, dlnZ_dvs] = noiseGradVals(noise, mu, varsigma, y);
 g = dlnZ_dmu*dmu' + dlnZ_dvs*dvs';

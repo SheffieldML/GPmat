@@ -4,9 +4,6 @@ function [m, beta] = gaussianNoiseSites(noise, g, nu, mu, varSigma, y)
 
 % NOISE
 
-% NOISE
-
-
 N = size(y, 1);
 D = length(noise.bias);
 beta = zeros(N, D);

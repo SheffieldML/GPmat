@@ -18,7 +18,7 @@ end
 noise.nParams = noise.numProcess;
 
 % This isn't optimised, it sets the gradient of the erf.
-noise.sigma2 = eps;
+noise.sigma2 = 1e-6;
 
 % Can handle missing values?
 noise.missing = 0;

@@ -4,9 +4,6 @@ function noise = orderedNoiseParamInit(noise, y)
 
 % NOISE
 
-% NOISE
-
-
 if nargin > 1
   noise.C = max(max(y))+1;
   noise.numProcess = size(y, 2);
@@ -26,7 +23,7 @@ if noise.C > 2
 else 
   noise.widths = [];
 end
-noise.variance = 0.1;
+noise.variance = 0.1; % needs to be set a bit above zero for numerical reasons.
 
 % Can handle missing values?
 noise.missing = 1;
