@@ -40,22 +40,7 @@ for i = 1:3
 
   % Do some plotting
   if display > 1
-    clf
-    pointsNeg = plot(X(find(y==0), 1), X(find(y==0), 2), 'bx');
-    set(pointsNeg, 'erasemode', 'xor')
-    hold on
-    pointsPos = plot(X(find(y==1), 1), X(find(y==1), 2), 'ro');
-    set(pointsNeg, 'erasemode', 'xor')
-    pointsPos = plot(X(find(y==2), 1), X(find(y==2), 2), 'g+');
-    set(pointsNeg, 'erasemode', 'xor')
-    pointsPos = plot(X(find(y==3), 1), X(find(y==3), 2), 'ys');
-    set(pointsNeg, 'erasemode', 'xor')
-    pointsPos = plot(X(find(y==4), 1), X(find(y==4), 2), 'mv');
-    set(pointsNeg, 'erasemode', 'xor')
-    pointsPos = plot(X(find(y==5), 1), X(find(y==5), 2), 'c>');
-    set(pointsNeg, 'erasemode', 'xor')
-    pointsPos = plot(X(find(y==6), 1), X(find(y==6), 2), 'w<');
-    set(pointsNeg, 'erasemode', 'xor')
+    ivm3dPlot(model, 'ivmContour', i);
   end
 
   % Select active set.
@@ -63,23 +48,7 @@ for i = 1:3
   % Optimise the noise model.
   model = ivmOptimiseNoise(model, prior, display, 100);
   if display > 1
-    figure(1)
-    clf
-    pointsNeg = plot(X(find(y==0), 1), X(find(y==0), 2), 'bx');
-    set(pointsNeg, 'erasemode', 'xor')
-    hold on
-    pointsPos = plot(X(find(y==1), 1), X(find(y==1), 2), 'ro');
-    set(pointsNeg, 'erasemode', 'xor')
-    pointsPos = plot(X(find(y==2), 1), X(find(y==2), 2), 'g+');
-    set(pointsNeg, 'erasemode', 'xor')
-    pointsPos = plot(X(find(y==3), 1), X(find(y==3), 2), 'ys');
-    set(pointsNeg, 'erasemode', 'xor')
-    pointsPos = plot(X(find(y==4), 1), X(find(y==4), 2), 'mv');
-    set(pointsNeg, 'erasemode', 'xor')
-    pointsPos = plot(X(find(y==5), 1), X(find(y==5), 2), 'c>');
-    set(pointsNeg, 'erasemode', 'xor')
-    pointsPos = plot(X(find(y==6), 1), X(find(y==6), 2), 'w<');
-    set(pointsNeg, 'erasemode', 'xor')
+    ivm3dPlot(model, 'ivmContour', i);
   end
   
   % Select active set.
@@ -88,22 +57,7 @@ for i = 1:3
   model = ivmOptimiseKernel(model, prior, display, 100);
 end
 if display > 1
-  clf
-  pointsNeg = plot(X(find(y==0), 1), X(find(y==0), 2), 'bx');
-  set(pointsNeg, 'erasemode', 'xor')
-  hold on
-  pointsPos = plot(X(find(y==1), 1), X(find(y==1), 2), 'ro');
-  set(pointsNeg, 'erasemode', 'xor')
-  pointsPos = plot(X(find(y==2), 1), X(find(y==2), 2), 'g+');
-  set(pointsNeg, 'erasemode', 'xor')
-  pointsPos = plot(X(find(y==3), 1), X(find(y==3), 2), 'ys');
-  set(pointsNeg, 'erasemode', 'xor')
-  pointsPos = plot(X(find(y==4), 1), X(find(y==4), 2), 'mv');
-  set(pointsNeg, 'erasemode', 'xor')
-  pointsPos = plot(X(find(y==5), 1), X(find(y==5), 2), 'c>');
-  set(pointsNeg, 'erasemode', 'xor')
-  pointsPos = plot(X(find(y==6), 1), X(find(y==6), 2), 'w<');
-  set(pointsNeg, 'erasemode', 'xor')
+  ivm3dPlot(model, 'ivmContour', i);
 end
 
 % Select active set.

@@ -22,6 +22,9 @@ if length(model.Sigma) > 1
     Kinvk = model.Sigma(i).Linv'*Lk;
     for n = 1:numData
       varsigma(n, i) = diagK(n) - Lk(:, n)'*Lk(:, n); 
+      if any(varsigma(n, :) < 0)
+        warning('Varsigma less than zero');
+      end
     end
     mu(:, i) = Kinvk'*model.m(model.I, i);
   end
@@ -30,6 +33,9 @@ else
   Kinvk = model.Sigma.Linv'*Lk;
   for n = 1:numData
     varsigma(n, :) = repmat(diagK(n) - Lk(:, n)'*Lk(:, n), 1, D);
+    if varsigma(n, 1) < 0
+      warning('Varsigma less than zero');
+    end
   end
   mu = Kinvk'*full(model.m(model.I, :));
 end

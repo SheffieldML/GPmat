@@ -3,8 +3,9 @@ function model = ivm(X, y, kernelType, noiseType, selectionCriterion, d)
 % IVM Initialise an IVM model.
 
 % IVM
-
+model.type = 'ivm';
 model.terminate = 0;
+model.epUpdate = 0;
 
 model.d = d;
 

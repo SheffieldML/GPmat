@@ -4,7 +4,7 @@ function model = ivmEpUpdateM(model, index)
 
 % IVM
 
-d = model.d;
+d = length(model.I);
 k = find(model.I == index);
 if k == d % This point has just been included so EP update is irrelevant.
   return;
@@ -45,7 +45,11 @@ for c = 1:length(model.Sigma)
                                                     k+1:end)')';
   invV = rocholForeSub(sVtilde, T33inv);
   model.Sigma(c).Linv(k:end-1, 1:end-1) = [T3prime(:, 1:k-1) V];
-  model.Sigma(c).L(k:end-1, 1:end-1) = [-invV*T3prime(:, 1:k-1)*model.Sigma(c).L(1:k-1, 1:k-1) invV];
+  model.Sigma(c).L(k:end-1, 1:end-1) = [-invV*T3prime(:, 1:k-1)* ...
+                      model.Sigma(c).L(1:k-1, 1:k-1) invV];
+  %/~
+  oldVarSigma = model.varSigma;
+  %~/
   model.varSigma(:, c) = model.varSigma(:, c) + ((model.nu(index, c)*s).*s)';
   %/~
   if any(model.varSigma(:, c)<0)

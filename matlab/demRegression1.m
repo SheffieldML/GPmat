@@ -2,11 +2,6 @@
 
 % IVM
 
-importTool('prior');
-importTool('kern');
-importTool('noise');
-importTool('optimi');
-
 noiseModel = 'gaussian';
 selectionCriterion = 'entropy';
 
@@ -25,35 +20,20 @@ model = ivm(X, y, kernelType, noiseModel, selectionCriterion, dVal);
 for i = 1:4
   % Plot the data.
   if display > 1
-    figure(1)
-    clf
-    grid on
-    pointsNeg = plot3(X(:, 1), X(:, 2), y, 'b.', 'erasemode', 'xor');
-    hold on
+    ivm3dPlot(model, 'surf', i);
+    colormap bone
+    shading interp  
   end
   % Select the active set.
   model = ivmOptimiseIVM(model, display);
   % Optimise kernel parameters.
   model = ivmOptimiseKernel(model, prior, display, 100);
-  if display > 1
-    figure(1)
-    clf
-    pointsNeg = plot3(X(:, 1), X(:, 2), y, 'b.', 'erasemode', 'xor');
-    set(pointsNeg, 'erasemode', 'xor')
-    hold on
-  end
-  % Select the active set.
-  model = ivmOptimiseIVM(model, display);
-  % Optimise noise parameters.
-  model = ivmOptimiseNoise(model, prior, display, 100);
 
 end
 if display > 1
-  figure(1)
-  clf
-  pointsNeg = plot3(X(:, 1), X(:, 2), y, 'b.', 'erasemode', 'xor');
-  set(pointsNeg, 'erasemode', 'xor')
-  hold on
+  ivm3dPlot(model, 'surf', i);
+  colormap bone
+  shading interp  
 end
 model = ivmOptimiseIVM(model, display);
 ivmDisplay(model);

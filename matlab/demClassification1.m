@@ -2,11 +2,6 @@
 
 % IVM
 
-importTool('prior');
-importTool('kern');
-importTool('noise');
-importTool('optimi');
-
 randn('seed', 1e6)
 rand('seed', 1e6)
 
@@ -30,55 +25,27 @@ model = ivm(X, y, kernelType, noiseModel, selectionCriterion, dVal);
 % Constrain the ARD parameters in the MLP and linear kernels to be the same.
 model.kern = cmpndTieParameters(model.kern, {[4, 7], [5, 8]});
 
+if display > 1
+  ivm3dPlot(model, 'ivmContour', i);
+end
 for i = 1:4
 
+  % Select the active set.
+  model = ivmOptimiseIVM(model, display);
   % Plot the data.
   if display > 1
-    clf
-    title(['Iteration ' num2str(i)])
-    pointsNeg = plot(X(find(y(:, 1)==-1), 1), X(find(y(:, 1)==-1), 2), ...
-                     'bx', 'erasemode', 'xor');
-    hold on
-    pointsPos = plot(X(find(y(:, 1)==1), 1), X(find(y(:, 1)==1), 2), 'ro', ...
-                     'erasemode', 'xor');
+    ivm3dPlot(model, 'ivmContour', i);
   end
-  % Select the active set.
-  model = ivmOptimiseIVM(model, display);
   % Optimise the kernel parameters.
   model = ivmOptimiseKernel(model, prior, display, 100);
-  if display > 1
-    clf
-    title(['Iteration ' num2str(i)])
-    pointsNeg = plot(X(find(y(:, 1)==-1), 1), X(find(y(:, 1)==-1), 2), ...
-                     'bx', 'erasemode', 'xor');
-    hold on
-    pointsPos = plot(X(find(y(:, 1)==1), 1), X(find(y(:, 1)==1), 2), 'ro', ...
-                     'erasemode', 'xor');
-  end
-  % Select the active set.
-  model = ivmOptimiseIVM(model, display);
-  % Optimise the noise model parameters.
-  model = ivmOptimiseNoise(model, prior, display, 100);
-
 end
 if display > 1
-  clf
-  title(['Iteration ' num2str(i)])
-  pointsNeg = plot(X(find(y(:, 1)==-1), 1), X(find(y(:, 1)==-1), 2), ...
-                   'bx', 'erasemode', 'xor');
-  hold on
-  pointsPos = plot(X(find(y(:, 1)==1), 1), X(find(y(:, 1)==1), 2), 'ro', ...
-                   'erasemode', 'xor');
+    ivm3dPlot(model, 'ivmContour', i);
 end
 model = ivmOptimiseIVM(model, display);
 % Display the final model.
 ivmDisplay(model);
 
-
-closeTool('prior');
-closeTool('kern');
-closeTool('noise');
-closeTool('optimi');
 
 
 

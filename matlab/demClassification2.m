@@ -20,29 +20,12 @@ generateClassificationData;
 model = ivm(X, y, kernelType, noiseModel, selectionCriterion, dVal);
 for i = 1:4
   if display > 1
-    clf
-    pointsNeg = plot(X(find(y==-1), 1), X(find(y==-1), 2), 'bx');
-    set(pointsNeg, 'erasemode', 'xor')
-    hold on
-    pointsPos = plot(X(find(y==1), 1), X(find(y==1), 2), 'ro');
-    set(pointsNeg, 'erasemode', 'xor')
+    ivm3dPlot(model, 'ivmContour', i);
   end
   % Select the active set.
   model = ivmOptimiseIVM(model, display);
   % Optimise the kernel parameters.
   model = ivmOptimiseKernel(model, prior, display, 100);
-  if display > 1
-    clf
-    pointsNeg = plot(X(find(y==-1), 1), X(find(y==-1), 2), 'bx');
-    set(pointsNeg, 'erasemode', 'xor')
-    hold on
-    pointsPos = plot(X(find(y==1), 1), X(find(y==1), 2), 'ro');
-    set(pointsNeg, 'erasemode', 'xor')
-  end
-  % Select the active set.
-  model = ivmOptimiseIVM(model, display);
-  % Optimise the noise parameters.
-  model = ivmOptimiseNoise(model, prior, display, 100);
 end
 
 model = ivmOptimiseIVM(model, display);

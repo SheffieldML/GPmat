@@ -31,20 +31,10 @@ set(gca, 'fontname', 'times')
 set(gca, 'fontsize', 20);
 
 if length(model.I)>0
-  switch model.noise.type 
-   case 'cmpnd'
-    bias = model.noise.comp{1}.bias;
-   otherwise
-    bias = model.noise.bias;
-  end
   % It's probably learnt something.
   xlim = get(gca, 'xlim');
   ylim = get(gca, 'ylim');
-  [CX, CY, CZ] = ivmMeshVals(model, xlim, ylim, 30);
-  [void, clines] =contour(CX, CY, CZ, [-bias-.5 -bias+.5], 'b--');
-  set(clines, 'linewidth', lineWidth)
-  [void, clines] =contour(CX, CY, CZ, [-bias -bias], 'r-');
-  set(clines, 'linewidth', lineWidth);
-  
+  [CX, CY, CZ, CZVar] = ivmMeshVals(model, xlim, ylim, 30);
+  noise3dPlot(model.noise, 'ivmContour', CX, CY, CZ, CZVar, lineWidth);   
 end
 drawnow

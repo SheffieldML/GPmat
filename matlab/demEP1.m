@@ -10,51 +10,31 @@ y = [ones(200, 1); -ones(100, 1)];
 
 noiseModel = 'probit';
 selectionCriterion = 'entropy';
-kernelType = 'ARD';
+% kernelType = {'rbfard', 'linard', 'white'};
+% prior = 0;
+% display = 2;
+% dVal = 100;
+
+kernelType = 'mlp';
 prior = 0;
 display = 2;
 dVal = 100;
 
 model = ivm(X, y, kernelType, noiseModel, selectionCriterion, dVal)
-if display > 1
-  clf
-  pointsNeg = plot(X(find(y==-1), 1), X(find(y==-1), 2), 'bx');
-  set(pointsNeg, 'erasemode', 'xor')
-  hold on
-  pointsPos = plot(X(find(y==1), 1), X(find(y==1), 2), 'ro');
-  set(pointsNeg, 'erasemode', 'xor')
+for i= 1:4
+  %model.kern = cmpndTieParameters(model.kern, {[3, 6], [4, 7]});
+  if display > 1
+    clf
+    pointsNeg = plot(X(find(y==-1), 1), X(find(y==-1), 2), 'bx');
+    set(pointsNeg, 'erasemode', 'xor')
+    hold on
+    pointsPos = plot(X(find(y==1), 1), X(find(y==1), 2), 'ro');
+    set(pointsNeg, 'erasemode', 'xor')
+  end
+  model = ivmSelectPoints(model, display);
+  model = ivmOptimiseKernel(model, prior, display, 100);
 end
 model = ivmSelectPoints(model, display);
-b = model.beta;
-counter = 0;
-
-% while 1
-%   counter = counter + 1;
-%   index = randperm(length(model.I));
-%   for j = index
-%     i = model.I(j);
-%     model = ivmEPUpdate(model, i);
-%   end
-%   change = max(abs(model.beta - b));
-%   fprintf('EP iteration %d, diff %2.4f\n', counter, full(change));
-%   if  change < 1e-6
-%     break
-%   end
-%   if ~rem(counter, 10)
-%     fprintf('Paused\n')
-%     pause
-%   end
-% end
-% if display > 1
-%   clf
-%   pointsNeg = plot(X(find(y==-1), 1), X(find(y==-1), 2), 'bx');
-%   set(pointsNeg, 'erasemode', 'xor')
-%   hold on
-%   pointsPos = plot(X(find(y==1), 1), X(find(y==1), 2), 'ro');
-%   set(pointsNeg, 'erasemode', 'xor')
-% end
-
-
 
 
 

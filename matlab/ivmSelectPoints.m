@@ -2,9 +2,7 @@ function model = ivmSelectPoints(model, display)
 
 % IVMSELECTPOINT Selects the point for an IVM.
 
-% IVM
-
-tol = 1e-6;
+tol = 1e-4;
 if nargin < 2
   display = 1;
 end
@@ -45,8 +43,9 @@ betaChange = 1;
 oldBeta = model.beta;
 counter = 0;
 while betaChange > tol
+  I = model.I;
   counter = counter + 1;
-  for i = model.I'
+  for i = I'
     model = ivmEpUpdatePoint(model, i);
   end
   betaChange = full(max(abs(model.beta - oldBeta)));

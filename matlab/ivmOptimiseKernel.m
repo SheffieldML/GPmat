@@ -22,3 +22,4 @@ options(14) = iters;
 
 model = optimiseParams('kern', 'scg', 'kernelObjective', ...
                        'kernelGradient', options, model, prior);
+  
