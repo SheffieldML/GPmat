@@ -4,9 +4,6 @@ function k = mlpardKernDiagCompute(kern, x)
 
 % KERN
 
-% KERN
-
-
 scales = sparse(diag(sqrt(kern.inputScales)));
 x = x*scales;
 numer = sum(x.*x, 2)*kern.weightVariance + kern.biasVariance;

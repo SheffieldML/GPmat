@@ -4,9 +4,6 @@ function k = linardKernDiagCompute(kern, x)
 
 % KERN
 
-% KERN
-
-
 scales = sparse(diag(sqrt(kern.inputScales)));
 x = x*scales;
 

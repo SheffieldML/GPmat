@@ -4,8 +4,4 @@ function k = rbfKernDiagCompute(kern, x)
 
 % KERN
 
-% KERN
-
-
-rbfPart = ones(size(x, 1), 1);
-k = rbfPart*kern.variance;
+k = repmat(kern.variance, size(x, 1), 1);

@@ -4,8 +4,6 @@ function k = mlpKernDiagCompute(kern, x)
 
 % KERN
 
-% KERN
-
 
 numer = sum(x.*x, 2)*kern.weightVariance + kern.biasVariance;
 denom = numer+1;

@@ -4,8 +4,4 @@ function k = linKernDiagCompute(kern, x)
 
 % KERN
 
-% KERN
-
-
-linPart = ones(size(x, 1), 1);
 k =  sum(x.*x, 2)*kern.variance;
