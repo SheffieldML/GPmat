@@ -4,8 +4,6 @@ function g = kernelGradient(params, model, prior)
 
 % KERN
 
-% KERN
-
 %/~
 if any(isnan(params))
   warning('Parameter is NaN')
