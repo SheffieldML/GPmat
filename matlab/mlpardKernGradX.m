@@ -4,10 +4,6 @@ function gX = mlpardKernGradX(kern, x, X2)
 
 % KERN
 
-% KERN
-
-
-
 scales = sparse(diag(kern.inputScales));
 xScaled = x*scales;
 X2Scaled = X2*scales;

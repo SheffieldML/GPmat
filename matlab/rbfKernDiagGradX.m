@@ -4,8 +4,5 @@ function gX = rbfKernDiagGradX(kern, x)
 
 % KERN
 
-% KERN
-
-
 gX = zeros(size(x));
 

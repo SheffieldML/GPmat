@@ -4,9 +4,6 @@ function kern = kernel(X, kernelType)
 
 % KERN
 
-% KERN
-
-
 kern.Kstore = [];
 kern.diagK = [];
 if iscell(kernelType)

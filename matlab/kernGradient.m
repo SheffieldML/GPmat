@@ -4,9 +4,6 @@ function g = kernGradient(kern, x, covGrad)
 
 % KERN
 
-% KERN
-
-
 g = feval([kern.type 'KernGradient'], kern, x, covGrad);
 
 % Check if parameters are being optimised in a transformed space.

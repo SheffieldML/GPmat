@@ -4,9 +4,6 @@ function gX = mlpardKernDiagGradX(kern, x)
 
 % KERN
 
-% KERN
-
-
 innerProd = x*sparse(diag(kern.inputScales))*x';  
 numer = innerProd*kern.weightVariance + kern.biasVariance;
 denom = numer + 1;

@@ -4,7 +4,4 @@ function kern = kernParamInit(kern)
 
 % KERN
 
-% KERN
-
-
 kern = feval([kern.type 'KernParamInit'], kern);

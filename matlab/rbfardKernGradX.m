@@ -4,8 +4,6 @@ function gX = rbfardKernGradX(kern, x, X2)
 
 % KERN
 
-% KERN
-
 scales = sparse(sqrt(diag(kern.inputScales)));
 gX = zeros(size(X2));
 n2 = dist2(X2*scales, x*scales);

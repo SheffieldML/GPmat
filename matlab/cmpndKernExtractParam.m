@@ -4,9 +4,6 @@ function params = cmpndKernExtractParam(kern)
 
 % KERN
 
-% KERN
-
-
 params = zeros(1, kern.nParams);
 startVal = 1;
 endVal = 0;

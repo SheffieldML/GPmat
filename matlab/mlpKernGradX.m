@@ -4,9 +4,6 @@ function gX = mlpKernGradX(kern, x, x2)
 
 % KERN
 
-% KERN
-
-
 innerProd = x2*x';  
 numer = innerProd*kern.weightVariance + kern.biasVariance;
 vec1 = sum(x.*x, 2)*kern.weightVariance + kern.biasVariance + 1;
