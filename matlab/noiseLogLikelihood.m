@@ -1,5 +1,5 @@
-function L = noiseLogLikelihood(x, y, model);
+function L = noiseLogLikelihood(noise, mu, varsigma, y);
 
 % NOISELOGLIKELIHOOD Return the log-likelihood under the noise model.
 
-L = feval([model.noise.type 'LogLikelihood'], x, y, model);
+L = feval([noise.type 'LogLikelihood'], noise, mu, varsigma, y);

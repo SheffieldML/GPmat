@@ -9,12 +9,12 @@ if isempty(index)
   error(['Point ' num2str(i) ' is not in inactive set'])
 end
 
-model = feval([model.noise.type 'UpdateSites'], model, i);
+model = ivmUpdateNuG(model, i);
+model = updateSites(model, i);
 model = updateM(model, i);
 
 % Remove point from the non-active set and place in the active.
 model.J(index) = [];
 model.I = [model.I; i];
-  
-model = feval([model.noise.type 'UpdateParams'], model, model.J);
 
+model = ivmUpdateNuG(model, model.J);

@@ -1,17 +1,13 @@
-function L = heavisideLikelihood(X, Y, model)
+function L = heavisideLikelihood(noise, mu, varsigma, y)
 
 % HEAVISIDELIKELIHOOD Likelihood of data under heaviside noise model.
 
 % IVM
-D = size(model.y, 2);
-if isempty(X)
-  mu = model.mu;
-  varsigma = model.varSigma;
-  Y = model.y;
-else
-  [mu, varsigma] = ivmPosteriorMeanVar(X, model);
-end
+D = size(y, 2);
+L = zeros(size(mu));
 for i = 1:D
-  mu(:, i) = mu(:, i) + model.noise.bias(i);
+  mu(:, i) = mu(:, i) + noise.bias(i);
+  L(:, i) = (1-2*noise.eta(i))...
+            *cumGaussian((y(:, i).*mu(:, i))...
+                         ./(sqrt(varsigma(:, i))))+noise.eta(i);
 end
-L = (1-2*model.noise.eta)*cumGaussian((Y.*mu)./(sqrt(varsigma)))+model.noise.eta;

@@ -15,7 +15,7 @@ model.J = 1:numData;
 % Set first infoChange to NaN
 infoChange(1) = NaN;
 
-% If RGS is being used, use dprime.
+% If Randomised greedy selection is being used, use dprime.
 if isfield(model, 'dprime')
   dVal = model.dprime;
 else
@@ -29,40 +29,31 @@ for k = 1:dVal
   
   model = ivmAddPoint(model, i);
   
-  switch model.noise.type
-   
-   case 'probit'
-     logLikelihoods = log(cumGaussian(model.u));
-     dLogLikelihood(k) = sum(sum(logLikelihoods));
-     logLikelihoodRemain(k) = sum(sum(logLikelihoods(model.J, :)));
-     falsePositives(k, :) = sum(sign(model.mu(model.J, :)+model.noise.bias)~=model.y(model.J, :) ...
-			     & model.y(model.J, :)==1);
-     trueNegatives(k, :) = sum(sign(model.mu(model.J, :)+model.noise.bias)~=model.y(model.J, :) ...
-			       & model.y(model.J, :)==-1);
-   case 'heaviside'
-     logLikelihoods = log(cumGaussian(model.u)*(1-2*model.noise.eta)+model.noise.eta);
-     dLogLikelihood(k) = sum(sum(logLikelihoods));
-     logLikelihoodRemain(k) = sum(sum(logLikelihoods(model.J, :)));
-     falsePositives(k, :) = sum(sign(model.mu(model.J, :)+model.noise.bias)~=model.y(model.J, :) & model.y(model.J, :)==1);
-     trueNegatives(k, :) = sum(sign(model.mu(model.J, :)+model.noise.bias)~=model.y(model.J, :) & model.y(model.J, :)==-1);
-   case 'ordered'
-    % Not yet implemented
-    logLikelihoods = zeros(size(model.y));
-    logLikelihoodRemain(k) = sum(sum(logLikelihoods(model.J, :)));
-   case 'gaussian'
-    logLikelihoods = -.5*log(2*pi) -.5*((model.y-model.mu).^2)./(model.noise.sigma2 ...
-						  + model.varSigma) - .5*log(model.noise.sigma2 ...
-						  +model.varSigma);
+  if display
+    logLikelihoods = log(ivmLikelihoods(model));
     dLogLikelihood(k) = sum(sum(logLikelihoods));
     logLikelihoodRemain(k) = sum(sum(logLikelihoods(model.J, :)));
-  end
-  if display
+    fprintf('%ith inclusion, remaining log Likelihood %2.4f', ...
+            k, logLikelihoodRemain(k))
     switch model.noise.type
-     case 'gaussian'
-      fprintf('%ith inclusion, remaining log likelihood %2.4f.\n', k, logLikelihoodRemain(k));
      case {'probit', 'heaviside'}
-      fprintf(['%ith inclusion, remaining log Likelihood %2.4f, falsePos %2.4f, trueNeg' ...
-	       ' %2.4f\n'], k, logLikelihoodRemain(k), sum(falsePositives(k))./sum(sum(model.y==1)), sum(trueNegatives(k))./sum(sum(model.y==-1)));
+      falsePositives(k) = 0;
+      truePositives(k) = 0;
+      for i = 1:size(model.y, 2)
+        falsePositives(k) = falsePositives(k) ...
+            + sum(...
+                sign(model.mu(model.J, i)+model.noise.bias(i)) ...
+                ~=model.y(model.J, i) & model.y(model.J, i)==-1);
+        truePositives(k) = truePositives(k) ...
+            + sum(...
+                sign(model.mu(model.J, i)+model.noise.bias(i)) ...
+                ~=model.y(model.J, i) & model.y(model.J, i)==1);
+        fprintf(', falsePos %2.4f, truePos %2.4f\n', ...
+                sum(falsePositives(k))./sum(sum(model.y==-1)), ...
+                sum(truePositives(k))./sum(sum(model.y==-1)));
+      end
+     otherwise
+      fprintf('\n');
     end
     if display > 1
       if size(model.X, 2) == 2

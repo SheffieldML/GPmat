@@ -1,26 +1,19 @@
-function L = gaussianLogLikelihood(X, Y, model, prior)
+function L = gaussianLogLikelihood(noise, mu, varsigma, y)
 
 % GAUSSIANLOGLIKELIHOOD Log-likelihood of data under Gaussian noise model.
 
 % IVM
 
-if isempty(X)
-  mu = model.mu;
-  varSigma = model.varSigma;
-  Y = model.y;
-else
-  [mu, varSigma] = ivmPosteriorMeanVar(X, model);
-end
-N = size(Y, 1);
-D = size(Y, 2);
-varSigma = varSigma + model.noise.sigma2;
+N = size(mu, 1);
+D = size(mu, 2);
+varsigma = varsigma + noise.sigma2;
 for i = 1:D
-  mu(:, i) = mu(:, i) + model.noise.bias(i);
+  mu(:, i) = mu(:, i) + noise.bias(i);
 end
-arg = (Y - mu);
-arg = arg.*arg./varSigma;
+arg = (y - mu);
+arg = arg.*arg./varsigma;
 
-L = - 0.5*sum(sum(log(varSigma))) ...
+L = - 0.5*sum(sum(log(varsigma))) ...
     - 0.5*sum(sum(arg)) ...
     - 0.5*N*D*log(2*pi);
 

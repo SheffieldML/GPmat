@@ -16,7 +16,7 @@ model.beta = [];
 model.nu = zeros(size(y));
 model.g = zeros(size(y));
 
-model.kern = kernel(X, kernelType);
+model.kern = kernelCreate(X, kernelType);
 
 model.varSigma = zeros(size(y));
 model.mu = zeros(size(y));
@@ -33,9 +33,9 @@ else
     model.Sigma(i).L = [];
   end
 end
-model.noise.type = noiseType;
 model.selectionCriterion = selectionCriterion;
-model = noiseParamInit(model);
+
+model.noise = noiseCreate(noiseType, y); 
 
 switch selectionCriterion
  case 'none'

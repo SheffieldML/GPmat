@@ -1,8 +1,9 @@
-function model = gaussianNoiseParamInit(model)
+function noise = gaussianNoiseParamInit(noise, y)
 
 % GAUSSIANNOISEPARAMINIT Gaussian noise model's parameter initialisation.
 
 % IVM
 
-model.noise.sigma2 = 1;
-model.noise.bias = mean(model.y);
+noise.sigma2 = 1;
+noise.bias = mean(y);
+noise.nParams = 1 + size(y, 2);

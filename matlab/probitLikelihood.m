@@ -1,17 +1,10 @@
-function L = probitLikelihood(X, Y, model)
+function L = probitLikelihood(noise, mu, varsigma, y)
 
 % PROBITLIKELIHOOD Likelihood of data under probit noise model.
 
 % IVM
-D = size(model.y, 2);
-if isempty(X)
-  mu = model.mu;
-  varsigma = model.varSigma;
-  Y = model.y;
-else
-  [mu, varsigma] = ivmPosteriorMeanVar(X, model);
-end
+D = size(y, 2);
 for i = 1:D
-  mu(:, i) = mu(:, i) + model.noise.bias(i);
+  mu(:, i) = mu(:, i) + noise.bias(i);
 end
-L = cumGaussian((Y.*mu)./(sqrt(1+varsigma)));
+L = cumGaussian((y.*mu)./(sqrt(1+varsigma)));

@@ -19,5 +19,5 @@ if display
 end
 options(14) = iters;
 
-model = optimiseParams('noise', 'scg', 'negNoiseLogLikelihood', ...
-                       'negNoiseGradientParam', options, model, prior);
+model = optimiseParams('noise', 'scg', 'negIvmLogLikelihood', ...
+                       'negIvmGradientNoise', options, model, prior);

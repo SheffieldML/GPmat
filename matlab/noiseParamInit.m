@@ -1,7 +1,7 @@
-function model = noiseParamInit(model)
+function noise = noiseParamInit(noise, y)
 
 % NOISEPARAMINIT Noise model's parameter initialisation.
 
 % IVM
 
-model = feval([model.noise.type 'NoiseParamInit'], model);
+noise = feval([noise.type 'NoiseParamInit'], noise, y);

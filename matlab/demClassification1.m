@@ -8,8 +8,8 @@ rand('seed', 1e6)
 % Generate a toy data-set
 X = [randn(100,2)-[zeros(100, 1) 6*ones(100, 1)]; randn(100,2)+[zeros(100, 1) 6*ones(100, 1)]; randn(100, 2)];
 y = [ones(200, 1); -ones(100, 1)];
-
-noiseModel = 'heaviside';
+y = [y -y];
+noiseModel = {'heaviside', 'gaussian'};
 selectionCriterion = 'entropy';
 kernelType = {'rbfard', 'linard', 'bias', 'white'};
 %kernelType = 'rbf';%{'ard', 'rbf'};

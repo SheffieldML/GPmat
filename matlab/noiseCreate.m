@@ -1,4 +1,4 @@
-function noise = noiseCreate(noiseType)
+function noise = noiseCreate(noiseType, y)
 
 % NOISECREATE Initialise a noise structure.
 
@@ -13,4 +13,4 @@ if iscell(noiseType)
 else
   noise.type = noiseType;
 end
-noise = noiseParamInit(noise);
+noise = noiseParamInit(noise, y);

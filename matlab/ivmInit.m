@@ -56,5 +56,5 @@ switch model.noise.type
 
 end
 
-model = feval([model.noise.type 'UpdateParams'], model, 1:numData);
+model = ivmUpdateNuG(model, 1:numData);
 

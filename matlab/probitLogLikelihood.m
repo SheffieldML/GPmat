@@ -1,7 +1,7 @@
-function L = probitLogLikelihood(X, Y, model)
+function L = probitLogLikelihood(noise, mu, varsigma, y)
 
 % PROBITLOGLIKELIHOOD Log-likelihood of data under probit noise model.
 
 % IVM
 
-L = sum(sum(log(probitLikelihood(X, Y, model))));
+L = sum(sum(log(probitLikelihood(noise, mu, varsigma, y))));

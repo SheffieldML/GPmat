@@ -12,22 +12,20 @@ my $ucPrefix = uc($prefix);
 
 my %files = 
 ("${prefix}NoiseParamInit.m",
-"function model = ${prefix}NoiseParamInit(model)\n\n% ${ucPrefix}NOISEPARAMINIT ${longName}'s parameter initialisation.\n\n% IVM\n\nmodel.noise.",
-"${prefix}GradX.m", 
-"function g = ${prefix}GradX(X, Y, model, prior)\n\n% ${ucPrefix}GRADX Gradient wrt x of log-likelihood for ${longName}.\n\n% IVM\n\nif size(X, 1) > 1\n  error('This function only takes one data-point');\nend",
-"${prefix}GradientParam.m", 
-"function g = ${prefix}GradientParam(model, params)\n\n% ${ucPrefix}GRADIENTPARAM Gradient of the ${longName}'s parameters.\n\n% IVM\n\n",
+"function noise = ${prefix}NoiseParamInit(noise, y)\n\n% ${ucPrefix}NOISEPARAMINIT ${longName}'s parameter initialisation.\n\n% IVM\n\n",
+"${prefix}NoiseGradVals.m", 
+"function [nu, dlnZ_dmu, dlnZ_dvs] = ${prefix}NoiseGradVals(noise, mu, varsigma, y)\n\n% ${ucPrefix}NOISEGRADVALS Gradient wrt x of log-likelihood for ${longName}.\n\n% IVM\n\nif size(X, 1) > 1\n  error('This function only takes one data-point');\nend",
+"${prefix}NoiseGradientParam.m", 
+"function g = ${prefix}NoiseGradientParam(noise, mu, varsigma, y)\n\n% ${ucPrefix}NOISEGRADIENTPARAM Gradient of the ${longName}'s parameters.\n\n% IVM\n\n",
 "${prefix}Likelihood.m", 
-"function L = ${prefix}Likelihood(X, Y, model)\n\n% ${ucPrefix}LIKELIHOOD Likelihood of data under ${longName}.\n\n% IVM",
+"function L = ${prefix}Likelihood(noise, mu, varsigma, y)\n\n% ${ucPrefix}LIKELIHOOD Likelihood of data under ${longName}.\n\n% IVM",
 "${prefix}LogLikelihood.m",
-"function L = ${prefix}LogLikelihood(X, Y, model)\n\n% ${ucPrefix}LOGLIKELIHOOD Log-likelihood of data under ${longName}.\n\n% IVM\n\nL = sum(sum(log(${prefix}Likelihood(X, Y, model))));",
+"function L = ${prefix}LogLikelihood(noise, mu, varsigma, y)\n\n% ${ucPrefix}LOGLIKELIHOOD Log-likelihood of data under ${longName}.\n\n% IVM\n\nL = sum(sum(log(${prefix}Likelihood(noise, mu, varsigma, y))));",
 "${prefix}NoiseExpandParam.m",
 "function noise = ${prefix}NoiseExpandParam(params, noise)\n\n% ${ucPrefix}NOISEEXPANDPARAM Expand probit noise structure from param vector.\n\n% IVM\n\nnoise.bias = params(1:end);",
 "${prefix}NoiseExtractParam.m",
-"function params = ${prefix}NoiseExtractParam(noise)\n\n% ${ucPrefix}NOISEEXTRACTPARAM Extract parameters from ${longName}.\n\n% IVM\n\nparams = [noise.bias];","${prefix}UpdateParams.m",
-"function model = ${prefix}UpdateParams(model, index)\n\n% ${ucPrefix}UPDATEPARAMS Update parameters for ${longName}.\n\n% IVM\n\n",
-"${prefix}UpdateSites.m", 
-"function model = ${prefix}UpdateSites(model, index)\n\n% ${ucPrefix}UPDATESITES Update site parameters for ${longName}.\n\n% IVM\n\nif nargin < 2\n  error('No site index specified');\nend\n\nmodel = ${prefix}UpdateParams(model, index);\nmodel = updateSites(model, index);");
+"function params = ${prefix}NoiseExtractParam(noise)\n\n% ${ucPrefix}NOISEEXTRACTPARAM Extract parameters from ${longName}.\n\n% IVM\n\nparams = [noise.bias];","${prefix}NoiseUpdateParams.m",
+"function [nu, g] = ${prefix}NoiseUpdateParams(noise, mu, varsigma, y, index)\n\n% ${ucPrefix}NOISEUPDATEPARAMS Update parameters for ${longName}.\n\n% IVM\n\n");
 
 my @fileNames = keys %files; 
 
