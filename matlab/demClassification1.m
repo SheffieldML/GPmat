@@ -39,10 +39,13 @@ for i = 1:4
   % Optimise the kernel parameters.
   model = ivmOptimiseKernel(model, prior, display, 100);
 end
+model = ivmOptimiseIVM(model, display);
 if display > 1
     ivm3dPlot(model, 'ivmContour', i);
 end
+% display active points.
 model = ivmOptimiseIVM(model, display);
+
 % Display the final model.
 ivmDisplay(model);
 

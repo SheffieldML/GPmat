@@ -39,15 +39,14 @@ for c = 1:length(model.Sigma)
     
   %/~
   oldVarSigma = model.varSigma(:, c);
-  if any(model.varSigma(:, c)<0)
-    warning('Variance less than zero')
-  end
   %~/
   model.varSigma(:, c) = model.varSigma(:, c) - ((model.nu(index, c)*s).*s)';
   %/~
   if any(model.varSigma(:, c)<0)
-    warning('Variance less than zero')
+    minVar = min(model.varSigma(:, c));
+    warning(['Minimum variance ' num2str(minVar)])
   end
+  % Seems like this variance can go as low as 1e-13 in, for example, demRegression1.m
   %~/
   model.mu(:, c) = model.mu(:, c) + model.g(index, c)*s';  
 end
@@ -58,7 +57,8 @@ if length(model.Sigma)==1 & size(model.y, 2)>1
     model.mu(:, c) = model.mu(:, c) + model.g(index, c)*s'; 
     %/~
     if any(model.varSigma(:, c)<0)
-      warning('Variance less than zero')
+      minVar = min(model.varSigma(:, c));
+      warning(['Minimum variance ' num2str(minVar)])
     end
     %~/
   end

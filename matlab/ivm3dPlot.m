@@ -19,7 +19,7 @@ if length(model.I)>0
   ylim = get(gca, 'ylim');
   [CX, CY, CZ, CZVar] = ivmMeshVals(model, xlim, ylim, 60);
   switch plotType
-   case 'ivmContour'
+   case {'ivmContour', 'ncnmContour'}
     threeDargs = cell(1);
     threeDargs{1} = 2;
    otherwise

@@ -1,7 +1,5 @@
 % GENERATECLASSIFICATIONDATA Tries to load a sampled data set otherwise generates it.
-
-% IVM
-
+ 
 seed = 1e5;
 try
   load classificationData.mat 

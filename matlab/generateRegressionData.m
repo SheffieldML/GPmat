@@ -1,6 +1,5 @@
 % GENERATEREGRESSIONDATA Tries to load a sampled data set otherwise generates it.
 
-% IVM
 
 try
   load regressionData.mat 

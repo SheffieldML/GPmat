@@ -6,21 +6,7 @@
 randn('seed', 1e6)
 rand('seed', 1e6)
 
-dataPerCat = 30;
-spacing = 3;
-
-% Generate a toy data-set of (linear) ordered categories.
-X = [randn(dataPerCat,2)-[zeros(dataPerCat, 1) repmat(3*spacing, dataPerCat, 1)]; ...
-     randn(dataPerCat,2)-[zeros(dataPerCat, 1) repmat(2*spacing, dataPerCat, 1)]; ...
-     randn(dataPerCat,2)-[zeros(dataPerCat, 1) repmat(spacing, dataPerCat, 1)]; ...
-     randn(dataPerCat, 2); ...
-     randn(dataPerCat,2)+[zeros(dataPerCat, 1) repmat(spacing, dataPerCat, 1)]; ...
-     randn(dataPerCat,2)+[zeros(dataPerCat, 1) repmat(2*spacing, dataPerCat, 1)]; ...
-     randn(dataPerCat,2)+[zeros(dataPerCat, 1) repmat(3*spacing, dataPerCat, 1)]];
-y = [zeros(dataPerCat, 1); ...
-     repmat(1, dataPerCat, 1); repmat(2, dataPerCat, 1); ...
-     repmat(3, dataPerCat, 1); repmat(4, dataPerCat, 1); ...
-     repmat(5, dataPerCat, 1); repmat(6, dataPerCat, 1)];
+[X, y] = ivmLoadData('orderedOne');
 
 noiseModel = 'ordered';
 selectionCriterion = 'entropy';
@@ -36,31 +22,33 @@ model = ivm(X, y, kernelType, noiseModel, selectionCriterion, dVal);
 
 % Constrain the ARD parameters in the RBF and linear kernels to be the same.
 model.kern = cmpndTieParameters(model.kern, {[3, 6], [4, 7]});
-for i = 1:3
-
-  % Do some plotting
-  if display > 1
-    ivm3dPlot(model, 'ivmContour', i);
-  end
-
-  % Select active set.
-  model = ivmOptimiseIVM(model, display);
-  % Optimise the noise model.
-  model = ivmOptimiseNoise(model, prior, display, 100);
-  if display > 1
-    ivm3dPlot(model, 'ivmContour', i);
-  end
-  
-  % Select active set.
-  model = ivmOptimiseIVM(model, display);
-  % Optimise kernel parameters
-  model = ivmOptimiseKernel(model, prior, display, 100);
-end
+% Do some plotting
 if display > 1
   ivm3dPlot(model, 'ivmContour', i);
 end
-
+for i = 1:4
+  % Select active set.
+  model = ivmOptimiseIVM(model, display);
+  if display > 1
+    ivm3dPlot(model, 'ivmContour', i);
+  end
+  % Optimise the noise model.
+  model = ivmOptimiseNoise(model, prior, display, 100);
+  
+  % Select active set.
+  model = ivmOptimiseIVM(model, display);
+  if display > 1
+    ivm3dPlot(model, 'ivmContour', i);
+  end
+  % Optimise kernel parameters
+  model = ivmOptimiseKernel(model, prior, display, 100);
+end
 % Select active set.
+model = ivmOptimiseIVM(model, display);
+if display > 1
+  ivm3dPlot(model, 'ivmContour', i);
+end
+% Display active points
 model = ivmOptimiseIVM(model, display);
 % Display parameters of end model.
 ivmDisplay(model);

@@ -6,7 +6,7 @@ function [X, Y, Z, varZ] = ivmMeshVals(model, limx, limy, number)
 
 x = linspace(limx(1), limx(2), number);
 y = linspace(limy(1), limy(2), number);
-[X, Y] = meshgrid(x);
+[X, Y] = meshgrid(x, y);
 
 [Z, varZ] = ivmPosteriorMeanVar(model, [X(:) Y(:)]);
 Z = reshape(Z, size(X));
