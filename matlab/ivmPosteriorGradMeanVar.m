@@ -36,5 +36,5 @@ else
     Kinvgk = model.Sigma.Linv'*diagB*(model.Sigma.Linv*gX);
   end
   gsigmavar = repmat(diaggK' - 2*Kinvgk'*kX, 1, D);
-  gmu = Kinvgk'*model.m(model.I, :); 
+  gmu = Kinvgk'*full(model.m(model.I, :)); 
 end

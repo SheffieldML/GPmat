@@ -43,5 +43,5 @@ else
   for n = 1:numData
     varsigma(n, :) = repmat(diagK(n) - Lk(:, n)'*Lk(:, n), 1, D);
   end
-  mu = Kinvk'*model.m(model.I, :);
+  mu = Kinvk'*full(model.m(model.I, :));
 end
