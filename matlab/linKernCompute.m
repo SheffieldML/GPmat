@@ -9,3 +9,6 @@ if nargin < 3
 else
   k = x*x2'*kern.variance;
 end
+if issparse(x)
+  k = full(k);
+end

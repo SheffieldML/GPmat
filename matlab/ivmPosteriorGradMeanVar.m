@@ -22,7 +22,7 @@ if length(model.Sigma)>1
     if ~model.Sigma(i).robust
       Kinvgk = model.Sigma(i).Linv'*(model.Sigma(i).Linv*gX);
     else
-      diagB = sparse(diag(model.beta(model.I, i)));
+      diagB = sparse(diag(sqrt(model.beta(model.I, i))));
       Kinvgk = model.Sigma(i).Linv'*diagB*(model.Sigma(i).Linv*gX);
     end
     gsigmavar(:, i) = diaggK' - 2*Kinvgk'*kX;
@@ -32,7 +32,7 @@ else
   if ~model.Sigma.robust
     Kinvgk = model.Sigma.Linv'*(model.Sigma.Linv*gX);
   else
-    diagB = sparse(diag(model.beta(model.I, :)));
+    diagB = sparse(diag(sqrt(model.beta(model.I, :))));
     Kinvgk = model.Sigma.Linv'*diagB*(model.Sigma.Linv*gX);
   end
   gsigmavar = repmat(diaggK' - 2*Kinvgk'*kX, 1, D);

@@ -59,12 +59,12 @@ for k = 1:dVal
            figure(1)
            a = plot(model.X(dataIndexSelect, 1), ...
                     model.X(dataIndexSelect, 2), '.', 'erasemode', 'xor', ...
-		    'markersize', 10);
+		    'markersize', 20);
 %           xlim = get(gca, 'xlim');
 %           labelGap = (xlim(2) - xlim(1)) * 0.025;
 %           b = text(model.X(dataIndexSelect, 1)+labelGap, ...
 %                    model.X(dataIndexSelect, 2), num2str(k), 'erasemode', ...
-%                    'xor');
+%'xor');
            drawnow
          case {'gaussian', 'ngauss'}
            figure(1)

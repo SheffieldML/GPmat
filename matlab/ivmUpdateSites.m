@@ -16,8 +16,7 @@ if any(model.beta<0)
     error('Beta less than zero for log concave model.')
   else
     indices = find(model.beta < 0);
-    model.beta(indices) = 0;
-    model.m(indices) = 0;
-    fprintf('Beta less than zero .... fixing to zero.\n')
+    model.beta(indices) = 1e-6;
+    fprintf('Beta less than zero .... fixing to 1e-6.\n')
   end
 end
