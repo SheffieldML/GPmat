@@ -1,6 +1,8 @@
-function [meanOut, varOut] = manifodOutputsManuel(X2, X, theta, A)
+function [meanOut, varOut] = manifoldOutputsManuel(X2, X, theta, A)
 
 % MANIFOLDOUTPUTS Evaluate the manifold output for datapoints X.
+
+% MOCAP
 
 kbold = kernel(X2, X, theta)';
 
