@@ -2,11 +2,14 @@
 
 CIvm::CIvm(const CMatrix& inData, const CMatrix& targetData, 
 	   CKern& kernel, CNoise& noiseModel, const int selectCrit,
-	   const int dVal) 
+	   const int dVal, const int verbos) 
   : X(inData), y(targetData), kern(kernel), 
-    noise(noiseModel), selectionCriterion(selectCrit), numTarget(y.getCols()), numData(y.getRows()), lastEntropyChange(0.0), cumEntropy(0.0), activeSetSize(dVal)
+    noise(noiseModel), selectionCriterion(selectCrit), numTarget(y.getCols()), numData(y.getRows()), lastEntropyChange(0.0), cumEntropy(0.0), activeSetSize(dVal), verbosity(verbos)
 {
+  assert(dVal<=numData);
+  assert(X.getRows()==y.getRows());
   terminate = false;
+  noise.setVerbosity(getVerbosity());
   epUpdate = false;
   // need to set up Sigma for handing spherical and non-spherical.
   // set numCovStruct
@@ -30,17 +33,15 @@ void CIvm::init()
   // set g to zeros(size of y)
   g.resize(y.getRows(), y.getRows());
   g.setVals(0.0);
-  // set mu and varSigma to zeros(size of y)
-  mu.resize(y.getRows(), y.getCols());
-  mu.setVals(0.0);
-  varSigma.resize(y.getRows(), y.getCols());
+  // set noise.varSigma to diagonal of kernel.
+  noise.setMus(0.0);
   double dk=0.0;
-  for(int i=0; i<varSigma.getRows(); i++)
+  for(int i=0; i<y.getRows(); i++)
     {
       dk = kern.diagComputeElement(X, i);
-      for(int j=0; j<varSigma.getCols(); j++)
+      for(int j=0; j<y.getCols(); j++)
 	{
-	  varSigma.setVals(dk, i, j);
+	  noise.setVarSigma(dk, i, j);
 	}
     }
 
@@ -90,12 +91,18 @@ void CIvm::init()
 void CIvm::selectPoints()
 {
   int index=0;
+  if(getVerbosity()>1)
+    cout << "Selecting points ... " << endl;
   for(int k=0; k<activeSetSize; k++)
     {
       index = selectPointAdd();
       addPoint(index);
+      if(getVerbosity()>2)
+	cout << k << "th addition: added point " << index << endl;
       
     }
+  if(getVerbosity()>1)
+    cout << "... done." << endl;
   if(isEpUpdate())
     cerr << "EP update not yet implemented.";
 }
@@ -114,7 +121,7 @@ void CIvm::addPoint(const int index)
 void CIvm::updateSite(const int index)
 {
   int actIndex = activeSet.size();
-  noise.updateSites(m, beta, actIndex, g, nu, mu, varSigma, y, index);
+  noise.updateSites(m, beta, actIndex, g, nu, index);
   for(int j=0; j<beta.getCols(); j++)
     {
       double betVal = beta.getVals(actIndex, j);
@@ -168,26 +175,30 @@ void CIvm::updateM(const int index)
       L[c].setVals(1/lValInv, activePoint, activePoint);
       a.trans(); // turn a into a column vector.
       // update the varSigma and mu systems.
+      double varSig = 0.0;
       for(int i=0; i<numData; i++)
 	{
 	  sVal = s.getVals(i, 0);
-	  varSigma.setVals(varSigma.getVals(i, c)
-			   -sVal*sVal*nu.getVals(index, c), i, c);
-	  assert(varSigma.getVals(i, c)>=0);
-	  mu.setVals(mu.getVals(i, c) + g.getVals(index, c)*sVal, i, c);
+	  varSig = noise.getVarSigma(i, c)
+	    -sVal*sVal*nu.getVals(index, c);
+	  noise.setVarSigma(varSig, i, c);
+	  noise.setMu(noise.getMu(i, c) + g.getVals(index, c)*sVal, i, c);
 	}
     }
   // this happens for spherical noise models.
   if(numCovStruct==1 && numTarget > 1)
     {
+      double varSig = 0.0;
       for(int c=1; c<numTarget; c++)
 	{
+
 	  for(int i=0; i<numData; i++)
 	    {
 	      sVal = s.getVals(i, 0);
-	      varSigma.setVals(varSigma.getVals(i, c)
-			       -sVal*sVal*nu.getVals(index, c), i, c);
-	      mu.setVals(mu.getVals(i, c) + g.getVals(index, c)*sVal, i, c);
+	      varSig = noise.getVarSigma(i, c)
+		-sVal*sVal*nu.getVals(index, c);
+	      noise.setVarSigma(varSig, i, c);
+	      noise.setMu(noise.getMu(i, c) + g.getVals(index, c)*sVal, i, c);
 	    }
 	}
     }
@@ -247,13 +258,13 @@ double CIvm::entropyChangeAdd(const int index) const
   double entChange=0.0;
   if(noise.isSpherical())
     {
-      entChange = -.5*log2(1-varSigma.getVals(index, 0)
+      entChange = -.5*log2(1-noise.getVarSigma(index, 0)
 			   *nu.getVals(index, 0)+1e-300)*numTarget;
     }
   else
     {
       for(int j=0; j<numTarget; j++)
-	entChange += -.5*log2(1-varSigma.getVals(index, j)
+	entChange += -.5*log2(1-noise.getVarSigma(index, j)
 			      *nu.getVals(index, j)+1e-300);
     }
   return entChange;
@@ -305,13 +316,13 @@ double CIvm::entropyChangeRemove(const int index) const
   double entChange = 0.0;
   if(noise.isSpherical())
     {
-      entChange = -.5*log2(1-varSigma.getVals(index, 0)
+      entChange = -.5*log2(1-noise.getVarSigma(index, 0)
 			   *beta.getVals(activeSet[index], 0)+1e-300)*numTarget;
     }
   else
     {
       for(int j=0; j<numTarget; j++)
-	entChange += -.5*log2(1-varSigma.getVals(index, j)
+	entChange += -.5*log2(1-noise.getVarSigma(index, j)
 			      *beta.getVals(activeSet[index], j)+1e-300);
     }
   return entChange;
@@ -319,9 +330,9 @@ double CIvm::entropyChangeRemove(const int index) const
 void CIvm::updateNuG()
 {
   for(int i=0; i<numData; i++)
-    noise.getNuG(g, nu, mu, varSigma, y, i);
+    noise.getNuG(g, nu, i);
 }
-void CIvm::updateK()
+void CIvm::updateK() const
 {
   double kVal=0.0;
   for(int i=0; i<activeSet.size(); i++)
@@ -336,23 +347,18 @@ void CIvm::updateK()
     }
   K.setSymmetric(true);
 }
-void CIvm::updateInvK(const int dim)
+void CIvm::updateInvK(const int dim) const
 {
   invK.deepCopy(K);
   for(int i=0; i<activeSetSize; i++)
     invK.setVals(invK.getVals(i, i) + 1/beta.getVals(i, dim), i, i);
   invK.setSymmetric(true);
-  invK.writeMatlabFile("invK.mat", "K");
-  //TODO this should be done in tandem (log det and invK).
-  CMatrix U(chol(K));
-  logDetK = 0.0;
-  for(int i=0; i<U.getRows(); i++)
-    logDetK+=log(U.getVals(i, i));
-  logDetK *= 2;
-  invK.pdinv();
+  CMatrix U(chol(invK));
+  logDetK = invK.logDet(U); 
+  invK.pdinv(U);
 }
   
-double CIvm::approxLogLikelihood()
+double CIvm::approxLogLikelihood() const
 {
   double L=0.0;
   updateK();
@@ -367,11 +373,11 @@ double CIvm::approxLogLikelihood()
 	updateInvK(j);
       invK.setSymmetric(true);
       invKm.symvColCol(0, invK, m, j, 1.0, 0.0, "u");
-      L -= .5*(logDetK + invKm.dotCol(0, m, j));
+      L -= .5*(logDetK + invKm.dotColCol(0, m, j));
     }
   return L;
 }  
-void CIvm::approxLogLikelihoodGradient(CMatrix& g)
+void CIvm::approxLogLikelihoodGradient(CMatrix& g) const
   {
     assert(g.getRows()==1);
     assert(g.getCols()==getOptNumParams());
@@ -394,8 +400,60 @@ void CIvm::approxLogLikelihoodGradient(CMatrix& g)
       
     }
   }
- 
-void CIvm::updateCovGradient(const int index)
+void CIvm::optimise(const int maxIters, const int kernIters, const int noiseIters)
+{
+  if(kernIters>0 || noiseIters>0)
+    {
+      for(int iters=0; iters<maxIters; iters++)
+	{
+	  if(getVerbosity()>1)
+	    cout << "IVM External Iteration: " << iters+1 << endl;
+	  if(kernIters>0)
+	    {
+	      init();
+	      selectPoints();
+	      if(getVerbosity()>3 && getOptNumParams()<10)
+		checkGradients();
+	      if(getVerbosity()>1)
+		cout << "Optimising kernel parameters ..." <<endl;
+	      scgOptimise(kernIters);
+	      if(getVerbosity()>1)
+		cout << "... done. " << endl;
+	      if(getVerbosity()>2)
+		kern.display(cout);
+	    }
+	  if(noiseIters>0)
+	    {
+	      init();
+	      selectPoints();
+	      if(getVerbosity()>3 && noise.getOptNumParams()<10)
+		noise.checkGradients();
+	      if(getVerbosity()>1)
+		cout << "Optimising noise parameters ..." <<endl;
+	      noise.scgOptimise(noiseIters);
+	      if(getVerbosity()>1)
+		cout << "... done." <<endl;
+	      if(getVerbosity()>2)
+		noise.display(cout);
+	    }
+	}
+    }
+  init();
+  selectPoints();
+  if(getVerbosity()>0)
+    display(cout);
+}
+void CIvm::display(ostream& os) const 
+{
+  cout << "IVM Model: " << endl;
+  cout << "Active Set Size: " << activeSetSize << endl;
+  cout << "Kernel Type: " << endl;
+  kern.display(os);
+  cout << "Noise Type: " << endl;
+  noise.display(os);
+}
+
+void CIvm::updateCovGradient(const int index) const
 {
   CMatrix invKm(invK.getRows(), 1);
   invK.setSymmetric(true);

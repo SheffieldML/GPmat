@@ -62,10 +62,12 @@ AXPY2(i, :) = C(:, j)'*alpha + B(i, :);
 AXPY3(:, j) = A(:, k)*alpha + B(:, j);
 AXPY4(:, j) = C(i, :)'*alpha + B(:, j);
 
-save testAxpy.mat i j k alpha A B C AXPY1 AXPY2 AXPY3 AXPY4
+D = randn(20);
+AXPY5 = D + alpha*diag(C(i, :));
+save testAxpy.mat i j k alpha A B C D AXPY1 AXPY2 AXPY3 AXPY4 AXPY5
 
 % GEMV
-alpha = pi;
+alpha=pi;
 beta = exp(1);
 i = 4;
 j = 8;

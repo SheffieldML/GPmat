@@ -7,6 +7,7 @@
 #include "CMatrix.h"
 #include "CDist.h"
 #include <iostream>
+#include <string>
 #include <vector>
 #include <cassert>
 #include <algorithm>

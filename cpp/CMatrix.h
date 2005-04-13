@@ -3,12 +3,14 @@
 // Base matrix class for Sheffield ML code.
 #include <iostream>
 #include <cmath>
+#include <climits>
 #include <vector>
 #include "CMatlab.h"
 #include "lapack.h"
 #include "xpose.h"
 using namespace std;
 
+const double EPS=DBL_EPSILON;
 const double DISPEPS = 1e-14;
 const double MATCHTOL = 1e-12;
 
@@ -274,7 +276,14 @@ class CMatrix : public CMatinterface {
       assert(A.ncols==nrows);
       daxpy_(nrows, alpha, A.vals+i, A.nrows, vals+j*nrows, 1);
     }
-
+  // Level 1 BLAS axpy diag(Y) = diag(Y) + alpha*x(i, :)'
+  void axpyDiagRow(const CMatrix& A, const int i, const double alpha)
+    {
+      assert(isSquare());
+      assert(i<A.nrows);
+      assert(A.ncols==nrows);
+      daxpy_(nrows, alpha, A.vals+i, A.nrows, vals, nrows+1);
+    }
   // Level 2 BLAS Rank 1 update: ger, A = alpha*x*y' + A; 
   void ger(const CMatrix& x, const CMatrix& y, const double alpha)
   {
@@ -355,7 +364,7 @@ class CMatrix : public CMatinterface {
       assert(ncols==A.ncols);
       assert(k<A.nrows);
       assert(i<nrows);
-      return norm2Row(i) + A.norm2Row(k) - 2.0*dotRow(i, A, k);
+      return norm2Row(i) + A.norm2Row(k) - 2.0*dotRowRow(i, A, k);
     }
   // Return the euclidean distance between two column vectors.
   double dist2Col(const int j, const CMatrix& A, const int k) const
@@ -363,7 +372,7 @@ class CMatrix : public CMatinterface {
       assert(nrows==A.nrows);
       assert(k<A.ncols);
       assert(j<ncols);
-      return norm2Col(j) + A.norm2Col(k) - 2.0*dotCol(j, A, k);
+      return norm2Col(j) + A.norm2Col(k) - 2.0*dotColCol(j, A, k);
     }
   // Return the 2-norm of the ith row of the matrix.
   double norm2Row(const int i) const
@@ -378,15 +387,26 @@ class CMatrix : public CMatinterface {
       return val*val;
     }
   // Return the inner product between the ith row of the matrix and the kth row of A.
-  double dotRow(const int i, const CMatrix& A, const int k) const
+  double dotRowRow(const int i, const CMatrix& A, const int k) const
     {
       return ddot_(ncols, A.vals+k, A.nrows, vals+i, nrows);
   
     }
+  // Return the inner product between the ith row of the matrix and the jth column of A.
+  double dotRowCol(const int i, const CMatrix& A, const int j) const
+    {
+      return ddot_(ncols, A.vals+j*A.nrows, 1, vals+i, nrows);
+  
+    }
   // Return the inner product between the jth column of the matrix and the kth column of A.
-  double dotCol(const int j, const CMatrix& A, const int k) const
+  double dotColCol(const int j, const CMatrix& A, const int k) const
     {
       return ddot_(nrows, A.vals+k*A.nrows, 1, vals+j*nrows, 1);
+    }
+  // Return the inner product between the jth column of the matrix and the ith row of A.
+  double dotColRow(const int j, const CMatrix& A, const int i) const
+    {
+      return ddot_(nrows, A.vals+i, A.nrows, vals+j*nrows, 1);
     }
   // Swap the jth and the kth columns of the matrix.
   void swapCols(const int j, const int k)
@@ -682,7 +702,11 @@ class CMatrix : public CMatinterface {
   void lu();
   void inv();
   void chol();
+  // Log determinant of a positive definite matrix where U is the Cholesky decomposition of the matrix.
+  double logDet(CMatrix U);
+
   void chol(const char* type);
+  void pdinv(CMatrix U);
   void pdinv();
 
   // LAPACK operations
@@ -759,7 +783,7 @@ class CMatrix : public CMatinterface {
     }
   // io operations ...
   //  ostream& operator<<(ostream& os, CMatrix& A);
-  
+
   // friend functions
   friend inline void swap(CMatrix& x, CMatrix& y);
 

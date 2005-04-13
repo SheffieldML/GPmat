@@ -1,6 +1,7 @@
 #ifndef LAPACK_H
 #define LAPACK_H
 
+//#define dgetrf_ dgetrf
 using namespace std;
 
 // **** LAPACK Operations ****

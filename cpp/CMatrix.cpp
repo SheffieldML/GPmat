@@ -234,7 +234,7 @@ void CMatrix::potrf(const char* type)
   dpotrf_(type, nrows, vals, ncols, info);
   setSymmetric(false);
   setTriangular(true);
-  assert(info==0);
+  if(info!=0) throw "Matrix not positive definite.";
 }
 void CMatrix::chol(const char* type)
 {
@@ -258,12 +258,30 @@ void CMatrix::chol()
 {
   chol("U");
 }
+double CMatrix::logDet(CMatrix U)
+{
+  assert(isSymmetric()); /// actually should be positive definite.
+  double logDet = 0.0;
+  for(int i=0; i<U.getRows(); i++)
+    logDet+=std::log(U.getVals(i, i));
+  logDet *= 2;
+  return logDet;
+}
+
 void CMatrix::potri(const char* type)
 {
   assert(isSquare());
   int info;
   dpotri_(type, nrows, vals, ncols, info);
-  assert(info==0);
+  if(info!=0) throw "Matrix not positive definite.";
+}
+void CMatrix::pdinv(CMatrix U)
+{
+  deepCopy(U);
+  potri("U");
+  for(int i=0; i<nrows; i++)
+    for(int j=0; j<i; j++)
+      vals[i + nrows*j] = vals[j + ncols*i];
 }
 void CMatrix::pdinv()
 {
@@ -282,7 +300,7 @@ void CMatrix::lu()
   int* ipiv = new int[nrows];
   // TODO should really check for errors here.
   dgetrf_(nrows, ncols, vals, ncols, ipiv, info);
-  assert(info==0);
+  if(info!=0) throw "Matrix not full rank.";
   delete[] ipiv;
 }
 
@@ -297,7 +315,7 @@ void CMatrix::inv()
     
   dgetrf_(nrows, ncols, 
 	  vals, ncols, ipiv, info);
-  assert(info==0);
+  if(info!=0) throw "Matrix not full rank.";
   int order = nrows;
   int lwork = order*16;
   double* work = new double[lwork];
@@ -305,7 +323,7 @@ void CMatrix::inv()
   dgetri_(order, vals, ncols, 
 	  ipiv, work, lwork, info);
   // check for successful inverse
-  assert(info == 0);
+  if(info!=0) throw "Matrix not full rank.";
   delete[] work;
   delete[] ipiv;
 }

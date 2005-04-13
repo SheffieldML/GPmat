@@ -17,7 +17,7 @@ class CIvm : public CMatinterface, public COptimisable {
  public:
   CIvm(const CMatrix& inData, const CMatrix& targetData, 
        CKern& kernel, CNoise& noiseModel, const int selectCrit,
-       const int dVal);
+       const int dVal, const int verbos=2);
   void init();
   void selectPoints(); // select active set points.
   void addPoint(const int index); // add a point to the model.
@@ -36,6 +36,14 @@ class CIvm : public CMatinterface, public COptimisable {
 
   void out(CMatrix& yPred, const CMatrix& inData) const;
   void posteriorMeanVar(CMatrix& mu, CMatrix& varSigma, const CMatrix& X) const;
+  inline void setVerbosity(const int val)
+    {
+      verbosity = val;
+    }
+  inline int getVerbosity() const
+    {
+      return verbosity;
+    }
   inline int changeEntropy(const double val)
     {
       cumEntropy += val;
@@ -43,7 +51,7 @@ class CIvm : public CMatinterface, public COptimisable {
     }
 
   // Gradient routines
-  void updateCovGradient(int index);
+  void updateCovGradient(int index) const;
   
 
   inline void setTerminate(const bool val)
@@ -64,16 +72,18 @@ class CIvm : public CMatinterface, public COptimisable {
     }
   void updateNuG();
   // update K with the kernel computed from the active points.
-  void updateK();
+  void updateK() const;
   // update invK with the inverse of the kernel plus beta terms computed from the active points.
-  void updateInvK(int index=0);
+  void updateInvK(int index=0) const;
   // compute the approximation to the log likelihood.
-  double approxLogLikelihood();
+  double approxLogLikelihood() const;
   // compute the gradients of the approximation wrt parameters.
-  void approxLogLikelihoodGradient(CMatrix& g);
+  void approxLogLikelihoodGradient(CMatrix& g) const;
+  
+  void optimise(const int maxIters=15, const int kernIters=100, const int noiseIters=100);
+  void display(ostream& os) const;
 
-
-  int getOptNumParams() const
+  inline int getOptNumParams() const
     {
       return kern.getNumParams();
     }    
@@ -85,20 +95,22 @@ class CIvm : public CMatinterface, public COptimisable {
     {
       kern.setTransParams(param);
     }
-  void computeObjectiveGradParams(CMatrix& g)
+  void computeObjectiveGradParams(CMatrix& g) const
     {
       approxLogLikelihoodGradient(g);
       g.negate();
     }
-  double computeObjectiveVal()
+  double computeObjectiveVal() const
     {
       return -approxLogLikelihood();
     }
   mxArray* toMxArray() const
     {
+      // TODO Write this function
     }
   void fromMxArray(const mxArray* matlabArray) 
     {
+      // TODO Write this function
     }
   const CMatrix& X;
 
@@ -110,8 +122,6 @@ class CIvm : public CMatinterface, public COptimisable {
   
   CMatrix Kstore;
 
-  CMatrix varSigma;
-  CMatrix mu;
   
   // these are IVM associated.
   CMatrix m;
@@ -121,10 +131,12 @@ class CIvm : public CMatinterface, public COptimisable {
   CMatrix a;
   CMatrix ainv;
 
-  CMatrix covGrad;
-  CMatrix invK;
-  double logDetK;
-  CMatrix K;
+  // these really just provide local storage
+  mutable CMatrix covGrad;
+  mutable CMatrix invK;
+  mutable double logDetK;
+  mutable CMatrix K;
+
   CMatrix activeX;
 
   CMatrix* M;
@@ -154,6 +166,8 @@ class CIvm : public CMatinterface, public COptimisable {
   double cumEntropy;
   enum{ENTROPY, RENTROPY, RANDOM};
   const int selectionCriterion; // need to set this up with enum
+  
+  int verbosity;
 };
 
 #endif

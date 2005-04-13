@@ -31,8 +31,8 @@ mxArray* CKern::toMxArray() const
 {
   int dims[1];
   dims[0] = 1;
-  const char *fieldNames[] = {"type", "transforms", "inputDimension", "nParams"};
-  mxArray* matlabArray = mxCreateStructArray(1, dims, 4, fieldNames);
+  const char *fieldNames[] = {"type", "transforms", "inputDimension"};
+  mxArray* matlabArray = mxCreateStructArray(1, dims, 3, fieldNames);
     
   // type field.
   const char *typeName[1];
@@ -42,29 +42,11 @@ mxArray* CKern::toMxArray() const
 	     mxCreateCharMatrixFromStrings(1, typeName));
   
   // transforms field.
-  const char *transFieldNames[] = {"index", "type"};
-  dims[0]=getNumTransforms();
-  mxArray* transformsArray = mxCreateStructArray(1, dims, 2, transFieldNames);
-  CMatrix ind(1, 1);
-  const char *compType[1];
-  string trType;
-  for(int i=0; i<getNumTransforms(); i++)
-    {
-      ind.setVals((double)(getTransformIndex(i)+1));
-      mxSetField(transformsArray, i, "index", ind.toMxArray());
-      trType = getTransformType(i);
-      compType[0] = trType.c_str();
-      mxSetField(transformsArray, i, "type", 
-		 mxCreateCharMatrixFromStrings(1, compType));
-    }
-  mxSetField(matlabArray, 0, "transforms", transformsArray);
-  // inputDimension field.
-  CMatrix inputD(1, 1, (double)inputDim);
-  mxSetField(matlabArray, 0, "inputDimension", inputD.toMxArray());
+  mxSetField(matlabArray, 0, "transforms", transformsToMxArray());
 
-  // nParams field.
-  CMatrix nPar(1, 1, (double)nParams);
-  mxSetField(matlabArray, 0, "nParams", nPar.toMxArray());
+  // inputDimension field.
+  mxSetField(matlabArray, 0, "inputDimension", convertMxArray((double)inputDim));
+
   
   // whiteVariance field.
   double whiteVar = getWhite();
@@ -88,23 +70,8 @@ void CKern::fromMxArray(const mxArray* matlabArray)
   if(mxType!=type)
     cerr << "Error mismatch between saved type, " << mxType << ", and Class type, " << type << "." << endl;
   mxArray* transformArray = mxArrayExtractMxArrayField(matlabArray, "transforms");
-  int numTransforms = mxGetNumberOfElements(transformArray);
-  string transformType;
-  vector<int> transformIndex;
-  int counter = 0;
-  for(int i=0; i<numTransforms; i++)
-    {
-      transformType=mxArrayExtractStringField(transformArray, "type", i);
-      transformIndex=mxArrayExtractVectorIntField(transformArray, "index", i);
-      for(int j=0; j<transformIndex.size(); j++)
-	{
-	  counter++;
-	  if(transformType=="negLogLogit")
-	    addTransform(new CNegLogLogitTransform, transformIndex[j]-1);
-	  else
-	    cerr << "Transform type " << transformType << " is currently unknown."<< endl;
-	}
-    }    
+  // transforms field.
+  transformsFromMxArray(transformArray);
     
   // TODO priors ... need to deal with priors
   extractParamFromMxArray(matlabArray);
@@ -128,6 +95,8 @@ void CKern::extractParamFromMxArray(const mxArray* matlabArray)
 }
 void CKern::addParamToMxArray(mxArray* matlabArray) const
 {
+  mxAddField(matlabArray, "nParams");
+  mxSetField(matlabArray, 0, "nParams", convertMxArray((double)nParams));
   string pName;
   for(int i=0; i<nParams; i++)
     {
@@ -923,7 +892,7 @@ double CLinKern::getWhite() const
 double CLinKern::computeElement(const CMatrix& X1, const int index1, 
 			  const CMatrix& X2, const int index2) const
 {
-  return variance*X1.dotRow(index1, X2, index2);
+  return variance*X1.dotRowRow(index1, X2, index2);
 }
 
 void CLinKern::compute(CMatrix& K, const CMatrix& X) const
@@ -950,7 +919,7 @@ double CLinKern::getGradParam(const int index, const CMatrix& X, const CMatrix& 
   for(int i=0; i<X.getRows(); i++)
     for(int j=0; j<X.getRows(); j++)
       {
-	dot = X.dotRow(i, X, j);
+	dot = X.dotRowRow(i, X, j);
 	g1 += dot*covGrad.getVals(i, j);
       }
   return g1;

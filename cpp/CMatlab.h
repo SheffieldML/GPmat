@@ -144,6 +144,26 @@ class CMatinterface {
 	cerr << "Conversion of this type to vector<int> is not yet supported." << endl;
       return val;
     }
+  bool mxArrayToBool(const mxArray* matlabArray) const
+    {
+      bool val;
+      mxClassID classID = mxGetClassID(matlabArray);
+      if(classID==mxDOUBLE_CLASS)
+	{
+	  assert(mxGetN(matlabArray)==1);
+	  assert(mxGetM(matlabArray)==1);
+	  double* valD = mxGetPr(matlabArray);
+	  val = valD[0];
+	  if(val!=0)
+	    val=true;
+	  else
+	    val=false;
+	}
+      else
+	cerr << "Conversion of this type to double not yet supported." << endl;
+    }	  
+  
+  
   mxArray* mxArrayExtractMxArrayField(const mxArray* matlabArray, const string fieldName, const int index=0) const
     {
       const char* fName = fieldName.c_str();
@@ -151,7 +171,7 @@ class CMatinterface {
 	cerr << "mxArray is not a structure." << endl;
       mxArray* fieldPtr = mxGetField(matlabArray, index, fName);
       if(fieldPtr == NULL)
-	cerr << "No such field as " << fieldName << "." << endl;
+	cout << "No such field as " << fieldName << "." << endl;
       return fieldPtr;
     }
 	
@@ -176,7 +196,11 @@ class CMatinterface {
       mxArray* fieldPtr = mxArrayExtractMxArrayField(matlabArray, fieldName, index);
       return mxArrayToVectorInt(fieldPtr);
     }
-  
+  bool mxArrayExtractBoolField(const mxArray* matlabArray, const string fieldName, const int index=0)
+    {
+      mxArray* fieldPtr = mxArrayExtractMxArrayField(matlabArray, fieldName, index);
+      return mxArrayToBool(fieldPtr);
+    }
 
 };
 

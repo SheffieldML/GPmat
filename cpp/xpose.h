@@ -1,4 +1,7 @@
-// tihis is algorithm 488 for GRAND, Gaussian sampling.
+// This is William Cody's scaled complementary erf implementation 
+extern "C" double derfcx_(const double& x);
+
+// this is algorithm 488 for GRAND, Gaussian sampling.
 extern "C" double dgrand_(const int& N); // N is a dummy parameter
 
 // this is algorithm 467 (which I can't get to work).

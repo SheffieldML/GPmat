@@ -1,9 +1,10 @@
 #include <iostream>
 #include "CMatrix.h"
 using namespace std;
-const double EPS=1e-16;
 const double MAXDIFF=1e-13;
 
+int testDot();
+int testNorm();
 int testInv();
 int testCholesky();
 int testRandn();
@@ -19,6 +20,8 @@ int testScale();
 int main()
 {
   int fail = 0;
+  fail += testDot();
+  fail += testNorm();
   fail += testInv();
   fail += testCholesky();
   fail += testRandn();
@@ -31,6 +34,17 @@ int main()
   fail += testAxpy();
   fail += testScale();
   cout << endl << "Total number of failures: " << fail << endl;
+}
+
+int testDot()
+{
+  cout << "Test dot not yet implmenented" << endl;
+  return 0;
+}
+int testNorm()
+{
+  cout << "Test norm not yet implemented" << endl;
+  return 0;
 }
 int testInv()
 {
@@ -260,6 +274,8 @@ int testAxpy()
   B.readMatlabFile("testAxpy.mat", "B");
   CMatrix C;
   C.readMatlabFile("testAxpy.mat", "C");
+  CMatrix D;
+  D.readMatlabFile("testAxpy.mat", "D");
   CMatrix AXPY1;
   AXPY1.readMatlabFile("testAxpy.mat", "AXPY1");
   CMatrix AXPY2;
@@ -268,6 +284,8 @@ int testAxpy()
   AXPY3.readMatlabFile("testAxpy.mat", "AXPY3");
   CMatrix AXPY4;
   AXPY4.readMatlabFile("testAxpy.mat", "AXPY4");
+  CMatrix AXPY5;
+  AXPY5.readMatlabFile("testAxpy.mat", "AXPY5");
   CMatrix F;
   F.deepCopy(B);
   F.axpyRowRow(i, A, k, alpha);
@@ -306,8 +324,16 @@ int testAxpy()
       fail++;
     }
   
+  F.deepCopy(D);
+  F.axpyDiagRow(C, i, alpha);
+  if(F.equals(AXPY5))
+    cout << "axpyDiagRow matches." << endl;
+  else
+    {
+      cout << "FAILURE: axpyDiagRow." << endl;
+      fail++;
+    }
   return fail;
-    
 }
 
 int testGemv()

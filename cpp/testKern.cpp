@@ -7,15 +7,16 @@ int testKern(CKern* kern, CKern* kern2, const string fileName);
 int main()
 {
   int fail=0;
-  fail += testType("bias");
-  fail += testType("white");
-  fail += testType("lin");
-  fail += testType("rbf");
-  fail += testType("cmpnd");
+  char* testKern = "bias";
+  fail += testType(testKern);
+   fail += testType("white");
+   fail += testType("lin");
+   fail += testType("rbf");
+   fail += testType("cmpnd");
   cout << "Number of failures: " << fail << "." << endl;
 }
 
-int testType(string kernelType)
+int testType(const string kernelType)
 {
   string fileName = kernelType + "Test.mat";
 
@@ -60,7 +61,7 @@ int testType(string kernelType)
   delete kern2;
   return fail;
 }
-int testKern(CKern* kern, CKern* kern2, string fileName)
+int testKern(CKern* kern, CKern* kern2, const string fileName)
 {
   
   int fail = 0;
@@ -126,7 +127,17 @@ int testKern(CKern* kern, CKern* kern2, string fileName)
        cout << "FAILURE: " << kern->getKernName() << " parameter gradient." << endl;
        fail++;
      }
-  return fail;
+   
+   kern->writeMatlabFile("crap.mat", "writtenKern");
+   kern2->readMatlabFile("crap.mat", "writtenKern");
+   if(kern->equals(*kern2))
+     cout << "Written kernel matches read in kernel. Read and write to matlab passes." << endl;
+   else
+     {
+       cout << "FAILURE: Read in kernel does not match written out kernel." << endl;
+       fail++;
+     }
+   return fail;
 }
   
 
