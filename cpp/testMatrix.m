@@ -28,6 +28,80 @@ GEMM4 = alpha*D'*H + beta*GEMM2;
 
 save testGemm.mat D E F G H alpha beta GEMM1 GEMM2 GEMM3 GEMM4
 
+% TRMM
+L = randn(15);
+L = tril(L);
+LU = L-diag(diag(L)) + eye(size(L));
+L2 = randn(30);
+L2 = tril(L2);
+L2U = L2-diag(diag(L2))+eye(size(L2));
+U = randn(15);
+U = triu(U);
+UU = U-diag(diag(U)) + eye(size(U));
+U2 = randn(30);
+U2 = triu(U2);
+U2U = U2-diag(diag(U2))+eye(size(U2));
+B = randn(15, 30);
+alpha = pi*exp(1);
+
+TRMM1 = L*B*alpha;
+TRMM2 = L'*B*alpha;
+TRMM3 = B*L2*alpha;
+TRMM4 = B*L2'*alpha;
+TRMM5 = LU*B*alpha;
+TRMM6 = LU'*B*alpha;
+TRMM7 = B*L2U*alpha;
+TRMM8 = B*L2U'*alpha;
+TRMM9 = U*B*alpha;
+TRMM10 = U'*B*alpha;
+TRMM11 = B*U2*alpha;
+TRMM12 = B*U2'*alpha;
+TRMM13 = UU*B*alpha;
+TRMM14 = UU'*B*alpha;
+TRMM15 = B*U2U*alpha;
+TRMM16 = B*U2U'*alpha;
+
+save testTrmm.mat L L2 U U2 B alpha TRMM1 TRMM2 ...
+    TRMM3 TRMM4 TRMM5 TRMM6 TRMM7 TRMM8 TRMM9 TRMM10 ...
+    TRMM11 TRMM12 TRMM13 TRMM14 TRMM15 TRMM16
+
+% TRSM
+L = randn(15);
+L = tril(L);
+LU = L-diag(diag(L)) + eye(size(L));
+L2 = randn(30);
+L2 = tril(L2);
+L2U = L2-diag(diag(L2))+eye(size(L2));
+U = randn(15);
+U = triu(U);
+UU = U-diag(diag(U)) + eye(size(U));
+U2 = randn(30);
+U2 = triu(U2);
+U2U = U2-diag(diag(U2))+eye(size(U2));
+B = randn(15, 30);
+alpha = pi*exp(1);
+
+TRSM1 = L\(B*alpha);
+TRSM2 = L'\(B*alpha);
+TRSM3 = (B*alpha)/L2;
+TRSM4 = (B*alpha)/L2';
+TRSM5 = LU\(B*alpha);
+TRSM6 = LU'\(B*alpha);
+TRSM7 = (B*alpha)/L2U;
+TRSM8 = (B*alpha)/L2U';
+TRSM9 = U\(B*alpha);
+TRSM10 = U'\(B*alpha);
+TRSM11 = (B*alpha)/U2;
+TRSM12 = (B*alpha)/U2';
+TRSM13 = UU\(B*alpha);
+TRSM14 = UU'\(B*alpha);
+TRSM15 = (B*alpha)/U2U;
+TRSM16 = (B*alpha)/U2U';
+
+save testTrsm.mat L L2 LU L2U U U2 UU U2U B alpha TRSM1 TRSM2 ...
+    TRSM3 TRSM4 TRSM5 TRSM6 TRSM7 TRSM8 TRSM9 TRSM10 ...
+    TRSM11 TRSM12 TRSM13 TRSM14 TRSM15 TRSM16
+
 % SYRK
 A = randn(10, 15);
 alpha = pi*exp(1);
@@ -64,7 +138,9 @@ AXPY4(:, j) = C(i, :)'*alpha + B(:, j);
 
 D = randn(20);
 AXPY5 = D + alpha*diag(C(i, :));
-save testAxpy.mat i j k alpha A B C D AXPY1 AXPY2 AXPY3 AXPY4 AXPY5
+AXPY6 = D + alpha*diag(B(:, j));
+save testAxpy.mat i j k alpha A B C D AXPY1 AXPY2 AXPY3 ...
+    AXPY4 AXPY5 AXPY6
 
 % GEMV
 alpha=pi;

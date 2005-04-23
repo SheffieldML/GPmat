@@ -152,13 +152,39 @@ extern "C" void dgemm_(
 extern "C" void dsyrk_(
 		       const char* type, 
 		       const char* trans, 
-		       const int &n, 
-		       const int &k,
+		       const int& n, 
+		       const int& k,
 		       const double& alpha, 
 		       const double* A, 
 		       const int& lda,
 		       const double& beta,
 		       const double* C,
-		       const int &ldc);
+		       const int& ldc);
+
+// Perform triangular matrix matrix operation.
+extern "C" void dtrmm_(const char* side,
+		       const char* type,
+		       const char* trans,
+		       const char* diag,
+		       const int& m,
+		       const int& n,
+		       const double& alpha,
+		       const double* A,
+		       const int& lda,
+		       double* B,
+		       const int& ldb);
+// Perform inverse triangular matrix matrix operation.
+extern "C" void dtrsm_(const char* side,
+		       const char* type,
+		       const char* trans,
+		       const char* diag,
+		       const int& m,
+		       const int& n,
+		       const double& alpha,
+		       const double* A,
+		       const int& lda,
+		       double* B,
+		       const int& ldb);
+		       
 
 #endif

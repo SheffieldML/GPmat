@@ -21,6 +21,7 @@ class CKern : public CMatinterface, public CTransformable {
   CKern(mxArray* kern){}
   virtual ~CKern(){}
   CKern(const CKern& kern){}
+  virtual CKern* clone() const=0;
   virtual void setInitParam()=0;
   virtual double diagComputeElement(const CMatrix& X, const int index) const=0;
   virtual void diagCompute(CMatrix& d, const CMatrix& X) const
@@ -28,14 +29,14 @@ class CKern : public CMatinterface, public CTransformable {
       assert(X.rowsMatch(d));
       assert(d.getCols()==1);
       for(int i=0; i<X.getRows(); i++)
-	d.setVals(diagComputeElement(X, i), i);
+	d.setVal(diagComputeElement(X, i), i);
     }
   virtual void diagCompute(CMatrix& d, const CMatrix& X, const vector<int> indices) const
     {
       assert(d.getRows()==indices.size());
       assert(d.getCols()==1);
       for(int i=0; i<indices.size(); i++)
-	d.setVals(diagComputeElement(X, indices[i]), i);
+	d.setVal(diagComputeElement(X, indices[i]), i);
     }
   virtual void setParam(const double, const int)=0;
   virtual void getGradX(vector<CMatrix*> g, const CMatrix& X, const CMatrix& X2) const=0;
@@ -58,7 +59,7 @@ class CKern : public CMatinterface, public CTransformable {
 	    {
 	      assert(indices1[i]<K.getRows());
 	      assert(indices2[j]<K.getCols());
-	      K.setVals(computeElement(X1, indices1[i], X2, indices2[j]), indices1[i], indices2[j]);
+	      K.setVal(computeElement(X1, indices1[i], X2, indices2[j]), indices1[i], indices2[j]);
 	    }
 	}
     }
@@ -72,10 +73,10 @@ class CKern : public CMatinterface, public CTransformable {
 	  for(int j=0; j<i; j++)
 	    {
 	      k = computeElement(X, i, X, j);
-	      K.setVals(k, i, j);
-	      K.setVals(k, j, i);
+	      K.setVal(k, i, j);
+	      K.setVal(k, j, i);
 	    }
-	  K.setVals(diagComputeElement(X, i), i, i);
+	  K.setVal(diagComputeElement(X, i), i, i);
 	}	      
       K.setSymmetric(true);
     }
@@ -87,7 +88,7 @@ class CKern : public CMatinterface, public CTransformable {
 	{
 	  for(int j=0; j<K.getCols(); j++)
 	    {
-	      K.setVals(computeElement(X, i, X2, j), i, j);
+	      K.setVal(computeElement(X, i, X2, j), i, j);
 	    }
 	}	      
     }
@@ -103,7 +104,7 @@ class CKern : public CMatinterface, public CTransformable {
       assert(X.rowsMatch(cvGrd));
       assert(cvGrd.isSquare());
       for(int i=0; i<nParams; i++)
-	g.setVals(getGradParam(i, X, cvGrd), i);
+	g.setVal(getGradParam(i, X, cvGrd), i);
     }
   virtual double getGradParam(const int index, const CMatrix& X, const CMatrix& cvGrd) const=0;
   virtual double getParam(const int) const=0;
@@ -114,12 +115,12 @@ class CKern : public CMatinterface, public CTransformable {
   void setParams(const CMatrix& X)
     {
       for(int i=0; i<nParams; i++)
-	setParam(X.getVals(i), i);
+	setParam(X.getVal(i), i);
     }
   void getParams(CMatrix& X) const
     {
       for(int i=0; i<nParams; i++)
-	X.setVals(getParam(i), i);
+	X.setVal(getParam(i), i);
 
     }
   inline string getType() const
@@ -188,7 +189,7 @@ class CKern : public CMatinterface, public CTransformable {
   virtual void extractParamFromMxArray(const mxArray* matlabArray);
   // returns sum(sum(cvGrd.*dK/dparam)) 
   void getGradTransParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd) const;
-  bool equals(const CKern& kern) const;
+  bool equals(const CKern& kern, const double tol=ndlutil::MATCHTOL) const;
   
  protected:
   int nParams;
@@ -208,6 +209,10 @@ class CCmpndKern: public CKern {
   CCmpndKern(mxArray* kern);
   ~CCmpndKern();
   CCmpndKern(const CCmpndKern&);
+  CCmpndKern* clone() const
+    {
+      return new CCmpndKern(*this);
+    }
   CCmpndKern(vector<CKern*> kernels);
   
   void setInitParam();
@@ -248,7 +253,11 @@ class CWhiteKern: public CKern {
   CWhiteKern(mxArray* kern);
   ~CWhiteKern();
   CWhiteKern(const CWhiteKern&);
-  void setInitParam();
+  CWhiteKern* clone() const
+    {
+      return new CWhiteKern(*this);
+    }
+ void setInitParam();
   double diagComputeElement(const CMatrix& X, const int index) const;
   void diagCompute(CMatrix& d, const CMatrix& X) const;
   void setParam(double val, const int paramNum);
@@ -278,6 +287,10 @@ class CBiasKern: public CKern {
   CBiasKern(mxArray* kern);
   ~CBiasKern();
   CBiasKern(const CBiasKern&);
+  CBiasKern* clone() const
+    {
+      return new CBiasKern(*this);
+    }
   void setInitParam();
   double diagComputeElement(const CMatrix& X, const int index) const;
   void diagCompute(CMatrix& d, const CMatrix& X) const;
@@ -309,6 +322,10 @@ class CRbfKern: public CKern {
   CRbfKern(mxArray* kern);
   ~CRbfKern();
   CRbfKern(const CRbfKern&);
+  CRbfKern* clone() const
+    {
+      return new CRbfKern(*this);
+    }
   void setInitParam();
   double diagComputeElement(const CMatrix& X, const int index) const;
   void diagCompute(CMatrix& d, const CMatrix& X) const;
@@ -339,6 +356,10 @@ class CLinKern: public CKern {
   CLinKern(mxArray* kern);
   ~CLinKern();
   CLinKern(const CLinKern&);
+  CLinKern* clone() const
+    {
+      return new CLinKern(*this);
+    }
   void setInitParam();
   double diagComputeElement(const CMatrix& X, const int index) const;
   void setParam(double val, const int paramNum);

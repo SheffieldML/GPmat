@@ -2,17 +2,13 @@
 #define CMATRIX_H
 // Base matrix class for Sheffield ML code.
 #include <iostream>
-#include <cmath>
-#include <climits>
 #include <vector>
+#include "ndlutil.h"
 #include "CMatlab.h"
 #include "lapack.h"
 #include "xpose.h"
 using namespace std;
 
-const double EPS=DBL_EPSILON;
-const double DISPEPS = 1e-14;
-const double MATCHTOL = 1e-12;
 
 class CMatrix : public CMatinterface {
  public:
@@ -147,14 +143,14 @@ class CMatrix : public CMatinterface {
       return nrows*ncols;
     }
   // Get the matrix element in the ith row and jth column (indexing from 0).
-  inline const double getVals(const int i, const int j) const
+  inline const double getVal(const int i, const int j) const
     {
       assert(i>=0 && i<nrows);
       assert(j>=0 && j<ncols);
       return vals[i + nrows*j];
     } 
   // Get the ith element from the matrix.
-  inline const double getVals(const int i) const
+  inline const double getVal(const int i) const
     {
       assert(i>=0 && i<nrows*ncols);
       return vals[i];
@@ -166,13 +162,13 @@ class CMatrix : public CMatinterface {
 	vals[i] = val;
     }
   // Set the ith element of the matrix to val.
-  inline void setVals(const double val, const int i)
+  inline void setVal(const double val, const int i)
     {
       assert(i>=0 && i<nrows*ncols);
       vals[i] = val;
     }
   // Set the matrix element from the ith row and jth column to val.
-  inline void setVals(const double val, const int i, const int j)
+  inline void setVal(const double val, const int i, const int j)
     {
       assert(i>=0 && i<nrows);
       assert(j>=0 && j<ncols);
@@ -237,7 +233,7 @@ class CMatrix : public CMatinterface {
       assert(i<nrows);
       dscal_(ncols, alpha, vals+i, nrows);
     }
-  // Level 1 BLAS axpy  := alpha x + y
+  // Level 1 BLAS axpy  y c:= alpha x + y
   void axpy(const CMatrix& x, const double alpha)
   {
     assert(x.ncols==ncols);
@@ -283,6 +279,14 @@ class CMatrix : public CMatinterface {
       assert(i<A.nrows);
       assert(A.ncols==nrows);
       daxpy_(nrows, alpha, A.vals+i, A.nrows, vals, nrows+1);
+    }
+  // Level 1 BLAS axpy diag(Y) = diag(Y) + alpha*x(i, :)'
+  void axpyDiagCol(const CMatrix& A, const int j, const double alpha)
+    {
+      assert(isSquare());
+      assert(j<A.ncols);
+      assert(A.nrows==nrows);
+      daxpy_(nrows, alpha, A.vals+j*A.nrows, 1, vals, nrows+1);
     }
   // Level 2 BLAS Rank 1 update: ger, A = alpha*x*y' + A; 
   void ger(const CMatrix& x, const CMatrix& y, const double alpha)
@@ -692,6 +696,16 @@ class CMatrix : public CMatinterface {
       for(int i = 0; i<nrows*ncols; i++)
 	vals[i] = std::exp(vals[i]);
     }
+  void sign()
+    {
+      for(int i = 0; i<nrows*ncols; i++)
+	{
+	  if(vals[i]>0)
+	    vals[i]=1;
+	  else
+	    vals[i]=-1;
+	}
+    }
   void log()
     {
       for(int i = 0; i<nrows*ncols; i++)
@@ -751,9 +765,15 @@ class CMatrix : public CMatinterface {
   //  C:=alpha*op(A)*op(A)' + beta*C.
   void syrk(const CMatrix& A, const double alpha, const double beta, const char* type, const char* trans);
 
+  void trmm(const CMatrix& B, const double alpha, const char* side, const char* type, const char* trans, const char* diag);
+
+  void trsm(const CMatrix& B, const double alpha, const char* side, const char* type, const char* trans, const char* diag);
+
   // MATLAB interaction commands
   mxArray* toMxArray() const;
   void fromMxArray(const mxArray* matlabArray);
+  void fromSparseMxArray(const mxArray* matlabArray);
+  void fromFullMxArray(const mxArray* matlabArray);
   // sample all elements from a Gaussian with mean and variance.
   void randn(const double var, const double mean);
   // sample all elements from a standard normal.
@@ -765,7 +785,7 @@ class CMatrix : public CMatinterface {
   // sum all elements of the matrix.
   double sum() const;
   // check if the two matrices are identical to within a tolerance.
-  bool equals(const CMatrix& A, double tol=MATCHTOL) const;
+  bool equals(const CMatrix& A, const double tol=ndlutil::MATCHTOL) const;
   // find the maximum absolute difference between matrices.
   double maxAbsDiff(const CMatrix& X) const;
   // find the maximum element of the matrix.

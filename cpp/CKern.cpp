@@ -115,12 +115,12 @@ void CKern::getGradTransParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGr
   double param;
   for(int i=0; i<getNumTransforms(); i++)
     {
-      val=g.getVals(getTransformIndex(i));
+      val=g.getVal(getTransformIndex(i));
       param=getParam(getTransformIndex(i));
-      g.setVals(val*getTransformGradFact(param, i), getTransformIndex(i));
+      g.setVal(val*getTransformGradFact(param, i), getTransformIndex(i));
     }  
 }
-bool CKern::equals(const CKern& kern) const
+bool CKern::equals(const CKern& kern, const double tol) const
 {
   if(getType()!=kern.getType())
     return false;
@@ -130,7 +130,7 @@ bool CKern::equals(const CKern& kern) const
   getParams(params);
   CMatrix kernParams(1, getNumParams());
   kern.getParams(kernParams);
-  if(!params.equals(kernParams))
+  if(!params.equals(kernParams, tol))
     return false;
   return true;
 }
@@ -160,6 +160,9 @@ CCmpndKern::~CCmpndKern()
 CCmpndKern::CCmpndKern(const CCmpndKern& kern) : components(kern.components)
 {
   initialiseKern(kern);
+  setInitParam();
+  for(int i=0; i<components.size(); i++)
+    addKern(components[i]->clone()); 
   //  components(kern.components);// = kern.components;
 }
 void CCmpndKern::setInitParam()
@@ -184,7 +187,7 @@ void CCmpndKern::diagCompute(CMatrix& d, const CMatrix& X) const
   for(int i=0; i < components.size(); i++)
     {
       components[i]->diagCompute(dStore, X);
-      d += dStore;
+      d.axpy(dStore, 1.0);
     }
 }
 void CCmpndKern::setParam(const double val, const int paramNo)
@@ -252,7 +255,7 @@ void CCmpndKern::getDiagGradX(CMatrix& G, const CMatrix& X) const
   for(int i=0; i<components.size(); i++)
     {
       components[i]->getDiagGradX(tempG, X);
-      G+=tempG;
+      G.axpy(tempG, 1.0);
     }
 }
 double CCmpndKern::getDiagGradXElement(const CMatrix& X, const int i, const int j) const
@@ -290,7 +293,7 @@ void CCmpndKern::compute(CMatrix& K, const CMatrix& X) const
   for(int i=0; i<components.size(); i++)
     {
       components[i]->compute(K2, X);
-      K += K2;
+      K.axpy(K2, 1.0);
     }
 }
 
@@ -303,7 +306,7 @@ void CCmpndKern::compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const
   for(int i=0; i<components.size(); i++)
     {
       components[i]->compute(K2, X, X2);
-      K+=K2;
+      K.axpy(K2, 1.0);
     }
 }
 void CCmpndKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad) const
@@ -413,6 +416,7 @@ CWhiteKern::~CWhiteKern()
 CWhiteKern::CWhiteKern(const CWhiteKern& kern)
 {
   initialiseKern(kern);
+  setInitParam();
   variance = kern.variance;
 }
 void CWhiteKern::setInitParam()
@@ -497,7 +501,7 @@ void CWhiteKern::compute(CMatrix& K, const CMatrix& X) const
   assert(K.isSquare());
   K.zeros();
   for(int i=0; i<K.getRows(); i++)
-    K.setVals(variance, i, i);
+    K.setVal(variance, i, i);
   K.setSymmetric(true);
 }
 
@@ -538,7 +542,9 @@ CBiasKern::~CBiasKern()
 CBiasKern::CBiasKern(const CBiasKern& kern)
 {
   initialiseKern(kern);
+  setInitParam();
   variance = kern.variance;
+  
 }
 void CBiasKern::setInitParam()
 {
@@ -660,6 +666,7 @@ CRbfKern::~CRbfKern()
 CRbfKern::CRbfKern(const CRbfKern& kern)
 {
   initialiseKern(kern);
+  setInitParam();
   variance = kern.variance;
   inverseWidth = inverseWidth;
 }
@@ -765,11 +772,11 @@ void CRbfKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGra
       {
 	dist2 = X.dist2Row(i, X, j);
 	k = exp(-dist2*0.5*inverseWidth);
-	g1 -= 0.5*k*variance*dist2*covGrad.getVals(i, j);
-	g2 += k*covGrad.getVals(i, j);
+	g1 -= 0.5*k*variance*dist2*covGrad.getVal(i, j);
+	g2 += k*covGrad.getVal(i, j);
       }
-  g.setVals(g1, 0);
-  g.setVals(g2, 1);
+  g.setVal(g1, 0);
+  g.setVal(g2, 1);
 }
 double CRbfKern::getGradParam(const int index, const CMatrix& X, const CMatrix& covGrad) const
 {
@@ -819,6 +826,7 @@ CLinKern::~CLinKern()
 CLinKern::CLinKern(const CLinKern& kern)
 {
   initialiseKern(kern);
+  setInitParam();
   variance = kern.variance;
 }
 void CLinKern::setInitParam()
@@ -880,7 +888,7 @@ void CLinKern::getDiagGradX(CMatrix& G, const CMatrix& X) const
 }
 double CLinKern::getDiagGradXElement(const CMatrix& X, const int i, const int j) const
 {
-  double g = X.getVals(i, j);
+  double g = X.getVal(i, j);
   g*=2.0*variance;
   return g;
 }
@@ -920,7 +928,7 @@ double CLinKern::getGradParam(const int index, const CMatrix& X, const CMatrix& 
     for(int j=0; j<X.getRows(); j++)
       {
 	dot = X.dotRowRow(i, X, j);
-	g1 += dot*covGrad.getVals(i, j);
+	g1 += dot*covGrad.getVal(i, j);
       }
   return g1;
 }

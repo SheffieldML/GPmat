@@ -18,16 +18,16 @@ void COptimisable::checkGradients()
   origParams.deepCopy(params);
   for(int j=0; j<getOptNumParams(); j++)
     {
-      origParam = origParams.getVals(j);
+      origParam = origParams.getVal(j);
       change = changeFactor*origParam;
-      params.setVals(origParam + change, j);
+      params.setVal(origParam + change, j);
       setOptParams(params);
       objectivePlus = computeObjectiveVal();
-      params.setVals(origParam - change, j);
+      params.setVal(origParam - change, j);
       setOptParams(params);
       objectiveMinus = computeObjectiveVal();
-      numericalDiff.setVals(0.5*(objectivePlus - objectiveMinus)/change, j);
-      params.setVals(origParams.getVals(j), j);
+      numericalDiff.setVal(0.5*(objectivePlus - objectiveMinus)/change, j);
+      params.setVal(origParams.getVal(j), j);
     }
   
   cout << "Numerical differences:" << endl << numericalDiff << endl;
@@ -439,7 +439,7 @@ void COptimisable::scgOptimise(int maxIters, const double objectiveTol, const do
 	{
 	  for(int i =0; i<d.getRows(); i++)
 	    {
-	      if(!finite(d.getVals(0, i)))
+	      if(!finite(d.getVal(0, i)))
 		{
 		  cout << "Warning d is infinite." << endl;
 		}    
@@ -452,7 +452,7 @@ void COptimisable::scgOptimise(int maxIters, const double objectiveTol, const do
 	      mu = d.dotRowRow(0, gradNew, 0);
 	    }
 	  kappa = d.norm2Row(0);
-	  if(kappa < EPS)
+	  if(kappa < ndlutil::EPS)
 	    return;
 	  sigma = sigma0/sqrt(kappa);
 	  paramsPlus.deepCopy(params);

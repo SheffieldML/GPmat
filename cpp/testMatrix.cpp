@@ -10,6 +10,8 @@ int testCholesky();
 int testRandn();
 int testGemm();
 int testSyrk();
+int testTrmm();
+int testTrsm();
 int testGemv();
 int testGer();
 int testSyr();
@@ -20,19 +22,28 @@ int testScale();
 int main()
 {
   int fail = 0;
-  fail += testDot();
-  fail += testNorm();
   fail += testInv();
   fail += testCholesky();
   fail += testRandn();
+
+  // Level 3 Blas
   fail += testGemm();
-  fail += testGemv();
-  fail += testGer();
   fail += testSyrk();
+  fail += testTrmm();
+  fail += testTrsm();
+  // Level 2 Blas
+  fail += testGemv();
   fail += testSymv();
+  fail += testGer();
   fail += testSyr();
+
+  // Level 1 Blas
   fail += testAxpy();
   fail += testScale();
+  fail += testDot();
+  fail += testNorm();
+
+
   cout << endl << "Total number of failures: " << fail << endl;
 }
 
@@ -105,20 +116,20 @@ int testRandn()
   CMatrix normRand(nrows, ncols);
   normRand.randn();
   CMatrix mean = meanCol(meanRow(normRand));
-  if(abs(mean.getVals(0))<1e-2)
+  if(abs(mean.getVal(0))<1e-2)
     cout << "randn mean matches." << endl;
   else
     {
-      cout << "POSSIBLE FAILURE: randn mean " << mean.getVals(0) << "." << endl;
+      cout << "POSSIBLE FAILURE: randn mean " << mean.getVal(0) << "." << endl;
       fail++;
     }
   normRand *= normRand;
   CMatrix var = meanCol(meanRow(normRand));
-  if(abs(var.getVals(0)-1)<1e-2)
+  if(abs(var.getVal(0)-1)<1e-2)
     cout << "randn variance matches." << endl;
   else
     {
-      cout << "POSSIBLE FAILURE: randn variance " << var.getVals(0) << "." << endl;
+      cout << "POSSIBLE FAILURE: randn variance " << var.getVal(0) << "." << endl;
       fail++;
     }
   
@@ -141,10 +152,10 @@ int testGemm()
   H.readMatlabFile("testGemm.mat", "H");
   CMatrix alph;
   alph.readMatlabFile("testGemm.mat", "alpha");
-  double alpha = alph.getVals(0);
+  double alpha = alph.getVal(0);
   CMatrix bet;
   bet.readMatlabFile("testGemm.mat", "beta");
-  double beta = bet.getVals(0);
+  double beta = bet.getVal(0);
   
   // "n" "n" test
   CMatrix GEMM1;
@@ -205,10 +216,10 @@ int testSyrk()
   D.setSymmetric(true);
   CMatrix alph;
   alph.readMatlabFile("testSyrk.mat", "alpha");
-  double alpha = alph.getVals(0);
+  double alpha = alph.getVal(0);
   CMatrix bet;
   bet.readMatlabFile("testSyrk.mat", "beta");
-  double beta = bet.getVals(0);
+  double beta = bet.getVal(0);
   CMatrix SYRK1;
   SYRK1.readMatlabFile("testSyrk.mat", "SYRK1");
   CMatrix SYRK2;
@@ -253,21 +264,464 @@ int testSyrk()
     }
   return fail;
 }
+int testTrmm()
+{
+  int fail = 0;
+  CMatrix B;
+  B.readMatlabFile("testTrmm.mat", "B");
+  CMatrix alph;
+  alph.readMatlabFile("testTrmm.mat", "alpha");
+  double alpha = alph.getVal(0);
+  CMatrix L;
+  L.readMatlabFile("testTrmm.mat", "L");
+  L.setTriangular(true);
+  CMatrix L2;
+  L2.readMatlabFile("testTrmm.mat", "L2");
+  L2.setTriangular(true);
+  CMatrix U;
+  U.readMatlabFile("testTrmm.mat", "U");
+  U.setTriangular(true);
+  CMatrix U2;
+  U2.readMatlabFile("testTrmm.mat", "U2");
+  U2.setTriangular(true);
+  CMatrix F;
+
+  CMatrix TRMM1;
+  TRMM1.readMatlabFile("testTrmm.mat", "TRMM1");
+  F.deepCopy(B);
+  F.trmm(L, alpha, "L", "L", "N", "N");
+  if(F.equals(TRMM1))
+    cout << "trmm llnn matches." << endl;
+  else
+    {
+      cout << "FAILURE: trmm llnn." << endl;
+      fail++;
+    }
+
+  CMatrix TRMM2;
+  TRMM2.readMatlabFile("testTrmm.mat", "TRMM2");
+  F.deepCopy(B);
+  F.trmm(L, alpha, "L", "L", "T", "N");
+  if(F.equals(TRMM2))
+    cout << "trmm lltn matches." << endl;
+  else
+    {
+      cout << "FAILURE: trmm lltn." << endl;
+      fail++;
+    }
+  
+  CMatrix TRMM3;
+  TRMM3.readMatlabFile("testTrmm.mat", "TRMM3");
+  F.deepCopy(B);
+  F.trmm(L2, alpha, "R", "L", "N", "N");
+  if(F.equals(TRMM3))
+    cout << "trmm rlnn matches." << endl;
+  else
+    {
+      cout << "FAILURE: trmm rlnn." << endl;
+      fail++;
+    }
+  CMatrix TRMM4;
+  TRMM4.readMatlabFile("testTrmm.mat", "TRMM4");
+  F.deepCopy(B);
+  F.trmm(L2, alpha, "R", "L", "T", "N");
+  if(F.equals(TRMM4))
+    cout << "trmm rltn matches." << endl;
+  else
+    {
+      cout << "FAILURE: trmm rltn." << endl;
+      fail++;
+    }
+
+  CMatrix TRMM5;
+  TRMM5.readMatlabFile("testTrmm.mat", "TRMM5");
+  F.deepCopy(B);
+  F.trmm(L, alpha, "L", "L", "N", "U");
+  if(F.equals(TRMM5))
+    cout << "trmm llnu matches." << endl;
+  else
+    {
+      cout << "FAILURE: trmm llnu." << endl;
+      fail++;
+    }
+
+  CMatrix TRMM6;
+  TRMM6.readMatlabFile("testTrmm.mat", "TRMM6");
+  F.deepCopy(B);
+  F.trmm(L, alpha, "L", "L", "T", "U");
+  if(F.equals(TRMM6))
+    cout << "trmm lltu matches." << endl;
+  else
+    {
+      cout << "FAILURE: trmm lltu." << endl;
+      fail++;
+    }
+  
+  CMatrix TRMM7;
+  TRMM7.readMatlabFile("testTrmm.mat", "TRMM7");
+  F.deepCopy(B);
+  F.trmm(L2, alpha, "R", "L", "N", "U");
+  if(F.equals(TRMM7))
+    cout << "trmm rlnu matches." << endl;
+  else
+    {
+      cout << "FAILURE: trmm rlnu." << endl;
+      fail++;
+    }
+  CMatrix TRMM8;
+  TRMM8.readMatlabFile("testTrmm.mat", "TRMM8");
+  F.deepCopy(B);
+  F.trmm(L2, alpha, "R", "L", "T", "U");
+  if(F.equals(TRMM8))
+    cout << "trmm rltu matches." << endl;
+  else
+    {
+      cout << "FAILURE: trmm rltu." << endl;
+      fail++;
+    }
+  CMatrix TRMM9;
+  TRMM9.readMatlabFile("testTrmm.mat", "TRMM9");
+  F.deepCopy(B);
+  F.trmm(U, alpha, "L", "U", "N", "N");
+  if(F.equals(TRMM9))
+    cout << "trmm lunn matches." << endl;
+  else
+    {
+      cout << "FAILURE: trmm lunn." << endl;
+      fail++;
+    }
+
+  CMatrix TRMM10;
+  TRMM10.readMatlabFile("testTrmm.mat", "TRMM10");
+  F.deepCopy(B);
+  F.trmm(U, alpha, "L", "U", "T", "N");
+  if(F.equals(TRMM10))
+    cout << "trmm lutn matches." << endl;
+  else
+    {
+      cout << "FAILURE: trmm lutn." << endl;
+      fail++;
+    }
+  
+  CMatrix TRMM11;
+  TRMM11.readMatlabFile("testTrmm.mat", "TRMM11");
+  F.deepCopy(B);
+  F.trmm(U2, alpha, "R", "U", "N", "N");
+  if(F.equals(TRMM11))
+    cout << "trmm runn matches." << endl;
+  else
+    {
+      cout << "FAILURE: trmm runn." << endl;
+      fail++;
+    }
+  CMatrix TRMM12;
+  TRMM12.readMatlabFile("testTrmm.mat", "TRMM12");
+  F.deepCopy(B);
+  F.trmm(U2, alpha, "R", "U", "T", "N");
+  if(F.equals(TRMM12))
+    cout << "trmm rutn matches." << endl;
+  else
+    {
+      cout << "FAILURE: trmm rutn." << endl;
+      fail++;
+    }
+
+  CMatrix TRMM13;
+  TRMM13.readMatlabFile("testTrmm.mat", "TRMM13");
+  F.deepCopy(B);
+  F.trmm(U, alpha, "L", "U", "N", "U");
+  if(F.equals(TRMM13))
+    cout << "trmm lunu matches." << endl;
+  else
+    {
+      cout << "FAILURE: trmm lunu." << endl;
+      fail++;
+    }
+
+  CMatrix TRMM14;
+  TRMM14.readMatlabFile("testTrmm.mat", "TRMM14");
+  F.deepCopy(B);
+  F.trmm(U, alpha, "L", "U", "T", "U");
+  if(F.equals(TRMM14))
+    cout << "trmm lutu matches." << endl;
+  else
+    {
+      cout << "FAILURE: trmm lutu." << endl;
+      fail++;
+    }
+  
+  CMatrix TRMM15;
+  TRMM15.readMatlabFile("testTrmm.mat", "TRMM15");
+  F.deepCopy(B);
+  F.trmm(U2, alpha, "R", "U", "N", "U");
+  if(F.equals(TRMM15))
+    cout << "trmm runu matches." << endl;
+  else
+    {
+      cout << "FAILURE: trmm runu." << endl;
+      fail++;
+    }
+  CMatrix TRMM16;
+  TRMM16.readMatlabFile("testTrmm.mat", "TRMM16");
+  F.deepCopy(B);
+  F.trmm(U2, alpha, "R", "U", "T", "U");
+  if(F.equals(TRMM16))
+    cout << "trmm rutu matches." << endl;
+  else
+    {
+      cout << "FAILURE: trmm rutu." << endl;
+      fail++;
+    }
+
+  
+  return fail;
+}
+int testTrsm()
+{
+  double tolInv = 1e-8;
+  int fail = 0;
+  CMatrix B;
+  B.readMatlabFile("testTrsm.mat", "B");
+  CMatrix alph;
+  alph.readMatlabFile("testTrsm.mat", "alpha");
+  double alpha = alph.getVal(0);
+  CMatrix L;
+  L.readMatlabFile("testTrsm.mat", "L");
+  L.setTriangular(true);
+  CMatrix L2;
+  L2.readMatlabFile("testTrsm.mat", "L2");
+  L2.setTriangular(true);
+  CMatrix U;
+  U.readMatlabFile("testTrsm.mat", "U");
+  U.setTriangular(true);
+  CMatrix U2;
+  U2.readMatlabFile("testTrsm.mat", "U2");
+  U2.setTriangular(true);
+  CMatrix F;
+
+  CMatrix TRSM1;
+  TRSM1.readMatlabFile("testTrsm.mat", "TRSM1");
+  F.deepCopy(B);
+  F.trsm(L, alpha, "L", "L", "N", "N");
+  double absDiff=F.maxAbsDiff(TRSM1);
+  if(absDiff<tolInv)
+    cout << "trsm llnn matches." << endl;
+  else
+    {
+      cout << "FAILURE: trsm llnn, absolute difference " << absDiff << "." << endl;
+      fail++;
+    }
+
+  CMatrix TRSM2;
+  TRSM2.readMatlabFile("testTrsm.mat", "TRSM2");
+  F.deepCopy(B);
+  F.trsm(L, alpha, "L", "L", "T", "N");
+  absDiff=F.maxAbsDiff(TRSM2);
+  if(absDiff<tolInv)
+    cout << "trsm lltn matches." << endl;
+  else
+    {
+      cout << "FAILURE: trsm lltn, absolute difference " << absDiff << "." << endl;
+      fail++;
+    }
+  
+  CMatrix TRSM3;
+  TRSM3.readMatlabFile("testTrsm.mat", "TRSM3");
+  F.deepCopy(B);
+  F.trsm(L2, alpha, "R", "L", "N", "N");
+  absDiff=F.maxAbsDiff(TRSM3);
+  if(absDiff<tolInv)
+    cout << "trsm rlnn matches." << endl;
+  else
+    {
+      cout << "FAILURE: trsm rlnn, absolute difference " << absDiff << "." << endl;
+      fail++;
+    }
+  CMatrix TRSM4;
+  TRSM4.readMatlabFile("testTrsm.mat", "TRSM4");
+  F.deepCopy(B);
+  F.trsm(L2, alpha, "R", "L", "T", "N");
+  absDiff=F.maxAbsDiff(TRSM4);
+  if(absDiff<tolInv)
+    cout << "trsm rltn matches." << endl;
+  else
+    {
+      cout << "FAILURE: trsm rltn, absolute difference " << absDiff << "." << endl;
+      fail++;
+    }
+
+  CMatrix TRSM5;
+  TRSM5.readMatlabFile("testTrsm.mat", "TRSM5");
+  F.deepCopy(B);
+  F.trsm(L, alpha, "L", "L", "N", "U");
+  absDiff=F.maxAbsDiff(TRSM5);
+  if(absDiff<tolInv)
+    cout << "trsm llnu matches." << endl;
+  else
+    {
+      cout << "FAILURE: trsm llnu, absolute difference " << absDiff << "." << endl;
+      fail++;
+    }
+
+  CMatrix TRSM6;
+  TRSM6.readMatlabFile("testTrsm.mat", "TRSM6");
+  F.deepCopy(B);
+  F.trsm(L, alpha, "L", "L", "T", "U");
+  absDiff=F.maxAbsDiff(TRSM6);
+  if(absDiff<tolInv)
+    cout << "trsm lltu matches." << endl;
+  else
+    {
+      cout << "FAILURE: trsm lltu, absolute difference " << absDiff << "." << endl;
+      fail++;
+    }
+  
+  CMatrix TRSM7;
+  TRSM7.readMatlabFile("testTrsm.mat", "TRSM7");
+  F.deepCopy(B);
+  F.trsm(L2, alpha, "R", "L", "N", "U");
+  absDiff=F.maxAbsDiff(TRSM7);
+  if(absDiff<tolInv)
+    cout << "trsm rlnu matches." << endl;
+  else
+    {
+      cout << "FAILURE: trsm rlnu, absolute difference " << absDiff << "." << endl;
+      fail++;
+    }
+  CMatrix TRSM8;
+  TRSM8.readMatlabFile("testTrsm.mat", "TRSM8");
+  F.deepCopy(B);
+  F.trsm(L2, alpha, "R", "L", "T", "U");
+  absDiff=F.maxAbsDiff(TRSM8);
+  if(absDiff<tolInv)
+    cout << "trsm rltu matches." << endl;
+  else
+    {
+      cout << "FAILURE: trsm rltu, absolute difference " << absDiff << "." << endl;
+      fail++;
+    }
+  CMatrix TRSM9;
+  TRSM9.readMatlabFile("testTrsm.mat", "TRSM9");
+  F.deepCopy(B);
+  F.trsm(U, alpha, "L", "U", "N", "N");
+  absDiff=F.maxAbsDiff(TRSM9);
+  if(absDiff<tolInv)
+    cout << "trsm lunn matches." << endl;
+  else
+    {
+      cout << "FAILURE: trsm lunn, absolute difference " << absDiff << "." << endl;
+      fail++;
+    }
+
+  CMatrix TRSM10;
+  TRSM10.readMatlabFile("testTrsm.mat", "TRSM10");
+  F.deepCopy(B);
+  F.trsm(U, alpha, "L", "U", "T", "N");
+  absDiff=F.maxAbsDiff(TRSM10);
+  if(absDiff<tolInv)
+    cout << "trsm lutn matches." << endl;
+  else
+    {
+      cout << "FAILURE: trsm lutn, absolute difference " << absDiff << "." << endl;
+      fail++;
+    }
+  
+  CMatrix TRSM11;
+  TRSM11.readMatlabFile("testTrsm.mat", "TRSM11");
+  F.deepCopy(B);
+  F.trsm(U2, alpha, "R", "U", "N", "N");
+  absDiff=F.maxAbsDiff(TRSM11);
+  if(absDiff<tolInv)
+    cout << "trsm runn matches." << endl;
+  else
+    {
+      cout << "FAILURE: trsm runn, absolute difference " << absDiff << "." << endl;
+      fail++;
+    }
+  CMatrix TRSM12;
+  TRSM12.readMatlabFile("testTrsm.mat", "TRSM12");
+  F.deepCopy(B);
+  F.trsm(U2, alpha, "R", "U", "T", "N");
+  absDiff=F.maxAbsDiff(TRSM12);
+  if(absDiff<tolInv)
+    cout << "trsm rutn matches." << endl;
+  else
+    {
+      cout << "FAILURE: trsm rutn, absolute difference " << absDiff << "." << endl;
+      fail++;
+    }
+
+  CMatrix TRSM13;
+  TRSM13.readMatlabFile("testTrsm.mat", "TRSM13");
+  F.deepCopy(B);
+  F.trsm(U, alpha, "L", "U", "N", "U");
+  absDiff=F.maxAbsDiff(TRSM13);
+  if(absDiff<tolInv)
+    cout << "trsm lunu matches." << endl;
+  else
+    {
+      cout << "FAILURE: trsm lunu, absolute difference " << absDiff << "." << endl;
+      fail++;
+    }
+
+  CMatrix TRSM14;
+  TRSM14.readMatlabFile("testTrsm.mat", "TRSM14");
+  F.deepCopy(B);
+  F.trsm(U, alpha, "L", "U", "T", "U");
+  absDiff=F.maxAbsDiff(TRSM14);
+  if(absDiff<tolInv)
+    cout << "trsm lutu matches." << endl;
+  else
+    {
+      cout << "FAILURE: trsm lutu, absolute difference " << absDiff << "." << endl;
+      fail++;
+    }
+  
+  CMatrix TRSM15;
+  TRSM15.readMatlabFile("testTrsm.mat", "TRSM15");
+  F.deepCopy(B);
+  F.trsm(U2, alpha, "R", "U", "N", "U");
+  absDiff = F.maxAbsDiff(TRSM15);
+  if(absDiff<tolInv)
+    cout << "trsm runu matches." << endl;
+  else
+    {
+      cout << "FAILURE: trsm runu, absolute difference " << absDiff << "." << endl;
+      fail++;
+    }
+  CMatrix TRSM16;
+  TRSM16.readMatlabFile("testTrsm.mat", "TRSM16");
+  F.deepCopy(B);
+  F.trsm(U2, alpha, "R", "U", "T", "U");
+  absDiff=F.maxAbsDiff(TRSM16);
+  if(absDiff<tolInv)
+    cout << "trsm rutu matches." << endl;
+  else
+    {
+      cout << "FAILURE: trsm rutu, absolute difference " << absDiff << "." << endl;
+      fail++;
+    }
+
+  
+  return fail;
+}
+
+
 int testAxpy()
 {
   int fail = 0;
   CMatrix iMat;
   iMat.readMatlabFile("testAxpy.mat", "i");
-  int i = (int)iMat.getVals(0) - 1;
+  int i = (int)iMat.getVal(0) - 1;
   CMatrix jMat;
   jMat.readMatlabFile("testAxpy.mat", "j");
-  int j = (int)jMat.getVals(0) - 1;
+  int j = (int)jMat.getVal(0) - 1;
   CMatrix kMat;
   kMat.readMatlabFile("testAxpy.mat", "k");
-  int k = (int)kMat.getVals(0) - 1;
+  int k = (int)kMat.getVal(0) - 1;
   CMatrix alphaMat;
   alphaMat.readMatlabFile("testAxpy.mat", "alpha");
-  double alpha = alphaMat.getVals(0);
+  double alpha = alphaMat.getVal(0);
   CMatrix A;
   A.readMatlabFile("testAxpy.mat", "A");
   CMatrix B;
@@ -278,14 +732,6 @@ int testAxpy()
   D.readMatlabFile("testAxpy.mat", "D");
   CMatrix AXPY1;
   AXPY1.readMatlabFile("testAxpy.mat", "AXPY1");
-  CMatrix AXPY2;
-  AXPY2.readMatlabFile("testAxpy.mat", "AXPY2");
-  CMatrix AXPY3;
-  AXPY3.readMatlabFile("testAxpy.mat", "AXPY3");
-  CMatrix AXPY4;
-  AXPY4.readMatlabFile("testAxpy.mat", "AXPY4");
-  CMatrix AXPY5;
-  AXPY5.readMatlabFile("testAxpy.mat", "AXPY5");
   CMatrix F;
   F.deepCopy(B);
   F.axpyRowRow(i, A, k, alpha);
@@ -296,6 +742,8 @@ int testAxpy()
       cout << "FAILURE: axpyRowRow." << endl;
       fail++;
     }
+  CMatrix AXPY2;
+  AXPY2.readMatlabFile("testAxpy.mat", "AXPY2");
   F.deepCopy(B);
   F.axpyRowCol(i, C, j, alpha);
   if(F.equals(AXPY2))
@@ -305,6 +753,8 @@ int testAxpy()
       cout << "FAILURE: axpyRowCol." << endl;
       fail++;
     }
+  CMatrix AXPY3;
+  AXPY3.readMatlabFile("testAxpy.mat", "AXPY3");
   F.deepCopy(B);
   F.axpyColCol(j, A, k, alpha);
   if(F.equals(AXPY3))
@@ -314,6 +764,8 @@ int testAxpy()
       cout << "FAILURE: axpyColCol." << endl;
       fail++;
     }
+  CMatrix AXPY4;
+  AXPY4.readMatlabFile("testAxpy.mat", "AXPY4");
   F.deepCopy(B);
   F.axpyColRow(j, C, i, alpha);
   if(F.equals(AXPY4))
@@ -324,6 +776,8 @@ int testAxpy()
       fail++;
     }
   
+  CMatrix AXPY5;
+  AXPY5.readMatlabFile("testAxpy.mat", "AXPY5");
   F.deepCopy(D);
   F.axpyDiagRow(C, i, alpha);
   if(F.equals(AXPY5))
@@ -331,6 +785,17 @@ int testAxpy()
   else
     {
       cout << "FAILURE: axpyDiagRow." << endl;
+      fail++;
+    }
+  CMatrix AXPY6;
+  AXPY6.readMatlabFile("testAxpy.mat", "AXPY6");
+  F.deepCopy(D);
+  F.axpyDiagCol(B, j, alpha);
+  if(F.equals(AXPY6))
+    cout << "axpyDiagCol matches." << endl;
+  else
+    {
+      cout << "FAILURE: axpyDiagCol." << endl;
       fail++;
     }
   return fail;
@@ -341,19 +806,19 @@ int testGemv()
   int fail = 0;
   CMatrix iMat;
   iMat.readMatlabFile("testGemv.mat", "i");
-  int i = (int)iMat.getVals(0) - 1;
+  int i = (int)iMat.getVal(0) - 1;
   CMatrix jMat;
   jMat.readMatlabFile("testGemv.mat", "j");
-  int j = (int)jMat.getVals(0) - 1;
+  int j = (int)jMat.getVal(0) - 1;
   CMatrix kMat;
   kMat.readMatlabFile("testGemv.mat", "k");
-  int k = (int)kMat.getVals(0) - 1;
+  int k = (int)kMat.getVal(0) - 1;
   CMatrix alphaMat;
   alphaMat.readMatlabFile("testGemv.mat", "alpha");
-  double alpha = alphaMat.getVals(0);
+  double alpha = alphaMat.getVal(0);
   CMatrix betaMat;
   betaMat.readMatlabFile("testGemv.mat", "beta");
-  double beta = betaMat.getVals(0);
+  double beta = betaMat.getVal(0);
   CMatrix A;
   A.readMatlabFile("testGemv.mat", "A");
   CMatrix B;
@@ -460,16 +925,16 @@ int testGer()
   int fail = 0;
   CMatrix iMat;
   iMat.readMatlabFile("testGer.mat", "i");
-  int i = (int)iMat.getVals(0) - 1;
+  int i = (int)iMat.getVal(0) - 1;
   CMatrix jMat;
   jMat.readMatlabFile("testGer.mat", "j");
-  int j = (int)jMat.getVals(0) - 1;
+  int j = (int)jMat.getVal(0) - 1;
   CMatrix kMat;
   kMat.readMatlabFile("testGer.mat", "k");
-  int k = (int)kMat.getVals(0) - 1;
+  int k = (int)kMat.getVal(0) - 1;
   CMatrix alphaMat;
   alphaMat.readMatlabFile("testGer.mat", "alpha");
-  double alpha = alphaMat.getVals(0);
+  double alpha = alphaMat.getVal(0);
   CMatrix x;
   x.readMatlabFile("testGer.mat", "x");
   CMatrix y;
@@ -548,13 +1013,13 @@ int testSyr()
   int fail = 0;
   CMatrix iMat;
   iMat.readMatlabFile("testSyr.mat", "i");
-  int i = (int)iMat.getVals(0) - 1;
+  int i = (int)iMat.getVal(0) - 1;
   CMatrix jMat;
   jMat.readMatlabFile("testSyr.mat", "j");
-  int j = (int)jMat.getVals(0) - 1;
+  int j = (int)jMat.getVal(0) - 1;
   CMatrix alphaMat;
   alphaMat.readMatlabFile("testSyr.mat", "alpha");
-  double alpha = alphaMat.getVals(0);
+  double alpha = alphaMat.getVal(0);
   CMatrix x;
   x.readMatlabFile("testSyr.mat", "x");
   CMatrix A;
@@ -624,19 +1089,19 @@ int testSymv()
   int fail = 0;
   CMatrix iMat;
   iMat.readMatlabFile("testSymv.mat", "i");
-  int i = (int)iMat.getVals(0) - 1;
+  int i = (int)iMat.getVal(0) - 1;
   CMatrix jMat;
   jMat.readMatlabFile("testSymv.mat", "j");
-  int j = (int)jMat.getVals(0) - 1;
+  int j = (int)jMat.getVal(0) - 1;
   CMatrix kMat;
   kMat.readMatlabFile("testSymv.mat", "k");
-  int k = (int)kMat.getVals(0) - 1;
+  int k = (int)kMat.getVal(0) - 1;
   CMatrix alphaMat;
   alphaMat.readMatlabFile("testSymv.mat", "alpha");
-  double alpha = alphaMat.getVals(0);
+  double alpha = alphaMat.getVal(0);
   CMatrix betaMat;
   betaMat.readMatlabFile("testSymv.mat", "beta");
-  double beta = betaMat.getVals(0);
+  double beta = betaMat.getVal(0);
   CMatrix A;
   A.readMatlabFile("testSymv.mat", "A");
   CMatrix B;
@@ -743,13 +1208,13 @@ int testScale()
   int fail = 0;
   CMatrix iMat;
   iMat.readMatlabFile("testScale.mat", "i");
-  int i = (int)iMat.getVals(0) - 1;
+  int i = (int)iMat.getVal(0) - 1;
   CMatrix jMat;
   jMat.readMatlabFile("testScale.mat", "j");
-  int j = (int)jMat.getVals(0) - 1;
+  int j = (int)jMat.getVal(0) - 1;
   CMatrix alphaMat;
   alphaMat.readMatlabFile("testScale.mat", "alpha");
-  double alpha = alphaMat.getVals(0);
+  double alpha = alphaMat.getVal(0);
   CMatrix A;
   A.readMatlabFile("testScale.mat", "A");
   CMatrix B;
@@ -810,7 +1275,7 @@ int testScale()
   D.deepCopy(B);
   D.pdinv();
   cout << "Inverse of B using pdinv = " << endl << D;
-  CMatrix E(nrows, ncols);
+  CMatrix E(nrows, ncols); 
   E.deepCopy(B);
   E.inv();
   cout << "Inverse of B using inv = " << endl << E;

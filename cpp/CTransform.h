@@ -220,14 +220,14 @@ class CTransformable {
       assert(params.getRows()==1);
       assert(params.getCols()==getNumParams());
       for(int i=0; i<params.getCols(); i++)
-	params.setVals(getParam(i), i);
+	params.setVal(getParam(i), i);
     }
   virtual void setParams(const CMatrix& params)
     {
       assert(params.getRows()==1);
       assert(params.getCols()==getNumParams());
       for(int i=0; i<params.getCols(); i++)
-	setParam(params.getVals(i), i);
+	setParam(params.getVal(i), i);
     }
   
   virtual double getTransParam(const int paramNo) const
@@ -252,8 +252,8 @@ class CTransformable {
       double val;
       for(int i=0; i<transArray.transIndex.size(); i++)
 	{
-	  val=transParam.getVals(transArray.transIndex[i]);
-	  transParam.setVals(transArray.transforms[i]->xtoa(val), transArray.transIndex[i]);
+	  val=transParam.getVal(transArray.transIndex[i]);
+	  transParam.setVal(transArray.transforms[i]->xtoa(val), transArray.transIndex[i]);
 	}  
     }
   virtual void setTransParam(const double val, const int paramNo)
@@ -277,8 +277,8 @@ class CTransformable {
       double val = 0.0;
       for(int i=0; i<transArray.transIndex.size(); i++)
 	{
-	  val = param.getVals(transArray.transIndex[i]);
-	  param.setVals(transArray.transforms[i]->atox(val), transArray.transIndex[i]);
+	  val = param.getVal(transArray.transIndex[i]);
+	  param.setVal(transArray.transforms[i]->atox(val), transArray.transIndex[i]);
 	}
       setParams(param);
     }
@@ -291,9 +291,9 @@ class CTransformable {
       double param;
       for(int i=0; i<transArray.transIndex.size(); i++)
 	{
-	  val=g.getVals(transArray.transIndex[i]);
+	  val=g.getVal(transArray.transIndex[i]);
 	  param=getParam(transArray.transIndex[i]);
-	  g.setVals(val*transArray.transforms[i]->gradfact(param), transArray.transIndex[i]);
+	  g.setVal(val*transArray.transforms[i]->gradfact(param), transArray.transIndex[i]);
 	}  
     }
   inline const int getNumTransforms() const

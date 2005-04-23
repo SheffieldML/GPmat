@@ -18,7 +18,6 @@ void CMatrix::copy(const CMatrix& x)
   dcopy_(ncols*nrows, x.vals, 1, vals, 1);
   symmetric = x.symmetric;
 }
-
 void CMatrix::gemv(const CMatrix& A, const CMatrix& x, const double alpha, const double beta, const char* trans)
 {
   // Level 2 Blas operation y <- alpha op(A)*x + beta*y
@@ -180,6 +179,55 @@ void CMatrix::gemm(const CMatrix& A, const CMatrix& B, const double alpha, const
 	 B.vals, B.nrows, beta, vals, nrows);
   
 }
+void CMatrix::trmm(const CMatrix& A, const double alpha, const char* side, const char* type, const char* trans, const char* diag)
+{
+  assert(side[0]=='L' || side[0]=='l' || side[0]=='R' || side[0]=='r');
+  assert(type[0]=='L' || type[0]=='l' || type[0]=='U' || type[0]=='u');
+  assert(trans[0]=='N' || trans[0]=='n' || trans[0]=='T' || trans[0]=='t');
+  assert(diag[0]=='N' || diag[0]=='n' || diag[0]=='U' || diag[0]=='u');
+  
+  assert(A.isTriangular());
+  switch(side[0])
+    {
+    case 'L':
+    case 'l':
+      assert(A.nrows==nrows);
+      break;
+    case 'R':
+    case 'r':
+      assert(A.nrows==ncols);
+      break;
+    otherwise:
+      cerr << "No such value for side.";
+    }
+  
+  dtrmm_(side, type, trans, diag, nrows, ncols, alpha, A.vals, A.nrows, vals, nrows);
+}
+void CMatrix::trsm(const CMatrix& A, const double alpha, const char* side, const char* type, const char* trans, const char* diag)
+{
+  assert(side[0]=='L' || side[0]=='l' || side[0]=='R' || side[0]=='r');
+  assert(type[0]=='L' || type[0]=='l' || type[0]=='U' || type[0]=='u');
+  assert(trans[0]=='N' || trans[0]=='n' || trans[0]=='T' || trans[0]=='t');
+  assert(diag[0]=='N' || diag[0]=='n' || diag[0]=='U' || diag[0]=='u');
+  
+  assert(A.isTriangular());
+  switch(side[0])
+    {
+    case 'L':
+    case 'l':
+      assert(A.nrows==nrows);
+      break;
+    case 'R':
+    case 'r':
+      assert(A.nrows==ncols);
+      break;
+    otherwise:
+      cerr << "No such value for side.";
+    }
+  
+  dtrsm_(side, type, trans, diag, nrows, ncols, alpha, A.vals, A.nrows, vals, nrows);
+}
+
 void CMatrix::syrk(const CMatrix& A, const double alpha, const double beta, const char* type, const char* trans)
 {
   assert(isSymmetric() || beta==0.0);  
@@ -263,7 +311,7 @@ double CMatrix::logDet(CMatrix U)
   assert(isSymmetric()); /// actually should be positive definite.
   double logDet = 0.0;
   for(int i=0; i<U.getRows(); i++)
-    logDet+=std::log(U.getVals(i, i));
+    logDet+=std::log(U.getVal(i, i));
   logDet *= 2;
   return logDet;
 }
@@ -339,6 +387,19 @@ mxArray* CMatrix::toMxArray() const
 }
 void CMatrix::fromMxArray(const mxArray* matlabArray) 
 {
+  // TODO implement true sparse matrices to handle this.
+  if(mxIsSparse(matlabArray))
+    {
+      fromSparseMxArray(matlabArray);
+    }
+  else
+    {
+      fromFullMxArray(matlabArray);
+    }
+}
+void CMatrix::fromFullMxArray(const mxArray* matlabArray)
+{
+  assert(!mxIsSparse(matlabArray));
   if(mxGetClassID(matlabArray) != mxDOUBLE_CLASS)
     {
       cerr << "mxArray is not a double matrix." << endl;
@@ -350,25 +411,32 @@ void CMatrix::fromMxArray(const mxArray* matlabArray)
   const int* dims = mxGetDimensions(matlabArray);
   resize(dims[0], dims[1]);
   double* matlabVals = mxGetPr(matlabArray);
-
-  // TODO implement true sparse matrices to handle this.
-  if(mxIsSparse(matlabArray))
-    {
-      setVals(0.0);
-      int* matlabIr = mxGetIr(matlabArray);
-      int* matlabJc = mxGetJc(matlabArray);
-      int nnz = matlabJc[getCols()];
-      for(int j=0; j<getCols(); j++)
-	for(int i=matlabJc[j]; i<matlabJc[j+1]; i++)
-	  {
-	    setVals(matlabVals[i], matlabIr[i], j);
-	  }     
-    }
-  else
-    {
-      dcopy_(ncols*nrows, matlabVals, 1, vals, 1);
-    }
+  dcopy_(ncols*nrows, matlabVals, 1, vals, 1);
 }
+void CMatrix::fromSparseMxArray(const mxArray* matlabArray)
+{
+  assert(mxIsSparse(matlabArray));
+  if(mxGetClassID(matlabArray) != mxDOUBLE_CLASS)
+    {
+      cerr << "mxArray is not a double matrix." << endl;
+    }
+  if(mxGetNumberOfDimensions(matlabArray) != 2)
+    {
+      cerr << "mxArray does not have 2 dimensions." << endl;
+    }
+  const int* dims = mxGetDimensions(matlabArray);
+  resize(dims[0], dims[1]);
+  double* matlabVals = mxGetPr(matlabArray);
+  setVals(0.0);
+  int* matlabIr = mxGetIr(matlabArray);
+  int* matlabJc = mxGetJc(matlabArray);
+  int nnz = matlabJc[getCols()];
+  for(int j=0; j<getCols(); j++)
+    for(int i=matlabJc[j]; i<matlabJc[j+1]; i++)
+      {
+	setVal(matlabVals[i], matlabIr[i], j);
+      } 
+}    
 void CMatrix::randn(const double var, const double mean)
 {
   dgrand_(0);
@@ -389,7 +457,7 @@ double CMatrix::sum() const
   return sum;
   
 }
-bool CMatrix::equals(const CMatrix& A, double tol) const
+bool CMatrix::equals(const CMatrix& A, const double tol) const
 {
   if(nrows != A.nrows)
     return false;
@@ -514,8 +582,8 @@ ostream& operator<<(ostream& out, const CMatrix& A)
 {
   for(int i = 0; i < A.getRows(); i++){
     for(int j = 0; j < A.getCols(); j++){
-      if (A.getVals(i, j) > DISPEPS || A.getVals(i, j) < -DISPEPS)
-        out << A.getVals(i, j) << " ";
+      if (A.getVal(i, j) > ndlutil::DISPEPS || A.getVal(i, j) < -ndlutil::DISPEPS)
+        out << A.getVal(i, j) << " ";
       else
         out << 0 << " ";
     }
@@ -594,7 +662,7 @@ double trace(const CMatrix& A)
   assert(A.isSquare());
   double tr = 0;
   for(int i=0; i<A.getRows(); i++)
-    tr += A.getVals(i, i);
+    tr += A.getVal(i, i);
   return tr;
 }
 double sum(const CMatrix& A)
@@ -621,7 +689,7 @@ CMatrix sumRow(const CMatrix& A)
       s[j] = 0.0;
       for(int i=0; i<A.getRows(); i++)
 	{
-	  s[j] += A.getVals(i, j);
+	  s[j] += A.getVal(i, j);
 	}
     }
   CMatrix S(1, A.getCols(), s);
@@ -631,7 +699,7 @@ CMatrix meanRow(const CMatrix& A)
 {
   CMatrix M = sumRow(A);
   for(int j=0; j<A.getCols(); j++)
-    M.setVals(M.getVals(0, j)/A.getRows(), 0, j);
+    M.setVal(M.getVal(0, j)/A.getRows(), 0, j);
   return M;
 }
 CMatrix sumCol(const CMatrix& A)
@@ -642,7 +710,7 @@ CMatrix sumCol(const CMatrix& A)
       s[i] = 0.0;
       for(int j=0; j<A.getCols(); j++)
 	{
-	  s[i] += A.getVals(i, j);
+	  s[i] += A.getVal(i, j);
 	}
     }
   CMatrix S(A.getRows(), 1, s);
@@ -652,7 +720,7 @@ CMatrix meanCol(const CMatrix& A)
 {
   CMatrix M = sumCol(A);
   for(int i=0; i<A.getRows(); i++)
-    M.setVals(M.getVals(i, 0)/A.getCols(), i, 0);
+    M.setVal(M.getVal(i, 0)/A.getCols(), i, 0);
   return M;
 }
 

@@ -2,43 +2,81 @@
 #include "CMatrix.h"
 #include "CIvm.h"
 
+int testGaussian();
+int testProbit();
+
 int main()
 {
-  int numData = 1000;
-  int numFeatures = 6;
-  int numProcess = 1;
-  CMatrix X(numData, numFeatures);
-  X.randn();
-  X.writeMatlabFile("test.mat", "X");
+  int fail = 0;
+  fail += testGaussian();
+  fail += testProbit();
+}
 
-  // create weight vector.
-  CMatrix w(numFeatures, 1);
-  w.randn();
-  w.updateMatlabFile("test.mat", "w");
+int testGaussian()
+{
+  int fail = 0;
+  CMatrix X;
+  X.readMatlabFile("testGaussian.mat", "X");
+  CMatrix y;
+  y.readMatlabFile("testGaussian.mat", "y");
+
+  CCmpndKern kernInit(X);
+  kernInit.addKern(new CRbfKern(X));
+  kernInit.addKern(new CLinKern(X));
+  kernInit.addKern(new CBiasKern(X));
+  kernInit.addKern(new CWhiteKern(X));
+  CGaussianNoise noiseInit(y);
   
-  // create targets
-  CMatrix y(numData, numProcess);
-  // set random noise
-  y.randn(0.01, 0.0);
-  // add Xw to it
-  y.gemv(X, w, 1.0, 1.0, "n");
-  y.updateMatlabFile("test.mat", "y");
-  
-  CGaussianNoise noise(y);
-
-
+  CIvm modelInit(X, y, kernInit, noiseInit, CIvm::ENTROPY, 50);
+  modelInit.selectPoints();
+   
   CCmpndKern kern(X);
-  kern.addKern(new CRbfKern(X));
-  kern.addKern(new CLinKern(X));
-  kern.addKern(new CBiasKern(X));
-  kern.addKern(new CWhiteKern(X));
-  cout << "Kernel:" << endl;
-  kern.display(cout);
-  int verbosity = 2;
-  int activeSetSize = 100;
-  int selectionCriterion = 0; // entropy selection
-  CIvm model(X, y, kern, noise, selectionCriterion, activeSetSize, verbosity);
-  model.optimise(4, 100, 20);
+  kern.readMatlabFile("testGaussian.mat", "kernInit");
+  CGaussianNoise noise(y);
+  noise.readMatlabFile("testGaussian.mat", "noiseInit");
+
+  CIvm model(X, y, kern, noise, "testGaussian.mat", "ivmInfoInit", 0);
+  if(model.equals(modelInit))
+    cout << "Gaussian Noise passed." << endl;
+  else
+    {
+      cout << "FAILURE: Gaussian noise." << endl;
+      fail++;
+    }
+  return fail;
+}
+int testProbit()
+{
+  int fail = 0;
+  CMatrix X;
+  X.readMatlabFile("testProbit.mat", "X");
+  CMatrix y;
+  y.readMatlabFile("testProbit.mat", "y");
+
+  CCmpndKern kernInit(X);
+  kernInit.addKern(new CRbfKern(X));
+  kernInit.addKern(new CLinKern(X));
+  kernInit.addKern(new CBiasKern(X));
+  kernInit.addKern(new CWhiteKern(X));
+  CProbitNoise noiseInit(y);
+  
+  CIvm modelInit(X, y, kernInit, noiseInit, CIvm::ENTROPY, 50);
+  modelInit.selectPoints();
+   
+  CCmpndKern kern(X);
+  kern.readMatlabFile("testProbit.mat", "kernInit");
+  CProbitNoise noise(y);
+  noise.readMatlabFile("testProbit.mat", "noiseInit");
+
+  CIvm model(X, y, kern, noise, "testProbit.mat", "ivmInfoInit", 0);
+  if(model.equals(modelInit))
+    cout << "Probit Noise passed." << endl;
+  else
+    {
+      cout << "FAILURE: Probit noise." << endl;
+      fail++;
+    }
+  return fail;
 }
 
 

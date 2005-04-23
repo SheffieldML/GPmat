@@ -17,8 +17,8 @@ void CNoise::getNuG(CMatrix& g, CMatrix& nu, const int index) const
       nuval = gval*gval - 2*nuval;
       if(abs(nuval)<DEPS)
 	nuval=DEPS;
-      nu.setVals(nuval, index, j);
-      g.setVals(gval, index, j);
+      nu.setVal(nuval, index, j);
+      g.setVal(gval, index, j);
     }
   
 }
@@ -38,9 +38,9 @@ void CNoise::updateSites(CMatrix& m, CMatrix& beta, const int actIndex,
   double gVal=0.0;
   for(int j=0; j<m.getCols(); j++)
     {
-      nuVal = nu.getVals(index, j);
-      m.setVals(getMu(index, j) + g.getVals(index, j)/nuVal);
-      beta.setVals(nuVal/(1-nuVal*getVarSigma(index, j)), actIndex, j);
+      nuVal = nu.getVal(index, j);
+      m.setVal(getMu(index, j) + g.getVal(index, j)/nuVal, actIndex, j);
+      beta.setVal(nuVal/(1-nuVal*getVarSigma(index, j)), actIndex, j);
     }
 }
 mxArray* CNoise::toMxArray() const
@@ -126,7 +126,7 @@ void CNoise::extractParamFromMxArray(const mxArray* matlabArray)
     }
 
 }
-bool CNoise::equals(const CNoise& noise) const
+bool CNoise::equals(const CNoise& noise, const double tol) const
 {
   if(getType()!=noise.getType())
     return false;
@@ -136,7 +136,7 @@ bool CNoise::equals(const CNoise& noise) const
   getParams(params);
   CMatrix noiseParams(1, getNumParams());
   noise.getParams(noiseParams);
-  if(!params.equals(noiseParams))
+  if(!params.equals(noiseParams, tol))
     return false;
   return true;
 }
@@ -171,7 +171,7 @@ ostream& CGaussianNoise::display(ostream& os)
   os << "Gaussian Noise: " << endl; 
   for(int j=0; j<bias.getCols(); j++)
     {
-      b = bias.getVals(j);
+      b = bias.getVal(j);
       os << "Bias on process " << j << ": " << b << endl; 
     }
   os << "Variance: " << sigma2 << endl;
@@ -182,7 +182,7 @@ void CGaussianNoise::setParam(const double val, const int index)
   assert(index>=0);
   assert(index<getNumParams());
   if(index<getNumProcesses())
-    bias.setVals(val, index);
+    bias.setVal(val, index);
   else
     sigma2=val;
 }  
@@ -194,16 +194,16 @@ void CGaussianNoise::setParams(const CMatrix& params)
   assert(getNumProcesses()==bias.getCols());
   for(int j=0; j<bias.getCols(); j++)
     {
-      bias.setVals(params.getVals(j), j);
+      bias.setVal(params.getVal(j), j);
     }
-  sigma2 = params.getVals(getNumParams()-1);
+  sigma2 = params.getVal(getNumParams()-1);
 }
 double CGaussianNoise::getParam(const int index) const
 {
   assert(index>=0);
   assert(index<getNumParams());
   if(index<getNumProcesses())
-    return bias.getVals(index);
+    return bias.getVal(index);
   else
     return sigma2;
 
@@ -215,8 +215,8 @@ void CGaussianNoise::getParams(CMatrix& params) const
   assert(params.getRows()==1);
   assert(getNumProcesses()==bias.getCols());
   for(int j=0; j<getNumProcesses(); j++)
-    params.setVals(bias.getVals(j), j);
-  params.setVals(sigma2, getNumParams()-1);
+    params.setVal(bias.getVal(j), j);
+  params.setVal(sigma2, getNumParams()-1);
 }
  
 void CGaussianNoise::getGradParams(CMatrix& g) const
@@ -230,7 +230,7 @@ void CGaussianNoise::getGradParams(CMatrix& g) const
   for(int j=0; j<y.getCols(); j++)
     {
       double gbias = 0.0;
-      b = bias.getVals(j);
+      b = bias.getVal(j);
       for(int i=0; i<y.getRows(); i++)
 	{
 	  nu = 1/(getVarSigma(i, j)+sigma2);
@@ -239,14 +239,14 @@ void CGaussianNoise::getGradParams(CMatrix& g) const
 	  gbias+=u;
 	  gsigma2+=nu-u*u;
 	}
-      g.setVals(gbias, 0, j);
+      g.setVal(gbias, 0, j);
     }
-  g.setVals(-0.5*gsigma2, 0, getNumParams()-1);
+  g.setVal(-0.5*gsigma2, 0, getNumParams()-1);
 }
 
 void CGaussianNoise::getGradInputs(double& gmu, double& gvs, const int i, const int j) const
 {
-  gmu = -bias.getVals(j);
+  gmu = -bias.getVal(j);
   gvs = 1/(sigma2+getVarSigma(i, j));
   gmu += getTarget(i, j)-getMu(i, j);
   gmu *= gvs;
@@ -266,9 +266,9 @@ void CGaussianNoise::getNuG(CMatrix& g, CMatrix& nu, const int index) const
 	  cout << "varSigma " << getVarSigma(index, j) << endl;
 	}
       assert(!isnan(nuval));
-      nu.setVals(nuval, index, j);
-      gval=getTarget(index, j)-getMu(index, j)-bias.getVals(j);
-      g.setVals(gval*nuval, index, j);
+      nu.setVal(nuval, index, j);
+      gval=getTarget(index, j)-getMu(index, j)-bias.getVal(j);
+      g.setVal(gval*nuval, index, j);
     }
 }
 void CGaussianNoise::updateSites(CMatrix& m, CMatrix& beta, const int actIndex, 
@@ -277,8 +277,8 @@ void CGaussianNoise::updateSites(CMatrix& m, CMatrix& beta, const int actIndex,
 {
   for(int j=0; j<y.getCols(); j++)
     {
-      m.setVals(getTarget(index, j)-bias.getVals(j), actIndex, j);
-      beta.setVals(1/sigma2, actIndex, j);
+      m.setVal(getTarget(index, j)-bias.getVal(j), actIndex, j);
+      beta.setVal(1/sigma2, actIndex, j);
     }
 }
 void CGaussianNoise::out(CMatrix& yTest, const CMatrix& muTest, const CMatrix& varSigmaTest) const
@@ -301,9 +301,9 @@ void CGaussianNoise::likelihood(CMatrix& L, const CMatrix& muTest, const CMatrix
     {
       for(int j=0; j<muTest.getCols(); j++)
 	{
-	  arg = yTest.getVals(i, j) - muTest.getVals(i, j) - bias.getVals(j);
+	  arg = yTest.getVal(i, j) - muTest.getVal(i, j) - bias.getVal(j);
 	  arg *= arg;
-	  var = varSigmaTest.getVals(i, j) + sigma2;
+	  var = varSigmaTest.getVal(i, j) + sigma2;
 	  arg = 1/sqrt(2*M_PI*var)*exp(-.5*arg*arg/var);
 	}
     }
@@ -322,9 +322,9 @@ double CGaussianNoise::logLikelihood(const CMatrix& muTest, const CMatrix& varSi
     {
       for(int j=0; j<muTest.getCols(); j++)
 	{
-	  arg = yTest.getVals(i, j) - muTest.getVals(i, j) - bias.getVals(j);
+	  arg = yTest.getVal(i, j) - muTest.getVal(i, j) - bias.getVal(j);
 	  arg *= arg;
-	  var = varSigmaTest.getVals(i, j) + sigma2;
+	  var = varSigmaTest.getVal(i, j) + sigma2;
 	  arg = arg/var;
 	  L += log(var)+arg;
 	}
@@ -368,9 +368,19 @@ void CProbitNoise::setInitParam()
   varSigma.resize(y.getRows(), y.getCols());
   mu.zeros();
   varSigma.zeros();
-  bias.deepCopy(meanRow(y));
+  double nClass1=0.0;
+  bias.resize(1, y.getCols());
   for(int j=0; j<y.getCols(); j++)
-    setParamName("bias" + j, j);
+    {
+      for(int i=0; i<y.getRows(); i++)
+	{
+	  if(y.getVal(i, j)==1)
+	    nClass1++;
+	}
+      bias.setVal(invCumGaussian(nClass1/(double)y.getRows()), j);
+      setParamName("bias" + j, j);
+    }
+      
   // sigma2 isn't treated as a parameter.
   sigma2 = 1e-6;
   clearTransforms();
@@ -384,7 +394,7 @@ ostream& CProbitNoise::display(ostream& os)
   os << "Probit noise: " << endl;
   for(int j=0; j<bias.getCols(); j++)
     {
-      b = bias.getVals(j);
+      b = bias.getVal(j);
       os << "Bias on process " << j << ": " << b << endl; 
     }
   return os;
@@ -393,7 +403,7 @@ void CProbitNoise::setParam(const double val, const int index)
 {
   assert(index>=0);
   assert(index<getNumParams());
-  bias.setVals(val, index);
+  bias.setVal(val, index);
 }  
 void CProbitNoise::setParams(const CMatrix& params)
 {
@@ -403,7 +413,7 @@ void CProbitNoise::setParams(const CMatrix& params)
   assert(getNumProcesses()==bias.getCols());
   for(int j=0; j<bias.getCols(); j++)
     {
-      bias.setVals(params.getVals(j), j);
+      bias.setVal(params.getVal(j), j);
     }
 }
 double CProbitNoise::getParam(const int index) const
@@ -411,7 +421,7 @@ double CProbitNoise::getParam(const int index) const
   assert(index>=0);
   assert(index<getNumParams());
   if(index<getNumProcesses())
-    return bias.getVals(index);
+    return bias.getVal(index);
 
 }
 void CProbitNoise::getParams(CMatrix& params) const
@@ -421,7 +431,7 @@ void CProbitNoise::getParams(CMatrix& params) const
   assert(params.getRows()==1);
   assert(getNumProcesses()==bias.getCols());
   for(int j=0; j<getNumProcesses(); j++)
-    params.setVals(bias.getVals(j), j);
+    params.setVal(bias.getVal(j), j);
 }
  
 void CProbitNoise::getGradParams(CMatrix& g) const
@@ -434,7 +444,7 @@ void CProbitNoise::getGradParams(CMatrix& g) const
   for(int j=0; j<y.getCols(); j++)
     {
       double gbias = 0.0;
-      b = bias.getVals(j);
+      b = bias.getVal(j);
       for(int i=0; i<y.getRows(); i++)
 	{
 	  c = getTarget(i, j)/sqrt(getVarSigma(i, j)+sigma2);
@@ -442,12 +452,12 @@ void CProbitNoise::getGradParams(CMatrix& g) const
 	  u=gradLnCumGaussian(u);
 	  gbias+=u*c;
 	}
-      g.setVals(gbias, 0, j);
+      g.setVal(gbias, 0, j);
     }
 }
 void CProbitNoise::getGradInputs(double& gmu, double& gvs, const int i, const int j) const
 {
-  double b = bias.getVals(j);
+  double b = bias.getVal(j);
   double c = getTarget(i, j)/sqrt(sigma2+getVarSigma(i, j));
   double u = c*(getMu(i, j) + b);
   gmu = gradLnCumGaussian(u)*c;
@@ -474,9 +484,9 @@ void CProbitNoise::likelihood(CMatrix& L, const CMatrix& muTest, const CMatrix& 
     {
       for(int j=0; j<muTest.getCols(); j++)
 	{
-	  arg = yTest.getVals(i, j) - muTest.getVals(i, j) - bias.getVals(j);
+	  arg = yTest.getVal(i, j) - muTest.getVal(i, j) - bias.getVal(j);
 	  arg *= arg;
-	  var = varSigmaTest.getVals(i, j) + sigma2;
+	  var = varSigmaTest.getVal(i, j) + sigma2;
 	  arg = 1/sqrt(2*M_PI*var)*exp(-.5*arg*arg/var);
 	}
     }
@@ -495,9 +505,9 @@ double CProbitNoise::logLikelihood(const CMatrix& muTest, const CMatrix& varSigm
     {
       for(int j=0; j<muTest.getCols(); j++)
 	{
-	  arg = muTest.getVals(i, j) + bias.getVals(j);
+	  arg = muTest.getVal(i, j) + bias.getVal(j);
 	  arg *= getTarget(i, j);
-	  var = sqrt(varSigmaTest.getVals(i, j) + sigma2);
+	  var = sqrt(varSigmaTest.getVal(i, j) + sigma2);
 	  L += lnCumGaussian(arg/var);
 	}
     }  

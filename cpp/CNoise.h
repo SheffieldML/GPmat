@@ -11,7 +11,7 @@
 #include "CDist.h"
 #include "CKern.h"
 using namespace std;
-
+using namespace ndlutil;
 const double DEPS=DBL_EPSILON;
 class CNoise : public CTransformable, public COptimisable, public CMatinterface {
 
@@ -41,8 +41,8 @@ class CNoise : public CTransformable, public COptimisable, public CMatinterface 
 	  for(int j=0; j<dlnZ_dmu.getCols(); j++)
 	    {
 	      getGradInputs(gmu, gvs, i, j);
-	      dlnZ_dmu.setVals(gmu, i, j);
-	      dlnZ_dvs.setVals(gvs, i, j);
+	      dlnZ_dmu.setVal(gmu, i, j);
+	      dlnZ_dvs.setVal(gvs, i, j);
 	    }
 	}
     }
@@ -175,13 +175,14 @@ class CNoise : public CTransformable, public COptimisable, public CMatinterface 
 	for(int j=0; j<getNumProcesses(); j++)
 	  setVarSigma(val, i, j);
     }
+
   virtual void setMus(const CMatrix& vals)
     {
       assert(vals.getRows()==getNumData());
       assert(vals.getCols()==getNumProcesses());
       for(int i=0; i<getNumData(); i++)
 	for(int j=0; j<getNumProcesses(); j++)
-	  setMu(vals.getVals(i, j), i, j);
+	  setMu(vals.getVal(i, j), i, j);
     }
   virtual void setVarSigmas(const CMatrix& vals)
     {
@@ -189,11 +190,43 @@ class CNoise : public CTransformable, public COptimisable, public CMatinterface 
       assert(vals.getCols()==getNumProcesses());
       for(int i=0; i<getNumData(); i++)
 	for(int j=0; j<getNumProcesses(); j++)
-	  setVarSigma(vals.getVals(i, j), i, j);
+	  setVarSigma(vals.getVal(i, j), i, j);
     }
-  bool equals(const CNoise& noise) const;
-  
+
+  virtual void setVarSigmas(const mxArray* matlabArray)
+    {
+      CMatrix varsig;
+      varsig.fromMxArray(matlabArray);
+      setVarSigmas(varsig);
+    }
+  virtual void setMus(const mxArray* matlabArray)
+    {
+      CMatrix mus;
+      mus.fromMxArray(matlabArray);
+      setMus(mus);
+    }
+
+  bool equals(const CNoise& noise, const double tol=ndlutil::MATCHTOL) const;
+  virtual mxArray* varSigmaToMxArray() const
+    {
+      return varSigma.toMxArray();
+    }
+  virtual mxArray* muToMxArray() const
+    {
+      return mu.toMxArray();
+    }
+
+  virtual mxArray* targetToMxArray() const
+    {
+      return y.toMxArray();
+    }
+ 
  protected:
+  CMatrix mu;
+  CMatrix varSigma;
+  CMatrix y;
+
+
   inline void setLogConcave(const bool val)
     {
       logConcave = val;
@@ -218,7 +251,8 @@ class CNoise : public CTransformable, public COptimisable, public CMatinterface 
     {
       nProcesses = num;
     }
-
+  
+  
     
  private:
   int verbosity;
@@ -263,25 +297,25 @@ class CGaussianNoise : public CNoise {
   
   inline double getMu(const int i, const int j) const
     {
-      return mu.getVals(i, j);
+      return mu.getVal(i, j);
     }
   inline void setMu(const double val, const int i, const int j) 
     {
-      mu.setVals(val, i, j);
+      mu.setVal(val, i, j);
     }
   inline double getVarSigma(const int i, const int j) const
     {
-      return varSigma.getVals(i, j);
+      return varSigma.getVal(i, j);
     }
   inline void setVarSigma(const double val, const int i, const int j) 
     {
       assert(!isnan(val));
       assert(val>=0);
-      varSigma.setVals(val, i, j);
+      varSigma.setVal(val, i, j);
     }
   inline double getTarget(const int i, const int j) const
     {
-      return y.getVals(i, j);
+      return y.getVal(i, j);
     }
   virtual void setTarget(const CMatrix& vals)
     {
@@ -294,13 +328,8 @@ class CGaussianNoise : public CNoise {
   void addParamToMxArray(mxArray* matlabArray) const;
   // Gets the parameters from the mxArray.
   void extractParamFromMxArray(const mxArray* matlabArray);
-  
 
  private:
-
-  CMatrix mu;
-  CMatrix varSigma;
-  CMatrix y;
 
   double sigma2;
   CMatrix bias;
@@ -335,25 +364,25 @@ class CProbitNoise : public CNoise {
   
   inline double getMu(const int i, const int j) const
     {
-      return mu.getVals(i, j);
+      return mu.getVal(i, j);
     }
   inline void setMu(const double val, const int i, const int j) 
     {
-      mu.setVals(val, i, j);
+      mu.setVal(val, i, j);
     }
   inline double getVarSigma(const int i, const int j) const
     {
-      return varSigma.getVals(i, j);
+      return varSigma.getVal(i, j);
     }
   inline void setVarSigma(const double val, const int i, const int j) 
     {
       assert(!isnan(val));
       assert(val>=0);
-      varSigma.setVals(val, i, j);
+      varSigma.setVal(val, i, j);
     }
   inline double getTarget(const int i, const int j) const
     {
-      return y.getVals(i, j);
+      return y.getVal(i, j);
     }
   virtual void setTarget(const CMatrix& vals)
     {
@@ -369,11 +398,6 @@ class CProbitNoise : public CNoise {
   
 
  private:
-
-  CMatrix mu;
-  CMatrix varSigma;
-  CMatrix y;
-
   double sigma2;
   CMatrix bias;
 };

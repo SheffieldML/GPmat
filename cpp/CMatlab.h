@@ -61,7 +61,18 @@ class CMatinterface {
 	  cerr << "Unable to close file " << fileName << endl;
 	}
     }
-
+  mxArray* convertMxArray(const bool val) const
+    {
+      int dims[1];
+      dims[0] = 1;
+      mxArray* matlabArray = mxCreateNumericArray(1, dims, mxDOUBLE_CLASS, mxREAL);
+      double* matlabVals = mxGetPr(matlabArray);
+      if(val)
+	matlabVals[0] = 1.0;
+      else
+	matlabVals[0] = 0.0;
+      return matlabArray;
+    }
   mxArray* convertMxArray(const double val) const
     {
       int dims[1];
@@ -71,11 +82,15 @@ class CMatinterface {
       matlabVals[0] = val;
       return matlabArray;
     }
+  mxArray* convertMxArray(const string val) const
+    {
+      return mxCreateString(val.c_str());
+    }
   mxArray* convertMxArray(const vector<int> vals) const
     {
       int dims[2];
-      dims[0] = 1;
-      dims[2]=vals.size();
+      dims[0]=vals.size();
+      dims[1] = 1;
       mxArray* matlabArray = mxCreateNumericArray(2, dims, mxDOUBLE_CLASS, mxREAL);
       double* matlabVals = mxGetPr(matlabArray);
       for(int i=0; i<vals.size(); i++)
@@ -137,7 +152,7 @@ class CMatinterface {
 	{
 	  int length=mxGetNumberOfElements(matlabArray);
 	  double* valD = mxGetPr(matlabArray);
-	  for(int i; i<length; i++)
+	  for(int i=0; i<length; i++)
 	    val.push_back((int)valD[i]);
 	}
       else

@@ -94,12 +94,12 @@ int testNoise(CNoise* noise, CNoise* noise2, string fileName)
   L2.readMatlabFile(fileName, "L2");
   double L = noise->logLikelihood();
   
-  if(abs(L2.getVals(0)-L)<1e-6)
+  if(abs(L2.getVal(0)-L)<1e-6)
     cout << noise->getNoiseName() << " log likelihood matches." << endl;
   else
     { 
       cout << "FAILURE: " << noise->getNoiseName() << " log likelihood." << endl;
-      cout << "MATLAB: " << L2.getVals(0) << endl;
+      cout << "MATLAB: " << L2.getVal(0) << endl;
       cout << "C++: " << L << endl;
       fail++;
     }
@@ -199,12 +199,12 @@ int main()
     {
       for(int j=0; j<noise.getNumProcesses(); j++)
 	{
-	  noise.setMu(origMu.getVals(i, j) + epsilon, i, j);
+	  noise.setMu(origMu.getVal(i, j) + epsilon, i, j);
 	  Lplus = noise.logLikelihood();
-	  noise.setMu(origMu.getVals(i, j) - epsilon, i, j);
+	  noise.setMu(origMu.getVal(i, j) - epsilon, i, j);
 	  Lminus = noise.logLikelihood();
 	  diffGradMu.setVals(0.5*(Lplus - Lminus)/epsilon, i, j);
-	  noise.setMu(origMu.getVals(i, j), i, j);
+	  noise.setMu(origMu.getVal(i, j), i, j);
 	}
     }
   // Check varSigma gradients.
@@ -215,12 +215,12 @@ int main()
     {
       for(int j=0; j<noise.getNumProcesses(); j++)
 	{
-	  noise.setVarSigma(origVarSigma.getVals(i, j) + epsilon, i, j);
+	  noise.setVarSigma(origVarSigma.getVal(i, j) + epsilon, i, j);
 	  Lplus=noise.logLikelihood();
-	  noise.setVarSigma(origVarSigma.getVals(i, j) - epsilon, i, j);
+	  noise.setVarSigma(origVarSigma.getVal(i, j) - epsilon, i, j);
 	  Lminus=noise.logLikelihood();
 	  diffGradVarSigma.setVals(0.5*(Lplus - Lminus)/epsilon, i, j);
-	  noise.setVarSigma(origVarSigma.getVals(i, j), i, j);
+	  noise.setVarSigma(origVarSigma.getVal(i, j), i, j);
 	}
     }
   

@@ -15,7 +15,13 @@ INCLUDE = ${MATLABINCLUDE}
 CFLAGS = -O3 -I$(INCLUDE) -DLINUX
 #CFLAGS = -ggdb -DDBG -I$(INCLUDE) -DLINUX
 G77FLAGS = -funroll-all-loops -O3
-all: testCode testKern testDist testTransform testMatrix testNoise testIvm
+all: ivm_learn testCode testKern testDist testTransform testMatrix testNoise testIvm
+
+ivm_learn: ivm_learn.o CIvm.o CMatrix.o dtransr.o dgrand.o derf.o CNoise.o ndlutil.o CTransform.o COptimisable.o CKern.o CDist.o
+	$(LD) ${XLINKERFLAGS} -o ivm_learn  ivm_learn.o CIvm.o CMatrix.o dtransr.o dgrand.o derf.o CNoise.o ndlutil.o CTransform.o COptimisable.o CKern.o CDist.o $(LDFLAGS)
+
+ivm_learn.o: ivm_learn.cpp CIvm.h CKern.h CMatrix.h
+	$(CC) -c ivm_learn.cpp -o ivm_learn.o $(CFLAGS)
 
 testCode: testCode.o CMatrix.o dtransr.o dgrand.o derf.o CKern.o CDist.o CTransform.o COptimisable.o 
 	$(LD) ${XLINKERFLAGS} -o testCode testCode.o CMatrix.o dtransr.o dgrand.o derf.o CKern.o CDist.o CTransform.o COptimisable.o $(LDFLAGS) 
@@ -28,6 +34,7 @@ testIvm: testIvm.o CIvm.o CMatrix.o dtransr.o dgrand.o derf.o CNoise.o ndlutil.o
 
 testIvm.o: testIvm.cpp CIvm.h CKern.h CMatrix.h
 	$(CC) -c testIvm.cpp -o testIvm.o $(CFLAGS)
+
 
 testNoise: testNoise.o CMatrix.o dtransr.o dgrand.o derf.o CNoise.o ndlutil.o CTransform.o COptimisable.o CDist.o
 	$(LD) ${XLINKERFLAGS} -o testNoise  testNoise.o CMatrix.o dtransr.o dgrand.o derf.o CNoise.o ndlutil.o CTransform.o COptimisable.o CDist.o $(LDFLAGS)
@@ -76,7 +83,7 @@ COptimisable.o: COptimisable.cpp COptimisable.h
 CDist.o: CDist.cpp CTransform.h CMatrix.h
 	$(CC) -c CDist.cpp -o CDist.o $(CFLAGS)
 
-CMatrix.o: CMatrix.cpp CMatrix.h CMatlab.h
+CMatrix.o: CMatrix.cpp CMatrix.h CMatlab.h ndlutil.h CMatlab.h lapack.h xpose.h
 	$(CC) -c CMatrix.cpp -o CMatrix.o $(CFLAGS)
 
 ndlutil.o: ndlutil.cpp ndlutil.h 

@@ -15,7 +15,7 @@ CDist::~CDist()
 // Gaussian prior.
 void CGaussian::setParams(CMatrix& params)
 {
-  precision = params.getVals(0);
+  precision = params.getVal(0);
 }
 CMatrix CGaussian::getParams()
 {
@@ -32,7 +32,7 @@ double CGaussian::logProb(CMatrix& X)
   double x2 = 0;
   int numElements = X.getNumElements();
   for(int i = 0; i < numElements; i++)
-    x2 += X.getVals(i)*X.getVals(i);
+    x2 += X.getVal(i)*X.getVal(i);
   return -0.5*precision*x2 -0.5*numElements*(log(2*M_PI) - log(precision));
 }
 CMatrix CGaussian::gradParam(CMatrix& X)

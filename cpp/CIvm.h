@@ -15,10 +15,24 @@ const double NULOW=1e-16;
 
 class CIvm : public CMatinterface, public COptimisable {
  public:
+  // Constructor given a kernel and a noise model.
   CIvm(const CMatrix& inData, const CMatrix& targetData, 
        CKern& kernel, CNoise& noiseModel, const int selectCrit,
        const int dVal, const int verbos=2);
+  // Constructor using file containing ivmInfo.
+  CIvm(const CMatrix& inData, 
+       const CMatrix& targetData, 
+       CKern& kernel, 
+       CNoise& noiseModel, 
+       const string ivmInfoFile, 
+       const string ivmInfoVariable, 
+       const int verbos=2);
+  // Initialise the model.
   void init();
+  // Initialise the storeage for the model.
+  void initStoreage();
+  // Set the initial values for the model.
+  void initVals();
   void selectPoints(); // select active set points.
   void addPoint(const int index); // add a point to the model.
   void updateSite(const int index); // update the site parameters at index.
@@ -62,11 +76,11 @@ class CIvm : public CMatinterface, public COptimisable {
     {
       epUpdate = val;
     }
-  inline bool isTerminate()
+  inline bool isTerminate() const
     {
       return terminate;
     }
-  inline bool isEpUpdate()
+  inline bool isEpUpdate() const 
     {
       return epUpdate;
     }
@@ -81,6 +95,7 @@ class CIvm : public CMatinterface, public COptimisable {
   void approxLogLikelihoodGradient(CMatrix& g) const;
   
   void optimise(const int maxIters=15, const int kernIters=100, const int noiseIters=100);
+  bool equals(const CIvm& model, const double tol=MATCHTOL) const;
   void display(ostream& os) const;
 
   inline int getOptNumParams() const
@@ -95,6 +110,44 @@ class CIvm : public CMatinterface, public COptimisable {
     {
       kern.setTransParams(param);
     }
+  string getType() const
+    {
+      return type;
+    }
+  void setType(const string name)
+    {
+      type = name;
+    }
+  string getTypeSelection() const
+    {
+      switch(selectionCriterion)
+	{
+	case ENTROPY:
+	  return "entropy";
+	case RENTROPY:
+	  return "rentropy";
+	case RANDOM:
+	  return "random";
+	otherwise:
+	  cerr << "Unrecognised selection criterion." << endl;
+	}
+    }
+  void setTypeSelection(const string val) 
+    {
+      if(val=="entropy")
+	selectionCriterion=ENTROPY;
+      else if(val=="rentropy")
+	selectionCriterion=RENTROPY;
+      else if(val=="random")
+	selectionCriterion=RANDOM;
+      else
+	cerr << "Unrecognised selection criterion " << val << "." << endl;
+    }
+  void setTypeSelection(const int val)
+    {
+      assert(val>=ENTROPY & val<=RANDOM);
+      selectionCriterion=val;
+    }
   void computeObjectiveGradParams(CMatrix& g) const
     {
       approxLogLikelihoodGradient(g);
@@ -104,14 +157,8 @@ class CIvm : public CMatinterface, public COptimisable {
     {
       return -approxLogLikelihood();
     }
-  mxArray* toMxArray() const
-    {
-      // TODO Write this function
-    }
-  void fromMxArray(const mxArray* matlabArray) 
-    {
-      // TODO Write this function
-    }
+  mxArray* toMxArray() const;
+  void fromMxArray(const mxArray* matlabArray);
   const CMatrix& X;
 
   // arguably these are noise model associated.
@@ -127,15 +174,17 @@ class CIvm : public CMatinterface, public COptimisable {
   CMatrix m;
   CMatrix beta;
 
-  CMatrix s;
-  CMatrix a;
-  CMatrix ainv;
 
   // these really just provide local storage
   mutable CMatrix covGrad;
   mutable CMatrix invK;
   mutable double logDetK;
   mutable CMatrix K;
+
+  mutable CMatrix s;
+  mutable CMatrix a;
+  mutable CMatrix ainv;
+
 
   CMatrix activeX;
 
@@ -150,7 +199,8 @@ class CIvm : public CMatinterface, public COptimisable {
 
   CKern& kern;
   CNoise& noise;
-  
+  enum{ENTROPY, RENTROPY, RANDOM};
+
 
  private:
   bool terminate;
@@ -164,10 +214,11 @@ class CIvm : public CMatinterface, public COptimisable {
   
   double lastEntropyChange;
   double cumEntropy;
-  enum{ENTROPY, RENTROPY, RANDOM};
-  const int selectionCriterion; // need to set this up with enum
+  int selectionCriterion; 
   
   int verbosity;
+
+  string type;
 };
 
 #endif
