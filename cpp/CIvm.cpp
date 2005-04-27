@@ -180,6 +180,7 @@ void CIvm::initVals()
   covGrad.zeros();
   
   // fill the inactive set.
+  inactiveSet.erase(inactiveSet.begin(), inactiveSet.end());
   for(int i=0; i<numData; i++)
     {
       inactiveSet.push_back(i);
@@ -257,8 +258,7 @@ void CIvm::updateM(const int index)
   double ms = 0.0;
   double sVal = 0.0;
   for(int c=0; c<numCovStruct; c++)
-    {
-      assert(nu.getVal(index, c)>=0);
+    {      
       lValInv = sqrt(nu.getVal(index, c));
       // set s from the kernel -- it is a column vector..
       Kstore.getMatrix(s, 0, numData-1, activePoint, activePoint);
@@ -282,6 +282,8 @@ void CIvm::updateM(const int index)
 	  sVal = s.getVal(i, 0);
 	  varSig = noise.getVarSigma(i, c)
 	    -sVal*sVal*nu.getVal(index, c);
+	  if(isnan(varSig))
+	    cout << "varSigma is varSig" << endl;
 	  noise.setVarSigma(varSig, i, c);
 	  noise.setMu(noise.getMu(i, c) + g.getVal(index, c)*sVal, i, c);
 	}
@@ -476,6 +478,7 @@ double CIvm::approxLogLikelihood() const
       invKm.symvColCol(0, invK, m, j, 1.0, 0.0, "u");
       L -= .5*(logDetK + invKm.dotColCol(0, m, j));
     }
+  L+=kern.priorLogProb();
   return L;
 }  
 void CIvm::approxLogLikelihoodGradient(CMatrix& g) const

@@ -7,7 +7,7 @@ int main()
 {
   int fail=0;
   fail += testType("gaussian");
-  //  fail += testType("ncnm");
+  fail += testType("ncnm");
   fail += testType("probit");
   //fail += testType("mgaussian");
   //fail += testType("cmpnd");
@@ -34,11 +34,12 @@ int testType(string noiseType)
       noise = new CProbitNoise(y);
       noise2 = new CProbitNoise(y);
     }
-  /*  else if(noiseType=="ncnm")
+  else if(noiseType=="ncnm")
     {
       noise = new CNcnmNoise(y);
       noise2 = new CNcnmNoise(y);
     }
+  /*
   else if(noiseType=="mgaussian")
     {
       noise = new CMgaussianNoise(y);

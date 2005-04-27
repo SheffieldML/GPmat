@@ -15,11 +15,26 @@ void CNoise::getNuG(CMatrix& g, CMatrix& nu, const int index) const
     {
       getGradInputs(gval, nuval, index, j);
       nuval = gval*gval - 2*nuval;
-      if(abs(nuval)<DEPS)
-	nuval=DEPS;
+      if(nuval<0)
+	{
+	  if(isLogConcave())
+	    {
+	      throw "Log concave noise model has value of nu < 0.";
+	    }
+	  else 
+	    {
+	      nuval=ndlutil::SMALLVAL;
+	    }
+	}
+      if(isnan(nuval)) 
+	throw "Nu is NaN";
+      if(abs(nuval)<ndlutil::SMALLVAL)
+	nuval=ndlutil::EPS;
       nu.setVal(nuval, index, j);
+      
       g.setVal(gval, index, j);
     }
+  
   
 }
 
@@ -362,7 +377,7 @@ CProbitNoise::~CProbitNoise()
 void CProbitNoise::setInitParam()
 {
   setType("probit");
-  setNoiseName("probit");
+  setNoiseName("Probit");
   setNumParams(getNumProcesses());
   mu.resize(y.getRows(), y.getCols());
   varSigma.resize(y.getRows(), y.getCols());
@@ -377,7 +392,7 @@ void CProbitNoise::setInitParam()
 	  if(y.getVal(i, j)==1)
 	    nClass1++;
 	}
-      bias.setVal(invCumGaussian(nClass1/(double)y.getRows()), j);
+      bias.setVal(ndlutil::invCumGaussian(nClass1/(double)y.getRows()), j);
       setParamName("bias" + j, j);
     }
       
@@ -449,7 +464,7 @@ void CProbitNoise::getGradParams(CMatrix& g) const
 	{
 	  c = getTarget(i, j)/sqrt(getVarSigma(i, j)+sigma2);
 	  u=c*(getMu(i, j)+b);
-	  u=gradLnCumGaussian(u);
+	  u=ndlutil::gradLnCumGaussian(u);
 	  gbias+=u*c;
 	}
       g.setVal(gbias, 0, j);
@@ -460,7 +475,7 @@ void CProbitNoise::getGradInputs(double& gmu, double& gvs, const int i, const in
   double b = bias.getVal(j);
   double c = getTarget(i, j)/sqrt(sigma2+getVarSigma(i, j));
   double u = c*(getMu(i, j) + b);
-  gmu = gradLnCumGaussian(u)*c;
+  gmu = ndlutil::gradLnCumGaussian(u)*c;
   gvs = -0.5*c*u*gmu;
 }
   
@@ -468,8 +483,17 @@ void CProbitNoise::out(CMatrix& yTest, const CMatrix& muTest, const CMatrix& var
 {
   assert(yTest.dimensionsMatch(muTest));
   assert(muTest.dimensionsMatch(varSigmaTest));
-  yTest.deepCopy(muTest);
-  yTest+=bias;
+  for(int j=0; j<yTest.getCols(); j++)
+    {
+      double b = bias.getVal(j);
+      for(int i=0; i<yTest.getRows(); i++)	
+	{
+	  if(muTest.getVal(i, j)>-b)
+	    yTest.setVal(1.0, i, j);
+	  else
+	    yTest.setVal(0.0, i, j);
+	}
+    }
 }
 void CProbitNoise::likelihood(CMatrix& L, const CMatrix& muTest, const CMatrix& varSigmaTest, 
 				   const CMatrix& yTest) const
@@ -508,7 +532,7 @@ double CProbitNoise::logLikelihood(const CMatrix& muTest, const CMatrix& varSigm
 	  arg = muTest.getVal(i, j) + bias.getVal(j);
 	  arg *= getTarget(i, j);
 	  var = sqrt(varSigmaTest.getVal(i, j) + sigma2);
-	  L += lnCumGaussian(arg/var);
+	  L += ndlutil::lnCumGaussian(arg/var);
 	}
     }  
   return L;
@@ -530,5 +554,336 @@ void CProbitNoise::extractParamFromMxArray(const mxArray* matlabArray)
   mxArray* biasField = mxArrayExtractMxArrayField(matlabArray, "bias");
   bias.fromMxArray(biasField);
   sigma2 = mxArrayExtractDoubleField(matlabArray, "sigma2");
+
+}
+
+CNcnmNoise::~CNcnmNoise()
+{
+}
+void CNcnmNoise::setInitParam()
+{
+  setType("ncnm");
+  setNoiseName("Null Category");
+  setNumParams(getNumProcesses()+2);
+  mu.resize(y.getRows(), y.getCols());
+  varSigma.resize(y.getRows(), y.getCols());
+  mu.zeros();
+  varSigma.zeros();
+  double nClass1=0.0;
+  double nClass2=0.0;
+  double nMissing=0.0;
+  bias.resize(1, y.getCols());
+  for(int j=0; j<y.getCols(); j++)
+    {
+      for(int i=0; i<y.getRows(); i++)
+	{
+	  if(y.getVal(i, j)==1.0)	    
+	    nClass1++;
+	  else if(y.getVal(i, j)==-1.0)
+	    nClass2++;
+	  else
+	    nMissing++;
+	}
+      bias.setVal(ndlutil::invCumGaussian(nClass1/(nClass1+nClass2)), j);
+      setParamName("bias" + j, j);
+    }
+  gamman=nMissing/(double)y.getRows();
+  gammap = gamman;
+
+  sigma2 = ndlutil::EPS;
+  width = 1.0;
+  clearTransforms();
+
+  // sigmoid transforms on gamman and gammap.
+  addTransform(new CSigmoidTransform(), getNumParams()-1);
+  addTransform(new CSigmoidTransform(), getNumParams()-2);
+
+  // sigma2 isn't treated as a parameter.
+  setLogConcave(false);
+  setSpherical(false);
+  setMissing(true);
+}
+ostream& CNcnmNoise::display(ostream& os)
+{
+  double b = 0.0;
+  os << "Ncnm noise: " << endl;
+  for(int j=0; j<bias.getCols(); j++)
+    {
+      b = bias.getVal(j);
+      os << "Bias on process " << j << ": " << b << endl; 
+    }
+  os << "Missing label probability for -ve class: " << gamman << endl;
+  os << "Missing label probability for +ve class: " << gammap << endl;
+  return os;
+}
+void CNcnmNoise::setParam(const double val, const int index)
+{
+  assert(index>=0);
+  assert(index<getNumParams());
+  if(index<getNumProcesses())
+    {
+      bias.setVal(val, index);
+      return;
+    }
+  if(index==getNumProcesses())
+    {
+      gamman=val;
+      return;
+    }
+  if(index==getNumProcesses()+1)
+    {
+      gammap=val;
+      return;
+    }
+}  
+void CNcnmNoise::setParams(const CMatrix& params)
+{
+  assert(params.getCols()==getNumParams());
+  assert(params.getRows()==1);
+  int nProc = getNumProcesses();
+  for(int j=0; j<nProc; j++)
+    {
+      bias.setVal(params.getVal(j), j);
+    }
+  gamman=params.getVal(nProc);
+  gammap=params.getVal(nProc+1);
+}
+double CNcnmNoise::getParam(const int index) const
+{
+  assert(index>=0);
+  assert(index<getNumParams());
+  if(index<getNumProcesses())
+    return bias.getVal(index);
+  if(index==getNumProcesses())
+    return gamman;
+  if(index==getNumProcesses()+1)
+    return gammap;
+
+}
+void CNcnmNoise::getParams(CMatrix& params) const
+{
+  assert(params.getCols()==getNumParams());
+  assert(params.getRows()==1);
+  int nProc=getNumProcesses();
+  for(int j=0; j<nProc; j++)
+    params.setVal(bias.getVal(j), j);
+  params.setVal(gamman, nProc);
+  params.setVal(gammap, nProc+1);
+}
+ 
+void CNcnmNoise::getGradParams(CMatrix& g) const
+{
+  assert(g.getCols()==getNumParams());
+  assert(g.getRows()==1);
+  double ggamman=0.0;
+  double ggammap=0.0;
+  double halfWidth = width/2.0;
+  for(int j=0; j<y.getCols(); j++)
+    {
+      double gbias = 0.0;
+      double b = bias.getVal(j);
+      for(int i=0; i<y.getRows(); i++)
+	{
+	  double muAdj = getMu(i, j)+b;
+	  double c = 1/sqrt(sigma2+getVarSigma(i, j));
+	  double targVal = getTarget(i, j);
+	  if(targVal==-1.0)
+	    {
+	      muAdj+=halfWidth;
+	      muAdj=muAdj*c;
+	      gbias-= c*ndlutil::gradLnCumGaussian(-muAdj);
+	      ggamman-=1.0/(1.0-gamman);
+	    }
+	  else if(targVal==1.0)
+	    {
+	      muAdj-=halfWidth;
+	      muAdj*=c;
+	      gbias+=c*ndlutil::gradLnCumGaussian(muAdj);
+	      ggammap-=1.0/(1.0-gammap);
+	    }
+	  else
+	    {
+	      muAdj+=halfWidth;
+	      double u=muAdj*c;
+	      double uprime=(muAdj-width)*c;
+	      double lndenom = ndlutil::lnCumGaussSum(-u, uprime, gamman, gammap);
+	      double lnNumer1 = log(gamman) - ndlutil::HALFLOGTWOPI -.5*u*u;
+	      double lnNumer2 = log(gammap) - ndlutil::HALFLOGTWOPI -.5*uprime*uprime;
+	      double B1 = exp(lnNumer1-lndenom);
+	      double B2 = exp(lnNumer2-lndenom);
+	      gbias+=c*(B2-B1);
+	      ggammap+=exp(ndlutil::lnCumGaussian(uprime)-lndenom);
+	      ggamman+=exp(ndlutil::lnCumGaussian(-u)-lndenom);
+	    }
+	      
+	}
+      g.setVal(gbias, 0, j);
+    }
+  g.setVal(ggamman, 0, getNumProcesses());
+  g.setVal(ggammap, 0, getNumProcesses()+1);
+}
+void CNcnmNoise::getGradInputs(double& gmu, double& gvs, const int i, const int j) const
+{
+  double b = bias.getVal(j);
+  double c = 1.0/sqrt(sigma2+getVarSigma(i, j));
+  double muAdj = getMu(i, j)+b;
+  double targ = getTarget(i, j);
+  double halfWidth = width/2.0;
+  if(targ==-1.0)
+    {
+      muAdj+=halfWidth;
+      muAdj*=c;
+      gmu=-ndlutil::gradLnCumGaussian(-muAdj)*c;
+      gvs=-.5*c*muAdj*gmu;
+    }
+  else if(targ==1.0)
+    {
+      muAdj-=halfWidth;
+      muAdj*=c;
+      gmu=ndlutil::gradLnCumGaussian(muAdj)*c;
+      gvs=-.5*c*muAdj*gmu;
+    }
+  else // missing data
+    {
+      muAdj+=halfWidth;
+      double u=c*muAdj;
+      double uprime=(muAdj-width)*c;
+      double lndenom=ndlutil::lnCumGaussSum(-u, uprime, gamman, gammap);
+      double lnNumer1 = log(gamman) - ndlutil::HALFLOGTWOPI -.5*(u*u);
+      double lnNumer2 = log(gammap) - ndlutil::HALFLOGTWOPI -.5*(uprime*uprime);
+      double B1 = exp(lnNumer1 - lndenom);
+      double B2 = exp(lnNumer2 - lndenom);
+      gmu = c*(B2-B1);
+      gvs = -.5*c*c*(uprime*B2-u*B1);
+      
+    }
+  if(isnan(gmu))
+    throw "gmu is NaN";
+  if(isnan(gvs))
+    throw "gvs is NaN";
+}
+  
+void CNcnmNoise::out(CMatrix& yTest, const CMatrix& muTest, const CMatrix& varSigmaTest) const
+{
+  assert(yTest.dimensionsMatch(muTest));
+  assert(muTest.dimensionsMatch(varSigmaTest));
+  for(int j=0; j<yTest.getCols(); j++)
+    {
+      double b = bias.getVal(j);
+      for(int i=0; i<yTest.getRows(); i++)	
+	{
+	  double muVal = muTest.getVal(i, j);
+	  if(muVal>-b)
+	    yTest.setVal(1.0, i, j);
+	  else
+	    yTest.setVal(0.0, i, j);
+	}
+    }
+}
+void CNcnmNoise::likelihood(CMatrix& L, const CMatrix& muTest, const CMatrix& varSigmaTest, 
+				   const CMatrix& yTest) const
+{
+  assert(yTest.getCols()==getNumProcesses());
+  assert(L.dimensionsMatch(muTest));
+  assert(yTest.dimensionsMatch(muTest));
+  assert(muTest.dimensionsMatch(varSigmaTest));
+  double halfWidth = width/2.0;
+  for(int j=0; j<muTest.getCols(); j++)
+    {
+      double b = bias.getVal(j);
+      for(int i=0; i<muTest.getRows(); i++)
+	{
+	  double muAdj=muTest.getVal(i, j) + b;
+	  double c=1/sqrt(sigma2+varSigmaTest.getVal(i, j));	  
+	  double targVal=yTest.getVal(i, j);
+	  if(targVal==1.0)
+	    {
+	      muAdj-=halfWidth;
+	      L.setVal(ndlutil::cumGaussian(muAdj*c)*(1-gammap), i, j);
+	    }
+	  else if(targVal==-1.0)
+	    {
+	      muAdj+=halfWidth;
+	      L.setVal(ndlutil::cumGaussian(-muAdj*c)*(1-gamman), i, j);
+	    }
+	  else // missing data
+	    {
+	      muAdj+=halfWidth;
+	      L.setVal(gamman*ndlutil::cumGaussian(-muAdj*c)+gammap*(ndlutil::cumGaussian((muAdj-width)*c)), i, j);
+	    }
+	}
+    }
+}
+
+double CNcnmNoise::logLikelihood(const CMatrix& muTest, const CMatrix& varSigmaTest, 
+				     const CMatrix& yTest) const
+{
+  assert(yTest.getCols()==getNumProcesses());
+  assert(yTest.dimensionsMatch(muTest));
+  assert(yTest.dimensionsMatch(varSigmaTest));
+  double arg=0.0;
+  double var=0.0;
+  double L=0.0;
+  double halfWidth = width/2.0;
+  double logPosGamma = log(1.0-gammap);
+  double logNegGamma = log(1.0-gamman);
+  for(int j=0; j<muTest.getCols(); j++)    
+    {
+      double b=bias.getVal(j);
+      for(int i=0; i<muTest.getRows(); i++)
+	{
+	  double muAdj = muTest.getVal(i, j) + b;
+	  double c=1/sqrt(sigma2+varSigmaTest.getVal(i, j));
+	  double targVal=yTest.getVal(i, j);
+	  if(targVal==1.0)
+	    {
+	      muAdj-=halfWidth;
+	      L+=ndlutil::lnCumGaussian(muAdj*c);
+	      L+=logPosGamma;
+	      
+	    }
+	  else if(targVal==-1.0)
+	    {
+	      muAdj+=halfWidth;
+	      L+=ndlutil::lnCumGaussian(-muAdj*c);
+	      L+=logNegGamma;
+	    }
+	  else // missing data.
+	    {
+	      muAdj+=halfWidth;
+	      double u=muAdj*c;
+	      double uprime=(muAdj-width)*c;
+	      L+=ndlutil::lnCumGaussSum(-u, uprime, gamman, gammap);	      
+	    }
+	}
+    }  
+  return L;
+}
+
+void CNcnmNoise::addParamToMxArray(mxArray* matlabArray) const
+{
+  mxAddField(matlabArray, "nParams");
+  mxSetField(matlabArray, 0, "nParams", convertMxArray((double)getNumParams()));
+  mxAddField(matlabArray, "bias");
+  mxSetField(matlabArray, 0, "bias", bias.toMxArray());
+  mxAddField(matlabArray, "sigma2");
+  mxSetField(matlabArray, 0, "sigma2", convertMxArray(sigma2));
+  mxAddField(matlabArray, "width");
+  mxSetField(matlabArray, 0, "width", convertMxArray(width));
+  mxAddField(matlabArray, "gamman");
+  mxSetField(matlabArray, 0, "gamman", convertMxArray(gamman));
+  mxAddField(matlabArray, "gammap");
+  mxSetField(matlabArray, 0, "gammap", convertMxArray(gammap));
+}
+
+void CNcnmNoise::extractParamFromMxArray(const mxArray* matlabArray) 
+{
+  setNumParams(mxArrayExtractIntField(matlabArray, "nParams"));
+  mxArray* biasField = mxArrayExtractMxArrayField(matlabArray, "bias");
+  bias.fromMxArray(biasField);
+  sigma2 = mxArrayExtractDoubleField(matlabArray, "sigma2");
+  width = mxArrayExtractDoubleField(matlabArray, "width");
+  gamman = mxArrayExtractDoubleField(matlabArray, "gamman");
+  gammap = mxArrayExtractDoubleField(matlabArray, "gammap");
 
 }

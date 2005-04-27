@@ -13,7 +13,7 @@
 #include <algorithm>
 using namespace std;
 
-class CKern : public CMatinterface, public CTransformable {
+class CKern : public CMatinterface, public CTransformable, public CRegularisable {
  public:
   CKern()
     {}
@@ -94,8 +94,9 @@ class CKern : public CMatinterface, public CTransformable {
     }
   virtual void getGradParams(CMatrix& g) const
     {
-      // This is a dummy functions
+      // This is a dummy function
       cerr << "getGradParams should not be used in CKern" << endl;
+      exit(1);
     }
   virtual void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd) const
     {
@@ -105,6 +106,7 @@ class CKern : public CMatinterface, public CTransformable {
       assert(cvGrd.isSquare());
       for(int i=0; i<nParams; i++)
 	g.setVal(getGradParam(i, X, cvGrd), i);
+      addPriorGrad(g); /// don't forget to add prior gradient at the end.
     }
   virtual double getGradParam(const int index, const CMatrix& X, const CMatrix& cvGrd) const=0;
   virtual double getParam(const int) const=0;
@@ -131,11 +133,11 @@ class CKern : public CMatinterface, public CTransformable {
     {
       type = name;
     }
-  inline string getKernName() const
+  inline string getName() const
     {
       return kernName;
     }
-  inline void setKernName(const string name)
+  inline void setName(const string name)
     {
       kernName = name;
     }

@@ -7,27 +7,28 @@ int VERBOSITY=1;
 int readSvmlDataFile(CMatrix& X, CMatrix& y, const string fileName);
 void helpInfo();
 void wait_any_key();
+
+
 int main(int argc, char* argv[])
 {
   string type="c";
-  int maxiter=100;
   double tol=1e-6;
   double gamma=-1;
   int kernelType=0;
   double rbfInvWidth=1.0;
-  string noiseType;
-  int activeSetSize = 100;
+  char noiseType;
+  int kernIters=100;
+  int noiseIters=20;
+  int extIters=4;
+  int activeSetSize=100;
+  int fileFormat = 0;
   int i;
   for(i=1; (i<argc) && ((argv[i])[0] == '-');i++) {
-    switch ((argv[i])[1]) 
+    switch (argv[i][1]) 
       { 
       case '?': 
 	helpInfo(); 
 	exit(0);
-      case 'd':
-	i++;
-	activeSetSize = atol(argv[i]);
-	break;
       case 'z': 
 	i++; 
 	type = argv[i]; 
@@ -35,10 +36,6 @@ int main(int argc, char* argv[])
       case 'v': 
 	i++; 
 	VERBOSITY=atol(argv[i]); 
-	break;
-      case '#': 
-	i++; 
-	maxiter=atol(argv[i]); 
 	break;
       case 'p': 
 	i++; 
@@ -52,6 +49,37 @@ int main(int argc, char* argv[])
 	i++; 
 	rbfInvWidth=atof(argv[i]); 
 	break;
+      case '-':
+	switch (argv[i][2])
+	  {
+	  case 'k':
+	    i++;
+	    kernIters=atol(argv[i]);
+	    break;
+	  case 'n':
+	    i++;
+	    noiseIters=atol(argv[i]);
+	    break;
+	  case 'e':
+	    i++;
+	    extIters=atol(argv[i]);
+	    break;
+	  case 'd':
+	    i++;
+	    activeSetSize = atol(argv[i]);
+	    break;
+	  case 'f':
+	    i++;
+	    fileFormat=atol(argv[i]);
+	    break;
+	  default: 
+	    cout << "Unrecognised option " << argv[i] << endl;
+	    helpInfo();
+	    exit(0);
+	    
+	    
+	  }
+	break;
       default: 
 	cout << "Unrecognised option " << argv[i] << endl;
 	helpInfo();
@@ -59,7 +87,7 @@ int main(int argc, char* argv[])
       }
   }
   if(i>=argc) {
-    cout << endl << "Not enough input parameters!" << endl << endl;
+    cout << endl << "There are not enough input parameters." << endl << endl;
     wait_any_key();
     helpInfo();
     exit(0);
@@ -69,9 +97,9 @@ int main(int argc, char* argv[])
   if((i+1)<argc) 
     modelfile=argv[i+1];
   if(type=="c")
-    noiseType = "probit";
+    noiseType = 'c';
   else if(type=="r") 
-    noiseType = "gaussian";
+    noiseType = 'r';
   else 
     {
       cout << "Unknown type " << type << ": Valid types are 'c' (classification), 'r' regession";
@@ -90,29 +118,127 @@ int main(int argc, char* argv[])
   string dataFile="";
   CMatrix X;
   CMatrix y;
-  readSvmlDataFile(X, y, trainData);
-
-  CProbitNoise noise(y);
+  switch(fileFormat)
+    {
+    case 0: /// svmlight file format.
+      try
+	{
+	  readSvmlDataFile(X, y, trainData);
+	}
+      catch(char* err)
+	{
+	  cout << err << endl;
+	}
+      break;
+    case 1: /// Matlab file format.
+      X.readMatlabFile(trainData, "X");
+      y.readMatlabFile(trainData, "y");
+      break;
+    default:
+      cout << "Unrecognised file format number." << endl;
+      wait_any_key();
+      helpInfo();
+      exit(0);
+      
+    }
+  
 
   
+  
+  int selectionCriterion = CIvm::ENTROPY; // entropy selection
+  
+  // prior for use with ncnm.
+  CDist* prior = new CGammaDist();
+  prior->setParam(1.0, 0);
+  prior->setParam(1.0, 1);
+  
+  // create noise model.
+  CNoise* noise;
+  bool missingData;
+  double yVal=0.0;
+  switch(noiseType)
+    {
+    case 'c': /// Set up a classification model.
+      for(int i=0; i<y.getRows(); i++)
+	{
+	  yVal=y.getVal(i);
+	  if(yVal!=1.0 && yVal!=-1.0)
+	    {
+	      if(yVal==0.0 || isnan(yVal))
+		{
+		  if(missingData)
+		    continue;
+		  else
+		    {
+		      if(VERBOSITY>0)
+			cout << "Missing data identified, using null category noise model." << endl;
+		      missingData=true;
+		    }
+		}
+	      else
+		{
+		  cout << "Input data is not a classification data set." << endl;
+		  cout << "Labels must either be -1.0, 1.0 or (for unlabelled) 0.0" << endl << endl;
+		  wait_any_key();
+		  helpInfo();
+		  exit(0);
+		}
+	    }
+	}
+      if(missingData)
+	{
+	  // set up ncnm noise model.
+	  noise = new CNcnmNoise;
+	}
+      else
+	{
+	  // set up probit noise model.
+	  noise = new CProbitNoise;
+	}
+      break;
+    case 'r':
+      noise = new CGaussianNoise;      
+      // set up a gaussian noise model.
+      break;
+    otherwise:
+      // we should never get here ... exit with error.
+      cerr << "Unkonwn noise type" << endl;
+      exit(1);
+    }
+
+  // create kernel.
   CCmpndKern kern(X);
+  CKern* mainKern;
   switch(kernelType)
     {
     case 0:
-      kern.addKern(new CLinKern(X));
+      mainKern = new CLinKern(X);
       break;
     case 2:
-      kern.addKern(new CRbfKern(X));
+      mainKern = new CRbfKern(X);
       // set rbf width to 2*gamma;
       break;
     }
-  kern.addKern(new CBiasKern(X));
-  kern.addKern(new CWhiteKern(X));
-  
-  int selectionCriterion = CIvm::ENTROPY; // entropy selection
-  CIvm model(X, y, kern, noise, selectionCriterion, activeSetSize, VERBOSITY);
-  model.selectPoints();
-  //model.optimise(4, 100, 20);
+  CKern* biasKern = new CBiasKern(X);
+  CKern* whiteKern = new CWhiteKern(X);
+
+  kern.addKern(biasKern);
+  kern.addKern(whiteKern);
+  kern.addKern(mainKern);
+
+  noise->setTarget(y);
+
+  if(noise->getType()=="ncnm")
+    {
+      kern.addPrior(prior, 0);
+      kern.addPrior(prior, 1);
+      kern.addPrior(prior, 2);
+    }
+
+  CIvm model(X, y, kern, *noise, selectionCriterion, activeSetSize, VERBOSITY);
+  model.optimise(extIters, kernIters, noiseIters);
+
+  // Write matlab output.
   model.writeMatlabFile("testIvm.mat", "ivmInfo");
   model.kern.updateMatlabFile("testIvm.mat", "kern");
   model.noise.updateMatlabFile("testIvm.mat", "noise");
@@ -142,6 +268,18 @@ void helpInfo()
   cout << "                      0: linear (default)" << endl;
   cout << "                      2: radial basis function exp(-gamma ||a-b||^2)" << endl;
   cout << "         -g float  -> parameter gamma in rbf kernel." << endl;
+  cout << "File Options: " << endl;
+  cout << "        --f int    -> type of file format:" << endl;
+  cout << "                      0: svm light (default)" << endl;
+  cout << "                      1: Matlab file containing X and y." << endl;
+  cout << "IVM options:" << endl;
+  cout << "        --d int    -> Size of active set. Default is 100." << endl;
+  cout << "        --e int    -> Number of external iterations for reselecting " << endl; 
+  cout << "                      active set. Default is 0." << endl; 
+  cout << "        --k int    -> Number of iterations for optimising kernel." <<endl;
+  cout << "                      Default is 100." << endl;
+  cout << "        --n int    -> Number of iterations for optimising noise model." << endl;
+  cout << "                      Default is 20." << endl;
 }    
 void wait_any_key()
 {
@@ -182,8 +320,7 @@ int readSvmlDataFile(CMatrix& X, CMatrix& y, const string fileName)
   if(VERBOSITY>0)
     cout << "Loading training data." << endl;
   ifstream in(fileName.c_str());
-  if(!in.is_open())
-    throw("File not found");
+  if(!in.is_open()) throw "File not found";
 
   string line;
   string token;
@@ -254,7 +391,7 @@ int readSvmlDataFile(CMatrix& X, CMatrix& y, const string fileName)
 		  pos++;
 		}
 	      pos++;
-	      if(token.size()>0)
+	      if(token.size()>0 && token!="\r")
 		{
 		  // deal with token.
 		  if(featureRead)
@@ -264,6 +401,9 @@ int readSvmlDataFile(CMatrix& X, CMatrix& y, const string fileName)
 		      string featStr=token.substr(0, ind);
 		      string featValStr=token.substr(ind+1, token.size()-ind);
 		      int featNum = atoi(featStr.c_str());
+		      if(featNum<1 || featNum>maxFeat || pointNo<0 || pointNo>=numData)
+			throw("Error reading file");
+		      
 		      double featVal = atof(featValStr.c_str());
 		      X.setVal(featVal, pointNo, featNum-1);
 		    }

@@ -3,8 +3,10 @@
 
 #include <cmath>
 #include "CMatrix.h"
+#include "ndlutil.h"
 
 using namespace std;
+
 const double limVal=36;
 
 class CTransform {
@@ -17,9 +19,9 @@ class CTransform {
   virtual ~CTransform()
     {
     }
-  virtual double atox(const double x) const=0;
-  virtual double xtoa(const double x) const=0;
-  virtual double gradfact(const double x) const=0;
+  virtual double atox(double x) const=0;
+  virtual double xtoa(double x) const=0;
+  virtual double gradfact(double x) const=0;
   virtual void setType(const string name)
     {
       type = name;
@@ -39,42 +41,10 @@ class CTransform {
 
 class CNegLogLogitTransform : public CTransform  {
  public:
-  CNegLogLogitTransform()
-    {
-      transform = 1;
-      setType("negLogLogit");
-    }
-  
-  double atox(const double a) const
-    {
-      double x;
-      if(a<-limVal)
-	x = exp(-limVal);
-      else if(a<limVal)
-	x=log(1+exp(a));
-      assert(!isnan(x));
-      return x;
-    }
-  double xtoa(const double x) const
-    {
-      double a=x;
-      assert(a>-limVal);
-      if(a<limVal)
-	a=log(exp(x)-1);
-      assert(!isnan(a));
-      return a;
-    }
-  double gradfact(const double x) const
-    {
-      double g;
-      assert(x>-limVal);
-      if(x<limVal)
-	g=(exp(x)-1)/exp(x);
-      else
-	g=1.0;
-      return g;
-    }
-
+  CNegLogLogitTransform();
+  double atox(double a) const;
+  double xtoa(double x) const;
+  double gradfact(double x) const;
   
  private:
   bool transform;
@@ -90,15 +60,15 @@ class CLinearTransform : public CTransform  {
       c = 0.0;
     }
   
-  double atox(const double a) const
+  double atox(double a) const
     {
       return (a-c)/m;
     }
-  double xtoa(const double x) const 
+  double xtoa(double x) const 
     {
       return m*x+c;
     }
-  double gradfact(const double x) const
+  double gradfact(double x) const
     {
       return 1/m;
     }
@@ -124,51 +94,23 @@ class CLinearTransform : public CTransform  {
   double c;
 
 };
+class CSigmoidTransform : public CTransform  {
+ public:
+  CSigmoidTransform();  
+  double atox(double a) const;
+  double xtoa(double x) const;
+  double gradfact(double x) const;
+  
+ private:
+  bool transform;
+  
+};
 
 class CParamTransforms : CMatinterface {
   
  public:
-  mxArray* toMxArray() const
-    {
-      int dims[1];
-      // transforms field.
-      const char *transFieldNames[] = {"index", "type"};
-      dims[0]=getNumTransforms();
-      mxArray* transformsArray = mxCreateStructArray(1, dims, 2, transFieldNames);
-      CMatrix ind(1, 1);
-      const char *compType[1];
-      string trType;
-      for(int i=0; i<getNumTransforms(); i++)
-	{
-	  ind.setVals((double)(getTransformIndex(i)+1));
-	  mxSetField(transformsArray, i, "index", ind.toMxArray());
-	  trType = getTransformType(i);
-      compType[0] = trType.c_str();
-      mxSetField(transformsArray, i, "type", 
-		 mxCreateCharMatrixFromStrings(1, compType));
-    }
-  return transformsArray;
-}
-  void fromMxArray(const mxArray* transformArray)
-    {
-      int numTransforms = mxGetNumberOfElements(transformArray);
-      string transformType;
-      vector<int> transformIndex;
-      int counter = 0;
-      for(int i=0; i<numTransforms; i++)
-	{
-	  transformType=mxArrayExtractStringField(transformArray, "type", i);
-	  transformIndex=mxArrayExtractVectorIntField(transformArray, "index", i);
-	  for(int j=0; j<transformIndex.size(); j++)
-	    {
-	      counter++;
-	      if(transformType=="negLogLogit")
-		addTransform(new CNegLogLogitTransform, transformIndex[j]-1);
-	      else
-		cerr << "Transform type " << transformType << " is currently unknown."<< endl;
-	    }
-	}    
-    }
+  mxArray* toMxArray() const;
+  void fromMxArray(const mxArray* transformArray);
   void addTransform(CTransform* trans, const int index)
     {
       assert(index>=0);
@@ -204,6 +146,8 @@ class CParamTransforms : CMatinterface {
 
 
 
+
+
 class CTransformable {
 
  public:
@@ -214,7 +158,7 @@ class CTransformable {
   virtual void setParam(const double val, const int paramNo)=0;
   virtual void getGradParams(CMatrix& g) const=0;
 
-
+  // these are default implementations.
   virtual void getParams(CMatrix& params) const
     {
       assert(params.getRows()==1);
@@ -296,6 +240,8 @@ class CTransformable {
 	  g.setVal(val*transArray.transforms[i]->gradfact(param), transArray.transIndex[i]);
 	}  
     }
+
+  // These are non-modifiable methods.
   inline const int getNumTransforms() const
     {
       return transArray.getNumTransforms();
@@ -331,6 +277,7 @@ class CTransformable {
       transArray.transIndex.clear();
       transArray.transforms.clear();
     }
+
   mxArray* transformsToMxArray() const
     {
       return transArray.toMxArray();

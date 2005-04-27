@@ -20,7 +20,7 @@ void CKern::initialiseKern(const CKern& kern)
 }
 ostream& CKern::display(ostream& os) const
 {
-  os << getKernName() << " kernel:" << endl;
+  os << getName() << " kernel:" << endl;
   for(int i=0; i<nParams; i++)
     {
       os << getParamName(i) << ": " << getParam(i) << endl;
@@ -168,7 +168,7 @@ CCmpndKern::CCmpndKern(const CCmpndKern& kern) : components(kern.components)
 void CCmpndKern::setInitParam()
 {
   setType("cmpnd");
-  setKernName("compound");
+  setName("compound");
   nParams=0;
 }
 double CCmpndKern::diagComputeElement(const CMatrix& X, const int index) const
@@ -323,6 +323,7 @@ void CCmpndKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covG
       g.setMatrix(0, start, subg);
       start = end+1;
     }
+  addPriorGrad(g);
 }
 double CCmpndKern::getGradParam(const int index, const CMatrix& X, const CMatrix& covGrad) const
 {
@@ -423,7 +424,7 @@ void CWhiteKern::setInitParam()
 {
   nParams = 1;
   setType("white");
-  setKernName("white noise");
+  setName("white noise");
   setParamName("variance", 0);
   variance = exp(-2.0);
   addTransform(new CNegLogLogitTransform, 0);
@@ -550,11 +551,11 @@ void CBiasKern::setInitParam()
 {
   nParams = 1;
   setType("bias");
-  setKernName("bias");
+  setName("bias");
   setParamName("variance", 0);
   variance = exp(-2.0);
   addTransform(new CNegLogLogitTransform, 0);
-  // TODO Add prior functinalityl priors.push_back(new CDist);
+  // TODO Add prior functionality priors.push_back(new CDist);
 }
 
 double CBiasKern::diagComputeElement(const CMatrix& X, const int index) const
@@ -674,7 +675,7 @@ void CRbfKern::setInitParam()
 {
   nParams = 2;
   setType("rbf");
-  setKernName("RBF");
+  setName("RBF");
   setParamName("inverseWidth", 0);
   inverseWidth = 1.0;
   setParamName("variance", 1);
@@ -777,6 +778,7 @@ void CRbfKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGra
       }
   g.setVal(g1, 0);
   g.setVal(g2, 1);
+  addPriorGrad(g);
 }
 double CRbfKern::getGradParam(const int index, const CMatrix& X, const CMatrix& covGrad) const
 {
@@ -833,7 +835,7 @@ void CLinKern::setInitParam()
 {
   nParams = 1;
   setType("lin");
-  setKernName("linear");
+  setName("linear");
   setParamName("variance", 0);
   variance = 1.0;
   addTransform(new CNegLogLogitTransform, 0);

@@ -19,6 +19,11 @@ int main()
   CMatrix D = inv(A);
   CMatrix E = multiply(A, D);
   cout << E;
+  
+  double x = 1.03;
+  cout << ndlutil::digamma(x) << endl;
+  cout << ndlutil::gammaln(x) << endl;
+  cout << ndlutil::gamma(x) << endl;
 
 }
 

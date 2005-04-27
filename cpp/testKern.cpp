@@ -74,10 +74,10 @@ int testKern(CKern* kern, CKern* kern2, const string fileName)
   kern->setTransParams(params);
   kern2->readMatlabFile(fileName, "kern2");
   if(kern2->equals(*kern))
-    cout << kern->getKernName() << " Initial Kernel matches." << endl;
+    cout << kern->getName() << " Initial Kernel matches." << endl;
   else
     {
-      cout << "FAILURE: " << kern->getKernName() << " Initial Kernel." << endl;
+      cout << "FAILURE: " << kern->getName() << " Initial Kernel." << endl;
       fail++;
     }
   CMatrix K1(X.getRows(), X.getRows());
@@ -85,10 +85,10 @@ int testKern(CKern* kern, CKern* kern2, const string fileName)
   CMatrix K2;
   K2.readMatlabFile(fileName, "K2");
   if(K1.equals(K2))
-    cout << kern->getKernName() << " full compute matches." << endl;
+    cout << kern->getName() << " full compute matches." << endl;
   else
     { 
-      cout << "FAILURE: " << kern->getKernName() << " full compute." << endl;
+      cout << "FAILURE: " << kern->getName() << " full compute." << endl;
       fail++;
     }
    CMatrix K3(X.getRows(), X2.getRows());
@@ -96,10 +96,10 @@ int testKern(CKern* kern, CKern* kern2, const string fileName)
    CMatrix K4;
    K4.readMatlabFile(fileName, "K4");
    if(K3.equals(K4))
-     cout << kern->getKernName() << " double compute matches." << endl;
+     cout << kern->getName() << " double compute matches." << endl;
    else
      { 
-       cout << "FAILURE: " << kern->getKernName() << " double compute." << endl;
+       cout << "FAILURE: " << kern->getName() << " double compute." << endl;
        fail++;
      }
    CMatrix k1(X.getRows(), 1);
@@ -107,10 +107,10 @@ int testKern(CKern* kern, CKern* kern2, const string fileName)
    CMatrix k2;
    k2.readMatlabFile(fileName, "k2");
    if(k1.equals(k2))
-     cout << kern->getKernName() << " diag compute matches." << endl;
+     cout << kern->getName() << " diag compute matches." << endl;
    else
      {
-       cout << "FAILURE: " << kern->getKernName() << " diag compute." << endl;
+       cout << "FAILURE: " << kern->getName() << " diag compute." << endl;
        fail++;
      }
    CMatrix covGrad;
@@ -121,10 +121,10 @@ int testKern(CKern* kern, CKern* kern2, const string fileName)
    CMatrix g2;
    g2.readMatlabFile(fileName, "g2");
    if(g1.equals(g2))
-     cout << kern->getKernName() << " parameter gradient matches." << endl;
+     cout << kern->getName() << " parameter gradient matches." << endl;
    else
      {
-       cout << "FAILURE: " << kern->getKernName() << " parameter gradient." << endl;
+       cout << "FAILURE: " << kern->getName() << " parameter gradient." << endl;
        fail++;
      }
    

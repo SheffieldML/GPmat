@@ -11,8 +11,7 @@
 #include "CDist.h"
 #include "CKern.h"
 using namespace std;
-using namespace ndlutil;
-const double DEPS=DBL_EPSILON;
+
 class CNoise : public CTransformable, public COptimisable, public CMatinterface {
 
  public:
@@ -270,6 +269,7 @@ class CNoise : public CTransformable, public COptimisable, public CMatinterface 
 class CGaussianNoise : public CNoise {
  public:  
   // constructors
+  CGaussianNoise(){}
   CGaussianNoise(const CMatrix& yin)
     {
       setTarget(yin);
@@ -339,6 +339,7 @@ class CGaussianNoise : public CNoise {
 class CProbitNoise : public CNoise {
  public:  
   // constructors
+  CProbitNoise(){}
   CProbitNoise(const CMatrix& yin)
     {
       setTarget(yin);
@@ -398,6 +399,77 @@ class CProbitNoise : public CNoise {
   
 
  private:
+  double sigma2;
+  CMatrix bias;
+};
+
+class CNcnmNoise : public CNoise {
+ public:  
+  // constructors
+  CNcnmNoise(){}
+  CNcnmNoise(const CMatrix& yin)
+    {
+      setTarget(yin);
+    }
+  ~CNcnmNoise();
+  
+  void setInitParam();
+  ostream& display(ostream& os);
+  void setParams(const CMatrix& params);
+  void setParam(const double val, const int index);
+  void getParams(CMatrix& params) const;
+  double getParam(const int index) const;
+  void getGradParams(CMatrix& g) const;
+  void getGradInputs(double& gmu, double& gvs, const int i, const int j) const;
+  void out(CMatrix& yTest, const CMatrix& muTest, const CMatrix& varSigmaTest) const;
+  void likelihood(CMatrix& L, const CMatrix& muTest, const CMatrix& varSigmaTest, const CMatrix& yTest) const;
+  double logLikelihood(const CMatrix& muTest, const CMatrix& varSigmaTest, const CMatrix& yTest) const;
+  double logLikelihood() const
+    {
+      return logLikelihood(mu, varSigma, y);
+    }
+  void  getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
+  
+  inline double getMu(const int i, const int j) const
+    {
+      return mu.getVal(i, j);
+    }
+  inline void setMu(const double val, const int i, const int j) 
+    {
+      mu.setVal(val, i, j);
+    }
+  inline double getVarSigma(const int i, const int j) const
+    {
+      return varSigma.getVal(i, j);
+    }
+  inline void setVarSigma(const double val, const int i, const int j) 
+    {
+      if(isnan(val))
+	throw("varSigma is being set with value NaN.");
+      assert(val>=0);
+      varSigma.setVal(val, i, j);
+    }
+  inline double getTarget(const int i, const int j) const
+    {
+      return y.getVal(i, j);
+    }
+  virtual void setTarget(const CMatrix& vals)
+    {
+      y.deepCopy(vals);
+      setNumData(vals.getRows());
+      setNumProcesses(vals.getCols());
+      setInitParam();
+    }
+  // Adds parameters to the mxArray.
+  void addParamToMxArray(mxArray* matlabArray) const;
+  // Gets the parameters from the mxArray.
+  void extractParamFromMxArray(const mxArray* matlabArray);
+  
+
+ private:
+  double gamman;
+  double gammap;
+  double width;
   double sigma2;
   CMatrix bias;
 };

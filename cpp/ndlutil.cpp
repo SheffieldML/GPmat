@@ -1,14 +1,12 @@
 #include "ndlutil.h"
 
 namespace ndlutil {
-
-  const double HALFSQRTTWO = 0.7071067811865476;
-
+  
   double ngaussian(double x)
   {
     x *= x;
     x = exp(-.5*x);
-    x = x/sqrt(2.0*M_PI);
+    x = x/SQRTTWOPI;
     return x;
   }
   double cumGaussian(double x)
@@ -28,7 +26,7 @@ namespace ndlutil {
     if(x>0)
       x = ngaussian(x)/cumGaussian(x);
     else
-      x = 1/(sqrt(2.0*M_PI)*0.5*derfcx_(-HALFSQRTTWO*x));
+      x = 1.0/(SQRTTWOPI*0.5*derfcx_(-HALFSQRTTWO*x));
     return x;
   }
   double lnCumGaussian(double x)
@@ -40,19 +38,44 @@ namespace ndlutil {
     return x;
   }
 
+  double lnCumGaussSum(double u1, double u2, double w1, double w2)
+  {
+    
+    if(u1 > 0 && u2 > 0)
+      return log(w1*cumGaussian(u1)+ w2*cumGaussian(u2));
+    
+    else if(u1>u2)
+      return log(w1) + lnCumGaussian(u1)
+	+ log(1.0 + w2/w1*exp(lnCumGaussian(u2)
+			      -lnCumGaussian(u1)));
+    else
+      return log(w2) + lnCumGaussian(u2)
+	+ log(1.0 + w1/w2*exp(lnCumGaussian(u1)
+			      -lnCumGaussian(u2)));
+  }
+
+  double invSigmoid(double x)
+  {
+    return log(x/(1.0-x));
+  }
+  double sigmoid(double x)
+  {
+    return 1.0/(1.0+exp(-x));
+  }
+
   double erfcinv(double x)
   {
     double s, t, u, w, y, z;
     
     z = x;
-    if (x > 1) {
+    if (x > 1.0) {
         z = 2 - x;
     }
     w = 0.916461398268964 - log(z);
     u = sqrt(w);
     s = (log(u) + 0.488826640273108) / w;
-    t = 1 / (u + 0.231729200323405);
-    y = u * (1 - s * (s * 0.124610454613712 + 0.5)) - 
+    t = 1.0 / (u + 0.231729200323405);
+    y = u * (1.0 - s * (s * 0.124610454613712 + 0.5)) - 
         ((((-0.0728846765585675 * t + 0.269999308670029) * t + 
         0.150689047360223) * t + 0.116065025341614) * t + 
         0.499999303439796) * t;
@@ -72,12 +95,36 @@ namespace ndlutil {
         0.686265948274097816) * u + 0.434397492331430115) * u + 
         0.244044510593190935) * t - 
         z * exp(y * y - 0.120782237635245222);
-    y += s * (y * s + 1);
-    if (x > 1) {
+    y += s * (y * s + 1.0);
+    if (x > 1.0) {
         y = -y;
     }
     return y;
-}
-
-
+  }
+  double gamma(double x)
+  {
+    double y;
+    lgama_(1, x, y);
+    return y;
+  }
+  double gammaln(double x)
+  {
+    double y;
+    lgama_(0, x, y);
+    return y;
+  }
+  double digamma(double x)
+  {
+    double y;
+    psi_(x, y);
+    return y;
+  }
+  
+  double xlogy(double x, double y)
+  {
+    if(x==0.0)
+      return 0.0;
+    else
+      return x*log(y);
+  }
 }

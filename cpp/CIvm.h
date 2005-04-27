@@ -50,10 +50,14 @@ class CIvm : public CMatinterface, public COptimisable {
 
   void out(CMatrix& yPred, const CMatrix& inData) const;
   void posteriorMeanVar(CMatrix& mu, CMatrix& varSigma, const CMatrix& X) const;
+  string getNoiseName() const
+    {
+      return noise.getNoiseName();
+    }
   inline void setVerbosity(const int val)
     {
       verbosity = val;
-    }
+    }  
   inline int getVerbosity() const
     {
       return verbosity;
@@ -95,7 +99,7 @@ class CIvm : public CMatinterface, public COptimisable {
   void approxLogLikelihoodGradient(CMatrix& g) const;
   
   void optimise(const int maxIters=15, const int kernIters=100, const int noiseIters=100);
-  bool equals(const CIvm& model, const double tol=MATCHTOL) const;
+  bool equals(const CIvm& model, const double tol=ndlutil::MATCHTOL) const;
   void display(ostream& os) const;
 
   inline int getOptNumParams() const
