@@ -5,4 +5,5 @@ function l = priorLogProb(prior, x)
 % PRIOR
 
 % Compute log prior
-l = feval([prior.type 'PriorLogProb'], prior, x);
+fhandle = str2func([prior.type 'PriorLogProb']);
+l = fhandle(prior, x);

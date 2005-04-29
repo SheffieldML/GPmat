@@ -4,10 +4,11 @@ function [params, names] = priorExtractParam(prior)
 
 % PRIOR
 
+fhandle = str2func([prior.type 'PriorExtractParam']);
 if nargout < 2
-  params = feval([prior.type 'PriorExtractParam'], prior);
+  params = fhandle(prior);
 else
-  [params, names] = feval([prior.type 'PriorExtractParam'], prior);
+  [params, names] = fhandle(prior);
 end
 
 
@@ -15,7 +16,7 @@ end
 if isfield(prior, 'transforms')
   for i = 1:length(prior.transforms)
     index = prior.transforms(i).index;
-    params(index) = feval([prior.transforms(i).type 'Transform'], ...
-              params(index), 'xtoa');
+    fhandle = [prior.transforms(i).type 'Transform'];
+    params(index) = fhandle(params(index), 'xtoa');
   end
 end

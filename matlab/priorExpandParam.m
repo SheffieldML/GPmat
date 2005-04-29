@@ -4,12 +4,14 @@ function prior = priorExpandParam(prior, params)
 
 % PRIOR
 
+
 if isfield(prior, 'transforms')
   for i = 1:length(prior.transforms)
     index = prior.transforms(i).index;
-    params(index) = feval([prior.transforms(i).type 'Transform'], ...
-              params(index), 'atox');
+    fhandle = str2func([prior.transforms(i).type 'Transform']);
+    params(index) = fhandle(params(index), 'atox');
   end
 end
 
-prior = feval([prior.type 'PriorExpandParam'], prior, params);
+fhandle = str2func([prior.type 'PriorExpandParam']);
+prior = fhandle(prior, params);
