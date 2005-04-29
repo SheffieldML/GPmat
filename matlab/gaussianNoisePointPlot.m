@@ -1,4 +1,4 @@
-function gaussianNoisePointPlot(noise, X, y, ...
+function h = gaussianNoisePointPlot(noise, X, y, ...
                               fontName, fontSize, ...
                               markerSize, lineWidth);
 
@@ -6,7 +6,7 @@ function gaussianNoisePointPlot(noise, X, y, ...
 
 % NOISE
 
-plot3(X(:, 1), X(:, 2), y, 'r.', 'erasemode', 'xor',  'markerSize', markerSize, 'linewidth', lineWidth);
+h = plot3(X(:, 1), X(:, 2), y, 'r.', 'erasemode', 'xor',  'markerSize', markerSize, 'linewidth', lineWidth);
 
 minVals = min([X y]);
 maxVals = max([X y]);

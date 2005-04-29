@@ -4,7 +4,4 @@ function L = noiseLikelihood(noise, mu, varsigma, y);
 
 % NOISE
 
-% NOISE
-
-
 L = feval([noise.type 'Likelihood'], noise, mu, varsigma, y);

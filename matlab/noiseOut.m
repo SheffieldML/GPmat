@@ -4,7 +4,9 @@ function y = noiseOut(noise, mu, varsigma);
 
 % NOISE
 
-% NOISE
-
-
-y = feval([noise.type 'NoiseOut'], noise, mu, varsigma);
+fhandle = str2func([noise.type 'NoiseOut']);
+if str2num(version('-release'))>13
+  y = fhandle(noise, mu, varsigma);
+else
+  y = feval(fhandle, noise, mu, varsigma);
+end

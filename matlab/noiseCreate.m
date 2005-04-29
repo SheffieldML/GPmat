@@ -4,10 +4,10 @@ function noise = noiseCreate(noiseType, y)
 
 % NOISE
 
-% NOISE
-
-
-if iscell(noiseType)
+if isstruct(noiseType)
+  noise = noiseType;
+  return
+elseif iscell(noiseType)
   % compound noise type
   noise.type = 'cmpnd';
   if nargin > 1
@@ -23,7 +23,9 @@ else
   noise.type = noiseType;
 end
 
-noise = noiseParamInit(noise, y);
+if nargin>1
+  noise = noiseParamInit(noise, y);
+end
 
 % Check if the noise model has bespoke site update code
 if exist([noise.type 'NoiseSites'])==2

@@ -4,9 +4,6 @@ function g = gaussianNoiseGradientParam(noise, mu, varsigma, y)
 
 % NOISE
 
-% NOISE
-
-
 D = size(y, 2);
 u = zeros(size(y));
 

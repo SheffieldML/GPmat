@@ -4,9 +4,6 @@ function [params, names] = probitNoiseExtractParam(noise)
 
 % NOISE
 
-% NOISE
-
-
 params = [noise.bias];
 
 if nargout > 1

@@ -4,9 +4,6 @@ function noise = probitNoiseParamInit(noise, y)
 
 % NOISE
 
-% NOISE
-
-
 if nargin > 1
   nClass1 = sum(y==1, 1);
   nClass2 = sum(y==-1, 1);

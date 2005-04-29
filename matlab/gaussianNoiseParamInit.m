@@ -14,7 +14,7 @@ end
 noise.sigma2 = 1e-6;
 
 noise.transforms.index = noise.numProcess+1;
-noise.transforms.type = 'exp';
+noise.transforms.type = 'negLogLogit';
 noise.nParams = 1 + noise.numProcess;
 
 % Can handle missing values?

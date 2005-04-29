@@ -4,9 +4,6 @@ function g = noiseGradientParam(noise, mu, varsigma, y)
 
 % NOISE
 
-% NOISE
-
-
 g = feval([noise.type 'NoiseGradientParam'], noise, mu, varsigma, y);
 
 % check if there is a prior over parameters

@@ -4,9 +4,6 @@ function [g, nu] = noiseUpdateNuG(noise, mu, varSigma, y);
 
 % NOISE
 
-% NOISE
-
-
 if noise.updateNuG
   % The noise model has it's own code for site updates.
   [g, nu] = ...

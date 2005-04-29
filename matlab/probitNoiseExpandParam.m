@@ -4,9 +4,5 @@ function noise = probitNoiseExpandParam(noise, params)
 
 % NOISE
 
-% NOISE
-
-
-
 noise.bias = params(1:end);
 

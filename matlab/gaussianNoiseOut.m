@@ -4,9 +4,6 @@ function y = gaussianNoiseOut(noise, mu, varsigma)
 
 % NOISE
 
-% NOISE
-
-
 D = size(mu, 2);
 y = zeros(size(mu));
 for i = 1:D

@@ -1,4 +1,4 @@
-function orderedNoisePointPlot(noise, X, y, ...
+function h = orderedNoisePointPlot(noise, X, y, ...
                               fontName, fontSize, ...
                               markerSize, lineWidth);
 
@@ -6,10 +6,11 @@ function orderedNoisePointPlot(noise, X, y, ...
 
 % NOISE
 
+h = [];
 symbol = getSymbols(noise.C);
 for i = 1:noise.C
-  plot(X(find(y==i-1), 1), X(find(y==i-1), 2), symbol{i}, 'erasemode', ...
-       'xor', 'markerSize', markerSize, 'linewidth', lineWidth);
+  h = [h; plot(X(find(y==i-1), 1), X(find(y==i-1), 2), symbol{i}, 'erasemode', ...
+       'xor', 'markerSize', markerSize, 'linewidth', lineWidth)];
   hold on
 end
 
