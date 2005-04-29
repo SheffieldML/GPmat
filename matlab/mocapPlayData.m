@@ -3,7 +3,8 @@ function mocapPlayData(fileName)
 % MOCAPPLAYDATA 
 
 % MOCAP
-[Y, connections] = mocapLoaddata(fileName);
+
+[Y, connections] = mocapLoadData(fileName);
 
 pauseVal = 0.01;
 handle = stickVisualise(Y(1, :), connections);

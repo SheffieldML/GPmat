@@ -7,6 +7,6 @@ function [vers, depend] = mocapVers
 vers = 0.001;
 if nargout > 2
   depend(1).name = 'gplvm';
-  depend(1).vers = 1.01;
-  depend(1).required = 1;
+  depend(1).vers = 2.02;
+  depend(1).required = 0;
 end
