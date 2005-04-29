@@ -5,7 +5,6 @@
 % Sample a regression data-set.
 [X, y] = ivmLoadData('regressionOne');
 
-
 noiseModel = 'gaussian';
 selectionCriterion = 'entropy';
 
@@ -16,14 +15,12 @@ options = ivmOptions;
 options.display = 2;
 dVal = 50;
 
-
+i = 0;
 % Initialise the IVM model.
 model = ivm(X, y, kernelType, noiseModel, selectionCriterion, dVal);
 model.kern = cmpndTieParameters(model.kern, {[3, 6], [4, 7]});
 if options.display > 1
-  ivm3dPlot(model, 'surf', i);
-  colormap bone
-  shading interp  
+  [h1, h2] = ivm3dPlot(model, 'mesh', i);
   drawnow
 end
 
@@ -32,9 +29,8 @@ for i = 1:options.extIters
   % Select the active set.
   model = ivmOptimiseIVM(model, options.display);
   if options.display > 1
-    ivm3dPlot(model, 'surf', i);
-    colormap bone
-    shading interp  
+    delete(h2)
+    [h1, h2] = ivm3dPlot(model, 'mesh', i);
     drawnow
   end
   % Optimise kernel parameters.
@@ -43,9 +39,8 @@ for i = 1:options.extIters
 end
 model = ivmOptimiseIVM(model, options.display);
 if options.display > 1
-  ivm3dPlot(model, 'surf', i);
-  colormap bone
-  shading interp  
+  delete(h2)
+  [h1, h2] = ivm3dPlot(model, 'mesh', i);
 end
 % Show the active points.
 model = ivmOptimiseIVM(model, options.display);

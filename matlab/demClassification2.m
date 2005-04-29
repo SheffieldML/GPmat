@@ -3,6 +3,8 @@
 % IVM
 
 % Sample a classification data-set.
+randn('seed', 1e5)
+rand('seed', 1e5)
 [X, y ] = ivmLoadData('classificationTwo');
 noiseModel = 'probit';
 selectionCriterion = 'entropy';

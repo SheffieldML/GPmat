@@ -3,6 +3,7 @@ function model = ivm(X, y, kernelType, noiseType, selectionCriterion, d)
 % IVM Initialise an IVM model.
 
 % IVM
+
 model.type = 'ivm';
 model.terminate = 0;
 model.epUpdate = 0;
@@ -19,7 +20,7 @@ model.nu = zeros(size(y));
 model.g = zeros(size(y));
 
 model.kern = kernCreate(X, kernelType);
-  
+
 model.varSigma = zeros(size(y));
 model.mu = zeros(size(y));
 

@@ -10,7 +10,7 @@ if nargin < 3
     display = 1;
   end
 end
-options = foptions;
+options = defaultOptions;
 if display
   options(1) = 1;
 end

@@ -1,6 +1,6 @@
 function model = ivmReconstruct(kern, noise, ivmInfo, X, y)
 
-% IVMLOAD Load an IVM structure.
+% IVMRECONSTRUCT Reconstruct an IVM form component parts.
 
 % IVM
 

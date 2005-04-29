@@ -1,6 +1,6 @@
-function [kern, noise, ivmInfo] = ivmDeconstruct(model, fileName)
+function [kern, noise, ivmInfo] = ivmDeconstruct(model)
 
-% IVMSAVE break IVM in pieces for saving.
+% IVMDECONSTRUCT break IVM in pieces for saving.
 
 % IVM
 

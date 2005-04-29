@@ -10,7 +10,7 @@ end
 
 if add
   switch model.selectionCriterion
-   case 'entropy'
+   case {'entropy', 'rentropy'}
     if model.noise.spherical
       % Noise model leads to constant values for beta.
       delta = -.5*size(model.y, 2).*sum(log2(1-model.varSigma(model.J, 1).* ...
@@ -25,7 +25,7 @@ if add
 else
   
   switch model.selectionCriterion
-   case 'entropy'
+   case {'entropy', 'rentropy'}
     delta = .5*sum(log2(1-model.varSigma(model.I, :).*model.beta(model.I, ...
 						  :)+1e-300), 2);
    otherwise

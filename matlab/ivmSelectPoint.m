@@ -29,4 +29,22 @@ switch model.selectionCriterion
     index1Select = ceil(rand(1)*numSelect);
     indexSelect = index1(index1Select);
   end
+ case 'rentropy' 
+  % entropy with first point random
+  if length(model.I)
+    % if point is already selected select another.
+    delta = ivmComputeInfoChange(model, add);
+    [infoChange, indexSelect] = max(delta);
+  else
+    % otherwise select one randomly
+    if add
+      indexSelect = ceil(rand(1)*length(model.J));
+      infoChange = -.5*sum(log2(1-model.varSigma(indexSelect, :)* ...
+                                model.nu(indexSelect, :)), 2);
+    else
+      indexSelect = ceil(rand(1)*length(model.I));
+      infoChange = -.5*sum(log2(1-model.varSigma(indexSelect, :)* ...
+                                model.beta(indexSelect, :)+1e-300), 2);
+    end
+  end
 end
