@@ -378,13 +378,23 @@ class CMatrix : public CMatinterface {
       assert(j<ncols);
       return norm2Col(j) + A.norm2Col(k) - 2.0*dotColCol(j, A, k);
     }
-  // Return the 2-norm of the ith row of the matrix.
+  // Return the norm of the ith row of the matrix.
+  double normRow(const int i) const
+    {
+      return dnrm2_(ncols, vals+i, nrows);
+    }
+  // Return the squared norm of the ith row of the matrix.
   double norm2Row(const int i) const
     {
       double val=dnrm2_(ncols, vals+i, nrows);
       return val*val;
     }
-  // Return the 2-norm of the jth column of the matrix.
+  // Return the norm of the jth column of the matrix.
+  double normCol(const int j) const
+    {
+      return dnrm2_(nrows, vals+j*nrows, 1);
+    }
+  // Return the squared norm of the jth column of the matrix.
   double norm2Col(const int j) const
     {
       double val=dnrm2_(nrows, vals+j*nrows, 1);

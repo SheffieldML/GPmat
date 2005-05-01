@@ -590,6 +590,7 @@ void CIvm::optimise(const int maxIters, const int kernIters, const int noiseIter
 		noise.checkGradients();
 	      if(getVerbosity()>1)
 		cout << "Optimising noise parameters ..." <<endl;
+	      noise.checkGradients();
 	      noise.scgOptimise(noiseIters);
 	      if(getVerbosity()>1)
 		cout << "... done." <<endl;

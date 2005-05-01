@@ -32,6 +32,7 @@ class COptimisable {
   void checkGradients();  
   void gdOptimise(double learnRate=0.01, double momentum=0.9, int display=0, int maxIters=1000, const double objectiveTol=1e-6, const double paramTol=1e-6);
   void gdPullbackOptimise(double learnRate=0.01, int display=0, int maxIters=1000, const double objectiveTol=1e-6, const double paramTol=1e-6);
+  void netlabScgOptimise(int maxIters=100, const double objectiveTol=1e-6, const double paramTol=1e-6);
   void scgOptimise(int maxIters=100, const double objectiveTol=1e-6, const double paramTol=1e-6);
   void lineMinimisation(const CMatrix& direction);
   double oneDObjectiveVal(double val);

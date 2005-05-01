@@ -3,13 +3,14 @@
 #include <cmath>
 #include <climits>
 #include <cfloat>
-#include "xpose.h"
+#include "ndlfortran.h"
 
 using namespace std;
 namespace ndlutil {
   const double MATCHTOL = 1e-12;
   const double EPS=DBL_EPSILON;
   const double SMALLVAL=1e-6;
+  const double GRADCHANGE=1e-6;
   const double DISPEPS = 1e-14;
   const double LOGTWOPI = log(2*M_PI);
   const double HALFLOGTWOPI = 0.5*LOGTWOPI;

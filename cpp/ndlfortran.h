@@ -1,5 +1,5 @@
-#ifndef XPOSE_H
-#define XPOSE_H
+#ifndef NDLFORTRAN_H
+#define NDLFORTRAN_H
 
 // This file contains header information for various fortran functions
 // that are used.
