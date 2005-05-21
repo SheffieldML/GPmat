@@ -13,7 +13,7 @@ mu = zeros(numData, D);
 % Compute kernel for new point.
 kX = kernCompute(model.kern, X, model.X(model.I, :))';
 
-% COmpute diagonal of kernel for new point.
+% Compute diagonal of kernel for new point.
 diagK = kernDiagCompute(model.kern, X);
 
 if length(model.Sigma) > 1

@@ -294,4 +294,9 @@ switch dataset
        repmat(3, dataPerCat, 1); repmat(4, dataPerCat, 1); ...
        repmat(5, dataPerCat, 1); repmat(6, dataPerCat, 1)];
 
+ case 'mouthData'
+
+
+  
+  
 end
