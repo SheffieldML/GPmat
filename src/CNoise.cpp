@@ -712,7 +712,8 @@ void CNcnmNoise::setInitParam()
 
   // sigmoid transforms on gamman and gammap.
   addTransform(new CSigmoidTransform(), getNumParams()-1);
-  addTransform(new CSigmoidTransform(), getNumParams()-2);
+  if(isSplitGamma())
+    addTransform(new CSigmoidTransform(), getNumParams()-2);
 
   // sigma2 isn't treated as a parameter.
   setLogConcave(false);
