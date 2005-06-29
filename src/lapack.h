@@ -6,6 +6,17 @@ using namespace std;
 
 // **** LAPACK Operations ****
 
+// compute all eigenvalues and, optionally, eigenvectors of a real symmetric matrix A
+extern "C" void dsyev_(const char* jobz,
+		       const char* uplo,
+		       const int& n,  
+		       double *a,   
+		       const int& lda,
+		       double *w,        // eigenvalues
+		       double *work,
+		       const int& lwork,
+		       int &info);
+	    
 // Compute an LU factorization of a general M by N matrix A.
 extern "C" void dgetrf_(
 			const int &m,	 // (input)
