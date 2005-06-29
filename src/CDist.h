@@ -7,6 +7,7 @@
 #include "ndlutil.h"
 
 
+const string DISTVERSION="0.1";
 class CDist : public CTransformable {
   
  public:
@@ -28,6 +29,8 @@ class CDist : public CTransformable {
       cerr << "getGradParams should not be used in CDist" << endl;
       exit(1);
     }
+  virtual void writeParamsToStream(ostream& out) const;
+  virtual void readParamsFromStream(istream& in);
   //CDist(CDist& dist);
   virtual double getGradInput(double x) const=0;
   void setInitParam();
@@ -77,6 +80,8 @@ class CDist : public CTransformable {
   vector<string> paramNames;
 };
 
+void writeDistToStream(const CDist& dist, ostream& out);
+CDist* readDistFromStream(istream& in);
 
 class CGaussianDist : public CDist {
 
@@ -201,6 +206,32 @@ class CRegularisable {
 		   distArray.distIndex[i]);
 	}  
     }
+      
+  virtual void writePriorsToStream(ostream& out) const
+    {
+      for(int i=0; i<distArray.distIndex.size(); i++)
+	{
+	  out << "priorIndex=" << distArray.distIndex[i] << endl;
+	  writeDistToStream(*distArray.dists[i], out);
+	}
+    }
+  virtual void readPriorsFromStream(istream& in, const int numPriors)
+    {
+      string line;
+      vector<string> tokens;
+      for(int i=0; i<numPriors; i++)
+	{
+	  CDist* prior;
+	  getline(in, line);
+	  ndlstrutil::tokenise(tokens, line, "=");
+	  if(tokens.size()>2 || tokens[0]!="priorIndex")
+	    throw ndlexceptions::FileFormatError();
+	  prior = readDistFromStream(in);
+	  addPrior(prior, atol(tokens[1].c_str()));
+	}
+      
+    }
+
   virtual double priorLogProb() const
     {
       double L = 0.0;

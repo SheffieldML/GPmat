@@ -1,6 +1,34 @@
 #include "CDist.h"
 
 
+void CDist::writeParamsToStream(ostream& out) const
+{
+  out << "numParams=" << getNumParams() << endl;
+  for(int i=0; i<getNumParams()-1; i++)
+    out << getParam(i) << " ";
+  out << getParam(getNumParams()-1) << endl;
+}
+void CDist::readParamsFromStream(istream& in)
+{
+  string line;
+  vector<string> tokens;
+  getline(in, line);
+  ndlstrutil::tokenise(tokens, line, "=");
+  if(tokens.size()>2 || tokens[0]!="numParams")
+    throw ndlexceptions::FileFormatError();
+  int numParams=atol(tokens[1].c_str());
+  CMatrix par(1, numParams);
+  tokens.clear();
+  getline(in, line);
+  ndlstrutil::tokenise(tokens, line, " ");
+  for(int i=0; i<numParams; i++)
+    par.setVal(atof(tokens[i].c_str()), i);
+  if(numParams==getNumParams())
+    setParams(par);
+  else
+    throw ndlexceptions::FileFormatError();
+}
+
 CGaussianDist::CGaussianDist()
 {
   setInitParam();
@@ -170,4 +198,40 @@ void CParamPriors::fromMxArray(const mxArray* distArray)
 	}
     }    
 }
+
 #endif
+void writeDistToStream(const CDist& dist, ostream& out)
+{
+  out << "distVersion=" << DISTVERSION << endl;
+  out << "type=" << dist.getType() << endl;
+  dist.writeParamsToStream(out);
+}
+CDist* readDistFromStream(istream& in)
+{
+  CDist* pdist;
+  string line;
+  vector<string> tokens;
+  // first line is version info.
+  getline(in, line);
+  ndlstrutil::tokenise(tokens, line, "=");
+  if(tokens.size()>2 || tokens[0]!="distVersion")
+    throw ndlexceptions::FileFormatError();
+  if(tokens[1]!="0.1")
+    throw ndlexceptions::FileVersionError();
+  // next line is type.
+  tokens.clear();
+  getline(in, line);
+  ndlstrutil::tokenise(tokens, line, "=");
+  if(tokens.size()>2 || tokens[0]!="type")
+    throw ndlexceptions::FileFormatError();
+  string type=tokens[1];
+  if(type=="gaussian")
+    pdist = new CGaussianDist();
+  else if(type=="gamma")
+    pdist = new CGammaDist();
+  else
+    throw ndlexceptions::FileFormatError();
+  
+  pdist->readParamsFromStream(in);
+  return pdist;
+}
