@@ -4,17 +4,44 @@ function k = cmpndKernCompute(kern, x, x2)
 
 % KERN
 
-% KERN
-
-
 if nargin > 2
-  k = kernCompute(kern.comp{1}, x, x2);
+  i = 1;
+  if ~isempty(kern.comp{i}.index)
+    % only part of the data is involved in the kernel.
+    k = kernCompute(kern.comp{i}, ...
+                         x(:, kern.comp{i}.index), ...
+                         x2(:, kern.comp{i}.index));
+  else
+    % all the data is involved with the kernel.
+    k = kernCompute(kern.comp{i}, x, x2);
+  end
   for i = 2:length(kern.comp)
-    k  = k + kernCompute(kern.comp{i}, x, x2);
+    if ~isempty(kern.comp{i}.index)
+      % only part of the data is involved in the kernel.
+      k  = k + kernCompute(kern.comp{i}, ...
+                           x(:, kern.comp{i}.index), ...
+                           x2(:, kern.comp{i}.index));
+    else
+      % all the data is involved with the kernel.
+      k  = k + kernCompute(kern.comp{i}, x, x2);
+    end
   end
 else
-  k  = kernCompute(kern.comp{1}, x);
+  i = 1;
+  if ~isempty(kern.comp{i}.index)
+    % only part of the data is involved with the kernel.
+    k  = kernCompute(kern.comp{i}, x(:, kern.comp{i}.index));
+  else
+    % all the data is involved with the kernel.
+    k  = kernCompute(kern.comp{i}, x);
+  end
   for i = 2:length(kern.comp)
-    k  = k + kernCompute(kern.comp{i}, x);
+    if ~isempty(kern.comp{i}.index)
+      % only part of the data is involved with the kernel.
+      k  = k + kernCompute(kern.comp{i}, x(:, kern.comp{i}.index));
+    else
+      % all the data is involved with the kernel.
+      k  = k + kernCompute(kern.comp{i}, x);
+    end
   end
 end

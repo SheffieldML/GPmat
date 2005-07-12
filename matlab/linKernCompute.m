@@ -4,9 +4,6 @@ function k = linKernCompute(kern, x, x2)
 
 % KERN
 
-% KERN
-
-
 if nargin < 3
   k = x*x'*kern.variance;
 else

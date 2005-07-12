@@ -4,9 +4,6 @@ function [k, innerProd, arg, denom, numer] = mlpKernCompute(kern, x, x2)
 
 % KERN
 
-% KERN
-
-
 if nargin < 3
   innerProd = x*x';
   numer = innerProd*kern.weightVariance + kern.biasVariance;

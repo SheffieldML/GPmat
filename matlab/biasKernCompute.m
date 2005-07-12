@@ -4,9 +4,6 @@ function k = biasKernCompute(kern, x, x2)
 
 % KERN
 
-% KERN
-
-
 if nargin< 3
   k = repmat(kern.variance, size(x, 1), size(x, 1));
 else

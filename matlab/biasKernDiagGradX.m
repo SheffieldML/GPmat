@@ -1,10 +1,7 @@
-function gX = biasKernDiagGradX(kern, x)
+function gX = biasKernDiagGradX(kern, X)
 
-% BIASKERNDIAGGRADX Gradient of bias kernel's diagonal with respect to a point x.
-
-% KERN
+% BIASKERNDIAGGRADX Gradient of bias kernel's diagonal with respect to a point X.
 
 % KERN
 
-
-gX = zeros(size(x));
+gX = zeros(size(X));

@@ -4,9 +4,6 @@ function g = rbfardKernGradient(kern, x, covGrad)
 
 % KERN
 
-% KERN
-
-
 g = zeros(1, size(x, 2)+2);
 [k, dist2xx] = rbfardKernCompute(kern, x);
 covGradK = covGrad.*k;

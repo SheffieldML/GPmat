@@ -4,17 +4,14 @@ function kern = kernExpandParam(kern, params)
 
 % KERN
 
-% KERN
-
-
 % Check if parameters are being optimised in a transformed space.
-if isfield(kern, 'transforms')
+if ~isempty(kern.transforms)
   for i = 1:length(kern.transforms)
     index = kern.transforms(i).index;
-    params(index) = feval([kern.transforms(i).type 'Transform'], ...
-              params(index), 'atox');
+    fhandle = str2func([kern.transforms(i).type 'Transform']);
+    params(index) = fhandle(params(index), 'atox');
   end
 end
-
-kern = feval([kern.type 'KernExpandParam'], kern, params);
+fhandle = str2func([kern.type 'KernExpandParam']);
+kern = fhandle(kern, params);
 

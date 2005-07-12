@@ -1,8 +1,17 @@
-function gX = mlpardKernGradX(kern, x, X2)
+function gX = mlpardKernGradX(kern, X, X2)
 
-% MLPARDKERNGRADX Gradient of multi-layer perceptron ARD kernel with respect to a point x.
+% MLPARDKERNGRADX Gradient of multi-layer perceptron ARD kernel with respect to a X.
 
 % KERN
+
+gX = zeros(size(X2, 1), size(X2, 2), size(X, 1));
+for i = 1:size(X, 1);
+  gX(:, :, i) = mlpardKernGradXpoint(kern, X(i, :), X2);
+end
+  
+function gX = mlpardKernGradXpoint(kern, x, X2)
+
+% MLPARDKERNGRADXPOINT Gradient with respect to one point of x.
 
 scales = sparse(diag(kern.inputScales));
 xScaled = x*scales;

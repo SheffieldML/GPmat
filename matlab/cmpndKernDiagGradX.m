@@ -1,13 +1,28 @@
-function gX = cmpndKernDiagGradX(kern, x)
+function gX = cmpndKernDiagGradX(kern, X)
 
-% CMPNDKERNDIAGGRADX Gradient of compound kernel's diagonal with respect to a point x.
-
-% KERN
+% CMPNDKERNDIAGGRADX Gradient of compound kernel's diagonal with respect to X.
 
 % KERN
 
-
-gX = kernDiagGradX(kern.comp{1}, x);
+i = 1;
+if ~isempty(kern.comp{i}.index)
+  % only part of the data is involved with the kernel.
+  gX = zeros(size(X));
+  gX(:, kern.comp{i}.index) = kernDiagGradX(kern.comp{i}, ...
+                                        X(:, kern.comp{i}.index));
+else
+  % all the data is involved with the kernel.
+  gX = kernDiagGradX(kern.comp{i}, X);
+end
 for i = 2:length(kern.comp)
-  gX = gX + kernDiagGradX(kern.comp{i}, x);
+  if ~isempty(kern.comp{i}.index)
+    % only part of the data is involved with the kernel.
+    gX(:, kern.comp{i}.index) = ...
+        gX(:, kern.comp{i}.index) + ...
+        kernDiagGradX(kern.comp{i}, ...
+                  X(:, kern.comp{i}.index));
+  else
+    % all the data is involved with the kernel.
+    gX = gX + kernDiagGradX(kern.comp{i}, X);
+  end
 end

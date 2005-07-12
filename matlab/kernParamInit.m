@@ -4,4 +4,7 @@ function kern = kernParamInit(kern)
 
 % KERN
 
-kern = feval([kern.type 'KernParamInit'], kern);
+fhandle = str2func([kern.type 'KernParamInit']);
+% By default don't transform kernel parameters.
+kern.transforms = [];
+kern = fhandle(kern);

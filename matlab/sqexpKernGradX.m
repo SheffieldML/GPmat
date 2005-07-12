@@ -1,16 +1,23 @@
-function gX = sqexpKernGradX(kern, x, x2)
+function gX = sqexpKernGradX(kern, X, X2)
 
-% SQEXPKERNGRADX Gradient of squared exponential kernel with respect to a point X.
-
-% KERN
+% SQEXPKERNGRADX Gradient of squared exponential kernel with respect to X.
 
 % KERN
 
+gX = zeros(size(X2, 1), size(X2, 2), size(X, 1));
+for i = 1:size(X, 1);
+  gX(:, :, i) = sqexpKernGradXpoint(kern, X(i, :), X2);
+end
 
-gX = zeros(size(x2));
-n2 = dist2(x2, x);
+
+function gX = sqexpKernGradXpoint(kern, x, X2)
+
+% SQEXPKERNGRADXPOINT Gradient with respect to one point of x.
+
+gX = zeros(size(X2));
+n2 = dist2(X2, x);
 wi2 = (.5 .* kern.inverseWidth);
 rbfPart = kern.rbfVariance*exp(-n2*wi2);
 for i = 1:size(x, 2)
-  gX(:, i) = kern.inverseWidth*(x2(:, i) - x(i)).*rbfPart;
+  gX(:, i) = kern.inverseWidth*(X2(:, i) - x(i)).*rbfPart;
 end

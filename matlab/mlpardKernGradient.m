@@ -1,10 +1,8 @@
 function g = mlpardKernGradient(kern, x, covGrad)
 
 % MLPARDKERNGRADIENT Gradient of multi-layer perceptron ARD kernel's parameters.
-
 % KERN
 
-% KERN
 g = zeros(1, kern.nParams);
 [k, innerProd, arg, denom, numer, vecDenom] = mlpardKernCompute(kern, x);
 denom3 = denom.*denom.*denom;

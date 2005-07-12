@@ -1,10 +1,7 @@
-function gX = whiteKernDiagGradX(kern, x)
+function gX = whiteKernDiagGradX(kern, X)
 
-% WHITEKERNDIAGGRADX Gradient of white noise kernel's diagonal with respect to a point x.
-
-% KERN
+% WHITEKERNDIAGGRADX Gradient of white noise kernel's diagonal with respect to a X.
 
 % KERN
 
-
-gX = zeros(size(x));
+gX = zeros(size(X));

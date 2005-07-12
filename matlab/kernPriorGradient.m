@@ -4,9 +4,6 @@ function g = kernPriorGradient(kern)
 
 % KERN
 
-% KERN
-
-
 g = zeros(1, kern.nParams);
 switch kern.type
  case 'cmpnd'
@@ -20,7 +17,8 @@ switch kern.type
   g = g*kern.paramGroups;
  otherwise
   if isfield(kern, 'priors')
-    params = feval([kern.type 'KernExtractParam'], kern);
+    fhandle = str2func([kern.type 'KernExtractParam']);
+    params = fhandle(kern);
     for i = 1:length(kern.priors)
       index = kern.priors(i).index;
       g(index) = g(index) + priorGradient(kern.priors(i), params(index));
@@ -29,9 +27,8 @@ switch kern.type
     if isfield(kern, 'transforms')
       for i = 1:length(kern.transforms)
         index = kern.transforms(i).index;
-        g(index) = g(index).* ...
-            feval([kern.transforms(i).type 'Transform'], ...
-                  params(index), 'gradfact');
+        fhandle = str2func([kern.transforms(i).type 'Transform']);
+        g(index) = g(index).*fhandle(params(index), 'gradfact');
       end
     end
   end

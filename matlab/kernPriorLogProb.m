@@ -4,9 +4,6 @@ function L = kernPriorLogProb(kern)
 
 % KERN
 
-% KERN
-
-
 L = 0;
 switch kern.type
  case 'cmpnd'

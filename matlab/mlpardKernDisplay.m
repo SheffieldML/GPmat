@@ -4,9 +4,6 @@ function mlpardKernDisplay(kern)
 
 % KERN
 
-% KERN
-
-
 fprintf('MLP ARD kernel Variance: %2.4f\n', kern.variance)
 fprintf('MLP ARD weight variance: %2.4f\n', kern.weightVariance)
 fprintf('MLP ARD bias variance: %2.4f\n', kern.biasVariance)

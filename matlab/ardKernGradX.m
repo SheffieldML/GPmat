@@ -1,11 +1,17 @@
-function gX = ardKernGradX(kern, x, X2)
+function gX = ardKernGradX(kern, X, X2)
 
-% ARDKERNGRADX Gradient of ARD kernel with respect to a point x.
-
-% KERN
+% ARDKERNGRADX Gradient of ARD kernel with respect to X.
 
 % KERN
 
+gX = zeros(size(X2, 1), size(X2, 2), size(X, 1));
+for i = 1:size(X, 1);
+  gX(:, :, i) = ardKernGradXpoint(kern, X(i, :), X2);
+end
+
+function gX = ardKernGradXpoint(kern, x, X2)
+
+% ARDKERNGRADXPOINT Gradient with respect to one point of x.
 
 scales = sparse(diag(kern.inputScales));
 

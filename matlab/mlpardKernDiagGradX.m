@@ -1,8 +1,18 @@
-function gX = mlpardKernDiagGradX(kern, x)
+function gX = mlpardKernDiagGradX(kern, X)
 
-% MLPARDKERNDIAGGRADX Gradient of multi-layer perceptron ARD kernel's diagonal with respect to a point x.
+% MLPARDKERNDIAGGRADX Gradient of multi-layer perceptron ARD kernel's diagonal with respect to X.
 
 % KERN
+
+gX = zeros(size(X));
+for i = 1:size(X, 1);
+  gX(i, :) = mlpardKernDiagGradXpoint(kern, X(i, :));
+end
+  
+
+function gX = mlpardKernDiagGradXpoint(kern, x)
+
+% MLPARDKERNDIAGGRADXPOINT Diagonal gradient with respect to one point of x.
 
 innerProd = x*sparse(diag(kern.inputScales))*x';  
 numer = innerProd*kern.weightVariance + kern.biasVariance;

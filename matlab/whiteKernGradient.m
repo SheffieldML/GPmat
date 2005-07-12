@@ -4,7 +4,4 @@ function g = whiteKernGradient(kern, x, covGrad)
 
 % KERN
 
-% KERN
-
-
 g = trace(covGrad);

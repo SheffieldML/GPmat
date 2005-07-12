@@ -4,7 +4,8 @@ function [params, names] = kernExtractParam(kern)
 
 % KERN
 
-params = feval([kern.type 'KernExtractParam'], kern);
+fhandle = str2func([kern.type 'KernExtractParam']);
+params = fhandle(kern);
 %/~
 if any(isnan(params));
   warning('Parameter has gone to NaN')
@@ -13,10 +14,10 @@ end
 names = cell(size(params));
 
 % Check if parameters are being optimised in a transformed space.
-if isfield(kern, 'transforms')
+if ~isempty(kern.transforms)
   for i = 1:length(kern.transforms)
     index = kern.transforms(i).index;
-    params(index) = feval([kern.transforms(i).type 'Transform'], ...
-              params(index), 'xtoa');
+    fhandle = str2func([kern.transforms(i).type 'Transform']);
+    params(index) = fhandle(params(index), 'xtoa');
   end
 end

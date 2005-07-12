@@ -1,8 +1,18 @@
-function gX = mlpKernDiagGradX(kern, x)
+function gX = mlpKernDiagGradX(kern, X)
 
-% MLPKERNDIAGGRADX Gradient of  multi-layer perceptron kernel's diagonal with respect to a point x.
+% MLPKERNDIAGGRADX Gradient of multi-layer perceptron kernel's diagonal with respect to X.
 
 % KERN
+
+gX = zeros(size(X));
+for i = 1:size(X, 1);
+  gX(i, :) = mlpKernDiagGradXpoint(kern, X(i, :));
+end
+  
+
+function gX = mlpKernDiagGradXpoint(kern, x)
+
+% MLPKERNDIAGGRADXPOINT Diagonal gradient with respect to one point of x.
 
 innerProd = x*x';  
 numer = innerProd*kern.weightVariance + kern.biasVariance;

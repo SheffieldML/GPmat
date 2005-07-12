@@ -4,8 +4,5 @@ function kern = rbfKernExpandParam(kern, params)
 
 % KERN
 
-% KERN
-
-
 kern.inverseWidth = params(1);
 kern.variance = params(2);

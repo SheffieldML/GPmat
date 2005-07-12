@@ -4,7 +4,4 @@ function params = mlpardKernExtractParam(kern)
 
 % KERN
 
-% KERN
-
-
 params = [kern.weightVariance kern.biasVariance kern.variance kern.inputScales];

@@ -4,8 +4,6 @@ function g = linardKernGradient(kern, x, covGrad)
 
 % KERN
 
-% KERN
-
 g = zeros(1, size(x, 2)+1);
 k = linardKernCompute(kern, x);
 g(1) = sum(sum(covGrad.*k))/kern.variance;

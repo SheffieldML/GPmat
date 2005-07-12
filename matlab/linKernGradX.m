@@ -1,10 +1,7 @@
-function gX = linKernGradX(kern, x, X2)
+function gX = linKernGradX(kern, X, X2)
 
-% LINKERNGRADX Gradient of linear kernel with respect to a point X.
-
-% KERN
+% LINKERNGRADX Gradient of linear kernel with respect to X.
 
 % KERN
 
-
-gX = kern.variance.*X2;
+gX = repmat(kern.variance.*X2, [1 1 size(X, 1)]);

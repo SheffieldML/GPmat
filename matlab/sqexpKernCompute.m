@@ -4,9 +4,6 @@ function [k, rbfPart, n2] = sqexpKernCompute(kern, x, x2)
 
 % KERN
 
-% KERN
-
-
 
 if nargin < 3
   n2 = dist2(x, x);

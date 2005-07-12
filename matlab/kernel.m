@@ -2,7 +2,6 @@ function kern = kernel(X, kernelType)
 
 % KERNEL Initialise a kernel structure.
 
-% KERN
 
 kern.Kstore = [];
 kern.diagK = [];

@@ -4,6 +4,4 @@ function kern = linKernExpandParam(kern, params)
 
 % KERN
 
-% KERN
-
 kern.variance = params(1);

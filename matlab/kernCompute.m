@@ -4,11 +4,9 @@ function k = kernCompute(kern, x, x2)
 
 % KERN
 
-% KERN
-
-
+fhandle = str2func([kern.type 'KernCompute']);
 if nargin < 3
-  k = feval([kern.type 'KernCompute'], kern, x);
+  k = fhandle(kern, x);
 else
-  k = feval([kern.type 'KernCompute'], kern, x, x2);
+  k = fhandle(kern, x, x2);
 end

@@ -1,3 +1,11 @@
+Version 0.13 Release Notes
+--------------------------
+
+Added kernSetWhite as a helper function to set the level of white noise in the kernel.
+
+General Overview
+----------------
+
 This toolbox implements the different kernels. At the time of writing two toolboxes make use of KERN, IVM vs 0.31 and FBD vs 0.2.
 
 Interaction with the toolbox is done through the interface files which are prefixed by kern. The toolbox is designed to allow linear combinations of kernels with a minimum of fuss (using the cmpnd kernel).

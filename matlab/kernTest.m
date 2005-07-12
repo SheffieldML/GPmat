@@ -4,16 +4,18 @@ function kern = kernTest(kernType);
 
 % KERN
 
-% KERN
-
-
 numData = 20;
 numIn = 2;
 
 % Generate some x positions.
 x = randn(numData, numIn);
-kern = kernel(x, kernType);
+kern = kernCreate(x, kernType);
 kern = kernParamInit(kern);
+
+if strcmp(kern.type, 'cmpnd') & length(kern.comp) > 1
+  kern.comp{1}.index = [1];
+  kern.comp{2}.index = [2];
+end
 
 % Set the parameters randomly.
 params = kernExtractParam(kern);
@@ -107,3 +109,6 @@ fprintf('Trace max diff: %2.6f.\n', traceDiff);
 fprintf('Param max diff: %2.6f.\n', paramMaxDiff)
 fprintf('X max diff: %2.6f.\n', xMaxDiff)
 fprintf('XDiag max diff: %2.6f.\n', xDiagMaxDiff)
+fprintf('\n');
+kernDisplay(kern);
+% We don't test kernCompute(kern, x, x2) here at all!

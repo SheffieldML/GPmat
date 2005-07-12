@@ -4,7 +4,4 @@ function kernDisplay(kern)
 
 % KERN
 
-% KERN
-
-
 feval([kern.type 'KernDisplay'], kern)

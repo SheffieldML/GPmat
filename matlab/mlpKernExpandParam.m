@@ -4,8 +4,6 @@ function kern = mlpKernExpandParam(kern, params)
 
 % KERN
 
-% KERN
-
 %/~
 if any(isinf(params))
   warning('params are infinite')

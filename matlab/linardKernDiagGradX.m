@@ -1,11 +1,7 @@
-function gX = linardKernDiagGradX(kern, x)
+function gX = linardKernDiagGradX(kern, X)
 
-% LINARDKERNDIAGGRADX Gradient of linear ARD kernel's diagonal with respect to a point x.
-
-% KERN
+% LINARDKERNDIAGGRADX Gradient of linear ARD kernel's diagonal with respect to X.
 
 % KERN
 
-
-
-gX = 2*kern.variance*x.*kern.inputScales;
+gX = 2*kern.variance*X.*repmat(kern.inputScales, [size(X, 1), 1]);

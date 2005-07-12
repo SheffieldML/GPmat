@@ -4,7 +4,4 @@ function kern = whiteKernExpandParam(kern, params)
 
 % KERN
 
-% KERN
-
-
 kern.variance = params(1);

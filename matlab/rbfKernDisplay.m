@@ -4,8 +4,6 @@ function rbfKernDisplay(kern)
 
 % KERN
 
-% KERN
-
 
 fprintf('RBF Variance: %2.4f\n', kern.variance)
 fprintf('RBF inverse width: %2.4f\n', kern.inverseWidth)

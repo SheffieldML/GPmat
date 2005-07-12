@@ -1,8 +1,8 @@
-function gX = rbfKernDiagGradX(kern, x)
+function gX = rbfKernDiagGradX(kern, X)
 
-% RBFKERNDIAGGRADX Gradient of Radial basis function kernel's diagonal with respect to a point x.
+% RBFKERNDIAGGRADX Gradient of Radial basis function kernel's diagonal with respect to X.
 
 % KERN
 
-gX = zeros(size(x));
+gX = zeros(size(X));
 

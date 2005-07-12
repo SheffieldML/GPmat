@@ -4,9 +4,20 @@ function k = cmpndKernDiagCompute(kern, x)
 
 % KERN
 
-% KERN
-
-k = kernDiagCompute(kern.comp{1}, x);
+i = 1;
+if ~isempty(kern.comp{i}.index)
+  % only part of the data is involved with the kernel.
+  k  = kernDiagCompute(kern.comp{i}, x(:, kern.comp{i}.index));
+else
+  % all the data is involved with the kernel.
+  k  = kernDiagCompute(kern.comp{i}, x);
+end
 for i = 2:length(kern.comp)
-  k  = k + kernDiagCompute(kern.comp{i}, x);
+  if ~isempty(kern.comp{i}.index)
+    % only part of the data is involved with the kernel.
+    k  = k + kernDiagCompute(kern.comp{i}, x(:, kern.comp{i}.index));
+  else
+    % all the data is involved with the kernel.
+    k  = k + kernDiagCompute(kern.comp{i}, x);
+  end
 end

@@ -4,8 +4,5 @@ function g = linKernGradient(kern, x, covGrad)
 
 % KERN
 
-% KERN
-
-
 linPart = linKernCompute(kern, x);
 g(1) = sum(sum(covGrad.*linPart))/kern.variance;

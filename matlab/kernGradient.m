@@ -4,17 +4,11 @@ function g = kernGradient(kern, x, covGrad)
 
 % KERN
 
-g = feval([kern.type 'KernGradient'], kern, x, covGrad);
+fhandle = str2func([kern.type 'KernGradient']);
+g = fhandle(kern, x, covGrad);
 
 % Check if parameters are being optimised in a transformed space.
-if isfield(kern, 'transforms')
-  params = feval([kern.type 'KernExtractParam'], kern);
-  for i = 1:length(kern.transforms)
-    index = kern.transforms(i).index;
-    g(index) = g(index).* ...
-        feval([kern.transforms(i).type 'Transform'], ...
-              params(index), 'gradfact');
-  end
-end
+factors = kernFactors(kern, 'gradfact');
+g(factors.index) = g(factors.index).*factors.val;
 
   
