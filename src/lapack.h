@@ -198,5 +198,18 @@ extern "C" void dtrsm_(const char* side,
 		       double* B,
 		       const int& ldb);
 		       
+// Perform symmetric matrix matrix operation.
+extern "C" void dsymm_(const char* side,
+		       const char* uplo,
+		       const int& m,
+		       const int& n,
+		       const double& alpha,
+		       const double* A,
+		       const int& lda,
+		       const double* B,
+		       const int& ldb,
+		       const double& beta,
+		       double* C,
+		       const int& ldc);
 
 #endif

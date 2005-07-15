@@ -120,5 +120,15 @@ class MatrixConditionError : public MatrixError {
       setMessage("Matrix has low condition number.");
     }
 };
+
+class CommandLineError : public Error {
+ public:
+  CommandLineError(){}
+  CommandLineError(std::string message) 
+    {
+      setMessage(message);
+    }
+};
+
 }
 #endif

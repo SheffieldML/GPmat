@@ -2,6 +2,7 @@
 #define CCLCTRL_H
 
 #include "ndlstrutil.h"
+#include "ndlexceptions.h"
 #include "CMatrix.h"
 // Command line control class header.
 using namespace std;
@@ -65,6 +66,18 @@ class CClctrl {
       assert(argNo<argc && argNo>=0);
       return atof(argv[argNo]);
     }
+  bool getBoolFromCurrentArgument() const
+    {
+      assert(argNo<argc && argNo>=0);
+      int val = atol(argv[argNo]);
+      if(val==0)
+	return false;
+      else if(val==1)
+	return true;
+      else 
+	throw ndlexceptions::CommandLineError("Current argument is not boolean");
+    }
+	
   string getStringFromCurrentArgument() const
     {
       assert(argNo<argc && argNo>=0);
