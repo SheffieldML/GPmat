@@ -254,6 +254,11 @@ class CCmpndKern: public CKern {
   void writeParamsToStream(ostream& out) const;
   void readParamsFromStream(istream& in);
   int addKern(CKern* kern);
+
+  int getNumKerns() const
+    {
+      return components.size();
+    }
 #ifdef _NDLMATLAB
   // Kernel specific code for toMxArray() call.
   void addParamToMxArray(mxArray* matlabArray) const;
