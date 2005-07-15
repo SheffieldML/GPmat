@@ -263,7 +263,7 @@ void COptimisable::scgOptimise(int maxIters, const double objectiveTol, const do
       // 7 Check whether a successful error reduction can be made.
       if(Delta >= 0.0)  // update is successful
 	{
-	  w.deepCopy(wPlus); 
+	  w.deepCopy(wPlus); 	  
 	  oldObj = newObj;
 	  computeObjectiveGradParams(rp);
 	  rp.negate();
@@ -286,6 +286,7 @@ void COptimisable::scgOptimise(int maxIters, const double objectiveTol, const do
 	  
 	  // 7.b Reduce the scale parameter
 	  if(Delta >= 0.75) lambda *= 0.5;
+	  if(lambda<1e-15) lambda = 1e-15;
 	}
       else // no reduction in error is possible.
 	{
@@ -299,7 +300,7 @@ void COptimisable::scgOptimise(int maxIters, const double objectiveTol, const do
       
       // 9 Check for convergence       
       if(getVerbosity()>2)
-	cout << "Iteration: " << k << " Error: " << newObj << " Scale: " << lambda << endl;
+	cout << "Iteration: " << k << " Error: " << oldObj << " Scale: " << lambda << endl;
       if (success && abs(p.max()*alpha) < paramTol && max(abs(newObj-oldObj)) < objectiveTol)
 	return;
       
