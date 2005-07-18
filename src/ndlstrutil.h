@@ -15,7 +15,7 @@ namespace ndlstrutil
   void getline(std::istream& in, std::string& line);
   void wrapOutputText(std::ostream& out, const std::string description, const int width, const int padding);
 
-  std::string itoa(int value, int base=10);
+  std::string itoa(long value, int base=10);
 }
 
 #endif

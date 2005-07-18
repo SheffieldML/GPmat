@@ -48,13 +48,13 @@ void ndlstrutil::wrapOutputText(std::ostream& out, const std::string description
       out << tokens[i] << " ";
     }
 }
-std::string ndlstrutil::itoa(int value, int base)
+std::string ndlstrutil::itoa(long value, int base)
 {
-  enum { kMaxDigits = 35 };
+  enum { kMaxDigits = std::numeric_limits<long>::digits };
   std::string buf;
   buf.reserve( kMaxDigits ); // Pre-allocate enough space.
   if (base < 2 || base > 16) throw ndlexceptions::Error("Unrecognised base in ndlstrutil::itoa()");
-  int quotient = value;
+  long quotient = value;
   do 
     {
       buf += "0123456789abcdef"[ std::abs( quotient % base ) ];
@@ -66,6 +66,3 @@ std::string ndlstrutil::itoa(int value, int base)
   std::reverse( buf.begin(), buf.end() );
   return buf;
 }
-
-
-

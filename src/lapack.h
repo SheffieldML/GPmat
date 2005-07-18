@@ -18,6 +18,18 @@ extern "C" void dsyev_(const char* jobz,
 		       const int& lwork,
 		       int &info);
 #endif // ndef _ATLAS	    
+// Solve A*X=B for X ... i.e. X=A^-1*B.
+extern "C" void dsysv_(const char* uplo,
+		      const int& n,
+		      const int& nrhs,
+		      const double *a,
+		      const int& lda,
+		      const int *ipiv,
+		      double *b,
+		      const int& ldb,
+		      double *work,
+		      const int& lwork,
+		      const int& info);
 // Compute an LU factorization of a general M by N matrix A.
 extern "C" void dgetrf_(
 			const int &m,	 // (input)

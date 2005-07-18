@@ -120,7 +120,14 @@ class MatrixConditionError : public MatrixError {
       setMessage("Matrix has low condition number.");
     }
 };
-
+class MatrixSingular : public MatrixError {
+ public:
+  MatrixSingular()
+    {
+      setMessage("Matrix is singular.");
+    }
+};
+ 
 class CommandLineError : public Error {
  public:
   CommandLineError(){}

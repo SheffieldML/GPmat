@@ -5,6 +5,8 @@
 #include <cfloat>
 #include "ndlfortran.h"
 
+
+
 using namespace std;
 namespace ndlutil {
   const double MATCHTOL = 1e-12;
@@ -40,6 +42,27 @@ namespace ndlutil {
   double digamma(double x);
 
   double xlogy(double x, double y);
+  double randn(); // normal deviates from N(0, 1.0)
+  double rand(); // uniform deviates from (0.0, 1.0)
 
+  /******** Mersenne Twister Random number generator ********/
+  /* Period parameters */  
+  const unsigned long MATRIX_A=0x9908b0dfUL;   /* constant vector a */
+  const unsigned long UPPER_MASK=0x80000000UL; /* most significant w-r bits */
+  const unsigned long LOWER_MASK=0x7fffffffUL; /* least significant r bits */
+  const unsigned long N=624;
+  const unsigned long M=397;
+    
+  static unsigned long mt[N]; /* the array for the state vector  */
+  static int mti=N+1; /* mti==N+1 means mt[N] is not initialized */
+  void init_genrand(unsigned long s);
+  void init_by_array(unsigned long init_key[], int key_length);
+  unsigned long genrand_int32(void);
+  long genrand_int31(void);
+  double genrand_real1(void);
+  double genrand_real2(void);
+  double genrand_real3(void);
+  double genrand_res53(void);
+  
 }
 #endif

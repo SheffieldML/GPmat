@@ -18,6 +18,10 @@
 // purchases this book to incorporate any of these programs into his
 // or her programs provided that the copyright is acknowledged.
 
+// random number generator (for setting the seed). 
+extern "C" void srand_(const int& m);
+extern "C" double rand_(const int& m);
+
 // computes the psi function putting the answer in y.
 extern "C" void psi_(const double& x, // input value
 		      double& y);      // output

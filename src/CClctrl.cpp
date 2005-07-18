@@ -5,6 +5,10 @@ CClctrl::CClctrl(int arc, char** arv) : argc(arc), argv(arv)
   argNo=1;
   fileFormat = 0; // svmlight format
   verbosity = 2; // second highest level (highest is 3)
+  time_t seconds;
+  time(&seconds);
+  setSeed((unsigned long) seconds);
+
 }
 
 void CClctrl::confirmCurrentArg(string commandName)

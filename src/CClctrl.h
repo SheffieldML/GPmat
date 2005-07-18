@@ -1,9 +1,13 @@
 #ifndef CCLCTRL_H
 #define CCLCTRL_H
-
+#include <iostream>
+#include <ctime>
 #include "ndlstrutil.h"
+#include "ndlutil.h"
+#include "ndlfortran.h"
 #include "ndlexceptions.h"
 #include "CMatrix.h"
+
 // Command line control class header.
 using namespace std;
 class CClctrl {
@@ -38,6 +42,15 @@ class CClctrl {
   void setVerbosity(int val)
     {
       verbosity = val;
+    }
+  unsigned long getSeed() const
+    {
+      return seed;
+    }
+  void setSeed(unsigned long val)
+    {
+      ndlutil::init_genrand(val);
+      seed = val;
     }
   int getFileFormat() const
     {
@@ -124,6 +137,7 @@ class CClctrl {
     }
  private:
   bool flags;
+  unsigned long seed;
   int verbosity;
   int fileFormat;
   int argNo;
