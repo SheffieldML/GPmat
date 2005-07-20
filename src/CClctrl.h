@@ -12,21 +12,31 @@
 using namespace std;
 class CClctrl {
  public:
-  CClctrl(){}
+  // Constructor given the input arguments.
   CClctrl(int argc, char** argv);
+  // Check that the current argument is valid.
   void confirmCurrentArg(string argument);
   void unrecognisedFlag();
+  // helper function for formatting help information.
   void helpUsage(const string description, const int width=79, const int padding=0);
+  // helper function for formating help information.
   void helpDescriptor(const string description, const int width=79, const int padding=5);
+  // helper function for formating help information.
   void helpArgument(const string flags, const string explanation, const int width=79, const int padding=5);
+  // pauses the screen until user presses space.
   void waitForSpace();
+  // Read in a data file in Thorsten Joachim's SVM light format.
   int readSvmlDataFile(CMatrix& X, CMatrix& y, const string fileName);
+  // Read in a data file.
   void readData(CMatrix& X, CMatrix& y, const string fileName);
+  // Exit with an error.
   void exitError(const string error);
 
+  // Virtual functions for help commands.
   virtual void helpInfo()=0;
   virtual void helpHeader()=0;
-
+  
+  // true if there are still unread flags from the command line.
   bool isFlags() const
     {
       return flags && getCurrentArgumentNo()<argc;
@@ -35,6 +45,8 @@ class CClctrl {
     {
       flags = val;
     }
+
+  // get and set the verbosity level.
   int getVerbosity() const
     {
       return verbosity;
@@ -43,6 +55,8 @@ class CClctrl {
     {
       verbosity = val;
     }
+
+  // get and set the seed for the random number generator.
   unsigned long getSeed() const
     {
       return seed;
@@ -52,6 +66,8 @@ class CClctrl {
       ndlutil::init_genrand(val);
       seed = val;
     }
+
+  // get and set the file format for input files.
   int getFileFormat() const
     {
       return fileFormat;
@@ -60,10 +76,22 @@ class CClctrl {
     {
       fileFormat = val;
     }
+
+  // Manipulate the current command line argument number
   void incrementArgument()
     {
       argNo++;
     }
+  int getCurrentArgumentNo() const
+    {
+      return argNo;
+    }
+  void setCurrentArgumentNo(int val)
+    {
+      argNo=val;
+    }
+
+  // Recover information from the command line arguments.
   string getCurrentArgument() const
     {
       assert(argNo<argc && argNo>=0);
@@ -90,7 +118,6 @@ class CClctrl {
       else 
 	throw ndlexceptions::CommandLineError("Current argument is not boolean");
     }
-	
   string getStringFromCurrentArgument() const
     {
       assert(argNo<argc && argNo>=0);
@@ -100,14 +127,7 @@ class CClctrl {
     {
       return strlen(argv[argNo]);
     }
-  int getCurrentArgumentNo() const
-    {
-      return argNo;
-    }
-  void setCurrentArgumentNo(int val)
-    {
-      argNo=val;
-    }
+  // test if the argument is a flag (i.e. starts with -)
   bool isCurrentArgumentFlag() const
     {
       if(argv[argNo][0]=='-')
@@ -115,10 +135,7 @@ class CClctrl {
       else
 	return false;
     }
-  string getFlagText() const
-    {
-      return argv[argNo]+1;
-    }
+  // manipulate the mode --- typically for determining what the help file output will be 
   void setMode(string val) 
     {
       mode = val;
@@ -127,14 +144,7 @@ class CClctrl {
     {
       return mode;
     }
-  void setArgv(char** arg)
-    {
-      argv = arg;
-    }
-  void setArgc(int arc)
-    {
-      argc = arc;
-    }
+
  private:
   bool flags;
   unsigned long seed;
