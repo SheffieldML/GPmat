@@ -5,9 +5,11 @@
 #include "CMatrix.h"
 #include "CTransform.h"
 #include "ndlutil.h"
-
+              
 
 const string DISTVERSION="0.1";
+
+// Base distribution class.
 class CDist : public CTransformable {
   
  public:
@@ -32,9 +34,10 @@ class CDist : public CTransformable {
   virtual void writeParamsToStream(ostream& out) const;
   virtual void readParamsFromStream(istream& in);
   //CDist(CDist& dist);
+  // get the gradient with respect to an input.
   virtual double getGradInput(double x) const=0;
   void setInitParam();
-
+  // Get log probability at a particualar value
   virtual double logProb(double val) const=0;
   void setParamName(const string name, const int index)
     {
@@ -80,9 +83,11 @@ class CDist : public CTransformable {
   vector<string> paramNames;
 };
 
+// Read and write dists to streams
 void writeDistToStream(const CDist& dist, ostream& out);
 CDist* readDistFromStream(istream& in);
 
+// The Gaussian distribution.
 class CGaussianDist : public CDist {
 
  public:
@@ -103,7 +108,7 @@ class CGaussianDist : public CDist {
   double precision;
 };
 
-
+// The gamma distribution
 class CGammaDist : public CDist {
 
  public:
@@ -124,7 +129,7 @@ class CGammaDist : public CDist {
   double a;
   double b;
 };
-
+// A class which stores distributions in a container for priors over parameters.
 class CParamPriors : CMatinterface {
   
  public:
@@ -165,7 +170,7 @@ class CParamPriors : CMatinterface {
 
 };
 
-
+// A virtual base class which makes its descendents regluarisable.
 class CRegularisable {
 
  public:
