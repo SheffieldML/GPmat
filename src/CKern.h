@@ -1,6 +1,5 @@
 #ifndef CKERN_H
 #define CKERN_H
-// This is the Kernel class.
 #include <cmath>
 #include "CTransform.h"
 #include "CMatrix.h"
@@ -15,6 +14,12 @@
 using namespace std;
 
 const string KERNVERSION="0.1";
+
+// The base class for all kernels. It implements: CMatinterface, for
+// saving and loading from MATLAB; CRegularisable, for placing priors
+// over parameters; CTransformable, for allowing parameters to be
+// transformed so that they are only optimised in, for example,
+// positive half-spaces
 class CKern : public CMatinterface, public CTransformable, public CRegularisable {
  public:
   CKern()
@@ -24,8 +29,11 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
   virtual ~CKern(){}
   CKern(const CKern& kern){}
   virtual CKern* clone() const=0;
+  // set initial parameters.
   virtual void setInitParam()=0;
+  // compute an element of the diagonal.
   virtual double diagComputeElement(const CMatrix& X, const int index) const=0;
+  // compute the entire diagonal
   virtual void diagCompute(CMatrix& d, const CMatrix& X) const
     {
       assert(X.rowsMatch(d));
@@ -33,6 +41,7 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
       for(int i=0; i<X.getRows(); i++)
 	d.setVal(diagComputeElement(X, i), i);
     }
+  // Compute the diagonal at particualr indices.
   virtual void diagCompute(CMatrix& d, const CMatrix& X, const vector<int> indices) const
     {
       assert(d.getRows()==indices.size());
@@ -40,15 +49,21 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
       for(int i=0; i<indices.size(); i++)
 	d.setVal(diagComputeElement(X, indices[i]), i);
     }
+  // Set the parameters of the kernel.
   virtual void setParam(const double, const int)=0;
+  // Get gradients of the kernel with respect to input values.
   virtual void getGradX(vector<CMatrix*> g, const CMatrix& X, const CMatrix& X2, const bool addG=false) const=0;
+  // Get gradients of the kernel diagonal with respect to input values.
   virtual void getDiagGradX(CMatrix& g, const CMatrix& X, const bool addG=false) const=0;
+  // Return the white noise component of the kernel.
   virtual double getWhite() const
     {
       return 0.0;
     }
+  // Compute an element of the kernel matrix.
   virtual double computeElement(const CMatrix& X1, const int index1,
 			 const CMatrix& X2, const int index2) const=0;
+  // Compute specified rows and columns of the kernel matrix.
   virtual void compute(CMatrix& K, const CMatrix& X1, const vector<int> indices1,
 			  const CMatrix& X2, const vector<int> indices2) const
     {
@@ -64,6 +79,7 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
 	    }
 	}
     }
+  // Compute the kernel matrix for a data set.
   virtual void compute(CMatrix& K, const CMatrix& X) const
     {
       assert(K.rowsMatch(X));
@@ -81,6 +97,7 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
 	}	      
       K.setSymmetric(true);
     }
+  // Compute portions of the kernel matrix.
   virtual void compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const
     {
       assert(K.rowsMatch(X));
@@ -93,12 +110,14 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
 	    }
 	}	      
     }
+  // Dummy function to allow CTransformable to be used.
   virtual void getGradParams(CMatrix& g) const
     {
       // This is a dummy function
       cerr << "getGradParams should not be used in CKern" << endl;
       exit(1);
     }
+  // Compute the gradient of the kernel matrix with respect to parameters given an additional gradient matrix.
   virtual void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd) const
     {
       assert(g.getRows()==1);
@@ -109,56 +128,64 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
 	g.setVal(getGradParam(i, X, cvGrd), i);
       addPriorGrad(g); /// don't forget to add prior gradient at the end.
     }
+  // Get gradient of a particular parameter.
   virtual double getGradParam(const int index, const CMatrix& X, const CMatrix& cvGrd) const=0;
-  virtual double getParam(const int) const=0;
+  // Get a particular parameter.
+  // For compound kernels when a new kernel is added.
   virtual int addKern(CKern* kern)
     {
       cerr << "You cannot add a kernel to this kernel." << endl;
     }
-  void setParams(const CMatrix& X)
+  virtual double getParam(const int) const=0;
+  // Set the parameters from a vector of parameters.
+  void setParams(const CMatrix& paramVec)
     {
       for(int i=0; i<nParams; i++)
-	setParam(X.getVal(i), i);
+	setParam(paramVec.getVal(i), i);
     }
-  void getParams(CMatrix& X) const
+  // Place the parameters in a vector.
+  void getParams(CMatrix& paramVec) const
     {
       for(int i=0; i<nParams; i++)
-	X.setVal(getParam(i), i);
-
+	paramVec.setVal(getParam(i), i);
     }
+  // Return a string representing the kernel type.
   inline string getType() const
     {
       return type;
     }
+  // Set a string representing the kernel type.
   inline void setType(const string name)
     {
       type = name;
     }
+  // Get the long name of the kernel.
   inline string getName() const
     {
       return kernName;
     }
+  // Set the long name of the kernel.
   inline void setName(const string name)
     {
       kernName = name;
     }
-  // non virtual functions.
-  /*void initialiseKern(const int inDim);
-  void initialiseKern(const CMatrix& X);
-  void initialiseKern(const CKern& kern);*/
+  // Set the input dimension.
   inline void setInputDim(const int dim)
     {
       inputDim = dim;
       setInitParam();
     }
+  // Get the input dimension.
   inline const int getInputDim() const
     {
       return inputDim;
     }
+  // How many kernel parameters are there?
   inline const int getNumParams() const
     {
       return nParams;
     }
+  // Assign a name to the kernel parameters.
   void setParamName(const string name, const int index)
     {
       assert(index>=0);
@@ -172,20 +199,26 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
 	  paramNames[index] = name;
 	}
     }
+  // Get the name of a kernel parameter.
   virtual string getParamName(const int index) const
     {
       assert(index>=0);
       assert(index<paramNames.size());
       return paramNames[index];
     }
+  // Write out the kernel parameters to a stream.
   virtual void writeParamsToStream(ostream& out) const;
+  // Read in the kernel parameters from a stream.
   virtual void readParamsFromStream(istream& in);
+  // Get the gradients of the parameters associated with the priors.
   void getGradPrior(CMatrix& g) const;
+  // Get the log probabilities associated with the priors.
   void getPriorLogProb(CMatrix& L) const;
-
-  // void setWhite(double val);
+  // Display the kernel on an ostream.
   ostream& display(ostream& os) const;
+  
 #ifdef _NDLMATLAB
+  // Create a kernel from an mxArray* object
   CKern(mxArray* kern){}
   // returns an mxArray of the kern for use with matlab.
   virtual mxArray* toMxArray() const;
@@ -195,8 +228,9 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
   // Gets the parameters from the mxArray.
   virtual void extractParamFromMxArray(const mxArray* matlabArray);
 #endif /* _NDLMATLAB*/
-  // returns sum(sum(cvGrd.*dK/dparam)) 
+  // Get the gradient of the transformed parameters.
   void getGradTransParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd) const;
+  // specify tests for equality between kernels.
   bool equals(const CKern& kern, const double tol=ndlutil::MATCHTOL) const;
   
  protected:
@@ -207,6 +241,8 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
  private:
   int inputDim;
 };
+
+// CArdKern is the base class for any kernel that uses multiple input parameters.
 class CArdKern : public CKern {
 #ifdef _NDLMATLAB
   virtual void addParamToMxArray(mxArray* matlabArray) const;
@@ -218,7 +254,7 @@ class CArdKern : public CKern {
   CMatrix scales;
 };
 
-// Compound Kernel --- This kernel combines other kernels together.
+// Compound Kernel --- This kernel combines other kernels additively together.
 class CCmpndKern: public CKern {
  public:
   CCmpndKern();
@@ -334,7 +370,7 @@ class CBiasKern: public CKern {
   double variance;
 
 };
-// RBF Kernel.
+// RBF Kernel, also known as the Gaussian or squared exponential kernel.
 class CRbfKern: public CKern {
  public:
   CRbfKern();
@@ -365,7 +401,7 @@ class CRbfKern: public CKern {
 
 };
 
-// Linear Kernel.
+// Linear Kernel, also known as the inner product kernel.
 class CLinKern: public CKern {
  public:
   CLinKern();
@@ -395,7 +431,7 @@ class CLinKern: public CKern {
   double variance;
 };
 
-// MLP Kernel.
+// MLP Kernel or arcsin kernel. Based on a multi-layer perceptron with infinite hidden nodes. See Williams (1996) "Computing with Infinite Networks" in NIPS 9.
 class CMlpKern: public CKern {
  public:
   CMlpKern();
@@ -426,7 +462,7 @@ class CMlpKern: public CKern {
   mutable CMatrix innerProd;
 };
 
-// POLY Kernel.
+// Polynomial Kernel, not generally recommended as it `extreme behaviour' outside the region where the argument's absolute value is less than 1.
 class CPolyKern: public CKern {
  public:
   CPolyKern();
@@ -471,7 +507,7 @@ class CPolyKern: public CKern {
   mutable CMatrix innerProd;
 };
 
-// Linear ARD Kernel.
+// Linear ARD Kernel --- automatic relevance determination version of the linear kernel.
 class CLinardKern: public CArdKern {
  public:
   CLinardKern();
@@ -500,7 +536,7 @@ class CLinardKern: public CArdKern {
   double variance;
 };
 
-// RBF ARD Kernel.
+// RBF ARD Kernel --- aurtomatic relevance determination of the RBF kernel.
 class CRbfardKern: public CArdKern {
  public:
   CRbfardKern();
@@ -531,7 +567,7 @@ class CRbfardKern: public CArdKern {
   mutable CMatrix gscales;
 };
 
-// MLP ARD Kernel.
+// MLP ARD Kernel --- automatic relevance determination version of the MLP kernel.
 class CMlpardKern: public CArdKern {
  public:
   CMlpardKern();
@@ -564,7 +600,7 @@ class CMlpardKern: public CArdKern {
   mutable CMatrix gscales;
 };
 
-// Polynomial ARD Kernel.
+// Polynomial ARD Kernel --- automatic relevance determination version of the polynomial kernel.
 class CPolyardKern: public CArdKern {
  public:
   CPolyardKern();
