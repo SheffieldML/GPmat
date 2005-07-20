@@ -2,7 +2,8 @@
 #define COPTIMISABLE_H
 #include "CMatrix.h"
 #include "ndlutil.h"
-// abstract class for making a class optimisable.
+
+// abstract base class for making a class optimisable.
 class COptimisable {
   
  public:

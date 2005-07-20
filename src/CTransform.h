@@ -9,6 +9,7 @@ using namespace std;
 
 const double limVal=36;
 
+// This is a base class for non-linear variable transformation.
 class CTransform {
 
  public:
@@ -38,7 +39,7 @@ class CTransform {
   const static double eps = 1e-16;
 };
 
-
+// This transform transforms from real to positive numbers.
 class CNegLogLogitTransform : public CTransform  {
  public:
   CNegLogLogitTransform();
@@ -94,6 +95,8 @@ class CLinearTransform : public CTransform  {
   double c;
 
 };
+
+// This transformation goes from real numbers to the range [0->1]
 class CSigmoidTransform : public CTransform  {
  public:
   CSigmoidTransform();  
@@ -106,6 +109,7 @@ class CSigmoidTransform : public CTransform  {
   
 };
 
+// A class for storing the parameter transformations.
 class CParamTransforms : CMatinterface {
   
  public:
@@ -149,7 +153,7 @@ class CParamTransforms : CMatinterface {
 
 
 
-
+// This is an abstract base class for making the parameters of a class transformable.
 class CTransformable {
 
  public:
@@ -181,7 +185,9 @@ class CTransformable {
       assert(paramNo>=0);
       assert(paramNo<getNumParams());
       double param = getParam(paramNo);
-      vector<int>::const_iterator pos = find(transArray.transIndex.begin(), transArray.transIndex.end(), paramNo);
+      vector<int>::const_iterator pos = find(transArray.transIndex.begin(), 
+					     transArray.transIndex.end(), 
+					     paramNo);
       if(pos == transArray.transIndex.end())
 	return param;
       else
@@ -206,7 +212,10 @@ class CTransformable {
     {
       assert(paramNo>=0);
       assert(paramNo<getNumParams());
-      vector<int>::iterator pos=find(transArray.transIndex.begin(), transArray.transIndex.end(), paramNo);
+      // this casting is required under solaris for some reason
+      vector<int>::iterator pos=find(transArray.transIndex.begin(), 
+				     transArray.transIndex.end(), 
+				     paramNo);
       if(pos==transArray.transIndex.end())
 	setParam(val, paramNo);
       else
