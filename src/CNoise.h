@@ -15,8 +15,8 @@
 using namespace std;
 
 const string NOISEVERSION="0.1";
+// The basic noise class. The class allows its parameters to be transformed or optimised. Also noise models can be loaded from matlab files.
 class CNoise : public CTransformable, public COptimisable, public CMatinterface {
-
  public:
   // constructors
   CNoise() {}
@@ -48,6 +48,7 @@ class CNoise : public CTransformable, public COptimisable, public CMatinterface 
 	    }
 	}
     }
+  // Nu and G are combinations of gradients with respect to the mean and variance of the noise model.
   virtual void getNuG(CMatrix& g, CMatrix& nu, const int index) const;
   virtual void updateSites(CMatrix& m, CMatrix& beta, const int actIndex, const CMatrix& g, const CMatrix& nu, const int index) const;
   virtual void test(const CMatrix& muout, const CMatrix& varSigmaOut, const CMatrix& yTest) const=0;
@@ -273,7 +274,7 @@ class CNoise : public CTransformable, public COptimisable, public CMatinterface 
   string type;
   string noiseName;
 };
-
+// The Gaussian noise model as commonly used in regression.
 class CGaussianNoise : public CNoise {
  public:  
   // constructors
@@ -345,7 +346,7 @@ class CGaussianNoise : public CNoise {
   CMatrix bias;
 };
 
-
+// The probit noise model often used for classification.
 class CProbitNoise : public CNoise {
  public:  
   // constructors
@@ -415,6 +416,7 @@ class CProbitNoise : public CNoise {
   CMatrix bias;
 };
 
+// The null category noise model for semi-supervised learning (see Lawrence and Jordan in NIPS 2004).
 class CNcnmNoise : public CNoise {
  public:  
   // constructors
