@@ -110,13 +110,14 @@ class CClctrl {
   bool getBoolFromCurrentArgument() const
     {
       assert(argNo<argc && argNo>=0);
-      int val = atol(argv[argNo]);
-      if(val==0)
-	return false;
-      else if(val==1)
+      // Assume it is a string first.
+      string arg = getStringFromCurrentArgument();
+      if(arg=="true" || arg=="1")
 	return true;
+      else if(arg=="false" || arg=="0")
+	return false;
       else 
-	throw ndlexceptions::CommandLineError("Current argument is not boolean");
+	throw ndlexceptions::CommandLineError("Current argument is not boolean.");
     }
   string getStringFromCurrentArgument() const
     {
