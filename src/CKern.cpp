@@ -284,13 +284,13 @@ void CCmpndKern::readParamsFromStream(istream& in)
   // first line is number of kernels.
   getline(in, line);
   ndlstrutil::tokenise(tokens, line, "=");
-  if(tokens.size()>2 || tokens[0]!="numKerns")
+  if(tokens.size()!=2 || tokens[0]!="numKerns")
     throw ndlexceptions::FileFormatError();
   int numKerns=atol(tokens[1].c_str());
   tokens.clear();
   getline(in, line);
   ndlstrutil::tokenise(tokens, line, "=");
-  if(tokens.size()>2 || tokens[0]!="numFeatures")
+  if(tokens.size()!=2 || tokens[0]!="numFeatures")
     throw ndlexceptions::FileFormatError();
   int numFeat=atol(tokens[1].c_str());
   setInputDim(numFeat);
@@ -2354,7 +2354,7 @@ CKern* readKernFromStream(istream& in)
   // first line is version info.
   getline(in, line);
   ndlstrutil::tokenise(tokens, line, "=");
-  if(tokens.size()>2 || tokens[0]!="kernVersion")
+  if(tokens.size()!=2 || tokens[0]!="kernVersion")
     throw ndlexceptions::FileFormatError();
   if(tokens[1]!="0.1")
     throw ndlexceptions::FileVersionError();
@@ -2362,7 +2362,7 @@ CKern* readKernFromStream(istream& in)
   tokens.clear();
   getline(in, line);
   ndlstrutil::tokenise(tokens, line, "=");
-  if(tokens.size()>2 || tokens[0]!="type")
+  if(tokens.size()!=2 || tokens[0]!="type")
     throw ndlexceptions::FileFormatError();
   string type=tokens[1];
   if(type=="cmpnd")

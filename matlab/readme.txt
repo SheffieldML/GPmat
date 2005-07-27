@@ -1,3 +1,8 @@
+Version 0.131 Release Notes
+--------------------------
+
+Added polynomial and polynomial ARD kernels for completeness (their use is not recommended in Gaussian processes). Added kernReadFromFID.m for reading in a kernel from a C++ written file.
+
 Version 0.13 Release Notes
 --------------------------
 

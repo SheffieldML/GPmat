@@ -6,6 +6,9 @@ function kern = cmpndKernParamInit(kern)
 
 kern.nParams = 0;
 kern.transforms = [];
+if ~isfield(kern, 'comp')
+  kern.comp=cell(0);
+end
 for i = 1:length(kern.comp)
   kern.comp{i} = kernParamInit(kern.comp{i});
   kern.nParams = kern.nParams + kern.comp{i}.nParams;
