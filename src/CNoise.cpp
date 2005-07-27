@@ -54,8 +54,8 @@ void CNoise::updateSites(CMatrix& m, CMatrix& beta, const int actIndex,
   for(int j=0; j<m.getCols(); j++)
     {
       nuVal = nu.getVal(index, j);
-      m.setVal(getMu(index, j) + g.getVal(index, j)/nuVal, actIndex, j);
       beta.setVal(nuVal/(1-nuVal*getVarSigma(index, j)), actIndex, j);
+      m.setVal(getMu(index, j) + g.getVal(index, j)/nuVal, actIndex, j);
     }
 }
 #ifdef _NDLMATLAB
@@ -112,7 +112,7 @@ void CNoise::fromMxArray(const mxArray* matlabArray)
   spherical = mxArrayExtractBoolField(matlabArray, "spherical");
   logConcave = mxArrayExtractBoolField(matlabArray, "logconcave");
   missing = mxArrayExtractBoolField(matlabArray, "missing");
-  
+  initStoreage();
   // TODO priors ... need to deal with priors
   extractParamFromMxArray(matlabArray);
 }
@@ -160,6 +160,25 @@ void CGaussianNoise::extractParamFromMxArray(const mxArray* matlabArray)
   sigma2 = mxArrayExtractDoubleField(matlabArray, "sigma2");
 
 }
+void CScaleNoise::addParamToMxArray(mxArray* matlabArray) const
+{
+  mxAddField(matlabArray, "nParams");
+  mxSetField(matlabArray, 0, "nParams", convertMxArray((double)getNumParams()));
+  mxAddField(matlabArray, "bias");
+  mxSetField(matlabArray, 0, "bias", bias.toMxArray());
+  mxAddField(matlabArray, "scale");
+  mxSetField(matlabArray, 0, "scale", scale.toMxArray());
+}
+
+void CScaleNoise::extractParamFromMxArray(const mxArray* matlabArray) 
+{
+  setNumParams(mxArrayExtractIntField(matlabArray, "nParams"));
+  mxArray* biasField = mxArrayExtractMxArrayField(matlabArray, "bias");
+  bias.fromMxArray(biasField);
+  mxArray* scaleField = mxArrayExtractMxArrayField(matlabArray, "scale");
+  scale.fromMxArray(scaleField);
+
+}
 
 void CProbitNoise::addParamToMxArray(mxArray* matlabArray) const
 {
@@ -193,6 +212,8 @@ void CNcnmNoise::addParamToMxArray(mxArray* matlabArray) const
   mxSetField(matlabArray, 0, "gamman", convertMxArray(gamman));
   mxAddField(matlabArray, "gammap");
   mxSetField(matlabArray, 0, "gammap", convertMxArray(gammap));
+  mxAddField(matlabArray, "gammaSplit");
+  mxSetField(matlabArray, 0, "gammaSplit", convertMxArray(isSplitGamma()));
 }
 
 void CNcnmNoise::extractParamFromMxArray(const mxArray* matlabArray) 
@@ -204,6 +225,11 @@ void CNcnmNoise::extractParamFromMxArray(const mxArray* matlabArray)
   width = mxArrayExtractDoubleField(matlabArray, "width");
   gamman = mxArrayExtractDoubleField(matlabArray, "gamman");
   gammap = mxArrayExtractDoubleField(matlabArray, "gammap");
+  int temp = mxArrayExtractIntField(matlabArray, "gammaSplit");
+  if(temp)
+    splitGamma = true;
+  else
+    splitGamma = false;
 
 }
 
@@ -259,30 +285,41 @@ void CNoise::readParamsFromStream(istream& in)
     throw ndlexceptions::FileFormatError();
 }
 
-
 CGaussianNoise::~CGaussianNoise()
 {
 }
-void CGaussianNoise::setInitParam()
+void CGaussianNoise::initStoreage()
 {
-  setType("gaussian");
-  setNoiseName("Gaussian");
   setNumParams(getNumProcesses()+1);
-  mu.resize(y.getRows(), y.getCols());
-  varSigma.resize(y.getRows(), y.getCols());
-  mu.zeros();
-  varSigma.zeros();
-  bias.deepCopy(meanRow(y));
-  for(int j=0; j<y.getCols(); j++)
-    setParamName("bias" + j, j);
-  sigma2 = 1e-6;
-  setParamName("sigma2", getNumProcesses());
+  mu.resize(getNumData(), getNumProcesses());
+  varSigma.resize(getNumData(), getNumProcesses());
+  bias.resize(1, getNumProcesses());
   clearTransforms();
   // transform sigma2 (the last parameter).
   addTransform(new CNegLogLogitTransform(), getNumParams()-1);
+  sigma2 = 1e-6;
   setLogConcave(true);
   setSpherical(true);
   setMissing(false);
+
+}
+void CGaussianNoise::initNames()
+{
+  setType("gaussian");
+  setNoiseName("Gaussian");
+  for(int j=0; j<getNumProcesses(); j++)
+    setParamName("bias" + j, j);
+  setParamName("sigma2", getNumProcesses());
+
+}
+void CGaussianNoise::initParams()
+{
+  bias.deepCopy(meanCol(y));
+}
+void CGaussianNoise::initVals()
+{
+  mu.zeros();
+  varSigma.zeros();
 }
 ostream& CGaussianNoise::display(ostream& os)
 {
@@ -346,11 +383,11 @@ void CGaussianNoise::getGradParams(CMatrix& g) const
   double u=0.0;
   double gsigma2=0.0;
   double b=0.0;
-  for(int j=0; j<y.getCols(); j++)
+  for(int j=0; j<getNumProcesses(); j++)
     {
       double gbias = 0.0;
       b = bias.getVal(j);
-      for(int i=0; i<y.getRows(); i++)
+      for(int i=0; i<getNumData(); i++)
 	{
 	  nu = 1/(getVarSigma(i, j)+sigma2);
 	  u=getTarget(i, j) - getMu(i, j)-b;
@@ -376,7 +413,7 @@ void CGaussianNoise::getNuG(CMatrix& g, CMatrix& nu, const int index) const
 {
   double nuval=0.0;
   double gval=0.0;
-  for(int j=0; j<y.getCols(); j++)
+  for(int j=0; j<getNumProcesses(); j++)
     {
       nuval=1./(sigma2+getVarSigma(index, j));
       if(isnan(nuval))
@@ -394,10 +431,10 @@ void CGaussianNoise::updateSites(CMatrix& m, CMatrix& beta, const int actIndex,
 				 const CMatrix& g, const CMatrix& nu, 
 				 const int index) const
 {
-  for(int j=0; j<y.getCols(); j++)
+  for(int j=0; j<getNumProcesses(); j++)
     {
-      m.setVal(getTarget(index, j)-bias.getVal(j), actIndex, j);
       beta.setVal(1/sigma2, actIndex, j);
+      m.setVal(getTarget(index, j)-bias.getVal(j), actIndex, j);
     }
 }
 void CGaussianNoise::test(const CMatrix& muout, const CMatrix& varSigmaOut, const CMatrix& yTest) const
@@ -416,7 +453,8 @@ void CGaussianNoise::out(CMatrix& yPred, const CMatrix& muTest, const CMatrix& v
   assert(yPred.dimensionsMatch(muTest));
   assert(muTest.dimensionsMatch(varSigmaTest));
   yPred.deepCopy(muTest);
-  yPred+=bias;
+  for(int j=0; j<getNumProcesses(); j++)
+    yPred.addCol(j,bias.getVal(j));
 }
 void CGaussianNoise::out(CMatrix& yPred, CMatrix& errorBars, const CMatrix& muTest, const CMatrix& varSigmaTest) const
 {
@@ -474,40 +512,317 @@ double CGaussianNoise::logLikelihood(const CMatrix& muTest, const CMatrix& varSi
 }
 
 
+CScaleNoise::~CScaleNoise()
+{
+}
+void CScaleNoise::initStoreage()
+{
+  setNumParams(2*getNumProcesses());
+  mu.resize(getNumData(), getNumProcesses());
+  varSigma.resize(getNumData(), getNumProcesses());
+  bias.resize(1, getNumProcesses());
+  scale.resize(1, getNumProcesses());
+  clearTransforms();
+  sigma2=1e-6;
+  setLogConcave(true);
+  setSpherical(true);
+  setMissing(false);
+
+}
+void CScaleNoise::initVals()
+{
+  mu.zeros();
+  varSigma.zeros();
+  bias.zeros();
+  scale.ones();
+}
+void CScaleNoise::initNames()
+{
+  setType("scale");
+  setNoiseName("Scaled Gaussian");
+  for(int j=0; j<getNumProcesses(); j++)
+    {
+      setParamName("bias" + j, j);
+      setParamName("scale" + j, getNumProcesses()+j);
+    }
+  
+}
+void CScaleNoise::initParams()
+{
+  scale.deepCopy(varCol(y));
+  for(int j=0; j<getNumProcesses(); j++)
+    scale.setVal(sqrt(scale.getVal(j)), j);
+  // TODO: need to check for missing values.
+  bias.deepCopy(meanCol(y));
+}
+ostream& CScaleNoise::display(ostream& os)
+{
+  double b = 0.0;
+  double s = 0.0;
+  os << "Scale Noise: " << endl; 
+  for(int j=0; j<bias.getCols(); j++)
+    {
+      b = bias.getVal(j);
+      os << "Bias on process " << j << ": " << b << endl; 
+      s = scale.getVal(j);
+      os << "Scale on process " << j << ": " << s << endl; 
+    }
+  return os;
+}
+void CScaleNoise::setParam(const double val, const int index)
+{
+  assert(index>=0);
+  assert(index<2*getNumParams()-1);
+  if(index<getNumProcesses())
+    bias.setVal(val, index);
+  else if(index<2*getNumProcesses())
+    scale.setVal(val, index-getNumProcesses());
+}  
+void CScaleNoise::setParams(const CMatrix& params)
+{
+  assert(getNumParams()==2*getNumProcesses());
+  assert(params.getCols()==getNumParams());
+  assert(params.getRows()==1);
+  assert(getNumProcesses()==bias.getCols());
+  for(int j=0; j<bias.getCols(); j++)
+    {
+      bias.setVal(params.getVal(j), j);
+    }
+  for(int j=0; j<scale.getCols(); j++)
+    {
+      scale.setVal(params.getVal(j+bias.getCols()), j);
+    }
+}
+double CScaleNoise::getParam(const int index) const
+{
+  assert(index>=0);
+  assert(index<2*getNumParams());
+  if(index<getNumProcesses())
+    return bias.getVal(index);
+  else
+    return scale.getVal(index-getNumProcesses());
+
+}
+void CScaleNoise::getParams(CMatrix& params) const
+{
+  assert(getNumParams()==2*getNumProcesses());
+  assert(params.getCols()==getNumParams());
+  assert(params.getRows()==1);
+  assert(getNumProcesses()==bias.getCols());
+  for(int j=0; j<getNumProcesses(); j++)
+    params.setVal(bias.getVal(j), j);
+  for(int j=0; j<getNumProcesses(); j++)
+    params.setVal(scale.getVal(j), j+getNumProcesses());
+}
+ 
+void CScaleNoise::getGradParams(CMatrix& g) const
+{
+  throw ndlexceptions::Error("ScaleNoise doesn't have gradients implemented.");
+  /*~
+    assert(g.getCols()==getNumParams());
+  assert(g.getRows()==1);
+  double nu=0.0;
+  double u=0.0;
+  double gsigma2=0.0;
+  double b=0.0;
+  for(int j=0; j<getNumProcesses(); j++)
+    {
+      double gbias = 0.0;
+      b = bias.getVal(j);
+      s = scale.getVal(j);
+      for(int i=0; i<getNumData(); i++)
+	{
+	  nu = 1/(getVarSigma(i, j)+sigma2);
+	  u=getTarget(i, j) - getMu(i, j)-b;
+	  u*=nu;
+	  gbias+=u;
+	  gsigma2+=nu-u*u;
+	}
+      g.setVal(gbias, 0, j);
+      g.setVal(gscale, 0, j+getNumProcesses());
+    }
+    ~*/
+}
+
+void CScaleNoise::getGradInputs(double& gmu, double& gvs, const int i, const int j) const
+{
+  throw ndlexceptions::Error("ScaleNoise doesn't have gradients implemented.");
+  /*~
+  gmu = -bias.getVal(j);
+  gvs = 1/(sigma2+getVarSigma(i, j));
+  gmu += getTarget(i, j)-getMu(i, j);
+  gmu *= gvs;
+  gvs = 0.5*(gmu*gmu - gvs);
+  ~*/
+}
+  
+void CScaleNoise::getNuG(CMatrix& g, CMatrix& nu, const int index) const
+{
+  throw ndlexceptions::Error("ScaleNoise doesn't have gradients implemented.");
+  /*~
+  double nuval=0.0;
+  double gval=0.0;
+  for(int j=0; j<getNumProcesses(); j++)
+    {
+      nuval=1./(sigma2+getVarSigma(index, j));
+      if(isnan(nuval))
+	{
+	  cout << "Sigma2 " << sigma2 << endl;
+	  cout << "varSigma " << getVarSigma(index, j) << endl;
+	}
+      assert(!isnan(nuval));
+      nu.setVal(nuval, index, j);
+      gval=getTarget(index, j)-getMu(index, j)-bias.getVal(j);
+      g.setVal(gval*nuval, index, j);
+    }
+    ~*/
+}
+void CScaleNoise::updateSites(CMatrix& m, CMatrix& beta, const int actIndex, 
+				 const CMatrix& g, const CMatrix& nu, 
+				 const int index) const
+{
+  for(int j=0; j<getNumProcesses(); j++)
+    {
+      beta.setVal(1/sigma2, actIndex, j);
+      m.setVal((getTarget(index, j)-bias.getVal(j))/scale.getVal(j), actIndex, j);
+    }
+}
+void CScaleNoise::test(const CMatrix& muout, const CMatrix& varSigmaOut, const CMatrix& yTest) const
+{
+  throw ndlexceptions::Error("ScaleNoise doesn't have site updates implemented.");
+  /*~
+  assert(yTest.dimensionsMatch(muout));
+  assert(muout.dimensionsMatch(varSigmaOut));
+  assert(yTest.getCols()==getNumProcesses());
+  CMatrix yPred(yTest.getRows(), yTest.getCols());
+  out(yPred, muout, varSigmaOut);
+  for(int i=0; i<getNumProcesses(); i++)
+    cout << "Mean Squared Error on output " << i+1 << ": " << yPred.dist2Col(i, yTest, i)/(double)yTest.getRows() << endl;
+    ~*/
+}
+
+void CScaleNoise::out(CMatrix& yPred, const CMatrix& muTest, const CMatrix& varSigmaTest) const
+{
+  assert(yPred.dimensionsMatch(muTest));
+  assert(muTest.dimensionsMatch(varSigmaTest));
+  yPred.deepCopy(muTest);
+  for(int j=0; j<getNumProcesses(); j++)
+    {
+      yPred.scaleCol(j, scale.getVal(j));
+      yPred.addCol(j, bias.getVal(j));
+    }
+}
+void CScaleNoise::out(CMatrix& yPred, CMatrix& errorBars, const CMatrix& muTest, const CMatrix& varSigmaTest) const
+{
+  assert(yPred.dimensionsMatch(errorBars));
+  out(yPred, muTest, varSigmaTest);
+  for(int i=0; i<errorBars.getRows(); i++)
+    for(int j=0; j<errorBars.getCols(); j++)
+      errorBars.setVal(sqrt(varSigmaTest.getVal(i, j) + sigma2)*scale.getVal(j), i, j);
+}
+void CScaleNoise::likelihoods(CMatrix& L, const CMatrix& muTest, const CMatrix& varSigmaTest, 
+				   const CMatrix& yTest) const
+{
+  throw ndlexceptions::Error("ScaleNoise doesn't have site likelihoods implemented.");
+  /*~
+  assert(yTest.getCols()==getNumProcesses());
+  assert(L.dimensionsMatch(muTest));
+  assert(yTest.dimensionsMatch(muTest));
+  assert(muTest.dimensionsMatch(varSigmaTest));
+  double arg=0.0;
+  double var=0.0;
+  for(int i=0; i<muTest.getRows(); i++)
+    {
+      for(int j=0; j<muTest.getCols(); j++)
+	{
+	  arg = yTest.getVal(i, j) - muTest.getVal(i, j) - bias.getVal(j);
+	  arg *= arg;
+	  var = varSigmaTest.getVal(i, j) + sigma2;
+	  arg = 1/sqrt(2*M_PI*var)*exp(-.5*arg*arg/var);
+	  L.setVal(arg, i, j);
+	}
+    }
+  ~*/
+}
+
+double CScaleNoise::logLikelihood(const CMatrix& muTest, const CMatrix& varSigmaTest, 
+				     const CMatrix& yTest) const
+{
+  throw ndlexceptions::Error("ScaleNoise doesn't have site loglikelihoods implemented.");
+  /*~
+  assert(yTest.getCols()==getNumProcesses());
+  assert(yTest.dimensionsMatch(muTest));
+  assert(yTest.dimensionsMatch(varSigmaTest));
+  double arg=0.0;
+  double var=0.0;
+  double L=0.0;
+  for(int i=0; i<muTest.getRows(); i++)
+    {
+      for(int j=0; j<muTest.getCols(); j++)
+	{
+	  arg = yTest.getVal(i, j) - muTest.getVal(i, j) - bias.getVal(j);
+	  arg *= arg;
+	  var = varSigmaTest.getVal(i, j) + sigma2;
+	  arg = arg/var;
+	  L += log(var)+arg;
+	}
+    }  
+  L += muTest.getRows()*muTest.getCols()*log(2*M_PI);
+  L *= -0.5;
+  return L;
+  ~*/
+}
+
+
+
 
 
 CProbitNoise::~CProbitNoise()
 {
 }
-void CProbitNoise::setInitParam()
+void CProbitNoise::initStoreage()
+{
+  setNumParams(getNumProcesses());
+  mu.resize(getNumData(), getNumProcesses());
+  varSigma.resize(getNumData(), getNumProcesses());
+  bias.resize(1, getNumProcesses());
+  clearTransforms();
+  sigma2 = 1e-6;
+  setLogConcave(true);
+  setSpherical(false);
+  setMissing(false);
+
+}
+void CProbitNoise::initVals()
+{
+  mu.zeros();
+  varSigma.zeros();
+  bias.zeros();
+
+}
+void CProbitNoise::initNames()
 {
   setType("probit");
   setNoiseName("Probit");
-  setNumParams(getNumProcesses());
-  mu.resize(y.getRows(), y.getCols());
-  varSigma.resize(y.getRows(), y.getCols());
-  mu.zeros();
-  varSigma.zeros();
-  double nClass1=0.0;
-  bias.resize(1, y.getCols());
-  for(int j=0; j<y.getCols(); j++)
+  for(int j=0; j<getNumProcesses(); j++)
+    setParamName("bias" + j, j);
+
+ 
+}
+void CProbitNoise::initParams()
+{
+  for(int j=0; j<getNumProcesses(); j++)
     {
-      for(int i=0; i<y.getRows(); i++)
+      double nClass1=0.0;
+      for(int i=0; i<getNumData(); i++)
 	{
 	  if(y.getVal(i, j)==1)
 	    nClass1++;
 	}
-      bias.setVal(ndlutil::invCumGaussian(nClass1/(double)y.getRows()), j);
-      setParamName("bias" + j, j);
+      bias.setVal(ndlutil::invCumGaussian(nClass1/(double)getNumData()), j);
     }
-      
-  // sigma2 isn't treated as a parameter.
-  sigma2 = 1e-6;
-  clearTransforms();
-  setLogConcave(true);
-  setSpherical(false);
-  setMissing(false);
 }
+
 ostream& CProbitNoise::display(ostream& os)
 {
   double b = 0.0;
@@ -561,11 +876,11 @@ void CProbitNoise::getGradParams(CMatrix& g) const
   double c=0.0;
   double u=0.0;
   double b=0.0;
-  for(int j=0; j<y.getCols(); j++)
+  for(int j=0; j<getNumProcesses(); j++)
     {
       double gbias = 0.0;
       b = bias.getVal(j);
-      for(int i=0; i<y.getRows(); i++)
+      for(int i=0; i<getNumData(); i++)
 	{
 	  c = getTarget(i, j)/sqrt(getVarSigma(i, j)+sigma2);
 	  u=c*(getMu(i, j)+b);
@@ -673,25 +988,51 @@ double CProbitNoise::logLikelihood(const CMatrix& muTest, const CMatrix& varSigm
 CNcnmNoise::~CNcnmNoise()
 {
 }
-void CNcnmNoise::setInitParam()
+void CNcnmNoise::initStoreage()
 {
-  setType("ncnm");
-  setNoiseName("Null Category");
   if(isSplitGamma())
     setNumParams(getNumProcesses()+2);
   else
     setNumParams(getNumProcesses()+1);
-  mu.resize(y.getRows(), y.getCols());
-  varSigma.resize(y.getRows(), y.getCols());
+  mu.resize(getNumData(), getNumProcesses());
+  varSigma.resize(getNumData(), getNumProcesses());
+  bias.resize(1, getNumProcesses());
+  // sigmoid transforms on gamman and gammap.
+  clearTransforms();
+  addTransform(new CSigmoidTransform(), getNumParams()-1);
+  if(isSplitGamma())
+    addTransform(new CSigmoidTransform(), getNumParams()-2);
+  sigma2 = 1e-6;
+  width = 1.0;
+  
+  // sigma2 isn't treated as a parameter.
+  setLogConcave(false);
+  setSpherical(false);
+  setMissing(true);
+
+}
+void CNcnmNoise::initVals()
+{
   mu.zeros();
   varSigma.zeros();
+  bias.zeros();
+
+}
+void CNcnmNoise::initNames()
+{
+  setType("ncnm");
+  setNoiseName("Null Category");
+  for(int j=0; j<getNumProcesses(); j++)
+    setParamName("bias" + j, j);
+}
+void CNcnmNoise::initParams()
+{
   double nClass1=0.0;
   double nClass2=0.0;
   double nMissing=0.0;
-  bias.resize(1, y.getCols());
-  for(int j=0; j<y.getCols(); j++)
+  for(int j=0; j<getNumProcesses(); j++)
     {
-      for(int i=0; i<y.getRows(); i++)
+      for(int i=0; i<getNumData(); i++)
 	{
 	  if(y.getVal(i, j)==1.0)	    
 	    nClass1++;
@@ -701,24 +1042,10 @@ void CNcnmNoise::setInitParam()
 	    nMissing++;
 	}
       bias.setVal(ndlutil::invCumGaussian(nClass1/(nClass1+nClass2)), j);
-      setParamName("bias" + j, j);
     }
-  gamman=nMissing/(double)y.getRows();
+  gamman=nMissing/(double)getNumData();
   gammap = gamman;
-
-  sigma2 = ndlutil::EPS;
-  width = 1.0;
-  clearTransforms();
-
-  // sigmoid transforms on gamman and gammap.
-  addTransform(new CSigmoidTransform(), getNumParams()-1);
-  if(isSplitGamma())
-    addTransform(new CSigmoidTransform(), getNumParams()-2);
-
-  // sigma2 isn't treated as a parameter.
-  setLogConcave(false);
-  setSpherical(false);
-  setMissing(true);
+  
 }
 ostream& CNcnmNoise::display(ostream& os)
 {
@@ -799,11 +1126,11 @@ void CNcnmNoise::getGradParams(CMatrix& g) const
   double ggamman=0.0;
   double ggammap=0.0;
   double halfWidth = width/2.0;
-  for(int j=0; j<y.getCols(); j++)
+  for(int j=0; j<getNumProcesses(); j++)
     {
       double gbias = 0.0;
       double b = bias.getVal(j);
-      for(int i=0; i<y.getRows(); i++)
+      for(int i=0; i<getNumData(); i++)
 	{
 	  double muAdj = getMu(i, j)+b;
 	  double c = 1/sqrt(sigma2+getVarSigma(i, j));
@@ -1098,6 +1425,8 @@ CNoise* readNoiseFromStream(istream& in)
     pnoise = new CNcnmNoise();
   else if(type=="gaussian")
     pnoise = new CGaussianNoise();
+  else if(type=="scale")
+    pnoise = new CScaleNoise();
   else
     throw ndlexceptions::Error("Unknown Noise Type Specified");
 

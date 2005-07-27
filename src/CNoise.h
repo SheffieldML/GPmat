@@ -23,7 +23,10 @@ class CNoise : public CTransformable, public COptimisable, public CMatinterface 
   virtual ~CNoise(){}
   
   // pure virtual functions
-  virtual void setInitParam()=0;
+  virtual void initStoreage()=0;
+  virtual void initNames()=0;
+  virtual void initVals()=0;
+  virtual void initParams()=0;
   virtual ostream& display(ostream& os)=0;
   virtual void setParams(const CMatrix& X)=0;
   virtual void getParams(CMatrix& X) const=0;
@@ -250,18 +253,19 @@ class CNoise : public CTransformable, public COptimisable, public CMatinterface 
     {
       nParams = num;
     }
+  inline void setNumProcesses(const int num) 
+    {
+      nProcesses = num;
+      initStoreage();
+      initNames();      
+    }
+  
+ protected:
   inline void setNumData(const int num) 
     {
       nData = num;
     }
-  inline void setNumProcesses(const int num) 
-    {
-      nProcesses = num;
-      setInitParam();
-    }
-  
-  
-    
+
  private:
   int verbosity;
   bool spherical;
@@ -282,10 +286,16 @@ class CGaussianNoise : public CNoise {
   CGaussianNoise(const CMatrix& yin)
     {
       setTarget(yin);
+      initVals();
+      initParams();
     }
   ~CGaussianNoise();
   
-  void setInitParam();
+  void initStoreage();
+  void initNames();
+  void initVals();
+  void initParams();
+
   ostream& display(ostream& os);
   void setParams(const CMatrix& params);
   void setParam(const double val, const int index);
@@ -328,7 +338,7 @@ class CGaussianNoise : public CNoise {
     {
       return y.getVal(i, j);
     }
-  virtual void setTarget(const CMatrix& vals)
+  void setTarget(const CMatrix& vals)
     {
       y.deepCopy(vals);
       setNumData(vals.getRows());
@@ -346,6 +356,104 @@ class CGaussianNoise : public CNoise {
   CMatrix bias;
 };
 
+// A scaled Gaussian noise model.
+class CScaleNoise : public CNoise {
+ public:  
+  // constructors
+  CScaleNoise(){}
+  CScaleNoise(const CMatrix& yin)
+    {
+      setTarget(yin);
+      initParams();
+    }
+  ~CScaleNoise();
+  
+  double getScale(const int index) const
+    {
+      assert(index<getNumProcesses()&&index>=0);
+      return scale.getVal(index);
+    }
+  void setScale(const double val, const int index)
+    {
+      assert(index<getNumProcesses()&&index>=0);
+      scale.setVal(val, index);
+    }
+  double getBias(const int index) const
+    {
+      assert(index<getNumProcesses()&&index>=0);
+      return bias.getVal(index);
+    }
+  void setBias(const double val, const int index)
+    {
+      assert(index<getNumProcesses()&&index>=0);
+      bias.setVal(val, index);
+    }
+  void initStoreage();
+  void initNames();
+  void initVals();
+  void initParams();
+
+  ostream& display(ostream& os);
+  void setParams(const CMatrix& params);
+  void setParam(const double val, const int index);
+  void getParams(CMatrix& params) const;
+  double getParam(const int index) const;
+  void getGradParams(CMatrix& g) const;
+  void getGradInputs(double& gmu, double& gvs, const int i, const int j) const;
+  void getNuG(CMatrix& g, CMatrix& nu, const int index) const;
+  void updateSites(CMatrix& m, CMatrix& beta, const int actIndex, const CMatrix& g, const CMatrix& nu, const int index) const;
+  void test(const CMatrix& muout, const CMatrix& varSigmaOut, const CMatrix& yTest) const;
+  void out(CMatrix& yPred, const CMatrix& muTest, const CMatrix& varSigmaTest) const;
+  void out(CMatrix& yPred, CMatrix& errorBarOut, const CMatrix& muTest, const CMatrix& varSigmaTest) const;
+  void likelihoods(CMatrix& L, const CMatrix& muTest, const CMatrix& varSigmaTest, const CMatrix& yTest) const;
+  double logLikelihood(const CMatrix& muTest, const CMatrix& varSigmaTest, const CMatrix& yTest) const;
+  double logLikelihood() const
+    {
+      return logLikelihood(mu, varSigma, y);
+    }
+  void  getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
+  
+  inline double getMu(const int i, const int j) const
+    {
+      return mu.getVal(i, j);
+    }
+  inline void setMu(const double val, const int i, const int j) 
+    {
+      mu.setVal(val, i, j);
+    }
+  inline double getVarSigma(const int i, const int j) const
+    {
+      return varSigma.getVal(i, j);
+    }
+  inline void setVarSigma(const double val, const int i, const int j) 
+    {
+      assert(!isnan(val));
+      assert(val>=0);
+      varSigma.setVal(val, i, j);
+    }
+  inline double getTarget(const int i, const int j) const
+    {
+      return y.getVal(i, j);
+    }
+  void setTarget(const CMatrix& vals)
+    {
+      y.deepCopy(vals);
+      setNumData(vals.getRows());
+      setNumProcesses(vals.getCols());
+    }
+#ifdef _NDLMATLAB
+  // Adds parameters to the mxArray.
+  void addParamToMxArray(mxArray* matlabArray) const;
+  // Gets the parameters from the mxArray.
+  void extractParamFromMxArray(const mxArray* matlabArray);
+#endif
+ private:
+
+  double sigma2;
+  CMatrix bias;
+  CMatrix scale;
+};
+
 // The probit noise model often used for classification.
 class CProbitNoise : public CNoise {
  public:  
@@ -354,10 +462,15 @@ class CProbitNoise : public CNoise {
   CProbitNoise(const CMatrix& yin)
     {
       setTarget(yin);
+      initParams();
     }
   ~CProbitNoise();
   
-  void setInitParam();
+  void initStoreage();
+  void initNames();
+  void initVals();
+  void initParams();
+
   ostream& display(ostream& os);
   void setParams(const CMatrix& params);
   void setParam(const double val, const int index);
@@ -424,10 +537,15 @@ class CNcnmNoise : public CNoise {
   CNcnmNoise(const CMatrix& yin)
     {
       setTarget(yin);
+      initParams();
     }
   ~CNcnmNoise();
   
-  void setInitParam();
+  void initStoreage();
+  void initNames();
+  void initVals();
+  void initParams();
+
   ostream& display(ostream& os);
   void setParams(const CMatrix& params);
   void setParam(const double val, const int index);
@@ -479,11 +597,11 @@ class CNcnmNoise : public CNoise {
     {
       return y.getVal(i, j);
     }
-  virtual void setTarget(const CMatrix& vals)
+  void setTarget(const CMatrix& vals)
     {
       y.deepCopy(vals);
-      setNumData(vals.getRows());
       setSplitGamma(false);
+      setNumData(vals.getRows());
       setNumProcesses(vals.getCols());
     }
 #ifdef _NDLMATLAB

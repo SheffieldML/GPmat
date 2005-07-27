@@ -1,3 +1,13 @@
+Version 0.121 Release Notes
+---------------------------
+
+Included a `scale' noise type for use with the GPLVM which allows for scaling the outputs on the GPLVM. This noise model is not designed for normal use with the IVM.
+
+Added noiseReadFromFID.m for reading a noise model from a file written by the C++ code.
+
+Version 0.12 Release Notes
+--------------------------
+
 This toolbox implements different noise models for the IVM toolbox from version 0.31.
 
 Interaction with the toolbox is done through the interface files which are prefixed by `noise'. 
