@@ -735,6 +735,10 @@ void writeIvmToStream(const CIvm& model, ostream& out)
   out << "activeSetSize=" << model.getActiveSetSize() << endl;
   out << "numProcesses=" << model.getNumProcesses() << endl;
   out << "numFeatures=" << model.getNumInputs() << endl;
+
+  writeKernToStream(model.kern, out);
+  writeNoiseToStream(model.noise, out);
+
   for(int i=0; i<model.getActiveSetSize(); i++)
     {
       out << model.getActivePoint(i) << " ";
@@ -764,8 +768,6 @@ void writeIvmToStream(const CIvm& model, ostream& out)
       if(x!=0.0)
 	out << model.getNumInputs() << ":" << x << endl;
     }
-  writeKernToStream(model.kern, out);
-  writeNoiseToStream(model.noise, out);
 }
 void writeIvmToFile(const CIvm& model, const string modelFileName, const string comment)
 {
@@ -817,6 +819,8 @@ CIvm* readIvmFromStream(istream& in)
     throw ndlexceptions::FileFormatError();
   int numFeatures=atoi(tokens[1].c_str());
 
+  CKern* pkern = readKernFromStream(in);
+  CNoise* pnoise = readNoiseFromStream(in);
 
   CMatrix m(activeSetSize, numProcesses);
   CMatrix beta(activeSetSize, numProcesses);
@@ -855,8 +859,6 @@ CIvm* readIvmFromStream(istream& in)
 	  activeX.setVal(featVal, i, featNum-1);	  
 	}
     }
-  CKern* pkern = readKernFromStream(in);
-  CNoise* pnoise = readNoiseFromStream(in);
   CIvm* pmodel= new CIvm(activeX, activeY, m, beta, activeSet, *pkern, *pnoise); 
   return pmodel;
 }

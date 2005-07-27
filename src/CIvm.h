@@ -196,7 +196,6 @@ class CIvm : public COptimisableModel {
   CMatrix m;
   CMatrix beta;
 
-
   // these really just provide local storage
   mutable CMatrix covGrad;
   mutable CMatrix invK;
