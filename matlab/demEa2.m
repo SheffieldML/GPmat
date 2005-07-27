@@ -1,7 +1,5 @@
 % DEMEA2 Iterate the face data for from 2_2 for 1000 iterations.
 
-% MOCAP
-
 
 % Keep results consistent each time run
 rand('seed', 1e5)

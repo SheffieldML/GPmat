@@ -1,7 +1,5 @@
 % DEMMANUEL1 Create some results for Manuel to use on the faces.
 
-% MOCAP
-
 % Keep results consistent each time run
 rand('seed', 1e5)
 randn('seed', 1e5)

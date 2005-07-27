@@ -1,7 +1,5 @@
 % DEMEA Show the saved results of demEa1.
 
-% MOCAP
-
 load demEa1
 labelInfo(1).text = 'Neutral';
 labelInfo(1).indices = [1:20]';

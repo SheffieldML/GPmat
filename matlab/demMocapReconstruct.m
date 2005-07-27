@@ -2,8 +2,6 @@ function demMocapReconstruct(fileName)
 
 % MOCAPPLAYFACEFILE Play a face file of motion capture data. 
 
-% MOCAP
-
 % Load patches
 
 % connections = mocapFaceConnections('../data/manuel/connections.txt');

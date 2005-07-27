@@ -1,7 +1,5 @@
 % DEMSWAGGER1 Demonstrate motion capture on swagger data --- uses recent GPLVM toolbox..
 
-% MOCAP
-
 % Fix seeds
 randn('seed', 1e5);
 rand('seed', 1e5);

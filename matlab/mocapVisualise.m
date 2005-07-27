@@ -47,9 +47,8 @@ set(gcf, 'WindowButtonDownFcn', 'mocapClassVisualise(''click'')')
 
 figure(2)
 clf
-visData = zeros(1,size(model.y, 2));
-visData(1) = min(min(model.y));
-visData(end) = max(max(model.y));
+[void, indMax]= max(sum((model.y.*model.y), 2));
+visData = model.y(indMax, :);
 imageAxesa =subplot(1, 1, 1);
 visHandle = fhandleVisualise(visData, bvhStruct);
 %set(visHandle, 'erasemode', 'xor')
