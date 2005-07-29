@@ -2,8 +2,6 @@ function facePatchCallback(call, input)
 
 % FACEPATCHCALLBACKHANDLER Function for handling call backs from draw window.
 
-% MOCAP
-
 global PATCHINFO
 global visualiseInfo
 

@@ -2,8 +2,6 @@ function mocapPlayData(fileName)
 
 % MOCAPPLAYDATA 
 
-% MOCAP
-
 [Y, connections] = mocapLoadData(fileName);
 
 pauseVal = 0.01;
