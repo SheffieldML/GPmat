@@ -2,8 +2,6 @@ function handle = vectorVisualise(vals, names, connect)
 
 % VECTORVISUALISE  Helper code for plotting a vector during 2-D visualisation.Plot the oil data
 
-% MOCAP
-
 vals = reshape(vals, size(vals, 2)/3, 3);
 
 indices = find(connect);

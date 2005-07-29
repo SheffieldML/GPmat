@@ -2,8 +2,6 @@ function connect = mocapFaceConnections(fileName);
 
 % MOCAPFACECONNECTIONS Give a connection matrix for the motion capture data.
 
-% MOCAP
-
 fid = fopen(fileName);
 i = 1;
 rem = fgets(fid);	

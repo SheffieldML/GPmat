@@ -2,8 +2,6 @@ function [model, connect] = mocapLoadResult(dataSet, number)
 
 % MOCAPLOADRESULT Load a previously saved result.
 
-% MOCAP
-
 [Y, connect] = mocapLoadData(dataSet);
 
 dataSet(1) = upper(dataSet(1));

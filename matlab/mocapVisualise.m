@@ -4,8 +4,6 @@ function mocapVisualise(model, YLbls, ...
 
 % MOCAPVISUALISE Visualise the manifold.
 
-% MOCAP
-
 % derived from gplvmVisualise from an early version of the gplvm toolbox.
 global visualiseInfo
 

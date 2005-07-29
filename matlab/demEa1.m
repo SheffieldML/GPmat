@@ -1,7 +1,5 @@
 % DEMEA1 Iterate the face data from 2_2 to convergence.
 
-% MOCAP
-
 % Keep results consistent each time run
 rand('seed', 1e5)
 randn('seed', 1e5)

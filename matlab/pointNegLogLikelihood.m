@@ -2,8 +2,6 @@ function e = pointNegLogLikelihood(x, y, X, A, theta, invK, m, C)
 
 % POINTNEGLOGLIKELIHOOD Wrapper function for calling noise likelihoods.
 
-% MOCAP
-
 L = modelLogLikelihood(x, y, X, A, theta, invK);
 if nargin < 7
   m = [0 0];

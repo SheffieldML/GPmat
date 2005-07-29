@@ -2,8 +2,6 @@ function [hd,motion] = read_bvh03(fn)
 
 % READ_BVH03 A bvh reader from the web.
 
-% MOCAP
-
 % Chris Bregler and J. Brasket
   fid = fopen(fn,'r');
   hd.str = [];  ch_id = 1; hir_lev = []; hir_name = []; ori = 0;

@@ -2,8 +2,6 @@ function [points, pointNames, times] = mocapParseText(fileName);
 
 % MOCAPPARSETEXT Parse a motion capture text file.
 
-% MOCAP 
-
 fid = fopen(fileName);
 readLine = fgets(fid);
 

@@ -2,8 +2,6 @@ function  mocapData = mocapLoadData(dataSet, velocity)
 
 % MOCAPLOADDATA Load a motion capture data set.
 
-% MOCAP
-
 dataDir = mocapDataDir;
 if nargin < 2
   velocity = 1;

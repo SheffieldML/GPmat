@@ -2,8 +2,6 @@ function [vers, depend] = mocapVers
 
 % MOCAPPATH Brings dependent toolboxes into the path.
 
-% MOCAP
-
 vers = 0.001;
 if nargout > 2
   depend(1).name = 'gplvm';

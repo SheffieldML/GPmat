@@ -3,8 +3,6 @@ function mocapFaceVisualise(X, Y, invK, theta, YLbls, meanData, activeSet, ...
 
 % MOCAPFACEVISUALISE Visualise the manifold.
 
-% MOCAP
-
 global visualiseInfo
 global PATCHINFO
 

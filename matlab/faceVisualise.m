@@ -2,8 +2,6 @@ function handle = faceVisualise(vals, connect)
 
 % FACEVISUALISE For updateing a face representation of 3-D data.
 
-% MOCAP
-
 numMark = size(vals, 2)/3;
 valsx = vals(1, 1:numMark);
 valsy = vals(1, numMark+1:2*numMark);

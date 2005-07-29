@@ -1,8 +1,6 @@
 function mocapResultsDynamic(dataSet, number, dataType, varargin)
 
 % MOCAPRESULTSDYNAMIC Load a results file and visualise them.
-
-% MOCAP
   
 [model, connect] = mocapLoadResult(dataSet, number);
 

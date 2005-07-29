@@ -2,8 +2,6 @@ function [columnNames, data] = mocapManuelRead(fileName)
 
 % MOCAPMANUELREAD Read in data which has column titles in the first line and separated values in each other line.
 
-% MOCAP
-
 if nargin < 2
   separator = ',';
 end

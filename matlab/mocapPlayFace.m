@@ -2,8 +2,6 @@ function mocapPlayFace(Y, patches, model)
 
 % MOCAPPLAYDATA 
 
-% MOCAP
-
 % Load patches
 % Compute any missing values
 

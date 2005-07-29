@@ -2,8 +2,6 @@ function handle = face2DVisualise(vals, patches)
 
 % FACEPATCHVISUALISE For updateing a face representation of 3-D data.
 
-% MOCAP
-
 global PATCHINFO
 
 

@@ -2,8 +2,6 @@ function classVisualise(call)
 
 % CLASSVISUALISE Callback function for visualising data in 2-D.
 
-% MOCAP
-
 global visualiseInfo
 
 switch call

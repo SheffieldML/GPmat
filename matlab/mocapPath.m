@@ -1,7 +1,5 @@
 % MOCAPATH The toolboxes for the mocap toolbox.
 
-% MOCAP
-
 
 importTool('ivm', 0.31) 
 importTool('kern', 0.13) 

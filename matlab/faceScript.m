@@ -1,7 +1,5 @@
 % FACESCRIPT A script for runnig face test.
 
-% MOCAP
-
 % Keep results consistent each time run
 rand('seed', 1e5)
 randn('seed', 1e5)

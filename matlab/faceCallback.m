@@ -2,8 +2,6 @@ function faceCallback(call)
 
 % FACECALLBACKHANDLER Function for handling call backs from draw window.
 
-% MOCAP
-
 global PATCHINFO
 persistent POINTNO
 switch call
