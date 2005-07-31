@@ -232,6 +232,30 @@ void CNcnmNoise::extractParamFromMxArray(const mxArray* matlabArray)
     splitGamma = false;
 
 }
+void COrderedNoise::addParamToMxArray(mxArray* matlabArray) const
+{
+  mxAddField(matlabArray, "nParams");
+  mxSetField(matlabArray, 0, "nParams", convertMxArray((double)getNumParams()));
+  mxAddField(matlabArray, "bias");
+  mxSetField(matlabArray, 0, "bias", bias.toMxArray());
+  mxAddField(matlabArray, "variance");
+  mxSetField(matlabArray, 0, "variance", convertMxArray(sigma2));
+  mxAddField(matlabArray, "widths");
+  mxSetField(matlabArray, 0, "widths", widths.toMxArray());
+  mxAddField(matlabArray, "C");
+  mxSetField(matlabArray, 0, "C", convertMxArray((double)getNumCategories()));
+}
+
+void COrderedNoise::extractParamFromMxArray(const mxArray* matlabArray) 
+{
+  setNumParams(mxArrayExtractIntField(matlabArray, "nParams"));
+  mxArray* biasField = mxArrayExtractMxArrayField(matlabArray, "bias");
+  bias.fromMxArray(biasField);
+  sigma2 = mxArrayExtractDoubleField(matlabArray, "variance");
+  mxArray* widthsField = mxArrayExtractMxArrayField(matlabArray, "widths");
+  widths.fromMxArray(widthsField);
+  setNumCategories(mxArrayExtractIntField(matlabArray, "C"));
+}
 
 
 #endif
@@ -551,7 +575,11 @@ void CScaleNoise::initParams()
 {
   scale.deepCopy(varCol(y));
   for(int j=0; j<getNumProcesses(); j++)
-    scale.setVal(sqrt(scale.getVal(j)), j);
+    {
+      scale.setVal(sqrt(scale.getVal(j)), j);
+      if(scale.getVal(j)<ndlutil::EPS)
+	scale.setVal(ndlutil::EPS, j);
+    }
   // TODO: need to check for missing values.
   bias.deepCopy(meanCol(y));
 }
@@ -1392,6 +1420,407 @@ void CNcnmNoise::readParamsFromStream(istream& in)
   else
     throw ndlexceptions::FileFormatError();
 }
+COrderedNoise::~COrderedNoise()
+{
+}
+void COrderedNoise::initStoreage()
+{
+  setNumParams(getNumProcesses()+getNumCategories()-2);
+  mu.resize(getNumData(), getNumProcesses());
+  varSigma.resize(getNumData(), getNumProcesses());
+  bias.resize(1, getNumProcesses());
+  widths.resize(1, getNumCategories()-2);
+  gwidth.resize(1, getNumCategories()-2);
+  // sigmoid transforms on gamman and gammap.
+  clearTransforms();
+  for(int i=0; i<getNumCategories()-2; i++)
+    addTransform(new CNegLogLogitTransform(), i+getNumProcesses());
+  sigma2 = 0.1;
+  
+  // sigma2 isn't treated as a parameter.
+  setLogConcave(true);
+  setSpherical(false);
+  setMissing(true);
+
+}
+void COrderedNoise::initVals()
+{
+  mu.zeros();
+  varSigma.zeros();
+  bias.zeros();
+  widths.setVals(1/(getNumCategories()-2));
+
+}
+void COrderedNoise::initNames()
+{
+  setType("ordered");
+  setNoiseName("Ordered Categorical");
+  for(int j=0; j<getNumProcesses(); j++)
+    setParamName("bias" + j, j);
+  for(int j=0; j<getNumCategories()-2; j++)
+    setParamName("width" + j, j+getNumProcesses());
+}
+void COrderedNoise::initParams()
+{
+  bias.deepCopy(meanCol(y));
+}
+ostream& COrderedNoise::display(ostream& os)
+{
+  double b = 0.0;
+  os << "Ordered Categorical noise: " << endl;
+  for(int j=0; j<bias.getCols(); j++)
+    {
+      b = bias.getVal(j);
+      os << "Bias on process " << j << ": " << b << endl; 
+    }
+  for(int j=0; j<widths.getCols(); j++)
+    {
+      b = widths.getVal(j);
+      os << "Width for category " << j << ": " << b << endl; 
+    }
+  return os;
+}
+void COrderedNoise::setParam(const double val, const int index)
+{
+  assert(index>=0);
+  assert(index<getNumParams());
+  if(index<getNumProcesses())
+    {
+      bias.setVal(val, index);
+      return;
+    }
+  if(index>=getNumProcesses())
+    {
+      widths.setVal(val, index-getNumProcesses());
+      return;
+    }
+}  
+void COrderedNoise::setParams(const CMatrix& params)
+{
+  assert(params.getCols()==getNumParams());
+  assert(params.getRows()==1);
+  int nProc = getNumProcesses();
+  for(int j=0; j<nProc; j++)
+    {
+      bias.setVal(params.getVal(j), j);
+    }
+  for(int j=0; j<getNumCategories()-2; j++)
+    widths.setVal(params.getVal(j+getNumProcesses()), j);
+}
+double COrderedNoise::getParam(const int index) const
+{
+  assert(index>=0);
+  assert(index<getNumParams());
+  if(index<getNumProcesses())
+    return bias.getVal(index);
+  if(index>=getNumProcesses())
+    return widths.getVal(index-getNumProcesses());
+}
+void COrderedNoise::getParams(CMatrix& params) const
+{
+  assert(params.getCols()==getNumParams());
+  assert(params.getRows()==1);
+  int nProc=getNumProcesses();
+  for(int j=0; j<nProc; j++)
+    params.setVal(bias.getVal(j), j);
+  for(int j=0; j<getNumCategories()-2; j++)
+    params.setVal(widths.getVal(j), j+getNumProcesses());
+}
+ 
+void COrderedNoise::getGradParams(CMatrix& g) const
+{
+  assert(g.getCols()==getNumParams());
+  assert(g.getRows()==1);
+  g.zeros();
+  gwidth.zeros();
+  for(int j=0; j<getNumProcesses(); j++)
+    {
+      double gbias = 0.0;
+      double b = bias.getVal(j);
+      for(int i=0; i<getNumData(); i++)
+	{
+	  double muAdj = getMu(i, j)+b;
+	  int targVal = (int)getTarget(i, j);
+	  assert(isnan(getTarget(i, j)) || getTarget(i, j)==(double)targVal);
+	  double c = 1/sqrt(sigma2+getVarSigma(i, j));
+	  if(targVal==0)
+	    {
+	      muAdj*=c;
+	      gbias -= c*ndlutil::gradLnCumGaussian(-muAdj);
+	    }
+	  else if(targVal>0 && targVal<getNumCategories()-1)
+	    {
+	      for(int k=0; k<targVal-1; k++)
+		muAdj -= widths.getVal(k);
+	      double u = muAdj*c;
+	      double uprime = (muAdj-widths.getVal(targVal-1))*c;
+	      double B1 = ndlutil::gaussOverDiffCumGaussian(u, uprime, 1);
+	      double B2 = ndlutil::gaussOverDiffCumGaussian(u, uprime, 2);
+	      gbias += c*(B1-B2);
+	      double addPart = c*B2;
+	      for(int k=0; k<targVal; k++)
+		gwidth.setVal(gwidth.getVal(k)+addPart, k);
+	      if(targVal>1)
+		{
+		  addPart = c*B1;
+		  for(int k=0; k<targVal-1; k++)
+		    gwidth.setVal(gwidth.getVal(k)-addPart, k);	      
+		}
+	    }
+	  else if(targVal==getNumCategories()-1)
+	    {
+	      for(int k=0; k<targVal-1; k++)
+		muAdj -= widths.getVal(k);
+	      muAdj*=c;
+	      double addPart = c*ndlutil::gradLnCumGaussian(muAdj);
+	      gbias += addPart;
+	      if(getNumCategories()>2)
+		for(int k=0; k<gwidth.getCols(); k++)
+		  gwidth.setVal(gwidth.getVal(k)-addPart, k);
+	    }
+	  else if(isnan(getTarget(i, j)))
+	    { /* do nothing*/  }
+	  else
+	    throw ndlexceptions::Error("This point should never be reached in COrderedNoise::getGradParams");
+	}
+      g.setVal(gbias, 0, j);
+    }
+  for(int j=0; j<getNumCategories()-2; j++)
+    g.setVal(gwidth.getVal(j), j+getNumProcesses());
+}
+void COrderedNoise::getGradInputs(double& gmu, double& gvs, const int i, const int j) const
+{
+  double b = bias.getVal(j);
+  double c = 1.0/sqrt(sigma2+getVarSigma(i, j));
+  double muAdj = getMu(i, j)+b;
+  int targ = (int)getTarget(i, j);
+  assert(isnan(getTarget(i, j)) || getTarget(i, j)==(double)targ);
+  if(targ==0)
+    {
+      muAdj*=c;
+      gmu=-c*ndlutil::gradLnCumGaussian(-muAdj);
+      gvs=-.5*gmu*c*muAdj;
+    }
+  
+  else if(targ>0 && targ < getNumCategories() - 1)
+    {
+      for(int k=0; k<targ-1; k++)
+	muAdj-=widths.getVal(k);
+      double u = muAdj*c;
+      double uprime = (muAdj - widths.getVal(targ-1))*c;
+      double B1 = ndlutil::gaussOverDiffCumGaussian(u, uprime, 1);
+      double B2 = ndlutil::gaussOverDiffCumGaussian(u, uprime, 2);
+      gmu = c*(B1-B2);
+      gvs = -.5*c*c*(u*B1 - uprime*B2);
+    }
+  else if (targ==getNumCategories()-1) // missing data
+    {
+      for(int k=0; k<targ-1; k++)
+	muAdj-=widths.getVal(k);
+      muAdj*=c;
+      gmu = c*ndlutil::gradLnCumGaussian(muAdj);
+      gvs = -.5*gmu*c*muAdj;
+      
+    }
+  else if(isnan(getTarget(i, j)))
+    { 
+      gmu = 0.0;
+      gvs = 0.0;
+    }
+  else
+    throw ndlexceptions::Error("This point should never be reached in COrderedNoise::getGradInputs");
+}  
+void COrderedNoise::test(const CMatrix& muout, const CMatrix& varSigmaOut, const CMatrix& yTest) const
+{
+  assert(yTest.dimensionsMatch(muout));
+  assert(muout.dimensionsMatch(varSigmaOut));
+  assert(yTest.getCols()==getNumProcesses());
+  CMatrix yPred(yTest.getRows(), yTest.getCols());
+  out(yPred, muout, varSigmaOut);
+  for(int j=0; j<getNumProcesses(); j++)
+    {
+      int error=0;
+      for(int i=0; i<yTest.getRows(); i++)
+	{
+	  if(yPred.getVal(i, j)!=yTest.getVal(i, j))
+	    error++;
+	}
+      double err=(double)error/(double)(yTest.getRows());
+      err=err*100.0;
+      cout << "Classification error on output " << j+1 << ": " << err << "% " << endl;
+    }
+}
+  
+void COrderedNoise::out(CMatrix& yOut, const CMatrix& muTest, const CMatrix& varSigmaTest) const
+{
+  assert(yOut.dimensionsMatch(muTest));
+  assert(muTest.dimensionsMatch(varSigmaTest));
+  for(int j=0; j<yOut.getCols(); j++)
+    {
+      double b = bias.getVal(j);
+      for(int i=0; i<yOut.getRows(); i++)	
+	{
+	  double muVal = muTest.getVal(i, j)+b;
+	  double tot = 0.0;
+	  int counter = 1;
+	  if(muVal<0)
+	    {
+	      yOut.setVal(0.0, i, j);
+	      continue;
+	    }
+	  for(int k=0; k<widths.getCols(); k++)
+	    if (muVal>tot)
+	      {
+		tot+=widths.getVal(i);
+		counter++;
+	      }
+	    else
+	      {
+		yOut.setVal((double)counter, i, j);
+		continue;
+	      }
+	}
+      
+    }
+}
+void COrderedNoise::out(CMatrix& yOut, CMatrix& probOut, const CMatrix& muTest, const CMatrix& varSigmaTest) const
+{
+  assert(yOut.dimensionsMatch(probOut));
+  out(yOut, muTest, varSigmaTest);
+  likelihoods(probOut, muTest, varSigmaTest, yOut);
+}
+void COrderedNoise::likelihoods(CMatrix& L, const CMatrix& muTest, const CMatrix& varSigmaTest, 
+				   const CMatrix& yTest) const
+{
+  assert(yTest.getCols()==getNumProcesses());
+  assert(L.dimensionsMatch(muTest));
+  assert(yTest.dimensionsMatch(muTest));
+  assert(muTest.dimensionsMatch(varSigmaTest));
+  for(int j=0; j<muTest.getCols(); j++)
+    {
+      double b = bias.getVal(j);
+      for(int i=0; i<muTest.getRows(); i++)
+	{
+	  double muAdj=muTest.getVal(i, j) + b;
+	  double c=1/sqrt(sigma2+varSigmaTest.getVal(i, j));	  
+	  int targVal=(int)yTest.getVal(i, j);
+	  assert(isnan(getTarget(i, j)) || getTarget(i, j)==(double)targVal);
+	  if(targVal==0)
+	    {
+	      L.setVal(ndlutil::cumGaussian(-muAdj*c), i, j);
+	    }
+	  else if(targVal>0 && targVal < getNumCategories()-1)
+	    {
+	      for(int k=0; k<targVal-1; k++)
+		muAdj+=widths.getVal(k);
+	      L.setVal(ndlutil::cumGaussian(muAdj*c)-ndlutil::cumGaussian((muAdj - widths.getVal(targVal-1))*c), i, j);
+	    }
+	  else if(targVal==getNumCategories()-1)
+	    {
+	      for(int k=0; k<targVal-1; k++)
+		muAdj+=widths.getVal(k);
+	      L.setVal(ndlutil::cumGaussian(muAdj*c), i, j);
+	    }
+	  else if(isnan(getTarget(i, j)))
+	    {
+	      L.setVal(1.0, i, j);
+	    }
+	  else
+	    throw ndlexceptions::Error("This point should never be reached in COrderedNoise::getGradInputs");
+	}
+    }
+}
+
+double COrderedNoise::logLikelihood(const CMatrix& muTest, const CMatrix& varSigmaTest, 
+				     const CMatrix& yTest) const
+{
+  assert(yTest.getCols()==getNumProcesses());
+  assert(yTest.dimensionsMatch(muTest));
+  assert(yTest.dimensionsMatch(varSigmaTest));
+  double arg=0.0;
+  double var=0.0;
+  double L=0.0;
+  for(int j=0; j<muTest.getCols(); j++)
+    {
+      double b = bias.getVal(j);
+      for(int i=0; i<muTest.getRows(); i++)
+	{
+	  double muAdj=muTest.getVal(i, j) + b;
+	  double c=1/sqrt(sigma2+varSigmaTest.getVal(i, j));	  
+	  int targVal=(int)yTest.getVal(i, j);
+	  assert(isnan(getTarget(i, j)) || getTarget(i, j)==(double)targVal);
+	  if(targVal==0)
+	    {
+	      L+=ndlutil::lnCumGaussian(-muAdj*c);
+	    }
+	  else if(targVal>0 && targVal < getNumCategories()-1)
+	    {
+	      for(int k=0; k<targVal-1; k++)
+		muAdj-=widths.getVal(k);
+	      double u = muAdj*c;
+	      double uprime = (muAdj - widths.getVal(targVal-1))*c;
+	      L-=ndlutil::lnDiffCumGaussian(u, uprime);
+	    }
+	  else if(targVal==getNumCategories()-1)
+	    {
+	      for(int k=0; k<targVal-1; k++)
+		muAdj-=widths.getVal(k);
+	      L+=ndlutil::lnCumGaussian(muAdj*c);
+	    }
+	  else if(isnan(getTarget(i, j)))
+	    {/*do nothing*/}
+	  else
+	    throw ndlexceptions::Error("This point should never be reached in COrderedNoise::getGradInputs");
+
+	}
+    }  
+  return L;
+}
+void COrderedNoise::writeParamsToStream(ostream& out) const
+{
+  out << "numParams=" << getNumParams() << endl;
+  out << "numProcesses=" << getNumProcesses() << endl;
+  out << "numCategories=" << getNumCategories() << endl;
+  for(int i=0; i<getNumParams()-1; i++)
+    out << getParam(i) << " ";
+  out << getParam(getNumParams()-1) << endl;
+}
+
+void COrderedNoise::readParamsFromStream(istream& in)
+{
+  string line;
+  vector<string> tokens;
+  getline(in, line);
+  ndlstrutil::tokenise(tokens, line, "=");
+  if(tokens.size()>2 || tokens[0]!="numParams")
+    throw ndlexceptions::FileFormatError();
+  int numPar=atol(tokens[1].c_str());
+  tokens.clear();
+  getline(in, line);
+  ndlstrutil::tokenise(tokens, line, "=");
+  if(tokens.size()>2 || tokens[0]!="numProcesses")
+    throw ndlexceptions::FileFormatError();
+  int numProc=atol(tokens[1].c_str());
+  tokens.clear();
+  getline(in, line);
+  ndlstrutil::tokenise(tokens, line, "=");
+  if(tokens.size()>2 || tokens[0]!="numCategories")
+    throw ndlexceptions::FileFormatError();
+  int numCat=atol(tokens[1].c_str());
+      
+  CMatrix par(1, numPar);
+  tokens.clear();
+  getline(in, line);
+  ndlstrutil::tokenise(tokens, line, " ");
+  for(int i=0; i<numPar; i++)
+    par.setVal(atof(tokens[i].c_str()), i);
+  setNumProcesses(numProc);
+  setNumCategories(numCat);
+  if(numPar==getNumParams())
+    setParams(par);
+  else
+    throw ndlexceptions::FileFormatError();
+}
 
 void writeNoiseToStream(const CNoise& noise, ostream& out)
 {
@@ -1425,6 +1854,8 @@ CNoise* readNoiseFromStream(istream& in)
     pnoise = new CNcnmNoise();
   else if(type=="gaussian")
     pnoise = new CGaussianNoise();
+  else if(type=="ordered")
+    pnoise = new COrderedNoise();
   else if(type=="scale")
     pnoise = new CScaleNoise();
   else

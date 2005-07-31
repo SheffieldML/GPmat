@@ -619,6 +619,101 @@ class CNcnmNoise : public CNoise {
   double sigma2;
   CMatrix bias;
 };
+class COrderedNoise : public CNoise {
+ public:  
+  // constructors
+  COrderedNoise(){}
+  COrderedNoise(const CMatrix& yin)
+    {
+      setTarget(yin);
+      initParams();
+    }
+  COrderedNoise(const CMatrix& yin, int numCts) : numCats(numCts)
+    {
+      setTarget(yin);
+      initParams();
+    }
+  ~COrderedNoise();
+  
+  int getNumCategories() const
+    {
+      return numCats;
+    }
+  void setNumCategories(int val)
+    {
+      assert(val>1);
+      numCats=val;
+    }
+
+  void initStoreage();
+  void initNames();
+  void initVals();
+  void initParams();
+
+  ostream& display(ostream& os);
+  void setParams(const CMatrix& params);
+  void setParam(const double val, const int index);
+  void getParams(CMatrix& params) const;
+  double getParam(const int index) const;
+  void getGradParams(CMatrix& g) const;
+  void getGradInputs(double& gmu, double& gvs, const int i, const int j) const;
+  void test(const CMatrix& muout, const CMatrix& varSigmaOut, const CMatrix& yTest) const;
+  void out(CMatrix& yPred, const CMatrix& muTest, const CMatrix& varSigmaTest) const;
+  void out(CMatrix& yPred, CMatrix& probOut, const CMatrix& muTest, const CMatrix& varSigmaTest) const;
+  void likelihoods(CMatrix& L, const CMatrix& muTest, const CMatrix& varSigmaTest, const CMatrix& yTest) const;
+  double logLikelihood(const CMatrix& muTest, const CMatrix& varSigmaTest, const CMatrix& yTest) const;
+  void writeParamsToStream(ostream& out) const;
+  void readParamsFromStream(istream& in);
+  double logLikelihood() const
+    {
+      return logLikelihood(mu, varSigma, y);
+    }
+  void  getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
+  
+  inline double getMu(const int i, const int j) const
+    {
+      return mu.getVal(i, j);
+    }
+  inline void setMu(const double val, const int i, const int j) 
+    {
+      mu.setVal(val, i, j);
+    }
+  inline double getVarSigma(const int i, const int j) const
+    {
+      return varSigma.getVal(i, j);
+    }
+  inline void setVarSigma(const double val, const int i, const int j) 
+    {
+      if(isnan(val))
+	throw ndlexceptions::Error("varSigma is being set with value NaN.");
+      assert(val>=0);
+      varSigma.setVal(val, i, j);
+    }
+  inline double getTarget(const int i, const int j) const
+    {
+      return y.getVal(i, j);
+    }
+  void setTarget(const CMatrix& vals)
+    {
+      y.deepCopy(vals);
+      setNumData(vals.getRows());
+      setNumProcesses(vals.getCols());
+    }
+#ifdef _NDLMATLAB
+  // Adds parameters to the mxArray.
+  void addParamToMxArray(mxArray* matlabArray) const;
+  // Gets the parameters from the mxArray.
+  void extractParamFromMxArray(const mxArray* matlabArray);
+#endif
+
+ private:
+  int numCats;
+  CMatrix widths;
+  double sigma2;
+  CMatrix bias;
+
+  mutable CMatrix gwidth;
+};
 
 void writeNoiseToStream(const CNoise& noise, ostream& out);
 CNoise* readNoiseFromStream(istream& in);
