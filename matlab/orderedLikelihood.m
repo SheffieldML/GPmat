@@ -4,9 +4,6 @@ function L = orderedLikelihood(noise, mu, varsigma, y)
 
 % NOISE
 
-% NOISE
-
-
 D = size(y, 2);
 
 L = zeros(size(mu));

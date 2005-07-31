@@ -4,12 +4,8 @@ function [dlnZ_dmu, dlnZ_dvs] = orderedNoiseGradVals(noise, mu, varsigma, y)
 
 % NOISE
 
-% NOISE
-
-
 D = size(y, 2);
 c = 1./sqrt(noise.variance + varsigma);
-fact = sqrt(2)/2;
 
 % Missing values are left untouched at zero.
 dlnZ_dmu = zeros(size(c));

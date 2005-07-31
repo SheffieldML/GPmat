@@ -2,8 +2,6 @@ function [vers, depend] = noiseVers
 
 % NOISEPATH Brings dependent toolboxes into the path.
 
-% NOISE
-
 vers = 0.13;
 if nargout > 2
   depend(1).name = 'ndlutil';
