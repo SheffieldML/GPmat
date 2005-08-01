@@ -53,7 +53,37 @@ namespace ndlutil {
 	+ log(1.0 + w1/w2*exp(lnCumGaussian(u1)
 			      -lnCumGaussian(u2)));
   }
-
+  // f = log(\phi(u) - phi(uprime))
+  double lnDiffCumGaussian(double u, double uprime)
+    {
+      return log(gaussOverDiffCumGaussian(u, uprime, 1)+1e-300) + .5*u*u + HALFLOGTWOPI;
+    }
+  double gaussOverDiffCumGaussian(double x, double xp, int order)
+  {
+    double robustAdd=1e-300;
+    double xp2 = xp*xp;
+    double x2 = x*x;
+    double expRatio = 0.0;
+    switch(order)
+      {
+      case 1:
+	expRatio = exp(.5*(x2-xp2));
+	if(x<=0)
+	  return 2/(SQRTTWOPI*(derfcx_(-HALFSQRTTWO*x)-expRatio*derfcx_(-HALFSQRTTWO*xp)+robustAdd));
+	else
+	  return 2/(SQRTTWOPI*(expRatio*derfcx_(HALFSQRTTWO*xp)-derfcx_(HALFSQRTTWO*x)+robustAdd));
+	break;
+      case 2:
+	expRatio = exp(.5*(xp2-x2));
+	if(x<=0)
+	  return 2/(SQRTTWOPI*(expRatio*derfcx_(-HALFSQRTTWO*x)-derfcx_(-HALFSQRTTWO*xp)+robustAdd));
+	else
+	  return 2/(SQRTTWOPI*(derfcx_(HALFSQRTTWO*xp)-expRatio*derfcx_(HALFSQRTTWO*x)+robustAdd));
+	break;
+      default:
+	throw ndlexceptions::Error("Incorrect order in gaussOverDiffCumGaussian");
+      }
+  }
   double invSigmoid(double x)
   {
     return log(x/(1.0-x));

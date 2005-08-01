@@ -4,7 +4,7 @@
 #include <climits>
 #include <cfloat>
 #include "ndlfortran.h"
-
+#include "ndlexceptions.h"
 using namespace std;
 namespace ndlutil {
   const double MATCHTOL = 1e-12;
@@ -24,9 +24,14 @@ namespace ndlutil {
   double invCumGaussian(double x);
   // Gradient of the log of the cumulative Gaussian distribution function.
   double gradLnCumGaussian(double x);
+  // The log of a cumulative Gaussian.
   double lnCumGaussian(double x);
   // The log of the weighted sum of two cumulative Gaussians.
   double lnCumGaussSum(double u1, double u2, double w1, double w2);
+  // Computes the log of the difference between two cumulative Gaussians.
+  double lnDiffCumGaussian(double u, double uprime);
+  // A Gaussian over the difference between two cumulative Gaussians.
+  double gaussOverDiffCumGaussian(double x, double xp, int order);
   // the sigmoid (logistic) function and its inverse.
   double sigmoid(double x);
   double invSigmoid(double x);
