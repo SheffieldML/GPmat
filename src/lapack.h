@@ -7,7 +7,7 @@ using namespace std;
 // **** LAPACK Operations ****
 
 // compute all eigenvalues and, optionally, eigenvectors of a real symmetric matrix A
-#ifndef _ATLAS
+#ifndef _NOSYEV
 extern "C" void dsyev_(const char* jobz,
 		       const char* uplo,
 		       const int& n,  
@@ -17,7 +17,7 @@ extern "C" void dsyev_(const char* jobz,
 		       double *work,
 		       const int& lwork,
 		       int &info);
-#endif // ndef _ATLAS	    
+#endif // ndef _NOSYEV
 // Solve A*X=B for X ... i.e. X=A^-1*B.
 extern "C" void dsysv_(const char* uplo,
 		      const int& n,
