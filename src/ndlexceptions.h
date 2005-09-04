@@ -25,6 +25,16 @@ class Error {
  private:
   std::string msg;
 };
+
+class NotImplementedError : public ndlexceptions::Error {
+ public:
+  NotImplementedError(){}
+  NotImplementedError(std::string message)
+    {
+      setMessage(message);
+    }
+};
+
 class FileError : public ndlexceptions::Error {
  public:
   FileError(){}
