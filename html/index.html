@@ -1,0 +1,26 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-gb">
+<title>MATLAB Motion Capture Toolbox</title>
+</head>
+
+<body>
+
+<h1>MATLAB Motion Capture Toolbox</h1>
+
+The MATLAB motion capture toolbox allows loading and playing of BVH files in MATLAB. It is available to <a href="http://ext.dcs.shef.ac.uk/~u0015/cgi-bin/downloadForm.cgi?toolbox=mocap">download here</a>.
+
+Once downloaded you can try loading a BVH data set from the examples directory.
+
+<p><code>&gt;&gt; [bvhStruct, channels, frameLength] = bvhReadFile('examples/Swagger.bvh');<br>
+&gt;&gt;</code>
+
+<p>This motion capture data was taken from Ohio State University's <a href="http://accad.osu.edu/research/mocap/mocap_data.htm">ACCAD</a> centre. 
+
+<p>You can now play the data using the command
+
+<p><code>&gt;&gt; bvhPlayData(bvhStruct, channels, frameLength);</code>
+
+
+</body>
