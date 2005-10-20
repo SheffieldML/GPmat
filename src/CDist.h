@@ -14,7 +14,7 @@ class CDist : public CTransformable {
   
  public:
   CDist(){}
-  ~CDist(){}
+  virtual ~CDist(){}
   const int getNumParams() const
     {
       return nParams;
@@ -24,7 +24,7 @@ class CDist : public CTransformable {
       nParams = num;
     }
   virtual double getParam(const int paramNo) const=0;
-  virtual void setParam(const double val, const int paramNo)=0;
+  virtual void setParam(double val, int paramNo)=0;
   virtual void getGradParams(CMatrix& g) const
     {
       // This is a dummy function
@@ -99,7 +99,7 @@ class CGaussianDist : public CDist {
       return new CGaussianDist(*this);
     }
   double getParam(const int paramNo) const;
-  void setParam(const double val, const int paramNo);
+  void setParam(double val, int paramNo);
   double getGradInput(double x) const;
   void setInitParam();
   double logProb(double val) const;
@@ -120,7 +120,7 @@ class CGammaDist : public CDist {
       return new CGammaDist(*this);
     }
   double getParam(const int paramNo) const;
-  void setParam(const double val, const int paramNo);
+  void setParam(double val, int paramNo);
   double getGradInput(double x) const;
   void setInitParam();
   double logProb(double val) const;
@@ -174,11 +174,12 @@ class CParamPriors : CMatinterface {
 class CRegularisable {
 
  public:
+   virtual ~CRegularisable() {}
 
   // these are the pure virtual functions.
   virtual const int getNumParams() const=0;
   virtual double getParam(const int paramNo) const=0;
-  virtual void setParam(const double val, const int paramNo)=0;
+  virtual void setParam(double val, int paramNo)=0;
   virtual void getGradParams(CMatrix& g) const=0;
 
   // these are default implementations.

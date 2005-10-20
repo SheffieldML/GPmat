@@ -40,7 +40,7 @@ CGaussianDist::~CGaussianDist()
 {
 }
 // Gaussian prior.
-void CGaussianDist::setParam(const double val, const int index)
+void CGaussianDist::setParam(double val, int index)
 {
   assert(index>=0);
   assert(index<getNumParams());
@@ -49,7 +49,7 @@ void CGaussianDist::setParam(const double val, const int index)
     case 0:
       precision = val;
       break;
-    otherwise:
+    default:
       cerr << "No such parameter" << endl;
       exit(1);
     }
@@ -63,11 +63,12 @@ double CGaussianDist::getParam(const int index) const
     {
     case 0:
       return precision;
-    otherwise:
+    default:
       cerr << "No such parameter" << endl;
       exit(1);
     }
-
+  // WVB ADDED
+  return -1;
 }
 void CGaussianDist::setInitParam()
 {
@@ -98,7 +99,7 @@ CGammaDist::~CGammaDist()
 {
 }
 // Gamma prior.
-void CGammaDist::setParam(const double val, const int index)
+void CGammaDist::setParam( double val,  int index)
 {
   assert(index>=0);
   assert(index<getNumParams());
@@ -110,7 +111,7 @@ void CGammaDist::setParam(const double val, const int index)
     case 1:
       b = val;
       break;
-    otherwise:
+    default:
       cerr << "No such parameter" << endl;
       exit(1);
     }
@@ -126,11 +127,12 @@ double CGammaDist::getParam(const int index) const
       return a;
     case 1:
       return b;
-    otherwise:
+    default:
       cerr << "No such parameter" << endl;
       exit(1);
     }
-
+  // WVB ADDED
+  return -1;
 }
 void CGammaDist::setInitParam()
 {
