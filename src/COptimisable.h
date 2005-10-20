@@ -10,6 +10,7 @@ class COptimisable {
   COptimisable()
     {
     }
+  virtual ~COptimisable() {}
   virtual int getVerbosity() const=0;
   virtual int getOptNumParams() const=0;
   virtual void getOptParams(CMatrix& param) const=0;
@@ -44,15 +45,11 @@ class COptimisable {
   
   double objectiveTol;
   double parameterTol;
-  //int maxIters;
-  //double learnRate;
-  //double momentum;
 
   const static bool evalFunc=true;
-  //int display;
-  const static double phi=1.618033988749895;
-  const static double cphi=-0.6180339887498949;
-  const static double smallNum=1e-11;
+  const static double phi;
+  const static double cphi;
+  const static double smallNum;
 
   CMatrix direction; // direction for 1-D optimisation.
   CMatrix paramStoreOne;

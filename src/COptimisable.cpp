@@ -1,5 +1,11 @@
 #include "COptimisable.h"
 
+const double COptimisable::phi=1.618033988749895;
+const double COptimisable::cphi=-0.6180339887498949;
+const double COptimisable::smallNum=1e-11;
+
+
+
 void COptimisable::checkGradients()
 {
   double change = ndlutil::GRADCHANGE;
@@ -181,7 +187,6 @@ void COptimisable::scgOptimise(int maxIters, const double objectiveTol, const do
   double lambda;
   double lambdaBar;
   double sigma;
-  double rr;
 
   CMatrix w(1, getOptNumParams());
   CMatrix wPlus(1, getOptNumParams());
