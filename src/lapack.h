@@ -1,6 +1,12 @@
 #ifndef LAPACK_H
 #define LAPACK_H
 
+#ifdef _MSC_VER
+/* For MSVC I'm using clapack/cblas */
+#include "blaswrap.h"
+#endif
+
+
 //#define dgetrf_ dgetrf
 using namespace std;
 
@@ -17,7 +23,7 @@ extern "C" void dsyev_(const char* jobz,
 		       double *work,
 		       const int& lwork,
 		       int &info);
-#endif // ndef _NOSYEV
+#endif // ndef _NOSYEV	    
 // Solve A*X=B for X ... i.e. X=A^-1*B.
 extern "C" void dsysv_(const char* uplo,
 		      const int& n,

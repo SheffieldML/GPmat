@@ -1,4 +1,4 @@
-// THis is very basic exception handling. It should probably be better integrated with the C++ exceptions.
+// This is very basic exception handling. It should probably be better integrated with the C++ exceptions.
 #ifndef NDLEXCEPTIONS_H
 #define NDLEXCEPTIONS_H
 #include <vector>
@@ -10,6 +10,7 @@ namespace ndlexceptions
 class Error {
  public:
   Error(){}
+  virtual ~Error(){}
   Error(std::string message)
     {
       msg = message;
@@ -25,7 +26,6 @@ class Error {
  private:
   std::string msg;
 };
-
 class NotImplementedError : public ndlexceptions::Error {
  public:
   NotImplementedError(){}
@@ -34,7 +34,6 @@ class NotImplementedError : public ndlexceptions::Error {
       setMessage(message);
     }
 };
-
 class FileError : public ndlexceptions::Error {
  public:
   FileError(){}
