@@ -35,71 +35,7 @@ class CDataModel : public CMatinterface // a model of a data set.
 #endif
 
 };
-
-/// This should form the base class for kernel models.
-class CKernelModel : public CDataModel
-{
- public:
-  // The number of processes associated with the kernel.
-  virtual int getNumProcesses() const=0;
-  // the number of points used for computing core kernel.
-  virtual int getNumActiveData() const=0;
-  // The value of the inverse `jitter' for that point
-  virtual double getBetaVal(const int i, const int j) const=0;
-
-  // Update the stored kernel matrix.
-  void updateK() const
-    {
-      double kVal=0.0;
-      for(int i=0; i<getNumActiveData(); i++)
-	{
-	  K.setVal(kern.diagComputeElement(activeX, i), i, i);
-	  for(int j=0; j<i; j++)
-	    {
-	      kVal=kern.computeElement(activeX, i, activeX, j);
-	      K.setVal(kVal, i, j);
-	      K.setVal(kVal, j, i);
-	    }
-	}
-      K.setSymmetric(true);
-    }
-  
-  // Update the stored inverse kernel matrix.
-  void updateInvK(const int dim) const
-    {
-      invK.deepCopy(K);
-      for(int i=0; i<getNumActiveData(); i++)
-	invK.setVal(invK.getVal(i, i) + 1/getBetaVal(i, dim), i, i);
-      invK.setSymmetric(true);
-      CMatrix U(chol(invK));
-      logDetK = invK.logDet(U); 
-      invK.pdinv(U);
-      
-    }
-
-  CKern& kern;
-  CMatrix activeX;
-
-  mutable CMatrix K;
-  mutable CMatrix invK;
-  mutable double logDetK;
-};
 class COptimisableModel : public CDataModel, public COptimisable
-{
- public:
-  virtual inline void setVerbosity(const int val) const
-    {
-      verbosity = val;
-    }  
-  virtual inline int getVerbosity() const
-    {
-      return verbosity;
-    }
- private:
-  mutable int verbosity;
-  
-};
-class COptimisableKernelModel : public CKernelModel, public COptimisable
 {
  public:
   virtual inline void setVerbosity(const int val) const
