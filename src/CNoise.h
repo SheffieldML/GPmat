@@ -298,7 +298,7 @@ class CGaussianNoise : public CNoise {
 
   ostream& display(ostream& os);
   void setParams(const CMatrix& params);
-  void setParam(const double val, const int index);
+  void setParam(double val, int index);
   void getParams(CMatrix& params) const;
   double getParam(const int index) const;
   void getGradParams(CMatrix& g) const;
@@ -395,7 +395,7 @@ class CScaleNoise : public CNoise {
 
   ostream& display(ostream& os);
   void setParams(const CMatrix& params);
-  void setParam(const double val, const int index);
+  void setParam(double val, int index);
   void getParams(CMatrix& params) const;
   double getParam(const int index) const;
   void getGradParams(CMatrix& g) const;
@@ -473,7 +473,7 @@ class CProbitNoise : public CNoise {
 
   ostream& display(ostream& os);
   void setParams(const CMatrix& params);
-  void setParam(const double val, const int index);
+  void setParam(double val, int index);
   void getParams(CMatrix& params) const;
   double getParam(const int index) const;
   void getGradParams(CMatrix& g) const;
@@ -548,7 +548,7 @@ class CNcnmNoise : public CNoise {
 
   ostream& display(ostream& os);
   void setParams(const CMatrix& params);
-  void setParam(const double val, const int index);
+  void setParam(double val, int index);
   void getParams(CMatrix& params) const;
   double getParam(const int index) const;
   void getGradParams(CMatrix& g) const;
@@ -619,6 +619,7 @@ class CNcnmNoise : public CNoise {
   double sigma2;
   CMatrix bias;
 };
+
 class COrderedNoise : public CNoise {
  public:  
   // constructors
@@ -652,7 +653,7 @@ class COrderedNoise : public CNoise {
 
   ostream& display(ostream& os);
   void setParams(const CMatrix& params);
-  void setParam(const double val, const int index);
+  void setParam(double val, int index);
   void getParams(CMatrix& params) const;
   double getParam(const int index) const;
   void getGradParams(CMatrix& g) const;

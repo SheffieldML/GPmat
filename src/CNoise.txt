@@ -1,0 +1,5 @@
+This file contains classes for different noise models including classification, regression and semi-supervised learning. 
+
+The latest version of this file also contains the code for ordered categorical noise models.
+
+20/10/2005 Incorporated William V. Baxter's code modifications for running the code with MSVC. Mostly this involved removing redundant const statements.

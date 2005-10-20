@@ -357,7 +357,7 @@ ostream& CGaussianNoise::display(ostream& os)
   os << "Variance: " << sigma2 << endl;
   return os;
 }
-void CGaussianNoise::setParam(const double val, const int index)
+void CGaussianNoise::setParam(double val, int index)
 {
   assert(index>=0);
   assert(index<getNumParams());
@@ -597,7 +597,7 @@ ostream& CScaleNoise::display(ostream& os)
     }
   return os;
 }
-void CScaleNoise::setParam(const double val, const int index)
+void CScaleNoise::setParam(double val, int index)
 {
   assert(index>=0);
   assert(index<2*getNumParams()-1);
@@ -862,7 +862,7 @@ ostream& CProbitNoise::display(ostream& os)
     }
   return os;
 }
-void CProbitNoise::setParam(const double val, const int index)
+void CProbitNoise::setParam(double val, int index)
 {
   assert(index>=0);
   assert(index<getNumParams());
@@ -885,7 +885,7 @@ double CProbitNoise::getParam(const int index) const
   assert(index<getNumParams());
   if(index<getNumProcesses())
     return bias.getVal(index);
-
+  return 0;
 }
 void CProbitNoise::getParams(CMatrix& params) const
 {
@@ -1088,7 +1088,7 @@ ostream& CNcnmNoise::display(ostream& os)
   os << "Missing label probability for +ve class: " << gammap << endl;
   return os;
 }
-void CNcnmNoise::setParam(const double val, const int index)
+void CNcnmNoise::setParam(double val, int index)
 {
   assert(index>=0);
   assert(index<getNumParams());
@@ -1133,7 +1133,7 @@ double CNcnmNoise::getParam(const int index) const
     return gamman;
   if(index==getNumProcesses()+1) // this only happens if the gammas aren't split.
     return gammap;
-
+  return -1;
 }
 void CNcnmNoise::getParams(CMatrix& params) const
 {
@@ -1480,7 +1480,7 @@ ostream& COrderedNoise::display(ostream& os)
     }
   return os;
 }
-void COrderedNoise::setParam(const double val, const int index)
+void COrderedNoise::setParam(double val, int index)
 {
   assert(index>=0);
   assert(index<getNumParams());
