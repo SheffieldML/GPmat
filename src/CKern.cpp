@@ -25,6 +25,7 @@ ostream& CKern::display(ostream& os) const
     {
       os << getParamName(i) << ": " << getParam(i) << endl;
     }
+  return os;
 }
 void CKern::writeParamsToStream(ostream& out) const
 {
@@ -91,7 +92,7 @@ CCmpndKern::~CCmpndKern()
 CCmpndKern::CCmpndKern(const CCmpndKern& kern) : components(kern.components)
 {
   setInputDim(kern.getInputDim());
-  for(int i=0; i<components.size(); i++)
+  for(size_t i=0; i<components.size(); i++)
     addKern(components[i]->clone()); 
   //  components(kern.components);// = kern.components;
 }
@@ -114,17 +115,17 @@ void CCmpndKern::diagCompute(CMatrix& d, const CMatrix& X) const
   assert(X.rowsMatch(d));
   d.zeros();
   CMatrix dStore(d.getRows(), d.getCols(), 0.0);
-  for(int i=0; i < components.size(); i++)
+  for(size_t i=0; i < components.size(); i++)
     {
       components[i]->diagCompute(dStore, X);
       d.axpy(dStore, 1.0);
     }
 }
-void CCmpndKern::setParam(const double val, const int paramNo)
+void CCmpndKern::setParam(double val, int paramNo)
 {
   int start = 0;
   int end = 0;
-  for(int i=0; i<components.size(); i++)
+  for(size_t i=0; i<components.size(); i++)
     {
       end = start+components[i]->getNumParams()-1;
       if(paramNo <= end)
@@ -141,25 +142,27 @@ double CCmpndKern::getParam(int paramNo) const
 {
   int start = 0;
   int end = 0;
-  for(int i=0; i<components.size(); i++)
+  for(size_t i=0; i<components.size(); i++)
     {
       end = start+components[i]->getNumParams()-1;
       if(paramNo <= end)
 	return components[i]->getParam(paramNo-start);
       start = end + 1;
     }
+    return -1;
 }
 string CCmpndKern::getParamName(int paramNo) const
 {
   int start = 0;
   int end = 0;
-  for(int i=0; i<components.size(); i++)
+  for(size_t i=0; i<components.size(); i++)
     {
       end = start+components[i]->getNumParams()-1;
       if(paramNo <= end)
 	return components[i]->getType() + components[i]->getParamName(paramNo-start);
       start = end + 1;
     }
+    return "";
 }
 void CCmpndKern::getGradX(vector<CMatrix*> gX, const CMatrix& X, const CMatrix& X2, const bool addG) const
 {
@@ -176,7 +179,7 @@ void CCmpndKern::getDiagGradX(CMatrix& gX, const CMatrix& X, const bool addG) co
   assert(gX.dimensionsMatch(X));
   if(!addG)
     gX.zeros();
-  for(int i=0; i<components.size(); i++)
+  for(size_t i=0; i<components.size(); i++)
     {
       components[i]->getDiagGradX(gX, X, true);
     }
@@ -184,7 +187,7 @@ void CCmpndKern::getDiagGradX(CMatrix& gX, const CMatrix& X, const bool addG) co
 double CCmpndKern::getWhite() const
 {
   double white = 0.0;
-  for(int i=0; i<components.size(); i++)
+  for(size_t i=0; i<components.size(); i++)
     white += components[i]->getWhite();
   return white;
 }
@@ -193,7 +196,7 @@ double CCmpndKern::computeElement(const CMatrix& X1, const int index1,
 			   const CMatrix& X2, const int index2) const
 {
   double y=0.0;
-  for(int i=0; i<components.size(); i++)
+  for(size_t i=0; i<components.size(); i++)
     y+=components[i]->computeElement(X1, index1, X2, index2);
   return y;
 }
@@ -204,7 +207,7 @@ void CCmpndKern::compute(CMatrix& K, const CMatrix& X) const
   assert(K.isSquare());
   K.zeros();
   CMatrix K2(K.getRows(), K.getCols());
-  for(int i=0; i<components.size(); i++)
+  for(size_t i=0; i<components.size(); i++)
     {
       components[i]->compute(K2, X);
       K.axpy(K2, 1.0);
@@ -255,6 +258,7 @@ double CCmpndKern::getGradParam(const int index, const CMatrix& X, const CMatrix
       if(index<end)
 	return components[i]->getGradParam(index-start, X, covGrad);
     }
+    return -1;
 }
 double CCmpndKern::priorLogProb() const
 {
@@ -351,7 +355,7 @@ void CWhiteKern::diagCompute(CMatrix& d, const CMatrix& X) const
   assert(X.rowsMatch(d));
   d.setVals(variance);
 }
-void CWhiteKern::setParam(const double val, const int paramNo)
+void CWhiteKern::setParam(double val, int paramNo)
 {
   assert(paramNo==0);
   switch(paramNo)
@@ -478,7 +482,7 @@ void CBiasKern::diagCompute(CMatrix& d, const CMatrix& X) const
   d.setVals(variance);
 }
 // Parameters are kernel parameters
-void CBiasKern::setParam(const double val, const int paramNo)
+void CBiasKern::setParam(double val, int paramNo)
 {
   assert(paramNo==0);
   switch(paramNo)
@@ -604,7 +608,7 @@ void CRbfKern::diagCompute(CMatrix& d, const CMatrix& X) const
   d.setVals(variance);
 }
 // Parameters are kernel parameters
-void CRbfKern::setParam(const double val, const int paramNo)
+void CRbfKern::setParam(double val, int paramNo)
 {
   assert(paramNo < nParams);
   switch(paramNo)
@@ -643,27 +647,42 @@ double CRbfKern::getParam(const int paramNo) const
 
 void CRbfKern::getGradX(vector<CMatrix*> gX, const CMatrix& X, const CMatrix& X2, const bool addG) const
 {
+  // WVB: always called with X=X2, so I'm not sure why both args are needed.
+  // I guess the idea is that the two x vals _could_ be rows living in different
+  // physical matrices
+
+  // This computes a 3rd order tensor with 
+  //   gX(i,k,j) = d kern(x_i,x_k)/ d x_component_j
+  //
+  // The full gradient of dK/dX is a 4th order tensor, but the row in the 
+  // denominator justs adds a [delta(i,j) or delta(k,j)] factor:
+  //   gX(i,k,j,l) = gX(i,k,j)*[delta(i,j) or delta(k,j)]
+  // I.e. the value is zero unless i or k is equal to j.
+
+  // There is an underlying assumption in getGradX that 
+  // kernel entry i,j only depends on row i of X and row j of X2.
+
   assert(gX.size()==X.getRows());
   assert(X.getCols()==X2.getCols());
   double wi2= 0.5*inverseWidth;
   double pf = variance*inverseWidth;
   for(int i=0; i<X.getRows(); i++)
-    {
-      assert(gX[i]->getRows()==X2.getRows());
-      assert(gX[i]->getCols()==X2.getCols());
-      for(int k=0; k<X2.getRows(); k++)
+  {
+    assert(gX[i]->getRows()==X2.getRows());
+    assert(gX[i]->getCols()==X2.getCols());
+    for(int k=0; k<X2.getRows(); k++)
 	{
 	  double n2 = X.dist2Row(i, X2, k);
 	  for(int j=0; j<X2.getCols(); j++)
-	    {
-	      double val = 0.0;
-	      if(addG)
-		val = gX[i]->getVal(k, j);
-	      val += pf*(X2.getVal(k, j)-X.getVal(i, j))*exp(-n2*wi2);
-	      gX[i]->setVal(val, k, j);	      
-	    }
+      {
+        double val = pf*(X2.getVal(k, j)-X.getVal(i, j))*exp(-n2*wi2);
+        if(addG)
+          gX[i]->addVal(val, k, j);
+        else 
+          gX[i]->setVal(val, k, j);
+      }
 	}
-    }
+  }
 }
 void CRbfKern::getDiagGradX(CMatrix& gX, const CMatrix& X, const bool addG) const
 {
@@ -695,13 +714,13 @@ void CRbfKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGra
   double halfInverseWidth=0.5*inverseWidth;
   for(int i=0; i<X.getRows(); i++)
     for(int j=0; j<X.getRows(); j++)
-      {
-	dist2 = X.dist2Row(i, X, j);
-	k = exp(-dist2*halfInverseWidth);
-	g1 -= 0.5*k*variance*dist2*covGrad.getVal(i, j);
-	g2 += k*covGrad.getVal(i, j);
-      }
-  g.setVal(g1, 0);
+    {
+      dist2 = X.dist2Row(i, X, j);
+      k = exp(-dist2*halfInverseWidth);
+      g1 -= 0.5*k*variance*dist2*covGrad.getVal(i, j); // dk()/dgamma in SBIK paper
+      g2 += k*covGrad.getVal(i, j);                    // dk()/dalpha in SBIK paper
+    }
+    g.setVal(g1, 0);
   g.setVal(g2, 1);
   addPriorGrad(g);
 }
@@ -766,7 +785,7 @@ double CLinKern::diagComputeElement(const CMatrix& X, const int index1) const
   return variance*X.norm2Row(index1);  
 }
 // Parameters are kernel parameters
-void CLinKern::setParam(const double val, const int paramNo)
+void CLinKern::setParam(double val, int paramNo)
 {
   assert(paramNo==0);
   switch(paramNo)
@@ -917,7 +936,7 @@ inline double CMlpKern::diagComputeElement(const CMatrix& X, const int index) co
   return variance*asin(numer/denom);
 }
 // Parameters are kernel parameters
-void CMlpKern::setParam(const double val, const int paramNo)
+void CMlpKern::setParam(double val, int paramNo)
 {
   assert(paramNo < nParams);
   switch(paramNo)
@@ -1172,7 +1191,7 @@ inline double CPolyKern::diagComputeElement(const CMatrix& X, const int index) c
   return variance*pow(arg, degree);
 }
 // Parameters are kernel parameters
-void CPolyKern::setParam(const double val, const int paramNo)
+void CPolyKern::setParam(double val, int paramNo)
 {
   assert(paramNo < nParams);
   switch(paramNo)
@@ -1380,7 +1399,7 @@ double CLinardKern::diagComputeElement(const CMatrix& X, const int index1) const
   return val*variance;
 }
 // Parameters are kernel parameters
-void CLinardKern::setParam(const double val, const int paramNo)
+void CLinardKern::setParam(double val, int paramNo)
 {
   assert(paramNo>=0);
   assert(paramNo<nParams);
@@ -1573,7 +1592,7 @@ double CRbfardKern::diagComputeElement(const CMatrix& X, const int index1) const
   return variance;
 }
 // Parameters are kernel parameters
-void CRbfardKern::setParam(const double val, const int paramNo)
+void CRbfardKern::setParam(double val, int paramNo)
 {
   assert(paramNo>=0);
   assert(paramNo<nParams);
@@ -1785,7 +1804,7 @@ double CMlpardKern::diagComputeElement(const CMatrix& X, const int index) const
   return variance*asin(numer/denom);
 }
 // Parameters are kernel parameters
-void CMlpardKern::setParam(const double val, const int paramNo)
+void CMlpardKern::setParam(double val, int paramNo)
 {
   assert(paramNo>=0);
   assert(paramNo<nParams);
@@ -2131,7 +2150,7 @@ double CPolyardKern::diagComputeElement(const CMatrix& X, const int index) const
   return variance*pow(arg, degree);
 }
 // Parameters are kernel parameters
-void CPolyardKern::setParam(const double val, const int paramNo)
+void CPolyardKern::setParam(double val, int paramNo)
 {
   assert(paramNo>=0);
   assert(paramNo<nParams);
@@ -2575,7 +2594,7 @@ void CCmpndKern::extractParamFromMxArray(const mxArray* matlabArray)
 void CCmpndKern::addParamToMxArray(mxArray* matlabArray) const
 {
   // Add comp field to mxArray.
-  int dims[0];
+  int dims[1];
   mxAddField(matlabArray, "comp");
   dims[0] = components.size();
   mxArray* compArray = mxCreateCellArray(1, dims);

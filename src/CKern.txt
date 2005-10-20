@@ -1,0 +1,3 @@
+This file contains classes for representing kernels. These classes do not store the kernel matrix, they merely store the kernels characteristics. There are several types of kernel provided, and it should be easy to add others. CCmpndKern provides a class which forms an additive kernel from individual kernels (i.e. a linear plus an RBF kernel).
+
+20/10/2005 Incorporated changes from William V. Baxter to allow compilation under MSVC. 
