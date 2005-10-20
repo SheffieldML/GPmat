@@ -104,7 +104,9 @@ int CClctrl::readSvmlDataFile(CMatrix& X, CMatrix& y, const string fileName)
       cout << "Number of data: " << numData << endl;
     }
   X.resize(numData, maxFeat);
+  X.zeros();
   y.resize(numData, 1);
+  y.zeros();
   in.close();
   ifstream inToo(fileName.c_str());
   int pointNo=0;
@@ -154,6 +156,8 @@ int CClctrl::readSvmlDataFile(CMatrix& X, CMatrix& y, const string fileName)
 	}
       pointNo++;
     }
+  // WVB ADDED
+    return -1;
 }
 
 void CClctrl::readData(CMatrix& X, CMatrix& y, const string fileName)

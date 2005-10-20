@@ -14,6 +14,7 @@ class CClctrl {
  public:
   // Constructor given the input arguments.
   CClctrl(int argc, char** argv);
+  virtual ~CClctrl() {}
   // Check that the current argument is valid.
   void confirmCurrentArg(string argument);
   void unrecognisedFlag();
