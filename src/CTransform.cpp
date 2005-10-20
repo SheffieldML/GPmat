@@ -1,5 +1,6 @@
 #include "CTransform.h"
 
+const double CTransform::eps = 1e-16;
 
 CNegLogLogitTransform::CNegLogLogitTransform()
 {
@@ -9,7 +10,7 @@ CNegLogLogitTransform::CNegLogLogitTransform()
   
 double CNegLogLogitTransform::atox(double a) const
 {
-  double x;
+  double x=0;
   if(a<-limVal)
     x = exp(-limVal);
   else if(a<limVal)
@@ -45,7 +46,6 @@ CSigmoidTransform::CSigmoidTransform()
 
 double CSigmoidTransform::atox(double a) const
 {
-  double x;
   if(a<-limVal)
     return ndlutil::EPS;
   if(a<limVal)

@@ -36,7 +36,7 @@ class CTransform {
   string type;
  protected:
   bool transform;
-  const static double eps = 1e-16;
+  const static double eps;
 };
 
 // This transform transforms from real to positive numbers.
@@ -161,7 +161,7 @@ class CTransformable {
   // these are the pure virtual functions.
   virtual const int getNumParams() const=0;
   virtual double getParam(const int paramNo) const=0;
-  virtual void setParam(const double val, const int paramNo)=0;
+  virtual void setParam(double val, int paramNo)=0;
   virtual void getGradParams(CMatrix& g) const=0;
 
   // these are default implementations.
