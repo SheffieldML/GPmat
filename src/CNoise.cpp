@@ -1515,6 +1515,7 @@ double COrderedNoise::getParam(const int index) const
     return bias.getVal(index);
   if(index>=getNumProcesses())
     return widths.getVal(index-getNumProcesses());
+  return -1;
 }
 void COrderedNoise::getParams(CMatrix& params) const
 {
