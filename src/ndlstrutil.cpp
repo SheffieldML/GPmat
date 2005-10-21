@@ -34,9 +34,9 @@ void ndlstrutil::wrapOutputText(std::ostream& out, const std::string description
     padStr += " ";
   std::vector<std::string> tokens;
   ndlstrutil::tokenise(tokens, description);
-  int remain = width-padding;
+  size_t remain = width-padding;
   out << padStr;
-  for(int i=0; i<tokens.size(); i++)
+  for(size_t i=0; i<tokens.size(); i++)
     {
       remain -= (tokens[i].size()+1);
       if (remain<1)

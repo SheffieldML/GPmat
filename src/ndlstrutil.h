@@ -1,5 +1,7 @@
 #ifndef NDLSTRUTIL_H
 #define NDLSTRUTIL_H
+#include <limits>
+#include <algorithm>
 #include <vector>
 #include <string>
 #include <iostream>

@@ -3,6 +3,16 @@
 #include <cmath>
 #include <climits>
 #include <cfloat>
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+#ifdef _MSC_VER
+#define isnan(x) _isnan(x)
+#pragma warning(disable:4018) // < signed/unsigned mismatch
+#pragma warning(disable:4267) // conversion from size_t to int
+#pragma warning(disable:4800) // forcing double to bool (performance warning)
+#pragma warning(disable:4244) // conversion from difference_type to int
+#endif
 #include "ndlfortran.h"
 #include "ndlexceptions.h"
 using namespace std;

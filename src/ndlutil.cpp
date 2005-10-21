@@ -1,5 +1,9 @@
 #include "ndlutil.h"
 
+#ifdef _MSC_VER 
+extern "C" double erf(double);
+#endif /* _MSC_VER */
+
 namespace ndlutil {
   
   double ngaussian(double x)
@@ -368,3 +372,18 @@ namespace ndlutil {
     }*/
 
 }
+
+#ifdef _MSC_VER
+extern "C" double rand_(const int &flag)
+{
+  // Generate random numbers using MersenneTwister code from 
+  //  http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html
+  if (flag == 1) {
+    ndlutil::init_genrand(0);
+  }
+  if (flag != 0) {
+    ndlutil::init_genrand(flag);
+  }
+  return ndlutil::genrand_real2();
+}
+#endif
