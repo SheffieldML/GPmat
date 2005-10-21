@@ -44,7 +44,7 @@ extern "C" void dxpose_(double* A,
 		       const int& nrows,
 		       const int& ncols,
 		       const int& numElements,
-		       bool* work,
+		       int* work, // (this was bool* which may be why it didn't work)
 		       const int& lwork);
 
 // this is algorithm 380 (which should be slower).
