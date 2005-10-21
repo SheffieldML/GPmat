@@ -1,3 +1,4 @@
+
 #ifndef CCLCTRL_H
 #define CCLCTRL_H
 #include <iostream>
@@ -15,6 +16,8 @@ class CClctrl {
   // Constructor given the input arguments.
   CClctrl(int argc, char** argv);
   virtual ~CClctrl() {}
+  // Check if the current argument is one of the given flags
+  bool isCurrentArg(string shortName, string longName);
   // Check that the current argument is valid.
   void confirmCurrentArg(string argument);
   void unrecognisedFlag();
@@ -161,3 +164,4 @@ class CClctrl {
 };
 
 #endif
+

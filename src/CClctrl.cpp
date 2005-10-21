@@ -1,3 +1,4 @@
+
 #include "CClctrl.h"
 
 CClctrl::CClctrl(int arc, char** arv) : argc(arc), argv(arv)
@@ -11,6 +12,10 @@ CClctrl::CClctrl(int arc, char** arv) : argc(arc), argv(arv)
 
 }
 
+bool CClctrl::isCurrentArg(string shortName, string commandName)
+{
+  return (getCurrentArgument()==shortName || getCurrentArgument()==commandName);
+}
 void CClctrl::confirmCurrentArg(string commandName)
 {
   if(getCurrentArgument()!=commandName)
@@ -194,3 +199,4 @@ void CClctrl::exitError(const string error)
   helpInfo();
   exit(1);
 }
+
