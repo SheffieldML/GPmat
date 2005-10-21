@@ -12,17 +12,18 @@ void COptimisable::checkGradients()
   double origParam = 0.0;
   double objectivePlus = 0.0;
   double objectiveMinus = 0.0;
+  int nParams = getOptNumParams();
   
-  CMatrix analyticGrad(1, getOptNumParams());
-  CMatrix numericalDiff(1, getOptNumParams());
-  CMatrix diffNumericalAnalytic(1, getOptNumParams());
-  CMatrix params(1, getOptNumParams());
-  CMatrix origParams(1, getOptNumParams());
+  CMatrix analyticGrad(1, nParams);
+  CMatrix numericalDiff(1, nParams);
+  CMatrix diffNumericalAnalytic(1, nParams);
+  CMatrix params(1, nParams);
+  CMatrix origParams(1, nParams);
   
   getOptParams(params);
   origParams.deepCopy(params);
   computeObjectiveGradParams(analyticGrad);
-  for(int j=0; j<getOptNumParams(); j++)
+  for(int j=0; j<nParams; j++)
     {
       origParam = origParams.getVal(j);
       params.setVal(origParam + change, j);
@@ -49,10 +50,10 @@ void COptimisable::gdOptimise(double learnRate, double momentum, int display, in
   double oldObjective = 0.0;
   double diffObjective = 0.0;
   double diffParam = 0.0;
-  CMatrix params(1, getOptNumParams());
-  CMatrix oldParams(1, getOptNumParams());
-  CMatrix gradParams(1, getOptNumParams());
-  CMatrix changeParams(1, getOptNumParams());
+  CMatrix params(1, nParams);
+  CMatrix oldParams(1, nParams);
+  CMatrix gradParams(1, nParams);
+  CMatrix changeParams(1, nParams);
   changeParams.zeros();
   getOptParams(params);
   if(evalFunc)
@@ -104,10 +105,10 @@ void COptimisable::gdPullbackOptimise(double learnRate, int display, int maxIter
   double oldObjective = 0.0;
   double diffObjective = 0.0;
   double diffParam = 0.0;
-  CMatrix params(1, getOptNumParams());
-  CMatrix oldParams(1, getOptNumParams());
-  CMatrix gradParams(1, getOptNumParams());
-  CMatrix changeParams(1, getOptNumParams());
+  CMatrix params(1, nParams);
+  CMatrix oldParams(1, nParams);
+  CMatrix gradParams(1, nParams);
+  CMatrix changeParams(1, nParams);
   changeParams.zeros();
   getOptParams(params);
   objectiveVal = computeObjectiveVal();
@@ -173,7 +174,6 @@ double COptimisable::oneDObjectiveVal(const double val)
 }
 void COptimisable::scgOptimise(int maxIters, const double objectiveTol, const double paramTol)
 {
-
   // taken from the paper by Martin Moller: "A scaled conjugate gradient algorithm for fast supervised learning".
   int nParams = getOptNumParams();
   double objectiveVal = 0.0;
@@ -187,14 +187,15 @@ void COptimisable::scgOptimise(int maxIters, const double objectiveTol, const do
   double lambda;
   double lambdaBar;
   double sigma;
+  //double rr;
 
-  CMatrix w(1, getOptNumParams());
-  CMatrix wPlus(1, getOptNumParams());
+  CMatrix w(1, nParams);
+  CMatrix wPlus(1, nParams);
 
-  CMatrix r(1, getOptNumParams());
-  CMatrix p(1, getOptNumParams());
-  CMatrix rp(1, getOptNumParams());
-  CMatrix s(1, getOptNumParams());
+  CMatrix r(1, nParams);
+  CMatrix p(1, nParams);
+  CMatrix rp(1, nParams);
+  CMatrix s(1, nParams);
   getOptParams(w);
 
   const double m_step = 1.0e-4;
@@ -218,12 +219,12 @@ void COptimisable::scgOptimise(int maxIters, const double objectiveTol, const do
   p.deepCopy(r);
 
   for(int k=1; k<=maxIters; k++)
-    {
-      // should check that p is not infinite above
-      double normp = p.normRow(0);
-      double normp2 = normp*normp;
-      // 2
-      if(success)
+  {
+    // should check that p is not infinite above
+    double normp = p.normRow(0);
+    double normp2 = normp*normp;
+    // 2
+    if(success)
 	{
 	  // can get a divide by zero here if pp is too small.
 	  
@@ -238,13 +239,13 @@ void COptimisable::scgOptimise(int maxIters, const double objectiveTol, const do
 	  delta = s.dotRowRow(0, p, 0);
 	}
       
-      // 3 Scale s_k
-      double lambdaDiff = lambda-lambdaBar;
-      s.axpy(p, lambdaDiff);
-      delta += lambdaDiff*normp;
+    // 3 Scale s_k
+    double lambdaDiff = lambda-lambdaBar;
+    s.axpy(p, lambdaDiff);
+    delta += lambdaDiff*normp;
       
-      // 4 
-      if(delta <= 0.0) // Make Hessian positive definite.
+    // 4 
+    if(delta <= 0.0) // Make Hessian positive definite.
 	{
 	  double deltaOverNormp2 = delta/normp2;
 	  s.axpy(p, (lambda-2.0*deltaOverNormp2));
@@ -254,19 +255,19 @@ void COptimisable::scgOptimise(int maxIters, const double objectiveTol, const do
 	  lambda = lambdaBar;
 	}
       
-      // 5  Calculate step size.
-      mu=p.dotRowRow(0, r, 0);
-      alpha = mu/delta;
+    // 5  Calculate step size.
+    mu=p.dotRowRow(0, r, 0);
+    alpha = mu/delta;
       
-      // 6 Compute the comparision parameter.
-      wPlus.deepCopy(w);
-      wPlus.axpy(p, alpha);
-      setOptParams(wPlus);
-      newObj = computeObjectiveVal();
-      Delta = 2.0*delta*(oldObj - newObj)/(mu*mu);
+    // 6 Compute the comparison parameter.
+    wPlus.deepCopy(w);
+    wPlus.axpy(p, alpha);
+    setOptParams(wPlus);
+    newObj = computeObjectiveVal();
+    Delta = 2.0*delta*(oldObj - newObj)/(mu*mu);
 
-      // 7 Check whether a successful error reduction can be made.
-      if(Delta >= 0.0)  // update is successful
+    // 7 Check whether a successful error reduction can be made.
+    if(Delta >= 0.0)  // update is successful
 	{
 	  w.deepCopy(wPlus); 	  
 	  oldObj = newObj;
@@ -278,14 +279,14 @@ void COptimisable::scgOptimise(int maxIters, const double objectiveTol, const do
 	  if(k % nParams == 0) // restart algorithm
 	    p.deepCopy(rp); 
 	  else
-	    {	      
-	      double rpnorm2 = rp.norm2Row(0);
-	      double rrp = r.dotRowRow(0, rp, 0); 
+      {	      
+        double rpnorm2 = rp.norm2Row(0);
+        double rrp = r.dotRowRow(0, rp, 0); 
 	      
-	      beta = (rpnorm2 - rrp)/mu;
-	      p.scale(beta); 
-	      p.axpy(rp, 1.0);
-	    }
+        beta = (rpnorm2 - rrp)/mu;
+        p.scale(beta); 
+        p.axpy(rp, 1.0);
+      }
 	  
 	  r.deepCopy(rp);
 	  
@@ -293,23 +294,27 @@ void COptimisable::scgOptimise(int maxIters, const double objectiveTol, const do
 	  if(Delta >= 0.75) lambda *= 0.5;
 	  if(lambda<1e-15) lambda = 1e-15;
 	}
-      else // no reduction in error is possible.
+    else // no reduction in error is possible.
 	{
 	  setOptParams(w);
 	  lambdaBar = lambda; 
 	  success = false; 
 	}
       
-      // 8 Increase the scale parameter
-      if(Delta < 0.25) lambda *= 4.0;
+    // 8 Increase the scale parameter
+    if(Delta < 0.25) lambda *= 4.0;
       
-      // 9 Check for convergence       
+    // 9 Check for convergence       
+    if(getVerbosity()>2)
+      cout << "Iteration: " << k << " Error: " << oldObj << " Scale: " << lambda << endl;
+    if (success && abs(p.max()*alpha) < paramTol && max(abs(newObj-oldObj)) < objectiveTol)
+    {
       if(getVerbosity()>2)
-	cout << "Iteration: " << k << " Error: " << oldObj << " Scale: " << lambda << endl;
-      if (success && abs(p.max()*alpha) < paramTol && max(abs(newObj-oldObj)) < objectiveTol)
-	return;
+        cout << "Convergence criterion for parameters and objective met" << endl;
+      return;
+    }
       
 
-    }
+  }
   cout << "Warning: Maximum number of iterations has been exceeded" << endl;
 }
