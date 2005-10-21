@@ -31,7 +31,7 @@ class CNoise : public CTransformable, public COptimisable, public CMatinterface 
   virtual void setParams(const CMatrix& X)=0;
   virtual void getParams(CMatrix& X) const=0;
   virtual void getGradParams(CMatrix& g) const=0;
-  virtual void getGradInputs(double& dlnZ_dmu, double& dlnZ_dvs, const int i, const int j) const=0;
+  virtual void getGradInputs(double& dlnZ_dmu, double& dlnZ_dvs, int i, int j) const=0;
   virtual void getGradInputs(CMatrix& dlnZ_dmu, CMatrix& dlnZ_dvs) const
     {
       // gradient with respect to mu and varSigma of log likelihood.  
@@ -52,8 +52,8 @@ class CNoise : public CTransformable, public COptimisable, public CMatinterface 
 	}
     }
   // Nu and G are combinations of gradients with respect to the mean and variance of the noise model.
-  virtual void getNuG(CMatrix& g, CMatrix& nu, const int index) const;
-  virtual void updateSites(CMatrix& m, CMatrix& beta, const int actIndex, const CMatrix& g, const CMatrix& nu, const int index) const;
+  virtual void getNuG(CMatrix& g, CMatrix& nu, int index) const;
+  virtual void updateSites(CMatrix& m, CMatrix& beta, int actIndex, const CMatrix& g, const CMatrix& nu, int index) const;
   virtual void test(const CMatrix& muout, const CMatrix& varSigmaOut, const CMatrix& yTest) const=0;
   virtual void out(CMatrix& yPred, const CMatrix& muTest, const CMatrix& varSigmaTest) const=0;
   virtual void out(CMatrix& yPred, CMatrix& probOut, const CMatrix& muTest, const CMatrix& varSigmaTest) const=0;
@@ -71,7 +71,7 @@ class CNoise : public CTransformable, public COptimisable, public CMatinterface 
   virtual void extractParamFromMxArray(const mxArray* matlabArray);
 #endif
   // non virtual functions
-  inline void setVerbosity(const int val)
+  inline void setVerbosity(int val)
     {
       verbosity = val;
     }
@@ -134,7 +134,7 @@ class CNoise : public CTransformable, public COptimisable, public CMatinterface 
     {
       return missing;
     }
-  inline const int getNumParams() const
+  inline int getNumParams() const
     {
       return nParams;
     }
@@ -146,13 +146,13 @@ class CNoise : public CTransformable, public COptimisable, public CMatinterface 
     {
       return nData;
     }
-  virtual string getParamName(const int index) const
+  virtual string getParamName(int index) const
     {
       assert(index>=0);
       assert(index<paramNames.size());
       return paramNames[index];
     }
-  void setParamName(const string paramName, const int index)
+  void setParamName(const string paramName, int index)
     {
       assert(index>=0);
       assert(index<getNumParams());
@@ -166,20 +166,20 @@ class CNoise : public CTransformable, public COptimisable, public CMatinterface 
 	}
     }
 
-  virtual void setMu(const double val, const int i, const int j)=0;
-  virtual double getMu(const int i, const int j) const=0;
-  virtual void setVarSigma(const double val, const int i, const int j)=0;
-  virtual double getVarSigma(const int i, const int j) const=0;
-  virtual double getTarget(const int i, const int j) const=0;
+  virtual void setMu(double val, int i, int j)=0;
+  virtual double getMu(int i, int j) const=0;
+  virtual void setVarSigma(double val, int i, int j)=0;
+  virtual double getVarSigma(int i, int j) const=0;
+  virtual double getTarget(int i, int j) const=0;
   virtual void setTarget(const CMatrix& vals)=0;
 
-  virtual void setMus(const double val)
+  virtual void setMus(double val)
     {
       for(int i=0; i<getNumData(); i++)
 	for(int j=0; j<getNumProcesses(); j++)
 	  setMu(val, i, j);
     }
-  virtual void setVarSigmas(const double val)
+  virtual void setVarSigmas(double val)
     {
       for(int i=0; i<getNumData(); i++)
 	for(int j=0; j<getNumProcesses(); j++)
@@ -202,7 +202,7 @@ class CNoise : public CTransformable, public COptimisable, public CMatinterface 
 	for(int j=0; j<getNumProcesses(); j++)
 	  setVarSigma(vals.getVal(i, j), i, j);
     }
-  bool equals(const CNoise& noise, const double tol=ndlutil::MATCHTOL) const;
+  bool equals(const CNoise& noise, double tol=ndlutil::MATCHTOL) const;
 #ifdef _NDLMATLAB
   virtual void setVarSigmas(const mxArray* matlabArray)
     {
@@ -249,11 +249,11 @@ class CNoise : public CTransformable, public COptimisable, public CMatinterface 
     {
       spherical = val;
     }
-  inline void setNumParams(const int num) 
+  inline void setNumParams(int num) 
     {
       nParams = num;
     }
-  inline void setNumProcesses(const int num) 
+  inline void setNumProcesses(int num) 
     {
       nProcesses = num;
       initStoreage();
@@ -261,7 +261,7 @@ class CNoise : public CTransformable, public COptimisable, public CMatinterface 
     }
   
  protected:
-  inline void setNumData(const int num) 
+  inline void setNumData(int num) 
     {
       nData = num;
     }
@@ -300,11 +300,11 @@ class CGaussianNoise : public CNoise {
   void setParams(const CMatrix& params);
   void setParam(double val, int index);
   void getParams(CMatrix& params) const;
-  double getParam(const int index) const;
+  double getParam(int index) const;
   void getGradParams(CMatrix& g) const;
-  void getGradInputs(double& gmu, double& gvs, const int i, const int j) const;
-  void getNuG(CMatrix& g, CMatrix& nu, const int index) const;
-  void updateSites(CMatrix& m, CMatrix& beta, const int actIndex, const CMatrix& g, const CMatrix& nu, const int index) const;
+  void getGradInputs(double& gmu, double& gvs, int i, int j) const;
+  void getNuG(CMatrix& g, CMatrix& nu, int index) const;
+  void updateSites(CMatrix& m, CMatrix& beta, int actIndex, const CMatrix& g, const CMatrix& nu, int index) const;
   void test(const CMatrix& muout, const CMatrix& varSigmaOut, const CMatrix& yTest) const;
   void out(CMatrix& yPred, const CMatrix& muTest, const CMatrix& varSigmaTest) const;
   void out(CMatrix& yPred, CMatrix& errorBarOut, const CMatrix& muTest, const CMatrix& varSigmaTest) const;
@@ -316,25 +316,25 @@ class CGaussianNoise : public CNoise {
     }
   void  getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
   
-  inline double getMu(const int i, const int j) const
+  inline double getMu(int i, int j) const
     {
       return mu.getVal(i, j);
     }
-  inline void setMu(const double val, const int i, const int j) 
+  inline void setMu(double val, int i, int j) 
     {
       mu.setVal(val, i, j);
     }
-  inline double getVarSigma(const int i, const int j) const
+  inline double getVarSigma(int i, int j) const
     {
       return varSigma.getVal(i, j);
     }
-  inline void setVarSigma(const double val, const int i, const int j) 
+  inline void setVarSigma(double val, int i, int j) 
     {
       assert(!isnan(val));
       assert(val>=0);
       varSigma.setVal(val, i, j);
     }
-  inline double getTarget(const int i, const int j) const
+  inline double getTarget(int i, int j) const
     {
       return y.getVal(i, j);
     }
@@ -368,22 +368,22 @@ class CScaleNoise : public CNoise {
     }
   ~CScaleNoise();
   
-  double getScale(const int index) const
+  double getScale(int index) const
     {
       assert(index<getNumProcesses()&&index>=0);
       return scale.getVal(index);
     }
-  void setScale(const double val, const int index)
+  void setScale(double val, int index)
     {
       assert(index<getNumProcesses()&&index>=0);
       scale.setVal(val, index);
     }
-  double getBias(const int index) const
+  double getBias(int index) const
     {
       assert(index<getNumProcesses()&&index>=0);
       return bias.getVal(index);
     }
-  void setBias(const double val, const int index)
+  void setBias(double val, int index)
     {
       assert(index<getNumProcesses()&&index>=0);
       bias.setVal(val, index);
@@ -397,11 +397,11 @@ class CScaleNoise : public CNoise {
   void setParams(const CMatrix& params);
   void setParam(double val, int index);
   void getParams(CMatrix& params) const;
-  double getParam(const int index) const;
+  double getParam(int index) const;
   void getGradParams(CMatrix& g) const;
-  void getGradInputs(double& gmu, double& gvs, const int i, const int j) const;
-  void getNuG(CMatrix& g, CMatrix& nu, const int index) const;
-  void updateSites(CMatrix& m, CMatrix& beta, const int actIndex, const CMatrix& g, const CMatrix& nu, const int index) const;
+  void getGradInputs(double& gmu, double& gvs, int i, int j) const;
+  void getNuG(CMatrix& g, CMatrix& nu, int index) const;
+  void updateSites(CMatrix& m, CMatrix& beta, int actIndex, const CMatrix& g, const CMatrix& nu, int index) const;
   void test(const CMatrix& muout, const CMatrix& varSigmaOut, const CMatrix& yTest) const;
   void out(CMatrix& yPred, const CMatrix& muTest, const CMatrix& varSigmaTest) const;
   void out(CMatrix& yPred, CMatrix& errorBarOut, const CMatrix& muTest, const CMatrix& varSigmaTest) const;
@@ -413,25 +413,25 @@ class CScaleNoise : public CNoise {
     }
   void  getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
   
-  inline double getMu(const int i, const int j) const
+  inline double getMu(int i, int j) const
     {
       return mu.getVal(i, j);
     }
-  inline void setMu(const double val, const int i, const int j) 
+  inline void setMu(double val, int i, int j) 
     {
       mu.setVal(val, i, j);
     }
-  inline double getVarSigma(const int i, const int j) const
+  inline double getVarSigma(int i, int j) const
     {
       return varSigma.getVal(i, j);
     }
-  inline void setVarSigma(const double val, const int i, const int j) 
+  inline void setVarSigma(double val, int i, int j) 
     {
       assert(!isnan(val));
       assert(val>=0);
       varSigma.setVal(val, i, j);
     }
-  inline double getTarget(const int i, const int j) const
+  inline double getTarget(int i, int j) const
     {
       return y.getVal(i, j);
     }
@@ -475,9 +475,9 @@ class CProbitNoise : public CNoise {
   void setParams(const CMatrix& params);
   void setParam(double val, int index);
   void getParams(CMatrix& params) const;
-  double getParam(const int index) const;
+  double getParam(int index) const;
   void getGradParams(CMatrix& g) const;
-  void getGradInputs(double& gmu, double& gvs, const int i, const int j) const;
+  void getGradInputs(double& gmu, double& gvs, int i, int j) const;
   void test(const CMatrix& muout, const CMatrix& varSigmaOut, const CMatrix& yTest) const;
   void out(CMatrix& yPred, const CMatrix& muTest, const CMatrix& varSigmaTest) const;
   void out(CMatrix& yPred, CMatrix& probOut, const CMatrix& muTest, const CMatrix& varSigmaTest) const;
@@ -489,25 +489,25 @@ class CProbitNoise : public CNoise {
     }
   void  getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
   
-  inline double getMu(const int i, const int j) const
+  inline double getMu(int i, int j) const
     {
       return mu.getVal(i, j);
     }
-  inline void setMu(const double val, const int i, const int j) 
+  inline void setMu(double val, int i, int j) 
     {
       mu.setVal(val, i, j);
     }
-  inline double getVarSigma(const int i, const int j) const
+  inline double getVarSigma(int i, int j) const
     {
       return varSigma.getVal(i, j);
     }
-  inline void setVarSigma(const double val, const int i, const int j) 
+  inline void setVarSigma(double val, int i, int j) 
     {
       assert(!isnan(val));
       assert(val>=0);
       varSigma.setVal(val, i, j);
     }
-  inline double getTarget(const int i, const int j) const
+  inline double getTarget(int i, int j) const
     {
       return y.getVal(i, j);
     }
@@ -550,9 +550,9 @@ class CNcnmNoise : public CNoise {
   void setParams(const CMatrix& params);
   void setParam(double val, int index);
   void getParams(CMatrix& params) const;
-  double getParam(const int index) const;
+  double getParam(int index) const;
   void getGradParams(CMatrix& g) const;
-  void getGradInputs(double& gmu, double& gvs, const int i, const int j) const;
+  void getGradInputs(double& gmu, double& gvs, int i, int j) const;
   void test(const CMatrix& muout, const CMatrix& varSigmaOut, const CMatrix& yTest) const;
   void out(CMatrix& yPred, const CMatrix& muTest, const CMatrix& varSigmaTest) const;
   void out(CMatrix& yPred, CMatrix& probOut, const CMatrix& muTest, const CMatrix& varSigmaTest) const;
@@ -566,19 +566,19 @@ class CNcnmNoise : public CNoise {
     }
   void  getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
   
-  inline double getMu(const int i, const int j) const
+  inline double getMu(int i, int j) const
     {
       return mu.getVal(i, j);
     }
-  inline void setMu(const double val, const int i, const int j) 
+  inline void setMu(double val, int i, int j) 
     {
       mu.setVal(val, i, j);
     }
-  inline double getVarSigma(const int i, const int j) const
+  inline double getVarSigma(int i, int j) const
     {
       return varSigma.getVal(i, j);
     }
-  inline void setVarSigma(const double val, const int i, const int j) 
+  inline void setVarSigma(double val, int i, int j) 
     {
       if(isnan(val))
 	throw ndlexceptions::Error("varSigma is being set with value NaN.");
@@ -593,7 +593,7 @@ class CNcnmNoise : public CNoise {
     {
       return splitGamma;
     }
-  inline double getTarget(const int i, const int j) const
+  inline double getTarget(int i, int j) const
     {
       return y.getVal(i, j);
     }
@@ -619,7 +619,6 @@ class CNcnmNoise : public CNoise {
   double sigma2;
   CMatrix bias;
 };
-
 class COrderedNoise : public CNoise {
  public:  
   // constructors
@@ -655,9 +654,9 @@ class COrderedNoise : public CNoise {
   void setParams(const CMatrix& params);
   void setParam(double val, int index);
   void getParams(CMatrix& params) const;
-  double getParam(const int index) const;
+  double getParam(int index) const;
   void getGradParams(CMatrix& g) const;
-  void getGradInputs(double& gmu, double& gvs, const int i, const int j) const;
+  void getGradInputs(double& gmu, double& gvs, int i, int j) const;
   void test(const CMatrix& muout, const CMatrix& varSigmaOut, const CMatrix& yTest) const;
   void out(CMatrix& yPred, const CMatrix& muTest, const CMatrix& varSigmaTest) const;
   void out(CMatrix& yPred, CMatrix& probOut, const CMatrix& muTest, const CMatrix& varSigmaTest) const;
@@ -671,26 +670,26 @@ class COrderedNoise : public CNoise {
     }
   void  getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
   
-  inline double getMu(const int i, const int j) const
+  inline double getMu(int i, int j) const
     {
       return mu.getVal(i, j);
     }
-  inline void setMu(const double val, const int i, const int j) 
+  inline void setMu(double val, int i, int j) 
     {
       mu.setVal(val, i, j);
     }
-  inline double getVarSigma(const int i, const int j) const
+  inline double getVarSigma(int i, int j) const
     {
       return varSigma.getVal(i, j);
     }
-  inline void setVarSigma(const double val, const int i, const int j) 
+  inline void setVarSigma(double val, int i, int j) 
     {
       if(isnan(val))
 	throw ndlexceptions::Error("varSigma is being set with value NaN.");
       assert(val>=0);
       varSigma.setVal(val, i, j);
     }
-  inline double getTarget(const int i, const int j) const
+  inline double getTarget(int i, int j) const
     {
       return y.getVal(i, j);
     }
@@ -715,6 +714,7 @@ class COrderedNoise : public CNoise {
 
   mutable CMatrix gwidth;
 };
+
 
 void writeNoiseToStream(const CNoise& noise, ostream& out);
 CNoise* readNoiseFromStream(istream& in);

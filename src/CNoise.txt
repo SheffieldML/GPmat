@@ -2,4 +2,6 @@ This file contains classes for different noise models including classification, 
 
 The latest version of this file also contains the code for ordered categorical noise models.
 
+21/10/2005 More changes from Bill, mostly removing redundant const modifiers.
+
 20/10/2005 Incorporated William V. Baxter's code modifications for running the code with MSVC. Mostly this involved removing redundant const statements.

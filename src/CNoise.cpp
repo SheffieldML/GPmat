@@ -1,7 +1,7 @@
 #include "CNoise.h"
 
 using namespace std;
-void CNoise::getNuG(CMatrix& g, CMatrix& nu, const int index) const
+void CNoise::getNuG(CMatrix& g, CMatrix& nu, int index) const
 {
   assert(g.dimensionsMatch(nu));
   assert(g.getRows()==nData);
@@ -38,9 +38,9 @@ void CNoise::getNuG(CMatrix& g, CMatrix& nu, const int index) const
   
 }
 
-void CNoise::updateSites(CMatrix& m, CMatrix& beta, const int actIndex, 
+void CNoise::updateSites(CMatrix& m, CMatrix& beta, int actIndex, 
 				 const CMatrix& g, const CMatrix& nu, 
-				 const int index) const
+				 int index) const
 {
   assert(index>=0);
   assert(index<nData);
@@ -259,7 +259,7 @@ void COrderedNoise::extractParamFromMxArray(const mxArray* matlabArray)
 
 
 #endif
-bool CNoise::equals(const CNoise& noise, const double tol) const
+bool CNoise::equals(const CNoise& noise, double tol) const
 {
   if(getType()!=noise.getType())
     return false;
@@ -378,7 +378,7 @@ void CGaussianNoise::setParams(const CMatrix& params)
     }
   sigma2 = params.getVal(getNumParams()-1);
 }
-double CGaussianNoise::getParam(const int index) const
+double CGaussianNoise::getParam(int index) const
 {
   assert(index>=0);
   assert(index<getNumParams());
@@ -424,7 +424,7 @@ void CGaussianNoise::getGradParams(CMatrix& g) const
   g.setVal(-0.5*gsigma2, 0, getNumParams()-1);
 }
 
-void CGaussianNoise::getGradInputs(double& gmu, double& gvs, const int i, const int j) const
+void CGaussianNoise::getGradInputs(double& gmu, double& gvs, int i, int j) const
 {
   gmu = -bias.getVal(j);
   gvs = 1/(sigma2+getVarSigma(i, j));
@@ -433,7 +433,7 @@ void CGaussianNoise::getGradInputs(double& gmu, double& gvs, const int i, const 
   gvs = 0.5*(gmu*gmu - gvs);
 }
   
-void CGaussianNoise::getNuG(CMatrix& g, CMatrix& nu, const int index) const
+void CGaussianNoise::getNuG(CMatrix& g, CMatrix& nu, int index) const
 {
   double nuval=0.0;
   double gval=0.0;
@@ -451,9 +451,9 @@ void CGaussianNoise::getNuG(CMatrix& g, CMatrix& nu, const int index) const
       g.setVal(gval*nuval, index, j);
     }
 }
-void CGaussianNoise::updateSites(CMatrix& m, CMatrix& beta, const int actIndex, 
+void CGaussianNoise::updateSites(CMatrix& m, CMatrix& beta, int actIndex, 
 				 const CMatrix& g, const CMatrix& nu, 
-				 const int index) const
+				 int index) const
 {
   for(int j=0; j<getNumProcesses(); j++)
     {
@@ -575,11 +575,11 @@ void CScaleNoise::initParams()
 {
   scale.deepCopy(varCol(y));
   for(int j=0; j<getNumProcesses(); j++)
-    {
-      scale.setVal(sqrt(scale.getVal(j)), j);
-      if(scale.getVal(j)<ndlutil::EPS)
-	scale.setVal(ndlutil::EPS, j);
-    }
+  {
+    scale.setVal(sqrt(scale.getVal(j)), j);
+    if(scale.getVal(j)<ndlutil::EPS)
+      scale.setVal(ndlutil::EPS, j);
+  }
   // TODO: need to check for missing values.
   bias.deepCopy(meanCol(y));
 }
@@ -621,7 +621,7 @@ void CScaleNoise::setParams(const CMatrix& params)
       scale.setVal(params.getVal(j+bias.getCols()), j);
     }
 }
-double CScaleNoise::getParam(const int index) const
+double CScaleNoise::getParam(int index) const
 {
   assert(index>=0);
   assert(index<2*getNumParams());
@@ -672,7 +672,7 @@ void CScaleNoise::getGradParams(CMatrix& g) const
     ~*/
 }
 
-void CScaleNoise::getGradInputs(double& gmu, double& gvs, const int i, const int j) const
+void CScaleNoise::getGradInputs(double& gmu, double& gvs, int i, int j) const
 {
   throw ndlexceptions::Error("ScaleNoise doesn't have gradients implemented.");
   /*~
@@ -684,7 +684,7 @@ void CScaleNoise::getGradInputs(double& gmu, double& gvs, const int i, const int
   ~*/
 }
   
-void CScaleNoise::getNuG(CMatrix& g, CMatrix& nu, const int index) const
+void CScaleNoise::getNuG(CMatrix& g, CMatrix& nu, int index) const
 {
   throw ndlexceptions::Error("ScaleNoise doesn't have gradients implemented.");
   /*~
@@ -705,10 +705,12 @@ void CScaleNoise::getNuG(CMatrix& g, CMatrix& nu, const int index) const
     }
     ~*/
 }
-void CScaleNoise::updateSites(CMatrix& m, CMatrix& beta, const int actIndex, 
+void CScaleNoise::updateSites(CMatrix& m, CMatrix& beta, int actIndex, 
 				 const CMatrix& g, const CMatrix& nu, 
-				 const int index) const
+				 int index) const
 {
+  // beta(actIndex,:) := 1/sigma^2
+  // m(actIndex,:) :=  ( y(index,:) - bias(:) ) ./ scale(:)
   for(int j=0; j<getNumProcesses(); j++)
     {
       beta.setVal(1/sigma2, actIndex, j);
@@ -879,7 +881,7 @@ void CProbitNoise::setParams(const CMatrix& params)
       bias.setVal(params.getVal(j), j);
     }
 }
-double CProbitNoise::getParam(const int index) const
+double CProbitNoise::getParam(int index) const
 {
   assert(index>=0);
   assert(index<getNumParams());
@@ -918,7 +920,7 @@ void CProbitNoise::getGradParams(CMatrix& g) const
       g.setVal(gbias, 0, j);
     }
 }
-void CProbitNoise::getGradInputs(double& gmu, double& gvs, const int i, const int j) const
+void CProbitNoise::getGradInputs(double& gmu, double& gvs, int i, int j) const
 {
   double b = bias.getVal(j);
   double c = getTarget(i, j)/sqrt(sigma2+getVarSigma(i, j));
@@ -1059,8 +1061,8 @@ void CNcnmNoise::initParams()
   double nClass2=0.0;
   double nMissing=0.0;
   for(int j=0; j<getNumProcesses(); j++)
-    {
-      for(int i=0; i<getNumData(); i++)
+  {
+    for(int i=0; i<getNumData(); i++)
 	{
 	  if(y.getVal(i, j)==1.0)	    
 	    nClass1++;
@@ -1069,8 +1071,8 @@ void CNcnmNoise::initParams()
 	  else
 	    nMissing++;
 	}
-      bias.setVal(ndlutil::invCumGaussian(nClass1/(nClass1+nClass2)), j);
-    }
+    bias.setVal(ndlutil::invCumGaussian(nClass1/(nClass1+nClass2)), j);
+  }
   gamman=nMissing/(double)getNumData();
   gammap = gamman;
   
@@ -1123,7 +1125,7 @@ void CNcnmNoise::setParams(const CMatrix& params)
   else
     gammap=gamman;
 }
-double CNcnmNoise::getParam(const int index) const
+double CNcnmNoise::getParam(int index) const
 {
   assert(index>=0);
   assert(index<getNumParams());
@@ -1204,7 +1206,7 @@ void CNcnmNoise::getGradParams(CMatrix& g) const
     g.setVal(ggamman+ggammap, 0, getNumProcesses());
 
 }
-void CNcnmNoise::getGradInputs(double& gmu, double& gvs, const int i, const int j) const
+void CNcnmNoise::getGradInputs(double& gmu, double& gvs, int i, int j) const
 {
   double b = bias.getVal(j);
   double c = 1.0/sqrt(sigma2+getVarSigma(i, j));
@@ -1507,7 +1509,7 @@ void COrderedNoise::setParams(const CMatrix& params)
   for(int j=0; j<getNumCategories()-2; j++)
     widths.setVal(params.getVal(j+getNumProcesses()), j);
 }
-double COrderedNoise::getParam(const int index) const
+double COrderedNoise::getParam(int index) const
 {
   assert(index>=0);
   assert(index<getNumParams());
@@ -1589,7 +1591,7 @@ void COrderedNoise::getGradParams(CMatrix& g) const
   for(int j=0; j<getNumCategories()-2; j++)
     g.setVal(gwidth.getVal(j), j+getNumProcesses());
 }
-void COrderedNoise::getGradInputs(double& gmu, double& gvs, const int i, const int j) const
+void COrderedNoise::getGradInputs(double& gmu, double& gvs, int i, int j) const
 {
   double b = bias.getVal(j);
   double c = 1.0/sqrt(sigma2+getVarSigma(i, j));
