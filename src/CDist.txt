@@ -1,0 +1,5 @@
+This file contains distributions which can be used as priors over parameters. 
+
+21/10/2005 Further minror updates to header.
+
+20/10/2005 File updated to include William V. Baxter's corrections which allow the file to be compiled under MSVC. Most corrections involve removing redundant const values.

@@ -15,15 +15,15 @@ class CDist : public CTransformable {
  public:
   CDist(){}
   virtual ~CDist(){}
-  const int getNumParams() const
+  int getNumParams() const
     {
       return nParams;
     }
-  void setNumParams(const int num)
+  void setNumParams(int num)
     {
       nParams = num;
     }
-  virtual double getParam(const int paramNo) const=0;
+  virtual double getParam(int paramNo) const=0;
   virtual void setParam(double val, int paramNo)=0;
   virtual void getGradParams(CMatrix& g) const
     {
@@ -39,7 +39,7 @@ class CDist : public CTransformable {
   void setInitParam();
   // Get log probability at a particualar value
   virtual double logProb(double val) const=0;
-  void setParamName(const string name, const int index)
+  void setParamName(const string name, int index)
     {
       assert(index>=0);
       assert(index<nParams);
@@ -52,7 +52,7 @@ class CDist : public CTransformable {
 	  paramNames[index] = name;
 	}
     }
-  virtual string getParamName(const int index) const
+  virtual string getParamName(int index) const
     {
       assert(index>=0);
       assert(index<paramNames.size());
@@ -98,7 +98,7 @@ class CGaussianDist : public CDist {
     {
       return new CGaussianDist(*this);
     }
-  double getParam(const int paramNo) const;
+  double getParam(int paramNo) const;
   void setParam(double val, int paramNo);
   double getGradInput(double x) const;
   void setInitParam();
@@ -119,7 +119,7 @@ class CGammaDist : public CDist {
     {
       return new CGammaDist(*this);
     }
-  double getParam(const int paramNo) const;
+  double getParam(int paramNo) const;
   void setParam(double val, int paramNo);
   double getGradInput(double x) const;
   void setInitParam();
@@ -137,7 +137,7 @@ class CParamPriors : CMatinterface {
   mxArray* toMxArray() const;
   void fromMxArray(const mxArray* distArray);
 #endif
-  void addDist(CDist* dist, const int index)
+  void addDist(CDist* dist, int index)
     {
       assert(index>=0);
       distIndex.push_back(index);
@@ -149,19 +149,19 @@ class CParamPriors : CMatinterface {
       distIndex.clear();
       dists.clear();
     }
-  inline string getDistType(const int ind) const
+  inline string getDistType(int ind) const
     {
       assert(ind>=0);
       assert(ind<getNumDists());
       return dists[ind]->getType();
     }
-  inline int getDistIndex(const int ind) const
+  inline int getDistIndex(int ind) const
     {
       assert(ind>=0);
       assert(ind<getNumDists());
       return distIndex[ind];
     }
-  inline const int getNumDists() const
+  inline int getNumDists() const
     {
       return dists.size();
     }
@@ -177,8 +177,8 @@ class CRegularisable {
    virtual ~CRegularisable() {}
 
   // these are the pure virtual functions.
-  virtual const int getNumParams() const=0;
-  virtual double getParam(const int paramNo) const=0;
+  virtual int getNumParams() const=0;
+  virtual double getParam(int paramNo) const=0;
   virtual void setParam(double val, int paramNo)=0;
   virtual void getGradParams(CMatrix& g) const=0;
 
@@ -221,7 +221,7 @@ class CRegularisable {
 	  writeDistToStream(*distArray.dists[i], out);
 	}
     }
-  virtual void readPriorsFromStream(istream& in, const int numPriors)
+  virtual void readPriorsFromStream(istream& in, int numPriors)
     {
       string line;
       vector<string> tokens;
@@ -251,29 +251,29 @@ class CRegularisable {
     }
 
   // These are non-modifiable methods.
-  inline const int getNumPriors() const
+  inline int getNumPriors() const
     {
       return distArray.getNumDists();
     }
-  inline CDist* getPrior(const int ind) const
+  inline CDist* getPrior(int ind) const
     {
       assert(ind>=0);
       assert(ind<getNumPriors());
       return distArray.dists[ind];
     }
-  inline string getPriorType(const int ind) const
+  inline string getPriorType(int ind) const
     {
       return distArray.getDistType(ind);
     }
-  inline int getPriorIndex(const int ind) const
+  inline int getPriorIndex(int ind) const
     {
       return distArray.getDistIndex(ind);
     }
-  inline double getPriorGradInput(const double val, const int ind) const
+  inline double getPriorGradInput(double val, int ind) const
     {
       return distArray.dists[ind]->getGradInput(val);
     }
-  void addPrior(CDist* dist, const int index)
+  void addPrior(CDist* dist, int index)
     {
       assert(index>=0);
       assert(index<getNumParams());
