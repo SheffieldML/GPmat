@@ -73,7 +73,7 @@ class CLinearTransform : public CTransform  {
     {
       return 1/m;
     }
-  void setM(const double val)
+  void setM(double val)
     {
       m = val;
     }
@@ -81,7 +81,7 @@ class CLinearTransform : public CTransform  {
     {
       return m;
     }
-  void setC(const double val)
+  void setC(double val)
     {
       c = val;
     }
@@ -117,7 +117,7 @@ class CParamTransforms : CMatinterface {
   mxArray* toMxArray() const;
   void fromMxArray(const mxArray* transformArray);
 #endif
-  void addTransform(CTransform* trans, const int index)
+  void addTransform(CTransform* trans, int index)
     {
       assert(index>=0);
       transIndex.push_back(index);
@@ -129,19 +129,19 @@ class CParamTransforms : CMatinterface {
       transIndex.clear();
       transforms.clear();
     }
-  inline string getTransformType(const int ind) const
+  inline string getTransformType(int ind) const
     {
       assert(ind>=0);
       assert(ind<getNumTransforms());
       return transforms[ind]->getType();
     }
-  inline int getTransformIndex(const int ind) const
+  inline int getTransformIndex(int ind) const
     {
       assert(ind>=0);
       assert(ind<getNumTransforms());
       return transIndex[ind];
     }
-  inline const int getNumTransforms() const
+  inline int getNumTransforms() const
     {
       return transforms.size();
     }
@@ -159,8 +159,8 @@ class CTransformable {
  public:
 
   // these are the pure virtual functions.
-  virtual const int getNumParams() const=0;
-  virtual double getParam(const int paramNo) const=0;
+  virtual int getNumParams() const=0;
+  virtual double getParam(int paramNo) const=0;
   virtual void setParam(double val, int paramNo)=0;
   virtual void getGradParams(CMatrix& g) const=0;
 
@@ -180,7 +180,7 @@ class CTransformable {
 	setParam(params.getVal(i), i);
     }
   
-  virtual double getTransParam(const int paramNo) const
+  virtual double getTransParam(int paramNo) const
     {
       assert(paramNo>=0);
       assert(paramNo<getNumParams());
@@ -208,7 +208,7 @@ class CTransformable {
 	  transParam.setVal(transArray.transforms[i]->xtoa(val), transArray.transIndex[i]);
 	}  
     }
-  virtual void setTransParam(const double val, const int paramNo)
+  virtual void setTransParam(double val, int paramNo)
     {
       assert(paramNo>=0);
       assert(paramNo<getNumParams());
@@ -253,29 +253,29 @@ class CTransformable {
     }
 
   // These are non-modifiable methods.
-  inline const int getNumTransforms() const
+  inline int getNumTransforms() const
     {
       return transArray.getNumTransforms();
     }
-  inline CTransform* getTransform(const int ind) const
+  inline CTransform* getTransform(int ind) const
     {
       assert(ind>=0);
       assert(ind<getNumTransforms());
       return transArray.transforms[ind];
     }
-  inline string getTransformType(const int ind) const
+  inline string getTransformType(int ind) const
     {
       return transArray.getTransformType(ind);
     }
-  inline int getTransformIndex(const int ind) const
+  inline int getTransformIndex(int ind) const
     {
       return transArray.getTransformIndex(ind);
     }
-  inline double getTransformGradFact(const double val, const int ind) const
+  inline double getTransformGradFact(double val, int ind) const
     {
       return transArray.transforms[ind]->gradfact(val);
     }
-  void addTransform(CTransform* trans, const int index)
+  void addTransform(CTransform* trans, int index)
     {
       assert(index>=0);
       assert(index<getNumParams());
