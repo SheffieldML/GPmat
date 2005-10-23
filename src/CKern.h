@@ -134,13 +134,16 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
     }
   // Get gradient of a particular parameter.
   virtual double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const=0;
-  // Get a particular parameter.
+  // Called to indicate the value of X has changed and kernel should do any
+  // precomputation it needs to do per value of X.
+  virtual void updateX(const CMatrix& X) {}
   // For compound kernels when a new kernel is added.
   virtual int addKern(CKern* kern)
     {
       cerr << "You cannot add a kernel to this kernel." << endl;
       return 0;
     }
+  // Get a particular parameter.
   virtual double getParam(int) const=0;
   // Set the parameters from a vector of parameters.
   void setParams(const CMatrix& paramVec)
@@ -290,6 +293,7 @@ class CCmpndKern: public CKern {
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
   double priorLogProb() const;
   void addPrior(CDist* prior, int index);
+  void updateX(const CMatrix& X);
 
 
   void writeParamsToStream(ostream& out) const;
@@ -399,10 +403,12 @@ class CRbfKern: public CKern {
 		  const CMatrix& X2, int index2) const;
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
+  void updateX(const CMatrix& X);
 
  private:
   double variance;
   double inverseWidth;
+  mutable CMatrix Xdists;
 
 };
 

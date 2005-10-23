@@ -272,6 +272,13 @@ void CCmpndKern::addPrior(CDist* prior, int index)
   cerr << "Error cannot add priors to compound kernels directly, please add to the components." << endl;
   exit(1);
 }
+
+void CCmpndKern::updateX(const CMatrix& X)
+{
+  for(size_t i=0; i<components.size(); i++)
+    components[i]->updateX(X);
+}
+
 int CCmpndKern::addKern(CKern* kern)
 {
   components.push_back(kern);
@@ -703,27 +710,54 @@ double CRbfKern::computeElement(const CMatrix& X1, int index1,
   k = variance*exp(-k);
   return k;
 }
+
+void CRbfKern::updateX(const CMatrix& X)
+{
+  Xdists.resize(X.getRows(),X.getRows());
+  double halfInverseWidth=0.5*inverseWidth;
+  int nrows = X.getRows();
+  for(int j=0; j<nrows; j++)
+  {
+    Xdists.setVal(0,j,j);
+    for(int i=0; i<j; i++)
+    {
+      double dist2 = X.dist2Row(i, X, j);
+      Xdists.setVal(dist2,i,j);
+      Xdists.setVal(exp(-dist2*halfInverseWidth),j,i);
+    }
+  }
+}
+
 void CRbfKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad) const
 {
   assert(g.getRows()==1);
   assert(g.getCols()==nParams);
-  double dist2;
+  assert(covGrad.isSymmetric());
   double g1=0.0;
   double g2=0.0;
-  double k;
   double halfInverseWidth=0.5*inverseWidth;
-  for(int i=0; i<X.getRows(); i++)
-    for(int j=0; j<X.getRows(); j++)
+  double halfVariance=0.5*variance;
+
+  int nrows = X.getRows();
+  for(int j=0; j<nrows; j++)
+  {
+    g2 += covGrad.getVal(j,j);
+    for(int i=0; i<j; i++)
     {
-      dist2 = X.dist2Row(i, X, j);
-      k = exp(-dist2*halfInverseWidth);
-      g1 -= 0.5*k*variance*dist2*covGrad.getVal(i, j); // dk()/dgamma in SBIK paper
-      g2 += k*covGrad.getVal(i, j);                    // dk()/dalpha in SBIK paper
+      // double dist2 = X.dist2Row(i, X, j);
+      // double k = exp(-dist2*halfInverseWidth);
+      double dist2 = Xdists.getVal(i,j);
+      double k = Xdists.getVal(j,i);
+      double kcg_ij = k*covGrad.getVal(i,j);
+      g1 -= 2.0*halfVariance*dist2*kcg_ij; // dk()/dgamma in SBIK paper
+      g2 += 2.0*kcg_ij;                    // dk()/dalpha in SBIK paper
     }
-    g.setVal(g1, 0);
+  }
+  g.setVal(g1, 0);
   g.setVal(g2, 1);
   addPriorGrad(g);
 }
+
 double CRbfKern::getGradParam(int index, const CMatrix& X, const CMatrix& covGrad) const
 {
   assert(index>=0);
