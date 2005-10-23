@@ -1,0 +1,3 @@
+This file contains classes for representing Gaussian processes using the IVM. The model relies on the CKern class and the CNoise class to define the kernel and the noise model.
+
+23/10/2005 Modifications for compiling under Visual C++, by Neil.

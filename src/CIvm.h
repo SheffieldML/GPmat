@@ -9,16 +9,16 @@ const string IVMVERSION="0.1";
 class CIvm : public COptimisableModel {
  public:
   // Constructor given a filename.
-  CIvm(const string modelFileName, const int verbos=2);
+  CIvm(const string modelFileName, int verbos=2);
   // Constructor given a kernel and a noise model.
   CIvm(const CMatrix& inData, const CMatrix& targetData, 
-       CKern& kernel, CNoise& noiseModel, const int selectCrit,
-       const int dVal, const int verbos=2);
+       CKern& kernel, CNoise& noiseModel, int selectCrit,
+       int dVal, int verbos=2);
   CIvm(const CMatrix& actX, const CMatrix& actY, 
        const CMatrix& mmat, const CMatrix& betamat, 
        const vector<int> actSet, CKern& kernel, 
-       CNoise& noiseModel, const int selectCrit=ENTROPY, 
-       const int verbos=2);
+       CNoise& noiseModel, int selectCrit=ENTROPY, 
+       int verbos=2);
 
 #ifdef _NDLMATLAB
   // Constructor using file containing ivmInfo.
@@ -28,26 +28,26 @@ class CIvm : public COptimisableModel {
        CNoise& noiseModel, 
        const string ivmInfoFile, 
        const string ivmInfoVariable, 
-       const int verbos=2);
+       int verbos=2);
 #endif
   // Initialise the storeage for the model.
   void initStoreage();
   // Set the initial values for the model.
   void initVals();
   void selectPoints(); // select active set points.
-  void addPoint(const int index); // add a point to the model.
-  void updateSite(const int index); // update the site parameters at index.
-  void updateM(const int index); // update M at index.
+  void addPoint(int index); // add a point to the model.
+  void updateSite(int index); // update the site parameters at index.
+  void updateM(int index); // update M at index.
 
   int selectPointAdd(); // select a point to add to active set.
   int entropyPointAdd(); // add a point selected by entropy change.
   int randomPointAdd();  // add a point selected randomly.
-  double entropyChangeAdd(const int) const; // entropy change associated with adding a point
+  double entropyChangeAdd(int) const; // entropy change associated with adding a point
 
   int selectPointRemove();  // select a point to remove from the active set.
   int entropyPointRemove(); // remove a point selected by entropy change.
   int randomPointRemove(); // remove a point selected randomly.
-  double entropyChangeRemove(const int) const; // entropy change associated with removing a point
+  double entropyChangeRemove(int) const; // entropy change associated with removing a point
   void test(const CMatrix& ytest, const CMatrix& Xin) const;
   void likelihoods(CMatrix& pout, CMatrix& yTest, const CMatrix& Xin) const;
   double logLikelihood(const CMatrix& yTest, const CMatrix& Xin) const;
@@ -58,7 +58,7 @@ class CIvm : public COptimisableModel {
     {
       return noise.getNoiseName();
     }
-  inline int changeEntropy(const double val)
+  inline void changeEntropy(double val)
     {
       cumEntropy += val;
       lastEntropyChange = val;
@@ -88,14 +88,14 @@ class CIvm : public COptimisableModel {
   // update K with the kernel computed from the active points.
   void updateK() const;
   // update invK with the inverse of the kernel plus beta terms computed from the active points.
-  void updateInvK(const int index=0) const;
+  void updateInvK(int index=0) const;
   // compute the approximation to the log likelihood.
   double approxLogLikelihood() const;
   // compute the gradients of the approximation wrt parameters.
   void approxLogLikelihoodGradient(CMatrix& g) const;
   
-  void optimise(const int maxIters=15, const int kernIters=100, const int noiseIters=100);
-  bool equals(const CIvm& model, const double tol=ndlutil::MATCHTOL) const;
+  void optimise(int maxIters=15, int kernIters=100, int noiseIters=100);
+  bool equals(const CIvm& model, double tol=ndlutil::MATCHTOL) const;
   void display(ostream& os) const;
 
   inline int getOptNumParams() const
@@ -128,7 +128,7 @@ class CIvm : public COptimisableModel {
 	  return "rentropy";
 	case RANDOM:
 	  return "random";
-	otherwise:
+	default:
 	  cerr << "Unrecognised selection criterion." << endl;
 	}
     }
@@ -143,9 +143,9 @@ class CIvm : public COptimisableModel {
       else
 	cerr << "Unrecognised selection criterion " << val << "." << endl;
     }
-  void setTypeSelection(const int val)
+  void setTypeSelection(int val)
     {
-      assert(val>=ENTROPY & val<=RANDOM);
+      assert(val>=ENTROPY && val<=RANDOM);
       selectionCriterion=val;
     }
   void computeObjectiveGradParams(CMatrix& g) const
@@ -175,11 +175,11 @@ class CIvm : public COptimisableModel {
     {
       return activeX.getCols();
     }
-  double getActiveX(const int i, const int j) const
+  double getActiveX(int i, int j) const
     {
       return activeX.getVal(i, j);
     }
-  int getActivePoint(const int i) const
+  int getActivePoint(int i) const
     {
       return activeSet[i];
     }
@@ -246,6 +246,6 @@ class CIvm : public COptimisableModel {
 void writeIvmToStream(const CIvm& model, ostream& out);
 void writeIvmToFile(const CIvm& model, const string modelFileName, const string comment="");
 CIvm* readIvmFromStream(istream& in);
-CIvm* readIvmFromFile(const string modelfileName, const int verbosity=2);
+CIvm* readIvmFromFile(const string modelfileName, int verbosity=2);
 
 #endif

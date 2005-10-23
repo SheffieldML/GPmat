@@ -1,7 +1,7 @@
 #include "CIvm.h"
 CIvm::CIvm(const CMatrix& inData, const CMatrix& targetData, 
-	   CKern& kernel, CNoise& noiseModel, const int selectCrit,
-	   const int dVal, const int verbosity) 
+	   CKern& kernel, CNoise& noiseModel, int selectCrit,
+	   int dVal, int verbosity) 
   : X(inData), y(targetData), kern(kernel), 
     noise(noiseModel), selectionCriterion(selectCrit), numTarget(y.getCols()), numData(y.getRows()), lastEntropyChange(0.0), cumEntropy(0.0), activeSetSize(dVal)
 {
@@ -18,8 +18,8 @@ CIvm::CIvm(const CMatrix& inData, const CMatrix& targetData,
 CIvm::CIvm(const CMatrix& actX, const CMatrix& actY, 
      const CMatrix& mmat, const CMatrix& betamat, 
      const vector<int> actSet, CKern& kernel, 
-     CNoise& noiseModel, const int selectCrit, 
-	   const int verbosity) : X(actX), y(actY), activeX(actX), activeY(actY), m(mmat), beta(betamat), kern(kernel), activeSet(actSet), noise(noiseModel), selectionCriterion(selectCrit), numTarget(actY.getCols()), numData(actY.getRows()), lastEntropyChange(0.0), cumEntropy(0.0), activeSetSize(activeSet.size())
+     CNoise& noiseModel, int selectCrit, 
+	   int verbosity) : X(actX), y(actY), activeX(actX), activeY(actY), m(mmat), beta(betamat), kern(kernel), activeSet(actSet), noise(noiseModel), selectionCriterion(selectCrit), numTarget(actY.getCols()), numData(actY.getRows()), lastEntropyChange(0.0), cumEntropy(0.0), activeSetSize(activeSet.size())
 {
   assert(activeX.getRows()==activeY.getRows());
   setVerbosity(verbosity);
@@ -229,7 +229,7 @@ void CIvm::selectPoints()
   if(isEpUpdate())
     cerr << "EP update not yet implemented.";
 }
-void CIvm::addPoint(const int index)
+void CIvm::addPoint(int index)
 {
   // check index is in inactive set
   assert(find(inactiveSet.begin(), inactiveSet.end(), index)!=inactiveSet.end());
@@ -242,7 +242,7 @@ void CIvm::addPoint(const int index)
   activeSet.push_back(index);
   updateNuG();
 }
-void CIvm::updateSite(const int index)
+void CIvm::updateSite(int index)
 {
   int actIndex = activeSet.size();
   noise.updateSites(m, beta, actIndex, g, nu, index);
@@ -265,7 +265,7 @@ void CIvm::updateSite(const int index)
   
 }
 
-void CIvm::updateM(const int index)
+void CIvm::updateM(int index)
 {
   int activePoint = activeSet.size();
   for(int i=0; i<Kstore.getRows(); i++)
@@ -375,7 +375,7 @@ int CIvm::randomPointAdd()
   return index;
 }
 
-double CIvm::entropyChangeAdd(const int index) const
+double CIvm::entropyChangeAdd(int index) const
 {
   // compute the entropy change associated with point addition.
   // make sure that index is in the inactive set.
@@ -383,13 +383,13 @@ double CIvm::entropyChangeAdd(const int index) const
   double entChange=0.0;
   if(noise.isSpherical())
     {
-      entChange = -.5*log2(1-noise.getVarSigma(index, 0)
+      entChange = -.5*log(1-noise.getVarSigma(index, 0)
 			   *nu.getVal(index, 0)+1e-300)*numTarget;
     }
   else
     {
       for(int j=0; j<numTarget; j++)
-	entChange += -.5*log2(1-noise.getVarSigma(index, j)
+	entChange += -.5*log(1-noise.getVarSigma(index, j)
 			      *nu.getVal(index, j)+1e-300);
     }
   return entChange;
@@ -433,7 +433,7 @@ int CIvm::randomPointRemove()
   return index;
 }
 
-double CIvm::entropyChangeRemove(const int index) const
+double CIvm::entropyChangeRemove(int index) const
 {
   // compute entropy change associated with point removal.
   // make sure that index is in the active set.
@@ -441,13 +441,13 @@ double CIvm::entropyChangeRemove(const int index) const
   double entChange = 0.0;
   if(noise.isSpherical())
     {
-      entChange = -.5*log2(1-noise.getVarSigma(index, 0)
+      entChange = -.5*log(1-noise.getVarSigma(index, 0)
 			   *beta.getVal(activeSet[index], 0)+1e-300)*numTarget;
     }
   else
     {
       for(int j=0; j<numTarget; j++)
-	entChange += -.5*log2(1-noise.getVarSigma(index, j)
+	entChange += -.5*log(1-noise.getVarSigma(index, j)
 			      *beta.getVal(activeSet[index], j)+1e-300);
     }
   return entChange;
@@ -472,14 +472,14 @@ void CIvm::updateK() const
     }
   K.setSymmetric(true);
 }
-void CIvm::updateInvK(const int dim) const
+void CIvm::updateInvK(int dim) const
 {
   invK.deepCopy(K);
   for(int i=0; i<activeSetSize; i++)
     invK.setVal(invK.getVal(i, i) + 1/beta.getVal(i, dim), i, i);
   invK.setSymmetric(true);
   CMatrix U(chol(invK));
-  logDetK = invK.logDet(U); 
+  logDetK = logDet(U); 
   invK.pdinv(U);
 }
   
@@ -535,7 +535,7 @@ CIvm::CIvm(const CMatrix& inData,
 	   CNoise& noiseModel, 
 	   const string ivmInfoFile, 
 	   const string ivmInfoVariable, 
-	   const int verbos) : 
+	   int verbos) : 
   X(inData), y(targetData), 
   kern(kernel), noise(noiseModel), 
   numTarget(y.getCols()), numData(y.getRows()),  
@@ -642,7 +642,7 @@ void CIvm::fromMxArray(const mxArray* matlabArray)
 }
 #else /* not _NDLMATLAB */
 #endif
-void CIvm::optimise(const int maxIters, const int kernIters, const int noiseIters)
+void CIvm::optimise(int maxIters, int kernIters, int noiseIters)
 {
   if(getVerbosity()>2)
     {
@@ -692,7 +692,7 @@ void CIvm::optimise(const int maxIters, const int kernIters, const int noiseIter
   if(getVerbosity()>0)
     display(cout);
 }
-bool CIvm::equals(const CIvm& model, const double tol) const
+bool CIvm::equals(const CIvm& model, double tol) const
 {
   if(!noise.equals(model.noise, tol))
     return false;
@@ -718,7 +718,7 @@ void CIvm::display(ostream& os) const
   noise.display(os);
 }
 
-void CIvm::updateCovGradient(const int index) const
+void CIvm::updateCovGradient(int index) const
 {
   CMatrix invKm(invK.getRows(), 1);
   invK.setSymmetric(true);
@@ -863,7 +863,7 @@ CIvm* readIvmFromStream(istream& in)
   return pmodel;
 }
 
-CIvm* readIvmFromFile(const string modelFileName, const int verbosity)
+CIvm* readIvmFromFile(const string modelFileName, int verbosity)
 {
   // File is m, beta, X
   if(verbosity>0)
