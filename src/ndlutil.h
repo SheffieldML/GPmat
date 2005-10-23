@@ -4,7 +4,10 @@
 #include <climits>
 #include <cfloat>
 #ifndef M_PI
-#define M_PI 3.14159265358979323846
+#define M_PI 3.1415926535897932384626433832795
+#endif
+#ifndef M_LN2
+#define M_LN2 0.69314718055994530941723212145818
 #endif
 #ifdef _MSC_VER
 #define isnan(x) _isnan(x)
