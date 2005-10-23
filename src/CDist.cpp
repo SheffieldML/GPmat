@@ -55,7 +55,7 @@ void CGaussianDist::setParam(double val, int index)
     }
 
 }
-double CGaussianDist::getParam(int index) const
+double CGaussianDist::getParam(const int index) const
 {
   assert(index>=0);
   assert(index<getNumParams());
@@ -117,7 +117,7 @@ void CGammaDist::setParam( double val,  int index)
     }
 
 }
-double CGammaDist::getParam(int index) const
+double CGammaDist::getParam(const int index) const
 {
   assert(index>=0);
   assert(index<getNumParams());
