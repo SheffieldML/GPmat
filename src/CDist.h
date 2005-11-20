@@ -10,7 +10,7 @@
 const string DISTVERSION="0.1";
 
 // Base distribution class.
-class CDist : public CTransformable {
+class CDist : public CMatinterface, public CTransformable {
   
  public:
   CDist(){}
@@ -31,14 +31,42 @@ class CDist : public CTransformable {
       cerr << "getGradParams should not be used in CDist" << endl;
       exit(1);
     }
+
+#ifdef _NDLMATLAB
+  // returns an mxArray of the dist for use with matlab.
+  virtual mxArray* toMxArray() const;
+  virtual void fromMxArray(const mxArray* matlabArray);
+  // Adds parameters to the mxArray.
+  virtual void addParamToMxArray(mxArray* matlabArray) const;
+  // Gets the parameters from the mxArray.
+  virtual void extractParamFromMxArray(const mxArray* matlabArray);
+#endif /* _NDLMATLAB*/
+
   virtual void writeParamsToStream(ostream& out) const;
   virtual void readParamsFromStream(istream& in);
   //CDist(CDist& dist);
   // get the gradient with respect to an input.
   virtual double getGradInput(double x) const=0;
+  // get the gradient with respect to a matrix of inputs
+  virtual void getGradInputs(CMatrix& g, const CMatrix& x)
+    {
+      assert(g.getRows()==x.getRows());
+      assert(g.getCols()==x.getCols());
+      for(int i=0; i<g.getRows(); i++)
+	for(int j=0; j<g.getCols(); j++)
+	  g.setVal(getGradInput(x.getVal(i, j)), i, j);
+    }
   void setInitParam();
   // Get log probability at a particualar value
   virtual double logProb(double val) const=0;
+  virtual double logProb(const CMatrix& x)
+    {
+      double ll = 0.0;
+      for(int i=0; i<x.getRows(); i++)
+	for(int j=0; j<x.getCols(); j++)
+	  ll+=logProb(x.getVal(i, j));
+      return ll;
+    }
   void setParamName(const string name, int index)
     {
       assert(index>=0);
@@ -223,7 +251,7 @@ class CRegularisable {
     {
       assert(g.getRows()==1);
       assert(g.getCols()==getNumParams());
-      double param;
+      double param=0.0;
       for(int i=0; i<distArray.distIndex.size(); i++)
 	{
 	  param=getParam(distArray.distIndex[i]);

@@ -16,7 +16,7 @@ end
 if isfield(prior, 'transforms')
   for i = 1:length(prior.transforms)
     index = prior.transforms(i).index;
-    fhandle = [prior.transforms(i).type 'Transform'];
+    fhandle = str2func([prior.transforms(i).type 'Transform']);
     params(index) = fhandle(params(index), 'xtoa');
   end
 end

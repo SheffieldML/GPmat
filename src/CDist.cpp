@@ -28,7 +28,64 @@ void CDist::readParamsFromStream(istream& in)
   else
     throw ndlexceptions::FileFormatError();
 }
+#ifdef _NDLMATLAB
+mxArray* CDist::toMxArray() const
+{
+  int dims[1];
+  dims[0] = 1;
+  const char *fieldNames[] = {"type", "transforms"};
+  mxArray* matlabArray = mxCreateStructArray(1, dims, 2, fieldNames);
+    
+  // type field.
+  const char *typeName[1];
+  string ty=getType();
+  typeName[0] = ty.c_str();
+  mxSetField(matlabArray, 0, "type", 
+	     mxCreateCharMatrixFromStrings(1, type));
+  
+  // transforms field.
+  mxSetField(matlabArray, 0, "transforms", transformsToMxArray());
+  
+  // Class specific code.
+  addParamToMxArray(matlabArray);
+  return matlabArray;
 
+}
+void CDist::fromMxArray(const mxArray* matlabArray) 
+{
+  string mxType = mxArrayExtractStringField(matlabArray, "type");
+  if(mxType!=type)
+    {
+      throw ndlexceptions::MatlabInterfaceError("Error mismatch between saved type, " + mxType + ", and Class type, " + type + ".";
+    }
+  mxArray* transformArray = mxArrayExtractMxArrayField(matlabArray, "transforms");
+  // transforms field.
+  transformsFromMxArray(transformArray);
+  extractParamFromMxArray(matlabArray);
+}
+void CDist::extractParamFromMxArray(const mxArray* matlabArray)
+{
+  nParams = mxArrayExtractIntField(matlabArray, "nParams");
+  string pName;
+  for(int i=0; i<nParams; i++)
+    {
+      pName=getParamName(i);
+      setParam(mxArrayExtractDoubleField(matlabArray, pName), i);  
+    }
+}
+void CDist::addParamToMxArray(mxArray* matlabArray) const
+{
+  mxAddField(matlabArray, "nParams");
+  mxSetField(matlabArray, 0, "nParams", convertMxArray((double)nParams));
+  string pName;
+  for(int i=0; i<nParams; i++)
+    {      
+      pName = getParamName(i);
+      mxAddField(matlabArray, pName.c_str());      
+      mxSetField(matlabArray, 0, pName.c_str(), convertMxArray(getParam(i))); 
+    }
+}
+#endif /* _NDLMATLAB*/
 CGaussianDist::CGaussianDist()
 {
   setInitParam();
