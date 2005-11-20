@@ -4,4 +4,5 @@ function noiseDisplay(noise)
 
 % NOISE
 
-feval([noise.type 'NoiseDisplay'], noise)
+fhandle = str2func([noise.type 'NoiseDisplay']);
+fhandle(noise);

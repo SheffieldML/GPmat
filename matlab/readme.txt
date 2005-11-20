@@ -1,3 +1,8 @@
+Version 0.13 Release Notes
+--------------------------
+
+This code no longer runs under MATLAB 6.0. It now requires MATLAB 7.0 or higher to run. 
+
 Version 0.121 Release Notes
 ---------------------------
 

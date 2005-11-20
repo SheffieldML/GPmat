@@ -4,9 +4,10 @@ function h = probitNoise3dPlot(noise, plotType, CX, CY, CZ, CZVar, varargin)
 
 % NOISE
 
+fhandle = str2func(plotType);
 CZ = cumGaussian((CZ + noise.bias)./sqrt(CZVar));
 if nargout > 0
-  h = feval(plotType, CX, CY, CZ, varargin{:});
+  h = fhandle(CX, CY, CZ, varargin{:});
 else
-  feval(plotType, CX, CY, CZ, varargin{:});
+  fhandle(CX, CY, CZ, varargin{:});
 end

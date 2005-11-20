@@ -5,4 +5,5 @@ function h = gaussianNoise3dPlot(noise, plotType, CX, CY, CZ, CZVar, varargin)
 % NOISE
 
 CZ = (CZ+noise.bias);
-h = feval(plotType, CX, CY, CZ, varargin{:});
+fhandle = str2func(plotType);
+h = fhandle(CX, CY, CZ, varargin{:});

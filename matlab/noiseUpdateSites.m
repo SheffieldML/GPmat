@@ -6,9 +6,8 @@ function [m, beta] = noiseUpdateSites(noise, g, nu, mu, varSigma, y);
 
 if noise.updateSites
   % The noise model has it's own code for site updates.
-  [m, beta] = ...
-      feval([noise.type 'NoiseSites'], noise, ...
-            g, nu,  mu, varSigma, y);
+  fhandle = str2func([noise.type 'NoiseSites']);
+  [m, beta] = fhandle(noise, g, nu,  mu, varSigma, y);
 else
   % Use the standard code.
   beta = nu./(1-nu.*varSigma);

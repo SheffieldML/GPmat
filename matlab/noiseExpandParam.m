@@ -4,14 +4,12 @@ function noise = noiseExpandParam(noise, params)
 
 % NOISE
 
-% NOISE
-
 if isfield(noise, 'transforms')
   for i = 1:length(noise.transforms)
     index = noise.transforms(i).index;
-    params(index) = feval([noise.transforms(i).type 'Transform'], ...
-              params(index), 'atox');
+    fhandle = str2func([noise.transforms(i).type 'Transform']);
+    params(index) = fhandle(params(index), 'atox');
   end
 end
-
-noise = feval([noise.type 'NoiseExpandParam'], noise, params);
+fhandle = str2func([noise.type 'NoiseExpandParam']);
+noise = fhandle(noise, params);

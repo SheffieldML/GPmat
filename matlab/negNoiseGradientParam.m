@@ -4,12 +4,10 @@ function g = negNoiseGradientParam(params, model, prior)
 
 % NOISE
 
-% NOISE
-
-
 model.noise = noiseExpandParam(model.noise, params);
-g = - feval([model.noise.type 'GradientParam'], model);
+fhandle = str2func([model.noise.type 'GradientParam']);
+g = - fhandle(model);
 
 if prior
-  g =g +params;
+  g = g + params;
 end

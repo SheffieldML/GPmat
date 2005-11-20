@@ -36,4 +36,5 @@ params = zeros(1, noise.nParams);
 for j=1:noise.nParams
   params(1, j) = str2num(tokens{j});
 end
-noise = feval([noise.type 'NoiseExpandParam'], noise, params);
+fhandle = str2func([noise.type 'NoiseExpandParam']);
+noise = fhandle(noise, params);

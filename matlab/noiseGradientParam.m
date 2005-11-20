@@ -4,7 +4,8 @@ function g = noiseGradientParam(noise, mu, varsigma, y)
 
 % NOISE
 
-g = feval([noise.type 'NoiseGradientParam'], noise, mu, varsigma, y);
+fhandle = str2func([noise.type 'NoiseGradientParam']);
+g = fhandle(noise, mu, varsigma, y);
 
 % check if there is a prior over parameters
 if isfield(noise, 'priors')
@@ -16,11 +17,11 @@ end
 
 % Check if parameters are being optimised in a transformed space.
 if isfield(noise, 'transforms')
-  params = feval([noise.type 'NoiseExtractParam'], noise);
+  fhandle = str2func([noise.type 'NoiseExtractParam']);
+  params = fhandle(noise);
   for i = 1:length(noise.transforms)
     index = noise.transforms(i).index;
-    g(index) = g(index).* ...
-        feval([noise.transforms(i).type 'Transform'], ...
-              params(index), 'gradfact');
+    fhandle = str2func([noise.transforms(i).type 'Transform']);
+    g(index) = g(index).*fhandle(params(index), 'gradfact');
   end
 end

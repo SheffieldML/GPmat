@@ -5,10 +5,11 @@ function h = orderedNoise3dPlot(noise, plotType, CX, CY, CZ, CZVar, varargin)
 % NOISE
 
 CZ = (CZ+noise.bias)./sqrt(CZVar);
-feval(plotType, CX, CY, CZ, varargin{:});
+fhandle = str2func(plotType);
+fhandle(CX, CY, CZ, varargin{:});
 hold on
 h = [];
 for i = 2:noise.C-1
   CZ = CZ - noise.widths(i-1)./sqrt(CZVar);
-  h = [h; feval(plotType, CX, CY, CZ, varargin{:})];
+  h = [h; fhandle(CX, CY, CZ, varargin{:})];
 end

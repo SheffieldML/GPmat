@@ -4,10 +4,11 @@ function [params, names] = noiseExtractParam(noise)
 
 % NOISE
 
+fhandle = str2func([noise.type 'NoiseExtractParam']);
 if nargout < 2
-  params = feval([noise.type 'NoiseExtractParam'], noise);
+  params = fhandle(noise);
 else
-  [params, names] = feval([noise.type 'NoiseExtractParam'], noise);
+  [params, names] = fhandle(noise);
 end
 
 
@@ -15,7 +16,7 @@ end
 if isfield(noise, 'transforms')
   for i = 1:length(noise.transforms)
     index = noise.transforms(i).index;
-    params(index) = feval([noise.transforms(i).type 'Transform'], ...
-              params(index), 'xtoa');
+    fhandle = str2func([noise.transforms(i).type 'Transform']);
+    params(index) = fhandle(params(index), 'xtoa');
   end
 end

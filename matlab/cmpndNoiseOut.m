@@ -4,14 +4,11 @@ function y = cmpndNoiseOut(noise, mu, varsigma)
 
 % NOISE
 
-% NOISE
-
-
 y = zeros(size(mu));
 for i = 1:length(noise.comp)
-  y(:, i) = feval([noise.comp{i}.type 'NoiseOut'], ...
-                noise.comp{i},...
-                mu(:, i), ...
-                varsigma(:, i));
+  fhandle = str2func([noise.comp{i}.type 'NoiseOut']);
+  y(:, i) = fhandle(noise.comp{i},...
+                    mu(:, i), ...
+                    varsigma(:, i));
 end
 

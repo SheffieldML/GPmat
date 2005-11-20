@@ -4,4 +4,5 @@ function L = noiseLikelihood(noise, mu, varsigma, y);
 
 % NOISE
 
-L = feval([noise.type 'Likelihood'], noise, mu, varsigma, y);
+fhandle = str2func([noise.type 'Likelihood']);
+L = fhandle(noise, mu, varsigma, y);
