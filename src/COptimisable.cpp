@@ -77,7 +77,7 @@ void COptimisable::gdOptimise(double learnRate, double momentum, int display, in
 	{
 	  oldObjective = objectiveVal;
 	  objectiveVal = computeObjectiveVal();
-	  diffObjective = abs(objectiveVal-oldObjective);
+	  diffObjective = fabs(objectiveVal-oldObjective);
 	}
       if(getVerbosity()>2)
 	{
@@ -300,21 +300,19 @@ void COptimisable::scgOptimise(int maxIters, const double objectiveTol, const do
 	  lambdaBar = lambda; 
 	  success = false; 
 	}
-      
+    
     // 8 Increase the scale parameter
     if(Delta < 0.25) lambda *= 4.0;
-      
+    
     // 9 Check for convergence       
     if(getVerbosity()>2)
       cout << "Iteration: " << k << " Error: " << oldObj << " Scale: " << lambda << endl;
-    if (success && abs(p.max()*alpha) < paramTol && max(abs(newObj-oldObj)) < objectiveTol)
-    {
+    if (success && fabs(p.max()*alpha) < paramTol && max(fabs(newObj-oldObj)) < objectiveTol)
+      {
       if(getVerbosity()>2)
         cout << "Convergence criterion for parameters and objective met" << endl;
       return;
     }
-      
-
   }
   cout << "Warning: Maximum number of iterations has been exceeded" << endl;
 }
