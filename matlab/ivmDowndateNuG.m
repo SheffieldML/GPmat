@@ -5,8 +5,6 @@ function model = ivmDowndateNuG(model, index)
 % IVM
 
 
-model.nu(index, :) = 1./(1./model.beta(index, :) - model.varSigma(index, ...
-						  :));
-model.g(index, :) = model.nu(index, :)...
-    .*(model.mu(index, :) - model.m(index, :));
+model.nu(index, :) = 1./(1./model.beta(index, :) - model.varSigma(index, :));
+model.g(index, :) = model.nu(index, :).*(model.mu(index, :) - model.m(index, :));
 
