@@ -244,7 +244,7 @@ void CCmpndKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covG
       g.setMatrix(0, start, subg);
       start = end+1;
     }
-  addPriorGrad(g);
+  addPriorGrad(g); //-- priors should be associated with component kernels
 }
 double CCmpndKern::getGradParam(int index, const CMatrix& X, const CMatrix& covGrad) const
 {
@@ -659,6 +659,9 @@ void CRbfKern::getGradX(vector<CMatrix*>& gX, const CMatrix& X, const CMatrix& X
   // WVB: always called with X=X2, so I'm not sure why both args are needed.
   // I guess the idea is that the two x vals _could_ be rows living in different
   // physical matrices
+  
+  // NDL: Mostly called with X=X2, but can also be called with X!=X2
+  // when a submatrix of the kernel matrix is involved.
 
   // This computes a rank 3 tensor with 
   //   gX(i,k,j) = d kern(x_i,x_k)/ d x_component_j
@@ -749,7 +752,7 @@ void CRbfKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGra
     {
       double k = 0;
       double dist2 = 0;
-      if(updateXused) // Bill Baxter's mod for precomputing parts of the kernel.
+      if(updateXused) // WVB's mod for precomputing parts of the kernel.
 	{
 	  dist2 = Xdists.getVal(i,j);
 	  k = Xdists.getVal(j,i);
@@ -775,22 +778,6 @@ double CRbfKern::getGradParam(int index, const CMatrix& X, const CMatrix& covGra
   assert(index<nParams);
   cerr << "Error getGradParam is not currently implemented for CRbfKern" << endl;
   exit(1);
-//   switch(index)
-//     {
-//     case 0:
-//       // todo 
-
-//       break;
-//     case 1:
-//       // todo
-//       break;
-//     case default:
-//       assert(0);
-//     }
-
-//   //  CMatrix KcovGrad = 
-//   // CMatrix K = compute(X);
-//   return sum(covGrad);
 }
 
 
