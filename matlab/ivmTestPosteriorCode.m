@@ -44,14 +44,16 @@ for i = 1:3
   X = origX;
   X(i) = origX(i)+epsilon;
   [dmu(i), dvarsigma(i)] = ivmPosteriorMeanVar(model, X);
-  L(i) = feval([model.noise.type 'LogLikelihood'], X, 1, model);
+  fhandle = str2func([model.noise.type 'LogLikelihood']);
+  L(i) = fhandle(X, 1, model);
   X(i) = origX(i)-epsilon;
   [dmum(i), dvarsigmam(i)] = ivmPosteriorMeanVar(model, X);
-  Lm(i) = feval([model.noise.type 'LogLikelihood'], X, 1, model);
+  Lm(i) = fhandle(X, 1, model);
 
 end
 gmu = 0.5*(dmu - dmum)'/epsilon;
 gvarsigma = 0.5*(dvarsigma - dvarsigmam)'/epsilon;
 gL = 0.5*(L - Lm)/epsilon;
 [gmu2, gvarsigma2] = ivmPosteriorGradMeanVar(model, X);
-gL2 =  feval([model.noise.type 'GradX'], X, 1, model);
+fhandle = str2func([model.noise.type 'GradX']);
+gL2 =  fhandle(X, 1, model);

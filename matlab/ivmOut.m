@@ -5,7 +5,7 @@ function y = ivmOut(model, x);
 % IVM 
 
 if nargin < 2
-  % This implies evaluate for the traing data.
+  % This implies evaluate for the training data.
   mu = model.mu;
   varsigma = model.varSigma;
 else

@@ -459,6 +459,7 @@ void CIvm::updateNuG()
 }
 void CIvm::updateK() const
 {
+  kern.updateX(X);
   double kVal=0.0;
   for(int i=0; i<activeSet.size(); i++)
     {

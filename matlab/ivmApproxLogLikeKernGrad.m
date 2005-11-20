@@ -18,6 +18,7 @@ for j = 1:size(m, 2)
   if ~model.noise.spherical
     invK = pdinv(K+diag(1./model.beta(model.I, j)));
   end
-  covGrad = feval([model.type 'CovarianceGradient'], invK, m(:, j));
+  fhandle = str2func([model.type 'CovarianceGradient']);
+  covGrad = fhandle(invK, m(:, j));
   g = g + kernGradient(model.kern, x, covGrad);
 end  

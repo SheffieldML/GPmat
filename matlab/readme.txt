@@ -1,21 +1,11 @@
-This is the fourth major release of my IVM software, it contains basic IVM functionality including point selection, point removal, EP updates and kernel and noise parameter optimisation.
-
-For details on this algorithm see the (forthcoming) technical report at
-http://ext.dcs.shef.ac.uk/~u0015/bibpage.cgi?keyName=Lawrence:ivmTech04
-
-It should be available from Aug/Sep 2003.
- 
-Changes in vs 0.31
+Changes in vs 0.32
 ------------------
 
-The options are now held in a structure whose values are set in ivmOptions.m
-There were some missing files in the last release, these have now been added.
-
-The EP updates are currently unstable numerically and should be used with caution.
-
+This code no longer works under MATLAB 6.1, it requires MATLAB 7.0 or higher to run.
+ 
 This version of the software now relies on the following toolboxes:
 
-KERN vs 0.12
+KERN vs 0.14
 ------------
 
 This toolbox implements the different kernels. IVM interacts with this toolbox through an interface which involves files starting with kern.
@@ -44,6 +34,14 @@ ROCHOL vs 0.12
 --------------
 
 This toolbox implements the rank one Cholesky updates. These are need when points are removed or EP updates are applied to selected points.
+
+Changes in vs 0.31
+------------------
+
+The options are now held in a structure whose values are set in ivmOptions.m
+There were some missing files in the last release, these have now been added.
+
+The EP updates are currently unstable numerically and should be used with caution.
 
 Demos
 -----
