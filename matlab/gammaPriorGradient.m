@@ -1,6 +1,6 @@
 function g = gammaPriorGradient(prior, x)
 
-% GAMMAPRIORGRADIENT Gradient wrt x of the log Gaussian prior.
+% GAMMAPRIORGRADIENT Gradient wrt x of the gamma prior.
 
 % PRIOR
 

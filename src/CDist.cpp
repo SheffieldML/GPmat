@@ -73,9 +73,9 @@ double CGaussianDist::getParam(const int index) const
 void CGaussianDist::setInitParam()
 {
   setType("gaussian");
+  setNumParams(1);
   setName("Gaussian prior");
   setParamName("precision", 0);
-  setNumParams(1);
   precision = 1.0;
   addTransform(new CNegLogLogitTransform, 0);
 }
@@ -88,6 +88,7 @@ double CGaussianDist::getGradInput(double x) const
   return -precision*x;
 }
 
+// Gamma prior.
 CGammaDist::CGammaDist()
 {
   setInitParam();
@@ -98,7 +99,6 @@ CGammaDist::CGammaDist(const CGammaDist& dist) : a(dist.a), b(dist.b)
 CGammaDist::~CGammaDist()
 {
 }
-// Gamma prior.
 void CGammaDist::setParam( double val,  int index)
 {
   assert(index>=0);
@@ -148,12 +148,69 @@ void CGammaDist::setInitParam()
 }
 double CGammaDist::logProb(double x) const
 {
-  
   return a*log(b) - ndlutil::gammaln(a) + ndlutil::xlogy(a-1.0,x)-b*x;  
 }
 double CGammaDist::getGradInput(double x) const
 {
   return (a-1.0)/x - b;
+}
+
+// Wang's unusual prior from the GPDM thesis.
+CWangDist::CWangDist()
+{
+  setInitParam();
+}
+CWangDist::CWangDist(const CWangDist& dist) : M(dist.M)
+{
+}
+CWangDist::~CWangDist()
+{
+}
+void CWangDist::setParam( double val,  int index)
+{
+  assert(index>=0);
+  assert(index<getNumParams());
+  switch(index)
+    {
+    case 0:
+      M = val;
+      break;
+    default:
+      cerr << "No such parameter" << endl;
+      exit(1);
+    }
+
+}
+double CWangDist::getParam(const int index) const
+{
+  assert(index>=0);
+  assert(index<getNumParams());
+  switch(index)
+    {
+    case 0:
+      return M;
+    default:
+      cerr << "No such parameter" << endl;
+      exit(1);
+    }
+  return -1;
+}
+void CWangDist::setInitParam()
+{
+  setType("wang");
+  setName("Wang's GPDM prior");
+  setNumParams(1);  
+  setParamName("M", 0);
+  M=1;
+  addTransform(new CNegLogLogitTransform, 0);
+}
+double CWangDist::logProb(double x) const
+{
+  return -M*log(x);
+}
+double CWangDist::getGradInput(double x) const
+{
+  return -M/x;
 }
 
 #ifdef _NDLMATLAB
@@ -193,6 +250,8 @@ void CParamPriors::fromMxArray(const mxArray* distArray)
 	  counter++;
 	  if(distType=="gamma")
 	    addDist(new CGammaDist, distIndex[j]-1);
+	  else if(distType=="wang")
+	    addDist(new CWangDist, distIndex[j]-1);
 	  else if(distType=="gaussian")
 	    addDist(new CGaussianDist, distIndex[j]-1);
 	  else
@@ -231,9 +290,11 @@ CDist* readDistFromStream(istream& in)
     pdist = new CGaussianDist();
   else if(type=="gamma")
     pdist = new CGammaDist();
+  else if(type=="wang")
+    pdist = new CWangDist();
   else
     throw ndlexceptions::FileFormatError();
-  
   pdist->readParamsFromStream(in);
+    
   return pdist;
 }

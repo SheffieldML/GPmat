@@ -130,6 +130,27 @@ class CGammaDist : public CDist {
   double b;
 };
 // A class which stores distributions in a container for priors over parameters.
+// An unusual prior used by Wang in the GPDM thesis.
+class CWangDist : public CDist {
+
+ public:
+  CWangDist();
+  CWangDist(const CWangDist&);
+  ~CWangDist();
+  CWangDist* clone() const
+    {
+      return new CWangDist(*this);
+    }
+  double getParam(int paramNo) const;
+  void setParam(double val, int paramNo);
+  double getGradInput(double x) const;
+  void setInitParam();
+  double logProb(double val) const;
+
+ private:
+  double M;
+};
+// A class which stores distributions in a container for priors over parameters.
 class CParamPriors : CMatinterface {
   
  public:
@@ -202,13 +223,11 @@ class CRegularisable {
     {
       assert(g.getRows()==1);
       assert(g.getCols()==getNumParams());
-      double val;
       double param;
       for(int i=0; i<distArray.distIndex.size(); i++)
 	{
-	  val=g.getVal(distArray.distIndex[i]);
 	  param=getParam(distArray.distIndex[i]);
-	  g.setVal(val+distArray.dists[i]->getGradInput(param), 
+	  g.addVal(getPriorGradInput(param, i), 
 		   distArray.distIndex[i]);
 	}  
     }
@@ -234,8 +253,8 @@ class CRegularisable {
 	    throw ndlexceptions::FileFormatError();
 	  prior = readDistFromStream(in);
 	  addPrior(prior, atol(tokens[1].c_str()));
+	  tokens.clear();
 	}
-      
     }
 
   virtual double priorLogProb() const
