@@ -1,14 +1,18 @@
-function g = rbfKernGradient(kern, x, covGrad)
+function g = rbfKernGradient(kern, x, varargin)
 
 % RBFKERNGRADIENT Gradient of rbf kernel's parameters.
 
 % KERN
 
-[k, dist2xx] = rbfKernCompute(kern, x);
 
-g(1) = - .5*sum(sum(covGrad.*k.*dist2xx));
-g(2) =  sum(sum(covGrad.*k))/kern.variance;
-
+% The last argument is covGrad
+if nargin < 4
+  [k, dist2xx] = rbfKernCompute(kern, x);
+else
+  [k, dist2xx] = rbfKernCompute(kern, x, varargin{1});
+end
+g(1) = - .5*sum(sum(varargin{end}.*k.*dist2xx));
+g(2) =  sum(sum(varargin{end}.*k))/kern.variance;
 %/~
 if any(isnan(g))
   warning('g is NaN')

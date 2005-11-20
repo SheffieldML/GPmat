@@ -1,7 +1,7 @@
-function g = biasKernGradient(kern, x, covGrad)
+function g = biasKernGradient(kern, x, varargin)
 
 % BIASKERNGRADIENT Gradient of bias kernel's parameters.
 
 % KERN
 
-g = sum(sum(covGrad));
+g = sum(sum(varargin{end}));

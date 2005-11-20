@@ -1,5 +1,12 @@
-Version 0.131 Release Notes
+Please note that this toolbox requires MATLAB 7.0 or higher to run.
+
+Version 0.14 Release Notes
 --------------------------
+
+Added computation of parameter gradients with respect to sub-matrices of the kernel matrix to allow for optimisation of inducing points.
+
+Version 0.131 Release Notes
+---------------------------
 
 Added polynomial and polynomial ARD kernels for completeness (their use is not recommended in Gaussian processes). Added kernReadFromFID.m for reading in a kernel from a C++ written file.
 

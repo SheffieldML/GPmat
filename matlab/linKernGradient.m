@@ -1,8 +1,12 @@
-function g = linKernGradient(kern, x, covGrad)
+function g = linKernGradient(kern, x, varargin)
 
 % LINKERNGRADIENT Gradient of lin kernel's parameters.
 
 % KERN
 
-linPart = linKernCompute(kern, x);
-g(1) = sum(sum(covGrad.*linPart))/kern.variance;
+if nargin < 4
+  linPart = linKernCompute(kern, x);
+else
+  linPart = linKernCompute(kern, x, varargin{1});
+end
+g(1) = sum(sum(varargin{end}.*linPart))/kern.variance;

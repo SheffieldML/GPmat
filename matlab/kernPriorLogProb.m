@@ -12,7 +12,8 @@ switch kern.type
   end
  otherwise
   if isfield(kern, 'priors')
-    params = feval([kern.type 'KernExtractParam'], kern);
+    fhandle = str2func([kern.type 'KernExtractParam']);
+    params = fhandle(kern);
     for i = 1:length(kern.priors)
       index = kern.priors(i).index;
       L = L + priorLogProb(kern.priors(i), params(index));

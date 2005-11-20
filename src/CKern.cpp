@@ -264,7 +264,9 @@ double CCmpndKern::priorLogProb() const
 {
   double L = 0.0;
   for(int i=0; i<components.size(); i++)
-    L+=components[i]->priorLogProb();
+    {
+      L+=components[i]->priorLogProb();
+    }
   return L;
 }
 void CCmpndKern::addPrior(CDist* prior, int index) 
@@ -570,14 +572,14 @@ double CBiasKern::getGradParam(int index, const CMatrix& X, const CMatrix& covGr
   return sum(covGrad);
 }
 // the RBF kernel.
-CRbfKern::CRbfKern()
+CRbfKern::CRbfKern() : updateXused(false)
 {
 }
-CRbfKern::CRbfKern(int inDim)
+CRbfKern::CRbfKern(int inDim) : updateXused(false)
 {
   setInputDim(inDim);
 }
-CRbfKern::CRbfKern(const CMatrix& X)
+CRbfKern::CRbfKern(const CMatrix& X) : updateXused(false)
 {
   setInputDim(X.getCols());
 }  
@@ -713,6 +715,7 @@ double CRbfKern::computeElement(const CMatrix& X1, int index1,
 
 void CRbfKern::updateX(const CMatrix& X)
 {
+  updateXused = true;
   Xdists.resize(X.getRows(),X.getRows());
   double halfInverseWidth=0.5*inverseWidth;
   int nrows = X.getRows();
@@ -744,10 +747,18 @@ void CRbfKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGra
     g2 += covGrad.getVal(j,j);
     for(int i=0; i<j; i++)
     {
-      // double dist2 = X.dist2Row(i, X, j);
-      // double k = exp(-dist2*halfInverseWidth);
-      double dist2 = Xdists.getVal(i,j);
-      double k = Xdists.getVal(j,i);
+      double k = 0;
+      double dist2 = 0;
+      if(updateXused) // Bill Baxter's mod for precomputing parts of the kernel.
+	{
+	  dist2 = Xdists.getVal(i,j);
+	  k = Xdists.getVal(j,i);
+	}
+      else
+	{
+	  dist2 = X.dist2Row(i, X, j);
+	  k = exp(-dist2*halfInverseWidth);
+	}
       double kcg_ij = k*covGrad.getVal(i,j);
       g1 -= 2.0*halfVariance*dist2*kcg_ij; // dk()/dgamma in SBIK paper
       g2 += 2.0*kcg_ij;                    // dk()/dalpha in SBIK paper

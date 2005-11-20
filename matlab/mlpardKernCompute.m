@@ -1,4 +1,4 @@
-function [k, innerProd, arg, denom, numer, vec] = mlpardKernCompute(kern, x, x2)
+function [k, innerProd, arg, denom, numer, vec1, vec2] = mlpardKernCompute(kern, x, x2)
 
 % MLPARDKERNCOMPUTE Compute the multi-layer perceptron ARD kernel given the parameters and X.
 
@@ -10,8 +10,8 @@ x = x*scales;
 if nargin < 3
   innerProd = x*x';
   numer = innerProd*kern.weightVariance + kern.biasVariance;
-  vec = diag(numer) + 1;
-  denom = sqrt(vec*vec');
+  vec1 = diag(numer) + 1;
+  denom = sqrt(vec1*vec1');
   arg = numer./denom;
   k = kern.variance*asin(arg);
 else

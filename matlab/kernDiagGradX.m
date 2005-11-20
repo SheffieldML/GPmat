@@ -4,8 +4,9 @@ function k = kernDiagGradX(kern, x, x2)
 
 % KERN
 
+fhandle = str2func([kern.type 'KernDiagGradX']);
 if nargin < 3
-  k = feval([kern.type 'KernDiagGradX'], kern, x);
+  k = fhandle(kern, x);
 else
-  k = feval([kern.type 'KernDiagGradX'], kern, x, x2);
+  k = fhandle(kern, x, x2);
 end

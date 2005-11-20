@@ -4,4 +4,5 @@ function kernDisplay(kern)
 
 % KERN
 
-feval([kern.type 'KernDisplay'], kern)
+fhandle = str2func([kern.type 'KernDisplay']);
+fhandle(kern);

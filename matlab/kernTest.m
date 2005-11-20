@@ -9,6 +9,7 @@ numIn = 2;
 
 % Generate some x positions.
 x = randn(numData, numIn);
+x2 = randn(numData/2, numIn);
 kern = kernCreate(x, kernType);
 kern = kernParamInit(kern);
 
@@ -40,6 +41,7 @@ kern = kernExpandParam(kern, params);
 [void, names] = kernExtractParam(kern);
 gLDiff = .5*(Lplus - Lminus)/epsilon;
 g = kernGradient(kern, x, covGrad);
+
 
 paramMaxDiff = max(max(abs(gLDiff-g)));
 if paramMaxDiff > 2*epsilon
@@ -104,9 +106,50 @@ K = kernCompute(kern, x);
 traceK =  full(trace(K));
 traceK2 = full(sum(kernDiagCompute(kern, x)));
 traceDiff = traceK - traceK2; 
+
+covGrad = ones(numData, numData/2);
+epsilon = 1e-6;
+params = kernExtractParam(kern);
+origParams = params;
+Lplus = zeros(size(params));
+Lminus = zeros(size(params));
+for i = 1:length(params);
+  params = origParams;
+  params(i) = origParams(i) + epsilon;
+  kern = kernExpandParam(kern, params);
+  Lplus(i) = full(sum(sum(kernCompute(kern, x, x2))));
+  params(i) = origParams(i) - epsilon;
+  kern = kernExpandParam(kern, params);
+  Lminus(i) = full(sum(sum(kernCompute(kern, x, x2))));
+end
+params = origParams;
+kern = kernExpandParam(kern, params);
+[void, names] = kernExtractParam(kern);
+gL2Diff = .5*(Lplus - Lminus)/epsilon;
+g = kernGradient(kern, x, x2, covGrad);
+
+param2MaxDiff = max(max(abs(gL2Diff-g)));
+if param2MaxDiff > 2*epsilon
+  l = 0;
+  for i = 1:length(names)
+    if l < length(names{i})
+      l = length(names{i});
+    end
+  end
   
+  fprintf([char(repmat(32, 1, l)) '\tanalytic   diffs     delta\n']);
+  for i = 1:length(names)
+    spaceLen = l - length(names{i});
+    space = char(repmat(32, 1, spaceLen));
+    fprintf([space names{i} ':\t%4.6f\t%4.6f\t%4.6f\n'], ...
+            g(i), gL2Diff(i), gL2Diff(i) - g(i));
+  end
+end
+
+
 fprintf('Trace max diff: %2.6f.\n', traceDiff);
 fprintf('Param max diff: %2.6f.\n', paramMaxDiff)
+fprintf('Param X2 max diff: %2.6f.\n', param2MaxDiff)
 fprintf('X max diff: %2.6f.\n', xMaxDiff)
 fprintf('XDiag max diff: %2.6f.\n', xDiagMaxDiff)
 fprintf('\n');

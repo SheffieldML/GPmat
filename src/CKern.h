@@ -406,6 +406,7 @@ class CRbfKern: public CKern {
   void updateX(const CMatrix& X);
 
  private:
+  bool updateXused;
   double variance;
   double inverseWidth;
   mutable CMatrix Xdists;

@@ -1,11 +1,8 @@
-function k = kernDiagCompute(kern, x, x2)
+function k = kernDiagCompute(kern, x)
 
 % KERNELCOMPUTE Compute the kernel given the parameters and X.
 
 % KERN
 
-if nargin < 3
-  k = feval([kern.type 'KernDiagCompute'], kern, x);
-else
-  k = feval([kern.type 'KernDiagCompute'], kern, x, x2);
-end
+fhandle = str2func([kern.type 'KernDiagCompute']);
+k = fhandle(kern, x);

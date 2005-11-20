@@ -32,7 +32,8 @@ else
   
   params = fscanf(FID, '%f\n', numParams);
   kern.inputDimension=numFeatures;
-  kern = feval([kern.type 'KernExpandParam'], kern, params);
+  fhandle = str2func([kern.type 'KernExpandParam']);
+  kern = fhandle(kern, params);
   
   lineStr = getline(FID);
   tokens = tokenise(lineStr, '=');
@@ -40,8 +41,15 @@ else
     error('Incorrect file format.')
   end
   numPriors = str2num(tokens{2});
-  if numPriors>0
-    kern.priors = priorReadFromFID(FID, numPriors);
+  for j=1:numPriors
+    lineStr = getline(FID);
+    tokens = tokenise(lineStr, '=');
+    if(length(tokens)~=2 | ~strcmp(tokens{1}, 'priorIndex'))
+      error('Incorrect file format.')
+    end
+    prior = priorReadFromFID(FID);
+    prior.index = str2num(tokens{2})+1;
+    kern.priors(j) = prior;
   end
 end
 
