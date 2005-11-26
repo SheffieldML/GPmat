@@ -192,6 +192,16 @@ void CClctrl::readData(CMatrix& X, CMatrix& y, const string fileName)
     cout << "Data set loaded." << endl;
   setMode(m);
 }
+void CClctrl::exitNormal()
+{
+#ifdef _DEBUG
+#ifdef _MSC_VER
+  // For debugging under visual studio, to prevent window disappearing.
+  waitForSpace();
+#endif
+#endif
+  exit(0);
+}
 void CClctrl::exitError(const string error)
 {
   cerr << error << endl << endl;

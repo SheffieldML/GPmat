@@ -26,6 +26,14 @@ class Error {
  private:
   std::string msg;
 };
+class MatlabInterfaceError : public ndlexceptions::Error {
+public:
+  MatlabInterfaceError(){}
+  MatlabInterfaceError(std::string message)
+    {
+	  setMessage(message);
+	}
+};
 class NotImplementedError : public ndlexceptions::Error {
  public:
   NotImplementedError(){}

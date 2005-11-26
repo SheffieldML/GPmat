@@ -33,6 +33,8 @@ class CClctrl {
   int readSvmlDataFile(CMatrix& X, CMatrix& y, const string fileName);
   // Read in a data file.
   void readData(CMatrix& X, CMatrix& y, const string fileName);
+  // exit normally.
+  void exitNormal();
   // Exit with an error.
   void exitError(const string error);
 
