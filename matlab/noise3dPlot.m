@@ -4,8 +4,9 @@ function h = noise3dPlot(noise, plotType, CX, CY, CZ, CZVar, varargin)
 
 % NOISE
 
-fhandle = str2func([noise.type 'Noise3dPlot']);
+functionName = [noise.type 'Noise3dPlot'];
 if exist(functionName) == 2
+  fhandle = str2func(functionName);
   h = fhandle(noise, plotType, CX, CY, CZ, CZVar, varargin{:});
 end
 
