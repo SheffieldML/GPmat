@@ -2,12 +2,9 @@
 
 % IVM
 
-randn('seed', 1e6)
-rand('seed', 1e6)
 
 % Generate a toy data-set
-X = [randn(100,2)-[zeros(100, 1) 6*ones(100, 1)]; randn(100,2)+[zeros(100, 1) 6*ones(100, 1)]; randn(100, 2)];
-y = [ones(200, 1); -ones(100, 1)];
+[X, y] = mappingLoadData('classificationOne', 1e6);
 
 % The probit is a classification noise model.
 noiseModel = 'probit'; 

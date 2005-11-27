@@ -8,7 +8,7 @@ experimentNo = 3;
 randn('seed', 1e5)
 rand('seed', 1e5)
 
-[X, y, XTest, yTest] = ivmLoadData(dataSetName);
+[X, y, XTest, yTest] = mappingLoadData(dataSetName);
 
 capitalName = dataSetName;
 capitalName(1) = upper(capitalName(1));

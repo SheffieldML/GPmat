@@ -2,8 +2,6 @@ function [X, y, XTest, yTest] = ivmLoadData(dataset, seedVal)
 
 % IVMLOADDATA Load a dataset.
 
-% IVM
-
 if nargin < 2
   seedVal = 1e5;
 end
@@ -13,7 +11,7 @@ XTest = [];
 yTest = [];
 switch dataset
  case 'pumadynSeeger'
-  data = load('../data/Dataset.data');
+  data = load('Dataset.data');
   ind = randperm(size(data, 1));
   indTr = ind(1:7168);
   indTe = ind(7169:end);
@@ -37,7 +35,7 @@ switch dataset
  case 'pumadyn'
 
   % Data is variance 1, no need to normalise.
-  data = load('../data/Dataset.data');
+  data = load('Dataset.data');
   ind = randperm(size(data, 1));
   indTr = ind(1:7168);
   indTe = ind(7169:end);
@@ -47,14 +45,14 @@ switch dataset
   yTest = data(indTe, end);
  
  case 'usps'
-  load ../data/usps_train
+  load usps_train
   X = ALL_DATA;
   range =  min(ALL_T):max(ALL_T);
   for i = 1:length(range)
     y(:, i) = (ALL_T == range(i))*2 - 1;
   end
   if nargout > 2
-    load ../data/usps_test
+    load usps_test
     XTest = ALL_DATA;
     range =  min(ALL_T):max(ALL_T);
     for i = 1:length(range)
@@ -64,14 +62,14 @@ switch dataset
   
  case {'usps0', 'usps1', 'usps2', 'usps3', 'usps4', 'usps5', 'usps6', 'usps7', 'usps8', 'usps9'}
   digitNo = str2num(dataset(end));
-  load ../data/usps_train
+  load usps_train
   X = ALL_DATA;
   range =  min(ALL_T):max(ALL_T);
   for i = 1:length(range)
     y(:, i) = (ALL_T == range(i))*2 - 1;
   end
   if nargout > 2
-    load ../data/usps_test
+    load usps_test
     XTest = ALL_DATA;
     range =  min(ALL_T):max(ALL_T);
     for i = 1:length(range)

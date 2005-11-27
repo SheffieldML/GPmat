@@ -3,10 +3,7 @@
 % IVM
 
 
-randn('seed', 1e6)
-rand('seed', 1e6)
-
-[X, y] = ivmLoadData('orderedTwo');
+[X, y] = mappingLoadData('orderedTwo');
 
 noiseModel = 'ordered';
 selectionCriterion = 'entropy';

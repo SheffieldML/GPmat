@@ -5,7 +5,7 @@
 % Sample a classification data-set.
 randn('seed', 1e5)
 rand('seed', 1e5)
-[X, y ] = ivmLoadData('classificationTwo');
+[X, y ] = mappingLoadData('classificationTwo');
 noiseModel = 'probit';
 selectionCriterion = 'entropy';
 kernelType = {'rbf', 'white'};

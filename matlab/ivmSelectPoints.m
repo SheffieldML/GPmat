@@ -4,7 +4,7 @@ function model = ivmSelectPoints(model, display)
 
 % IVM
 
-tol = 1e-4;
+tol = 1e-3;
 if nargin < 2
   display = 1;
 end

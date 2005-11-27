@@ -522,7 +522,11 @@ void CIvm::approxLogLikelihoodGradient(CMatrix& g) const
 	  updateInvK(j);
 	}
       updateCovGradient(j);
-      kern.getGradTransParams(tempG, activeX, covGrad);
+      if(j==0)
+	kern.getGradTransParams(tempG, activeX, covGrad, true);
+      else
+	kern.getGradTransParams(tempG, activeX, covGrad, false);
+	
       g+=tempG;
       
     }

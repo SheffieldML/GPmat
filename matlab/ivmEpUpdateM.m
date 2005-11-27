@@ -94,12 +94,12 @@ for c = 1:length(model.Sigma)
   end
   %~/
   model.Sigma(c).M(end, :) = lValInv*s;
-  ainv = (-a*lValInv)'/lower(model.Sigma(c).L(1:end-1, 1:end-1));
+  ainv = (-a*lValInv)'/tril(model.Sigma(c).L(1:end-1, 1:end-1));
   model.Sigma(c).L(end, :) = [a' 1/lValInv];
   model.Sigma(c).Linv(end, :) = [ainv lValInv];
   % make sure Matlab knows they are lower triangular.
-  model.Sigma(c).L = lower(model.Sigma(c).L);
-  model.Sigma(c).Linv = lower(model.Sigma(c).Linv);
+  model.Sigma(c).L = tril(model.Sigma(c).L);
+  model.Sigma(c).Linv = tril(model.Sigma(c).Linv);
   %/~
   oldVarSigma = model.varSigma(:, c);
   if any(model.varSigma(:, c)<0)

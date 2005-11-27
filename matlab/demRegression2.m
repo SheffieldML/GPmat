@@ -3,7 +3,7 @@
 % IVM
 
 % Sample a regression data-set.
-[X, y] = ivmLoadData('regressionTwo');
+[X, y] = mappingLoadData('regressionTwo');
 
 noiseModel = 'gaussian';
 selectionCriterion = 'entropy';
