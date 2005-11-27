@@ -122,7 +122,7 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
       exit(1);
     }
   // Compute the gradient of the kernel matrix with respect to parameters given an additional gradient matrix.
-  virtual void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd) const
+  virtual void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const
     {
       assert(g.getRows()==1);
       assert(g.getCols()==nParams);
@@ -130,7 +130,8 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
       assert(cvGrd.isSquare());
       for(int i=0; i<nParams; i++)
 	g.setVal(getGradParam(i, X, cvGrd), i);
-      addPriorGrad(g); /// don't forget to add prior gradient at the end.
+      if(regularise)
+	addPriorGrad(g); /// don't forget to add prior gradient at the end.
     }
   // Get gradient of a particular parameter.
   virtual double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const=0;
@@ -237,7 +238,7 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
   virtual void extractParamFromMxArray(const mxArray* matlabArray);
 #endif /* _NDLMATLAB*/
   // Get the gradient of the transformed parameters.
-  void getGradTransParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd) const;
+  void getGradTransParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
   // specify tests for equality between kernels.
   bool equals(const CKern& kern, double tol=ndlutil::MATCHTOL) const;
   
@@ -289,7 +290,7 @@ class CCmpndKern: public CKern {
 		 const CMatrix& X2, int index2) const;
   void compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const;
   void compute(CMatrix& K, const CMatrix& X) const;
-  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd) const;
+  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
   double priorLogProb() const;
   void addPrior(CDist* prior, int index);
@@ -401,7 +402,7 @@ class CRbfKern: public CKern {
   double getWhite() const;
   double computeElement(const CMatrix& X1, int index1, 
 		  const CMatrix& X2, int index2) const;
-  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd) const;
+  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
   void updateX(const CMatrix& X);
 
@@ -464,7 +465,7 @@ class CMlpKern: public CKern {
   double getWhite() const;
   double computeElement(const CMatrix& X1, int index1, 
 		  const CMatrix& X2, int index2) const;
-  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd) const;
+  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
 
  private:
@@ -503,7 +504,7 @@ class CPolyKern: public CKern {
   double getWhite() const;
   double computeElement(const CMatrix& X1, int index1, 
 		  const CMatrix& X2, int index2) const;
-  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd) const;
+  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
   void writeParamsToStream(ostream& out) const;
   void readParamsFromStream(istream& in);
@@ -540,7 +541,7 @@ class CLinardKern: public CArdKern {
   double getWhite() const;
   double computeElement(const CMatrix& X1, int index1, 
 		 const CMatrix& X2, int index2) const;
-  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd) const;
+  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise = true) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
 
 
@@ -569,7 +570,7 @@ class CRbfardKern: public CArdKern {
   double getWhite() const;
   double computeElement(const CMatrix& X1, int index1, 
 		 const CMatrix& X2, int index2) const;
-  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd) const;
+  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
 
 
@@ -600,7 +601,7 @@ class CMlpardKern: public CArdKern {
   double getWhite() const;
   double computeElement(const CMatrix& X1, int index1, 
 		 const CMatrix& X2, int index2) const;
-  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd) const;
+  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
 
 
@@ -641,7 +642,7 @@ class CPolyardKern: public CArdKern {
   double getWhite() const;
   double computeElement(const CMatrix& X1, int index1, 
 		 const CMatrix& X2, int index2) const;
-  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd) const;
+  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
   void writeParamsToStream(ostream& out) const;
   void readParamsFromStream(istream& in);

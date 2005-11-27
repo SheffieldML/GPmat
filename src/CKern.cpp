@@ -44,11 +44,11 @@ void CKern::getPriorLogProb(CMatrix& G) const
 {
 }
 
-void CKern::getGradTransParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd) const
+void CKern::getGradTransParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise) const
 {
   assert(g.getRows()==1);
   assert(g.getCols()==getNumParams());
-  getGradParams(g, X, cvGrd);
+  getGradParams(g, X, cvGrd, regularise);
   double val;
   double param;
   for(int i=0; i<getNumTransforms(); i++)
@@ -230,7 +230,7 @@ void CCmpndKern::compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const
 	}
     }
 }
-void CCmpndKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad) const
+void CCmpndKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
   assert(g.getRows()==1);
   assert(g.getCols()==getNumParams());
@@ -240,11 +240,10 @@ void CCmpndKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covG
     {
       end = start+components[i]->getNumParams()-1;
       CMatrix subg(1, components[i]->getNumParams());
-      components[i]->getGradParams(subg, X, covGrad);
+      components[i]->getGradParams(subg, X, covGrad, regularise);
       g.setMatrix(0, start, subg);
       start = end+1;
     }
-  addPriorGrad(g); //-- priors should be associated with component kernels
 }
 double CCmpndKern::getGradParam(int index, const CMatrix& X, const CMatrix& covGrad) const
 {
@@ -734,7 +733,7 @@ void CRbfKern::updateX(const CMatrix& X)
   }
 }
 
-void CRbfKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad) const
+void CRbfKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
   assert(g.getRows()==1);
   assert(g.getCols()==nParams);
@@ -769,7 +768,8 @@ void CRbfKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGra
   }
   g.setVal(g1, 0);
   g.setVal(g2, 1);
-  addPriorGrad(g);
+  if(regularise)
+    addPriorGrad(g);
 }
 
 double CRbfKern::getGradParam(int index, const CMatrix& X, const CMatrix& covGrad) const
@@ -1072,7 +1072,7 @@ double CMlpKern::computeElement(const CMatrix& X1, int index1,
   double denom2=weightVariance*X2.norm2Row(index2)+biasVariance+1.0;  
   return variance*asin(numer/sqrt(denom1*denom2));
 }
-void CMlpKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad) const
+void CMlpKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
   assert(g.getRows()==1);
   assert(g.getCols()==nParams);
@@ -1121,7 +1121,9 @@ void CMlpKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGra
   g.setVal(g1, 0);
   g.setVal(g2, 1);
   g.setVal(g3, 2);
-  addPriorGrad(g);
+  if(regularise)
+    addPriorGrad(g);
+
 }
 double CMlpKern::getGradParam(int index, const CMatrix& X, const CMatrix& covGrad) const
 {
@@ -1317,7 +1319,7 @@ double CPolyKern::computeElement(const CMatrix& X1, int index1,
   double arg=weightVariance*X1.dotRowRow(index1, X2, index2) + biasVariance;
   return variance*pow(arg, degree);
 }
-void CPolyKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad) const
+void CPolyKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
   assert(g.getRows()==1);
   assert(g.getCols()==nParams);
@@ -1357,7 +1359,9 @@ void CPolyKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGr
   g.setVal(g1, 0);
   g.setVal(g2, 1);
   g.setVal(g3, 2);
-  addPriorGrad(g);
+  if(regularise)
+    addPriorGrad(g);
+
 }
 double CPolyKern::getGradParam(int index, const CMatrix& X, const CMatrix& covGrad) const
 {
@@ -1524,7 +1528,7 @@ double CLinardKern::computeElement(const CMatrix& X1, int index1,
   return val*variance;
 }
 
-void CLinardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad) const
+void CLinardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
   assert(g.getRows()==1);
   assert(g.getCols()==nParams);
@@ -1564,7 +1568,9 @@ void CLinardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cov
       g2*=variance;
       g.setVal(g2, k+1);
     }
-  addPriorGrad(g);
+  if(regularise)
+    addPriorGrad(g);
+
 }
 double CLinardKern::getGradParam(int index, const CMatrix& X, const CMatrix& covGrad) const
 {
@@ -1723,7 +1729,7 @@ double CRbfardKern::computeElement(const CMatrix& X1, int index1,
   return variance*exp(-val*inverseWidth*0.5);
 }
 
-void CRbfardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad) const
+void CRbfardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
   assert(g.getRows()==1);
   assert(g.getCols()==nParams);
@@ -1764,7 +1770,9 @@ void CRbfardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cov
   g.setVal(g2, 1);
   for(int k=0; k<getInputDim(); k++)
     g.setVal(gscales.getVal(k), k+2);
-  addPriorGrad(g);
+  if(regularise)
+    addPriorGrad(g);
+
 }
 double CRbfardKern::getGradParam(int index, const CMatrix& X, const CMatrix& covGrad) const
 {
@@ -1982,7 +1990,7 @@ double CMlpardKern::computeElement(const CMatrix& X1, int index1,
   return variance*asin(numer/sqrt(denom1*denom2));
 }
 
-void CMlpardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad) const
+void CMlpardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
   assert(g.getRows()==1);
   assert(g.getCols()==nParams);
@@ -2068,7 +2076,9 @@ void CMlpardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cov
   g.setVal(g3, 2);
   for(int k=0; k<getInputDim(); k++)
     g.setVal(gscales.getVal(k), k+3);
-  addPriorGrad(g);
+  if(regularise)
+    addPriorGrad(g);
+
 }
 double CMlpardKern::getGradParam(int index, const CMatrix& X, const CMatrix& covGrad) const
 {
@@ -2301,7 +2311,7 @@ double CPolyardKern::computeElement(const CMatrix& X1, int index1,
   return variance*pow(arg, degree);
 }
 
-void CPolyardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad) const
+void CPolyardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
   assert(g.getRows()==1);
   assert(g.getCols()==nParams);
@@ -2375,7 +2385,9 @@ void CPolyardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& co
   g.setVal(g3, 2);
   for(int k=0; k<getInputDim(); k++)
     g.setVal(gscales.getVal(k), k+3);
-  addPriorGrad(g);
+  if(regularise)
+    addPriorGrad(g);
+
 }
 double CPolyardKern::getGradParam(int index, const CMatrix& X, const CMatrix& covGrad) const
 {
