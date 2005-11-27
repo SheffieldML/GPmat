@@ -41,7 +41,8 @@ class CDist : public CMatinterface, public CTransformable {
   // Gets the parameters from the mxArray.
   virtual void extractParamFromMxArray(const mxArray* matlabArray);
 #endif /* _NDLMATLAB*/
-
+  bool equals(const CDist& dist, double tol=ndlutil::MATCHTOL) const;
+ 
   virtual void writeParamsToStream(ostream& out) const;
   virtual void readParamsFromStream(istream& in);
   //CDist(CDist& dist);
@@ -59,12 +60,12 @@ class CDist : public CMatinterface, public CTransformable {
   void setInitParam();
   // Get log probability at a particualar value
   virtual double logProb(double val) const=0;
-  virtual double logProb(const CMatrix& x)
+  virtual double logProb(const CMatrix& x) const
     {
       double ll = 0.0;
       for(int i=0; i<x.getRows(); i++)
 	for(int j=0; j<x.getCols(); j++)
-	  ll+=logProb(x.getVal(i, j));
+		ll+=logProb(x.getVal(i, j));
       return ll;
     }
   void setParamName(const string name, int index)

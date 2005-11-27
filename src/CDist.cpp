@@ -28,6 +28,21 @@ void CDist::readParamsFromStream(istream& in)
   else
     throw ndlexceptions::FileFormatError();
 }
+bool CDist::equals(const CDist& dist, double tol) const
+{
+  if(getType()!=dist.getType())
+    return false;
+  if(getNumParams()!=dist.getNumParams())
+    return false;
+  CMatrix params(1, getNumParams());
+  getParams(params);
+  CMatrix distParams(1, getNumParams());
+  dist.getParams(distParams);
+  if(!params.equals(distParams, tol))
+    return false;
+  return true;
+}
+
 #ifdef _NDLMATLAB
 mxArray* CDist::toMxArray() const
 {
@@ -41,7 +56,7 @@ mxArray* CDist::toMxArray() const
   string ty=getType();
   typeName[0] = ty.c_str();
   mxSetField(matlabArray, 0, "type", 
-	     mxCreateCharMatrixFromStrings(1, type));
+	     mxCreateCharMatrixFromStrings(1, typeName));
   
   // transforms field.
   mxSetField(matlabArray, 0, "transforms", transformsToMxArray());
@@ -56,7 +71,7 @@ void CDist::fromMxArray(const mxArray* matlabArray)
   string mxType = mxArrayExtractStringField(matlabArray, "type");
   if(mxType!=type)
     {
-      throw ndlexceptions::MatlabInterfaceError("Error mismatch between saved type, " + mxType + ", and Class type, " + type + ".";
+      throw ndlexceptions::MatlabInterfaceError("Error mismatch between saved type, " + mxType + ", and Class type, " + type + ".");
     }
   mxArray* transformArray = mxArrayExtractMxArrayField(matlabArray, "transforms");
   // transforms field.
