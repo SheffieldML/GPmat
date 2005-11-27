@@ -1,0 +1,10 @@
+# These are files that should be packaged for the datasets software
+dir: html
+~/mlprojects/datasets/html/index.html
+dir: .
+~/mlprojects/datasets/matlab/3Class.mat
+~/mlprojects/datasets/matlab/frey_rawface.mat
+~/mlprojects/datasets/matlab/swiss_roll_data.mat
+~/mlprojects/datasets/matlab/twos.mat
+~/mlprojects/datasets/matlab/usps_train.mat
+~/mlprojects/datasets/matlab/usps_test.mat
