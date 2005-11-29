@@ -191,6 +191,13 @@ double CCmpndKern::getWhite() const
     white += components[i]->getWhite();
   return white;
 }
+double CCmpndKern::getVariance() const
+{
+  double totVariance = 0.0;
+  for(size_t i=0; i<components.size(); i++)
+    totVariance += components[i]->getVariance();
+  return totVariance;
+}
 
 double CCmpndKern::computeElement(const CMatrix& X1, int index1, 
 			   const CMatrix& X2, int index2) const
@@ -343,6 +350,10 @@ CWhiteKern::CWhiteKern(const CWhiteKern& kern)
   setInputDim(kern.getInputDim());
   variance = kern.variance;
 }
+double CWhiteKern::getVariance() const
+{
+  return variance;
+}
 void CWhiteKern::setInitParam()
 {
   nParams = 1;
@@ -469,6 +480,10 @@ CBiasKern::CBiasKern(const CBiasKern& kern)
   variance = kern.variance;
   
 }
+double CBiasKern::getVariance() const
+{
+  return variance;
+}
 void CBiasKern::setInitParam()
 {
   nParams = 1;
@@ -591,6 +606,10 @@ CRbfKern::CRbfKern(const CRbfKern& kern)
   setInputDim(kern.getInputDim());
   variance = kern.variance;
   inverseWidth = kern.inverseWidth;
+}
+double CRbfKern::getVariance() const
+{
+  return variance;
 }
 void CRbfKern::setInitParam()
 {
@@ -802,6 +821,10 @@ CLinKern::CLinKern(const CLinKern& kern)
   setInputDim(kern.getInputDim());
   variance = kern.variance;
 }
+double CLinKern::getVariance() const
+{
+  return variance;
+}
 void CLinKern::setInitParam()
 {
   nParams = 1;
@@ -944,6 +967,10 @@ CMlpKern::CMlpKern(const CMlpKern& kern)
   variance = kern.variance;
   weightVariance = kern.weightVariance;
   biasVariance = kern.biasVariance;
+}
+double CMlpKern::getVariance() const
+{
+  return variance;
 }
 void CMlpKern::setInitParam()
 {
@@ -1202,6 +1229,10 @@ void CPolyKern::readParamsFromStream(istream& in)
   else
     throw ndlexceptions::FileFormatError();
 }
+double CPolyKern::getVariance() const
+{
+  return variance;
+}
 void CPolyKern::setInitParam()
 {
   nParams = 3;
@@ -1406,6 +1437,10 @@ CLinardKern::CLinardKern(const CLinardKern& kern)
   variance = kern.variance;
   scales = kern.scales;
 }
+double CLinardKern::getVariance() const
+{
+  return variance;
+}
 void CLinardKern::setInitParam()
 {
   nParams = 1+getInputDim();
@@ -1602,6 +1637,10 @@ CRbfardKern::CRbfardKern(const CRbfardKern& kern)
   variance = kern.variance;
   inverseWidth = kern.inverseWidth;
   scales = kern.scales;
+}
+double CRbfardKern::getVariance() const
+{
+  return variance;
 }
 void CRbfardKern::setInitParam()
 {
@@ -1805,6 +1844,10 @@ CMlpardKern::CMlpardKern(const CMlpardKern& kern)
   weightVariance=kern.weightVariance;
   biasVariance=kern.biasVariance;
   scales = kern.scales;
+}
+double CMlpardKern::getVariance() const
+{
+  return variance;
 }
 void CMlpardKern::setInitParam()
 {
@@ -2153,6 +2196,10 @@ void CPolyardKern::readParamsFromStream(istream& in)
     setParams(par);
   else
     throw ndlexceptions::FileFormatError();
+}
+double CPolyardKern::getVariance() const
+{
+  return variance;
 }
 void CPolyardKern::setInitParam()
 {

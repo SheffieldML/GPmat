@@ -41,7 +41,7 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
       for(int i=0; i<X.getRows(); i++)
 	d.setVal(diagComputeElement(X, i), i);
     }
-  // Compute the diagonal at particualr indices.
+  // Compute the diagonal at particular indices.
   virtual void diagCompute(CMatrix& d, const CMatrix& X, const vector<int> indices) const
     {
       assert(d.getRows()==indices.size());
@@ -59,6 +59,8 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
   // (i.e. kern(X_row_i,X_row_i) should always be taken from the same matrix X.
   // Not to imply that I understand why we need X and X2 in getGradX, really.
   virtual void getDiagGradX(CMatrix& g, const CMatrix& X, const bool addG=false) const=0;
+  // return the `signal strength' of the kernel.
+  virtual double getVariance() const=0;
   // Return the white noise component of the kernel.
   virtual double getWhite() const
     {
@@ -277,6 +279,8 @@ class CCmpndKern: public CKern {
     }
   CCmpndKern(vector<CKern*> kernels);
   
+  double getVariance() const;
+  double getWhite() const;
   void setInitParam();
   double diagComputeElement(const CMatrix& X, int index1) const;
   void diagCompute(CMatrix& d, const CMatrix& X) const;
@@ -285,7 +289,6 @@ class CCmpndKern: public CKern {
   string getParamName(int index) const;
   void getGradX(vector<CMatrix*>& g, const CMatrix& X, const CMatrix& X2, const bool addG=false) const;
   void getDiagGradX(CMatrix& g, const CMatrix& X, const bool addG=false) const;
-  double getWhite() const;
   double computeElement(const CMatrix& X1, int index1, 
 		 const CMatrix& X2, int index2) const;
   void compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const;
@@ -329,7 +332,8 @@ class CWhiteKern: public CKern {
     {
       return new CWhiteKern(*this);
     }
- void setInitParam();
+  double getVariance() const;
+  void setInitParam();
   double diagComputeElement(const CMatrix& X, int index) const;
   void diagCompute(CMatrix& d, const CMatrix& X) const;
   void setParam(double val, int paramNum);
@@ -360,6 +364,7 @@ class CBiasKern: public CKern {
     {
       return new CBiasKern(*this);
     }
+  double getVariance() const;
   void setInitParam();
   double diagComputeElement(const CMatrix& X, int index) const;
   void diagCompute(CMatrix& d, const CMatrix& X) const;
@@ -392,6 +397,7 @@ class CRbfKern: public CKern {
     {
       return new CRbfKern(*this);
     }
+  double getVariance() const;
   void setInitParam();
   double diagComputeElement(const CMatrix& X, int index) const;
   void diagCompute(CMatrix& d, const CMatrix& X) const;
@@ -426,6 +432,7 @@ class CLinKern: public CKern {
     {
       return new CLinKern(*this);
     }
+  double getVariance() const;
   void setInitParam();
   double diagComputeElement(const CMatrix& X, int index) const;
   void setParam(double val, int paramNum);
@@ -456,6 +463,7 @@ class CMlpKern: public CKern {
     {
       return new CMlpKern(*this);
     }
+  double getVariance() const;
   void setInitParam();
   double diagComputeElement(const CMatrix& X, int index) const;
   void setParam(double val, int paramNum);
@@ -495,6 +503,7 @@ class CPolyKern: public CKern {
     {
       return degree;
     }
+  double getVariance() const;
   void setInitParam();
   double diagComputeElement(const CMatrix& X, int index) const;
   void setParam(double val, int paramNum);
@@ -532,6 +541,7 @@ class CLinardKern: public CArdKern {
     {
       return new CLinardKern(*this);
     }
+  double getVariance() const;
   void setInitParam();
   double diagComputeElement(const CMatrix& X, int index) const;
   void setParam(double val, int paramNum);
@@ -561,6 +571,7 @@ class CRbfardKern: public CArdKern {
     {
       return new CRbfardKern(*this);
     }
+  double getVariance() const;
   void setInitParam();
   double diagComputeElement(const CMatrix& X, int index) const;
   void setParam(double val, int paramNum);
@@ -592,6 +603,7 @@ class CMlpardKern: public CArdKern {
     {
       return new CMlpardKern(*this);
     }
+  double getVariance() const;
   void setInitParam();
   double diagComputeElement(const CMatrix& X, int index) const;
   void setParam(double val, int paramNum);
@@ -633,6 +645,7 @@ class CPolyardKern: public CArdKern {
     {
       return degree;
     }
+  double getVariance() const;
   void setInitParam();
   double diagComputeElement(const CMatrix& X, int index) const;
   void setParam(double val, int paramNum);
