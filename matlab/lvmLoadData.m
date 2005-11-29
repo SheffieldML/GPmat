@@ -9,7 +9,7 @@ switch dataset
  
   %/~
  case 'run1'
-  [Y, connect] = mocapLoadData('run1');
+  [Y, connect] = mocapLoadTextData('run1');
   Y = Y(1:4:end, :);
  case 'horse'
   load horse.dat;

@@ -8,3 +8,4 @@ dir: .
 ~/mlprojects/datasets/matlab/twos.mat
 ~/mlprojects/datasets/matlab/usps_train.mat
 ~/mlprojects/datasets/matlab/usps_test.mat
+~/mlprojects/datasets/matlab/run1.txt
