@@ -9,34 +9,43 @@ global visualiseInfo
 
 switch call
  case 'click'
+  [x, y]  = localCheckPointPosition(visualiseInfo);  
+  if ~isempty(x) 
+    visualiseInfo.latentPos = [x, y];
+  end
   visualiseInfo.clicked = ~visualiseInfo.clicked;
+  if isfield(visualiseInfo.model, 'dynamics') & ~isempty(visualiseInfo.model.dynamics)
+    if visualiseInfo.runDynamics
+      visualiseInfo.dynamicsRunning = 1;
+      fhandle = str2func([visualiseInfo.model.type 'DynamicsRun']);
+      feval(fhandle);
+      visualiseInfo.dynamicsRunning = 0;
+    end
+  else
+    visualiseInfo.dynamicsRunning = 0;
+  end
  case 'move'
-  if visualiseInfo.clicked
+  if visualiseInfo.clicked & ~visualiseInfo.runDynamics
     [x, y]  = localCheckPointPosition(visualiseInfo);  
     if ~isempty(x) 
       % This should be changed to a model specific visualisation.
       set(visualiseInfo.latentHandle, 'xdata', x, 'ydata', y);
       fhandle = str2func([visualiseInfo.model.type 'PosteriorMeanVar']);
-      if str2num(version('-release'))>13
-        [mu, varsigma] = fhandle(visualiseInfo.model, [x y]);
-      else 
-        [mu, varsigma] = feval(fhandle, visualiseInfo.model, [x y]);
-      end
+      [mu, varsigma] = fhandle(visualiseInfo.model, [x y]);
       if isfield(visualiseInfo.model, 'noise')
         Y = noiseOut(visualiseInfo.model.noise, mu, varsigma);
       else
         Y = mu;
       end
-%      if str2num(version('-release'))>13
-%        visualiseInfo.visualiseModify(visualiseInfo.visHandle, Y, ...
-%                                      visualiseInfo.varargin{:});
-%      else
-        feval(visualiseInfo.visualiseModify, visualiseInfo.visHandle, ...
-              Y, visualiseInfo.varargin{:});
-%      end
+      visualiseInfo.visualiseModify(visualiseInfo.visHandle, ...
+                                    Y, visualiseInfo.varargin{:});
       visualiseInfo.latentPos=[x, y];
     end
   end
+ case 'toggleDynamics'
+  visualiseInfo.runDynamics = ~visualiseInfo.runDynamics;
+  set(visualiseInfo.dynamicsRadio, 'value', visualiseInfo.runDynamics);
+  
 end
 
 
