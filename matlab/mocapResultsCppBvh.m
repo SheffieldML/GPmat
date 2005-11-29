@@ -4,7 +4,7 @@ function mocapResultsCppBvh(fileName, bvhFileName, dataType, varargin)
 
 % MOCAP
 
-[model, labels] = gplvmReadFromFile(fileName);
+[model, labels] = fgplvmReadFromFile(fileName);
 bvhStruct = bvhReadFile(bvhFileName);
 
 maxInd = 0;
@@ -20,15 +20,15 @@ for i=1:length(bvhStruct)
     end
   end
 end
-padding = maxInd - size(model.y, 2);
+padding = maxInd - size(model.Y, 2);
 % Visualise the results
 switch size(model.X, 2) 
  case 1
-  gplvmVisualise1D(model, [dataType 'Visualise'], [dataType 'Modify'], ...
-		   bvhStruct, padding, varargin{:});
+%  gplvmVisualise1D(model, [dataType 'Visualise'], [dataType 'Modify'], ...
+%		   bvhStruct, padding, varargin{:});
   
  case 2
-  gplvmVisualise(model, labels, [dataType 'Visualise'], [dataType 'Modify'], ...
+  fgplvmVisualise(model, labels, [dataType 'Visualise'], [dataType 'Modify'], ...
                  bvhStruct, padding, varargin{:});
   
  otherwise 

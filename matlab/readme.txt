@@ -1,6 +1,11 @@
 This toolbox allows MATLAB to read in and write bvh files. There are also routines for visualising the files in MATLAB.
 
 
+Version 0.12 Release Notes
+--------------------------
+
+mocapResultsCppBvh now uses the FGPLVM toolbox rather than the GPLVM toolbox.
+
 Version 0.11 Release Notes
 --------------------------
 
