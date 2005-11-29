@@ -3,4 +3,4 @@ The FGPLVM toolbox is a new implementation of the GP-LVM that uses the Pseudo-In
 Version 0.1
 -----------
 
-The first release containing a couple of examples on the oil data. 
+The first release containing a couple of examples on the oil data and dynamics. The toolbox can load in the C++ files with dynamics associated and (through the mocapResultsCppBvh in the MOCAP toolbox) can run motion capture files with dynamics.
