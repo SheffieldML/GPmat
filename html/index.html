@@ -19,9 +19,15 @@ The original MATLAB version of the toolbox is available here <a href="http://www
 
 <h3>Release Information</h3>
 
-<p>Current release is 0.1. 
+<p>Current release is 0.11.
 
-<p>New toolboxes are required since version 2.1, namely the datasets and the mltools toolbox.</p>
+<p>Release 0.11 is the first release that contains the fully independent training conditional approximation (Snelson and Ghahramani, Quinonero Candela and Rasmussen).  
+
+<p>Release 0.1 is a pre-release to make some of the model functionality available. The some of the different approximations (such as fully independent training conditional and partially independent training conditional) are not yet implemented and the dynamics currently has no sparse approximations associated.
+
+<p>This toolbox also implements back constraints. The mappings that can be used as back constraints are those described in <a href="http://www.dcs.shef.ac.uk/~neil/mltools/downloadFiles/">the MLTOOLS toolbox</a>.
+
+<p>The toolboxes required to run the FGPLVM toolbox are listed below.</p>
 
 
 <table>
@@ -33,30 +39,127 @@ The original MATLAB version of the toolbox is available here <a href="http://www
     <td width="65%">
 
 <p align="left"><a href="http://www.dcs.shef.ac.uk/~neil/kern/downloadFiles">KERN</a><br>
-<a href="http://www.dcs.shef.ac.uk/~neil/noise/downloadFiles">NOISE</a><br>
 <a href="http://www.dcs.shef.ac.uk/~neil/ndlutil/downloadFiles">NDLUTIL</a><br>
 <a href="http://www.dcs.shef.ac.uk/~neil/optimi/downloadFiles">OPTIMI</a><br>
 <a href="http://www.dcs.shef.ac.uk/~neil/prior/downloadFiles">PRIOR</a><br>
-<a href="http://www.dcs.shef.ac.uk/~neil/ivm/downloadFiles">MLTOOLS</a></p>
-<a href="http://www.dcs.shef.ac.uk/~neil/ivm/downloadFiles">DATASETS</a></p>
+<a href="http://www.dcs.shef.ac.uk/~neil/mltools/downloadFiles">MLTOOLS</a><br>
+<a href="http://www.dcs.shef.ac.uk/~neil/datasets/downloadFiles">DATASETS</a></p>
 
     </td>
     <td width="35%">
 
 <p align="center">0.141<br>
-0.13<br>
-0.14<br>
+0.142<br>
 0.13<br>
 0.13<br>
 0.1<br>
-0.1</p>
+0.11</p>
 
     </td>
   </tr>
 </table>
 
-<p>Finally you will also need the <a href="http://www.ncrg.aston.ac.uk/netlab/">NETLAB toolbox</a> in your path.
 
+<p>Finally you will also need the <a href="http://www.ncrg.aston.ac.uk/netlab/">NETLAB toolbox</a> in your path and to run demos that make use of MOCAP data you will need to use <a href="http://www.dcs.shef.ac.uk/~neil/mocap/downloadFiles/">the MOCAP toolbox</a>.
+
+<h2>Examples</h2>
+
+<h3>Sparse Pseudo-input Gaussian Processes</h3>
+
+<p>The sparse approximation used in this toolbox is based on the Sparse Pseudo-input Gaussian Process model described by  <a href="http://ext.dcs.shef.ac.uk/~u0015/cgi-bin/bibpage.cgi?keyName=Snelson:pseudo05&printAbstract=1">Snelson and Ghahramani</a>. Also provided are the extensions suggested by <a href="http://ext.dcs.shef.ac.uk/~u0015/cgi-bin/bibpage.cgi?keyName=Quinonero:unifying05">Quinonero-Candela and Rasmussen</a>. They provide a unifying terminology for describing these approximations which we shall use in what follows.
+
+<p>There are three demos provided for Gaussian process regression in 1-D. They each use a different form of likelihood approximation. The first demonstration uses the `projected latent variable' approach first described by <a href="http://ext.dcs.shef.ac.uk/~u0015/cgi-bin/bibpage.cgi?keyName=Csato:sparse02&printAbstract=1">Csato and Opper</a> and later used by <a href="http://ext.dcs.shef.ac.uk/~u0015/cgi-bin/bibpage.cgi?keyName=Seeger:fast03&printAbstract=1">Seeger <i>et al.</i></a>. In the terminology of Quinonero-Candela and Rasmussen (QR-terminology) this is known as the `deterministic training conditional' (DTC) approximation.
+
+<p>To use this approximation the following script can be run.
+<p><code>
+&gt;&gt; demSpgp1d1
+</code>
+<p>The result of the script is given in the plot below.
+<p><center><img src="demSpgp1d1.png" width="50%"><br>
+Gaussian process using the DTC approximation with nine inducing variables. Data is shown as red spots, posterior mean prediction is shown as a blue line and two standard deviations are given as dashed blue lines.</center>
+
+<p>The improved approximation suggested by Snelson and Ghahramani, in QR-terminology this is known as the fully independent training conditional (FITC). To try this approximation run the following script
+<p><code>
+&gt;&gt; demSpgp1d2
+</code>
+<p>The result of the script is given on the left of the plot below.
+<p><center><img src="demSpgp1d2.png" width="49%"><img src="demSpgp1d3.png" width="49%"><br>
+<i>Left</i>: Gaussian process using the FITC approximation with nine inducing variables. Data is shown as red spots, posterior mean prediction is shown as a blue line and two standard deviations are given as dashed blue lines. <i>Right</i>: Similar but for the PITC approximation, again with nine inducing variables.</center>
+
+<p>Finally, at the <a href="http://www.dcs.shef.ac.uk/ml/gprt/">Sheffield Gaussian Process Round Table</a> Lehel Csato pointed out that the Bayesian Committee Machine of <a href="http://ext.dcs.shef.ac.uk/~u0015/cgi-bin/bibpage.cgi?group=bcm&printAbstract=1">Schwaighofer and Tresp</a> can also be viewed within the same framework. This idea is formalised in <a href="http://ext.dcs.shef.ac.uk/~u0015/cgi-bin/bibpage.cgi?keyName=Quinonero:unifying05&printAbstract=1">Qunionenro-Candela and Rasmussen's</a> review. This approximation is known as the `partially independent training conditional' (PITC) in QR-terminology. To try this approximation run the following script
+<p><code>
+&gt;&gt; demSpgp1d2
+</code>
+<p>The result of the script is given on the right of the plot above.
+
+<h3>GP-LVM</h3>
+
+<p>The three approximations outlined above can be used to speed up learning in the GP-LVM. They have the advantage over the IVM approach taken in the <a href="http://www.dcs.shef.ac.uk/~neil/gplvm/">original GP-LVM toolbox</a> that the algorithm is fully convergent and the final mapping from latent space to data space takes into account all of the data (not just the points in the active set).
+
+<p>As well as the new sparse approximation the new toolbox allows the GP-LVM to be run with dynamics as suggested by <a href="http://ext.dcs.shef.ac.uk/~u0015/cgi-bin/bibpage.cgi?keyName=Wang:gpdm05&printAbstract=1">Wang <i>et al.</i></a>.
+
+<p>Finally, the new toolbox allows the incorporation of `back constraints' in learning. Back constraints force the latent points to be a smooth function of the data points. This means that points that are close in data space are constrained to be close in latent space. For the standard GP-LVM points close in latent space are constrained to be close in data space, but the converse is not true.
+
+<p>Various combinations of back constraints and different approximations are used in the exmaples below.
+
+<h3>Oil Data</h3>
+
+<p>The `oil data' is commonly used as a bench mark for visualisation algorithms. For more details on the data see <a href="http://www.ncrg.aston.ac.uk/GTM/3PhaseData.html">this page</a>.
+
+<p>The <a href="http://www.dcs.shef.ac.uk/~neil/gplvmcpp">C++ implementation of the GP-LVM</a> has details on training the full GP-LVM with this data set. Here we will consider the three different approximations outlined above.
+
+<h4>FITC Approximation</h4>
+
+In all the examples we give there will be 100 points in the active set. We first considered the FITC approximation. The script <code>demOil1.m</code> runs the FITC approximation giving the result on the left of the figure shown below.
+
+<p><center><img src="demOil1.png" width="49%"><img src="demOil2.png" width="49%"><br>
+<i>Left</i>: GP-LVM on the oil data using the FITC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses.  One hundred inducing variables are used. <i>Right</i>: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.</center>
+
+<p>Back constraints can be added to each of these approximations. In the example on the right we used a back constraint given by a multi-layer perceptron with 15 hidden nodes. This example can be recreated with <code>demOil2.m</code>.
+
+<h4>DTC Approximation</h4>
+
+<p>The other approximations can also be used, in the figures below we give results from the DTC approximation. The can be recreated using <code>demOil3.m</code> and <code>demOil4.m</code>.
+
+<p><center><img src="demOil3.png" width="49%"><img src="demOil4.png" width="49%"><br>
+<i>Left</i>: GP-LVM on the oil data using the DITC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses.  One hundred inducing variables are used. <i>Right</i>: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.</center>
+
+<h4>PITC Approximation</h4>
+
+<p>Finally we show results using the PITC approximation, these results can be recreated using the scripts <code>demOil5.m</code> and <code>demOil6.m</code>.
+
+<p><center><img src="demOil5.png" width="49%"><img src="demOil6.png" width="49%"><br>
+<i>Left</i>: GP-LVM on the oil data using the PITC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses.  One hundred inducing variables are used. <i>Right</i>: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.</center>
+
+
+<h3>Dynamics and Motion Capture Data</h3>
+
+Finally we will demonstrate the dynamics functionality of the toolbox. We raw x-y-z values from a motion capture data set, the <code>Figure Run 1</code> example available <a href="http://accad.osu.edu/research/mocap/mocap_data.htm">from Ohio State University</a>. To run without dynamics use the script:
+<p><code>
+&gt;&gt; demOil1
+</code>
+
+<p>The results are given on the left of the figure below.
+
+<p><center><img src="demStick1.png" width="49%"><br>
+GP-LVM on the motion capture data without dynamics in the latent space. </center>
+
+<p>Notice that the sequence (which is a few strides of a man running) is split into several sub-sequences. These sub-sequences are aligned to the strides of the man. By introducing a dynamics prior, we can force the sequence to link up. Samples from the dynamics prior used are shown in the plot below.
+
+<p><center><img src="dynamicsSamp1.png" width="49%"><img src="dynamicsSamp2.png" width="49%"><br>
+<img src="dynamicsSamp3.png" width="49%"><img src="dynamicsSamp4.png" width="49%">
+Samples from the dynamics prior which is placed over the latent space. This prior has <i>Left</i>: GP-LVM on the motion capture data without dynamics in the latent space. <i>Right</i>: GP-LVM with dynamics. Samples from the dynamics prior used are given in the figure above.</center>
+
+<p>This prior is used in the model to obtain the results below,
+
+<p><code>
+&gt;&gt; demOil2
+</code>
+
+<p><center><img src="demStick2.png" width="49%"><br>
+GP-LVM with dynamics. Samples from the dynamics prior used are given in the figure above.</center>
+
+Note now the circular form of the latent space. 
 
 </body>
 </html>
