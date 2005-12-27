@@ -7,10 +7,14 @@ function [Y, lbls] = lvmLoadData(dataset)
 lbls = [];
 switch dataset
  
+ case 'robotWireless'
+  Y = parseWirelessData('uw-floor.txt');
+  Y = Y(1:215, :);
+ case 'robotWirelessTest'
+  Y = parseWirelessData('uw-floor.txt');
+  Y = Y(216:end, :);
+  
   %/~
- case 'run1'
-  [Y, connect] = mocapLoadTextData('run1');
-  Y = Y(1:4:end, :);
  case 'horse'
   load horse.dat;
   horse([133, 309], :) = [];
@@ -44,7 +48,47 @@ switch dataset
  case 'cepstral'
   Y = load('cepvecs');
   Y = Y(1:5000, :);
+
+ case 'vowels90'
+  load('jon_vowel_data');
+  Y = [a_raw(1:30:end, :); ae_raw(1:30:end, :); ao_raw(1:30:end, :); ...
+       e_raw(1:30:end, :); i_raw(1:30:end, :); ibar_raw(1:30:end, :); ...
+       o_raw(1:30:end, :); schwa_raw(1:30:end, :); u_raw(1:30:end, :)];
+  lbls = [];
+  for i = 1:9
+    lbl = zeros(1, 9);
+    lbl(i) = 1;
+    lbls = [lbls; repmat(lbl, 10, 1)];
+  end
+ case 'vowels3'
+  load('jon_vowel_data');
+  Y = [a_raw(1:3:end, :); ae_raw(1:3:end, :); ao_raw(1:3:end, :); ...
+       e_raw(1:3:end, :); i_raw(1:3:end, :); ibar_raw(1:3:end, :); ...
+       o_raw(1:3:end, :); schwa_raw(1:3:end, :); u_raw(1:3:end, : ...
+                                                    )];
+  lbls = [];
+  for i = 1:9
+    lbl = zeros(1, 9);
+    lbl(i) = 1;
+    lbls = [lbls; repmat(lbl, 100, 1)];
+  end
   %~/
+ case 'vowels'
+  load('jon_vowel_data');
+  Y = [a_raw; ae_raw; ao_raw; ...
+       e_raw; i_raw; ibar_raw; ...
+       o_raw; schwa_raw; u_raw];
+  Y(:, [13 26]) = [];
+  lbls = [];
+  for i = 1:9
+    lbl = zeros(1, 9);
+    lbl(i) = 1;
+    lbls = [lbls; repmat(lbl, size(a_raw, 1), 1)];
+  end
+ 
+ case 'stick'
+  Y = mocapLoadTextData('run1');
+  Y = Y(1:4:end, :);
  
  case 'brendan'
   load frey_rawface.mat
@@ -95,5 +139,7 @@ switch dataset
  case 'swissRoll'
   load swiss_roll_data
   Y = X_data(:, 1:1000)';
- 
+ otherwise
+  error('Unknown data set requested.')
+  
 end
