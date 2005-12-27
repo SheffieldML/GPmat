@@ -18,12 +18,12 @@ if isempty(UC)
     try
       % Try --- need to check A is positive definite
       if jitter == 0;
-        jitter = mean(diag(A));
+        jitter = abs(mean(A));
         UC = chol(A);
         break
       else
         warning(['Matrix is not positive definite in pdinv, adding ' num2str(jitter) ' jitter.'])
-        UC = chol(A+jitter*eye(size(A, 1)));
+        UC = chol(real(A+jitter*eye(size(A, 1))));
         break
       end
     catch

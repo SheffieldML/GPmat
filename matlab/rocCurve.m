@@ -4,8 +4,6 @@ function [area, rocPointX, rocPointY] = rocCurve(outputs, labels)
 
 % NDLUTIL
 
-% GENERAL
-
 [sOutputs, index] = sort(outputs);
 sLabels = labels(index);
 
