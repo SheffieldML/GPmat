@@ -12,9 +12,9 @@ if nargin < 3
 end
 
 options = optOptions;
-options(9) = 1;
 if display
   options(1) = 1;
+  options(9) = 1;
 end
 options(14) = iters;
 

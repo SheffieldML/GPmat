@@ -38,9 +38,14 @@ xTest = linspace(-1.5, 1.5, 200)';
 figure
 plot(X, y, 'r.');
 hold on
-plot(xTest, mu, 'b-');
-plot(xTest, mu+2*sqrt(varSigma), 'b--')
-plot(xTest, mu-2*sqrt(varSigma), 'b--')
+a = plot(xTest, mu, 'b-');
+a = [a plot(xTest, mu+2*sqrt(varSigma), 'b--')];
+
+a = [a plot(xTest, mu-2*sqrt(varSigma), 'b--')];
+b = plot(model.X_u, -1, 'bx');
+set(b, 'linewidth', 2)
+set(b, 'markersize', 10);
 set(gca, 'ylim', [-1 2])
 set(gca, 'xlim', [-1.5 1.5])
+set(a, 'linewidth', 2);
 zeroAxes

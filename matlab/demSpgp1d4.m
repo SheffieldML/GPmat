@@ -1,4 +1,4 @@
-% DEMSPGP1D1 Do a simple 1-D regression after Snelson & Ghahramani's example.
+% DEMSPGP1D4 Do a simple 1-D regression after Snelson & Ghahramani's example.
 
 % FGPLVM
 
@@ -7,7 +7,7 @@ randn('seed', 1e5);
 rand('seed', 1e5);
 
 dataSetName = 'spgp1d';
-experimentNo = 1;
+experimentNo = 4;
 
 % load data
 [X, y] = mapLoadData(dataSetName);
@@ -16,17 +16,16 @@ experimentNo = 1;
 numActive = 9;
 latentDim = 2;
 
-% use the deterministic training conditional.
-model = gpCreate(y, X, {'rbf', 'bias', 'white'}, 'dtc', numActive);
+% Use the full Gaussian process model.
+model = gpCreate(y, X, {'rbf', 'white'}, 'ftc', numActive);
+model.kern.comp{1}.inverseWidth = 20;
+model.kern.comp{2}.variance = 0.01;
 
-model.X_u = randn(9, 1)*0.25 - 0.75;
-% Optimise the model.
-iters = 1000;
-display = 1;
+% This updates the kernels.
+params = gpExtractParam(model);
+model = gpExpandParam(model, params);
 
-model = gpOptimise(model, display, iters);
-
-% Save the results.
+% Save results
 capName = dataSetName;;
 capName(1) = upper(capName(1));
 save(['dem' capName num2str(experimentNo) '.mat'], 'model');
@@ -40,11 +39,7 @@ plot(X, y, 'r.');
 hold on
 a = plot(xTest, mu, 'b-');
 a = [a plot(xTest, mu+2*sqrt(varSigma), 'b--')];
-
 a = [a plot(xTest, mu-2*sqrt(varSigma), 'b--')];
-b = plot(model.X_u, -1, 'bx');
-set(b, 'linewidth', 2)
-set(b, 'markersize', 10);
 set(gca, 'ylim', [-1 2])
 set(gca, 'xlim', [-1.5 1.5])
 set(a, 'linewidth', 2);

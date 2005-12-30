@@ -4,6 +4,7 @@ dir: html
 ~/mlprojects/fgplvm/html/demSpgp1d1.png
 ~/mlprojects/fgplvm/html/demSpgp1d2.png
 ~/mlprojects/fgplvm/html/demSpgp1d3.png
+~/mlprojects/fgplvm/html/demSpgp1d4.png
 ~/mlprojects/fgplvm/html/demOil1.png
 ~/mlprojects/fgplvm/html/demOil2.png
 ~/mlprojects/fgplvm/html/demOil3.png
@@ -12,3 +13,8 @@ dir: html
 ~/mlprojects/fgplvm/html/demOil6.png
 ~/mlprojects/fgplvm/html/demStick1.png
 ~/mlprojects/fgplvm/html/demStick2.png
+~/mlprojects/fgplvm/html/dynamicsSamp1.png
+~/mlprojects/fgplvm/html/dynamicsSamp2.png
+~/mlprojects/fgplvm/html/dynamicsSamp3.png
+~/mlprojects/fgplvm/html/dynamicsSamp4.png
+

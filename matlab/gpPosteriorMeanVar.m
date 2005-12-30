@@ -56,10 +56,10 @@ while startVal <= size(X, 1)
       Kinvk = (model.invK_uu - model.Ainv)*KX_star;
     end
     varsig = diagK - sum(KX_star.*Kinvk, 1)';
-    varsigma(indices, :) = repmat(varsig, 1, model.d);
     if isfield(model, 'sigma2')
       varsig = varsig + model.sigma2;
     end
+    varsigma(indices, :) = repmat(varsig, 1, model.d);
   end
   
   
