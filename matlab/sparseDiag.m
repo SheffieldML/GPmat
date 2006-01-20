@@ -2,6 +2,8 @@ function D = sparseDiag(d)
 
 % SPARSEDIAG Create a diagonal matrix that is sparse from a vector.
 
+% NDLUTIL
+
 if length(size(d)) ~=2
   error('Input must be a vector.');
 end

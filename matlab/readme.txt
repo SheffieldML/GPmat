@@ -1,6 +1,11 @@
 This toolbox implements some generic functions used by other toolboxes. Originally it was spun out of the IVM 0.221 toolbox.
 
 
+Version 0.15
+------------
+
+Fixed inconsistencies in logdet and pdinv and corrected the amount of jitter that is added at first try. Placed the jitter addition in a new file jitChol which is called by both functions.
+
 Version 0.142
 -------------
 
