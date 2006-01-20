@@ -2,6 +2,8 @@ function kl = kldivGaussian(mean1, cov1, mean2, cov2)
 
 % KLDIVGAUSSIAN Give the KL divergence between two Gaussians.
 
+% NDLUTIL
+
 [invCov2, U] = pdinv(cov2);
 logDet2 = logdet(cov2, U);
 logDet1 = logdet(cov1);
