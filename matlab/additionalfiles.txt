@@ -13,6 +13,7 @@ dir: html
 ~/mlprojects/fgplvm/html/demOil6.png
 ~/mlprojects/fgplvm/html/demVowels1.png
 ~/mlprojects/fgplvm/html/demVowels2.png
+~/mlprojects/fgplvm/html/demVowels3.png
 ~/mlprojects/fgplvm/html/demRobotWireless1.png
 ~/mlprojects/fgplvm/html/demRobotWireless2.png
 ~/mlprojects/fgplvm/html/demRobotWireless3.png
@@ -23,4 +24,3 @@ dir: html
 ~/mlprojects/fgplvm/html/dynamicsSamp2.png
 ~/mlprojects/fgplvm/html/dynamicsSamp3.png
 ~/mlprojects/fgplvm/html/dynamicsSamp4.png
-
