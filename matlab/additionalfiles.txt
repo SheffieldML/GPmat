@@ -20,6 +20,7 @@ dir: html
 ~/mlprojects/fgplvm/html/demRobotWireless4.png
 ~/mlprojects/fgplvm/html/demStick1.png
 ~/mlprojects/fgplvm/html/demStick2.png
+~/mlprojects/fgplvm/html/demStick3.png
 ~/mlprojects/fgplvm/html/dynamicsSamp1.png
 ~/mlprojects/fgplvm/html/dynamicsSamp2.png
 ~/mlprojects/fgplvm/html/dynamicsSamp3.png
