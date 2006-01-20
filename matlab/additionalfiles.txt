@@ -9,6 +9,9 @@ dir: .
 ~/mlprojects/datasets/matlab/usps_train.mat
 ~/mlprojects/datasets/matlab/usps_test.mat
 ~/mlprojects/datasets/matlab/run1.txt
+~/mlprojects/datasets/matlab/walkSitJog.txt
 ~/mlprojects/datasets/matlab/connections.txt
+~/mlprojects/datasets/matlab/connections_walkJogRun.txt
 ~/mlprojects/datasets/matlab/jon_vowel_data.mat
 ~/mlprojects/datasets/matlab/uw-floor.txt
+~/mlprojects/datasets/matlab/europeDistance.xls

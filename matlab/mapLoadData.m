@@ -12,10 +12,12 @@ rand('seed', seedVal)
 XTest = [];
 yTest = [];
 
+baseDir = datasetsDirectory;
+
 switch dataset
   %/~
  case 'pumadynSeeger'
-  data = load('Dataset.data');
+  data = load([baseDir 'Dataset.data']);
   ind = randperm(size(data, 1));
   indTr = ind(1:7168);
   indTe = ind(7169:end);
@@ -39,7 +41,7 @@ switch dataset
  case 'pumadyn'
 
   % Data is variance 1, no need to normalise.
-  data = load('Dataset.data');
+  data = load([baseDir 'Dataset.data']);
   ind = randperm(size(data, 1));
   indTr = ind(1:7168);
   indTe = ind(7169:end);
@@ -49,14 +51,14 @@ switch dataset
   yTest = data(indTe, end);
  %~/
  case 'usps'
-  load usps_train
+  load([baseDir 'usps_train']);
   X = ALL_DATA;
   range =  min(ALL_T):max(ALL_T);
   for i = 1:length(range)
     y(:, i) = (ALL_T == range(i))*2 - 1;
   end
   if nargout > 2
-    load usps_test
+    load([baseDir 'usps_test']);
     XTest = ALL_DATA;
     range =  min(ALL_T):max(ALL_T);
     for i = 1:length(range)
@@ -66,14 +68,14 @@ switch dataset
   
  case {'usps0', 'usps1', 'usps2', 'usps3', 'usps4', 'usps5', 'usps6', 'usps7', 'usps8', 'usps9'}
   digitNo = str2num(dataset(end));
-  load usps_train
+  load([baseDir 'usps_train'])
   X = ALL_DATA;
   range =  min(ALL_T):max(ALL_T);
   for i = 1:length(range)
     y(:, i) = (ALL_T == range(i))*2 - 1;
   end
   if nargout > 2
-    load usps_test
+    load([baseDir 'usps_test']);
     XTest = ALL_DATA;
     range =  min(ALL_T):max(ALL_T);
     for i = 1:length(range)
@@ -85,7 +87,7 @@ switch dataset
 
  case 'spgp1d'
   try 
-    load spgp1DData.mat
+    load([baseDir 'spgp1DData.mat'])
   catch
     [void, errid] = lasterr;
     if strcmp(errid, 'MATLAB:load:couldNotReadFile')
@@ -98,14 +100,14 @@ switch dataset
       K = kernCompute(kern, X);
       y = real(gaussSamp(K, 1)') + randn(N, 1)*0.1;
 
-      save('spgp1DData.mat', 'numIn', 'N', 'X', 'y')
+      save([baseDir 'spgp1DData.mat'], 'numIn', 'N', 'X', 'y')
     else
       error(lasterr);
     end
   end
  case 'regressionOne'
   try
-    load regressionOneData.mat 
+    load([baseDir 'regressionOneData.mat'])
   catch
     
     [void, errid] = lasterr;
@@ -125,7 +127,7 @@ switch dataset
       K = kernCompute(kern, X);
       y = real(gaussSamp(K, 1)') + randn(N, 1)*0.01;
 
-      save('regressionOneData.mat', 'numIn', 'N', 'X', 'y')
+      save([baseDir 'regressionOneData.mat'], 'numIn', 'N', 'X', 'y')
     else
       error(lasterr);
     end
@@ -134,7 +136,7 @@ switch dataset
   
  case 'regressionTwo'
   try
-    load regressionTwoData.mat 
+    load([baseDir 'regressionTwoData.mat'])
   catch
     
     [void, errid] = lasterr;
@@ -154,7 +156,7 @@ switch dataset
       K = kernCompute(kern, X);
       y = real(gaussSamp(K, 1)') + randn(N, 1)*0.01;
     
-      save('regressionTwoData.mat', 'numIn', 'N', 'X', 'y')
+      save([baseDir 'regressionTwoData.mat'], 'numIn', 'N', 'X', 'y')
     else
       error(lasterr)
     end
@@ -163,7 +165,7 @@ switch dataset
 
  case 'regressionThree'
   try
-    load regressionThreeData.mat 
+    load([baseDir 'regressionThreeData.mat'])
   catch
     
     [void, errid] = lasterr;
@@ -180,7 +182,7 @@ switch dataset
       
       K = kernCompute(kern, X);
       y = real(gaussSamp(K, 1)') + randn(N, 1)*0.01;
-      save('regressionThreeData.mat', 'numIn', 'N', 'X', 'y')
+      save([baseDir 'regressionThreeData.mat'], 'numIn', 'N', 'X', 'y')
     else 
       error(lasterr);
     end
@@ -188,7 +190,7 @@ switch dataset
 
  case 'regressionFour'
   try
-    load regressionFourData.mat 
+    load([baseDir 'regressionFourData.mat'])
   catch
     
     [void, errid] = lasterr;
@@ -206,7 +208,7 @@ switch dataset
       kern.biasVariance = 1;
       K = kernCompute(kern, X);
       y = real(gaussSamp(K, 1)') + randn(N, 1)*0.01;
-      save('regressionFourData.mat', 'numIn', 'N', 'X', 'y')
+      save([baseDir 'regressionFourData.mat'], 'numIn', 'N', 'X', 'y')
     else 
       error(lasterr);
     end
@@ -215,7 +217,7 @@ switch dataset
  case 'classificationTwo'
    
   try
-    load classificationTwoData.mat 
+    load([baseDir 'classificationTwoData.mat'])
   catch
     [void, errid] = lasterr;
     if strcmp(errid, 'MATLAB:load:couldNotReadFile')
@@ -234,7 +236,7 @@ switch dataset
       
       p = cumGaussian(u);
       y = 2*(rand(size(u))>p)-1;
-      save('classificationTwoData.mat', 'numIn', 'N', 'X', 'u', 'y')
+      save([baseDir 'classificationTwoData.mat'], 'numIn', 'N', 'X', 'u', 'y')
     else
       error(lasterr);  
     end
@@ -244,7 +246,7 @@ switch dataset
  case 'classificationThree'
    
   try
-    load classificationThreeData.mat 
+    load([baseDir 'classificationThreeData.mat'])
   catch
     [void, errid] = lasterr;
     if strcmp(errid, 'MATLAB:load:couldNotReadFile')
@@ -272,7 +274,7 @@ switch dataset
       y(indMinus) = -1;
       y(indNone, :) = [];
       X(indNone, :) = [];
-      save('classificationThreeData.mat', 'numIn', 'N', 'X', 'u', 'y')
+      save([baseDir 'classificationThreeData.mat'], 'numIn', 'N', 'X', 'u', 'y')
     else
       error(lasterr);  
     end

@@ -2,7 +2,6 @@ function [X, y, XTest, yTest] = mappingLoadData(dataset, seedVal)
 
 % MAPPINGLOADDATA Load a regression or classification dataset.
 
-% DATASETS
 
 if nargin < 2
   seedVal = 1e5;
