@@ -4,7 +4,11 @@ This toolbox implements some generic functions used by other toolboxes. Original
 Version 0.15
 ------------
 
-Fixed inconsistencies in logdet and pdinv and corrected the amount of jitter that is added at first try. Placed the jitter addition in a new file jitChol which is called by both functions.
+Fixed inconsistencies in logdet and pdinv and corrected the amount of jitter that is added at first try. Placed the jitter addition in a new file jitChol which is called by both functions. 
+
+Added kldivGaussian for computing Gaussian Kullback-Leibler divergences.
+
+Added deg2rad for converting degrees to radians.
 
 Version 0.142
 -------------
