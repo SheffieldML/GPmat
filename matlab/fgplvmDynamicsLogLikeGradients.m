@@ -2,7 +2,6 @@ function gX = fgplvmDynamicsLogLikeGradients(model)
 
 % FGPLVMDYNAMICSLOGLIKEGRADIENTS Gradients of the dynamics portion.
 
-% FGPLVM
 
 switch model.approx
  case {'ftc', 'dtc', 'fitc', 'pitc'}

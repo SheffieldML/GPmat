@@ -1,4 +1,4 @@
-% DEMOIL5 Oil data with deterministic training conditional, and MLP back constraints.
+% DEMOIL4 Oil data with deterministic training conditional, and MLP back constraints.
 
 % FGPLVM
 
@@ -13,12 +13,13 @@ experimentNo = 4;
 [Y, lbls] = lvmLoadData(dataSetName);
 
 % Set up model
-numActive = 100;
+options = fgplvmOptions('dtc');
+options.back = 'mlp';
+options.backOptions = mlpOptions;
 latentDim = 2;
+d = size(Y, 2);
 
-% use the deterministic training conditional back constrained by mlp.
-model = fgplvmCreate(Y, latentDim, 'dtc', numActive, {'rbf', 'bias', ...
-                    'white'}, 'gaussian', 'mlp', 15);
+model = fgplvmCreate(latentDim, d, Y, options);
 
 % Optimise the model.
 iters = 1000;
@@ -31,7 +32,9 @@ capName = dataSetName;;
 capName(1) = upper(capName(1));
 save(['dem' capName num2str(experimentNo) '.mat'], 'model');
 
-
+if exist('printDiagram') & printDiagram
+  fgplvmPrintPlot(model, lbls, capName, experimentNo);
+end
 
 % Load the results and display dynamically.
 fgplvmResultsDynamic(dataSetName, experimentNo, 'vector')

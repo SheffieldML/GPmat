@@ -125,18 +125,23 @@ end
 if backConstrained
   warning('Not loading form of back constraints.')
 end
-y = y - repmat(noise.bias, size(y, 1), 1);
-y = y./repmat(noise.scale, size(y, 1), 1);
-model = fgplvmCreate(y, latentDim, 'ftc', numData, kern, ...
+model = fgplvmCreate(latentDim, size(y, 2), y, 'ftc', numData, kern, ...
                                  prior);
 model.X = X;
+model.scale = noise.scale;
+model.bias = noise.bias;
+for i = 1:model.noise.numProcess
+  model.m(:, i) = (y(:, i) - model.noise.bias(i));
+  if model.noise.scale(i)
+    model.m(:, i) = y(:, i)/model.noise.scale(i);
+  end
+end
+
 % This forces kernel computation.
 initParams = fgplvmExtractParam(model);
 model = fgplvmExpandParam(model, initParams);
-model.scales = noise.scale;
-model.m = noise.bias;
 if dynamicsLearnt
-  model = fgplvmAddDynamics(model, dynKern);
+  model = fgplvmAddDynamics(model, 'gp', dynKern);
 end
 lbls=[];
 if labelsPresent

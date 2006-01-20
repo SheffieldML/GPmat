@@ -1,8 +1,9 @@
 % FGPLVMTOOLBOXES Load in the relevant toolboxes for fgplvm.
 
-importLatest('kern');
 importLatest('prior');
 importLatest('optimi');
+importLatest('kern');
 importLatest('mltools');
-importLatest('datasets');
+importLatest('mocap')
 importLatest('ndlutil');
+importLatest('datasets');

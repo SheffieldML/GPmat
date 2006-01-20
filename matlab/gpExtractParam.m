@@ -4,12 +4,18 @@ function params = gpExtractParam(model)
 
 % FGPLVM
 
+if model.learnScales
+  fhandle = str2func([model.scaleTransform 'Transform']);
+  scaleParams = fhandle(model.scale, 'xtoa');
+else
+  scaleParams = [];
+end
 switch model.approx
  case 'ftc'
-  params =  kernExtractParam(model.kern);
+  params =  [kernExtractParam(model.kern) scaleParams];
  case {'dtc', 'fitc', 'pitc'}
-  fhandle = str2func([model.sigma2Transform 'Transform']);
+  fhandle = str2func([model.betaTransform 'Transform']);
   params =  [model.X_u(:)' kernExtractParam(model.kern) ...
-             fhandle(model.sigma2, 'xtoa')];
+             scaleParams fhandle(model.beta, 'xtoa')];
 end
 

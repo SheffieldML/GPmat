@@ -20,11 +20,9 @@ while visualiseInfo.clicked & visualiseInfo.runDynamics
   end
   visualiseInfo.visualiseModify(visualiseInfo.visHandle, ...
                                 Y, visualiseInfo.varargin{:});
-  fhandle = str2func([visualiseInfo.model.type ...
-                      'DynamicsPosteriorMeanVar']);
-  [mu, var] = fhandle(visualiseInfo.model, visualiseInfo.latentPos);
-  visualiseInfo.latentPos=gsamp(mu, diag(var), 1);
-  pause(0.05)
+  visualiseInfo.latentPos = modelSamp(visualiseInfo.model.dynamics, ...
+                                      visualiseInfo.latentPos);
+  pause(0.0001)
 end
 
 

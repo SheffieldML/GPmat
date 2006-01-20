@@ -1,4 +1,4 @@
-% DEMOIL3 Oil data with deterministic training conditional approximation.
+% DEMOIL3 Oil data with deterministic training conditional.
 
 % FGPLVM
 
@@ -13,12 +13,11 @@ experimentNo = 3;
 [Y, lbls] = lvmLoadData(dataSetName);
 
 % Set up model
-numActive = 100;
+options = fgplvmOptions('dtc');
 latentDim = 2;
+d = size(Y, 2);
 
-% use the fully independent training conditional.
-model = fgplvmCreate(Y, latentDim, 'dtc', numActive, {'rbf', 'bias', ...
-                    'white'}, 'gaussian');
+model = fgplvmCreate(latentDim, d, Y, options);
 
 % Optimise the model.
 iters = 1000;
@@ -31,6 +30,9 @@ capName = dataSetName;;
 capName(1) = upper(capName(1));
 save(['dem' capName num2str(experimentNo) '.mat'], 'model');
 
+if exist('printDiagram') & printDiagram
+  fgplvmPrintPlot(model, lbls, capName, experimentNo);
+end
 
 
 % Load the results and display dynamically.

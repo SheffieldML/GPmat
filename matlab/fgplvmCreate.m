@@ -1,28 +1,46 @@
-function model = fgplvmCreate(Y, latentDim, approx, numActive, kern, ...
-                                 prior, backModel, varargin)
+function model = fgplvmCreate(q, d, Y, options)
 
 % FGPLVMCREATE Create a GPLVM model with inducing varibles.
 
 % FGPLVM
 
-X = ppcaEmbed(Y, latentDim);
-model = gpCreate(Y, X, kern, approx, numActive);
+if size(Y, 2) ~= d
+  error(['Input matrix Y does not have dimension ' num2str(d)]);
+end
+
+initFunc = str2func([options.initX 'Embed']);
+X = initFunc(Y, q);
+model = gpCreate(q, d, X, Y, options);
 
 model.type = 'fgplvm';
 
-if nargin < 6
-elseif isstruct(prior)
-  model.prior = prior;
+if isstruct(options.prior)
+  model.prior = options.prior;
 else
-  model.prior = priorCreate(prior);
-  if nargin >6
-    if isstruct(backModel)
-      model.back = backModel;
-    else
-      fhandle = str2func([backModel 'Create']);
-      model.back = fhandle(model.d, model.q, varargin{:});
+  if ~isempty(options.prior)
+    model.prior = priorCreate(options.prior);
+  end
+end
+
+if isstruct(options.inducingPrior)
+  model.inducingPrior = options.inducingPrior;
+else
+  if ~isempty(options.inducingPrior)
+    model.inducingPrior = priorCreate(options.inducingPrior);
+  end
+end
+
+if isfield(options, 'back') & ~isempty(options.back)
+  if isstruct(options.back)
+    model.back = options.back;
+  else
+    if ~isempty(options.back)
+      model.back = modelCreate(options.back, model.d, model.q, options.backOptions);
     end
-    model.back = mappingOptimise(model.back, model.Y, model.X);
+  end
+  if options.optimiseInitBack
+    % Match back model to initialisation.
+    model.back = mappingOptimise(model.back, model.y, model.X);
   end
 end
 

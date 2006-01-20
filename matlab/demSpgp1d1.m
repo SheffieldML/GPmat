@@ -13,13 +13,18 @@ experimentNo = 1;
 [X, y] = mapLoadData(dataSetName);
 
 % Set up model
-numActive = 9;
-latentDim = 2;
+options = gpOptions('dtc');
+options.numActive = 9;
 
 % use the deterministic training conditional.
-model = gpCreate(y, X, {'rbf', 'bias', 'white'}, 'dtc', numActive);
+q = size(X, 2);
+d = size(y, 2);
 
-model.X_u = randn(9, 1)*0.25 - 0.75;
+model = gpCreate(q, d, X, y, options);
+%model.X_u = randn(9, 1)*0.25 - 0.75;
+%params = gpExtractParam(model);
+%model = gpExpandParam(model, params);
+
 % Optimise the model.
 iters = 1000;
 display = 1;
@@ -49,3 +54,17 @@ set(gca, 'ylim', [-1 2])
 set(gca, 'xlim', [-1.5 1.5])
 set(a, 'linewidth', 2);
 zeroAxes
+if exist('printDiagram') & printDiagram
+  fileName = ['dem' capName num2str(experimentNo)];
+  print('-depsc', ['../tex/diagrams/' fileName])
+  pos = get(gcf, 'paperposition')
+  origpos = pos;
+  pos(3) = pos(3)/2;
+  pos(4) = pos(4)/2;
+  set(gcf, 'paperposition', pos);
+  fontsize = get(gca, 'fontsize');
+  set(gca, 'fontsize', fontsize/2);
+  lineWidth = get(gca, 'lineWidth');
+  set(gca, 'lineWidth', lineWidth*2);
+  print('-dpng', ['../html/' fileName])
+end

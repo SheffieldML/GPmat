@@ -1,6 +1,5 @@
 % DEMROBOTATRIUM1 Wireless Robot data from University of Washington, with back constraints and dynamics.
 
-% FGPLVM
 
 % Fix seeds
 randn('seed', 1e5);
@@ -17,11 +16,12 @@ numActive = 100;
 latentDim = 2;
 
 % Train using the full training conditional (i.e. no approximation.)
-model = fgplvmCreate(Y, latentDim, 'ftc', numActive, {'rbf', 'bias', ...
+d = size(Y, 2);
+model = fgplvmCreate(latentDim, d, Y, 'ftc', numActive, {'rbf', 'bias', ...
                     'white'}, 'gaussian', 'mlp', 15);
 
 % Add dynamics model.
-model = fgplvmAddDynamics(model, {'rbf', 'white'}, 100);
+model = fgplvmAddDynamics(model, 'gp', {'rbf', 'white'}, 100);
 model.dynamics.kern.comp{1}.inverseWidth = 0.2;
 
 % Optimise the model.

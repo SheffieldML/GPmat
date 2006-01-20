@@ -4,23 +4,12 @@ function [mu, varsigma] = fgplvmDynamicsPosteriorMeanVar(model, X);
 
 % FGPLVM
 
-
-varsigma = zeros(size(X, 1), model.q);
-mu = zeros(size(X, 1), model.q);
-
-% Compute kernel for new point.
-kX = kernCompute(model.dynamics.kern, X, model.X(1:end-1, :))';
-  
-invKk = model.dynamics.invK_uu*kX;
-
-if nargout > 1
-  % Compute diagonal of kernel for new point.
-  diagK = kernDiagCompute(model.dynamics.kern, X);
-  for n = 1:size(X, 1)
-    varsigma(n, :) = repmat(diagK(n) - kX(:, n)'*invKk(:, n), 1, model.q);
-    if varsigma(n, 1) < 0
-      warning('Varsigma less than zero');
-    end
+if ~isfield(model, 'alpha')
+  if model.dynamics.diff
+    Y = model.X(2:end, :) - model.X(1:end-1, :);
+  else
+    Y = model.X(2:end, :);
   end
+  model.dynamics = gpComputeAlpha(model.dynamics, Y);
 end
-mu = invKk'*model.X(2:end, :);
+[mu, varsigma] = gpPosteriorMeanVar(model.dynamics, X);

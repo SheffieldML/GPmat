@@ -1,4 +1,4 @@
-% DEMSPGP1D1 Do a simple 1-D regression after Snelson & Ghahramani's example.
+% DEMSPGP1D3 Do a simple 1-D regression after Snelson & Ghahramani's example.
 
 % FGPLVM
 
@@ -13,13 +13,15 @@ experimentNo = 3;
 [X, y] = mapLoadData(dataSetName);
 
 % Set up model
-numActive = 9;
-latentDim = 2;
+options = gpOptions('pitc');
+options.numActive = 9;
 
-% use the partially independent training conditional.
-model = gpCreate(y, X, {'rbf', 'bias', 'white'}, 'pitc', numActive);
+% use the deterministic training conditional.
+q = size(X, 2);
+d = size(y, 2);
 
-model.X_u = randn(9, 1)*0.25 - 0.75;
+model = gpCreate(q, d, X, y, options);
+
 % Optimise the model.
 iters = 1000;
 display = 1;
@@ -31,21 +33,4 @@ capName = dataSetName;;
 capName(1) = upper(capName(1));
 save(['dem' capName num2str(experimentNo) '.mat'], 'model');
 
-
-xTest = linspace(-1.5, 1.5, 200)';
-[mu, varSigma] = gpPosteriorMeanVar(model, xTest);
-
-figure
-plot(X, y, 'r.');
-hold on
-a = plot(xTest, mu, 'b-');
-a = [a plot(xTest, mu+2*sqrt(varSigma), 'b--')];
-
-a = [a plot(xTest, mu-2*sqrt(varSigma), 'b--')];
-b = plot(model.X_u, -1, 'bx');
-set(b, 'linewidth', 2)
-set(b, 'markersize', 10);
-set(gca, 'ylim', [-1 2])
-set(gca, 'xlim', [-1.5 1.5])
-set(a, 'linewidth', 2);
-zeroAxes
+demSpgp1dPlot

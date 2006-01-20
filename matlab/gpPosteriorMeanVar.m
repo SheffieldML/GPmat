@@ -51,26 +51,25 @@ while startVal <= size(X, 1)
      case 'ftc'
       Kinvk = model.invK_uu*KX_star;
      case 'dtc'
-      Kinvk = ((model.invK_uu - model.sigma2*model.Ainv)*KX_star);
+      Kinvk = ((model.invK_uu - (1/model.beta)*model.Ainv)*KX_star);
      case {'fitc', 'pitc'}
       Kinvk = (model.invK_uu - model.Ainv)*KX_star;
     end
     varsig = diagK - sum(KX_star.*Kinvk, 1)';
-    if isfield(model, 'sigma2')
-      varsig = varsig + model.sigma2;
+    if isfield(model, 'beta')
+      varsig = varsig + (1/model.beta);
     end
     varsigma(indices, :) = repmat(varsig, 1, model.d);
   end
   
   
-  
   % Add the mean back in.
-  mu(indices,:) = mu(indices, :).*repmat(model.scales, length(indices), 1) + repmat(model.m, length(indices), 1);
+  mu(indices,:) = mu(indices, :).*repmat(model.scale, length(indices), 1) + repmat(model.bias, length(indices), 1);
   
   % rescale the variances
   if nargout > 1
     varsigma(indices, :) = varsigma(indices, :).* ...
-        repmat(model.scales.*model.scales, length(indices), 1);
+        repmat(model.scale.*model.scale, length(indices), 1);
   end
 
   % Prepare for the next chunk.

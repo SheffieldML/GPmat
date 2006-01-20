@@ -13,11 +13,12 @@ experimentNo = 1;
 [Y, lbls] = lvmLoadData(dataSetName);
 
 % Set up model
-numActive = 100;
+% Train using the full training conditional (i.e. no approximation.)
+options = fgplvmOptions('ftc');
 latentDim = 2;
 
-% Train using the full training conditional (i.e. no approximation.)
-model = fgplvmCreate(Y, latentDim, 'ftc', numActive, {'rbf', 'bias', 'white'}, 'gaussian');
+d = size(Y, 2);
+model = fgplvmCreate(latentDim, d, Y, options);
 
 % Optimise the model.
 iters = 1000;
@@ -29,6 +30,10 @@ model = fgplvmOptimise(model, display, iters);
 capName = dataSetName;;
 capName(1) = upper(capName(1));
 save(['dem' capName num2str(experimentNo) '.mat'], 'model');
+
+if exist('printDiagram') & printDiagram
+  fgplvmPrintPlot(model, lbls, capName, experimentNo);
+end
 
 % load connectivity matrix
 [void, connect] = mocapLoadTextData('run1');

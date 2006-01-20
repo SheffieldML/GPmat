@@ -32,7 +32,7 @@ switch model.approx
  case 'ftc'
   Kinvgk = model.invK_uu*gX;
  case 'dtc'
-  Kinvgk = ((model.invK_uu - model.sigma2*model.Ainv)*gX);
+  Kinvgk = ((model.invK_uu - (1/model.beta)*model.Ainv)*gX);
  case {'fitc', 'pitc'}
   Kinvgk = (model.invK_uu - model.Ainv)*gX;
  otherwise
@@ -42,5 +42,5 @@ end
 gsigmavar = repmat(diaggK' - 2*Kinvgk'*kX, 1, model.d);
 gmu = gX'*model.alpha; 
 
-gmu = gmu.*repmat(model.scales, model.q, 1);
-gsigmavar = gsigmavar.*repmat(model.scales, model.q, 1);
+gmu = gmu.*repmat(model.scale, model.q, 1);
+gsigmavar = gsigmavar.*repmat(model.scale, model.q, 1);

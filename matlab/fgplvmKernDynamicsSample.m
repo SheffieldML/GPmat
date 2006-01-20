@@ -1,11 +1,13 @@
-function [ax, data] = fgplvmKernDynamicsSample(kern, points);
+function [ax, data] = fgplvmKernDynamicsSample(kern, points, diff);
 
 % FGPLVMKERNDYNAMICSSAMPLE Sample a field from a given kernel.
 
 % FGPLVM
-
-if nargin < 2
-  points = 20;
+if nargin < 3
+  diff = 0;
+  if nargin < 2
+    points = 20;
+  end
 end
 
 x1 = linspace(-2.5, 2.5, points);
@@ -24,7 +26,9 @@ end
 
 K = kernCompute(kern, XTest);
 Y = real(gsamp(zeros(1, size(XTest, 1)), K, 2)');
-%Y = Y -XTest;
+if ~diff
+  Y = Y -XTest;
+end
 Y1 = reshape(Y(:, 1), size(X1));
 Y2 = reshape(Y(:, 2), size(X2));
 handle = quiver(X1, X2, Y1, Y2, 0);

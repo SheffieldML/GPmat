@@ -1,4 +1,4 @@
-% DEMROBOTWIRELESS3 Wireless Robot data from University of Washington with dynamics, but no back constraints.
+% DEMROBOTWIRELESS4 Wireless Robot data from University of Washington with dynamics and no back constraints.
 
 % FGPLVM
 
@@ -13,15 +13,21 @@ experimentNo = 3;
 [Y, lbls] = lvmLoadData(dataSetName);
 
 % Set up model
-numActive = 100;
-latentDim = 2;
+options = fgplvmOptions('ftc');
 
-% Train using the full training conditional (i.e. no approximation.)
-model = fgplvmCreate(Y, latentDim, 'ftc', numActive, {'rbf', 'bias', 'white'}, 'gaussian');
+latentDim = 2;
+d = size(Y, 2);
+
+model = fgplvmCreate(latentDim, d, Y, options);
 
 % Add dynamics model.
-model = fgplvmAddDynamics(model, {'rbf', 'white'}, 100);
-model.dynamics.kern.comp{1}.inverseWidth = 0.2;
+options = gpOptions('ftc');
+options.kern = kernCreate(model.X, {'rbf', 'white'});
+options.kern.comp{1}.inverseWidth = 0.2;
+% This gives signal to noise of 0.1:1e-3 or 100:1.
+options.kern.comp{1}.variance = 0.1^2;
+options.kern.comp{2}.variance = 1e-3^2;
+model = fgplvmAddDynamics(model, 'gp', options);
 
 % Optimise the model.
 iters = 1000;

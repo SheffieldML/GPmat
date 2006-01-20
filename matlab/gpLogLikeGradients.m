@@ -12,7 +12,7 @@ if nargin < 4
     X_u = [];
   end
   if nargin < 3
-    Y = model.Y;
+    Y = model.m;
   end
   if nargin < 2
     X = model.X;
@@ -22,11 +22,13 @@ end
 gX_u = [];
 gX = [];
 
+g_scaleBias = gpScaleBiasGradient(model);
+
 switch model.approx
  case 'ftc'
   % Full training conditional.
   
-  if nargout > 1    
+  if nargout > 2
     %%% Prepare to Compute Gradients with respect to X %%%
     gKX = kernGradX(model.kern, X, X);
     gKX = gKX*2;
@@ -42,7 +44,7 @@ switch model.approx
 
   for k = 1:model.d
     gK = localCovarianceGradients(model, Y(:, k));
-    if nargout > 1
+    if nargout > 2
       %%% Compute Gradients with respect to X %%%
       for i = 1:model.N
         for j = 1:model.q
@@ -53,10 +55,10 @@ switch model.approx
     %%% Compute Gradients of Kernel Parameters %%%
     gParam = gParam + kernGradient(model.kern, X, gK);
   end
- 
+  gParam = [gParam g_scaleBias];
  case {'dtc', 'fitc', 'pitc'}
   % Sparse approximations.
-  [gK_u, gK_uf, gK_star, g_sigma2] = gpCovGrads(model, Y);
+  [gK_u, gK_uf, gK_star, g_beta] = gpCovGrads(model, Y);
   
   %%% Compute Gradients of Kernel Parameters %%%
   gParam_u = kernGradient(model.kern, X_u, gK_u);
@@ -90,7 +92,7 @@ switch model.approx
     end
   end
 
-  if nargout > 1
+  if nargout > 2
     %%% Compute gradients with respect to X %%%
     
     % Allocate space for gX
@@ -115,13 +117,13 @@ switch model.approx
  case 'dtc'
   % Deterministic training conditional.  
 
-  % append sigma2 gradient to end of parameters
-  gParam = [g_param(:)' g_sigma2];
+  % append beta gradient to end of parameters
+  gParam = [g_param(:)' g_scaleBias g_beta];
  
  case 'fitc'
   % Fully independent training conditional.
   
-  if nargout > 1
+  if nargout > 2
     % deal with diagonal term's effect on X gradients..
     gKXdiag = kernDiagGradX(model.kern, X);
     for i = 1:model.N
@@ -135,13 +137,13 @@ switch model.approx
               + kernGradient(model.kern, X(i, :), gK_star(i));
   end
 
-  % append sigma2 gradient to end of parameters  
-  gParam = [g_param(:)' g_sigma2];
+  % append beta gradient to end of parameters  
+  gParam = [g_param(:)' g_scaleBias g_beta];
 
  case 'pitc'
   % Partially independent training conditional.
   
-  if nargout > 1
+  if nargout > 2
     % deal with block diagonal term's effect on X gradients.
     startVal = 1;
     for i = 1:length(model.blockEnd)
@@ -177,8 +179,8 @@ switch model.approx
     startVal = endVal + 1;
   end
 
-  % append sigma2 gradient to end of parameters
-  gParam = [g_param(:)' g_sigma2];
+  % append beta gradient to end of parameters
+  gParam = [g_param(:)' g_scaleBias g_beta];
 
  otherwise
   error('Unrecognised model approximation');

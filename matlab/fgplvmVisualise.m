@@ -68,11 +68,11 @@ else
 end
 visData = zeros(1,model.d);
 if(strcmp(visualiseFunction(1:5), 'image'))
-  visData(1) = min(min(model.Y));
-  visData(end) = max(max(model.Y));
+  visData(1) = min(min(model.y));
+  visData(end) = max(max(model.y));
 else
-  [void, indMax]= max(sum((model.Y.*model.Y), 2));
-  visData = model.Y(indMax, :)+model.m;
+  [void, indMax]= max(sum((model.y.*model.y), 2));
+  visData = model.y(indMax, :);
 end
 visualiseInfo.visualiseFunction = str2func(visualiseFunction);
 visHandle = visualiseInfo.visualiseFunction(visData, varargin{:});

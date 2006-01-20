@@ -31,14 +31,14 @@ if nargout > 1
    case 'ftc'
     Kinvk = model.invK_uu*KX_star;
    case 'dtc'
-    Kinvk = ((model.invK_uu - model.sigma2*model.Ainv)*KX_star);
+    Kinvk = ((model.invK_uu - (1/model.beta)*model.Ainv)*KX_star);
    case {'fitc', 'pitc'}
     Kinvk = (model.invK_uu - model.Ainv)*KX_star;
   end
   
   covarsig = K - KX_star'*Kinvk;
-  if isfield(model, 'sigma2')
-    covarsig = covarsig + eye(size(X, 1))*model.sigma2;
+  if isfield(model, 'beta')
+    covarsig = covarsig + eye(size(X, 1))*(1/model.beta);
   end
 end
 
@@ -46,9 +46,9 @@ end
     
 % rescale the variances
 if nargout > 1
-  if model.d>1 & ~all(model.scales==1)
+  if ~all(model.scale==1)
     for i = 1:model.d
-      covarsigma{i} = covarsig*model.scales(i).*model.scales(i);
+      covarsigma{i} = covarsig*model.scale(i).*model.scale(i);
     end
   else 
     covarsigma = covarsig;

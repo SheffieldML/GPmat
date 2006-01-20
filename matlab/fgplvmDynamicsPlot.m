@@ -22,7 +22,9 @@ x2 = linspace(min(model.X(:, 2))*1.1, max(model.X(:, 2))*1.1, points);
 [X1, X2] = meshgrid(x1, x2);
 XTest = [X1(:), X2(:)];
 [Y, varsigma] = fgplvmDynamicsPosteriorMeanVar(model, XTest);
-Y = Y - XTest;
+if ~model.dynamics.diff
+  Y = Y - XTest;
+end
 
 C = log10(reshape(1./varsigma(:, 1), size(X1)));
 C = C - min(min(C));
@@ -48,3 +50,4 @@ set(gca, 'yLim', yLim);
 set(gca, 'fontname', 'arial');
 set(gca, 'fontsize', 20);
 
+axis xy

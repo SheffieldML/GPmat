@@ -6,24 +6,24 @@ function [gK_uu, gK_uf, g_Lambda, g_Lambda2] = gpCovGrads(model, Y)
 
 switch model.approx
  case 'dtc'
-  % Deterministic training condtional.
+  % Deterministic training conditional.
   E = model.K_uf*Y;
   EET = E*E';
   AinvEET = model.Ainv*EET;
   AinvEETAinv = AinvEET*model.Ainv;
-  gK_uu = 0.5*(model.d*(model.invK_uu-model.sigma2*model.Ainv) ...
+  gK_uu = 0.5*(model.d*(model.invK_uu-(1/model.beta)*model.Ainv) ...
           - AinvEETAinv);
   
   AinvK_uf = model.Ainv*model.K_uf;
-  gK_uf = -model.d*AinvK_uf-1/model.sigma2*(model.Ainv*EET*AinvK_uf-(model.Ainv*E*Y'));
+  gK_uf = -model.d*AinvK_uf-model.beta*(AinvEET*AinvK_uf-(model.Ainv*E*Y'));
   
-  g_Lambda2 = -0.5*(model.d*((model.N-model.k)/(model.sigma2) ...
-                            +sum(sum(model.Ainv.*model.K_uu))) ...
-                   +sum(sum(AinvEETAinv.*model.K_uu))/model.sigma2 ...
-                   +(trace(AinvEET)-sum(sum(Y.*Y)))/(model.sigma2*model.sigma2));
+  g_Lambda2 = 0.5*(model.d*((model.N-model.k)/model.beta ...
+                            +sum(sum(model.Ainv.*model.K_uu))/(model.beta*model.beta))...
+                   +sum(sum(AinvEETAinv.*model.K_uu))/model.beta ...
+                   +(trace(AinvEET)-sum(sum(Y.*Y))));
   
-  fhandle = str2func([model.sigma2Transform 'Transform']);
-  g_Lambda2 = g_Lambda2*fhandle(model.sigma2, 'gradfact');
+  fhandle = str2func([model.betaTransform 'Transform']);
+  g_Lambda2 = g_Lambda2*fhandle(model.beta, 'gradfact');
   g_Lambda = [];
   
  case 'fitc'
@@ -50,9 +50,9 @@ switch model.approx
           -AinvEETAinv*model.K_uf*model.Dinv ...
           +model.Ainv*E*Y'*model.Dinv;
   g_Lambda = 0.5*diagQ.*1./(model.diagD.*model.diagD);
-  g_Lambda2 = sum(g_Lambda);
-  fhandle = str2func([model.sigma2Transform 'Transform']);
-  g_Lambda2 = g_Lambda2*fhandle(model.sigma2, 'gradfact');
+  g_Lambda2 = -sum(g_Lambda)/(model.beta*model.beta);
+  fhandle = str2func([model.betaTransform 'Transform']);
+  g_Lambda2 = g_Lambda2*fhandle(model.beta, 'gradfact');
  
  case 'pitc' 
   % Partially independent training conditional.
@@ -95,12 +95,12 @@ switch model.approx
     
 
     g_Lambda{i} = 0.5*model.Dinv{i}*blockQ{i}*model.Dinv{i};
-    g_Lambda2 = g_Lambda2 + sum(diag((g_Lambda{i})));
+    g_Lambda2 = g_Lambda2 - sum(diag((g_Lambda{i})))/(model.beta*model.beta);
     startVal = endVal + 1;
   end
   gK_uu = gK_uu*0.5;
-  fhandle = str2func([model.sigma2Transform 'Transform']);
-  g_Lambda2 = g_Lambda2*fhandle(model.sigma2, 'gradfact');
+  fhandle = str2func([model.betaTransform 'Transform']);
+  g_Lambda2 = g_Lambda2*fhandle(model.beta, 'gradfact');
 
  otherwise
   error('Unknown approximation type');

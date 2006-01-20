@@ -47,7 +47,7 @@ switch model.approx
     end
   end
   
-  [gK_uu, gK_uf, g_Lambda] = gpCovGrads(model, model.Y);
+  [gK_uu, gK_uf, g_Lambda] = gpCovGrads(model, model.m);
   
   gK_uuMaxDiff = max(max(abs(2*(gK_uu-diag(diag(gK_uu))) ...
                              + diag(diag(gK_uu)) ...
@@ -75,12 +75,12 @@ switch model.approx
  
  case 'dtc'
   K_uf2 = model.K_uf*model.K_uf';
-  model.A = model.sigma2*model.K_uu+ K_uf2;
+  model.A = (1/model.beta)*model.K_uu+ K_uf2;
   [model.Ainv, U] = pdinv(model.A);
   model.logdetA = logdet(model.A, U);
   
  case 'fitc'
-  model.diagD = model.sigma2 + model.diagK - sum(model.K_uf.*(model.invK_uu*model.K_uf), 1)';
+  model.diagD = (1/model.beta) + model.diagK - sum(model.K_uf.*(model.invK_uu*model.K_uf), 1)';
   model.Dinv = sparseDiag(1./model.diagD);
   K_ufDinvK_uf = model.K_uf*model.Dinv*model.K_uf';
   model.A = model.K_uu + K_ufDinvK_uf;
@@ -94,7 +94,7 @@ switch model.approx
     endVal = model.blockEnd(i);
     ind = startVal:endVal;
     blockLength = length(ind);
-    model.D{i} = model.sigma2*eye(blockLength) + model.K{i} - ...
+    model.D{i} = (1/model.beta)*eye(blockLength) + model.K{i} - ...
         model.K_uf(:, ind)'*model.invK_uu*model.K_uf(:, ind);
     [model.Dinv{i}, U] = pdinv(model.D{i});
     model.logDetD(i) = logdet(model.D{i}, U);

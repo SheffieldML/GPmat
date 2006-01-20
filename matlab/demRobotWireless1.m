@@ -13,11 +13,11 @@ experimentNo = 1;
 [Y, lbls] = lvmLoadData(dataSetName);
 
 % Set up model
-numActive = 100;
+options = fgplvmOptions('ftc');
 latentDim = 2;
+d = size(Y, 2);
 
-% Train using the full training conditional (i.e. no approximation.)
-model = fgplvmCreate(Y, latentDim, 'ftc', numActive, {'rbf', 'bias', 'white'}, 'gaussian');
+model = fgplvmCreate(latentDim, d, Y, options);
 
 % Optimise the model.
 iters = 1000;

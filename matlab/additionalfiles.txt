@@ -11,6 +11,12 @@ dir: html
 ~/mlprojects/fgplvm/html/demOil4.png
 ~/mlprojects/fgplvm/html/demOil5.png
 ~/mlprojects/fgplvm/html/demOil6.png
+~/mlprojects/fgplvm/html/demVowels1.png
+~/mlprojects/fgplvm/html/demVowels2.png
+~/mlprojects/fgplvm/html/demRobotWireless1.png
+~/mlprojects/fgplvm/html/demRobotWireless2.png
+~/mlprojects/fgplvm/html/demRobotWireless3.png
+~/mlprojects/fgplvm/html/demRobotWireless4.png
 ~/mlprojects/fgplvm/html/demStick1.png
 ~/mlprojects/fgplvm/html/demStick2.png
 ~/mlprojects/fgplvm/html/dynamicsSamp1.png
