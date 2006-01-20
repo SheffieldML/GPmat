@@ -2,6 +2,7 @@ function handle = spectrumModify(handle, spectrumValues, convertFile, width,vara
 
 % SPECTRUMMODIFY Helper code for visualisation of spectrum data.
 
+% MLTOOLS
 
 if nargin < 4
   width = 500;
@@ -30,10 +31,11 @@ end
 counter = counter + 1;
 x = repmat(counter,size(spectrumValues));
 y = 1:length(spectrumValues);
-spectrumValues = diffrep2Ratemap(spectrumValues)';
+%spectrumValues = diffrep2Ratemap(spectrumValues)';
+spectrumValues = spectrumValues';
 spectrum(:, counter) = spectrumValues;
-a = ep2wave(spectrumValues,0.02, 'randn');
-a = a/max(abs(a));
+%a = ep2wave(spectrumValues,0.02, 'randn');
+%a = a/max(abs(a));
 %wavplay(a, 22050);
 if nargin > 2
   spectrumValues = feval(convertFile, spectrumValues, varargin{:});

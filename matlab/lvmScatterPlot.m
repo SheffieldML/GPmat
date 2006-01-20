@@ -38,7 +38,7 @@ image(x1, x2, C);
 % shading flat
 colormap gray;
 %colorbar
-data = lvmtwoDPlot(model.X, YLbls, symbol);
+data = lvmTwoDPlot(model.X, YLbls, symbol);
 xLim = [min(XTest(:, 1)) max(XTest(:, 1))];
 yLim = [min(XTest(:, 2)) max(XTest(:, 2))];
 set(ax, 'xLim', xLim);

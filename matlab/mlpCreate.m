@@ -1,15 +1,10 @@
-function model = mlpCreate(inputDim, outputDim, hiddenDim, activeFunc)
+function model = mlpCreate(inputDim, outputDim, options)
 
 % MLPCREATE Wrapper for NETLAB's mlp `net'.
 
-if nargin < 5
-  hiddenDim = 20;
-  if nargin < 4
-    activeFunc = 'linear';
-  end
-end
+% MLTOOLS
 
-model = mlp(inputDim, hiddenDim, outputDim, activeFunc);
+model = mlp(inputDim, options.hiddenDim, outputDim, options.activeFunc);
 model.numParams = model.nwts;
 model.inputDim = inputDim;
 model.outputDim = outputDim;

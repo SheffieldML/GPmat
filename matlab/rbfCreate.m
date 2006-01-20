@@ -1,18 +1,10 @@
-function model = rbfCreate(inputDim, outputDim, hiddenDim, activeFunc, outFunc)
+function model = rbfCreate(inputDim, outputDim, options)
 
 % RBFCREATE Wrapper for NETLAB's rbf `net'.
 
-if nargin < 5
-  activeFunc = 'linear';
-  if nargin < 4
-    activeFunc = 'gaussian';
-    if nargin < 3
-      hiddenDim = 20;
-    end
-  end
-end
+% MLTOOLS
 
-model = rbf(inputDim, hiddenDim, outputDim, activeFunc, outFunc);
+model = rbf(inputDim, options.hiddenDim, outputDim, options.activeFunc, options.outFunc);
 model.numParams = model.nwts;
 model.inputDim = inputDim;
 model.outputDim = outputDim;

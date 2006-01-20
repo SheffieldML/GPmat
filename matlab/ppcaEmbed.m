@@ -1,6 +1,6 @@
 function [X, sigma2] = ppcaEmbed(Y, dims)
 
-% PPCAEMBED Embed data set with Isomap.
+% PPCAEMBED Embed data set with probabilistic PCA.
 
 % MLTOOLS
 
