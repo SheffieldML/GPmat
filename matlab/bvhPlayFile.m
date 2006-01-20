@@ -1,11 +1,8 @@
-function bvhPlayFile(fileName, position)
+function bvhPlayFile(fileName)
 
 % BVHPLAYFILE Play motion capture data from a bvh file.
 
 % MOCAP
 
-if nargin < 2
-  position = 1;
-end
-[bvhStruct, channels, frameLength] = bvhReadFile(fileName);
-bvhPlayData(bvhStruct, channels, frameLength);
+[skel, channels, frameLength] = bvhReadFile(fileName);
+skelPlayData(skel, channels, frameLength);

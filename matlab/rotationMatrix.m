@@ -18,7 +18,7 @@ s1 = sin(xangle);
 s2 = sin(yangle);
 s3 = sin(zangle);
 
-% see http://mathworld.wolfram.com/RotationMatrix.html for
+% see http://en.wikipedia.org/wiki/Rotation_matrix for
 % additional info.
 
 switch order

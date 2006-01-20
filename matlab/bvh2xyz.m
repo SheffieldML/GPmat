@@ -1,46 +1,43 @@
-function xyz = bvh2xyz(bvhStruct, channels)
+function xyz = bvh2xyz(skel, channels)
 
-% BVHCOMPUTEXYZ Compute XYZ values given structure and channels.
+% BVH2XYZ Compute XYZ values given structure and channels.
 
 % MOCAP
 
-for i = 1:length(bvhStruct)  
-  if ~isempty(bvhStruct(i).posInd)
-    xpos = channels(bvhStruct(i).posInd(1));
-    ypos = channels(bvhStruct(i).posInd(2));
-    zpos = channels(bvhStruct(i).posInd(3));
+for i = 1:length(skel.tree)  
+  if ~isempty(skel.tree(i).posInd)
+    xpos = channels(skel.tree(i).posInd(1));
+    ypos = channels(skel.tree(i).posInd(2));
+    zpos = channels(skel.tree(i).posInd(3));
   else
     xpos = 0;
     ypos = 0;
     zpos = 0;
   end
   xyzStruct(i) = struct('rotation', [], 'xyz', []); 
-  if nargin < 2 | isempty(bvhStruct(i).rotInd)
+  if nargin < 2 | isempty(skel.tree(i).rotInd)
     xangle = 0;
     yangle = 0;
     zangle = 0;
   else
-    xangle = deg2rad(channels(bvhStruct(i).rotInd(1)));
-    yangle = deg2rad(channels(bvhStruct(i).rotInd(2)));
-    zangle = deg2rad(channels(bvhStruct(i).rotInd(3)));
+    xangle = deg2rad(channels(skel.tree(i).rotInd(1)));
+    yangle = deg2rad(channels(skel.tree(i).rotInd(2)));
+    zangle = deg2rad(channels(skel.tree(i).rotInd(3)));
   end
-  thisRotation = rotationMatrix(xangle, yangle, zangle, bvhStruct(i).order);
+  thisRotation = rotationMatrix(xangle, yangle, zangle, skel.tree(i).order);
   thisPosition = [xpos ypos zpos];
-  if ~bvhStruct(i).parent
+  if ~skel.tree(i).parent
     xyzStruct(i).rotation = thisRotation;
-    xyzStruct(i).xyz = bvhStruct(i).offset + thisPosition;
+    xyzStruct(i).xyz = skel.tree(i).offset + thisPosition;
   else
     xyzStruct(i).xyz = ...
-        bvhStruct(i).offset*xyzStruct(bvhStruct(i).parent).rotation ...
-        + xyzStruct(bvhStruct(i).parent).xyz + thisPosition;
-    xyzStruct(i).rotation = thisRotation*xyzStruct(bvhStruct(i).parent).rotation;
+        skel.tree(i).offset*xyzStruct(skel.tree(i).parent).rotation ...
+        + xyzStruct(skel.tree(i).parent).xyz + thisPosition;
+    xyzStruct(i).rotation = thisRotation*xyzStruct(skel.tree(i).parent).rotation;
     
   end
 end
-xyz = reshape([xyzStruct(:).xyz], 3, length(bvhStruct))';
+xyz = reshape([xyzStruct(:).xyz], 3, length(skel.tree))';
 
 
 
-function theta = deg2rad(omega)
-
-theta = omega/180*pi;

@@ -1,4 +1,4 @@
-function [bvhStruct, channels, frameLength] = bvhReadFile(fileName)
+function [skel, channels, frameLength] = bvhReadFile(fileName)
 
 % BVHREADFILE Reads a bvh file into a tree structure.
 
@@ -16,6 +16,12 @@ numBracket = 0;
 backTrace = 0;
 jointNo = 0;
 channelNo = 0;
+skel.type = 'bvh';
+skel.mass = 1.0;
+skel.length = 1.0;
+skel.angle = 'deg';
+skel.documentation = '';
+skel.name = fileName;
 while ~feof(fid)
   lin = fgetl(fid);
   [token, R] = strtok(lin);
@@ -27,14 +33,23 @@ while ~feof(fid)
     parentNo = backTrace(numBracket+1);
     jointNo = jointNo + 1;
     name = strtok(R); 
-    bvhStruct(jointNo) = struct('name', name, ...
+    skel.tree(jointNo) = struct('name', name, ...
+                                'id', jointNo - 1, ...
                                 'offset', [], ...
+                                'orientation', [], ...
+                                'axis', [0 0 0], ...
+                                'axisOrder', [], ...
+                                'C', eye(3), ...
+                                'Cinv', eye(3), ...
                                 'channels', [], ...
+                                'bodymass', [], ...
+                                'confmass', [], ...
                                 'parent', parentNo, ...
                                 'order', [], ...
                                 'rotInd', [], ...
                                 'posInd', [], ...
-                                'children', []);
+                                'children', [], ...
+                                'limits', []);
     backTrace = [backTrace jointNo];
     
    case 'OFFSET'
@@ -43,7 +58,7 @@ while ~feof(fid)
     if length(offsets) == 3
       for i = 1:3
         offset = str2num(offsets{i}{1});
-        bvhStruct(jointNo).offset(1, i) = offset;
+        skel.tree(jointNo).offset(1, i) = offset;
       end
     else 
       error('Offset is incorrect length.');
@@ -63,29 +78,29 @@ while ~feof(fid)
     orderNo = 0;
     for i = 1:numChannels 
       [tok, R] = strtok(R);
-      bvhStruct(jointNo).channels{i} = tok;
+      skel.tree(jointNo).channels{i} = tok;
       switch tok
        case 'Xrotation'
         orderNo = orderNo + 1;
-        bvhStruct(jointNo).rotInd(1, 1) = channelNo + i;
-        bvhStruct(jointNo).order(1, orderNo) = 'x';
+        skel.tree(jointNo).rotInd(1, 1) = channelNo + i;
+        skel.tree(jointNo).order(1, orderNo) = 'x';
        case 'Yrotation'
         orderNo = orderNo + 1;
-        bvhStruct(jointNo).rotInd(1, 2) = channelNo + i;
-        bvhStruct(jointNo).order(1, orderNo) = 'y';
+        skel.tree(jointNo).rotInd(1, 2) = channelNo + i;
+        skel.tree(jointNo).order(1, orderNo) = 'y';
        case 'Zrotation'
         orderNo = orderNo + 1;
-        bvhStruct(jointNo).rotInd(1, 3) = channelNo + i;
-        bvhStruct(jointNo).order(1, orderNo) = 'z';
+        skel.tree(jointNo).rotInd(1, 3) = channelNo + i;
+        skel.tree(jointNo).order(1, orderNo) = 'z';
        case 'Xposition'
-        bvhStruct(jointNo).posInd(1, 1) = channelNo + i;
+        skel.tree(jointNo).posInd(1, 1) = channelNo + i;
        case 'Yposition'
-        bvhStruct(jointNo).posInd(1, 2) = channelNo + i;
+        skel.tree(jointNo).posInd(1, 2) = channelNo + i;
        case 'Zposition'
-        bvhStruct(jointNo).posInd(1, 3) = channelNo + i;
+        skel.tree(jointNo).posInd(1, 3) = channelNo + i;
       end        
     end
-    bvhStruct(jointNo).order = char(bvhStruct(jointNo).order);
+    skel.tree(jointNo).order = char(skel.tree(jointNo).order);
     channelNo = channelNo + numChannels;
    
    case 'MOTION'
@@ -116,38 +131,9 @@ while ~feof(fid)
   end
 end
 fclose(fid);
-bvhStruct = findChildren(bvhStruct);
-
-channels = channelsAngles(channels, bvhStruct);
-
-function tree = findChildren(tree)
-
-% FINDCHILDREN Add the children to the tree structure.
-
-for i = 1:length(tree)
-  for j = 1:length(tree(i).parent)
-    if tree(i).parent(j)
-      tree(tree(i).parent(j)).children ...
-          = [tree(tree(i).parent(j)).children i];
-    end
-  end
-end
+skel.tree = treeFindChildren(skel.tree);
 
 
-function channels = channelsAngles(channels, bvhStruct);
+channels = smoothAngleChannels(channels, skel);
 
-% CHANNELSANGLES Try and remove artificial discontinuities associated with angles.
 
-for i=1:length(bvhStruct)
-  for j=1:length(bvhStruct(i).rotInd)
-    col = bvhStruct(i).rotInd(j);
-    for k=2:size(channels, 1)
-      diff=channels(k, col)-channels(k-1, col);
-      if abs(diff+360)<abs(diff)
-        channels(k:end, col)=channels(k:end, col)+360;
-      elseif abs(diff-360)<abs(diff)
-        channels(k:end, col)=channels(k:end, col)-360;
-      end
-    end
-  end
-end

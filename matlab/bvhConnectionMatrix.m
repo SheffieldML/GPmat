@@ -1,13 +1,8 @@
-function connection = bvhConnectionMatrix(bvhStruct);
+function connection = bvhConnectionMatrix(skel);
 
 % BVHCONNECTIONMATRIX Compute the connection matrix for the structure.
 
 % MOCAP
 
-connection = zeros(length(bvhStruct));
-for i = 1:length(bvhStruct);
-  for j = 1:length(bvhStruct(i).children)    
-    connection(i, bvhStruct(i).children(j)) = 1;
-  end
-end
+connection = skelConnectionMatrix(skel);
 

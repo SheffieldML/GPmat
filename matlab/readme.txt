@@ -1,5 +1,9 @@
 This toolbox allows MATLAB to read in and write bvh files. There are also routines for visualising the files in MATLAB.
 
+Version 0.13 Release Notes
+--------------------------
+
+Added the ability to read motion capture files in the Acclaim format (asf and amc) to facilitate using the CMU Motion Capture database.
 
 Version 0.12 Release Notes
 --------------------------
