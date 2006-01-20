@@ -5,6 +5,8 @@ function g = kernGradient(kern, x, varargin)
 % KERN
 
 fhandle = str2func([kern.type 'KernGradient']);
+
+% varargin contains (optionally) x2 and covGrad.
 g = fhandle(kern, x, varargin{:});
 
 % Check if parameters are being optimised in a transformed space.

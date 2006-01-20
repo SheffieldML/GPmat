@@ -4,7 +4,4 @@ function params = rbfKernExtractParam(kern)
 
 % KERN
 
-% KERN
-
-
 params = [kern.inverseWidth kern.variance];

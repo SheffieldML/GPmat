@@ -4,7 +4,6 @@ function g = rbfKernGradient(kern, x, varargin)
 
 % KERN
 
-
 % The last argument is covGrad
 if nargin < 4
   [k, dist2xx] = rbfKernCompute(kern, x);
