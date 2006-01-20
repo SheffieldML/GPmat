@@ -5,18 +5,29 @@ function zeroAxes(axesHandle, tickRatio, fontSize, fontName)
 % NDLUTIL
 
 if nargin < 4
-  fontName = 'times';
+  fontName = [];
   if nargin < 3
-    fontSize = 14;
+    fontSize = [];
     if nargin < 2
-      tickRatio = 0.025;
+      tickRatio = [];
       if nargin < 1
-        axesHandle = gca;
+        axesHandle = [];
       end
     end
   end
 end
-
+if isempty(fontName)
+  fontName = 'times';
+end
+if isempty(fontSize)
+  fontSize = 14;
+end
+if isempty(tickRatio)
+  tickRatio = 0.025;
+end
+if isempty(axesHandle)
+  axesHandle = [];
+end
 axis off
 xlim = get(axesHandle, 'xlim');
 ylim = get(axesHandle, 'ylim');
