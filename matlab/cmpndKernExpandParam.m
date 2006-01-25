@@ -12,7 +12,8 @@ for i = 1:length(kern.comp)
   endVal = endVal + kern.comp{i}.nParams;
   kern.comp{i} = kernExpandParam(kern.comp{i}, params(1, startVal:endVal));
   startVal = endVal + 1;
-  if strcmp(kern.comp{i}.type(1:5), 'white')
+  if strcmp(kern.comp{i}.type(1:min([end 5])), 'white')
+    % If kernel name starts with white, assume it is a white noise term.
     kern.whiteVariance = kern.whiteVariance + kern.comp{i}.variance;
   else
     if(isfield(kern.comp{i}, 'whiteVariance'))
