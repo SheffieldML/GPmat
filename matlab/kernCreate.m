@@ -4,13 +4,29 @@ function kern = kernCreate(X, kernelType)
 
 % KERN
 
+dim = size(X, 2);
+if dim == 1 & size(X, 1) == 1;
+  dim = X;
+end
 if iscell(kernelType)
-  % compound kernel type
-  kern.type = 'cmpnd';
-  for i = 1:length(kernelType)
-    kern.comp{i}.type = kernelType{i};
-    kern.comp{i}.inputDimension = size(X, 2);
-    kern.comp{i}.index = [];
+  kern.inputDimension = dim;
+  switch kernelType{1}
+   case 'tensor'
+    % tensor kernel type
+    start = 2;
+    kern.type = 'tensor';
+   case 'cmpnd'
+    % compound kernel type
+    start = 2;
+    kern.type = 'cmpnd';
+   otherwise
+    % compound kernel type
+    start = 1;
+    kern.type = 'cmpnd';
+  end
+  for i = start:length(kernelType)
+    kern.comp{i-start+1} = kernCreate(X, kernelType{i});
+    kern.comp{i-start+1}.index = [];
   end
   kern = kernParamInit(kern);
 elseif isstruct(kernelType)
@@ -18,7 +34,7 @@ elseif isstruct(kernelType)
   kern = kernelType;
 else
   kern.type = kernelType;
-  kern.inputDimension = size(X, 2);
+  kern.inputDimension = dim;
   kern = kernParamInit(kern);
 end
 kern.Kstore = [];

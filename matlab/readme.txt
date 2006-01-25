@@ -6,6 +6,7 @@ Version 0.142 Release Notes
 Minor changes to the kernDisplay command and each command for the relevant sub kernels. New command allows spaces to be placed in front of the display so that the kernel can be better formated when displayed as part of a larger model.
 
 Also added is the kernel 'file' which is a kernel for which values are precomputed and stored in a file.
+
 Version 0.141 Release Notes
 ---------------------------
 

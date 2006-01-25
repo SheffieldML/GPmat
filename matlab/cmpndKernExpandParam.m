@@ -1,6 +1,6 @@
 function kern = cmpndKernExpandParam(kern, params)
 
-% CMPNDKERNEXPANDPARAM Create kernel structure from ARD parameters.
+% CMPNDKERNEXPANDPARAM Create kernel structure from parameters.
 
 % KERN
 

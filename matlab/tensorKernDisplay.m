@@ -1,6 +1,6 @@
-function cmpndKernDisplay(kern, varargin)
+function tensorKernDisplay(kern, varargin)
 
-% CMPNDKERNDISPLAY Display the parameters of the compound kernel.
+% TENSORKERNDISPLAY Display the parameters of the compound kernel.
 
 % KERN
 
@@ -13,7 +13,7 @@ else
 end
 spacing = char(spacing);
 fprintf(spacing);
-fprintf('Compound kernel:\n')
+fprintf('Tensor kernel:\n')
 for i = 1:length(kern.comp)
   kernDisplay(kern.comp{i}, varargin{:});
 end

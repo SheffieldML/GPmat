@@ -5,7 +5,7 @@ function kern = kernTest(kernType);
 % KERN
 
 numData = 20;
-numIn = 2;
+numIn = 4;
 
 % Generate some x positions.
 x = randn(numData, numIn);
@@ -13,9 +13,14 @@ x2 = randn(numData/2, numIn);
 kern = kernCreate(x, kernType);
 kern = kernParamInit(kern);
 
-if strcmp(kern.type, 'cmpnd') & length(kern.comp) > 1
-  kern.comp{1}.index = [1];
-  kern.comp{2}.index = [2];
+if exist([kern.type 'KernSetIndex'])==2 
+  for i = 1:length(kern.comp)
+    if rand(1)>0.5
+      indices = randperm(numIn);
+      indices = indices(1:ceil(rand(1)*numIn));
+      kern = kernSetIndex(kern, i, indices);
+    end
+  end
 end
 
 % Set the parameters randomly.
