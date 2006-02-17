@@ -4,5 +4,4 @@ function k = whitefixedKernDiagCompute(kern, x)
 
 % KERN
 
-
 k = whiteKernDiagCompute(kern, x);

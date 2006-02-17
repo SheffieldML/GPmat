@@ -3,7 +3,7 @@ Please note that this toolbox requires MATLAB 7.0 or higher to run. The toolbox 
 Version 0.15
 ------------
 
-Added tensor kernels and white noise kernels which don't return a parameter for optimisation, 'whiteFixed'.
+Added tensor kernels and white noise kernels which don't return a parameter for optimisation: 'whitefixed'. White fixed kernels were added by Nathaniel King.
 
 Version 0.142 Release Notes
 ---------------------------
