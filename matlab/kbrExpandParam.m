@@ -6,4 +6,4 @@ function model = kbrExpandParam(model, params);
 startVal = 1;
 endVal = model.numData*model.outputDim;
 model.A = reshape(params(1:endVal), model.numData, model.outputDim);
-model.b = params(endVal+1:end);
+model.bias = params(endVal+1:end);

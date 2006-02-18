@@ -25,8 +25,12 @@ else
   sigma2 = 1;
   mu = zeros(d, 1);
   for i = 1:d
-    obs = ~isnan(Y(:, i));
-    mu(i) = mean(Y(find(obs), i));
+    obs = find(~isnan(Y(:, i)));
+    if length(obs)>0
+      mu(i) = mean(Y(obs, i));
+    else
+      mu(i) = 0;
+    end
   end
   numObs = sum(sum(~isnan(Y)));
   for i = 1:iters

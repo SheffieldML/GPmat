@@ -12,7 +12,11 @@ else
   options.dims = 1:dims;
   neighbours = 7;
   [Xstruct, sigma2, E] = Isomap(D, 'k', neighbours, options);
-  X = Xstruct.coords{dims}';
+  X = zeros(size(Y, 1), 2);
+  if length(Xstruct.index) ~= size(Y, 1)
+    warning('Isomap graph is not fully connected');
+  end
+  X(Xstruct.index, :) = Xstruct.coords{dims}';
   % Rescale X so that variance is 1 and mean is zero.
   meanX = mean(X);
   X = X-ones(size(Y, 1), 1)*meanX;

@@ -4,4 +4,4 @@ function params = kbrExtractParam(model);
 
 % MLTOOLS
 
-params = [model.A(:)' model.b];
+params = [model.A(:)' model.bias];
