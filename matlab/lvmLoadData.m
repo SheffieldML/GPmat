@@ -18,15 +18,24 @@ switch dataset
   Y = parseWirelessData([baseDir 'uw-floor.txt']);
   Y = Y(216:end, :);
 
+ case 'robotTwoLoops'
+  Y = csvread([baseDir 'TwoLoops.slam'], 1, 0);
+  Y = Y(1:floor(end/2), 4:end);
+  Y(find(Y==-100))=-NaN;
+  Y = (Y + 85)/15;
+  
  case 'robotTraces'
   Y = csvread([baseDir 'Trace-3rdFloor-01.uwar.slam'], 1, 0); 
   Y = Y(1:floor(end/2), 4:end);
-  Y(find(Y==-100))=-92;
+  Y(:, [3 4 38]) = []; % Remove columns of missing data.
+  Y(find(Y==-100))=NaN;
   Y = (Y + 85)/15;
+
  case 'robotTracesTest'
   Y = csvread([baseDir 'Trace-3rdFloor-01.uwar.slam'], 1, 0); 
   Y = Y(ceil(end/2):end, 4:end);
-  Y(find(Y==-100))=-92;
+  Y(:, [3 4 38]) = []; % Remove columns of missing data.
+  Y(find(Y==-100))=NaN;
   Y = (Y + 85)/15;
   %/~
  case 'robotAtrium'

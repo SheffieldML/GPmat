@@ -1,5 +1,10 @@
 This toolbox stores datasets and gives commands for accessing them.
 
+Version 0.121
+-------------
+
+Modified robot traces example to reflect the fact that the data which is missing is genuinely missing rather than just reading low.
+
 Version 0.12
 ------------
 
