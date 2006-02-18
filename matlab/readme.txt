@@ -4,7 +4,7 @@ This toolbox provides various machine learning tools, either through wrapping ot
 Version 0.111
 -------------
 
-Fixed bug in kbr where bias parameter fields where still being referred to as b.
+Fixed bug in kbr where bias parameter fields where still being referred to as b.Also acknowledged the fact that the isomap graph may not be fully connected in isomapEmbed, but don't yet deal with it properly. Finally added lleEmbed.m for wrapping the lle code.
 
 
 Version 0.11
