@@ -4,7 +4,7 @@ function [X, sigma2] = isomapEmbed(Y, dims)
 
 % MLTOOLS
 
-% Note isomap code uses the transpose of a design matrix.
+% Note: isomap code uses the transpose of a design matrix.
 if any(any(isnan(Y)))
   error('Cannot initialise gplvm using isomap when missing data is present.')
 else
@@ -14,6 +14,7 @@ else
   [Xstruct, sigma2, E] = Isomap(D, 'k', neighbours, options);
   X = zeros(size(Y, 1), 2);
   if length(Xstruct.index) ~= size(Y, 1)
+    % We don't really deal with this problem correctly here ...
     warning('Isomap graph is not fully connected');
   end
   X(Xstruct.index, :) = Xstruct.coords{dims}';
