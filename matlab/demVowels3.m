@@ -14,6 +14,8 @@ experimentNo = 3;
 
 % Set up model
 options = fgplvmOptions('fitc');
+options.back = 'mlp';
+options.backOptions = mlpOptions;
 options.optimiseInitBack = 0;
 options.numActive = 200;
 latentDim = 2;

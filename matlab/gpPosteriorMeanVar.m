@@ -40,26 +40,47 @@ while startVal <= size(X, 1)
   end
 
   % Compute mean, using precomputed alpha vector.
-  mu(indices, :) = KX_star'*model.alpha;
-
+  if ~model.isMissingData
+    mu(indices, :) = KX_star'*model.alpha;
+  else
+    for i = 1:model.d
+      mu(indices, i) = KX_star(model.indexPresent{i}, :)' ...
+         *model.alpha(model.indexPresent{i}, i);
+    end
+  end
   
   % Compute variances if requried.
   if nargout > 1
-    % Compute diagonal of kernel for new point.
-    diagK = kernDiagCompute(model.kern, X(indices, :));
-    switch model.approx
-     case 'ftc'
-      Kinvk = model.invK_uu*KX_star;
-     case 'dtc'
-      Kinvk = ((model.invK_uu - (1/model.beta)*model.Ainv)*KX_star);
-     case {'fitc', 'pitc'}
-      Kinvk = (model.invK_uu - model.Ainv)*KX_star;
+    if model.isSpherical
+      % Compute diagonal of kernel for new point.
+      diagK = kernDiagCompute(model.kern, X(indices, :));
+      switch model.approx
+       case 'ftc'
+        Kinvk = model.invK_uu*KX_star;
+       case 'dtc'
+        Kinvk = ((model.invK_uu - (1/model.beta)*model.Ainv)*KX_star);
+       case {'fitc', 'pitc'}
+        Kinvk = (model.invK_uu - model.Ainv)*KX_star;
+      end
+      varsig = diagK - sum(KX_star.*Kinvk, 1)';
+      if isfield(model, 'beta')
+        varsig = varsig + (1/model.beta);
+      end
+      varsigma(indices, :) = repmat(varsig, 1, model.d);
+    else
+      diagK = kernDiagCompute(model.kern, X(indices, :));
+      for i = 1:model.d
+        ind = model.indexPresent{i};
+        switch model.approx
+         case 'ftc'
+          Kinvk = model.invK_uu{i}*KX_star(ind, :);
+         otherwise 
+          error(['Non-spherical not yet implemented for any approximation ' ...
+                 'other than ''ftc''']);
+        end
+        varsigma(indices, i) = diagK - sum(KX_star(ind, :).*Kinvk, 1)';
+      end
     end
-    varsig = diagK - sum(KX_star.*Kinvk, 1)';
-    if isfield(model, 'beta')
-      varsig = varsig + (1/model.beta);
-    end
-    varsigma(indices, :) = repmat(varsig, 1, model.d);
   end
   
   

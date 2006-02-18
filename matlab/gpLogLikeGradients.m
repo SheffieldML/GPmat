@@ -43,17 +43,27 @@ switch model.approx
   gParam = zeros(1, model.kern.nParams);
 
   for k = 1:model.d
-    gK = localCovarianceGradients(model, Y(:, k));
+    gK = localCovarianceGradients(model, Y(:, k), k);
     if nargout > 2
       %%% Compute Gradients with respect to X %%%
-      for i = 1:model.N
+      ind = gpDataIndices(model, k);
+      counter = 0;
+      for i = ind
+        counter = counter + 1;
         for j = 1:model.q
-          gX(i, j) = gX(i, j) + gKX(:, j, i)'*gK(:, i);
+          gX(i, j) = gX(i, j) + gKX(ind, j, i)'*gK(:, counter);
         end
       end
     end
     %%% Compute Gradients of Kernel Parameters %%%
-    gParam = gParam + kernGradient(model.kern, X, gK);
+    if model.isMissingData
+      gParam = gParam ...
+               + kernGradient(model.kern, ...
+                              X(model.indexPresent{k}, :), ...
+                              gK);
+    else
+      gParam = gParam + kernGradient(model.kern, X, gK);
+    end
   end
   gParam = [gParam g_scaleBias];
  case {'dtc', 'fitc', 'pitc'}
@@ -63,6 +73,7 @@ switch model.approx
   %%% Compute Gradients of Kernel Parameters %%%
   gParam_u = kernGradient(model.kern, X_u, gK_u);
   gParam_uf = kernGradient(model.kern, X_u, X, gK_uf);
+
   g_param = gParam_u + gParam_uf;
   
   %%% Compute Gradients with respect to X_u %%%
@@ -170,13 +181,10 @@ switch model.approx
     end
   end
   % deal with block diagonal's effect on kernel parameters.
-  startVal = 1;
   for i = 1:length(model.blockEnd);
-    endVal = model.blockEnd(i);
-    ind = startVal:endVal;
+    ind = gpBlockIndices(model, i);
     g_param = g_param ...
               + kernGradient(model.kern, X(ind, :), gK_star{i});
-    startVal = endVal + 1;
   end
 
   % append beta gradient to end of parameters
@@ -195,6 +203,17 @@ function gK = localCovarianceGradients(model, y, dimension)
 
 % FGPLVMCOVARIANCEGRADIENTS
 
-invKy = model.invK_uu*y;
-gK = -model.invK_uu + invKy*invKy';
+if ~isfield(model, 'isSpherical') | model.isSpherical
+  invKy = model.invK_uu*y;
+  gK = -model.invK_uu + invKy*invKy';
+else
+  if model.isMissingData
+    m = y(model.indexPresent{dimension});
+  else
+    m = y;
+  end
+  invKy = model.invK_uu{dimension}*m;
+  gK = -model.invK_uu{dimension} + invKy*invKy';
+end
 gK = gK*.5;
+    

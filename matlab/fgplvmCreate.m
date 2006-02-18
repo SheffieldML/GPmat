@@ -8,8 +8,18 @@ if size(Y, 2) ~= d
   error(['Input matrix Y does not have dimension ' num2str(d)]);
 end
 
-initFunc = str2func([options.initX 'Embed']);
-X = initFunc(Y, q);
+if isstr(options.initX)
+  initFunc = str2func([options.initX 'Embed']);
+  X = initFunc(Y, q);
+else
+  if size(options.initX, 1) == size(Y, 1) ...
+        & size(options.initX, 2) == q
+    X = options.initX;
+  else
+    error('options.initX not in recognisable form.');
+  end
+end
+    
 model = gpCreate(q, d, X, Y, options);
 
 model.type = 'fgplvm';

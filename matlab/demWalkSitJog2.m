@@ -11,11 +11,11 @@ experimentNo = 2;
 
 % load data
 [Y, lbls] = lvmLoadData(dataSetName);
-
+Y = Y(1:2:end, :);
 % Set up model
 options = fgplvmOptions('pitc');
-options.initX = 'isomap';
-options.numActive = 200;
+options.initX = X(1:2:end, :); %'isomap';
+options.numActive = 100;
 latentDim = 2;
 
 % Train using the partially independent training conditional.
@@ -23,16 +23,10 @@ d = size(Y, 2);
 model = fgplvmCreate(latentDim, d, Y, options);
 
 % Add dynamics model.
-options = gpOptions('pitc');
-options.learnScales = 1;
-options.kern = kernCreate(model.X, {'rbf', 'white'});
-
-options.kern.comp{1}.inverseWidth = 5;
-% This gives signal to noise of 0.1:1e-3 or 100:1.
-options.kern.comp{1}.variance = 0.1^2;
-options.kern.comp{2}.variance = 1e-3^2;
-options.kern.learnScales = 1;
-model = fgplvmAddDynamics(model, 'gp', options);
+optionsDyn = gpReversibleDynamicsOptions('pitc');
+optionsDyn.numActive = 100;
+optionsDyn.learnScales = 1;
+model = fgplvmAddDynamics(model, 'gpReversible', optionsDyn);
 
 % Optimise the model.
 iters = 1000;

@@ -14,6 +14,7 @@ experimentNo = 3;
 
 % Set up model
 options = fgplvmOptions('dtc');
+options.optimiser = 'scg';
 latentDim = 2;
 d = size(Y, 2);
 

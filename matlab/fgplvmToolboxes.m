@@ -2,8 +2,8 @@
 
 importLatest('prior');
 importLatest('optimi');
-importLatest('kern');
-importLatest('mltools');
 importLatest('mocap')
 importLatest('ndlutil');
+importLatest('kern');
 importLatest('datasets');
+importLatest('mltools');

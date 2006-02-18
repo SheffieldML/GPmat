@@ -11,6 +11,13 @@ if size(y, 2) ~= d
   error(['Input matrix y does not have dimension ' num2str(d)]);
 end
 
+if any(isnan(y)) & ~options.isMissingData
+  error('NaN values in y, but no missing data declared.')
+end
+if options.isMissingData & options.isSpherical
+  error('If there is missing data, spherical flag cannot be set.');
+end
+
 model.type = 'gp';
 model.approx = options.approx;
 
@@ -26,8 +33,29 @@ model.N = size(y, 1);
 
 model.optimiser = options.optimiser;
 
-model.bias = mean(y);
-model.scale = ones(1, model.d);
+model.isMissingData = options.isMissingData;
+if model.isMissingData
+  for i = 1:model.d
+    model.indexPresent{i} = find(~isnan(y(:, i)));
+  end
+end
+
+model.isSpherical = options.isSpherical;
+
+if ~model.isMissingData
+  model.bias = mean(y);
+  model.scale = ones(1, model.d);
+else
+  for i = 1:model.d
+    if isempty(model.indexPresent{i})
+      model.bias(i) = 0;
+      model.scale(i) = 1;
+    else
+      model.bias(i) = mean(model.y(model.indexPresent{i}, i));
+      model.scale(i) = 1;
+    end
+  end
+end
 
 model.m = gpComputeM(model);
 

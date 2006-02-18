@@ -8,17 +8,19 @@
 
 <h1>Fast GP-LVM Software</h1>
 
-This page will describe examples of how to use the fast Gaussian process latent variable model Software (FGPLVM) available for <a href="http://ext.dcs.shef.ac.uk/~u0015/cgi-bin/downloadForm.cgi?toolbox=fgplvm">download here</a>. 
+<p>This page describes examples of how to use the fast Gaussian process latent variable model Software (FGPLVM) available for <a href="http://ext.dcs.shef.ac.uk/~u0015/cgi-bin/downloadForm.cgi?toolbox=fgplvm">download here</a>. 
 
-Alternative GP-LVM implementations from this site:
+<p>Alternative GP-LVM implementations from this site:
 
-The GP-LVM C++ software is available from <a href="http://www.dcs.shef.ac.uk/~neil/gplvmcpp/">here</a>.
+<p>The GP-LVM C++ software is available from <a href="http://www.dcs.shef.ac.uk/~neil/gplvmcpp/">here</a>.
 
-The original MATLAB version of the toolbox is available here <a href="http://www.dcs.shef.ac.uk/~neil/gplvm/">here</a>.
+<p>The original MATLAB version of the toolbox is available here <a href="http://www.dcs.shef.ac.uk/~neil/gplvm/">here</a>.
 
 <h3>Release Information</h3>
 
-<p>Current release is 0.13.
+<p>Current release is 0.131.
+
+<p>Release 0.131 adds the ability to handle missing data and a new reversible dynamics model.
 
 <p>Release 0.13 is a (hopefully) fairly stable base release for which several results in forthcoming papers will be created. Additional features are better decompartmentalisation of dynamics models, regularisation of inducing variable's inputs and introduction of fgplvmOptions and gpOptions for setting default options for the models.
 
@@ -49,19 +51,19 @@ The original MATLAB version of the toolbox is available here <a href="http://www
     </td>
     <td width="35%">
 
-<p align="center">0.142<br>
+<p align="center">0.15<br>
 0.15<br>
 0.13<br>
 0.13<br>
-0.11<br>
-0.12</p>
+0.111<br>
+0.121</p>
 
     </td>
   </tr>
 </table>
 
 
-<p>Finally you will also need the <a href="http://www.ncrg.aston.ac.uk/netlab/">NETLAB toolbox</a> in your path and to run demos that make use of MOCAP data you will need to use <a href="http://www.dcs.shef.ac.uk/~neil/mocap/downloadFiles/">the MOCAP toolbox (vrs 0.13)</a>. Finally if you need to load in a file written from the GPLVMCPP toolbox you will need <a href="http://www.dcs.shef.ac.uk/~neil/noise/downloadFiles/">the NOISE toolbox (vrs 0.13)</a>.
+<p>Finally you will also need the <a href="http://www.ncrg.aston.ac.uk/netlab/">NETLAB toolbox</a> in your path and to run demos that make use of MOCAP data you will need to use <a href="http://www.dcs.shef.ac.uk/~neil/mocap/downloadFiles/">the MOCAP toolbox (vrs 0.13)</a>. If you need to load in a file written from the GPLVMCPP toolbox you will need <a href="http://www.dcs.shef.ac.uk/~neil/noise/downloadFiles/">the NOISE toolbox (vrs 0.13)</a>.
 
 <h2>Examples</h2>
 
@@ -188,13 +190,11 @@ In on-going work with Dieter Fox and Brian Ferris at the University of Washingto
 <p><img src="demRobotWireless3.png" width="49%"><img src="demRobotWireless4.png" width="49%"><br>
 Use of back constraints and dynamics to obtain loop closure in a robot navigation example. <i>Top Left</i>: GP-LVM without back constraints or dynamics, <i>Top right</i>: GP-LVM with back constraints, no dynamics, <i>Bottom Left</i>: GP-LVM with dynamics, no back constraints, <i>Bottom right</i>: GP-LVM with back constraints and dynamics. </center>
 
-<!--
 <h3>Vocal Joystick and Vowel Data</h3>
 
 Another ongoing piece of work with Jeff Bilmes and Jon Malkin involves embedding vowel sounds in a two dimensional space as part of <a href="http://ssli.ee.washington.edu/vj">vocal joystick</a> system. Jon has provided a simple data set of 2,700 examples of different vowels. These are embedded in a two dimensional latent space with and without back constraints.
 
-<p><center><img src="demVowels2.png" width="49%"><img src="demVowels1.png" width="49%"><br>
+<p><center><img src="demVowels2.png" width="49%"><img src="demVowels3.png" width="49%"><br>
 <i>Left</i>: embedding of the vowel data without back constraints, <i>Right</i>: embedding of the vowel data with back constraints. <i>/a/</i> - red cross, <i>/ae/</i> - green circle, <i>/ao/</i> - blue plus, <i>/e/</i> - cyan asterix, <i>/i/</i> - magenta square, <i>/ibar/</i> - yellow diamond, <i>/o/</i> - red down triangle, <i>/schwa/</i> - green up triangle, <i>/u/</i> - blue left triangle.
---!>
 </body>
 </html>
