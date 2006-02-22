@@ -10,7 +10,7 @@ indices = find(connect);
 [I, J] = ind2sub(size(connect), indices);
 set(handle(1), 'Xdata', vals(:, 1), 'Ydata', vals(:, 2), 'Zdata', ...
                  vals(:, 3));
-set(handle(1), 'visible', 'off')
+%set(handle(1), 'visible', 'off')
 
 
 for i = 1:length(indices)
