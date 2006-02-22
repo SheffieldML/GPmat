@@ -49,14 +49,14 @@ Once downloaded you can try loading a BVH data set from the examples directory.
 
 <p><code>&gt;&gt; skelPlayData(skel, channels, frameLength);</code>
 
-You can also download and read data in the Acclaim format (asf/amc). In the example below we load a nd play data from the <a href="http://mocap.cs.cmu.edu">CMU Graphics Lab Motion Capture Database</a>. We use the tenth example from the 86th subject. We have assumed that you have placed the files in the <code>examples</code> subdirectory.
+<p>You can also download and read data in the Acclaim format (asf/amc). In the example below we load a nd play data from the <a href="http://mocap.cs.cmu.edu">CMU Graphics Lab Motion Capture Database</a>. We use the tenth example from the 86th subject. We have assumed that you have placed the files in the <code>examples</code> subdirectory.
 
-<p><code>&gt;&gt; skel = acclaimReadSkel('examples/86.asf');
-&gt;&gt; [channels, skel] = acclaimReadChannels('examples/86_10.asf');
-&gt;&gt; skelPlayData(skel, channels, 1/120);
-&gt;&gt;
+<p><code>&gt;&gt; skel = acclaimReadSkel('examples/86.asf');<br>
+&gt;&gt; [channels, skel] = acclaimLoadChannels('examples/86_10.amc', skel);<br>
+&gt;&gt; skelPlayData(skel, channels, 1/120);<br>
+&gt;&gt;<br>
 </code>
 
-Where the frames per second is given on the CMU site as 120.
+<p>Where the frames per second is given on the CMU site as 120.
 
 </body>
