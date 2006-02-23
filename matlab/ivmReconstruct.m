@@ -28,18 +28,6 @@ if isfield(model.kern, 'whiteVariance')
 end
 model.kern.diagK = kernDiagCompute(model.kern, model.X);
 
-if model.noise.spherical
-  model.Sigma.L = chol(model.kern.Kstore(model.I, :) ...
-                       + diag(1./model.beta(model.I)))';
-  model.Sigma.Linv = eye(size(model.Sigma.L))/model.Sigma.L;
-  model.Sigma.M = model.Sigma.Linv*model.kern.Kstore';
-else
-  for i = 1:size(y, 2)
-    model.Sigma(i).L = chol(model.kern.Kstore(model.I, :) ...
-                            + diag(1./model.beta(model.I, i)))';
-    model.Sigma(i).Linv = eye(size(model.Sigma(i).L))/model.Sigma(i).L;
-    model.Sigma(i).M = model.Sigma(i).Linv*model.kern.Kstore';
-  end
-end
+model = ivmComputeLandM(model);
 model.d = length(model.I);
 [model.mu, model.varSigma] = ivmPosteriorMeanVar(model, X);

@@ -27,19 +27,21 @@ for k = 1:dVal
     ivmSelectVisualise(model, display, k, dataIndexSelect);
   end
 end
-deltaInfo = tol+1;
-while abs(deltaInfo) > tol  
-  [indexSelectRemove, infoChangeRemove] = ivmSelectPoint(model, 0);
-  dataIndexSelectRemove = model.I(indexSelectRemove);
-  model = ivmRemovePoint(model, dataIndexSelectRemove);
-  [indexSelect, infoChangeAdd] = ivmSelectPoint(model, 1);  
-  dataIndexSelectAdd = model.J(indexSelect);
-  model = ivmAddPoint(model, dataIndexSelectAdd);
-  deltaInfo = infoChangeRemove + infoChangeAdd;
-  fprintf('Swapping inclusion %d: point %d for point %d, change %2.4f.\n', ...
-          indexSelectRemove, ...
-          dataIndexSelectRemove, dataIndexSelectAdd, deltaInfo);
-end   
+if length(model.J)>1 & ~strcmp(model.selectionCriterion, 'random')
+  deltaInfo = tol+1;
+  while abs(deltaInfo) > tol  
+    [indexSelectRemove, infoChangeRemove] = ivmSelectPoint(model, 0);
+    dataIndexSelectRemove = model.I(indexSelectRemove);
+    model = ivmRemovePoint(model, dataIndexSelectRemove);
+    [indexSelect, infoChangeAdd] = ivmSelectPoint(model, 1);  
+    dataIndexSelectAdd = model.J(indexSelect);
+    model = ivmAddPoint(model, dataIndexSelectAdd);
+    deltaInfo = infoChangeRemove + infoChangeAdd;
+    fprintf('Swapping inclusion %d: point %d for point %d, change %2.4f.\n', ...
+            indexSelectRemove, ...
+            dataIndexSelectRemove, dataIndexSelectAdd, deltaInfo);
+  end   
+end
 lengthIndex = length(model.I);
 betaChange = 1;
 oldBeta = model.beta;
@@ -49,7 +51,15 @@ while betaChange > tol
   counter = counter + 1;
   for i = I'
     model = ivmEpUpdatePoint(model, i);
+    if ~rem(counter, 101)
+      model = ivmComputeLandM(model);  
+      [model.mu, model.varSigma] = ivmPosteriorMeanVar(model, model.X);
+      model = ivmUpdateNuG(model);
+    end
   end
+  model = ivmComputeLandM(model);  
+  [model.mu, model.varSigma] = ivmPosteriorMeanVar(model, model.X);
+  model = ivmUpdateNuG(model);
   betaChange = full(max(abs(model.beta - oldBeta)));
   fprintf('EP Update %d, beta change %2.4f\n', counter, betaChange)
   oldBeta =  model.beta;

@@ -17,7 +17,7 @@ L = noiseLogLikelihood(model.noise, mu, varsigma, y);
 
 % check if there is a prior over kernel parameters
 if isfield(model.kern, 'priors')
-  fhandle = str2func([kern.type 'KernExpandParams']);
+  fhandle = str2func([model.kern.type 'KernExpandParams']);
   params = fhandle(model.kern);
   for i = 1:length(model.kern.priors)
     index = model.kern.priors(i).index;

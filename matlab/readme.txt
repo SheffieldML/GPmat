@@ -2,7 +2,7 @@
 Changes in vs 0.33
 ------------------
 
-The code now relies upon the datasets toolbox for loading of datasets used.
+The code now relies upon the datasets toolbox for loading of datasets used. The EP updates have now been fixed so that the site parameters can be refined.
 
 
 Changes in vs 0.32

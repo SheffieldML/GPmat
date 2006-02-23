@@ -459,7 +459,6 @@ void CIvm::updateNuG()
 }
 void CIvm::updateK() const
 {
-  kern.updateX(X);
   double kVal=0.0;
   for(int i=0; i<activeSet.size(); i++)
     {
@@ -510,6 +509,7 @@ void CIvm::approxLogLikelihoodGradient(CMatrix& g) const
   assert(g.getCols()==getOptNumParams());
   g.zeros();
   CMatrix tempG(1, getOptNumParams());
+  tempG.zeros();
   updateK();
   if(noise.isSpherical())
     {
@@ -526,7 +526,7 @@ void CIvm::approxLogLikelihoodGradient(CMatrix& g) const
 	kern.getGradTransParams(tempG, activeX, covGrad, true);
       else
 	kern.getGradTransParams(tempG, activeX, covGrad, false);
-	
+      
       g+=tempG;
       
     }
