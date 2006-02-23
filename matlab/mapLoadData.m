@@ -318,6 +318,31 @@ switch dataset
        repmat(3, dataPerCat, 1); repmat(4, dataPerCat, 1); ...
        repmat(5, dataPerCat, 1); repmat(6, dataPerCat, 1)];
 
-  
-  
+
+ case 'ionosphere'
+  X = zeros(351, 34);
+  fid = fopen([baseDir 'ionosphere.data'], 'r');
+  lin = getline(fid);
+  i = 0;
+  while(lin ~= -1)
+    i = i+1;
+    elements = tokenise(lin, ',');
+    for j = 1:length(elements)-1
+      X(i, j) = str2num(elements{j});
+    end
+    switch(elements{end})
+     case 'g'
+      y(i, 1) = 1;
+     case 'b'
+      y(i, 1) = -1;
+    end
+    lin = getline(fid);
+  end
+  ind = randperm(351);
+  trainInd = ind(1:200);
+  testInd = ind(201:end);
+  XTest = X(testInd, :);
+  yTest = y(testInd, :);
+  X = X(trainInd, :);
+  y = y(trainInd, :);
 end
