@@ -17,7 +17,7 @@ for i = 1:length(kern.comp)
                                              covDiag);
   else
     % all the data is involved with the kernel.
-    g(1, startVal:endVal)  = kernDiagGradient(kern.comp{i}, x, covDiag);
+    g(1, startVal:endVal) = kernDiagGradient(kern.comp{i}, x, covDiag);
   end
   startVal = endVal + 1;
 end
