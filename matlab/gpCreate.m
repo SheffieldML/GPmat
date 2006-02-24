@@ -74,9 +74,19 @@ switch options.approx
  case {'dtc', 'fitc', 'pitc'}
   % Sub-sample inducing variables.
   model.k = options.numActive;
-  ind = randperm(model.N);
-  ind = ind(1:model.k);
-  model.X_u = model.X(ind, :);
+  model.fixInducing = options.fixInducing;
+  if options.fixInducing
+    if length(options.fixIndices)~=options.numActive
+      error(['Length of indices for fixed inducing variables must ' ...
+             'match number of inducing variables']);
+    end
+    model.X_u = model.X(options.fixIndices, :);
+    model.inducingIndices = options.fixIndices;
+  else
+    ind = randperm(model.N);
+    ind = ind(1:model.k);
+    model.X_u = model.X(ind, :);
+  end
   model.beta = options.beta;
   model.betaTransform = 'negLogLogit';  
 end

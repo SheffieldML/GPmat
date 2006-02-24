@@ -86,23 +86,24 @@ switch model.approx
     gKX(i, :, i) = dgKX(i, :);
   end
   
-  % Allocate space for gX_u
-  gX_u = zeros(model.k, model.q);
-  % Compute portion associated with gK_u
-  for i = 1:model.k
-    for j = 1:model.q
-      gX_u(i, j) = gKX(:, j, i)'*gK_u(:, i);
+  if ~model.fixInducing | nargout > 1
+    % Allocate space for gX_u
+    gX_u = zeros(model.k, model.q);
+    % Compute portion associated with gK_u
+    for i = 1:model.k
+      for j = 1:model.q
+        gX_u(i, j) = gKX(:, j, i)'*gK_u(:, i);
+      end
+    end
+    
+    % Compute portion associated with gK_uf
+    gKX_uf = kernGradX(model.kern, X_u, X);
+    for i = 1:model.k
+      for j = 1:model.q
+        gX_u(i, j) = gX_u(i, j) + gKX_uf(:, j, i)'*gK_uf(i, :)';
+      end
     end
   end
-
-  % Compute portion associated with gK_uf
-  gKX_uf = kernGradX(model.kern, X_u, X);
-  for i = 1:model.k
-    for j = 1:model.q
-      gX_u(i, j) = gX_u(i, j) + gKX_uf(:, j, i)'*gK_uf(i, :)';
-    end
-  end
-
   if nargout > 2
     %%% Compute gradients with respect to X %%%
     
@@ -143,10 +144,7 @@ switch model.approx
   end
   
   % deal with diagonal term's affect on kernel parameters.
-  for i = 1:model.N
-    g_param = g_param ...
-              + kernGradient(model.kern, X(i, :), gK_star(i));
-  end
+  g_param = g_param + kernDiagGradient(model.kern, X, gK_star);
 
   % append beta gradient to end of parameters  
   gParam = [g_param(:)' g_scaleBias g_beta];

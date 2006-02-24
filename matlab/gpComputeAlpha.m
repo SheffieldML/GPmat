@@ -45,7 +45,7 @@ switch model.approx
     end
   end
  case 'pitc'
-  model.alpha = zeros(model.k, model.n);
+  model.alpha = zeros(model.k, model.d);
   if ~isfield(model, 'isSpherical') | model.isSpherical
     for i = 1:length(model.blockEnd)
       ind = gpBlockIndices(model, i);

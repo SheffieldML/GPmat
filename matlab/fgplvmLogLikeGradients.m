@@ -30,7 +30,15 @@ switch model.approx
   % do nothing
 end
 
-gParam = [gX_u(:)' gParam gDynParam];
+% Concatanate existing parameter gradients.
+gParam = [gParam gDynParam];
+
+% Decide where to include gX_u.
+if ~strcmp(model.approx, 'ftc') & model.fixInducing
+  gX(model.inducingIndices, :) = gX(model.inducingIndices, :) + gX_u;
+else
+  gParam = [gX_u(:)' gParam];
+end
 
 % Check for back constraints.
 if isfield(model, 'back')

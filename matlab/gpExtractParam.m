@@ -15,7 +15,12 @@ switch model.approx
   params =  [kernExtractParam(model.kern) scaleParams];
  case {'dtc', 'fitc', 'pitc'}
   fhandle = str2func([model.betaTransform 'Transform']);
-  params =  [model.X_u(:)' kernExtractParam(model.kern) ...
-             scaleParams fhandle(model.beta, 'xtoa')];
+  paramPart = [kernExtractParam(model.kern) ...
+               scaleParams fhandle(model.beta, 'xtoa')];
+  if model.fixInducing
+    params = paramPart;
+  else
+    params =  [model.X_u(:)' paramPart];
+  end
 end
 

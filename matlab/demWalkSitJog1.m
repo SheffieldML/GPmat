@@ -14,8 +14,11 @@ experimentNo = 1;
 
 % Set up model
 options = fgplvmOptions('pitc');
-options.initX = 'isomap';
-options.numActive = 300;
+load walkJogRunIsomapInit
+options.initX = X; %'isomap';
+options.numActive = 100;
+options.fixInducing = 1;
+options.fixIndices = round(linspace(1, size(Y, 1), options.numActive));
 latentDim = 2;
 
 % Train using the partially independent training conditional.

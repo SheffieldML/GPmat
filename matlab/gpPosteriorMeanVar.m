@@ -40,7 +40,7 @@ while startVal <= size(X, 1)
   end
 
   % Compute mean, using precomputed alpha vector.
-  if ~model.isMissingData
+  if ~isfield(model, 'isMissingData') | ~model.isMissingData
     mu(indices, :) = KX_star'*model.alpha;
   else
     for i = 1:model.d
@@ -51,7 +51,7 @@ while startVal <= size(X, 1)
   
   % Compute variances if requried.
   if nargout > 1
-    if model.isSpherical
+    if ~isfield(model, 'isSpherical') | model.isSpherical
       % Compute diagonal of kernel for new point.
       diagK = kernDiagCompute(model.kern, X(indices, :));
       switch model.approx

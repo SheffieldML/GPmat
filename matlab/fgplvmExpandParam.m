@@ -14,13 +14,22 @@ else
   model.X = reshape(params(startVal:endVal), model.N, model.q);
 end
 startVal = endVal+1;
-endVal = endVal + model.k*model.q + model.kern.nParams;
+endVal = endVal + model.kern.nParams;
 
 switch model.approx
  case 'ftc'
   endVal = endVal;
  case {'dtc', 'fitc', 'pitc'}
-  endVal = endVal + 1; % account for beta attached to the end.
+  if model.fixInducing
+    % account for beta attached to the end.
+    endVal = endVal + 1; 
+    % X_u values are taken from X values.
+    model.X_u = model.X(model.inducingIndices, :);
+  else
+    % Parameters include inducing variables and beta.
+    endVal = endVal + model.q*model.k + 1;
+  end
+
  otherwise
   error('Unknown approximation type.')
 end

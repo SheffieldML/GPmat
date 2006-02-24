@@ -24,6 +24,7 @@ options.isMissingData = 0;
 
 switch options.approx
  case 'ftc'
+  % bog-standard kernel.
   options.kern = {'rbf', 'bias', 'white'};
   options.numActive = 0;
   options.beta = [];
@@ -31,5 +32,9 @@ switch options.approx
   options.kern = {'rbf', 'bias', 'white'};
   options.numActive = 100;
   options.beta = 1e3;
+
+  % Option to fix the inducing variables to other latent points.
+  options.fixInducing = 0;
+  options.fixIndices = [];
 end
 
