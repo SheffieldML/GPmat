@@ -1,6 +1,11 @@
 This toolbox implements some generic functions used by other toolboxes. Originally it was spun out of the IVM 0.221 toolbox.
 
 
+Version 0.151
+-------------
+
+Sped up the sparseDiag command using spdiag, this makes the FGPLVM code run much faster.
+
 Version 0.15
 ------------
 

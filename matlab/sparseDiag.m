@@ -11,5 +11,10 @@ if size(d, 1) ~= 1 & size(d, 2) ~=1
   error('Input must be a vector.');
 end
 
-% Can be made more efficient.
-D = sparse(diag(d));
+D = spdiags(d, 0, length(d), length(d));
+% % Can be made more efficient.
+% n = length(d);
+% D = spalloc(n, n, n);
+% for i = 1:n
+%   D(i, i) = d(i);
+% end
