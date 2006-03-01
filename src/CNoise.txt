@@ -1,6 +1,8 @@
 This file contains classes for different noise models including classification, regression and semi-supervised learning. 
 
-The latest version of this file also contains the code for ordered categorical noise models.
+1/3/2005 While looking for the bug that caused Gregg Keller problems, I found that when noise models where read from disk they were allocating storeage at the rong point. Moved initStoreage() out of setNumProcesses and set the numData to a dummy value in readParamsFromStream() to fix it.
+
+This file now also contains the code for ordered categorical noise models.
 
 21/10/2005 More changes from Bill, mostly removing redundant const modifiers.
 

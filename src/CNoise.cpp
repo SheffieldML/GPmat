@@ -302,7 +302,9 @@ void CNoise::readParamsFromStream(istream& in)
   ndlstrutil::tokenise(tokens, line, " ");
   for(int i=0; i<numPar; i++)
     par.setVal(atof(tokens[i].c_str()), i);
+  setNumData(1);
   setNumProcesses(numProc);
+  initStoreage();
   if(numPar==getNumParams())
     setParams(par);
   else
@@ -1416,7 +1418,9 @@ void CNcnmNoise::readParamsFromStream(istream& in)
   ndlstrutil::tokenise(tokens, line, " ");
   for(int i=0; i<numPar; i++)
     par.setVal(atof(tokens[i].c_str()), i);
+  setNumData(1);
   setNumProcesses(numProc);
+  initStoreage();
   if(numPar==getNumParams())
     setParams(par);
   else
@@ -1817,8 +1821,10 @@ void COrderedNoise::readParamsFromStream(istream& in)
   ndlstrutil::tokenise(tokens, line, " ");
   for(int i=0; i<numPar; i++)
     par.setVal(atof(tokens[i].c_str()), i);
+  setNumData(1);
   setNumProcesses(numProc);
   setNumCategories(numCat);
+  initStoreage();
   if(numPar==getNumParams())
     setParams(par);
   else

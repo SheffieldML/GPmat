@@ -256,8 +256,6 @@ class CNoise : public CTransformable, public COptimisable, public CMatinterface 
   inline void setNumProcesses(int num) 
     {
       nProcesses = num;
-      initStoreage();
-      initNames();      
     }
   
  protected:
@@ -343,6 +341,8 @@ class CGaussianNoise : public CNoise {
       y.deepCopy(vals);
       setNumData(vals.getRows());
       setNumProcesses(vals.getCols());
+      initStoreage();
+      initNames();      
     }
 #ifdef _NDLMATLAB
   // Adds parameters to the mxArray.
@@ -440,6 +440,8 @@ class CScaleNoise : public CNoise {
       y.deepCopy(vals);
       setNumData(vals.getRows());
       setNumProcesses(vals.getCols());
+      initStoreage();
+      initNames();      
     }
 #ifdef _NDLMATLAB
   // Adds parameters to the mxArray.
@@ -516,6 +518,8 @@ class CProbitNoise : public CNoise {
       y.deepCopy(vals);
       setNumData(vals.getRows());
       setNumProcesses(vals.getCols());
+      initStoreage();
+      initNames();      
     }
 #ifdef _NDLMATLAB
   // Adds parameters to the mxArray.
@@ -603,6 +607,8 @@ class CNcnmNoise : public CNoise {
       setSplitGamma(false);
       setNumData(vals.getRows());
       setNumProcesses(vals.getCols());
+      initStoreage();
+      initNames();      
     }
 #ifdef _NDLMATLAB
   // Adds parameters to the mxArray.
@@ -698,6 +704,8 @@ class COrderedNoise : public CNoise {
       y.deepCopy(vals);
       setNumData(vals.getRows());
       setNumProcesses(vals.getCols());
+      initStoreage();
+      initNames();      
     }
 #ifdef _NDLMATLAB
   // Adds parameters to the mxArray.
