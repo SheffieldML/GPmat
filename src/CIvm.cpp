@@ -509,7 +509,7 @@ void CIvm::approxLogLikelihoodGradient(CMatrix& g) const
   assert(g.getCols()==getOptNumParams());
   g.zeros();
   CMatrix tempG(1, getOptNumParams());
-  tempG.zeros();
+  kern.updateX(X);
   updateK();
   if(noise.isSpherical())
     {
@@ -772,6 +772,8 @@ void writeIvmToStream(const CIvm& model, ostream& out)
       double x = model.getActiveX(i, model.getNumInputs()-1);
       if(x!=0.0)
 	out << model.getNumInputs() << ":" << x << endl;
+      else
+	out << endl;
     }
 }
 void writeIvmToFile(const CIvm& model, const string modelFileName, const string comment)
