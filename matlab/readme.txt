@@ -1,5 +1,14 @@
 This toolbox allows MATLAB to read in and write bvh files. There are also routines for visualising the files in MATLAB.
 
+Version 0.131 Release Notes
+---------------------------
+
+The axis display for visualising the data gave the limbs on the wrong side (this is a problem of definition of the axis system). It was fixed by placing 
+
+axis ij 
+
+in the skeVisualise.m file. Thanks to Heike Vallery for pointing out this error.
+
 Version 0.13 Release Notes
 --------------------------
 

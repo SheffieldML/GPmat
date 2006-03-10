@@ -67,4 +67,3 @@ for i = 1:length(children)
   cind = children(i);
   xyzStruct = getChildXyz(skel, xyzStruct, cind, channels);
 end
-

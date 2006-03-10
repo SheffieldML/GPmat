@@ -14,6 +14,7 @@ connect = skelConnectionMatrix(skel);
 indices = find(connect);
 [I, J] = ind2sub(size(connect), indices);
 handle(1) = plot3(vals(:, 1), vals(:, 3), vals(:, 2), '.');
+axis ij % make sure the left is on the left.
 set(handle(1), 'markersize', 20);
 %/~
 %set(handle(1), 'visible', 'off')
