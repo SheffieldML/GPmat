@@ -56,28 +56,32 @@ switch model.approx
  case 'fitc'
   % Fully independent training conditonal.
   if ~isfield(model, 'isSpherical') | model.isSpherical
-    K_ufDinvK_uf = model.K_uf*model.Dinv*model.K_uf';
     E = model.K_uf*model.Dinv*Y;
     EET = E*E';
-    AinvEET = model.Ainv*EET;
+    AinvE = model.Ainv*E;
+    %AinvEET = model.Ainv*EET;
     diagK_fuAinvEYT = sum(model.K_uf.*(model.Ainv*E*Y'), 1)';
-    AinvEETAinv = AinvEET*model.Ainv;
+    AinvEETAinv = AinvE*AinvE';
     diagK_ufdAinvplusAinvEETAinvK_fu = ...
-        sum(model.K_uf.*((model.d*model.Ainv+AinvEETAinv)*model.K_uf), 1)';
+        sum(model.K_uf.*((model.d*model.Ainv/model.beta+AinvEETAinv)*model.K_uf), 1)';
     invK_uuK_uf = model.invK_uu*model.K_uf;
-    invK_uuK_ufDinv = invK_uuK_uf*model.Dinv;
+    if true
+      invK_uuK_ufDinv = invK_uuK_uf*model.Dinv;
+    else
+      invK_uuK_ufDinv = model.L'\model.V;
+    end
     diagYYT = sum(Y.*Y, 2);
-    diagQ = -model.d*model.diagD + diagYYT ...
+    diagQ = -model.d*model.diagD/model.beta + diagYYT ...
             + diagK_ufdAinvplusAinvEETAinvK_fu...
             -2*diagK_fuAinvEYT;
-    gK_uu = 0.5*(model.d*model.invK_uu ...
-                 - model.d*model.Ainv - AinvEETAinv ...
-                 + invK_uuK_ufDinv*sparseDiag(diagQ)*invK_uuK_ufDinv');
-    gK_uf = -invK_uuK_ufDinv*sparseDiag(diagQ)*model.Dinv ...      
+    gK_uu = 0.5*(model.d*(model.invK_uu ...
+                 -model.Ainv/model.beta) - AinvEETAinv ...
+                 + model.beta*model.beta*invK_uuK_ufDinv*sparseDiag(diagQ)*invK_uuK_ufDinv');
+    gK_uf = -model.beta*model.beta*invK_uuK_ufDinv*sparseDiag(diagQ)*model.Dinv ...      
             -model.d*model.Ainv*model.K_uf*model.Dinv ...
-            -AinvEETAinv*model.K_uf*model.Dinv ...
-            +model.Ainv*E*Y'*model.Dinv;
-    g_Lambda = 0.5*diagQ.*1./(model.diagD.*model.diagD);
+            -model.beta*AinvEETAinv*model.K_uf*model.Dinv ...
+            +model.beta*model.Ainv*E*Y'*model.Dinv;
+    g_Lambda = (0.5*diagQ.*model.beta*model.beta)./(model.diagD.*model.diagD);
     g_Lambda2 = -sum(g_Lambda)/(model.beta*model.beta);
     fhandle = str2func([model.betaTransform 'Transform']);
     g_Lambda2 = g_Lambda2*fhandle(model.beta, 'gradfact');

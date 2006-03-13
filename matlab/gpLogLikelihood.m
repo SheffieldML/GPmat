@@ -48,12 +48,25 @@ switch model.approx
  case 'fitc'
   % Fully independent training conditional.
   if ~isfield(model, 'isSpherical') | model.isSpherical
-    Dinvm = model.Dinv*model.m;
-    K_ufDinvm = model.K_uf*Dinvm;
-    ll = -0.5*(model.d*(sum(log(model.diagD))...
-                        - model.logDetK_uu + model.logDetA) ...
-               + sum(sum(Dinvm.*model.m)) ...
-               - sum(sum((model.Ainv*K_ufDinvm).*K_ufDinvm)));
+    if false
+      % This is the original objective
+      Dinvm = model.Dinv*model.m;
+      K_ufDinvm = model.K_uf*Dinvm;
+      ll = -0.5*(model.d*(sum(log(model.diagD))...
+                          -(model.N-model.k)*log(model.beta) ...
+                          + model.detDiff)...
+                 + (sum(sum(Dinvm.*model.m))...
+                    - sum(sum((model.Ainv*K_ufDinvm).*K_ufDinvm)))*model.beta);
+      
+      ll = ll - 0.5*model.N*model.d*log(2*pi);
+    else
+      % This is objective to match Ed Snelson's code
+      ll =  - model.d*(sum(log(diag(model.Lm))) + 0.5*(-(model.N - model.k)*log(model.beta)+(model.N*log(2*pi)+sum(log(model.ep)))));
+      for i = 1:model.d
+        ll = ll - 0.5*model.beta*(model.scaledM(:, i)'*model.scaledM(:, i) ...
+                                  - model.bet(:, i)'*model.bet(:, i));
+      end
+    end
   else
     ll = 0;
     for i = 1:model.d

@@ -59,7 +59,9 @@ while startVal <= size(X, 1)
         Kinvk = model.invK_uu*KX_star;
        case 'dtc'
         Kinvk = ((model.invK_uu - (1/model.beta)*model.Ainv)*KX_star);
-       case {'fitc', 'pitc'}
+       case 'fitc' 
+        Kinvk = (model.invK_uu - (1/model.beta)*model.Ainv)*KX_star;
+       case 'pitc'
         Kinvk = (model.invK_uu - model.Ainv)*KX_star;
       end
       varsig = diagK - sum(KX_star.*Kinvk, 1)';

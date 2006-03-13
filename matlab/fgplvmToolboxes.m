@@ -1,9 +1,12 @@
 % FGPLVMTOOLBOXES Load in the relevant toolboxes for fgplvm.
 
+importLatest('netlab');
+
 importLatest('prior');
-importLatest('optimi');
-importLatest('mocap')
+importLatest('mocap');
 importLatest('ndlutil');
-importTool('kern');
+importLatest('kern');
 importLatest('datasets');
-importLatest('mltools');
+
+importTool('mltools');
+importTool('optimi');

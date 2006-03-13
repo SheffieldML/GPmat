@@ -9,7 +9,7 @@ d = 3;
 N = 10;
 k = 5;
 kernType = {'rbf', 'lin', 'rbfard', 'mlp', 'mlpard', 'white'};
-kernType = {'rbf'};
+kernType = 'rbf'
 backType = 'mlp';
 dynType = 'gp';
 learn = 0; % dont' test learning of dynamics.
@@ -21,9 +21,10 @@ indMissing = find(rand(N, d)>0.9);
 %Y(ind) = NaN;
 
 approxType = {'ftc', 'dtc', 'fitc', 'pitc'};
-for back = [false true]
-  for missing = [false true]
-    for fixInducing = [ false true] 
+approxType ={'fitc'}
+for back = [false]% true]
+  for missing = [false]% true]
+    for fixInducing = [ false]% true] 
       Y = Yorig;
       if missing
         Y(indMissing) = NaN;
@@ -31,7 +32,7 @@ for back = [false true]
       if back & missing
         continue
       end
-      for dyn = [false true];
+      for dyn = [false]% true];
         for a = 1:length(approxType)
           options = fgplvmOptions(approxType{a});
           options.kern = kernType;
