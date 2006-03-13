@@ -23,7 +23,7 @@ indMissing = find(rand(N, d)>0.9);
 approxType = {'ftc', 'dtc', 'fitc', 'pitc'};
 approxType ={'fitc'}
 for back = [false]% true]
-  for missing = [false]% true]
+  for missing = [false true]
     for fixInducing = [ false]% true] 
       Y = Yorig;
       if missing

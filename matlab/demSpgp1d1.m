@@ -32,7 +32,7 @@ display = 1;
 model = gpOptimise(model, display, iters);
 
 % Save the results.
-capName = dataSetName;;
+capName = dataSetName;
 capName(1) = upper(capName(1));
 save(['dem' capName num2str(experimentNo) '.mat'], 'model');
 

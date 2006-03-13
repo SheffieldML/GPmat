@@ -61,7 +61,7 @@ switch model.approx
       ll = ll - 0.5*model.N*model.d*log(2*pi);
     else
       % This is objective to match Ed Snelson's code
-      ll =  - model.d*(sum(log(diag(model.Lm))) + 0.5*(-(model.N - model.k)*log(model.beta)+(model.N*log(2*pi)+sum(log(model.ep)))));
+      ll =  - model.d*(sum(log(diag(model.Lm))) + 0.5*(-(model.N - model.k)*log(model.beta)+(model.N*log(2*pi)+sum(log(model.diagD)))));
       for i = 1:model.d
         ll = ll - 0.5*model.beta*(model.scaledM(:, i)'*model.scaledM(:, i) ...
                                   - model.bet(:, i)'*model.bet(:, i));
@@ -69,14 +69,30 @@ switch model.approx
     end
   else
     ll = 0;
-    for i = 1:model.d
-      ind = gpDataIndices(model, i);
-      Dinvm = model.Dinv{i}*model.m(ind, i);
-      K_ufDinvm = model.K_uf(:, ind)*Dinvm;
-      ll = ll -0.5*((sum(log(model.diagD{i}))...
-                     - model.logDetK_uu + model.logDetA(i)) ...
-                    + Dinvm'*model.m(ind, i) ...
-                    - K_ufDinvm'*model.Ainv{i}*K_ufDinvm);
+    if false
+      for i = 1:model.d
+        ind = gpDataIndices(model, i);
+        Dinvm = model.Dinv{i}*model.m(ind, i);
+        K_ufDinvm = model.K_uf(:, ind)*Dinvm;
+        ll = ll -0.5*(sum(log(model.diagD{i})) ...
+                      - (length(ind) - model.k)*log(model.beta) ...
+                      + model.detDiff(i) ...
+                      + (sum(sum(Dinvm.*model.m(ind, i))) ...
+                         - sum(sum((model.Ainv{i}*K_ufDinvm).* ...
+                                   K_ufDinvm)))*model.beta ...
+                      +length(ind)*log(2*pi));
+      end
+    else
+      % This is objective to match Ed Snelson's code
+      ll = 0;
+      for i = 1:model.d
+        ind = gpDataIndices(model, i);
+        ll =  ll - (sum(log(diag(model.Lm{i}))) ...
+                    + 0.5*(-(length(ind) - model.k)*log(model.beta) ...
+                           +(length(ind)*log(2*pi)+sum(log(model.diagD{i})))));
+        ll = ll - 0.5*model.beta*(model.scaledM{i}'*model.scaledM{i} ...
+                                  - model.bet{i}'*model.bet{i});
+      end
     end
   end
  case 'pitc'

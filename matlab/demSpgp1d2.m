@@ -14,7 +14,6 @@ experimentNo = 2;
 
 % Set up model
 options = gpOptions('fitc');
-options.kern = 'rbf';
 options.numActive = 9;
 options.optimiser = 'conjgrad';
 % use the deterministic training conditional.
@@ -22,8 +21,6 @@ q = size(X, 2);
 d = size(y, 2);
 
 model = gpCreate(q, d, X, y, options);
-model.betaTransform = 'exp';
-model.kern.transforms.type = 'exp';
 % Optimise the model.
 iters = 1000;
 display = 1;

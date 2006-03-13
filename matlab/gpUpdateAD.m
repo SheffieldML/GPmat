@@ -64,20 +64,19 @@ switch model.approx
   
  case 'fitc'
   model.diagK = kernDiagCompute(model.kern, X);
+  model.L = jitChol(model.K_uu)';
+
   if ~isfield(model, 'isSpherical') | model.isSpherical
     model.diagD = 1 + model.beta*model.diagK ...
         - model.beta*sum(model.K_uf.*(model.invK_uu*model.K_uf), 1)';
     model.Dinv = sparseDiag(1./model.diagD);
     K_ufDinvK_uf = model.K_uf*model.Dinv*model.K_uf';
-    model.A = 1/model.beta*model.K_uu + K_ufDinvK_uf;
-  %  K_ufDinvK_uf = K_ufDinvK_uf/model.sqrtK_uu;
-   % K_ufDinvK_uf = model.sqrtK_uu'\K_ufDinvK_uf;
-    
+    model.A = 1/model.beta*model.K_uu + K_ufDinvK_uf;    
+
     % This can become unstable when K_ufDinvK_uf is low rank.
     [model.Ainv, U] = pdinv(model.A);
     model.logDetA = logdet(model.A, U);
-    model.detDiff = model.logDetA - model.logDetK_uu;
-    
+    % model.detDiff = model.logDetA - model.logDetK_uu;
     model.detDiff = - log(model.beta)*model.k + log(det(eye(model.k) + model.beta*K_ufDinvK_uf*model.invK_uu));
     % compute inner products
     for i = 1:model.d
@@ -88,32 +87,42 @@ switch model.approx
     end
   
     % Computations from Ed's implementation.
-    model.L = jitChol(model.K_uu)';
     model.V = model.L\model.K_uf;
-    model.ep = model.diagD;
-    model.V = model.V./repmat(sqrt(model.ep)', model.k, 1);
+    model.V = model.V./repmat(sqrt(model.diagD)', model.k, 1);
     model.Am = 1/model.beta*eye(model.k)+model.V*model.V';
     model.Lm = jitChol(model.Am)';
     model.invLmV = model.Lm\model.V;
-    model.scaledM = model.m./repmat(sqrt(model.ep), 1, model.d);
+    model.scaledM = model.m./repmat(sqrt(model.diagD), 1, model.d);
     model.bet = model.invLmV*model.scaledM;
   else
     for i = 1:model.d
       ind = gpDataIndices(model, i);
-      model.diagD{i} = (1/model.beta) + model.diagK(ind) ...
-          - sum(model.K_uf(:, ind).*(model.invK_uu*model.K_uf(:, ind)), 1)';
+      model.diagD{i} = 1 + model.beta*model.diagK(ind) ...
+          - model.beta*sum(model.K_uf(:, ind).*(model.invK_uu*model.K_uf(:, ind)), 1)';
       model.Dinv{i} = sparseDiag(1./model.diagD{i});
       K_ufDinvK_uf = model.K_uf(:, ind)*model.Dinv{i}...
           *model.K_uf(:, ind)';
-      model.A{i} = model.K_uu + K_ufDinvK_uf;
+      model.A{i} = 1/model.beta*model.K_uu + K_ufDinvK_uf;
       % This can become unstable when K_ufDinvK_uf is low rank.
       [model.Ainv{i}, U] = pdinv(model.A{i});
       model.logDetA(i) = logdet(model.A{i}, U);
+      % model.detDiff = model.logDetA - model.logDetK_uu;
+      model.detDiff(i) = - log(model.beta)*model.k + log(det(eye(model.k) + model.beta*K_ufDinvK_uf*model.invK_uu));
     
       % compute inner products
       Dinvm = model.Dinv{i}*model.m(ind, i);
       K_ufDinvm = model.K_uf(:, ind)*Dinvm;
-      model.innerProducts(1, i) = Dinvm'*model.m(ind, i) - K_ufDinvm'*model.Ainv{i}*K_ufDinvm;
+      model.innerProducts(1, i) = model.beta*(Dinvm'*model.m(ind, i) - K_ufDinvm'*model.Ainv{i}*K_ufDinvm);
+    
+      % Computations from Ed's implementation.
+      model.V{i} = model.L\model.K_uf(:, ind);
+      model.V{i} = model.V{i}./repmat(sqrt(model.diagD{i})', model.k, 1);
+      model.Am{i} = 1/model.beta*eye(model.k)+model.V{i}*model.V{i}';
+      model.Lm{i} = jitChol(model.Am{i})';
+      model.invLmV{i} = model.Lm{i}\model.V{i};
+      model.scaledM{i} = model.m(ind, i)./sqrt(model.diagD{i});
+      model.bet{i} = model.invLmV{i}*model.scaledM{i};
+
     end
       
   end
