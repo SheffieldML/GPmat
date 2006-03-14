@@ -128,6 +128,7 @@ switch model.approx
   end
   
  case 'pitc'
+  model.L = jitChol(model.K_uu)';
   if ~isfield(model, 'isSpherical') | model.isSpherical
     model.A = 1/model.beta*model.K_uu;
     K_ufDinvm = zeros(model.k, model.d);
