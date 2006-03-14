@@ -12,16 +12,16 @@ kernType = {'rbf', 'lin', 'rbfard', 'mlp', 'mlpard', 'white'};
 kernType = 'rbf'
 backType = 'mlp';
 dynType = 'gp';
-learn = 0; % dont' test learning of dynamics.
-learnScales = 0; % don't test learning of dynamics scales.
-diff = 1; % Use diffs for generating dynamics.
+learn = false; % dont' test learning of dynamics.
+learnScales = false; % don't test learning of dynamics scales.
+diff = true; % Use diffs for generating dynamics.
 
 Yorig = randn(N, d);
 indMissing = find(rand(N, d)>0.9);
 %Y(ind) = NaN;
 
 approxType = {'ftc', 'dtc', 'fitc', 'pitc'};
-approxType ={'fitc'}
+approxType ={'fitc', 'pitc'}
 for back = [false]% true]
   for missing = [false true]
     for fixInducing = [ false]% true] 
@@ -85,9 +85,6 @@ for back = [false]% true]
           initParams = randn(size(initParams))./randn(size(initParams));
           % This forces kernel computation.
           model = fgplvmExpandParam(model, initParams);
-          %      model.kern = kernSetWhite(model.kern, 1e-6);
-          %      params = fgplvmExtractParam(model);
-          %      model = fgplvmExpandParam(model, params);
           if dyn
             if strcmp(dynType, 'robOne')
               aveR = mean(model.dynamics.r);
@@ -98,7 +95,7 @@ for back = [false]% true]
               model.dynamics.b = model.dynamics.a/aveR;
             end
           end
-          if ~back & ~dyn & ~missing
+          if ~back & ~dyn
             gpCovGradsTest(model);
           end
           gradientCheck(initParams, 'fgplvmObjective', 'fgplvmGradient', ...

@@ -129,13 +129,13 @@ switch model.approx
   
  case 'pitc'
   if ~isfield(model, 'isSpherical') | model.isSpherical
-    model.A = model.K_uu;
+    model.A = 1/model.beta*model.K_uu;
     K_ufDinvm = zeros(model.k, model.d);
     for i = 1:length(model.blockEnd)
       ind = gpBlockIndices(model, i);
       model.K{i} = kernCompute(model.kern, X(ind, :));
-      model.D{i} = (1/model.beta)*eye(length(ind)) + model.K{i} - ...
-          model.K_uf(:, ind)'*model.invK_uu*model.K_uf(:, ind);
+      model.D{i} = eye(length(ind)) + model.beta*model.K{i} - ...
+          model.beta*model.K_uf(:, ind)'*model.invK_uu*model.K_uf(:, ind);
       [model.Dinv{i}, U] = pdinv(model.D{i});
       model.logDetD(i) = logdet(model.D{i}, U);
       K_ufDinvK_uf = model.K_uf(:, ind)*model.Dinv{i}...
@@ -147,28 +147,27 @@ switch model.approx
     % This can become unstable when K_ufDinvK_uf is low rank.
     [model.Ainv, U] = pdinv(model.A);
     model.logDetA = logdet(model.A, U);
-    
     % compute inner products
     for i = 1:model.d
-      model.innerProducts(1, i) = - K_ufDinvm(:, i)'*model.Ainv*K_ufDinvm(:, ...
+      model.innerProducts(1, i) = - model.beta*K_ufDinvm(:, i)'*model.Ainv*K_ufDinvm(:, ...
                                                         i);
     end
     for i = 1:length(model.blockEnd)
       ind = gpBlockIndices(model, i);
       for j = 1:model.d
         model.innerProducts(1, j) = model.innerProducts(1, j) ...
-            + Dinvm{i}(:, j)'*model.m(ind, j);
+            + model.beta*Dinvm{i}(:, j)'*model.m(ind, j);
       end
     end
   else
     for j = 1:model.d
-      model.A{j} = model.K_uu;
+      model.A{j} = 1/model.beta*model.K_uu;
       K_ufDinvm = zeros(model.k, model.d);
       for i = 1:length(model.blockEnd)
         ind = gpDataIndices(model, j, i);
         model.K{i, j} = kernCompute(model.kern, X(ind, :));
-        model.D{i, j} = (1/model.beta)*eye(length(ind)) + model.K{i, j} - ...
-            model.K_uf(:, ind)'*model.invK_uu*model.K_uf(:, ind);
+        model.D{i, j} = eye(length(ind)) + model.beta*model.K{i, j} - ...
+            model.beta*model.K_uf(:, ind)'*model.invK_uu*model.K_uf(:, ind);
         [model.Dinv{i, j}, U] = pdinv(model.D{i, j});
         model.logDetD(i, j) = logdet(model.D{i, j}, U);
         K_ufDinvK_uf = model.K_uf(:, ind)*model.Dinv{i, j}...
@@ -180,19 +179,19 @@ switch model.approx
       end
       % This can become unstable when K_ufDinvK_uf is low rank.
       [model.Ainv{j}, U] = pdinv(model.A{j});
-      model.logDetA(j) = logdet(model.A(j), U);
+      model.logDetA(j) = logdet(model.A{j}, U);
     end
     
     % compute inner products
     for j = 1:model.d
-      model.innerProducts(1, j) = - K_ufDinvm(:, j)'*model.Ainv{j}*K_ufDinvm(:, ...
+      model.innerProducts(1, j) = - model.beta*K_ufDinvm(:, j)'*model.Ainv{j}*K_ufDinvm(:, ...
                                                         j);
     end
     for i = 1:length(model.blockEnd)
       ind = gpBlockIndices(model, i);
       for j = 1:model.d
         model.innerProducts(1, j) = model.innerProducts(1, j) ...
-            + Dinvm{i}(ind, j)'*model.m(ind, j);
+            + model.beta*Dinvm{i}(ind, j)'*model.m(ind, j);
       end
     end
     

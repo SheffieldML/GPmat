@@ -98,32 +98,28 @@ switch model.approx
  case 'pitc'
   % Partially independent training conditional.
   if ~isfield(model, 'isSpherical') | model.isSpherical
-    ll = model.d*(model.logDetA-model.logDetK_uu);
+    ll = model.d*(model.logDetA-model.logDetK_uu +model.k*log(model.beta));
     % Loop through the blocks computing each part to be added.
-    startVal = 1;
     K_ufDinvm = zeros(model.k, model.d);
     for i = 1:length(model.blockEnd)
-      endVal = model.blockEnd(i);
-      ind = startVal:endVal;
+      ind = gpBlockIndices(model, i);
       Dinvm{i} = model.Dinv{i}*model.m(ind, :);
       K_ufDinvm = K_ufDinvm + model.K_uf(:, ind)*Dinvm{i};
-      startVal = endVal + 1;
     end
-    startVal = 1;
-    ll = ll - sum(sum((model.Ainv*K_ufDinvm).*K_ufDinvm));
+    ll = ll - model.beta*sum(sum((model.Ainv*K_ufDinvm).*K_ufDinvm));
     
     for i = 1:length(model.blockEnd)
-      endVal = model.blockEnd(i);
-      ind = startVal:endVal;
-      ll = ll + model.d*model.logDetD(i) ...
-           + sum(sum(Dinvm{i}.*model.m(ind, :)));
-      startVal = endVal + 1;
+      ind = gpBlockIndices(model, i); 
+      ll = ll + model.d*(model.logDetD(i) ...
+                         - length(ind)*log(model.beta))...
+           + model.beta*sum(sum(Dinvm{i}.*model.m(ind, :)));
     end
     ll = -0.5*ll;
+    ll = ll - 0.5*model.N*model.d*log(2*pi);
   else
     ll = 0;
     for j = 1:model.d
-      ll = ll + model.logDetA(j)-model.logDetK_uu;
+      ll = ll + model.logDetA(j)-model.logDetK_uu + model.k*log(model.beta);
       % Loop through the blocks computing each part to be added.
       K_ufDinvm = zeros(model.k, 1);
       for i = 1:length(model.blockEnd)
@@ -131,12 +127,14 @@ switch model.approx
         Dinvm{i, j} = model.Dinv{i, j}*model.m(ind, j);
         K_ufDinvm = K_ufDinvm + model.K_uf(:, ind)*Dinvm{i, j};
       end
-      ll = ll - sum(sum((model.Ainv{i}*K_ufDinvm).*K_ufDinvm));
+      ll = ll - model.beta*sum(sum((model.Ainv{i}*K_ufDinvm).*K_ufDinvm));
       
       for i = 1:length(model.blockEnd)
         ind = gpDataIndices(model, j, i);
         ll = ll + model.logDetD(i, j) ...
-             + sum(sum(Dinvm{i, j}.*model.m(ind, j)));
+             - length(ind)*log(model.beta) ...
+             + model.beta*sum(sum(Dinvm{i, j}.*model.m(ind, j)));
+        ll = ll + length(ind)*log(2*pi);
       end
     end
     ll = -0.5*ll;

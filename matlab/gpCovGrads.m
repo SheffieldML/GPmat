@@ -128,46 +128,37 @@ switch model.approx
   % Partially independent training conditional.
   if ~isfield(model, 'isSpherical') | model.isSpherical
     E = zeros(model.k, model.d);
-    startVal = 1;
     for i = 1:length(model.blockEnd)
-      endVal = model.blockEnd(i);
-      ind = startVal:endVal;
+      ind = gpBlockIndices(model, i);
       E = E + model.K_uf(:, ind)*model.Dinv{i}*Y(ind, :);
-      startVal = endVal + 1;
     end
     AinvE = model.Ainv*E;
     AinvEET = AinvE*E';
     AinvEETAinv = AinvEET*model.Ainv;
-    startVal = 1;
     for i = 1:length(model.blockEnd)
-      endVal = model.blockEnd(i);
-      ind = startVal:endVal;
+      ind = gpBlockIndices(model, i);
       K_fuAinvEYT = model.K_uf(:, ind)'*AinvE*Y(ind, :)';
-      blockQ{i} = -model.d*model.D{i} + Y(ind, :)*Y(ind, :)' ...
-          + model.K_uf(:, ind)'*(model.d*model.Ainv + AinvEETAinv)*model.K_uf(:, ind)...
+      blockQ{i} = -model.d*model.D{i}/model.beta + Y(ind, :)*Y(ind, :)' ...
+          + model.K_uf(:, ind)'*(model.d*model.Ainv/model.beta + AinvEETAinv)*model.K_uf(:, ind)...
           -K_fuAinvEYT - K_fuAinvEYT';
-      startVal = endVal + 1;
     end
     gK_uu = model.d*model.invK_uu ...
-            - model.d*model.Ainv - AinvEETAinv;
+            - model.d*model.Ainv/model.beta - AinvEETAinv;
     g_Lambda2 = 0;
-    gK_ufBase = -(model.d*model.Ainv + AinvEETAinv)*model.K_uf ...
-        + AinvE*Y';
+    gK_ufBase = -(model.d*model.Ainv + model.beta*AinvEETAinv)*model.K_uf ...
+        + model.beta*AinvE*Y';
     
-    startVal = 1;
     for i = 1:length(model.blockEnd)
-      endVal = model.blockEnd(i);
-      ind = startVal:endVal;
+      ind = gpBlockIndices(model, i);
       invK_uuK_ufDinv = model.invK_uu*model.K_uf(:, ind)*model.Dinv{i};
-      gK_uu = gK_uu + invK_uuK_ufDinv*blockQ{i}*invK_uuK_ufDinv';
+      gK_uu = gK_uu + model.beta*model.beta*invK_uuK_ufDinv*blockQ{i}*invK_uuK_ufDinv';
       
       gK_uf(:, ind) = (gK_ufBase(:, ind) ...
-                       -invK_uuK_ufDinv*blockQ{i})*model.Dinv{i};
+                       -model.beta*model.beta*invK_uuK_ufDinv*blockQ{i})*model.Dinv{i};
       
       
-      g_Lambda{i} = 0.5*model.Dinv{i}*blockQ{i}*model.Dinv{i};
+      g_Lambda{i} = 0.5*model.Dinv{i}*blockQ{i}*model.Dinv{i}*model.beta*model.beta;
       g_Lambda2 = g_Lambda2 - sum(diag((g_Lambda{i})))/(model.beta*model.beta);
-      startVal = endVal + 1;
     end
     gK_uu = gK_uu*0.5;
     fhandle = str2func([model.betaTransform 'Transform']);
@@ -196,22 +187,22 @@ switch model.approx
       for i = 1:length(model.blockEnd)
         ind = gpDataIndices(model, j, i);
         K_fuAinveyT = model.K_uf(:, ind)'*Ainve*Y(ind, j)';
-        blockQ{i} = -model.D{i, j} + Y(ind, j)*Y(ind, j)' ...
-            + model.K_uf(:, ind)'*(model.Ainv{j} + AinveeTAinv)*model.K_uf(:, ind)...
+        blockQ{i} = -model.D{i, j}/model.beta + Y(ind, j)*Y(ind, j)' ...
+            + model.K_uf(:, ind)'*(model.Ainv{j}/model.beta + AinveeTAinv)*model.K_uf(:, ind)...
             -K_fuAinveyT - K_fuAinveyT';
       end
       gK_uu = gK_uu + model.invK_uu ...
-            - model.Ainv{j} - AinveeTAinv;
-      gK_ufBase = -(model.d*model.Ainv{i} + AinveeTAinv)*model.K_uf ...
-        + Ainve*Y(:, j)';
+            - model.Ainv{j}/model.beta - AinveeTAinv;
+      gK_ufBase = -(model.Ainv{i} + model.beta*AinveeTAinv)*model.K_uf ...
+        + model.beta*Ainve*Y(:, j)';
     
       for i = 1:length(model.blockEnd)
         ind = gpDataIndices(model, j, i);
         invK_uuK_ufDinv = model.invK_uu*model.K_uf(:, ind)*model.Dinv{i,j};
-        gK_uu = gK_uu + invK_uuK_ufDinv*blockQ{i}*invK_uuK_ufDinv';
+        gK_uu = gK_uu + model.beta*model.beta*invK_uuK_ufDinv*blockQ{i}*invK_uuK_ufDinv';
       
-        gK_uf(:, ind) = (gK_ufBase(:, ind) ...
-                         -invK_uuK_ufDinv*blockQ{i})*model.Dinv{i,j};
+        gK_uf(:, ind) = gK_uf(:, ind) + (gK_ufBase(:, ind) ...
+                         -model.beta*model.beta*invK_uuK_ufDinv*blockQ{i})*model.Dinv{i,j};
       
         if i == 1
           localInd = ind;
@@ -219,7 +210,7 @@ switch model.approx
           localInd = ind - (model.blockEnd(i-1));
         end
         g_Lambda{i}(localInd, localInd) = g_Lambda{i}(localInd, localInd) ...
-            + 0.5*model.Dinv{i,j}*blockQ{i}*model.Dinv{i,j};
+            + 0.5*model.Dinv{i,j}*blockQ{i}*model.Dinv{i,j}*model.beta*model.beta;
       end
     end
     for i = 1:length(model.blockEnd)
