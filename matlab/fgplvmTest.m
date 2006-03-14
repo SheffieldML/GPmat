@@ -21,10 +21,9 @@ indMissing = find(rand(N, d)>0.9);
 %Y(ind) = NaN;
 
 approxType = {'ftc', 'dtc', 'fitc', 'pitc'};
-approxType ={'fitc', 'pitc'}
-for back = [false]% true]
+for back = [false true]
   for missing = [false true]
-    for fixInducing = [ false]% true] 
+    for fixInducing = [ false true] 
       Y = Yorig;
       if missing
         Y(indMissing) = NaN;
