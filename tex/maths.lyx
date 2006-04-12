@@ -1,0 +1,222 @@
+#LyX 1.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 221
+\textclass article
+\language english
+\inputencoding auto
+\fontscheme default
+\graphics default
+\paperfontsize default
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\use_natbib 0
+\use_numerical_citations 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Standard
+
+
+\begin_inset Formula \[
+\frac{dx_{i}\left(t\right)}{dt}=B_{i}+C_{i}f\left(t\right)-D_{i}x\left(t\right)\]
+
+\end_inset 
+
+Laplace transforms then give
+\begin_inset Formula \[
+sX_{i}\left(s\right)=B_{i}+C_{i}F\left(s\right)-D_{i}X\left(s\right)\]
+
+\end_inset 
+
+which can be rearranged to form
+\begin_inset Formula \[
+X_{i}\left(s\right)=\frac{B_{i}}{s+D_{i}}+\frac{C_{i}}{s+D_{i}}F\left(s\right)\]
+
+\end_inset 
+
+which implies that
+\begin_inset Formula \[
+x_{i}\left(t\right)=B_{i}e^{-D_{i}t}+C_{i}\int_{0}^{t}e^{-D_{i}\left(t-u\right)}f\left(u\right)du\]
+
+\end_inset 
+
+which can be rewritten as
+\begin_inset Formula \[
+x_{i}\left(t\right)=e^{-D_{i}t}\left(B_{i}+C_{i}\int_{0}^{t}e^{D_{i}u}f\left(u\right)du\right)\]
+
+\end_inset 
+
+we will define
+\begin_inset Formula \[
+g_{i}\left(t\right)=B_{i}+C_{i}\int_{0}^{t}e^{D_{i}u}f\left(u\right)du.\]
+
+\end_inset 
+
+The key problem is given a covariance function for 
+\begin_inset Formula $f$
+\end_inset 
+
+, 
+\begin_inset Formula $\mathbf{K}_{f}$
+\end_inset 
+
+, what is the covariance function for 
+\begin_inset Formula $g_{i}$
+\end_inset 
+
+,
+\begin_inset Formula $\mathbf{K}_{g_{i}}$
+\end_inset 
+
+.
+ Having got this, the relationship between 
+\begin_inset Formula $g_{i}$
+\end_inset 
+
+ and 
+\begin_inset Formula $x_{i}$
+\end_inset 
+
+ is straightforward,
+\begin_inset Formula \[
+k_{x_{i}}\left(t,t^{\prime}\right)=e^{-D_{i}t}k_{g_{i}}\left(t,t^{\prime}\right)e^{-D_{i}t^{\prime}}.\]
+
+\end_inset 
+
+The covariance for 
+\begin_inset Formula $g_{i}$
+\end_inset 
+
+ is given by
+\begin_inset Formula \[
+k_{g_{i}g_{j}}\left(t,t^{\prime}\right)=\int_{0}^{t}e^{D_{i}u}\int_{0}^{t^{\prime}}e^{D_{j}u^{\prime}}e^{-\frac{\left(u-u^{\prime}\right)^{2}}{\sigma^{2}}}dudu^{\prime}\]
+
+\end_inset 
+
+We now make the following substitutions, 
+\begin_inset Formula $s=\frac{u}{\sigma}$
+\end_inset 
+
+ and 
+\begin_inset Formula $s^{\prime}=\frac{u^{\prime}}{\sigma}$
+\end_inset 
+
+ giving
+\begin_inset Formula \[
+k_{g_{i}g_{j}}\left(t,t^{\prime}\right)=\sigma^{2}\int_{0}^{\frac{t}{\sigma}}e^{D_{i}\sigma s}\int_{0}^{\frac{t^{\prime}}{\sigma}}e^{D_{j}\sigma s^{\prime}}e^{-\left(s-s^{\prime}\right)^{2}}dsds^{\prime}\]
+
+\end_inset 
+
+Taking the innermost integral over 
+\begin_inset Formula $s^{\prime}$
+\end_inset 
+
+,
+\begin_inset Formula \begin{eqnarray*}
+e^{D_{j}\sigma s^{\prime}}e^{-\left(s-s^{\prime}\right)^{2}} & = & e^{-s^{2}+2ss^{\prime}+D_{j}\sigma s^{\prime}-s^{\prime^{2}}}\\
+ & = & e^{-\left(s^{\prime}-\left(s+\frac{D_{j}\sigma}{2}\right)\right)^{2}}e^{\left(s+\frac{D_{j}\sigma}{2}\right)^{2}-s^{2}}\\
+ & = & e^{-\left(s^{\prime}-\left(s+\frac{D_{j}\sigma}{2}\right)\right)^{2}}e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}e^{D_{j}\sigma s}\end{eqnarray*}
+
+\end_inset 
+
+so we have
+\begin_inset Formula \begin{eqnarray*}
+\int_{0}^{\frac{t^{\prime}}{\sigma}}e^{D_{j}\sigma s^{\prime}}e^{-\left(s-s^{\prime}\right)^{2}} & = & \frac{\sqrt{\pi}}{2}e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}e^{D_{j}\sigma s}\left[\erf\left(s^{\prime}-\left(s+\frac{D_{j}\sigma}{2}\right)\right)\right]_{0}^{\frac{t^{\prime}}{\sigma}}\\
+ & = & \frac{\sqrt{\pi}}{2}e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}e^{D_{j}\sigma s}\left[\erf\left(\frac{t^{\prime}}{\sigma}-\left(s+\frac{D_{j}\sigma}{2}\right)\right)-\erf\left(-\left(s+\frac{D_{j}\sigma}{2}\right)\right)\right]\\
+ & = & \frac{\sqrt{\pi}}{2}e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}e^{D_{j}\sigma s}\left[\erf\left(s+\frac{D_{j}\sigma}{2}\right)-\erf\left(s+\frac{D_{j}\sigma}{2}-\frac{t^{\prime}}{\sigma}\right)\right]\end{eqnarray*}
+
+\end_inset 
+
+where we have used the fact that 
+\begin_inset Formula $\textrm{erf}\left(-x\right)=-\textrm{erf}\left(x\right)$
+\end_inset 
+
+.
+ The integral therefore becomes
+\begin_inset Formula \[
+k_{g_{i}g_{j}}\left(t,t^{\prime}\right)=\frac{\sigma^{2}\sqrt{\pi}}{2}e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}\int_{0}^{\frac{t}{\sigma}}e^{\left(D_{i}+D_{j}\right)\sigma s}\left[\erf\left(s+\frac{D_{j}\sigma}{2}\right)-\erf\left(s+\frac{D_{j}\sigma}{2}-\frac{t^{\prime}}{\sigma}\right)\right]ds\]
+
+\end_inset 
+
+which can be solved by parts.
+\begin_inset Formula \begin{eqnarray*}
+k_{g_{i}g_{j}}\left(t,t^{\prime}\right) & = & \frac{\sqrt{\pi}\sigma}{2\left(D_{i}+D_{j}\right)}e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}\left\{ \left[e^{\left(D_{i}+D_{j}\right)\sigma s}\left[\erf\left(s+\frac{D_{j}\sigma}{2}\right)-\erf\left(s+\frac{D_{j}\sigma}{2}-\frac{t^{\prime}}{\sigma}\right)\right]\right]_{0}^{\frac{t}{\sigma}}-I\right\} \\
+ & = & \frac{\sqrt{\pi}\sigma}{2\left(D_{i}+D_{j}\right)}e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}\left\{ e^{\left(D_{i}+D_{j}\right)t}\left[\erf\left(\frac{t}{\sigma}+\frac{D_{j}\sigma}{2}\right)-\erf\left(\frac{D_{j}\sigma}{2}-\frac{t^{\prime}-t}{\sigma}\right)\right]\right.\\
+ &  & \left.-\left[\erf\left(\frac{D_{j}\sigma}{2}\right)-\erf\left(\frac{D_{j}\sigma}{2}-\frac{t^{\prime}}{\sigma}\right)\right]-I\right\} \end{eqnarray*}
+
+\end_inset 
+
+
+\layout Standard
+
+
+\begin_inset Formula \begin{eqnarray*}
+I & =\frac{2}{\sqrt{\pi}} & \int_{0}^{\frac{t}{\sigma}}e^{\left(D_{i}+D_{j}\right)\sigma s}\left[e^{-\left(s+\frac{D_{j}\sigma}{2}\right)^{2}}-e^{-\left(s+\frac{D_{j}\sigma}{2}-\frac{t^{\prime}}{\sigma}\right)^{2}}\right]ds\\
+ & = & I_{1}-I_{2}\end{eqnarray*}
+
+\end_inset 
+
+where
+\begin_inset Formula \[
+I_{1}=\frac{2}{\sqrt{\pi}}\int_{0}^{\frac{t}{\sigma}}e^{\left(D_{i}+D_{j}\right)\sigma s}e^{-\left(s+\frac{D_{j}\sigma}{2}\right)^{2}}ds\]
+
+\end_inset 
+
+ and 
+\begin_inset Formula \[
+I_{2}=\frac{2}{\sqrt{\pi}}\int_{0}^{\frac{t}{\sigma}}e^{\left(D_{i}+D_{j}\right)\sigma s}e^{-\left(s+\frac{D_{j}\sigma}{2}-\frac{t^{\prime}}{\sigma}\right)^{2}}ds\]
+
+\end_inset 
+
+the first integral is given by
+\begin_inset Formula \begin{eqnarray*}
+I_{1} & = & \frac{2}{\sqrt{\pi}}\int_{0}^{\frac{t}{\sigma}}e^{D_{i}\sigma s+D_{j}\sigma s-s^{2}-D_{j}\sigma s-\left(\frac{D_{j}\sigma}{2}\right)^{2}}\\
+ & = & \frac{2}{\sqrt{\pi}}\int_{0}^{\frac{t}{\sigma}}e^{D_{i}\sigma s-s^{2}-\left(\frac{D_{j}\sigma}{2}\right)^{2}}\\
+ & = & \frac{2}{\sqrt{\pi}}e^{-\left(\frac{D_{j}\sigma}{2}\right)^{2}}e^{\left(\frac{D_{i}\sigma}{2}\right)^{2}}\int_{0}^{\frac{t}{\sigma}}e^{-\left(s-\frac{D_{i}\sigma}{2}\right)^{2}}\\
+ & = & e^{-\left(\frac{D_{j}\sigma}{2}\right)^{2}}e^{\left(\frac{D_{i}\sigma}{2}\right)^{2}}\left[\textrm{erf}\left(s-\frac{D_{i}\sigma}{2}\right)\right]_{0}^{\frac{t}{\sigma}}\\
+ & = & e^{-\left(\frac{D_{j}\sigma}{2}\right)^{2}}e^{\left(\frac{D_{i}\sigma}{2}\right)^{2}}\left[\textrm{erf}\left(\frac{t}{\sigma}-\frac{D_{i}\sigma}{2}\right)+\textrm{erf}\left(\frac{D_{i}\sigma}{2}\right)\right]\end{eqnarray*}
+
+\end_inset 
+
+
+\begin_inset Formula \begin{eqnarray*}
+I_{2} & = & \int_{0}^{\frac{t}{\sigma}}e^{D_{i}\sigma s+D_{j}\sigma s-s^{2}-D_{j}\sigma s+2\frac{t^{\prime}s}{\sigma}-\left(\frac{D_{j}\sigma}{2}-\frac{t^{\prime}}{\sigma}\right)^{2}}\\
+ & = & \frac{2}{\sqrt{\pi}}\int_{0}^{\frac{t}{\sigma}}e^{D_{i}\sigma s-s^{2}+2\frac{t^{\prime}s}{\sigma}-\left(\frac{D_{j}\sigma}{2}-\frac{t^{\prime}}{\sigma}\right)^{2}}\\
+ & = & \frac{2}{\sqrt{\pi}}e^{-\left(\frac{D_{j}\sigma}{2}-\frac{t^{\prime}}{\sigma}\right)^{2}}e^{\left(\frac{D_{i}\sigma}{2}+\frac{t^{\prime}}{\sigma}\right)^{2}}\int_{0}^{\frac{t}{\sigma}}e^{-\left(s-\left(\frac{D_{i}\sigma}{2}+\frac{t^{\prime}}{\sigma}\right)\right)^{2}}\\
+ & = & \frac{2}{\sqrt{\pi}}e^{-\left(\frac{D_{j}\sigma}{2}\right)^{2}}e^{\left(\frac{D_{i}\sigma}{2}\right)^{2}}e^{\left(D_{j}+D_{i}\right)t^{\prime}}\int_{0}^{\frac{t}{\sigma}}e^{-\left(s-\left(\frac{D_{i}\sigma}{2}+\frac{t^{\prime}}{\sigma}\right)\right)^{2}}\\
+ & = & e^{-\left(\frac{D_{j}\sigma}{2}\right)^{2}}e^{\left(\frac{D_{i}\sigma}{2}\right)^{2}}e^{\left(D_{j}+D_{i}\right)t^{\prime}}\left[\textrm{erf}\left(s-\left(\frac{D_{i}\sigma}{2}+\frac{t^{\prime}}{\sigma}\right)\right)\right]_{0}^{\frac{t}{\sigma}}\\
+ & = & e^{-\left(\frac{D_{j}\sigma}{2}\right)^{2}}e^{\left(\frac{D_{i}\sigma}{2}\right)^{2}}e^{\left(D_{j}+D_{i}\right)t^{\prime}}\left[\textrm{erf}\left(\frac{t-t^{\prime}}{\sigma}-\frac{D_{i}\sigma}{2}\right)+\textrm{erf}\left(\frac{t^{\prime}}{\sigma}+\frac{D_{i}\sigma}{2}\right)\right]\end{eqnarray*}
+
+\end_inset 
+
+so we have 
+\begin_inset Formula $I=I_{1}-I_{2}$
+\end_inset 
+
+
+\begin_inset Formula \begin{eqnarray*}
+I & = & e^{-\left(\frac{D_{j}\sigma}{2}\right)^{2}}e^{\left(\frac{D_{i}\sigma}{2}\right)^{2}}\left\{ \left[\textrm{erf}\left(\frac{t}{\sigma}-\frac{D_{i}\sigma}{2}\right)+\textrm{erf}\left(\frac{D_{i}\sigma}{2}\right)\right]\right.\\
+ &  & \left.-e^{\left(D_{j}+D_{i}\right)t^{\prime}}\left[\textrm{erf}\left(\frac{t-t^{\prime}}{\sigma}-\frac{D_{i}\sigma}{2}\right)+\textrm{erf}\left(\frac{t^{\prime}}{\sigma}+\frac{D_{i}\sigma}{2}\right)\right]\right\} \end{eqnarray*}
+
+\end_inset 
+
+
+\begin_inset Formula \begin{eqnarray*}
+k_{g_{i}g_{j}}\left(t,t^{\prime}\right) & = & \frac{\sqrt{\pi}\sigma}{2\left(D_{i}+D_{j}\right)}\left[e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}\left\{ e^{\left(D_{i}+D_{j}\right)t}\left[\erf\left(\frac{t}{\sigma}+\frac{D_{j}\sigma}{2}\right)-\erf\left(\frac{D_{j}\sigma}{2}-\frac{t^{\prime}-t}{\sigma}\right)\right]\right.\right.\\
+ &  & \left.-\left[\erf\left(\frac{D_{j}\sigma}{2}\right)-\erf\left(\frac{D_{j}\sigma}{2}-\frac{t^{\prime}}{\sigma}\right)\right]\right\} \\
+ &  & +e^{\left(\frac{D_{i}\sigma}{2}\right)^{2}}\left\{ e^{\left(D_{i}+D_{j}\right)t^{\prime}}\left[\erf\left(\frac{t^{\prime}-t}{\sigma}-\frac{D_{i}\sigma}{2}\right)+\erf\left(\frac{t^{\prime}}{\sigma}+\frac{D_{i}\sigma}{2}\right)\right]\right.\\
+ &  & \left.\left.-\left[\erf\left(\frac{t}{\sigma}-\frac{D_{i}\sigma}{2}\right)+\erf\left(\frac{D_{i}\sigma}{2}\right)\right]\right\} \right]\end{eqnarray*}
+
+\end_inset 
+
+
+\the_end
