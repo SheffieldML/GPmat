@@ -1,6 +1,13 @@
 function kern = cmpndKernParamInit(kern)
 
 % CMPNDKERNPARAMINIT Compound kernel parameter initialisation.
+% FORMAT
+% DESC initialises parameters on a compound kernel.
+% ARG kern : the kernel structure to initialise.
+% RETURN kern : the kernel structure returned with parameters
+% initialised.
+%
+% SEEALSO : kernParamInit, tensorKernParamInit, cmpndKernCompute 
 
 % KERN
 

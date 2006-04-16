@@ -1,6 +1,13 @@
 function kern = tensorKernParamInit(kern)
 
 % TENSORKERNPARAMINIT Tensor kernel parameter initialisation.
+% FORMAT
+% DESC initialises parameters on a tensor product kernel.
+% ARG kern : the kernel structure to initialise.
+% RETURN kern : the kernel structure returned with parameters
+% initialised.
+%
+% SEEALSO : kernParamInit, tensorKernCompute, cmpndKernParamInit 
 
 % KERN
 

@@ -1,6 +1,15 @@
 function k = cmpndKernDiagCompute(kern, x)
 
 % CMPNDKERNDIAGCOMPUTE Compute diagonal of compound kernel.
+% FORMAT
+% DESC computes the diagonal of a kernel matrix for a compound
+% kernel type given an input data matrix.
+% ARG kern : kernel structure to be computed.
+% ARG X : input data matrix (rows are data points) to the kernel computation.
+% RETURN K : vector containing computed diagonal elements of the
+% kernel structure.
+%
+% SEEALSO : kernDiagCompute, cmpndKernCompute
 
 % KERN
 

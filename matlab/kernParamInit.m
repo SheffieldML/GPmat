@@ -1,6 +1,14 @@
 function kern = kernParamInit(kern)
 
 % KERNPARAMINIT Kernel parameter initialisation.
+% FORMAT
+% DESC initialises the parameters of a kernel.
+% ARG kern : the kernel structure for which the parameters will be
+% initialised.
+% RETURN kern : the kernel structure with the parameters
+% initialised.
+%
+% SEEALSO : kernCreate
 
 % KERN
 
