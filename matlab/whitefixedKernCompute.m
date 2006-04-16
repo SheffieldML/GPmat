@@ -1,31 +1,28 @@
 function k = whitefixedKernCompute(kern, x, x2)
 
-% WHITEFIXEDKERNCOMPUTE Compute the white fixed noise kernel given the parameters and X.
+
+% WHITEFIXEDKERNCOMPUTE Compute the WHITEFIXED kernel given the parameters and X.
 % FORMAT
-% DESC computes a kernel matrix for the white fixed kernel given an
-% input data matrix.
-% ARG kern : kernel structure to be computed.
-% ARG X : input data matrix (rows are data points) to the kernel
-% computation (not used in the computation, but there for compatability).
-% RETURN K : computed elements of the kernel structure.
+% DESC computes the kernel parameters for the fixed parameter white noise
+% kernel given inputs associated with rows and columns.
+% ARG kern : the kernel structure for which the matrix is computed.
+% ARG x : the input matrix associated with the rows of the kernel.
+% ARG x2 : the inpute matrix associated with the columns of the kernel.
+% RETURN k : the kernel matrix computed at the given points.
 %
-% FORMAT 
-% DESC computes a kernel matrix for the given kernel type given 
-% two input data matrices, one for the rows and one for the columns.
-% ARG kern : kernel structure to be computed.
-% ARG X : first input matrix to the kernel computation (forms the
-% rows of the kernel, not used in the computation, but there for
-% compatability).
-% ARG X2 : second input matrix to the kernel computation (forms the
-% columns of the kernel, not used in the computation, but there for
-% compatability).
-% RETURN K : computed elements of the kernel structure.
+% FORMAT
+% DESC computes the kernel matrix for the fixed parameter white noise
+% kernel given a design matrix of inputs.
+% ARG kern : the kernel structure for which the matrix is computed.
+% ARG x : input data matrix in the form of a design matrix.
+% RETURN k : the kernel matrix computed at the given points.
 %
-% SEEALSO : whiefixedKernDiagCompute
+% SEEALSO : whitefixedKernParamInit, kernCompute, kernCreate, whitefixedKernDiagCompute
 %
 % COPYRIGHT : Nathaniel J. King, 2006
 
 % KERN
+
 
 if nargin < 3
   k = whiteKernCompute(kern, x);

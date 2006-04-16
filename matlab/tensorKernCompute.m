@@ -1,24 +1,28 @@
 function k = tensorKernCompute(kern, x, x2)
 
-% TENSORKERNCOMPUTE Compute the tensor kernel given the parameters and X.
+
+% TENSORKERNCOMPUTE Compute the TENSOR kernel given the parameters and X.
 % FORMAT
-% DESC computes a kernel matrix for a tensor kernel type given an
-% input data matrix.
-% ARG kern : kernel structure to be computed.
-% ARG X : input data matrix (rows are data points) to the kernel computation.
-% RETURN K : computed elements of the kernel structure.
+% DESC computes the kernel parameters for the tensor product
+% kernel given inputs associated with rows and columns.
+% ARG kern : the kernel structure for which the matrix is computed.
+% ARG x : the input matrix associated with the rows of the kernel.
+% ARG x2 : the input matrix associated with the columns of the kernel.
+% RETURN k : the kernel matrix computed at the given points.
 %
-% FORMAT 
-% DESC computes a kernel matrix for the tensor kernel type given
-% two input data matrices, one for the rows and one for the columns.
-% ARG kern : kernel structure to be computed.
-% ARG X : first input matrix to the kernel computation (forms the rows of the kernel).
-% ARG X2 : second input matrix to the kernel computation (forms the columns of the kernel).
-% RETURN K : computed elements of the kernel structure.
+% FORMAT
+% DESC computes the kernel matrix for the tensor product
+% kernel given a design matrix of inputs.
+% ARG kern : the kernel structure for which the matrix is computed.
+% ARG x : input data matrix in the form of a design matrix.
+% RETURN k : the kernel matrix computed at the given points.
 %
-% SEEALSO : kernCompute, tensorKernCreate, tensorKernDiagCompute
+% SEEALSO : tensorKernParamInit, kernCompute, kernCreate, tensorKernDiagCompute
+%
+% COPYRIGHT : Neil D. Lawrence, 2006
 
 % KERN
+
 
 if nargin > 2
   i = 1;

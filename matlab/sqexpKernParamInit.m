@@ -1,8 +1,25 @@
 function kern = sqexpKernParamInit(kern)
 
-% SQEXPKERNPARAMINIT squared exponential kernel parameter initialisation.
+% SQEXPKERNPARAMINIT SQEXP kernel parameter initialisation.
+% This kernel is a 'pre-packaged' compound kernel of the form
+% {'rbfard', 'linard', 'bias', 'white'}. The input scales are shared
+% between the linear and RBF ARD kernels. Using this kernel removes
+% the overhead of mutliple calls through the 'cmpnd' kernel.
+% 
+% SEEALSO sqexpKernParamInit
+%
+% FORMAT
+% DESC initialises the pre-built compound squared exponential
+%  kernel structure with some default parameters.
+% ARG kern : the kernel structure which requires initialisation.
+% RETURN kern : the kernel structure with the default parameters placed in.
+%
+% SEEALSO : kernCreate, kernParamInit
+%
+% COPYRIGHT : Neil D. Lawrence, 2004
 
 % KERN
+
 
 kern.inverseWidth = 1;
 kern.rbfVariance = 1;

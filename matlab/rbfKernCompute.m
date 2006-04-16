@@ -1,41 +1,28 @@
 function [k, n2] = rbfKernCompute(kern, x, x2)
 
-% RBFKERNCOMPUTE Compute the kernel given the parameters and X.
+
+% RBFKERNCOMPUTE Compute the RBF kernel given the parameters and X.
 % FORMAT
-% DESC computes a kernel matrix for the kernel type 'rbf' given an
-% DESC input data matrix.
-% ARG kern : kernel structure to be computed.
-% ARG X : input data matrix (rows are data points) to the kernel computation.
-% RETURN K : computed elements of the kernel structure.
-%
-% FORMAT 
-% DESC computes a kernel matrix for the kernel type 'rbf' given an
-% DESC two input data matrix, one for the rows and one for the columns.
-% ARG kern : kernel structure to be computed.
-% ARG X : first input matrix to the kernel computation (forms the rows of the kernel).
-% ARG X2 : second input matrix to the kernel computation (forms the columns of the kernel).
-% RETURN K : computed elements of the kernel structure.
+% DESC computes the kernel parameters for the radial basis function
+% kernel given inputs associated with rows and columns.
+% ARG kern : the kernel structure for which the matrix is computed.
+% ARG x : the input matrix associated with the rows of the kernel.
+% ARG x2 : the input matrix associated with the columns of the kernel.
+% RETURN k : the kernel matrix computed at the given points.
 %
 % FORMAT
-% DESC additionally returns a matrix of inter point distances for
-% DESC the matrix X..
-% ARG kern : kernel structure to be computed.
-% ARG X : input data matrix (rows are data points) to the kernel computation.
-% RETURN K : computed elements of the kernel structure.
-% RETURN DIST : squared distances between the input data points.
+% DESC computes the kernel matrix for the radial basis function
+% kernel given a design matrix of inputs.
+% ARG kern : the kernel structure for which the matrix is computed.
+% ARG x : input data matrix in the form of a design matrix.
+% RETURN k : the kernel matrix computed at the given points.
 %
-% FORMAT 
-% DESC additionally returns a matrix of inter point distances for
-% DESC between the matrices X and X2.
-% ARG kern : kernel structure to be computed.
-% ARG X : first input matrix to the kernel computation (forms the rows of the kernel).
-% ARG X2 : second input matrix to the kernel computation (forms the columns of the kernel).
-% RETURN K : computed elements of the kernel structure.
-% RETURN DIST : squared distances between the input data points.
+% SEEALSO : rbfKernParamInit, kernCompute, kernCreate, rbfKernDiagCompute
 %
-% SEEALSO : kernCompute, rbfKernCreate, rbfKernDiagCompute, dist2
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
 % KERN
+
 
 if nargin < 3
   n2 = dist2(x, x);

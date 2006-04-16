@@ -1,6 +1,19 @@
 function rbfardKernDisplay(kern, spacing)
 
-% RBFARDKERNDISPLAY Display parameters of radial basis function ARD kernel.
+% RBFARDKERNDISPLAY Display parameters of the RBFARD kernel.
+% FORMAT
+% DESC displays the parameters of the automatic relevance determination radial basis function
+% kernel and the kernel type to the console.
+% ARG kern : the kernel to display.
+%
+% FORMAT does the same as above, but indents the display according
+% to the amount specified.
+% ARG kern : the kernel to display.
+% ARG spacing : how many spaces to indent the display of the kernel by.
+%
+% SEEALSO rbfardKernParamInit, modelDisplay, kernDisplay
+%
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
 % KERN
 
