@@ -1,6 +1,5 @@
 function k = cmpndKernCompute(kern, x, x2)
 
-
 % CMPNDKERNCOMPUTE Compute the CMPND kernel given the parameters and X.
 % FORMAT
 % DESC computes the kernel parameters for the compound
@@ -22,7 +21,6 @@ function k = cmpndKernCompute(kern, x, x2)
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
 % KERN
-
 
 if nargin > 2
   i = 1;

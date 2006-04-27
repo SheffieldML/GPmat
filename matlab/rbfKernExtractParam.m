@@ -1,6 +1,5 @@
 function params = rbfKernExtractParam(kern)
 
-
 % RBFKERNEXTRACTPARAM Extract parameters from the RBF kernel structure.
 % FORMAT
 % DESC Extract parameters from the radial basis function kernel matrix into a vector of
@@ -15,7 +14,7 @@ function params = rbfKernExtractParam(kern)
 % SEEALSO rbfKernParamInit, rbfKernExpandParam, kernExtractParam, scg, conjgrad
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
-%
+
 % KERN
 
 

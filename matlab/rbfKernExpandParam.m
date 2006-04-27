@@ -1,6 +1,5 @@
 function kern = rbfKernExpandParam(kern, params)
 
-
 % RBFKERNEXPANDPARAM Create kernel structure from RBF kernel's parameters.
 % FORMAT
 % DESC returns a radial basis function kernel structure filled with the

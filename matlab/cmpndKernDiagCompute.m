@@ -1,6 +1,5 @@
 function k = cmpndKernDiagCompute(kern, x)
 
-
 % CMPNDKERNDIAGCOMPUTE Compute diagonal of CMPND kernel.
 % FORMAT
 % DESC computes the diagonal of the kernel matrix for the compound kernel given a design matrix of inputs.

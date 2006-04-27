@@ -1,7 +1,6 @@
 function whitefixedKernDisplay(kern, spacing)
 
-
-% WHITEFIXEDKERNDISPLAY Display parameters of the WHITEFIXEDkernel.
+% WHITEFIXEDKERNDISPLAY Display parameters of the WHITEFIXED kernel.
 % FORMAT
 % DESC displays the parameters of the fixed parameter white noise
 % kernel and the kernel type to the console.
@@ -12,7 +11,7 @@ function whitefixedKernDisplay(kern, spacing)
 % ARG kern : the kernel to display.
 % ARG spacing : how many spaces to indent the display of the kernel by.
 %
-% SEEALSO whitefixedKernParamInit, modelDisplay, kernDisplay
+% SEEALSO : whitefixedKernParamInit, modelDisplay, kernDisplay
 %
 % COPYRIGHT : Nathaniel J. King, 2006
 

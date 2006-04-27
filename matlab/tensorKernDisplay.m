@@ -11,7 +11,7 @@ function tensorKernDisplay(kern, varargin)
 % ARG kern : the kernel to display.
 % ARG spacing : how many spaces to indent the display of the kernel by.
 %
-% SEEALSO tensorKernParamInit, modelDisplay, kernDisplay
+% SEEALSO : tensorKernParamInit, modelDisplay, kernDisplay
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 

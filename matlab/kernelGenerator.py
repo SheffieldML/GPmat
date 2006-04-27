@@ -44,7 +44,7 @@ else:
 
 # Dictionary of the files and their contents.
 files = {prefix + 'KernCompute.m' :
- '''function k = ''' + prefix + '''KernCompute(kern, x, x2)
+ '''function K = ''' + prefix + '''KernCompute(kern, x, x2)
 
 % ''' + ucPrefix + '''KERNCOMPUTE Compute the ''' + ucPrefix + ''' kernel given the parameters and X.
 % FORMAT
@@ -137,7 +137,7 @@ prefix + 'KernDisplay.m' :
 % ARG kern : the kernel to display.
 % ARG spacing : how many spaces to indent the display of the kernel by.
 %
-% SEEALSO ''' + prefix + '''KernParamInit, modelDisplay, kernDisplay''' + copyRightText + '''
+% SEEALSO : ''' + prefix + '''KernParamInit, modelDisplay, kernDisplay''' + copyRightText + '''
 
 % KERN
 
@@ -168,12 +168,12 @@ prefix + 'KernExtractParam.m' :
 
 % ''' + ucPrefix + '''KERNEXTRACTPARAM Extract parameters from the ''' + ucPrefix + ''' kernel structure.
 % FORMAT
-% DESC Extract parameters from the ''' + longName + ''' kernel matrix into a vector of
+% DESC Extract parameters from the ''' + longName + ''' kernel structure into a vector of
 % parameters for optimisation.
 % ARG kern : the kernel structure containing the parameters to be
 % extracted.
 % RETURN param : vector of parameters extracted from the kernel. If
-% the field \'transforms\' is not empty in the kernel matrix, the
+% the field \'transforms\' is not empty in the kernel structure, the
 % parameters will be transformed before optimisation (for example
 % positive only parameters could be logged before being returned).
 %
@@ -216,7 +216,7 @@ prefix + 'KernGradX.m' :
 
 ''',
 prefix + 'KernGradient.m' :
-'''function g = ''' + prefix + '''KernGradient(kern, x, covGrad)
+'''function g = ''' + prefix + '''KernGradient(kern, x, x2, covGrad)
 % ''' + ucPrefix + '''KERNGRADIENT Gradient of ''' + ucPrefix + ''' kernel\'s parameters.
 % FORMAT
 % DESC computes the gradient of functions with respect to the

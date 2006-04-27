@@ -44,7 +44,7 @@ function g = cmpndKernGradient(kern, x, varargin)
 % KERN
 
 
-g = zeros(1, kern.nParams);
+g = zeros(1, size(kern.paramGroups, 1));
 startVal = 1;
 endVal = 0;
 
