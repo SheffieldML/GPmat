@@ -1,8 +1,14 @@
 function model = cmpndTieParameters(model, paramsList)
 
 % CMPNDTIEPARAMETERS Tie parameters together.
+%
+% model = cmpndTieParameters(model, paramsList)
+%
 
-% OPTIMI
+% Copyright (c) 2005 Neil D. Lawrence
+% cmpndTieParameters.m version 1.2
+
+
 
 colToDelete = [];
 for i = 1:length(paramsList)

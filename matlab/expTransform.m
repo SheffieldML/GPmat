@@ -1,8 +1,14 @@
 function y = expTransform(x, transform)
 
 % EXPTRANSFORM Constrains a parameter to be positive through exponentiation.
+%
+% y = expTransform(x, transform)
+%
 
-% OPTIMI
+% Copyright (c) 2005 Neil D. Lawrence
+% expTransform.m version 1.1
+
+
 
 
 limVal = 36;
