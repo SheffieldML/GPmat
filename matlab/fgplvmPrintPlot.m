@@ -1,8 +1,14 @@
 function h = fgplvmPrintPlot(model, lbls, capName, experimentNo)
 
 % FGPLVMPRINTPLOT Print latent space for learnt model.
+%
+% h = fgplvmPrintPlot(model, lbls, capName, experimentNo)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% fgplvmPrintPlot.m version 1.2
+
+
 
 lvmScatterPlot(model, lbls);
 fileName = ['dem' capName num2str(experimentNo)];

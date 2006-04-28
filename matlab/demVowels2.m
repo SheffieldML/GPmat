@@ -1,6 +1,11 @@
 % DEMVOWELS2 Model the vowels data with a 2-D FGPLVM using RBF kernel and back constraints.
+%
+% 
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% demVowels2.m version 1.1
+
+
 
 % Fix seeds
 randn('seed', 1e5);

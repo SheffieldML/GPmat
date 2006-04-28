@@ -1,8 +1,14 @@
 function fgplvmClassVisualise(call)
 
 % FGPLVMCLASSVISUALISE Callback function for visualising data in 2-D.
+%
+% fgplvmClassVisualise(call)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% fgplvmClassVisualise.m version 1.1
+
+
 
 global visualiseInfo
 

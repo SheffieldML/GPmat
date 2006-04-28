@@ -1,8 +1,14 @@
 function dynamics = dynamicsTest(type);
 
 % DYNAMICSTEST Run some tests on the specified dynamics model.
+%
+% dynamics = dynamicsTest(type);
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% dynamicsTest.m version 1.1
+
+
 
 type = [type 'Dynamics'];
 X = randn(10, 2);

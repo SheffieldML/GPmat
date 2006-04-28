@@ -1,8 +1,14 @@
 function model = gpCreate(q, d, X, y, options);
 
 % GPCREATE Create a GP model with inducing varibles/pseudo-inputs.
+%
+% model = gpCreate(q, d, X, y, options);
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% gpCreate.m version 1.4
+
+
 
 if size(X, 2) ~= q
   error(['Input matrix X does not have dimension ' num2str(q)]);
@@ -88,8 +94,16 @@ switch options.approx
     model.X_u = model.X(ind, :);
   end
   model.beta = options.beta;
-  model.betaTransform = 'negLogLogit';  
+  model.betaTransform = 'negLogLogit';
+  model.KLCorrectionTerm = options.KLCorrectionTerm;
+case 'nftc'
+  model.k = 0;
+  model.X_u = [];
+  model.beta = options.beta;
+  model.betaTransform = 'negLogLogit';
+  model.KLCorrectionTerm = options.KLCorrectionTerm;
 end
+
 if model.k>model.N
   error('Number of active points cannot be greater than number of data.')
 end
@@ -108,8 +122,10 @@ if strcmp(model.approx, 'pitc')
   end  
 end
 
+
 initParams = gpExtractParam(model);
 
 % This forces kernel computation.
 model = gpExpandParam(model, initParams);
+
 

@@ -1,8 +1,14 @@
 function params = fgplvmExtractParam(model)
 
 % FGPLVMEXTRACTPARAM Extract a parameter vector from a GP-LVM model.
+%
+% params = fgplvmExtractParam(model)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% fgplvmExtractParam.m version 1.2
+
+
 
 params = gpExtractParam(model);
 if isfield(model, 'back')

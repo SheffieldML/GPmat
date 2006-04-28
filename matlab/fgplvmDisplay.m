@@ -1,8 +1,14 @@
 function fgplvmDisplay(model, spaceNum)
 
 % FGPLVMDISPLAY Display an FGPLVM model.
+%
+% fgplvmDisplay(model, spaceNum)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% fgplvmDisplay.m version 1.1
+
+
 
 
 if nargin > 1

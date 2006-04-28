@@ -1,6 +1,11 @@
 % DEMSTICK4 Model the stick man using an RBF kernel and 3-D latent space.
+%
+% 
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% demStick4.m version 1.1
+
+
 
 % Fix seeds
 randn('seed', 1e5);

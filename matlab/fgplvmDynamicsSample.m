@@ -1,8 +1,14 @@
 function [ax, data] = fgplvmDynamicsSample(model, points);
 
 % FGPLVMDYNAMICSSAMPLE Sample a field from the GP.
+%
+% [ax, data] = fgplvmDynamicsSample(model, points);
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% fgplvmDynamicsSample.m version 1.2
+
+
 
 if nargin < 2
   points = 20;

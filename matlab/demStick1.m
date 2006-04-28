@@ -1,6 +1,11 @@
 % DEMSTICK1 Model the stick man using an RBF kernel.
+%
+% 
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% demStick1.m version 1.2
+
+
 
 % Fix seeds
 randn('seed', 1e5);

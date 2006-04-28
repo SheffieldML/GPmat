@@ -1,8 +1,14 @@
 function fgplvmResultsDynamic(dataSet, number, dataType, varargin)
 
 % FGPLVMRESULTSDYNAMIC Load a results file and visualise them.
+%
+% fgplvmResultsDynamic(dataSet, number, dataType, varargin)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% fgplvmResultsDynamic.m version 1.1
+
+
   
 [model, lbls] = fgplvmLoadResult(dataSet, number);
 

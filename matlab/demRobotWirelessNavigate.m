@@ -1,6 +1,11 @@
 % DEMROBOTWIRELESSNAVIGATE Take some test data for the robot and navigate with it.
+%
+% 
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% demRobotWirelessNavigate.m version 1.2
+
+
 
 % Fix seeds
 randn('seed', 1e5);

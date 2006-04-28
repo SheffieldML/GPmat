@@ -1,8 +1,14 @@
 function model = gpDynamicsCreate(q, d, latentVals, options, diff, learn)
 
 % GPDYNAMICSCREATE Create the dynamics model. 
+%
+% model = gpDynamicsCreate(q, d, latentVals, options, diff, learn)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% gpDynamicsCreate.m version 1.1
+
+
 
 if nargin < 6
   learn = 0;

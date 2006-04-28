@@ -1,8 +1,14 @@
 function [mu, varsigma] = gpPosteriorMeanVar(model, X);
 
 % GPPOSTERIORMEANVAR Mean and variances of the posterior at points given by X.
+%
+% [mu, varsigma] = gpPosteriorMeanVar(model, X);
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% gpPosteriorMeanVar.m version 1.5
+
+
 
 
 if ~isfield(model, 'alpha')
@@ -11,7 +17,7 @@ end
 
 maxMemory = 1000000;
 switch model.approx
- case 'ftc'
+ case {'ftc','nftc'}
   chunkSize = ceil(maxMemory/model.N);
  case {'dtc', 'fitc', 'pitc'}
   chunkSize = ceil(maxMemory/model.k);
@@ -33,7 +39,7 @@ while startVal <= size(X, 1)
 
   % Compute kernel for new point.
   switch model.approx
-   case 'ftc'
+   case {'ftc','nftc'}
     KX_star = kernCompute(model.kern, model.X, X(indices, :));  
    case {'dtc', 'fitc', 'pitc'}
     KX_star = kernCompute(model.kern, model.X_u, X(indices, :));  
@@ -59,10 +65,10 @@ while startVal <= size(X, 1)
         Kinvk = model.invK_uu*KX_star;
        case 'dtc'
         Kinvk = ((model.invK_uu - (1/model.beta)*model.Ainv)*KX_star);
-       case 'fitc' 
-        Kinvk = (model.invK_uu - (1/model.beta)*model.Ainv)*KX_star;
-       case 'pitc'
+       case {'fitc', 'pitc'}
         Kinvk = (model.invK_uu - model.Ainv)*KX_star;
+       case 'nftc'
+        Kinvk = model.Ainv*KX_star;
       end
       varsig = diagK - sum(KX_star.*Kinvk, 1)';
       if isfield(model, 'beta')

@@ -1,8 +1,14 @@
 function robTwoDynamicsDisplay(model, spaceNum)
 
 % ROBTWODYNAMICSDISPLAY Display the robot dynamics model. 
+%
+% robTwoDynamicsDisplay(model, spaceNum)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% robTwoDynamicsDisplay.m version 1.1
+
+
 
 if nargin > 1
   spacing = repmat(32, 1, spaceNum);

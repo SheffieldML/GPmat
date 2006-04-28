@@ -1,8 +1,14 @@
 function g = fgplvmPointLogLikeGradient(model, x, y)
 
 % FGPLVMPOINTLOGLIKEGRADIENT Log-likelihood gradient for of a point of the GP-LVM.
+%
+% g = fgplvmPointLogLikeGradient(model, x, y)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% fgplvmPointLogLikeGradient.m version 1.1
+
+
 
 logTwoPi = log(2*pi);
 [mu, varSigma] = gpPosteriorMeanVar(model, x);

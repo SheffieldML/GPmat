@@ -1,8 +1,14 @@
 function options = gpOptions(approx);
 
 % GPOPTIONS Return default options for GP model.
+%
+% options = gpOptions(approx);
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% gpOptions.m version 1.3
+
+
 
 if nargin < 1
   options.approx = 'ftc';
@@ -36,5 +42,13 @@ switch options.approx
   % Option to fix the inducing variables to other latent points.
   options.fixInducing = 0;
   options.fixIndices = [];
+    
+ case 'nftc'
+     % Like FTC but with presition noise beta
+  options.kern = {'rbf', 'bias', 'white'};
+  options.numActive = 0;
+  options.beta = 1e3;     
+  
 end
 
+options.KLCorrectionTerm = 0; % A setting for the KL correction

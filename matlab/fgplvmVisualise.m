@@ -2,8 +2,15 @@ function fgplvmVisualise(model, YLbls, ...
 			visualiseFunction, visualiseModify, varargin)
 
 % FGPLVMVISUALISE Visualise the manifold.
+%
+% fgplvmVisualise(model, YLbls, ...
+%			visualiseFunction, visualiseModify, varargin)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% fgplvmVisualise.m version 1.2
+
+
 
 global visualiseInfo
 

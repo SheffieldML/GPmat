@@ -1,6 +1,11 @@
 % DEMOIL1 Oil data with fully independent training conditional.
+%
+% 
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% demOil1.m version 1.3
+
+
 
 % Fix seeds
 randn('seed', 1e5);
@@ -11,9 +16,9 @@ experimentNo = 1;
 
 % load data
 [Y, lbls] = lvmLoadData(dataSetName);
-
+Y=Y(1:50,:);
 % Set up model
-options = fgplvmOptions('fitc');
+options = fgplvmOptions('nftc');
 options.optimiser = 'scg';
 latentDim = 2;
 d = size(Y, 2);
@@ -21,7 +26,7 @@ d = size(Y, 2);
 model = fgplvmCreate(latentDim, d, Y, options);
 
 % Optimise the model.
-iters = 1000;
+iters = 30%;000;
 display = 1;
 
 model = fgplvmOptimise(model, display, iters);

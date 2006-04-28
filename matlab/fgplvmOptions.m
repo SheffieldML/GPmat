@@ -1,8 +1,14 @@
 function options = fgplvmOptions(varargin);
 
 % FGPLVMOPTIONS Return default options for FGPLVM model.
+%
+% options = fgplvmOptions(varargin);
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% fgplvmOptions.m version 1.2
+
+
 
 % Get default options from Gaussian process.
 options = gpOptions(varargin{:});

@@ -1,8 +1,14 @@
 function gX = gpDynamicsLatentGradients(model);
 
 % GPDYNAMICSLATENTGRADIENTS Gradients of the X vector given the dynamics model.
+%
+% gX = gpDynamicsLatentGradients(model);
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% gpDynamicsLatentGradients.m version 1.1
+
+
 
 % gX the +1 accounts for the first point, which cannot have dynamics.
 gX = zeros(model.N+1, model.d);

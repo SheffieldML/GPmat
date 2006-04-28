@@ -1,8 +1,14 @@
 function ll = fgplvmLogLikelihood(model)
 
 % FGPLVMLOGLIKELIHOOD Log-likelihood for a GP-LVM.
+%
+% ll = fgplvmLogLikelihood(model)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% fgplvmLogLikelihood.m version 1.2
+
+
 
 
 ll = gpLogLikelihood(model);

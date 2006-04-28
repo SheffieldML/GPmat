@@ -2,8 +2,15 @@ function [gParam, gX_u, gX] = gpLogLikeGradients(model, ...
                                                   X, Y, X_u)
 
 % GPLOGLIKEGRADIENTS Compute the gradients for the parameters and X.
+%
+% [gParam, gX_u, gX] = gpLogLikeGradients(model, ...
+%                                                  X, Y, X_u)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% gpLogLikeGradients.m version 1.4
+
+
 
 if nargin < 4
   if isfield(model, 'X_u')
@@ -119,6 +126,65 @@ switch model.approx
       end
     end    
   end
+case 'nftc'
+  % Noisy Full training conditional.
+  
+  if nargout > 2
+    %%% Prepare to Compute Gradients with respect to X %%%
+    gKX = kernGradX(model.kern, X, X);% this seems to be the same for all
+    gKX = gKX*2;
+    dgKX = kernDiagGradX(model.kern, X);
+    for i = 1:model.N
+      gKX(i, :, i) = dgKX(i, :);
+    end
+    gX = zeros(model.N, model.q);
+  end
+  
+  %%% Compute Gradients of Kernel Parameters %%%
+  gParam = zeros(1, model.kern.nParams);
+  g_beta = 0;
+  for k = 1:model.d
+    gK = localCovarianceGradients(model, Y(:, k), k);
+    
+    g_beta = g_beta - model.beta.^-2.*trace(gK);%*
+    %g_beta = g_beta - model.beta(:,k).^-2.*trace(gK);%*
+    % If performing KL correction we need to include the correction term
+    % for beta
+    if model.KLCorrectionTerm
+        g_beta = g_beta - 0.5.*sum(model.KLVariance(:,k)-model.m(:,k).*model.m(:,k));       
+    end
+    fhandle = str2func([model.betaTransform 'Transform']);
+    g_beta = g_beta*fhandle(model.beta, 'gradfact');
+    
+    if nargout > 2
+      %%% Compute Gradients with respect to X %%%
+      ind = gpDataIndices(model, k);
+      counter = 0;
+      for i = ind
+        counter = counter + 1;
+        for j = 1:model.q
+          gX(i, j) = gX(i, j) + gKX(ind, j, i)'*gK(:, counter);
+        end
+      end
+    end
+    %%% Compute Gradients of Kernel Parameters %%%
+    if model.isMissingData
+      gParam = gParam ...
+               + kernGradient(model.kern, ...
+                              X(model.indexPresent{k}, :), ...
+                              gK);
+    else
+      gParam = gParam + kernGradient(model.kern, X, gK);
+    end
+  end
+  
+  
+  
+  gParam = [gParam g_scaleBias];
+  
+   
+
+    %end  
  otherwise
   error('Unknown model approximation.')
 end
@@ -187,7 +253,10 @@ switch model.approx
 
   % append beta gradient to end of parameters
   gParam = [g_param(:)' g_scaleBias g_beta];
-
+case 'nftc'
+  % Full training conditional. Nothing required here.
+  % append beta gradient to end of parameters
+  gParam = [gParam g_beta];
  otherwise
   error('Unrecognised model approximation');
 end
@@ -200,18 +269,36 @@ end
 function gK = localCovarianceGradients(model, y, dimension)
 
 % FGPLVMCOVARIANCEGRADIENTS
-
-if ~isfield(model, 'isSpherical') | model.isSpherical
-  invKy = model.invK_uu*y;
-  gK = -model.invK_uu + invKy*invKy';
-else
-  if model.isMissingData
-    m = y(model.indexPresent{dimension});
-  else
-    m = y;
-  end
-  invKy = model.invK_uu{dimension}*m;
-  gK = -model.invK_uu{dimension} + invKy*invKy';
-end
-gK = gK*.5;
+switch model.approx
+ case 'ftc'
+     if ~isfield(model, 'isSpherical') | model.isSpherical
+         invKy = model.invK_uu*y;
+         gK = -model.invK_uu + invKy*invKy';
+     else
+         if model.isMissingData
+             m = y(model.indexPresent{dimension});
+         else
+             m = y;
+         end
+         invKy = model.invK_uu{dimension}*m;
+         gK = -model.invK_uu{dimension} + invKy*invKy';
+     end
+     gK = gK*.5;
+ case 'nftc'
+     if ~isfield(model, 'isSpherical') | model.isSpherical
+         invKy = model.Ainv*y;
+         gK = -model.Ainv + invKy*invKy';
+     else
+         if model.isMissingData
+             m = y(model.indexPresent{dimension});
+         else
+             m = y;
+         end
+         invKy = model.Ainv{dimension}*m;
+         gK = -model.Ainv{dimension} + invKy*invKy';
+     end
+     gK = gK*.5;
     
+otherwise
+  error('Model approximation not covered for localCovarianceGradients');
+end

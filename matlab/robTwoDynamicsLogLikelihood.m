@@ -1,8 +1,14 @@
 function ll = robTwoDynamicsLogLikelihood(model)
 
 % ROBTWODYNAMICSLOGLIKELIHOOD Give the log likelihood of the robot one dynamics part.
+%
+% ll = robTwoDynamicsLogLikelihood(model)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% robTwoDynamicsLogLikelihood.m version 1.1
+
+
 
 thetaDiff = model.theta(2:end)-model.theta(1:end-1);
 while any(thetaDiff>pi)

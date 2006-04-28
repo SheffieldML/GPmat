@@ -1,8 +1,14 @@
 function model = fgplvmCreate(q, d, Y, options)
 
 % FGPLVMCREATE Create a GPLVM model with inducing varibles.
+%
+% model = fgplvmCreate(q, d, Y, options)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% fgplvmCreate.m version 1.3
+
+
 
 if size(Y, 2) ~= d
   error(['Input matrix Y does not have dimension ' num2str(d)]);

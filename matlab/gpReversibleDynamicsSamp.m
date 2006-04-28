@@ -1,8 +1,14 @@
 function y = gpReversibleDynamicsSamp(model, X);
 
 % GPREVERSIBLEDYNAMICSSAMP Sample from the dynamics for a given input.
+%
+% y = gpReversibleDynamicsSamp(model, X);
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% gpReversibleDynamicsSamp.m version 1.1
+
+
 
 persistent oldX
 if isempty(oldX)

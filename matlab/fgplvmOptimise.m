@@ -1,8 +1,14 @@
 function model = fgplvmOptimise(model, display, iters);
 
 % FGPLVMOPTIMISE Optimise the inducing variable based kernel.
+%
+% model = fgplvmOptimise(model, display, iters);
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% fgplvmOptimise.m version 1.1
+
+
 
 
 if nargin < 3

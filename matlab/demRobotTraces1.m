@@ -1,6 +1,11 @@
 % DEMROBOTTRACES1 Wireless Robot data from University of Washington, with tailored dynamics.
+%
+% 
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% demRobotTraces1.m version 1.1
+
+
 
 % Fix seeds
 randn('seed', 1e5);

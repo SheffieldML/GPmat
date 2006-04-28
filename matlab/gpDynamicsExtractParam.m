@@ -1,8 +1,14 @@
 function param = gpDynamicsExtractParam(model)
 
 % GPDYNAMICSEXTRACTPARAM Extract parameters from the GP dynamics model.
+%
+% param = gpDynamicsExtractParam(model)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% gpDynamicsExtractParam.m version 1.1
+
+
 
 param = gpExtractParam(model);
 

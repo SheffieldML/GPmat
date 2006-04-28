@@ -1,8 +1,14 @@
 function [model, lbls] = fgplvmLoadResult(dataSet, number)
 
 % FGPLVMLOADRESULT Load a previously saved result.
+%
+% [model, lbls] = fgplvmLoadResult(dataSet, number)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% fgplvmLoadResult.m version 1.1
+
+
 
 [Y, lbls] = lvmLoadData(dataSet);
 

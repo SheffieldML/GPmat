@@ -1,6 +1,11 @@
 % DEMROBOTWIRELESS2 Wireless Robot data from University of Washington, without dynamics and without back constraints.
+%
+% 
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% demRobotWireless2.m version 1.2
+
+
 
 % Fix seeds
 randn('seed', 1e5);

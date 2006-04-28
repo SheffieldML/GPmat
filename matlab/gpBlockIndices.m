@@ -1,8 +1,14 @@
 function ind = gpBlockIndices(model, blockNo)
 
 % GPBLOCKINDICES Return indices of given block.
+%
+% ind = gpBlockIndices(model, blockNo)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% gpBlockIndices.m version 1.1
+
+
 
 
 if ~strcmp(model.approx, 'pitc')

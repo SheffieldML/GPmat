@@ -1,6 +1,11 @@
 % DEMSPGP1DPLOT Plot results from 1-D sparse GP.
+%
+% 
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% demSpgp1dPlot.m version 1.1
+
+
 
 xTest = linspace(-1.5, 1.5, 200)';
 [mu, varSigma] = gpPosteriorMeanVar(model, xTest);

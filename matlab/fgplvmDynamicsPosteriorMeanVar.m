@@ -1,8 +1,14 @@
 function [mu, varsigma] = fgplvmDynamicsPosteriorMeanVar(model, X);
 
 % FGPLVMDYNAMICSPOSTERIORMEANVAR Mean and variances of the posterior at points given by X.
+%
+% [mu, varsigma] = fgplvmDynamicsPosteriorMeanVar(model, X);
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% fgplvmDynamicsPosteriorMeanVar.m version 1.2
+
+
 
 if ~isfield(model, 'alpha')
   if model.dynamics.diff

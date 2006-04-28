@@ -1,6 +1,11 @@
 % FGPLVMTEST Test the gradients of the gpCovGrads function and the fgplvm models.
+%
+% 
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% fgplvmTest.m version 1.4
+
+
 
 % TODO: add checks for models with missing data.
 
@@ -9,12 +14,12 @@ d = 3;
 N = 10;
 k = 5;
 kernType = {'rbf', 'lin', 'rbfard', 'mlp', 'mlpard', 'white'};
-kernType = 'rbf'
+kernType = {'rbf'};
 backType = 'mlp';
 dynType = 'gp';
-learn = false; % dont' test learning of dynamics.
-learnScales = false; % don't test learning of dynamics scales.
-diff = true; % Use diffs for generating dynamics.
+learn = 0; % dont' test learning of dynamics.
+learnScales = 0; % don't test learning of dynamics scales.
+diff = 1; % Use diffs for generating dynamics.
 
 Yorig = randn(N, d);
 indMissing = find(rand(N, d)>0.9);
@@ -31,7 +36,7 @@ for back = [false true]
       if back & missing
         continue
       end
-      for dyn = [false]% true];
+      for dyn = [false true];
         for a = 1:length(approxType)
           options = fgplvmOptions(approxType{a});
           options.kern = kernType;
@@ -84,6 +89,9 @@ for back = [false true]
           initParams = randn(size(initParams))./randn(size(initParams));
           % This forces kernel computation.
           model = fgplvmExpandParam(model, initParams);
+          %      model.kern = kernSetWhite(model.kern, 1e-6);
+          %      params = fgplvmExtractParam(model);
+          %      model = fgplvmExpandParam(model, params);
           if dyn
             if strcmp(dynType, 'robOne')
               aveR = mean(model.dynamics.r);
@@ -94,7 +102,7 @@ for back = [false true]
               model.dynamics.b = model.dynamics.a/aveR;
             end
           end
-          if ~back & ~dyn
+          if ~back & ~dyn & ~missing
             gpCovGradsTest(model);
           end
           gradientCheck(initParams, 'fgplvmObjective', 'fgplvmGradient', ...

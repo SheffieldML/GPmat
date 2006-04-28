@@ -1,6 +1,11 @@
 % DEMSPGP1D4 Do a simple 1-D regression after Snelson & Ghahramani's example.
+%
+% 
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% demSpgp1d4.m version 1.2
+
+
 
 % Fix seeds
 randn('seed', 1e5);

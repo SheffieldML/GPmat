@@ -4,7 +4,7 @@ function gX = fgplvmDynamicsLogLikeGradients(model)
 
 
 switch model.approx
- case {'ftc', 'dtc', 'fitc', 'pitc'}
+ case {'ftc', 'dtc', 'fitc', 'pitc','nftc'}
   gKX = kernGradX(model.dynamics.kern, model.X(1:end-1, :), ...
                   model.X(1:end-1, :));
   gKX = gKX*2;

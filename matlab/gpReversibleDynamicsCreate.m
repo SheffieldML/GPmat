@@ -1,8 +1,14 @@
 function model = gpReversibleDynamicsCreate(q, d, latentVals, options)
 
 % GPREVERSIBLEDYNAMICSCREATE Create the dynamics model. 
+%
+% model = gpReversibleDynamicsCreate(q, d, latentVals, options)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% gpReversibleDynamicsCreate.m version 1.1
+
+
 
 if nargin < 4
   options = gpReversibleDynamicsOptions('ftc');

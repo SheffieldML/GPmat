@@ -1,8 +1,14 @@
 function ll = gpDynamicsLogLikelihood(model)
 
 % GPDYNAMICSLOGLIKELIHOOD Give the log likelihood of the dynamics part.
+%
+% ll = gpDynamicsLogLikelihood(model)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% gpDynamicsLogLikelihood.m version 1.1
+
+
 
 ll = gpLogLikelihood(model);
 

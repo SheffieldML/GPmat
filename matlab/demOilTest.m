@@ -1,6 +1,11 @@
 % DEMROBOTWIRELESSNAVIGATE Take some test data for the robot and navigate with it.
+%
+% 
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% demOilTest.m version 1.1
+
+
 
 % Fix seeds
 randn('seed', 1e5);

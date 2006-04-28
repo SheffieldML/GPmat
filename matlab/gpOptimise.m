@@ -1,8 +1,14 @@
 function model = gpOptimise(model, display, iters);
 
 % GPOPTIMISE Optimise the inducing variable based kernel.
+%
+% model = gpOptimise(model, display, iters);
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% gpOptimise.m version 1.1
+
+
 
 
 if nargin < 3

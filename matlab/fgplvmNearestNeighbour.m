@@ -1,8 +1,14 @@
 function err = fgplvmNearestNeighbour(model, lbls)
 
 % FGPLVMNEARESTNEIGHBOUR Give the number of errors in latent space for 1 nearest neighbour.
+%
+% err = fgplvmNearestNeighbour(model, lbls)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% fgplvmNearestNeighbour.m version 1.1
+
+
 
 d = dist2(model.X, model.X);
 for i = 1:size(model.X, 1); 

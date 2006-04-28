@@ -1,8 +1,14 @@
 function [gmu, gsigmavar] = gpPosteriorGradMeanVar(model, X);
 
 % GPPOSTERIORGRADMEANVAR Gadient of the mean and variances of the posterior at points given by X.
+%
+% [gmu, gsigmavar] = gpPosteriorGradMeanVar(model, X);
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% gpPosteriorGradMeanVar.m version 1.2
+
+
 
 
 if ~isfield(model, 'alpha')

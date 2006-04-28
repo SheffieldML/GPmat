@@ -1,8 +1,14 @@
 function [model, lbls] = fgplvmReadFromFID(FID)
 
 % FGPLVMREADFROMFID Load from a FID produced by the C++ implementation.
+%
+% [model, lbls] = fgplvmReadFromFID(FID)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% fgplvmReadFromFID.m version 1.2
+
+
 
 lineStr = getline(FID);
 tokens = tokenise(lineStr, '=');

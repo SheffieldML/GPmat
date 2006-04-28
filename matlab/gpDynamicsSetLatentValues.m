@@ -1,8 +1,14 @@
 function model = gpDynamicsSetLatentValues(model, X)
 
 % GPDYNAMICSSETLATENTVALUES Set the latent values inside the model.
+%
+% model = gpDynamicsSetLatentValues(model, X)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% gpDynamicsSetLatentValues.m version 1.1
+
+
 
 model.X = X(1:end-1, :);
 if model.diff

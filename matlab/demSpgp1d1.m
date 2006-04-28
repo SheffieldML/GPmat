@@ -1,6 +1,11 @@
-% DEMSPGP1D1 Do a simple 1-D regression after Snelson & Ghahramani's example.
+% DEMSPGP1Dd Do a simple 1-D regression after Snelson & Ghahramani's example.
+%
+% 
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% demSpgp1d1.m version 1.4
+
+
 
 % Fix seeds
 randn('seed', 1e5);
@@ -15,7 +20,7 @@ experimentNo = 1;
 % Set up model
 options = gpOptions('dtc');
 options.numActive = 9;
-
+options.beta=1e-4;
 % use the deterministic training conditional.
 q = size(X, 2);
 d = size(y, 2);
@@ -26,7 +31,7 @@ model = gpCreate(q, d, X, y, options);
 %model = gpExpandParam(model, params);
 
 % Optimise the model.
-iters = 1000;
+iters = 1;
 display = 1;
 
 model = gpOptimise(model, display, iters);
@@ -37,4 +42,4 @@ capName(1) = upper(capName(1));
 save(['dem' capName num2str(experimentNo) '.mat'], 'model');
 
 
-demSpgpd1Plot
+demSpgp1dPlot

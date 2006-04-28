@@ -1,11 +1,17 @@
 function model = gpExpandParam(model, params)
 
 % GPEXPANDPARAM Expand a parameter vector into a GP model.
+%
+% model = gpExpandParam(model, params)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% gpExpandParam.m version 1.3
 
 
-if strcmp(model.approx, 'ftc') | model.fixInducing
+
+
+if strcmp(model.approx, 'ftc') | strcmp(model.approx, 'nftc') | model.fixInducing
   endVal = 0;
 else
   startVal = 1;
@@ -32,6 +38,8 @@ switch model.approx
  case 'ftc'
   model = gpUpdateKernels(model, model.X, model.X_u);
  case {'dtc', 'fitc', 'pitc'}
+  model = gpUpdateKernels(model, model.X, model.X_u, params(end));
+ case 'nftc'
   model = gpUpdateKernels(model, model.X, model.X_u, params(end));
  otherwise
   error('Unknown approximation type.')

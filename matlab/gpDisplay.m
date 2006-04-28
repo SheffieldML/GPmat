@@ -1,8 +1,14 @@
 function gpDisplay(model, spaceNum)
 
 % GPDISPLAY Display a Gaussian process model.
+%
+% gpDisplay(model, spaceNum)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% gpDisplay.m version 1.1
+
+
 
 if nargin > 1
   spacing = repmat(32, 1, spaceNum);

@@ -1,8 +1,14 @@
 function g = gpDynamicsLogLikeGradients(model)
 
 % GPDYNAMICSLOGLIKEGRADIENTS Gradients of the GP dynamics wrt parameters.
+%
+% g = gpDynamicsLogLikeGradients(model)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% gpDynamicsLogLikeGradients.m version 1.1
+
+
 
 if model.k ==0 & ~model.learn & ~model.learnScales
   g = [];

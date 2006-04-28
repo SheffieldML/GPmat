@@ -1,8 +1,14 @@
 function ind = gpDataIndices(model, dimNo, blockNo)
 
 % GPDATAINDICES Return indices of present data.
+%
+% ind = gpDataIndices(model, dimNo, blockNo)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% gpDataIndices.m version 1.1
+
+
 
 
 if nargin > 2

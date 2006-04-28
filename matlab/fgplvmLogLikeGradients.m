@@ -1,8 +1,14 @@
 function g = fgplvmLogLikeGradients(model)
 
 % FGPLVMLOGLIKEGRADIENTS Compute the gradients of the EZFT sparse covariance.
+%
+% g = fgplvmLogLikeGradients(model)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% fgplvmLogLikeGradients.m version 1.3
+
+
 
 
 [gParam, gX_u, gX] = gpLogLikeGradients(model);
@@ -34,7 +40,7 @@ end
 gParam = [gParam gDynParam];
 
 % Decide where to include gX_u.
-if ~strcmp(model.approx, 'ftc') & model.fixInducing
+if ~strcmp(model.approx, 'ftc') & ~strcmp(model.approx, 'nftc') & model.fixInducing 
   gX(model.inducingIndices, :) = gX(model.inducingIndices, :) + gX_u;
 else
   gParam = [gX_u(:)' gParam];

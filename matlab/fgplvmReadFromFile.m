@@ -1,8 +1,14 @@
 function [model,labels] = fgplvmReadFromFile(fileName)
 
 % FGPLVMREADFROMFILE Load a file produced by the c++ implementation.
+%
+% [model,labels] = fgplvmReadFromFile(fileName)
+%
 
-% FGPLVM
+% Copyright (c) 2006 Neil D. Lawrence
+% fgplvmReadFromFile.m version 1.1
+
+
 
 FID = fopen(fileName);
 if FID==-1
