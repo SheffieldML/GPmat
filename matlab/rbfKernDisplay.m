@@ -27,4 +27,4 @@ fprintf(spacing);
 fprintf('RBF inverse width: %2.4f (length scale %2.4f)\n', ...
         kern.inverseWidth, 1/sqrt(kern.inverseWidth));
 fprintf(spacing);
-fprintf('RBF inverse width: %2.4f\n', kern.inverseWidth)
+fprintf('RBF variance: %2.4f\n', kern.variance)

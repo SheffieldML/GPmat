@@ -20,6 +20,8 @@ function kern = kernExpandParam(kern, params)
 % positive).
 %
 % SEEALSO : kernExtractParam, scg, conjgrad
+%
+% COPYRIGHT : Neil D. Lawrence, 2003, 2004, 2005, 2006
 
 % KERN
 

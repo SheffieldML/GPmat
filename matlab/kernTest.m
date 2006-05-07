@@ -1,6 +1,21 @@
-function kern = kernTest(kernType);
+function kernRet = kernTest(kernType);
 
 % KERNTEST Run some tests on the specified kernel.
+% FORMAT
+% DESC runs some tests on a kernel with the specified type to ensure it is
+% correctly implemented.
+% ARG kernType : type of kernel to test. For example, 'rbf' or
+% {'cmpnd', 'rbf', 'lin', 'white'}.
+% RETURN kern : the kernel that was generated for the tests.
+% 
+% DESC runs some tests on a given kernel structure to ensure it is
+% correctly implemented.
+% ARG kern : kernel structure to test.
+% RETURN kern : the kernel as it was used in the tests.
+% 
+% SEEALSO : kernCreate
+%
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
 % KERN
 
@@ -10,23 +25,25 @@ numIn = 4;
 % Generate some x positions.
 x = randn(numData, numIn);
 x2 = randn(numData/2, numIn);
-kern = kernCreate(x, kernType);
-kern = kernParamInit(kern);
-
-if exist([kern.type 'KernSetIndex'])==2 
-  for i = 1:length(kern.comp)
-    if rand(1)>0.5
-      indices = randperm(numIn);
-      indices = indices(1:ceil(rand(1)*numIn));
-      kern = kernSetIndex(kern, i, indices);
+if isstruct(kernType)
+  kern = kernType;
+else
+  kern = kernCreate(x, kernType);
+  if exist([kern.type 'KernSetIndex'])==2 
+    for i = 1:length(kern.comp)
+      if rand(1)>0.5
+        indices = randperm(numIn);
+        indices = indices(1:ceil(rand(1)*numIn));
+        kern = kernSetIndex(kern, i, indices);
+      end
     end
   end
+  
+  % Set the parameters randomly.
+  params = kernExtractParam(kern);
+  params = randn(size(params))./sqrt(randn(size(params)).^2);
+  kern = kernExpandParam(kern, params);
 end
-
-% Set the parameters randomly.
-params = kernExtractParam(kern);
-params = randn(size(params))./sqrt(randn(size(params)).^2);
-kern = kernExpandParam(kern, params);
 
 covGrad = ones(numData);
 epsilon = 1e-6;
@@ -158,5 +175,11 @@ fprintf('Param X2 max diff: %2.6f.\n', param2MaxDiff)
 fprintf('X max diff: %2.6f.\n', xMaxDiff)
 fprintf('XDiag max diff: %2.6f.\n', xDiagMaxDiff)
 fprintf('\n');
-kernDisplay(kern);
+
+if nargout > 0
+  kernRet = kern;
+else
+  kernDisplay(kern);
+end
+
 % We don't test kernCompute(kern, x, x2) here at all!

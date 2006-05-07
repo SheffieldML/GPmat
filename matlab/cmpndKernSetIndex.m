@@ -16,3 +16,10 @@ end
 kern.comp{component}.inputDimension = length(indices);
 kern.comp{component}.index = indices;
 kern.comp{component} = kernParamInit(kern.comp{component});
+kern.nParams = 0;
+for i = 1:length(kern.comp)
+  kern.nParams = kern.nParams + kern.comp{i}.nParams;
+end
+
+
+kern.paramGroups = speye(kern.nParams);

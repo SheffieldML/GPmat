@@ -164,18 +164,30 @@ prefix + 'KernExpandParam.m' :
 
 ''',
 prefix + 'KernExtractParam.m' :
-'''function params = ''' + prefix + '''KernExtractParam(kern)
+'''function [params, names] = ''' + prefix + '''KernExtractParam(kern)
 
 % ''' + ucPrefix + '''KERNEXTRACTPARAM Extract parameters from the ''' + ucPrefix + ''' kernel structure.
 % FORMAT
-% DESC Extract parameters from the ''' + longName + ''' kernel structure into a vector of
-% parameters for optimisation.
+% DESC extracts parameters from the ''' + longName + '''
+% kernel structure into a vector of parameters for optimisation.
 % ARG kern : the kernel structure containing the parameters to be
 % extracted.
 % RETURN param : vector of parameters extracted from the kernel. If
 % the field \'transforms\' is not empty in the kernel structure, the
 % parameters will be transformed before optimisation (for example
 % positive only parameters could be logged before being returned).
+%
+% FORMAT
+% DESC extracts parameters and parameter names from the ''' + longName + '''
+% kernel structure.
+% ARG kern : the kernel structure containing the parameters to be
+% extracted.
+% RETURN param : vector of parameters extracted from the kernel. If
+% the field \'transforms\' is not empty in the kernel structure, the
+% parameters will be transformed before optimisation (for example
+% positive only parameters could be logged before being returned).
+% RETURN names : cell array of strings containing names for each
+% parameter.
 %
 % SEEALSO ''' + prefix + '''KernParamInit, ''' + prefix + '''KernExpandParam, kernExtractParam, scg, conjgrad''' + copyRightText + '''
 %
