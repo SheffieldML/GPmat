@@ -1,0 +1,12 @@
+% The automatic relevance determination version of the linear
+% kernel (LINARD) is the simple inner product kernel with feature
+% selection applied.
+%
+% k(x_i, x_j) = sigma2 * x_i'*A* x_j
+%
+% where A is a diagonal matrix of values constrained to be between
+% zero and one. These parameters are stored in the field
+% 'inputScales'. There is also the parameter, sigma2, which is stored
+% in the field kern.variance.
+%
+% SEEALSO : linKernParamInit, rbfardKernParamInit

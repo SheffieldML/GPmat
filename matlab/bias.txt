@@ -1,0 +1,9 @@
+% The bias kernel arises from placing a prior over the bias with a
+% variance given by the kern.variance parameter. It allows the
+% output function to move up and down. 
+%
+% This kernel is not intended to be used independently, it is
+% provided so that it may be combined with other kernels in a
+% compound kernel.
+%
+% SEEALSO : cmpndKernParamInit

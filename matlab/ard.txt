@@ -1,0 +1,6 @@
+% This kernel is a 'pre-packaged' compound kernel of the form
+% {'rbfard', 'linard', 'bias', 'white'}. The input scales are shared
+% between the linear and RBF ARD kernels. Using this kernel removes
+% the overhead of mutliple calls through the 'cmpnd' kernel.
+% 
+% SEEALSO sqexpKernParamInit

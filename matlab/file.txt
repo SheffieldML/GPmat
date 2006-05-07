@@ -1,0 +1,10 @@
+% The file (FILE) kernel is designed for working with pre-computed
+% kernel files that are saved on disk. It loads in a file the
+% first time it is accessed and then caches it in memory (in single
+% precision). The cacheing is done in by the fileKernRead command.
+%
+% This kernel type was originally written for working with Bill
+% Stafford Noble's yeast data, available at
+% http://noble.gs.washington.edu/proj/yeast/
+%
+% SEEALSO : fileKernRead
