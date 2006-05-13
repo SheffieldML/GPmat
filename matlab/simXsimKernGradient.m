@@ -36,6 +36,8 @@ function [g1, g2] = simXsimKernGradient(simKern1, simKern2, t1, t2, covGrad)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
+% KERN
+
 arg{1}=t1;
 if nargin < 5
   covGrad = t2;

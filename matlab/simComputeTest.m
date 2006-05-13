@@ -1,5 +1,7 @@
 % SIMCOMPUTETEST Test the file simComputeH.
 
+% KERN
+
 t1 = linspace(0, 1, 7)';
 t2 = linspace(0, 1, 7)';
 D_i = 0.5;
