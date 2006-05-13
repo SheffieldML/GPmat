@@ -6,7 +6,10 @@ function g = kbrOutputGrad(model, X)
 
 
 numData = size(X, 1);
-g(:, :, 1) = [model.K zeros(size(model.K)) ones(numData, 1) ...
-                    zeros(numData, 1)];
-g(:, :, 2) = [zeros(size(model.K)) model.K zeros(numData, 1) ...
-                    ones(numData, 1)];
+for i = 1:model.outputDim
+  startZeros = zeros(numData, numData*(i - 1));
+  finishZeros = zeros(numData, numData*(model.outputDim-i));
+  startZeros2 = zeros(numData, (i - 1));
+  finishZeros2 = zeros(numData, (model.outputDim-i));
+  g(:, :, i) = [startZeros model.K finishZeros startZeros2 ones(numData, 1) finishZeros2];
+end

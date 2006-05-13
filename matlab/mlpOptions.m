@@ -6,3 +6,4 @@ function options = mlpOptions
 
 options.hiddenDim = 20;
 options.activeFunc = 'linear';
+options.optimiser = 'conjgrad';

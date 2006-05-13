@@ -14,4 +14,4 @@ end
 options = optOptions;
 options(14) = iters;
 options(1) = display;
-model = netopt(model, options, X, Y, 'scg');  
+model = netopt(model, options, X, Y, model.optimiser);  
