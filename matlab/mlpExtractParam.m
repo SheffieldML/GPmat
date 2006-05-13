@@ -1,6 +1,6 @@
 function [params, names] = mlpExtractParam(model)
 
-% MLPEXTRACTPARAMS Wrapper for NETLAB's mlppak.
+% MLPEXTRACTPARAM Wrapper for NETLAB's mlppak.
 
 % MLTOOLS
 

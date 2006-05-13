@@ -1,6 +1,6 @@
 function params = rbfExtractParam(model)
 
-% RBFEXTRACTPARAMS Wrapper for NETLAB's rbfpak.
+% RBFEXTRACTPARAM Wrapper for NETLAB's rbfpak.
 
 % MLTOOLS
 
