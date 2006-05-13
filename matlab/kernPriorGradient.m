@@ -6,7 +6,7 @@ function g = kernPriorGradient(kern)
 
 g = zeros(1, kern.nParams);
 switch kern.type
- case 'cmpnd'
+ case {'cmpnd', 'multi', 'tensor'}
   startVal = 1;
   endVal = 0;
   for i = 1:length(kern.comp)

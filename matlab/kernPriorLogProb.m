@@ -6,7 +6,7 @@ function L = kernPriorLogProb(kern)
 
 L = 0;
 switch kern.type
- case 'cmpnd'
+ case {'cmpnd', 'multi', 'tensor'}
   for i = 1:length(kern.comp)
     L = L + kernPriorLogProb(kern.comp{i});
   end

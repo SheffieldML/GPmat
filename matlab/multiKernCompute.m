@@ -30,7 +30,9 @@ K = zeros(kern.numBlocks*dim1, kern.numBlocks*dim2);
 for i = 1:kern.numBlocks
   startOne = (i-1)*dim1 + 1;
   endOne = i*dim1;
-  K(startOne:endOne, (i-1)*dim2 + 1:i*dim2) = multiKernComputeBlock(kern, ...
+  startThree = (i-1)*dim2 + 1;
+  endThree = i*dim2;
+  K(startOne:endOne, startThree:endThree) = multiKernComputeBlock(kern, ...
                                                     varargin{:}, i, ...
                                                     i);
   for j = 1:i-1
@@ -40,7 +42,15 @@ for i = 1:kern.numBlocks
       K(startOne:endOne, startTwo:endTwo) = multiKernComputeBlock(kern, ...
                                                         varargin{:}, ...
                                                         i, j);
-      K(startTwo:endTwo, startOne:endOne) = K(startOne:endOne, startTwo:endTwo)';
+      if length(varargin)<2
+        K(startTwo:endTwo, startOne:endOne) = K(startOne:endOne, ...
+                                                startTwo:endTwo)';
+      else
+        startFour = (j-1)*dim1 + 1;
+        endFour = j*dim1;
+        K(startFour:endFour, startThree:endThree) = ...
+            multiKernComputeBlock(kern, varargin{end:-1:1}, j, i)';
+      end
     end
   end
 end

@@ -1,6 +1,6 @@
 function k = kernDiagCompute(kern, x)
 
-% KERNELCOMPUTE Compute the kernel given the parameters and X.
+% KERNDIAGCOMPUTE Compute the kernel given the parameters and X.
 % FORMAT
 % DESC computes the diagonal of a kernel matrix for the given kernel.
 % ARG kern : kernel structure to be computed.
@@ -9,6 +9,8 @@ function k = kernDiagCompute(kern, x)
 % kernel structure.
 %
 % SEEALSO : kernCompute
+%
+% COPYRIGHT : Neil D. Lawrence, 2003, 2004, 2005, 2006
 
 % KERN
 

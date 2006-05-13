@@ -51,9 +51,26 @@ if ~isfield(kern, 'comp')
   kern.comp=cell(0);
 end
 for i = 1:length(kern.comp)
+  
+  % Set up the component kernels.
   kern.comp{i} = kernParamInit(kern.comp{i});
   kern.nParams = kern.nParams + kern.comp{i}.nParams;
   kern.comp{i}.index = [];
+  
+  % Check whether the kernel is a multi-output block kernel.
+  if isfield(kern.comp{i}, 'numBlocks')
+    if i == 1
+      kern.numBlocks = kern.comp{i}.numBlocks;
+    else
+      if ~isfield(kern, 'numBlocks') | kern.numBlocks ~= kern.comp{i}.numBlocks
+        error('Compound of multi kerns with different numbers of blocks')
+      end
+    end
+  else
+    if isfield(kern, 'numBlocks')
+      error('Attempt to combine multi-kernel with non multi kernel.')
+    end
+  end
 end
 kern.paramGroups = speye(kern.nParams);
 

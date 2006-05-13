@@ -1,7 +1,6 @@
-#!/usr/bin/perl
-
-# FOr creating files for new kernels. Run as 
 #!/usr/bin/env python
+
+# For creating files for new kernels. Run as 
 
 # kernelGenerator.py {kernel short name} {kernel long name} [CopyrightName YearOne YearTwo etc]
 

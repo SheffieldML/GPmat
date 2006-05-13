@@ -1,4 +1,4 @@
-function multiKernDisplay(kern, spacing)
+function multiKernDisplay(kern, varargin)
 
 % MULTIKERNDISPLAY Display parameters of the MULTI kernel.
 % FORMAT

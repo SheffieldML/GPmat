@@ -46,7 +46,7 @@ if iscell(kernType) & ~strcmp(kernType{1}, 'multi')
 end
   
 % Generate some x positions.
-x = randn(numData, numIn);
+x = linspace(-1, 1, numData)'; %randn(numData, numIn);
 x2 = randn(numData/2, numIn);
 if isstruct(kernType)
   kern = kernType;
@@ -61,7 +61,9 @@ else
   kern = kernExpandParam(kern, params);
 end
 
-covGrad = ones(numData*kern.numBlocks);
+covGrad = randn(numData*kern.numBlocks);
+covGrad = covGrad*covGrad';
+%covGrad = ones(numData*kern.numBlocks);
 epsilon = 1e-6;
 params = kernExtractParam(kern);
 origParams = params;
@@ -69,10 +71,10 @@ for i = 1:length(params);
   params = origParams;
   params(i) = origParams(i) + epsilon;
   kern = kernExpandParam(kern, params);
-  Lplus(i) = full(sum(sum(kernCompute(kern, x))));
+  Lplus(i) = full(sum(sum(kernCompute(kern, x).*covGrad)));
   params(i) = origParams(i) - epsilon;
   kern = kernExpandParam(kern, params);
-  Lminus(i) = full(sum(sum(kernCompute(kern, x))));
+  Lminus(i) = full(sum(sum(kernCompute(kern, x).*covGrad)));
 end
 params = origParams;
 kern = kernExpandParam(kern, params);
@@ -147,7 +149,7 @@ traceK =  full(trace(K));
 traceK2 = full(sum(kernDiagCompute(kern, x)));
 traceDiff = traceK - traceK2; 
 
-covGrad = ones(numData*kern.numBlocks, numData/2*kern.numBlocks);
+covGrad = randn(numData*kern.numBlocks, numData/2*kern.numBlocks);
 epsilon = 1e-6;
 params = kernExtractParam(kern);
 origParams = params;
@@ -157,10 +159,10 @@ for i = 1:length(params);
   params = origParams;
   params(i) = origParams(i) + epsilon;
   kern = kernExpandParam(kern, params);
-  Lplus(i) = full(sum(sum(kernCompute(kern, x, x2))));
+  Lplus(i) = full(sum(sum(covGrad.*kernCompute(kern, x, x2))));
   params(i) = origParams(i) - epsilon;
   kern = kernExpandParam(kern, params);
-  Lminus(i) = full(sum(sum(kernCompute(kern, x, x2))));
+  Lminus(i) = full(sum(sum(covGrad.*kernCompute(kern, x, x2))));
 end
 params = origParams;
 kern = kernExpandParam(kern, params);

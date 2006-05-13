@@ -1,3 +1,5 @@
 # These are files that should be packaged for the kernel software
 dir: html
 ~/mlprojects/kern/html/index.html
+dir: .
+~/mlprojects/kern/matlab/kernelGenerator.py

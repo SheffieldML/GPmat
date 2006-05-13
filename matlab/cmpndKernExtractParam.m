@@ -37,6 +37,8 @@ for i = 1:length(kern.comp)
   end
     startVal = endVal + 1;
 end
+
+% If any parameters are 'tied together' deal with them.
 paramGroups = kern.paramGroups;
 for i = 1:size(paramGroups, 2)
   ind = find(paramGroups(:, i));

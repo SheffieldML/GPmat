@@ -1,5 +1,15 @@
 Please note that this toolbox requires MATLAB 7.0 or higher to run. The toolbox relies on the optimi and ndlutil toolboxes, available at http://www.dcs.shef.ac.uk/~neil/optimi/downloadFiles and http://www.dcs.shef.ac.uk/~neil/ndultil/downloadFiles/.
 
+Version 0.161
+-------------
+
+Updated with the Single Input Motif kernel, and improved the documentation.
+
+Version 0.16
+------------
+
+An intermediate release with some problems.
+
 Version 0.151
 -------------
  
