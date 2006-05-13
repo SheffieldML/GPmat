@@ -26,6 +26,8 @@ function K = simXsimKernCompute(simKern1, simKern2, t1, t2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
+% KERN
+
 if nargin < 4
   t2 = t1;
 end
