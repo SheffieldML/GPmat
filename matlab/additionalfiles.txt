@@ -1,0 +1,12 @@
+# These are files that should be packaged for the GPSIM software
+dir: html
+~/mlprojects/gpsim/html/index.html
+~/mlprojects/gpsim/html/demBarenco1_profile1.png
+~/mlprojects/gpsim/html/demBarenco1_profile2.png
+~/mlprojects/gpsim/html/demBarenco1_profile3.png
+~/mlprojects/gpsim/html/demBarenco1_basal.png
+~/mlprojects/gpsim/html/demBarenco1_sensitivity.png
+~/mlprojects/gpsim/html/demBarenco1_decay.png
+dir: data
+~/mlprojects/gpsim/matlab/data/resultsMartino_exprs.xls
+~/mlprojects/gpsim/matlab/data/resultsMartino_se.xls
