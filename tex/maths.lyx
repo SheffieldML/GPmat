@@ -1,13 +1,14 @@
 #LyX 1.3 created this file. For more info see http://www.lyx.org/
 \lyxformat 221
-\textclass article
+\textclass sheftech
 \language english
 \inputencoding auto
 \fontscheme default
 \graphics default
 \paperfontsize default
+\spacing single 
 \papersize Default
-\paperpackage a4
+\paperpackage widemarginsa4
 \use_geometry 0
 \use_amsmath 0
 \use_natbib 0
@@ -23,41 +24,57 @@
 \papersides 1
 \paperpagestyle default
 
+\layout Title
+
+Gaussian Processes for Single Input Motifs
+\layout Standard
+
+The or iginal inspiration for this system is in 
+\begin_inset LatexCommand \cite{Barenco:ranked06}
+
+\end_inset 
+
+ other work in this area has been performed by 
+\begin_inset LatexCommand \cite{Rogers:model06}
+
+\end_inset 
+
+.
 \layout Standard
 
 
 \begin_inset Formula \[
-\frac{dx_{i}\left(t\right)}{dt}=B_{i}+C_{i}f\left(t\right)-D_{i}x\left(t\right)\]
+\frac{dx_{i}\left(t\right)}{dt}=C_{i}f\left(t\right)-D_{i}x\left(t\right)\]
 
 \end_inset 
 
 Laplace transforms then give
 \begin_inset Formula \[
-sX_{i}\left(s\right)=B_{i}+C_{i}F\left(s\right)-D_{i}X\left(s\right)\]
+sX_{i}\left(s\right)-x_{i}\left(0\right)=C_{i}F\left(s\right)-D_{i}X\left(s\right)\]
 
 \end_inset 
 
-which can be rearranged to form
+which, ignoring the initial condition, can be rearranged to form
 \begin_inset Formula \[
-X_{i}\left(s\right)=\frac{B_{i}}{s+D_{i}}+\frac{C_{i}}{s+D_{i}}F\left(s\right)\]
+X_{i}\left(s\right)=\frac{x_{i}\left(0\right)}{s+D_{i}}+\frac{C_{i}}{s+D_{i}}F\left(s\right)\]
 
 \end_inset 
 
 which implies that
 \begin_inset Formula \[
-x_{i}\left(t\right)=B_{i}e^{-D_{i}t}+C_{i}\int_{0}^{t}e^{-D_{i}\left(t-u\right)}f\left(u\right)du\]
+x_{i}\left(t\right)=x_{i}\left(0\right)e^{-D_{i}t}+C_{i}\int_{0}^{t}e^{-D_{i}\left(t-u\right)}f\left(u\right)du\]
 
 \end_inset 
 
 which can be rewritten as
 \begin_inset Formula \[
-x_{i}\left(t\right)=e^{-D_{i}t}\left(B_{i}+C_{i}\int_{0}^{t}e^{D_{i}u}f\left(u\right)du\right)\]
+x_{i}\left(t\right)=e^{-D_{i}t}\left(x_{i}\left(0\right)+C_{i}\int_{0}^{t}e^{D_{i}u}f\left(u\right)du\right)\]
 
 \end_inset 
 
 we will define
 \begin_inset Formula \[
-g_{i}\left(t\right)=B_{i}+C_{i}\int_{0}^{t}e^{D_{i}u}f\left(u\right)du.\]
+g_{i}\left(t\right)=x_{i}\left(0\right)+C_{i}\int_{0}^{t}e^{D_{i}u}f\left(u\right)du.\]
 
 \end_inset 
 
@@ -130,9 +147,9 @@ e^{D_{j}\sigma s^{\prime}}e^{-\left(s-s^{\prime}\right)^{2}} & = & e^{-s^{2}+2ss
 
 so we have
 \begin_inset Formula \begin{eqnarray*}
-\int_{0}^{\frac{t^{\prime}}{\sigma}}e^{D_{j}\sigma s^{\prime}}e^{-\left(s-s^{\prime}\right)^{2}} & = & \frac{\sqrt{\pi}}{2}e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}e^{D_{j}\sigma s}\left[\erf\left(s^{\prime}-\left(s+\frac{D_{j}\sigma}{2}\right)\right)\right]_{0}^{\frac{t^{\prime}}{\sigma}}\\
- & = & \frac{\sqrt{\pi}}{2}e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}e^{D_{j}\sigma s}\left[\erf\left(\frac{t^{\prime}}{\sigma}-\left(s+\frac{D_{j}\sigma}{2}\right)\right)-\erf\left(-\left(s+\frac{D_{j}\sigma}{2}\right)\right)\right]\\
- & = & \frac{\sqrt{\pi}}{2}e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}e^{D_{j}\sigma s}\left[\erf\left(s+\frac{D_{j}\sigma}{2}\right)-\erf\left(s+\frac{D_{j}\sigma}{2}-\frac{t^{\prime}}{\sigma}\right)\right]\end{eqnarray*}
+\int_{0}^{\frac{t^{\prime}}{\sigma}}e^{D_{j}\sigma s^{\prime}}e^{-\left(s-s^{\prime}\right)^{2}} & = & \frac{\sqrt{\pi}}{2}e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}e^{D_{j}\sigma s}\left[\mathrm{erf}\left(s^{\prime}-\left(s+\frac{D_{j}\sigma}{2}\right)\right)\right]_{0}^{\frac{t^{\prime}}{\sigma}}\\
+ & = & \frac{\sqrt{\pi}}{2}e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}e^{D_{j}\sigma s}\left[\mathrm{erf}\left(\frac{t^{\prime}}{\sigma}-\left(s+\frac{D_{j}\sigma}{2}\right)\right)-\mathrm{erf}\left(-\left(s+\frac{D_{j}\sigma}{2}\right)\right)\right]\\
+ & = & \frac{\sqrt{\pi}}{2}e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}e^{D_{j}\sigma s}\left[\mathrm{erf}\left(s+\frac{D_{j}\sigma}{2}\right)-\mathrm{erf}\left(s+\frac{D_{j}\sigma}{2}-\frac{t^{\prime}}{\sigma}\right)\right]\end{eqnarray*}
 
 \end_inset 
 
@@ -143,15 +160,15 @@ where we have used the fact that
 .
  The integral therefore becomes
 \begin_inset Formula \[
-k_{g_{i}g_{j}}\left(t,t^{\prime}\right)=\frac{\sigma^{2}\sqrt{\pi}}{2}e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}\int_{0}^{\frac{t}{\sigma}}e^{\left(D_{i}+D_{j}\right)\sigma s}\left[\erf\left(s+\frac{D_{j}\sigma}{2}\right)-\erf\left(s+\frac{D_{j}\sigma}{2}-\frac{t^{\prime}}{\sigma}\right)\right]ds\]
+k_{g_{i}g_{j}}\left(t,t^{\prime}\right)=\frac{\sigma^{2}\sqrt{\pi}}{2}e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}\int_{0}^{\frac{t}{\sigma}}e^{\left(D_{i}+D_{j}\right)\sigma s}\left[\mathrm{erf}\left(s+\frac{D_{j}\sigma}{2}\right)-\mathrm{erf}\left(s+\frac{D_{j}\sigma}{2}-\frac{t^{\prime}}{\sigma}\right)\right]ds\]
 
 \end_inset 
 
 which can be solved by parts.
 \begin_inset Formula \begin{eqnarray*}
-k_{g_{i}g_{j}}\left(t,t^{\prime}\right) & = & \frac{\sqrt{\pi}\sigma}{2\left(D_{i}+D_{j}\right)}e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}\left\{ \left[e^{\left(D_{i}+D_{j}\right)\sigma s}\left[\erf\left(s+\frac{D_{j}\sigma}{2}\right)-\erf\left(s+\frac{D_{j}\sigma}{2}-\frac{t^{\prime}}{\sigma}\right)\right]\right]_{0}^{\frac{t}{\sigma}}-I\right\} \\
- & = & \frac{\sqrt{\pi}\sigma}{2\left(D_{i}+D_{j}\right)}e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}\left\{ e^{\left(D_{i}+D_{j}\right)t}\left[\erf\left(\frac{t}{\sigma}+\frac{D_{j}\sigma}{2}\right)-\erf\left(\frac{D_{j}\sigma}{2}-\frac{t^{\prime}-t}{\sigma}\right)\right]\right.\\
- &  & \left.-\left[\erf\left(\frac{D_{j}\sigma}{2}\right)-\erf\left(\frac{D_{j}\sigma}{2}-\frac{t^{\prime}}{\sigma}\right)\right]-I\right\} \end{eqnarray*}
+k_{g_{i}g_{j}}\left(t,t^{\prime}\right) & = & \frac{\sqrt{\pi}\sigma}{2\left(D_{i}+D_{j}\right)}e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}\left\{ \left[e^{\left(D_{i}+D_{j}\right)\sigma s}\left[\mathrm{erf}\left(s+\frac{D_{j}\sigma}{2}\right)-\mathrm{erf}\left(s+\frac{D_{j}\sigma}{2}-\frac{t^{\prime}}{\sigma}\right)\right]\right]_{0}^{\frac{t}{\sigma}}-I\right\} \\
+ & = & \frac{\sqrt{\pi}\sigma}{2\left(D_{i}+D_{j}\right)}e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}\left\{ e^{\left(D_{i}+D_{j}\right)t}\left[\mathrm{erf}\left(\frac{t}{\sigma}+\frac{D_{j}\sigma}{2}\right)-\mathrm{erf}\left(\frac{D_{j}\sigma}{2}-\frac{t^{\prime}-t}{\sigma}\right)\right]\right.\\
+ &  & \left.-\left[\mathrm{erf}\left(\frac{D_{j}\sigma}{2}\right)-\mathrm{erf}\left(\frac{D_{j}\sigma}{2}-\frac{t^{\prime}}{\sigma}\right)\right]-I\right\} \end{eqnarray*}
 
 \end_inset 
 
@@ -211,10 +228,250 @@ I & = & e^{-\left(\frac{D_{j}\sigma}{2}\right)^{2}}e^{\left(\frac{D_{i}\sigma}{2
 
 
 \begin_inset Formula \begin{eqnarray*}
-k_{g_{i}g_{j}}\left(t,t^{\prime}\right) & = & \frac{\sqrt{\pi}\sigma}{2\left(D_{i}+D_{j}\right)}\left[e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}\left\{ e^{\left(D_{i}+D_{j}\right)t}\left[\erf\left(\frac{t}{\sigma}+\frac{D_{j}\sigma}{2}\right)-\erf\left(\frac{D_{j}\sigma}{2}-\frac{t^{\prime}-t}{\sigma}\right)\right]\right.\right.\\
- &  & \left.-\left[\erf\left(\frac{D_{j}\sigma}{2}\right)-\erf\left(\frac{D_{j}\sigma}{2}-\frac{t^{\prime}}{\sigma}\right)\right]\right\} \\
- &  & +e^{\left(\frac{D_{i}\sigma}{2}\right)^{2}}\left\{ e^{\left(D_{i}+D_{j}\right)t^{\prime}}\left[\erf\left(\frac{t^{\prime}-t}{\sigma}-\frac{D_{i}\sigma}{2}\right)+\erf\left(\frac{t^{\prime}}{\sigma}+\frac{D_{i}\sigma}{2}\right)\right]\right.\\
- &  & \left.\left.-\left[\erf\left(\frac{t}{\sigma}-\frac{D_{i}\sigma}{2}\right)+\erf\left(\frac{D_{i}\sigma}{2}\right)\right]\right\} \right]\end{eqnarray*}
+k_{g_{i}g_{j}}\left(t,t^{\prime}\right) & = & \frac{\sqrt{\pi}\sigma}{2\left(D_{i}+D_{j}\right)}\left[e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}\left\{ e^{\left(D_{i}+D_{j}\right)t}\left[\mathrm{erf}\left(\frac{t}{\sigma}+\frac{D_{j}\sigma}{2}\right)-\mathrm{erf}\left(\frac{D_{j}\sigma}{2}-\frac{t^{\prime}-t}{\sigma}\right)\right]\right.\right.\\
+ &  & \left.-\left[\mathrm{erf}\left(\frac{D_{j}\sigma}{2}\right)-\mathrm{erf}\left(\frac{D_{j}\sigma}{2}-\frac{t^{\prime}}{\sigma}\right)\right]\right\} \\
+ &  & +e^{\left(\frac{D_{i}\sigma}{2}\right)^{2}}\left\{ e^{\left(D_{i}+D_{j}\right)t^{\prime}}\left[\mathrm{erf}\left(\frac{t-t^{\prime}}{\sigma}-\frac{D_{i}\sigma}{2}\right)+\mathrm{erf}\left(\frac{t^{\prime}}{\sigma}+\frac{D_{i}\sigma}{2}\right)\right]\right.\\
+ &  & \left.\left.-\left[\mathrm{erf}\left(\frac{t}{\sigma}-\frac{D_{i}\sigma}{2}\right)+\mathrm{erf}\left(\frac{D_{i}\sigma}{2}\right)\right]\right\} \right]\end{eqnarray*}
+
+\end_inset 
+
+
+\begin_inset Formula \begin{eqnarray*}
+k_{g_{i}g_{j}}\left(t,t^{\prime}\right) & = & \frac{\sqrt{\pi}\sigma}{2\left(D_{i}+D_{j}\right)}\left[e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}\left\{ e^{\left(D_{i}+D_{j}\right)t}\left[\mathrm{erf}\left(\frac{t^{\prime}-t}{\sigma}-\frac{D_{j}\sigma}{2}\right)+\mathrm{erf}\left(\frac{t}{\sigma}+\frac{D_{j}\sigma}{2}\right)\right]\right.\right.\\
+ &  & \left.-\left[\mathrm{erf}\left(\frac{t^{\prime}}{\sigma}-\frac{D_{j}\sigma}{2}\right)+\mathrm{erf}\left(\frac{D_{j}\sigma}{2}\right)\right]\right\} \\
+ &  & +e^{\left(\frac{D_{i}\sigma}{2}\right)^{2}}\left\{ e^{\left(D_{i}+D_{j}\right)t^{\prime}}\left[\mathrm{erf}\left(\frac{t-t^{\prime}}{\sigma}-\frac{D_{i}\sigma}{2}\right)+\mathrm{erf}\left(\frac{t^{\prime}}{\sigma}+\frac{D_{i}\sigma}{2}\right)\right]\right.\\
+ &  & \left.\left.-\left[\mathrm{erf}\left(\frac{t}{\sigma}-\frac{D_{i}\sigma}{2}\right)+\mathrm{erf}\left(\frac{D_{i}\sigma}{2}\right)\right]\right\} \right]\end{eqnarray*}
+
+\end_inset 
+
+so we have 
+\begin_inset Formula \[
+k_{x_{i}x_{j}}\left(t,t^{\prime}\right)=C_{i}C_{j}e^{-D_{i}t}k_{g_{i}g_{j}}\left(t,t^{\prime}\right)e^{-D_{j}t^{\prime}}\]
+
+\end_inset 
+
+
+\begin_inset Formula \[
+k_{x_{i}x_{j}}\left(t,t^{\prime}\right)=C_{i}C_{j}\frac{\sqrt{\pi}\sigma}{2}\left[h_{ji}\left(t^{\prime},t\right)+h_{ij}\left(t,t^{\prime}\right)\right]\]
+
+\end_inset 
+
+where
+\begin_inset Formula \[
+h_{ji}\left(t^{\prime},t\right)=\frac{e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}}{\left(D_{i}+D_{j}\right)}\left\{ e^{-D_{j}\left(t^{\prime}-t\right)}\left[\mathrm{erf}\left(\frac{t^{\prime}-t}{\sigma}-\frac{D_{j}\sigma}{2}\right)+\mathrm{erf}\left(\frac{t}{\sigma}+\frac{D_{j}\sigma}{2}\right)\right]-e^{-\left(D_{i}t+D_{j}t^{\prime}\right)}\left[\mathrm{erf}\left(\frac{t^{\prime}}{\sigma}-\frac{D_{j}\sigma}{2}\right)+\mathrm{erf}\left(\frac{D_{j}\sigma}{2}\right)\right]\right\} \]
+
+\end_inset 
+
+
+\layout Standard
+
+We also need gradients of the kernel with respect to the parameters,
+\begin_inset Formula \[
+\frac{dk_{x_{i}x_{j}}\left(t,t^{\prime}\right)}{dC_{i}}=\frac{k_{x_{i}x_{j}}\left(t,t^{\prime}\right)}{C_{i}}\]
+
+\end_inset 
+
+
+\begin_inset Formula \begin{eqnarray*}
+\frac{dh_{ji}\left(t^{\prime},t\right)}{dD_{j}} & = & \frac{D_{j}\sigma^{2}h_{ji}\left(t^{\prime},t\right)}{2}-\frac{1}{D_{i}+D_{j}}h_{ji}\left(t^{\prime},t\right)+\frac{e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}}{D_{i}+D_{j}}\left\{ -\left(t^{\prime}-t\right)e^{-D_{j}\left(t^{\prime}-t\right)}\left[\mathrm{erf}\left(\frac{t^{\prime}-t}{\sigma}-\frac{D_{j}\sigma}{2}\right)+\mathrm{erf}\left(\frac{t}{\sigma}+\frac{D_{j}\sigma}{2}\right)\right]\right.\\
+ &  & \left.+t^{\prime}e^{-\left(D_{i}t+D_{j}t^{\prime}\right)}\left[\mathrm{erf}\left(\frac{t^{\prime}}{\sigma}-\frac{D_{j}\sigma}{2}\right)+\mathrm{erf}\left(\frac{D_{j}\sigma}{2}\right)\right]\right\} \\
+ &  & +\frac{\sigma}{\sqrt{\pi}\left(D_{i}+D_{j}\right)}\left\{ \left[-e^{-\frac{\left(t^{\prime}-t\right)^{2}}{\sigma^{2}}}+e^{-\frac{t^{2}}{\sigma^{2}}-D_{j}t^{\prime}}\right]\right.\\
+ &  & \left.+\left[e^{-\frac{t^{\prime2}}{\sigma^{2}}-D_{i}t}-e^{-\left(D_{i}t+D_{j}t^{\prime}\right)}\right]\right\} \end{eqnarray*}
+
+\end_inset 
+
+
+\layout Standard
+
+
+\begin_inset Formula \[
+\frac{dh_{ji}\left(t^{\prime},t\right)}{dD_{i}}=\frac{e^{\left(\frac{D_{j}\sigma}{2}\right)^{2}}}{D_{i}+D_{j}}\left\{ te^{-\left(D_{i}t+D_{j}t^{\prime}\right)}\left[\mathrm{erf}\left(\frac{t^{\prime}}{\sigma}-\frac{D_{j}\sigma}{2}\right)+\mathrm{erf}\left(\frac{D_{j}\sigma}{2}\right)\right]\right\} -\frac{h_{ji}}{D_{i}+D_{j}}\]
+
+\end_inset 
+
+
+\layout Standard
+
+
+\begin_inset Formula \begin{eqnarray*}
+\frac{dh_{ji}\left(t^{\prime},t\right)}{d\sigma} & =\frac{D_{j}^{2}\sigma h_{ji}\left(t^{\prime},t\right)}{2} & +\frac{2}{\sqrt{\pi}\left(D_{i}+D_{j}\right)}\left\{ \left[\left(-\frac{\left(t^{\prime}-t\right)}{\sigma^{2}}-\frac{D_{j}}{2}\right)e^{\left(\frac{-\left(t^{\prime}-t\right)^{2}}{\sigma^{2}}\right)}+\left(-\frac{t}{\sigma^{2}}+\frac{D_{j}}{2}\right)e^{\left(-\frac{t^{2}}{\sigma^{2}}-D_{j}t^{\prime}\right)}\right]\right.\\
+ &  & \left.-\left[\left(-\frac{t^{\prime}}{\sigma^{2}}-\frac{D_{j}}{2}\right)e^{\left(-\frac{t^{\prime^{2}}}{\sigma^{2}}-D_{i}t\right)}+\frac{D_{j}}{2}e^{-\left(D_{i}t+D_{j}t^{\prime}\right)}\right]\right\} \end{eqnarray*}
+
+\end_inset 
+
+
+\layout Subsection*
+
+Cross Covariance between 
+\begin_inset Formula $f$
+\end_inset 
+
+ and 
+\begin_inset Formula $x$
+\end_inset 
+
+
+\layout Standard
+
+Cross Covariance between 
+\begin_inset Formula $f$
+\end_inset 
+
+ and 
+\begin_inset Formula $x$
+\end_inset 
+
+
+\layout Standard
+
+
+\begin_inset Formula \[
+k_{x_{i}f}\left(t,t^{\prime}\right)=e^{-D_{i}t}\int_{0}^{t}e^{D_{i}u}e^{-\frac{\left(u-t^{\prime}\right)}{\sigma^{2}}^{2}}du\]
+
+\end_inset 
+
+substitute 
+\begin_inset Formula $s=\frac{u}{\sigma}$
+\end_inset 
+
+ and 
+\begin_inset Formula $s^{\prime}=\frac{t^{\prime}}{\sigma}$
+\end_inset 
+
+ giving
+\begin_inset Formula \[
+k_{x_{i}f}\left(t,t^{\prime}\right)=\sigma C_{i}e^{-D_{i}t}\int_{0}^{\frac{t}{\sigma}}e^{D_{i}\sigma s}e^{-\left(s-s^{\prime}\right)}ds\]
+
+\end_inset 
+
+
+\begin_inset Formula \begin{eqnarray*}
+e^{D_{i}\sigma s}e^{-\left(s-s^{\prime}\right)} & = & e^{D_{i}\sigma s-s^{2}+2s^{\prime}s-s^{\prime2}}\\
+ & = & e^{-\left(s-\left(\frac{D_{i}\sigma}{2}+s^{\prime}\right)\right)^{2}}e^{\left(\frac{D_{i}\sigma}{2}+s^{\prime}\right)^{2}}e^{-s^{\prime2}}\\
+ & = & e^{-\left(s-\left(\frac{D_{i}\sigma}{2}+s^{\prime}\right)\right)^{2}}e^{\left(\frac{D_{i}\sigma}{2}\right)^{2}}e^{D_{i}\sigma s^{\prime}}\end{eqnarray*}
+
+\end_inset 
+
+
+\begin_inset Formula \begin{eqnarray*}
+k_{x_{i}f}\left(t,t^{\prime}\right) & = & \frac{\sqrt{\pi}\sigma C_{i}}{2}e^{\left(\frac{D_{i}\sigma}{2}\right)^{2}}e^{-D_{i}\left(t-t^{\prime}\right)}\left[\textrm{erf}\left(s-\left(\frac{D_{i}\sigma}{2}+s^{\prime}\right)\right)\right]_{0}^{\frac{t}{\sigma}}\\
+ & = & \frac{\sqrt{\pi}\sigma C_{i}}{2}e^{\left(\frac{D_{i}\sigma}{2}\right)^{2}}e^{-D_{i}\left(t-t^{\prime}\right)}\left[\textrm{erf}\left(\frac{t-t^{\prime}}{\sigma}-\frac{D_{i}\sigma}{2}\right)+\textrm{erf}\left(\frac{t^{\prime}}{\sigma}+\frac{D_{i}\sigma}{2}\right)\right].\end{eqnarray*}
+
+\end_inset 
+
+Gradient of the cross kernels.
+ 
+\begin_inset Note
+collapsed true
+
+\layout Standard
+
+
+\begin_inset Formula \begin{eqnarray*}
+\frac{dk_{x_{i}f}\left(t,t^{\prime}\right)}{dD_{i}} & = & \left(\sigma D_{i}-\left(t-t^{\prime}\right)\right)k_{x_{i}f}\left(t,t^{\prime}\right)\\
+ &  & +\frac{C_{i}\sigma^{2}}{2}e^{\left(\frac{D_{i}\sigma}{2}\right)^{2}}e^{-D_{i}\left(t-t^{\prime}\right)}\left[e^{-\left(\frac{t^{\prime}}{\sigma}+\frac{D_{i}\sigma}{2}\right)^{2}}-e^{-\left(\frac{t-t^{\prime}}{\sigma}-\frac{D_{i}\sigma}{2}\right)^{2}}\right]\end{eqnarray*}
+
+\end_inset 
+
+
+\begin_inset Formula \begin{eqnarray*}
+\frac{dk_{x_{i}f}\left(t,t^{\prime}\right)}{dD_{i}} & = & \left(\sigma D_{i}-\left(t-t^{\prime}\right)\right)k_{x_{i}f}\left(t,t^{\prime}\right)\\
+ &  & +\frac{C_{i}\sigma^{2}}{2}e^{\left(\frac{D_{i}\sigma}{2}\right)^{2}}e^{-D_{i}\left(t-t^{\prime}\right)}\left[e^{-\frac{t^{\prime2}}{\sigma}-t^{\prime}D_{i}-\left(\frac{D_{i}\sigma}{2}\right)^{2}}-e^{-\left(\frac{t-t^{\prime}}{\sigma}\right)^{2}+D_{i}\left(t-t^{\prime}\right)-\left(\frac{D_{i}\sigma}{2}\right)^{2}}\right]\end{eqnarray*}
+
+\end_inset 
+
+
+\end_inset 
+
+
+\begin_inset Formula \begin{eqnarray*}
+\frac{dk_{x_{i}f}\left(t,t^{\prime}\right)}{dD_{i}} & = & \left(\frac{\sigma^{2}D_{i}}{2}-\left(t-t^{\prime}\right)\right)k_{x_{i}f}\left(t,t^{\prime}\right)\\
+ &  & +\frac{C_{i}\sigma^{2}}{2}\left[\left(-\frac{t-t^{\prime}}{\sigma^{2}}-\frac{D_{i}}{2}\right)e^{-\left(\frac{t-t^{\prime}}{\sigma^{2}}\right)^{2}}+\left(-\frac{t^{\prime}}{\sigma^{2}}+\frac{D_{i}}{2}\right)e^{-\frac{t^{\prime2}}{\sigma^{2}}-tD_{i}}\right]\end{eqnarray*}
+
+\end_inset 
+
+
+\begin_inset Formula \begin{eqnarray*}
+\frac{dk_{x_{i}f}\left(t,t^{\prime}\right)}{d\sigma} & = & \left(\frac{1}{\sigma}+\frac{\sigma D_{i}^{2}}{2}\right)k_{x_{i}f}\left(t,t^{\prime}\right)\\
+ &  & +\frac{C_{i}\sigma D_{i}}{2}\left[e^{-\frac{t^{\prime2}}{\sigma^{2}}-tD_{j}}-e^{-\left(\frac{t-t^{\prime}}{\sigma}\right)^{2}}\right]\end{eqnarray*}
+
+\end_inset 
+
+
+\begin_inset Formula \begin{eqnarray*}
+\frac{dk_{x_{i}f}\left(t,t^{\prime}\right)}{dC_{i}} & = & \frac{1}{C_{i}}k_{x_{i}f}\left(t,t^{\prime}\right)\end{eqnarray*}
+
+\end_inset 
+
+
+\layout Section
+
+The Likelihood
+\layout Standard
+
+The Gaussian process likelihood we are interested in is
+\begin_inset Formula \[
+p\left(\mathbf{y}|\mathbf{t}\right)=\frac{1}{\left(2\pi\right)^{\frac{NG}{2}}\left|\mathbf{K}\right|^{\frac{1}{2}}}\exp\left(-\frac{1}{2}\left(\mathbf{y}-\boldsymbol{\mu}\right)^{\textrm{T}}\mathbf{K}^{-1}\left(\mathbf{y}-\boldsymbol{\mu}\right)\right)\]
+
+\end_inset 
+
+where 
+\begin_inset Formula $\mathbf{y}=\left[\mathbf{x}_{1}^{\textrm{T}}\dots\mathbf{x}_{I}^{\textrm{T}}\right]^{\textrm{T}}$
+\end_inset 
+
+ is a vector which concatanates all the observations of the gene expressions,
+ 
+\begin_inset Formula $I$
+\end_inset 
+
+ is the number of gene targets for the protein of interest, 
+\begin_inset Formula $N$
+\end_inset 
+
+ is the number of observations for each gene and 
+\begin_inset Formula $\boldsymbol{\mu}=\left[\frac{B_{1}}{D_{1}}\mathbf{1}_{N}^{\textrm{T}}\dots\frac{B_{I}}{D_{I}}\mathbf{1}_{N}^{\textrm{T}}\right]$
+\end_inset 
+
+ is the mean vector.
+ Taking the gradient of the log likelihood with respect to 
+\begin_inset Formula $\mathbf{K}$
+\end_inset 
+
+ we have
+\begin_inset Formula \[
+\frac{dL}{d\mathbf{K}}=-\mathbf{K}^{-1}+\mathbf{K}^{-1}\left(\mathbf{y}-\boldsymbol{\mu}\right)\left(\mathbf{y}-\boldsymbol{\mu}\right)^{\textrm{T}}\mathbf{K}^{-1}\]
+
+\end_inset 
+
+and with respect to 
+\begin_inset Formula $\boldsymbol{\mu}$
+\end_inset 
+
+ we have
+\begin_inset Formula \[
+\frac{dL}{d\boldsymbol{\mu}}=\mathbf{K}^{-1}\left(\mathbf{y}-\boldsymbol{\mu}\right)\]
+
+\end_inset 
+
+these can be combined with gradients of 
+\begin_inset Formula $\mathbf{K}$
+\end_inset 
+
+ with respect to the parameters (from above) and gradients of 
+\begin_inset Formula $\boldsymbol{\mu}$
+\end_inset 
+
+ with respect to the parameters to find gradients of the log likelihood.
+\begin_inset Formula \[
+\mathbf{y}\]
+
+\end_inset 
+
+
+\layout Standard
+
+
+\begin_inset LatexCommand \BibTeX[plain]{lawrence,other,zbooks}
 
 \end_inset 
 
