@@ -1,5 +1,7 @@
 % GPSIMTEST Test the single input motif code.
 
+% GPSIM
+
 numSamp = 50;
 t = linspace(0, 2, numSamp)';
 interSpace = t(2)-t(1);
