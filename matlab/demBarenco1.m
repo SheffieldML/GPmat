@@ -91,7 +91,7 @@ else
   yvar{2} = yFullVar(8:14, :);
   yvar{3} = yFullVar(15:21, :);
   times = [0 2 4 6 8 10 12]';
-  save('./data/demBarenco1.mat', 'y', 'yvar', 'gene', 'times', 'scale');
+  save('./data/demBarenco1.mat', 'y', 'yvar', 'gene', 'times', 'scale', 'rawVar', 'rawExp');
 end
 
 % Get the default options structure.
