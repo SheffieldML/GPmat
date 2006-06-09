@@ -3,7 +3,7 @@ Please note that this toolbox requires MATLAB 7.0 or higher to run. The toolbox 
 Version 0.162
 -------------
 
-Added the rational quadratic kernel and the Matern kernel with nu = 3/2 and nu = 5/2.
+Added the Gibbs's non-stationary kernel, the rational quadratic kernel and the Matern kernel with nu = 3/2 and nu = 5/2.
 
 Version 0.161
 -------------
