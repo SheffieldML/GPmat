@@ -76,7 +76,9 @@ if paramMaxDiff > 2*epsilon
     fprintf([space names{i} ':\t%4.6f\t%4.6f\t%4.6f\n'], ...
             g(i), gLDiff(i), gLDiff(i) - g(i));
   end
+
 end
+fprintf('Param max diff: %2.6f.\n', paramMaxDiff);
 
 if exist([model.type 'OutputGrad'])==2;
   epsilon = 1e-6;
@@ -101,8 +103,8 @@ if exist([model.type 'OutputGrad'])==2;
   g = modelOutputGrad(model, model.X);
   
   
-  paramMaxDiff = max(max(abs(gLDiff-g)));
-  if paramMaxDiff > 2*epsilon
+  outParamMaxDiff = max(max(max(abs(gLDiff-g))));
+  if outParamMaxDiff > 2*epsilon
     l = 0;
     for i = 1:length(names)
       if l < length(names{i})
@@ -118,6 +120,42 @@ if exist([model.type 'OutputGrad'])==2;
               g(i), gLDiff(i), gLDiff(i) - g(i));
     end
   end
+  fprintf('Output param max diff: %2.6f.\n', outParamMaxDiff);
+else
+  fprintf('No grad of output with respect to param implemented.\n');
+end
+
+
+if exist([model.type 'OutputGradX'])==2;
+  epsilon = 1e-6;
+  X = model.X;
+  origX = X;
+  Lplus = zeros(size(model.X, 1), size(model.X, 2), model.outputDim);
+  Lminus = zeros(size(model.X, 1), size(model.X, 2), model.outputDim);
+  for i = 1:size(model.X, 2)
+    X = origX;
+    X(:, i) = origX(:, i) + epsilon;
+    Lplus(:, i, :) = reshape(modelOut(model, X), ...
+                             size(model.X, 1), 1, model.outputDim);
+    X(:, i) = origX(:, i) - epsilon;
+    Lminus(:, i, :) = reshape(modelOut(model, X), ...
+                              size(model.X, 1), 1, model.outputDim);
+  end
+  X = origX;
+  gLDiff = .5*(Lplus - Lminus)/epsilon;
+  g = modelOutputGradX(model, X);
+  
+  
+  outputXMaxDiff = max(max(max(abs(gLDiff-g))));
+  if outputXMaxDiff > 2*epsilon
+    fprintf('gX\n')
+    disp(g)
+    fprintf('gXDiff\n')
+    disp(gLDiff)
+  end
+  fprintf('X max diff: %2.6f.\n', outputXMaxDiff);
+else
+  fprintf('No grad of output with respect to X implemented.\n');
 end
 if nargout > 0
   modelRet = model;
