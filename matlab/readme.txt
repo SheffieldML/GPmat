@@ -1,5 +1,10 @@
 Please note that this toolbox requires MATLAB 7.0 or higher to run. The toolbox relies on the optimi and ndlutil toolboxes, available at http://www.dcs.shef.ac.uk/~neil/optimi/downloadFiles and http://www.dcs.shef.ac.uk/~neil/ndultil/downloadFiles/.
 
+Version 0.162
+-------------
+
+Added the rational quadratic kernel and the Matern kernel with nu = 3/2 and nu = 5/2.
+
 Version 0.161
 -------------
 

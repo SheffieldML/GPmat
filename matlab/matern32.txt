@@ -1,0 +1,12 @@
+% The Matern class of kernels is a wide class with different
+% degrees of freedom parameters. This is the specific case where nu
+% = 3/2.
+%
+% Given 
+% r = sqrt((x_i - x_j)'*(x_i - x_j))
+% 
+% We have
+% k(x_i, x_j) = sigma2*(1+sqrt(3)*r/l)*exp(-sqrt(3)*r/l)
+%
+% The parameters are sigma2, the process variance (kern.variance),
+% and l, the length scale (kern.lengthScale).

@@ -68,4 +68,3 @@ else
 end
 kern.Kstore = [];
 kern.diagK = [];
-

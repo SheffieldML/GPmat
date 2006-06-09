@@ -1,6 +1,5 @@
 function k = rbfKernDiagCompute(kern, x)
 
-
 % RBFKERNDIAGCOMPUTE Compute diagonal of RBF kernel.
 % FORMAT
 % DESC computes the diagonal of the kernel matrix for the radial basis function kernel given a design matrix of inputs.
@@ -14,6 +13,5 @@ function k = rbfKernDiagCompute(kern, x)
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
 % KERN
-
 
 k = repmat(kern.variance, size(x, 1), 1);

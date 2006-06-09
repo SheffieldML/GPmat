@@ -195,6 +195,7 @@ prefix + 'KernExtractParam.m' :
 ''',
 prefix + 'KernGradX.m' : 
 '''function gX = ''' + prefix + '''KernGradX(kern, x, x2)
+
 % ''' + ucPrefix + '''KERNGRADX Gradient of ''' + ucPrefix + ''' kernel with respect to a point x.
 % FORMAT
 % DESC computes the gradient of the ''' + longName + '''
@@ -228,6 +229,7 @@ prefix + 'KernGradX.m' :
 ''',
 prefix + 'KernGradient.m' :
 '''function g = ''' + prefix + '''KernGradient(kern, x, x2, covGrad)
+
 % ''' + ucPrefix + '''KERNGRADIENT Gradient of ''' + ucPrefix + ''' kernel\'s parameters.
 % FORMAT
 % DESC computes the gradient of functions with respect to the
@@ -272,6 +274,7 @@ prefix + 'KernGradient.m' :
 ''',
 prefix + 'KernParamInit.m' : 
 '''function kern = ''' + prefix + '''KernParamInit(kern)
+
 % ''' + ucPrefix + '''KERNPARAMINIT ''' + ucPrefix + ''' kernel parameter initialisation.''' + kernDescription + '''
 % FORMAT
 % DESC initialises the ''' + longName + '''
