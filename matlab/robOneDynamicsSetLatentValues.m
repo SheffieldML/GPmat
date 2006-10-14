@@ -1,14 +1,8 @@
 function model = robOneDynamicsSetLatentValues(model, X)
 
 % ROBONEDYNAMICSSETLATENTVALUES Set the latent values inside the model.
-%
-% model = robOneDynamicsSetLatentValues(model, X)
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% robOneDynamicsSetLatentValues.m version 1.1
-
-
+% FGPLVM
 
 model.X = X;
 X1 = X(1:end-1, :);

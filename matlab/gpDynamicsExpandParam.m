@@ -1,14 +1,8 @@
 function model = gpDynamicsExpandParam(model, params)
 
 % GPDYNAMICSEXPANDPARAM Place the parameters vector into the model for GP dynamics.
-%
-% model = gpDynamicsExpandParam(model, params)
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% gpDynamicsExpandParam.m version 1.1
-
-
+% FGPLVM
 
 % get the current parameter vector
 origParam = gpExtractParam(model);

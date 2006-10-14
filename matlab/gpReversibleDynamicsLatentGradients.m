@@ -1,14 +1,8 @@
 function gX = gpReversibleDynamicsLatentGradients(model);
 
 % GPREVERSIBLEDYNAMICSLATENTGRADIENTS Gradients of the X vector given the dynamics model.
-%
-% gX = gpReversibleDynamicsLatentGradients(model);
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% gpReversibleDynamicsLatentGradients.m version 1.1
-
-
+% FGPLVM
 
 % gX the +1 accounts for the first two points, which cannot have dynamics.
 gX = zeros(model.N+2, model.d);
@@ -55,11 +49,11 @@ switch model.approx
   
   for i = 1:model.q/2
     gX(3:end, i) = gX(3:end, i) ...
-        - 1/model.scale(i)*sparseDiag(1./model.diagD)*model.m(:, i) ...
-        + 1/model.scale(i)*K_ufDinv'*AinvK_ufDinv*model.m(:, i);
+        - model.beta/model.scale(i)*sparseDiag(1./model.diagD)*model.m(:, i) ...
+        + model.beta/model.scale(i)*K_ufDinv'*AinvK_ufDinv*model.m(:, i);
     gX(2:end-1, i) = gX(2:end-1, i) ...
-        + 1/model.scale(i)*sparseDiag(1./model.diagD)*model.m(:, i) ...
-        - 1/model.scale(i)*K_ufDinv'*AinvK_ufDinv*model.m(:, i);
+        + model.beta/model.scale(i)*sparseDiag(1./model.diagD)*model.m(:, i) ...
+        - model.beta/model.scale(i)*K_ufDinv'*AinvK_ufDinv*model.m(:, i);
   end
   
  case 'pitc'
@@ -80,11 +74,11 @@ switch model.approx
     AinvK_ufDinv = model.Ainv*K_ufDinv;
     for j = 1:model.q/2
       gX(ind+2, j) = gX(ind+2, j) ...
-          - 1/model.scale(j)*model.Dinv{i}*model.m(ind, j);
+          - model.beta/model.scale(j)*model.Dinv{i}*model.m(ind, j);
       gX(ind+1, j) = gX(ind+1, j) ...
-          + 1/model.scale(j)*model.Dinv{i}*model.m(ind, j);
-      gX(3:end, j) = gX(3:end, j) + 1/model.scale(j)*gXbase'*AinvK_ufDinv*model.m(ind, j);
-      gX(2:end-1, j) = gX(2:end-1, j) - 1/model.scale(j)*gXbase'*AinvK_ufDinv*model.m(ind, ...
+          + model.beta/model.scale(j)*model.Dinv{i}*model.m(ind, j);
+      gX(3:end, j) = gX(3:end, j) + model.beta/model.scale(j)*gXbase'*AinvK_ufDinv*model.m(ind, j);
+      gX(2:end-1, j) = gX(2:end-1, j) - model.beta/model.scale(j)*gXbase'*AinvK_ufDinv*model.m(ind, ...
                                                           j);
     end
     startVal = endVal + 1;

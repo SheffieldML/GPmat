@@ -1,14 +1,18 @@
 function gpDisplay(model, spaceNum)
 
 % GPDISPLAY Display a Gaussian process model.
+% FORMAT
+% DESC displays in human readable form the contents of the GP
+% model.
+% ARG model : the model structure to be displaced.
+% ARG spaceNum : number of spaces to place before displaying model
+% structure.
 %
-% gpDisplay(model, spaceNum)
+% SEEALSO : gpCreate, modelDisplay.
 %
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% Copyright (c) 2006 Neil D. Lawrence
-% gpDisplay.m version 1.1
-
-
+% FGPLVM
 
 if nargin > 1
   spacing = repmat(32, 1, spaceNum);

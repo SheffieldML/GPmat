@@ -128,7 +128,6 @@ switch model.approx
   end
   
  case 'pitc'
-  model.L = jitChol(model.K_uu)';
   if ~isfield(model, 'isSpherical') | model.isSpherical
     model.A = 1/model.beta*model.K_uu;
     K_ufDinvm = zeros(model.k, model.d);
@@ -189,8 +188,8 @@ switch model.approx
                                                         j);
     end
     for i = 1:length(model.blockEnd)
-      ind = gpBlockIndices(model, i);
       for j = 1:model.d
+        ind = gpDataIndices(model, j, i);
         model.innerProducts(1, j) = model.innerProducts(1, j) ...
             + model.beta*Dinvm{i}(ind, j)'*model.m(ind, j);
       end

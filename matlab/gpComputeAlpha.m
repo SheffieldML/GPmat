@@ -1,13 +1,7 @@
 function model = gpComputeAlpha(model, m)
 
 % GPCOMPUTEALPHA Update the vector `alpha' for computing posterior mean quickly.
-%
-% model = gpComputeAlpha(model, m)
-%
-
-% Copyright (c) 2006 Neil D. Lawrence
-% gpComputeAlpha.m version 1.4
-
+% FGPLVM
 
 if nargin < 2
   m = model.m;
@@ -66,17 +60,5 @@ switch model.approx
             model.Dinv{i, j}*m(ind, j);
       end
     end  
-  end
-
- case 'nftc'
-  model.alpha = zeros(model.N, model.d);
-  if ~isfield(model, 'isSpherical') | model.isSpherical
-    model.alpha = model.Ainv*m;
-  else
-    for i = 1:model.d
-      ind = gpDataIndices(model, i);
-      model.alpha(ind, i) = model.Ainv{i}* ...
-          m(ind, i);
-    end
   end
 end

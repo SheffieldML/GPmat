@@ -1,14 +1,8 @@
 function x = fgplvmOptimisePoint(model, x, y, display, iters);
 
 % FGPLVMOPTIMISEPOINT Optimise the postion of a point.
-%
-% x = fgplvmOptimisePoint(model, x, y, display, iters);
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% fgplvmOptimisePoint.m version 1.2
-
-
+% FGPLVM
 
 if nargin < 3
   iters = 2000;

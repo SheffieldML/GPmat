@@ -1,14 +1,22 @@
 function model = gpCreate(q, d, X, y, options);
 
 % GPCREATE Create a GP model with inducing varibles/pseudo-inputs.
+% FORMAT
+% DESC creates a Gaussian process model structure with default
+% parameter settings as specified by the options vector.
+% ARG q : input data dimension.
+% ARG d : the number of processes (i.e. output data dimension).
+% ARG X : the input data matrix.
+% ARG y : the target (output) data.
+% ARG options : options structure as defined by gpOptions.m.
+% RETURN model : model structure containing the Gaussian process.
 %
-% model = gpCreate(q, d, X, y, options);
+% SEEALSO : gpOptions, modelCreate
 %
-
-% Copyright (c) 2006 Neil D. Lawrence
-% gpCreate.m version 1.4
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
 
+% FGPLVM
 
 if size(X, 2) ~= q
   error(['Input matrix X does not have dimension ' num2str(q)]);
@@ -71,6 +79,30 @@ else
   model.kern = kernCreate(model.X, options.kern);
 end
 
+if isfield(options, 'noise')
+  if isstruct(options.noise)
+    model.noise = options.noise;
+  else
+    model.noise = noiseCreate(options.noise, y);
+  end
+
+  % Set up noise model gradient storage.
+  model.nu = zeros(size(y));
+  model.g = zeros(size(y));
+  model.gamma = zeros(size(y));
+  
+  % Initate noise model
+  model.noise = noiseCreate(noiseType, y); 
+  
+  % Set up storage for the expectations
+  model.expectations.f = model.y;
+  model.expectations.ff = ones(size(model.y));
+  model.expectations.fBar =ones(size(model.y));
+  model.expectations.fBarfBar = ones(numData, ...
+                                     numData, ...
+                                     size(model.y, 2));
+end
+
 
 
 switch options.approx
@@ -94,16 +126,8 @@ switch options.approx
     model.X_u = model.X(ind, :);
   end
   model.beta = options.beta;
-  model.betaTransform = 'negLogLogit';
-  model.KLCorrectionTerm = options.KLCorrectionTerm;
-case 'nftc'
-  model.k = 0;
-  model.X_u = [];
-  model.beta = options.beta;
-  model.betaTransform = 'negLogLogit';
-  model.KLCorrectionTerm = options.KLCorrectionTerm;
+  model.betaTransform = 'negLogLogit';  
 end
-
 if model.k>model.N
   error('Number of active points cannot be greater than number of data.')
 end
@@ -122,10 +146,8 @@ if strcmp(model.approx, 'pitc')
   end  
 end
 
-
 initParams = gpExtractParam(model);
 
 % This forces kernel computation.
 model = gpExpandParam(model, initParams);
-
 

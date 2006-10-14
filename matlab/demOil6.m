@@ -1,11 +1,6 @@
 % DEMOIL6 Oil data with partially independent training conditional, and MLP back constraints.
-%
-% 
 
-% Copyright (c) 2006 Neil D. Lawrence
-% demOil6.m version 1.3
-
-
+% FGPLVM
 
 % Fix seeds
 randn('seed', 1e5);

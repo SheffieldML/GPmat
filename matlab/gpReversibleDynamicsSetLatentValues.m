@@ -1,14 +1,8 @@
 function model = gpReversibleDynamicsSetLatentValues(model, X)
 
 % GPREVERSIBLEDYNAMICSSETLATENTVALUES Set the latent values inside the model.
-%
-% model = gpReversibleDynamicsSetLatentValues(model, X)
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% gpReversibleDynamicsSetLatentValues.m version 1.1
-
-
+% FGPLVM
 
 model.diffX = X(2:end, :) - X(1:end-1, :);
 model.X = [X(2:end-1, :) model.diffX(1:end-1, :)];

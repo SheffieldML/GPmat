@@ -1,14 +1,8 @@
 function model = robTwoDynamicsCreate(q, d, latentVals)
 
 % ROBTWODYNAMICSCREATE Create the dynamics model. 
-%
-% model = robTwoDynamicsCreate(q, d, latentVals)
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% robTwoDynamicsCreate.m version 1.1
-
-
+% FGPLVM
 
 if(q~=2)
   error('Robot Two Dynamics designed for 2-D latent spaces.');

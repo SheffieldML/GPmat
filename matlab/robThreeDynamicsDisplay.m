@@ -1,14 +1,8 @@
 function robThreeDynamicsDisplay(model, spaceNum)
 
 % ROBTHREEDYNAMICSDISPLAY Display the robot dynamics model. 
-%
-% robThreeDynamicsDisplay(model, spaceNum)
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% robThreeDynamicsDisplay.m version 
-
-
+% FGPLVM
 
 if nargin > 1
   spacing = repmat(32, 1, spaceNum);

@@ -1,14 +1,8 @@
 function model = robOneDynamicsCreate(q, d, latentVals)
 
 % ROBONEDYNAMICSCREATE Create the dynamics model. 
-%
-% model = robOneDynamicsCreate(q, d, latentVals)
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% robOneDynamicsCreate.m version 1.1
-
-
+% FGPLVM
 
 if(q~=2)
   error('Robot One Dynamics designed for 2-D latent spaces.');

@@ -1,14 +1,8 @@
 function ll = fgplvmPointLogLikelihood(model, x, y)
 
 % FGPLVMPOINTLOGLIKELIHOOD Log-likelihood of a point for the GP-LVM.
-%
-% ll = fgplvmPointLogLikelihood(model, x, y)
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% fgplvmPointLogLikelihood.m version 1.2
-
-
+% FGPLVM
 
 logTwoPi = log(2*pi);
 [mu, varSigma] = gpPosteriorMeanVar(model, x);

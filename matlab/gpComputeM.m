@@ -1,14 +1,8 @@
 function m = gpComputeM(model)
 
 % GPCOMPUTEM Compute the matrix m given the model.
-%
-% m = gpComputeM(model)
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% gpComputeM.m version 1.1
-
-
+% FGPLVM 
 
 m = zeros(size(model.y));
 for i = 1:model.d

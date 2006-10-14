@@ -1,14 +1,8 @@
 function gX = robThreeDynamicsLatentGradients(model);
 
 % ROBTHREEDYNAMICSLATENTGRADIENTS Gradients of the X vector given the dynamics model.
-%
-% gX = robThreeDynamicsLatentGradients(model);
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% robThreeDynamicsLatentGradients.m version 
-
-
+% FGPLVM
 
 gX = zeros(size(model.X));
 

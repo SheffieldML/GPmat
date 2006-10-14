@@ -1,14 +1,20 @@
 function options = fgplvmOptions(varargin);
 
 % FGPLVMOPTIONS Return default options for FGPLVM model.
+% FORMAT
+% DESC returns the default options in a structure for a FGPLVM model.
+% ARG approx : approximation type, either 'ftc' (no approximation),
+% 'dtc' (deterministic training conditional), 'fitc' (fully
+% independent training conditional) or 'pitc' (partially
+% independent training conditional.
+% RETURN options : structure containing the default options for the
+% given approximation type.
 %
-% options = fgplvmOptions(varargin);
+% SEEALSO : fgplvmCreate
 %
+% COPYRIGHT : Neil D. Lawrence, 2006, 2005
 
-% Copyright (c) 2006 Neil D. Lawrence
-% fgplvmOptions.m version 1.2
-
-
+% FGPLVM
 
 % Get default options from Gaussian process.
 options = gpOptions(varargin{:});
@@ -25,8 +31,8 @@ options.back = [];
 options.backOptions = [];
 
 % If set to 1 set initial back constraint mapping to match
-% initialisation on X.
-options.optimiseInitBack = 1;
+% initialisation on X. Default is to use standard model initialisation.
+options.optimiseInitBack = 0;
 
 % Optional prior on the inducing inputs, X_u
-options.inducingPrior = 'gaussian';
+options.inducingPrior = [];

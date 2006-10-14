@@ -1,14 +1,8 @@
 function [model, lbls] = fgplvmReadFromFID(FID)
 
 % FGPLVMREADFROMFID Load from a FID produced by the C++ implementation.
-%
-% [model, lbls] = fgplvmReadFromFID(FID)
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% fgplvmReadFromFID.m version 1.2
-
-
+% FGPLVM
 
 lineStr = getline(FID);
 tokens = tokenise(lineStr, '=');
@@ -131,15 +125,17 @@ end
 if backConstrained
   warning('Not loading form of back constraints.')
 end
-model = fgplvmCreate(latentDim, size(y, 2), y, 'ftc', numData, kern, ...
-                                 prior);
+options = fgplvmOptions('ftc');
+options.kern = kern;
+options.prior = prior;
+model = fgplvmCreate(latentDim, size(y, 2), y, options);
 model.X = X;
 model.scale = noise.scale;
 model.bias = noise.bias;
-for i = 1:model.noise.numProcess
-  model.m(:, i) = (y(:, i) - model.noise.bias(i));
-  if model.noise.scale(i)
-    model.m(:, i) = y(:, i)/model.noise.scale(i);
+for i = 1:model.d
+  model.m(:, i) = (y(:, i) - model.bias(i));
+  if model.scale(i)
+    model.m(:, i) = y(:, i)/model.scale(i);
   end
 end
 
@@ -147,7 +143,9 @@ end
 initParams = fgplvmExtractParam(model);
 model = fgplvmExpandParam(model, initParams);
 if dynamicsLearnt
-  model = fgplvmAddDynamics(model, 'gp', dynKern);
+  options = gpOptions;
+  options.kern = dynKern;
+  model = fgplvmAddDynamics(model, 'gp', options);
 end
 lbls=[];
 if labelsPresent

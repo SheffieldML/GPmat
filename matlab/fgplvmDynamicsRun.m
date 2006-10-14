@@ -1,14 +1,8 @@
 function fgplvmDynamicsRun
 
 % FGPLVMDYNAMICSRUN Visualise the manifold.
-%
-% fgplvmDynamicsRun
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% fgplvmDynamicsRun.m version 1.2
-
-
+% FGPLVM
 
 global visualiseInfo
 

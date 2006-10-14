@@ -1,14 +1,8 @@
 function y = gpDynamicsSamp(model, X);
 
 % GPDYNAMICSSAMP Sample from the dynamics for a given input.
-%
-% y = gpDynamicsSamp(model, X);
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% gpDynamicsSamp.m version 1.1
-
-
+% FGPLVM
 
 [mu, var] = gpPosteriorMeanVar(model, X);
 y = gsamp(mu, diag(var), 1);

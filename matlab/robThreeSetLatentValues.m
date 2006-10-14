@@ -1,14 +1,8 @@
 function model = robThreeSetLatentValues(model, X)
 
 % ROBTHREEDYNAMICSSETLATENTVALUES Set the latent values inside the model.
-%
-% model = robThreeSetLatentValues(model, X)
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% robThreeSetLatentValues.m version 
-
-
+% FGPLVM
 
 model.X = X;
 X1 = X(1:end-1, :);

@@ -1,14 +1,18 @@
 function params = gpExtractParam(model)
 
 % GPEXTRACTPARAM Extract a parameter vector from a GP model.
+% FORMAT
+% DESC extracts the model parameters from a structure containing
+% the information about a Gaussian process.
+% ARG model : the model structure containing the information about
+% the model.
+% RETURN params : a vector of parameters from the model.
 %
-% params = gpExtractParam(model)
+% SEEALSO : gpCreate, gpExpandParam, modelExtractParam
 %
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% Copyright (c) 2006 Neil D. Lawrence
-% gpExtractParam.m version 1.3
-
-
+% FGPLVM
 
 if model.learnScales
   fhandle = str2func([model.scaleTransform 'Transform']);
@@ -28,8 +32,5 @@ switch model.approx
   else
     params =  [model.X_u(:)' paramPart];
   end
- case 'nftc'
-  fhandle = str2func([model.betaTransform 'Transform']);
-  params =  [kernExtractParam(model.kern) scaleParams fhandle(model.beta, 'xtoa')];
 end
 

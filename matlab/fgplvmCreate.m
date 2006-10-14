@@ -1,14 +1,22 @@
 function model = fgplvmCreate(q, d, Y, options)
 
-% FGPLVMCREATE Create a GPLVM model with inducing varibles.
+% FGPLVMCREATE Create a GPLVM model with inducing variables.
+% FORMAT
+% DESC creates a GP-LVM model with the possibility of using
+% inducing variables to speed up computation.
+% ARG q : dimensionality of latent space.
+% ARG d : dimensionality of data space.
+% ARG Y : the data to be modelled in design matrix format (as many
+% rows as there are data points).
+% ARG options : options structure as returned from
+% FGPLVMOPTIONS. This structure determines the type of
+% approximations to be used (if any).
 %
-% model = fgplvmCreate(q, d, Y, options)
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006
 %
+% SEEALSO : modelCreate, fgplvmOptions
 
-% Copyright (c) 2006 Neil D. Lawrence
-% fgplvmCreate.m version 1.3
-
-
+% FGPLVM
 
 if size(Y, 2) ~= d
   error(['Input matrix Y does not have dimension ' num2str(d)]);

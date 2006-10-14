@@ -1,14 +1,8 @@
 function [mu, covarsigma] = gpPosteriorMeanCovar(model, X);
 
 % GPPOSTERIORMEANCOVAR Mean and covariances of the posterior at points given by X.
-%
-% [mu, covarsigma] = gpPosteriorMeanCovar(model, X);
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% gpPosteriorMeanCovar.m version 1.2
-
-
+% FGPLVM
 
 mu = gpPosteriorMeanVar(model, X);
 

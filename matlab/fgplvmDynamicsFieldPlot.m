@@ -1,14 +1,8 @@
 function [ax, data] = fgplvmDynamicsFieldPlot(model, YLbls, points);
 
 % FGPLVMDYNAMICSFIELDPLOT 2-D field plot of the dynamics.
-%
-% [ax, data] = fgplvmDynamicsFieldPlot(model, YLbls, points);
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% fgplvmDynamicsFieldPlot.m version 1.2
-
-
+% FGPLVM
 if nargin < 3
   points = 20;
   if nargin < 2

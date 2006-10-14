@@ -1,14 +1,20 @@
 function model = fgplvmExpandParam(model, params)
 
 % FGPLVMEXPANDPARAM Expand a parameter vector into a GP-LVM model.
-%
-% model = fgplvmExpandParam(model, params)
-%
+% FORMAT
+% DESC takes an FGPLVM structure and a vector of parameters, and
+% fills the structure with the given parameters. Also performs any
+% necessary precomputation for likelihood and gradient
+% computations, so can be computationally intensive to call.
+% ARG model : the FGPLVM structure to put the parameters in.
+% ARG params : parameter vector containing the parameters to put in
+% the FGPLVM structure.
+% 
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006
+% 
+% SEEALSO : fgplvmCreate, fgplvmExtractParam, modelExpandParam
 
-% Copyright (c) 2006 Neil D. Lawrence
-% fgplvmExpandParam.m version 1.3
-
-
+% FGPLVM
 
 startVal = 1;
 if isfield(model, 'back')
@@ -35,9 +41,6 @@ switch model.approx
     % Parameters include inducing variables and beta.
     endVal = endVal + model.q*model.k + 1;
   end
- case 'nftc'
-  % account for beta attached to the end.
-  endVal = endVal + 1;     
 
  otherwise
   error('Unknown approximation type.')

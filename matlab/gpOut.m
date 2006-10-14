@@ -1,14 +1,8 @@
 function y = gpOut(model, x);
 
 % GPOUT Evaluate the output of an Gaussian process model.
-%
-% y = gpOut(model, x);
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% gpOut.m version 1.1
-
-
+% FGPLVM 
 
 if nargin < 2
   % This implies evaluate for the training data.

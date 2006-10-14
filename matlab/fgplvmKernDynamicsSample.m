@@ -1,14 +1,8 @@
 function [ax, data] = fgplvmKernDynamicsSample(kern, points, diff);
 
 % FGPLVMKERNDYNAMICSSAMPLE Sample a field from a given kernel.
-%
-% [ax, data] = fgplvmKernDynamicsSample(kern, points, diff);
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% fgplvmKernDynamicsSample.m version 1.2
-
-
+% FGPLVM
 if nargin < 3
   diff = 0;
   if nargin < 2

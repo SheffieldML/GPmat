@@ -1,11 +1,6 @@
 % DEMWALKSITJOGDYNAMICSLEARN Learn the stick man dynamics.
-%
-% 
 
-% Copyright (c) 2006 Neil D. Lawrence
-% demWalkSitJogDynamicsLearn.m version 
-
-
+% FGPLVM
 
 % Fix seeds
 randn('seed', 1e5);

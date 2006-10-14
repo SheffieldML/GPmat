@@ -1,14 +1,8 @@
 function ll = gpReversibleDynamicsLogLikelihood(model)
 
 % GPREVERSIBLEDYNAMICSLOGLIKELIHOOD Give the log likelihood of the dynamics part.
-%
-% ll = gpReversibleDynamicsLogLikelihood(model)
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% gpReversibleDynamicsLogLikelihood.m version 1.1
-
-
+% FGPLVM
 
 ll = gpLogLikelihood(model);
 

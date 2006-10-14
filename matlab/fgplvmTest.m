@@ -1,34 +1,29 @@
 % FGPLVMTEST Test the gradients of the gpCovGrads function and the fgplvm models.
-%
-% 
 
-% Copyright (c) 2006 Neil D. Lawrence
-% fgplvmTest.m version 1.4
-
-
-
-% TODO: add checks for models with missing data.
+% FGPLVM
 
 q = 2;
 d = 3;
 N = 10;
 k = 5;
 kernType = {'rbf', 'lin', 'rbfard', 'mlp', 'mlpard', 'white'};
-kernType = {'rbf'};
+kernType = 'rbf';
 backType = 'mlp';
 dynType = 'gp';
-learn = 0; % dont' test learning of dynamics.
-learnScales = 0; % don't test learning of dynamics scales.
-diff = 1; % Use diffs for generating dynamics.
+learn = true; % dont' test learning of dynamics.
+diff = false; % Use diffs for generating dynamics.
+seq(1) = 5;
+seq(2) = 10;
+learnScales = true; % test learning of output scales.
 
 Yorig = randn(N, d);
-indMissing = find(rand(N, d)>0.9);
-%Y(ind) = NaN;
-
+indMissing = find(rand(N, d)>0.7);
+%indMissing = [9 19 29];
 approxType = {'ftc', 'dtc', 'fitc', 'pitc'};
 for back = [false true]
-  for missing = [false true]
-    for fixInducing = [ false true] 
+%  for missing = [false true]
+  for missing = [false]
+    for fixInducing = [false true] 
       Y = Yorig;
       if missing
         Y(indMissing) = NaN;
@@ -39,11 +34,12 @@ for back = [false true]
       for dyn = [false true];
         for a = 1:length(approxType)
           options = fgplvmOptions(approxType{a});
+          options.learnScales = learnScales;
           options.kern = kernType;
           options.numActive = k;
-          optionsDyn = options;
           options.isSpherical = ~missing;
           options.isMissingData = missing;
+          optionsDyn = options;
           options.fixInducing = fixInducing;
           if back & dyn
             disp(['Back constrained, ' ...
@@ -66,6 +62,7 @@ for back = [false true]
             disp(['Inducing variables fixed.'])
             options.fixIndices = round(linspace(1, size(Y, 1), k));
           end
+                    
           if back
             options.back = backType;
             options.backOptions = feval([backType 'Options']);
@@ -75,7 +72,8 @@ for back = [false true]
           if dyn
             switch dynType 
              case 'gp'
-              model = fgplvmAddDynamics(model, 'gp', optionsDyn, diff, learn);
+              model = fgplvmAddDynamics(model, 'gp', optionsDyn, ...
+                                        diff, learn, seq);
              otherwise
               model = fgplvmAddDynamics(model, dynType);
               
@@ -86,12 +84,9 @@ for back = [false true]
           
           initParams = fgplvmExtractParam(model);
           % this creates some nasty parameters.
-          initParams = randn(size(initParams))./randn(size(initParams));
+          initParams = randn(size(initParams));%./(100*randn(size(initParams)));
           % This forces kernel computation.
           model = fgplvmExpandParam(model, initParams);
-          %      model.kern = kernSetWhite(model.kern, 1e-6);
-          %      params = fgplvmExtractParam(model);
-          %      model = fgplvmExpandParam(model, params);
           if dyn
             if strcmp(dynType, 'robOne')
               aveR = mean(model.dynamics.r);
@@ -102,7 +97,7 @@ for back = [false true]
               model.dynamics.b = model.dynamics.a/aveR;
             end
           end
-          if ~back & ~dyn & ~missing
+          if ~back & ~dyn
             gpCovGradsTest(model);
           end
           gradientCheck(initParams, 'fgplvmObjective', 'fgplvmGradient', ...

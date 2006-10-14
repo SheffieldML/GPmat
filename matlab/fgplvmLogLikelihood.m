@@ -1,14 +1,18 @@
 function ll = fgplvmLogLikelihood(model)
 
 % FGPLVMLOGLIKELIHOOD Log-likelihood for a GP-LVM.
+% FORMAT
+% DESC returns the log likelihood for a given GP-LVM model.
+% ARG model : the model for which the log likelihood is to be
+% computed. The model contains the data for which the likelihood is
+% being computed in the 'y' component of the structure.
+% RETURN ll : the log likelihood of the data given the model.
 %
-% ll = fgplvmLogLikelihood(model)
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006
 %
+% SEEALSO : gpLogLikelihood, fgplvmCreate
 
-% Copyright (c) 2006 Neil D. Lawrence
-% fgplvmLogLikelihood.m version 1.2
-
-
+% FGPLVM
 
 
 ll = gpLogLikelihood(model);

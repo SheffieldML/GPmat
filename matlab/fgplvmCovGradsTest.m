@@ -1,14 +1,8 @@
 function fgplvmCovGradsTest(model)
 
 % FGPLVMCOVGRADSTEST Test the gradients of the covariance.
-%
-% fgplvmCovGradsTest(model)
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% fgplvmCovGradsTest.m version 1.2
-
-
+% FGPLVM
 
 switch model.approx
  case 'ftc'

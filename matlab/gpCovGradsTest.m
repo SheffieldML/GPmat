@@ -1,15 +1,10 @@
 function gpCovGradsTest(model)
 
 % GPCOVGRADSTEST Test the gradients of the covariance.
-%
-% gpCovGradsTest(model)
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% gpCovGradsTest.m version 1.2
+% FGPLVM
 
-
-
+changeVal = 1e-9;
 switch model.approx
  case 'ftc'
   
@@ -17,39 +12,39 @@ switch model.approx
   for i =1 :size(model.K_uu, 1)
     for j=1:i
       origK = model.K_uu(i, j);
-      model.K_uu(i, j) = origK + 1e-6;
+      model.K_uu(i, j) = origK + changeVal;
       model.K_uu(j, i) = model.K_uu(i, j);
       [model.invK_uu, U] = pdinv(model.K_uu);
       model.logDetK_uu = logdet(model.K_uu, U);
-      model = localUpdateAD(model);
+      model = gpUpdateAD(model);
       objPlus = gpLogLikelihood(model);
-      model.K_uu(i, j) = origK - 1e-6;
+      model.K_uu(i, j) = origK - changeVal;
       model.K_uu(j, i) = model.K_uu(i, j);
       [model.invK_uu, U] = pdinv(model.K_uu);
       model.logDetK_uu = logdet(model.K_uu, U);
-      model = localUpdateAD(model);
+      model = gpUpdateAD(model);
       objMinus = gpLogLikelihood(model);
-      diffsK_uu(i, j) = (objPlus - objMinus)/2e-6;
+      diffsK_uu(i, j) = (objPlus - objMinus)/(2*changeVal);
       diffsK_uu(j, i) = diffsK_uu(i, j);
       model.K_uu(i, j) = origK;
       model.K_uu(j, i) = origK;
       [model.invK_uu, U] = pdinv(model.K_uu);
       model.logDetK_uu = logdet(model.K_uu, U);
-      model = localUpdateAD(model);
+      model = gpUpdateAD(model);
     end
   end
-  for i =1 :size(model.K_uf, 1)
+  for i=1:size(model.K_uf, 1)
     for j=1:size(model.K_uf, 2)
       origK = model.K_uf(i, j);
-      model.K_uf(i, j) = origK + 1e-6;
-      model = localUpdateAD(model);
+      model.K_uf(i, j) = origK + changeVal;
+      model = gpUpdateAD(model);
       objPlus = gpLogLikelihood(model);
-      model.K_uf(i, j) = origK - 1e-6;
-      model = localUpdateAD(model);
+      model.K_uf(i, j) = origK - changeVal;
+      model = gpUpdateAD(model);
       objMinus = gpLogLikelihood(model);
-      diffsK_uf(i, j) = (objPlus - objMinus)/2e-6;
+      diffsK_uf(i, j) = (objPlus - objMinus)/(2*changeVal);
       model.K_uf(i, j) = origK;
-      model = localUpdateAD(model);
+      model = gpUpdateAD(model);
     end
   end
   
@@ -72,43 +67,3 @@ switch model.approx
   end
 end
 
-
-function model = localUpdateAD(model)
-
-% LOCALUPDATED Update representation of D without kernel recomputation.
-
-switch model.approx
- 
- case 'dtc'
-  K_uf2 = model.K_uf*model.K_uf';
-  model.A = (1/model.beta)*model.K_uu+ K_uf2;
-  [model.Ainv, U] = pdinv(model.A);
-  model.logdetA = logdet(model.A, U);
-  
- case 'fitc'
-  model.diagD = (1/model.beta) + model.diagK - sum(model.K_uf.*(model.invK_uu*model.K_uf), 1)';
-  model.Dinv = sparseDiag(1./model.diagD);
-  K_ufDinvK_uf = model.K_uf*model.Dinv*model.K_uf';
-  model.A = model.K_uu + K_ufDinvK_uf;
-  [model.Ainv, U] = pdinv(model.A);
-  model.logDetA = logdet(model.A, U);
- 
- case 'pitc'
-  model.A = model.K_uu;
-  startVal = 1;
-  for i = 1:length(model.blockEnd)
-    endVal = model.blockEnd(i);
-    ind = startVal:endVal;
-    blockLength = length(ind);
-    model.D{i} = (1/model.beta)*eye(blockLength) + model.K{i} - ...
-        model.K_uf(:, ind)'*model.invK_uu*model.K_uf(:, ind);
-    [model.Dinv{i}, U] = pdinv(model.D{i});
-    model.logDetD(i) = logdet(model.D{i}, U);
-    K_ufDinvK_uf = model.K_uf(:, ind)*model.Dinv{i}...
-        *model.K_uf(:, ind)';
-    model.A = model.A + K_ufDinvK_uf;
-    startVal = endVal + 1;
-  end
-  [model.Ainv, U] = pdinv(model.A);
-  model.logDetA = logdet(model.A, U);
-end

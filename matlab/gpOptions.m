@@ -1,14 +1,20 @@
 function options = gpOptions(approx);
 
 % GPOPTIONS Return default options for GP model.
+% FORMAT
+% DESC returns the default options in a structure for a GP model.
+% ARG approx : approximation type, either 'ftc' (no approximation),
+% 'dtc' (deterministic training conditional), 'fitc' (fully
+% independent training conditional) or 'pitc' (partially
+% independent training conditional.
+% RETURN options : structure containing the default options for the
+% given approximation type.
 %
-% options = gpOptions(approx);
+% SEEALSO : gpCreate
 %
+% COPYRIGHT : Neil D. Lawrence, 2006, 2005
 
-% Copyright (c) 2006 Neil D. Lawrence
-% gpOptions.m version 1.3
-
-
+% FGPLVM
 
 if nargin < 1
   options.approx = 'ftc';
@@ -42,13 +48,5 @@ switch options.approx
   % Option to fix the inducing variables to other latent points.
   options.fixInducing = 0;
   options.fixIndices = [];
-    
- case 'nftc'
-     % Like FTC but with presition noise beta
-  options.kern = {'rbf', 'bias', 'white'};
-  options.numActive = 0;
-  options.beta = 1e3;     
-  
 end
 
-options.KLCorrectionTerm = 0; % A setting for the KL correction

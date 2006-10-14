@@ -1,14 +1,19 @@
 function fgplvmDisplay(model, spaceNum)
 
 % FGPLVMDISPLAY Display an FGPLVM model.
+% FORMAT
+% DESC displays a given GP-LVM in human readable form.
+% ARG model : the GP-LVM to display.
 %
-% fgplvmDisplay(model, spaceNum)
+% FORMAT does the same as above, but indents the display according to the amount specified.
+% ARG model : the GP-LVM to display.
+% ARG spacing : how many spaces to indent the display of the GP-LVM by.
 %
+% SEEALSO modelDisplay, kernDisplay
+%
+% COPYRIGHT Neil D. Lawrence, 2006
 
-% Copyright (c) 2006 Neil D. Lawrence
-% fgplvmDisplay.m version 1.1
-
-
+% FGPLVM
 
 
 if nargin > 1

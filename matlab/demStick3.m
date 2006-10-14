@@ -1,11 +1,6 @@
-% DEMSTICK3 Model the stick man using an RBF kernel and mlp back constraints.
-%
-% 
+% DEMSTICK3 Model the stick man using an RBF kernel and RBF kernel based back constraints.
 
-% Copyright (c) 2006 Neil D. Lawrence
-% demStick3.m version 1.1
-
-
+% FGPLVM
 
 % Fix seeds
 randn('seed', 1e5);

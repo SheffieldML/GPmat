@@ -1,11 +1,6 @@
 % DEMOIL4 Oil data with deterministic training conditional, and MLP back constraints.
-%
-% 
 
-% Copyright (c) 2006 Neil D. Lawrence
-% demOil4.m version 1.3
-
-
+% FGPLVM
 
 % Fix seeds
 randn('seed', 1e5);

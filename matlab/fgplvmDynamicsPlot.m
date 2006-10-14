@@ -1,14 +1,8 @@
 function [ax, data] = fgplvmDynamicsPlot(model, Ylbls, points);
 
 % FGPLVMDYNAMICSPLOT 2-D scatter plot of the latent points.
-%
-% [ax, data] = fgplvmDynamicsPlot(model, Ylbls, points);
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% fgplvmDynamicsPlot.m version 1.2
-
-
+% FGPLVM
 
 if nargin < 3
   points = 20;

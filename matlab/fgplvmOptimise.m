@@ -1,14 +1,22 @@
 function model = fgplvmOptimise(model, display, iters);
 
-% FGPLVMOPTIMISE Optimise the inducing variable based kernel.
+% FGPLVMOPTIMISE Optimise the FGPLVM.
+% FORMAT
+% DESC takes a given GP-LVM model structure and optimises with
+% respect to parameters and latent positions. 
+% ARG model : the model to be optimised.
+% ARG display : flag dictating whether or not to display
+% optimisation progress (set to greater than zero) (default value 1). 
+% ARG iters : number of iterations to run the optimiser
+% for (default value 2000).
+% RETURN model : the optimised model.
 %
-% model = fgplvmOptimise(model, display, iters);
-%
+% SEEALSO : fgplvmCreate, fgplvmLogLikelihood,
+% fgplvmLogLikeGradients, fgplvmObjective, fgplvmGradient
+% 
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% Copyright (c) 2006 Neil D. Lawrence
-% fgplvmOptimise.m version 1.1
-
-
+% FGPLVM
 
 
 if nargin < 3

@@ -1,11 +1,4 @@
 % DEMWALKSITJOG4 Model the stick man using an RBF kernel.
-%
-% 
-
-% Copyright (c) 2006 Neil D. Lawrence
-% demWalkSitJog4.m version 
-
-
 
 % Fix seeds
 randn('seed', 1e5);

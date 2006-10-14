@@ -1,14 +1,8 @@
 function [ax, data] = fgplvmFieldPlot(model, YLbls);
 
 % FGPLVMFIELDPLOT 2-D field plot of the dynamics.
-%
-% [ax, data] = fgplvmFieldPlot(model, YLbls);
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% fgplvmFieldPlot.m version 1.1
-
-
+% FGPLVM
 
 if isempty(YLbls)
   symbol = [];

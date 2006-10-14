@@ -1,21 +1,35 @@
 function model = gpDynamicsSetLatentValues(model, X)
 
 % GPDYNAMICSSETLATENTVALUES Set the latent values inside the model.
+% FORMAT
+% DESC Distributes GP-LVM latent positions throughout the GP dynamics model. 
+% ARG model : the model in which the latent positions are to be
+% placed.
+% ARG X : the latent positions to be placed in the model.
+% RETURN model : the updated model with the relevant latent
+% positions in place.
 %
-% model = gpDynamicsSetLatentValues(model, X)
+% SEEALSO : gpDynamicsCreate, gpDynamicsLogLikelihood
 %
+% COPYRIGHT : Neil D. Lawrence and Cark Ek, 2006
 
-% Copyright (c) 2006 Neil D. Lawrence
-% gpDynamicsSetLatentValues.m version 1.1
+% FGPLVM
 
+ind_in = [];
+ind_out = []; 
+startVal=1;
+for i = 1:length(model.seq)
+  endVal = model.seq(i);
+  ind_in = [ind_in startVal:endVal-1];
+  ind_out = [ind_out startVal+1:endVal];
+  startVal = endVal + 1;
+end
 
-
-model.X = X(1:end-1, :);
+model.X = X(ind_in, :);
 if model.diff
-  model.y = X(2:end, :) ...
-            - X(1:end-1, :);
+  model.y = X(ind_out, :) - X(ind_in, :);
 else
-  model.y = X(2:end, :);
+  model.y = X(ind_out, :);
 end
 
 for i = 1:model.d
@@ -24,3 +38,4 @@ for i = 1:model.d
     model.m(:, i) = model.y(:, i)/model.scale(i);
   end
 end
+

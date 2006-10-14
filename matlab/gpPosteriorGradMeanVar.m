@@ -1,14 +1,8 @@
 function [gmu, gsigmavar] = gpPosteriorGradMeanVar(model, X);
 
 % GPPOSTERIORGRADMEANVAR Gadient of the mean and variances of the posterior at points given by X.
-%
-% [gmu, gsigmavar] = gpPosteriorGradMeanVar(model, X);
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% gpPosteriorGradMeanVar.m version 1.2
-
-
+% FGPLVM
 
 
 if ~isfield(model, 'alpha')
@@ -38,8 +32,10 @@ switch model.approx
  case 'ftc'
   Kinvgk = model.invK_uu*gX;
  case 'dtc'
-  Kinvgk = ((model.invK_uu - (1/model.beta)*model.Ainv)*gX);
- case {'fitc', 'pitc'}
+  Kinvgk = (model.invK_uu - (1/model.beta)*model.Ainv)*gX;
+ case 'fitc'
+  Kinvgk = (model.invK_uu - (1/model.beta)*model.Ainv)*gX;  
+ case 'pitc'
   Kinvgk = (model.invK_uu - model.Ainv)*gX;
  otherwise
   error('Unrecognised approximation type');
@@ -49,4 +45,4 @@ gsigmavar = repmat(diaggK' - 2*Kinvgk'*kX, 1, model.d);
 gmu = gX'*model.alpha; 
 
 gmu = gmu.*repmat(model.scale, model.q, 1);
-gsigmavar = gsigmavar.*repmat(model.scale, model.q, 1);
+gsigmavar = gsigmavar.*repmat(model.scale.*model.scale, model.q, 1);

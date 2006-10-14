@@ -1,14 +1,21 @@
 function model = gpOptimise(model, display, iters);
 
 % GPOPTIMISE Optimise the inducing variable based kernel.
+% FORMAT
+% DESC optimises the Gaussian process  model for
+% a given number of iterations.
+% ARG model : the model to be optimised.
+% ARG display : whether or not to display while optimisation
+% proceeds, set to 2 for the most verbose and 0 for the least
+% verbose.
+% ARG iters : number of iterations for the optimisation.
+% RETURN model : the optimised model.
 %
-% model = gpOptimise(model, display, iters);
+% SEEALSO : scg, conjgrad, gpCreate, gpGradient, gpObjective
 %
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% Copyright (c) 2006 Neil D. Lawrence
-% gpOptimise.m version 1.1
-
-
+% FGPLVM
 
 
 if nargin < 3

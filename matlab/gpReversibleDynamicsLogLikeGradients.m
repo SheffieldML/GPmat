@@ -1,14 +1,8 @@
 function g = gpReversibleDynamicsLogLikeGradients(model)
 
 % GPREVERSIBLEDYNAMICSLOGLIKEGRADIENTS Gradients of the GP reversible dynamics wrt parameters.
-%
-% g = gpReversibleDynamicsLogLikeGradients(model)
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% gpReversibleDynamicsLogLikeGradients.m version 1.1
-
-
+% FGPLVM
 
 if model.k ==0 & ~model.learn & ~model.learnScales
   g = [];

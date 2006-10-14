@@ -1,14 +1,8 @@
 function ll = robThreeDynamicsLogLikelihood(model)
 
 % ROBTHREEDYNAMICSLOGLIKELIHOOD Give the log likelihood of the robot three dynamics part.
-%
-% ll = robThreeDynamicsLogLikelihood(model)
-%
 
-% Copyright (c) 2006 Neil D. Lawrence
-% robThreeDynamicsLogLikelihood.m version 
-
-
+% FGPLVM
 
 ll = 0;
 for i = 1:size(model.diffX)-1
