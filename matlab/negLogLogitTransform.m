@@ -1,6 +1,6 @@
 function y = negLogLogitTransform(x, transform)
 
-% NEGLOGLOGIT Constrains a parameter to be positive.
+% NEGLOGLOGITTRANSFORM Constrains a parameter to be positive.
 
 % OPTIMI
 
