@@ -1,6 +1,18 @@
-function str = num2strSigFig(num, sf);
+function str = stringSigFigs(num, sf);
 
-% NUM2STRSIGFIG Convert number to a string with a number of significant digits.
+% STRINGSIGFIGS Convert number to a string with a number of significant digits.
+% FORMAT
+% DESC converts a given number to a string, but provides a given
+% number of significant figures.
+% ARG number : the number that requires conversion.
+% ARG sf : the number of significant figures required in the
+% conversion.
+% RETURN str : the string with the number to the given number of
+% significant figures.
+%
+% SEEALSO : num2str
+%
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
 % NDLUTIL
 
