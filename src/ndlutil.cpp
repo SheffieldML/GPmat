@@ -60,7 +60,7 @@ namespace ndlutil {
   // f = log(\phi(u) - phi(uprime))
   double lnDiffCumGaussian(double u, double uprime)
     {
-      return log(gaussOverDiffCumGaussian(u, uprime, 1)+1e-300) + .5*u*u + HALFLOGTWOPI;
+      return -log(gaussOverDiffCumGaussian(u, uprime, 1)+1e-300) - .5*u*u - HALFLOGTWOPI;
     }
   double gaussOverDiffCumGaussian(double x, double xp, int order)
   {
