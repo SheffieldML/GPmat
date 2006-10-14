@@ -1766,7 +1766,7 @@ double COrderedNoise::logLikelihood(const CMatrix& muTest, const CMatrix& varSig
 		muAdj-=widths.getVal(k);
 	      double u = muAdj*c;
 	      double uprime = (muAdj - widths.getVal(targVal-1))*c;
-	      L-=ndlutil::lnDiffCumGaussian(u, uprime);
+	      L+=ndlutil::lnDiffCumGaussian(u, uprime);
 	    }
 	  else if(targVal==getNumCategories()-1)
 	    {

@@ -24,7 +24,7 @@ for j = 1:D
       mu(i, j) = mu(i, j) + noise.bias(j) - sum(noise.widths(1:y(i, j)-1));
       u = mu(i, j).*c(i, j);
       uprime = (mu(i, j) - noise.widths(y(i, j))).* c(i, j); 
-      L = L - lnDiffCumGaussian(u, uprime); 
+      L = L + lnDiffCumGaussian(u, uprime); 
     end
   end
   % Highest category

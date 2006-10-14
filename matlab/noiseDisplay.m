@@ -1,4 +1,4 @@
-function noiseDisplay(noise)
+function noiseDisplay(noise. varargin)
 
 % NOISEDISPLAY Display the parameters of the noise model.
 

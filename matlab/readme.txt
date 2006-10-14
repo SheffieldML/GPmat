@@ -1,3 +1,9 @@
+Version 0.131 Release Notes
+---------------------------
+
+There was a sign error in lnDiffCumGaussian and a corresponding sign error in orderedLogLikelihood. This has now been fixed.
+
+
 Version 0.13 Release Notes
 --------------------------
 
