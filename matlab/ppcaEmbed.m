@@ -1,6 +1,18 @@
 function [X, sigma2] = ppcaEmbed(Y, dims)
 
 % PPCAEMBED Embed data set with probabilistic PCA.
+% FORMAT
+% DESC returns latent positions for a given data set via probabilistic
+% PCA.
+% ARG Y : the data set which you want the latent positions for.
+% ARG dims : the dimensionality of the latent space.
+% RETURN X : the latent positions.
+% RETURN sigma2 : the variance not explained by the latent
+% positions.
+%
+% COPYRIGHT : Neil D. Lawrence, 2006
+%
+% SEEALSO : lleEmbed, isomapEmbed
 
 % MLTOOLS
 

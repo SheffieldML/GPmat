@@ -1,7 +1,16 @@
 function model = modelOptimise(model, varargin)
 
 % MODELOPTIMISE Optimise the given model.
-
+% FORMAT
+% DESC is a wrapper function that optimises a given model.
+% ARG model : the model to be optimised. 
+% ARG P1, P2, P3 ... : optional additional arguments.
+% RETURN model : the optimised model.
+%
+% SEEALSO : modelObjective, modelGradient
+%
+% COPYRIGHT : Neil D. Lawrence, 2006
+ 
 % MLTOOLS
 
 if nargin < 2

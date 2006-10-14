@@ -1,4 +1,4 @@
-function modelRet = modelTest(modelType)
+function modelRet = modelTest(modelType, varargin)
 
 % MODELTEST Run some tests on the specified model.
 % FORMAT

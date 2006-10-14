@@ -9,7 +9,7 @@ function g = modelGradient(params, model, varargin)
 % ARG P1, P2, P3 ... : optional additional arguments.
 % RETURN g : the gradient of the error function to be minimised.
 % 
-% SEEALSO : modelLogLikeGradient
+% SEEALSO : modelLogLikeGradient, modelObjective, modelOptimise
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 

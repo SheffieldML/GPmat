@@ -9,7 +9,7 @@ function err = modelObjective(params, model, varargin)
 % ARG P1, P2, P3 ... : optional additional arguments.
 % RETURN err : the error function to be minimised.
 % 
-% SEEALSO : modelLogLikelihood
+% SEEALSO : modelLogLikelihood, modelGradient, modelOptimise
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
