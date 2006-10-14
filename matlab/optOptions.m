@@ -1,14 +1,8 @@
 function options = optOptions;
 
 % OPTOPTIONS Give optimisation options for NETLAB.
-%
-% options = optOptions;
-%
 
-% Copyright (c) 2005 Neil D. Lawrence
-% optOptions.m version 
-
-
+% OPTIMI
 
 if exist('foptions')
   options = foptions;

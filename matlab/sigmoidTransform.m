@@ -1,14 +1,8 @@
 function y = sigmoidTransform(x, transform)
 
 % SIGMOIDTRANSFORM Constrains a parameter to be between 0 and 1.
-%
-% y = sigmoidTransform(x, transform)
-%
 
-% Copyright (c) 2005 Neil D. Lawrence
-% sigmoidTransform.m version 1.1
-
-
+% OPTIMI
 
 
 limVal = 36;

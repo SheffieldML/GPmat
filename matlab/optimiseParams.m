@@ -2,15 +2,8 @@ function model = optimiseParams(component, optimiser, objective, ...
                                 gradient, options, model);
 
 % OPTIMISEPARAMS Optimise parameters.
-%
-% model = optimiseParams(component, optimiser, objective, ...
-%                                gradient, options, model);
-%
 
-% Copyright (c) 2005 Neil D. Lawrence
-% optimiseParams.m version 1.3
-
-
+% OPTIMI
 
 
 params = feval([component 'ExtractParam'], getfield(model, component));

@@ -1,14 +1,8 @@
 function y = negLogLogitTransform(x, transform)
 
 % NEGLOGLOGIT Constrains a parameter to be positive.
-%
-% y = negLogLogitTransform(x, transform)
-%
 
-% Copyright (c) 2005 Neil D. Lawrence
-% negLogLogitTransform.m version 1.1
-
-
+% OPTIMI
 
 
 y = zeros(size(x));
