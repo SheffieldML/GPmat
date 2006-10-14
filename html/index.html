@@ -1,0 +1,36 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-gb">
+<title>Matlab Noise Toolbox - Examples</title>
+</head>
+
+<body>
+
+<h1>Matlab Noise Toolbox</h1>
+
+This page describes the noise model toolbox for MATLAB available for <a href="http://ext.dcs.shef.ac.uk/~u0015/cgi-bin/downloadForm.cgi?toolbox=noise">download here</a>. 
+
+<h3>Dependencies</h3>
+
+The noise toolbox depends on the <a href="http://www.dcs.shef.ac.uk/~neil/ndlutil/downloadFiles/"><code>ndlutil</code> toolbox</a> and the <a href="http://www.dcs.shef.ac.uk/~neil/optimi/downloadFiles/"><code>optimi</code> toolbox</a>. You can use your user name and password for accessing these toolboxes.
+
+Important, you must use vrs 0.152 or greater of the NDLUTIL toolbox with version 0.131 or greater of this toolbox. 
+
+<h3>Release Information</h3>
+
+<p>Current release is 0.131. 
+
+<p>This toolbox allows computation of several different noise models and their gradients. You can add noise models to the toolbox by creating versions of the relevant files. Once added, they can be tested using the <code>noiseTest</code>. For example you can test the probit noise model by writing
+
+<p><code>&gt;&gt; noiseTest('probit')</code>
+
+<p>There are several noise models implemented, the mains ones that are being maintained for the latest release are:
+
+<p><code>gaussian
+ordered
+probit
+</code>
+
+These noise models are Gaussian (standard Gaussian noise), probitistic regression for binary classificaiton and ordered categorical for ordered categories (ordinal regression).</body>
+</html>
