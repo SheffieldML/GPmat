@@ -26,7 +26,9 @@ function g = kernGradX(kern, x, x2)
 % points in X2 and numInputs is the number of input
 % dimensions in X.
 %
-% SEEALSO kernDiagGradX, kernGradient
+% SEEALSO : kernDiagGradX, kernGradient
+%
+% COPYRIGHT : Neil D.Lawrence, 2004, 2005, 2006
 
 % KERN
 

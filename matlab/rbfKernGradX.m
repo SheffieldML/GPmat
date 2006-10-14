@@ -26,7 +26,7 @@ function gX = rbfKernGradX(kern, X, X2)
 % points in X2 and numInputs is the number of input
 % dimensions in X.
 %
-% SEEALSO rbfKernParamInit, kernGradX, rbfKernDiagGradX
+% SEEALSO : rbfKernParamInit, kernGradX, rbfKernDiagGradX
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 

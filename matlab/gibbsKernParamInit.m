@@ -35,7 +35,7 @@ function kern = gibbsKernParamInit(kern)
 kern.variance = 1;
 options = mlpOptions(5);
 kern.lengthScaleFunc = modelCreate('mlp', kern.inputDimension, 1, options);
-kern.lengthScaleTransform = 'negLogLogit';
+kern.lengthScaleTransform = 'exp';
 
 kern.nParams = 1+kern.lengthScaleFunc.numParams;
 
