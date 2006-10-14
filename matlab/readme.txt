@@ -1,5 +1,9 @@
 This toolbox provides various machine learning tools, either through wrapping other toolboxes (such as NETLAB) or providing the tool directly. It was designed originally as part of splitting the GPLVM and FGPLVM toolboxes.
 
+Version 0.121
+-------------
+
+Various minor bug fixes and changes which seem to have gone undocumented.
 
 Version 0.12
 ------------
