@@ -2,10 +2,9 @@
 
 importLatest('netlab');
 importLatest('mocap');
-
-importTool('ndlutil');
-importTool('prior');
-importTool('kern');
-importTool('datasets');
-importTool('mltools');
-importTool('optimi');
+importLatest('ndlutil');
+importLatest('prior');
+importLatest('kern');
+importLatest('datasets');
+importLatest('mllatests');
+importLatest('optimi');
