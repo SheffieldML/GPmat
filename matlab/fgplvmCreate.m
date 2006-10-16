@@ -11,6 +11,7 @@ function model = fgplvmCreate(q, d, Y, options)
 % ARG options : options structure as returned from
 % FGPLVMOPTIONS. This structure determines the type of
 % approximations to be used (if any).
+% RETURN model : the GP-LVM model.
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 %

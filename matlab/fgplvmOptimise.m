@@ -41,7 +41,7 @@ options(14) = iters;
 if isfield(model, 'optimiser')
   optim = str2func(model.optimiser);
 else
-  optim = str2func('conjgrad');
+  optim = str2func('scg');
 end
 
 params = optim('fgplvmObjective', params,  options, ...

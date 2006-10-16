@@ -1,6 +1,18 @@
 function [mu, varsigma] = gpPosteriorMeanVar(model, X);
 
 % GPPOSTERIORMEANVAR Mean and variances of the posterior at points given by X.
+% FORMAT
+% DESC returns the posterior mean and variance for a given set of
+% points.
+% ARG model : the model for which the posterior will be computed.
+% ARG x : the input positions for which the posterior will be
+% computed.
+% RETURN mu : the mean of the posterior distribution.
+% RETURN sigma : the variances of the posterior distributions.
+%
+% SEEALSO : gpCreate, gpPosteriorMeanCovar, gpPosteriorGradMeanVar
+%
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
 % FGPLVM
 
@@ -62,7 +74,7 @@ while startVal <= size(X, 1)
        case 'fitc' 
         Kinvk = (model.invK_uu - (1/model.beta)*model.Ainv)*KX_star;
        case 'pitc'
-        Kinvk = (model.invK_uu - model.Ainv)*KX_star;
+        Kinvk = (model.invK_uu - (1/model.beta)*model.Ainv)*KX_star;
       end
       varsig = diagK - sum(KX_star.*Kinvk, 1)';
       if isfield(model, 'beta')
@@ -86,7 +98,7 @@ while startVal <= size(X, 1)
   end
   
   
-  % Add the mean back in.
+  % Rescale and add the bias mean back in.
   mu(indices,:) = mu(indices, :).*repmat(model.scale, length(indices), 1) + repmat(model.bias, length(indices), 1);
   
   % rescale the variances

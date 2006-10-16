@@ -1,6 +1,20 @@
 function [gmu, gsigmavar] = gpPosteriorGradMeanVar(model, X);
 
 % GPPOSTERIORGRADMEANVAR Gadient of the mean and variances of the posterior at points given by X.
+% FORMAT
+% DESC computes the gradient of the mean and variances of the
+% posterior distribution of a Gaussian process with respect to the
+% input locations.
+% ARG model : the model for which gradients are to be computed.
+% ARG X : the input locations where gradients are to be computed.
+% RETURN gmu : the gradient of the posterior mean with respect to
+% the input locations.
+% RETURN gsigmavar : the gradient of the posterior variances with
+% respect to the input locations.
+%
+% SEEALSO : gpCreate, gpPosteriorMeanVar
+%
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
 % FGPLVM
 
@@ -36,7 +50,7 @@ switch model.approx
  case 'fitc'
   Kinvgk = (model.invK_uu - (1/model.beta)*model.Ainv)*gX;  
  case 'pitc'
-  Kinvgk = (model.invK_uu - model.Ainv)*gX;
+  Kinvgk = (model.invK_uu - (1/model.beta)*model.Ainv)*gX;
  otherwise
   error('Unrecognised approximation type');
 end

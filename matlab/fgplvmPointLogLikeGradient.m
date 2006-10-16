@@ -1,6 +1,21 @@
 function g = fgplvmPointLogLikeGradient(model, x, y)
 
 % FGPLVMPOINTLOGLIKEGRADIENT Log-likelihood gradient for of a point of the GP-LVM.
+% FORMAT
+% DESC returns the gradient of the log likelihood with respect to
+% the latent position, where the log likelihood is conditioned on
+% the training set. 
+% ARG model : the model for which the gradient computation is being
+% done.
+% ARG x : the latent position where the gradient is being computed.
+% ARG y : the position in data space for which the computation is
+% being done.
+% RETURN g : the gradient of the log likelihood, conditioned on the
+% training data, with respect to the latent position.
+%
+% SEEALSO : fgplvmPointLogLikelihood, fgplvmOptimisePoint, fgplvmSequenceLogLikeGradient
+%
+% COPYRIGHT : Neil D. Lawrence, 2006
 
 % FGPLVM
 
