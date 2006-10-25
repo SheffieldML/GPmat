@@ -1,11 +1,11 @@
- function g = mlpKernDiagGradient(kern, x, covDiag)
+function g = linKernDiagGradient(kern, x, covDiag)
 
-% MLPKERNDIAGGRADIENT Compute the gradient of the MLP kernel's diagonal wrt parameters.
+% LINKERNDIAGGRADIENT Compute the gradient of the LIN kernel's diagonal wrt parameters.
 % FORMAT
 % DESC computes the gradient of functions of the diagonal of the
-% multi-layer perceptron kernel matrix with respect to the parameters of the kernel. The
+% linear kernel matrix with respect to the parameters of the kernel. The
 % parameters' gradients are returned in the order given by the
-% mlpKernExtractParam command.
+% linKernExtractParam command.
 % ARG kern : the kernel structure for which the gradients are
 % computed.
 % ARG x : the input data for which the gradient is being computed.
@@ -13,11 +13,13 @@
 % respect to the diagonal elements of the kernel.
 % RETURN g : gradients of the relevant function with respect to each
 % of the parameters. Ordering should match the ordering given in
-% mlpKernExtractParam.
+% linKernExtractParam.
 %
-% SEEALSO : mlpKernParamInit, kernDiagGradient, mlpKernExtractParam, mlpKernGradient
+% SEEALSO : linKernParamInit, kernDiagGradient, linKernExtractParam, linKernGradient
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
 % KERN
 
+error('mlpKernDiagGradient not yet implemented');
+g(1) = sum(sum(x.*x, 2).*covDiag);

@@ -34,7 +34,11 @@ function g = kernGradX(kern, x, x2)
 
 fhandle = str2func([kern.type 'KernGradX']);
 if nargin < 3
-  g = fhandle(kern, x);
+  g = kernGradX(kern, x, x);
+  dg = kernDiagGradX(kern, x);
+  for i = 1:size(x, 1)
+    g(i, :, i) = dg(i, :);
+  end
 else
   g = fhandle(kern, x, x2);
 end

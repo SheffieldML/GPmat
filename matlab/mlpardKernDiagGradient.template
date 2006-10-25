@@ -1,4 +1,4 @@
- function g = mlpardKernDiagGradient(kern, x, covDiag)
+function g = mlpardKernDiagGradient(kern, x, covDiag)
 
 % MLPARDKERNDIAGGRADIENT Compute the gradient of the MLPARD kernel's diagonal wrt parameters.
 % FORMAT

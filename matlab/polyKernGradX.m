@@ -1,17 +1,6 @@
 function gX = polyKernGradX(kern, X, X2)
 
-% POLYKERNGRADX Gradient of POLY kernel with respect to a point x.
-% FORMAT
-% DESC computes the gradient of the polynomial
-% kernel with respect to the input positions. 
-% ARG kern : kernel structure for which gradients are being
-% computed.
-% ARG x : locations against which gradients are being computed.
-% RETURN g : the returned gradients. The gradients are returned in
-% a matrix which is numData x numInputs x numData. Where numData is
-% the number of data points and numInputs is the number of input
-% dimensions in X.
-%
+% POLYKERNGRADX Gradient of POLY kernel with respect to input locations.
 % FORMAT
 % DESC computes the gradident of the polynomial
 % kernel with respect to the input positions where both the row
