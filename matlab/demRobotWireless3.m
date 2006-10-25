@@ -1,4 +1,4 @@
-% DEMROBOTWIRELESS4 Wireless Robot data from University of Washington with dynamics and no back constraints.
+% DEMROBOTWIRELESS3 Wireless Robot data from University of Washington with dynamics and no back constraints.
 
 % FGPLVM
 

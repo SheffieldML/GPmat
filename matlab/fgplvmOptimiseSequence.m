@@ -1,6 +1,6 @@
 function Xout = fgplvmOptimiseSequence(model, X, Y, display, iters);
 
-% FGPLVMOPTIMISEPOINT Optimise the postion of a latent sequence.
+% FGPLVMOPTIMISESEQUENCE Optimise the postion of a latent sequence.
 % FORMAT
 % DESC optimises the location of a sequence in latent space
 % given an initialisation and an observed sequence in data space.

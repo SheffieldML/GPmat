@@ -1,6 +1,6 @@
 function [gmu, gsigmavar, factors] = gpPosteriorGradMeanCovar(model, X);
 
-% GPPOSTERIORGRADMEANVAR Gadient of the mean and variances of the posterior at points given by X.
+% GPPOSTERIORGRADMEANCOVAR Gadient of the mean and variances of the posterior at points given by X.
 % FORMAT
 % DESC computes the gradient of the mean and covariances of the
 % posterior distribution of a Gaussian process with respect to the

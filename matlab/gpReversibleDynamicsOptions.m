@@ -1,6 +1,6 @@
 function options = gpReversibleDynamicsOptions(approx);
 
-% GPREVERSIBLEOPTIONS Return default options for GP reversible dynamics model.
+% GPREVERSIBLEDYNAMICSOPTIONS Return default options for GP reversible dynamics model.
 
 % FGPLVM
 

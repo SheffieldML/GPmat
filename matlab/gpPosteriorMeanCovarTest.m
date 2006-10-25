@@ -1,5 +1,5 @@
 function [analMu, analCov, diffMu, diffCov] = gpPosteriorMeanCovarTest(model, X)
-% GPMEANCOVARTEST Test the gradients of the mean and covariance.
+% GPPOSTERIORMEANCOVARTEST Test the gradients of the mean and covariance.
 % FORMAT
 % DESC tests the gpPosteriorMeanCovar and gpPosteriorGradMeanCovar
 % functions.

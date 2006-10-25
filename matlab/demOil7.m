@@ -1,6 +1,5 @@
 % DEMOIL1 Oil data with fully independent training conditional.
 
-% FGPLVM
 
 % Fix seeds
 randn('seed', 1e5);
