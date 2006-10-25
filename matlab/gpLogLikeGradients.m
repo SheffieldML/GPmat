@@ -84,7 +84,7 @@ switch model.approx
     gX = zeros(model.N, model.q);
   end
   
-  %%% Compute Gradients of Kernel Parameters %%%
+  %%% Gradients of Kernel Parameters %%%
   gParam = zeros(1, model.kern.nParams);
 
   for k = 1:model.d

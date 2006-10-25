@@ -1,4 +1,4 @@
-function [mu, covarsig, scales] = gpPosteriorMeanCovar(model, X);
+function [mu, covarSigma, factors] = gpPosteriorMeanCovar(model, X);
 
 % GPPOSTERIORMEANCOVAR Mean and covariances of the posterior at points given by X.
 % FORMAT
@@ -8,7 +8,19 @@ function [mu, covarsig, scales] = gpPosteriorMeanCovar(model, X);
 % ARG X : the latent positions where the mean and covariance will
 % be computed.
 % RETURN mu : the posterior mean.
+% RETURN Sigma : the posterior covariance.
+%
+% DESC gives the posterior mean and covariance at the points given
+% by X without scaling on the output posterior covariance. This
+% allows for a more compact representation. The scale factors are provided
+% in a separate vector FACTORS.
+% ARG model : the model for which the posterior will be computed.
+% ARG X : the latent positions where the mean and covariance will
+% be computed.
+% RETURN mu : the posterior mean.
 % RETURN Sigma : the posterior covariance *without scaling*.
+% RETURN factor : the factors to multiply each dimension by to
+% obtain the covariances for each output.
 %
 % SEEALSO : gpCreate, gpPosteriorMeanVar
 %
@@ -41,15 +53,21 @@ if nargout > 1
   switch model.approx
    case 'ftc'
     Kinvk = model.invK_uu*KX_star;
-   case 'dtc'
-    Kinvk = (model.invK_uu - (1/model.beta)*model.Ainv)*KX_star;
-   case {'fitc', 'pitc'}
+   case {'dtc', 'fitc', 'pitc'}
     Kinvk = (model.invK_uu - (1/model.beta)*model.Ainv)*KX_star;
   end
   
   covarsig = K - KX_star'*Kinvk;
   if isfield(model, 'beta')
     covarsig = covarsig + eye(size(X, 1))*(1/model.beta);
+  end
+  if nargout>2
+    covarSigma = covarsig;
+    factors = model.scale.*model.scale;
+  else
+    for i = 1:model.d
+      covarSigma{i} = covarsig*model.scale(i)*model.scale(i);
+    end
   end
 end
     

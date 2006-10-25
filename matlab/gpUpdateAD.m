@@ -1,6 +1,19 @@
 function model = gpUpdateAD(model, X)
 
 % GPUPDATEAD Update the representations of A and D associated with the model.
+% FORMAT
+% DESC updates the representations of A and D in the model when
+% called by gpUpdateKernels.
+% ARG model : the model for which the representations are being
+% updated.
+% ARG X : the X values for which the representations are being
+% computed.
+% RETURN model : the model with the A and D representations
+% updated.
+%
+% SEEALSO : gpUpdateKernels, gpExpandParam
+%
+% COPYRIGHT : Neil D. Lawrence 2006
 
 % FGPLVM
 

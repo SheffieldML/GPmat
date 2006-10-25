@@ -1,6 +1,28 @@
 function ind = gpDataIndices(model, dimNo, blockNo)
 
 % GPDATAINDICES Return indices of present data.
+% FORMAT
+% DESC returns the indices of data which is not missing for a given
+% dimension in the GP-LVM.
+% ARG model : the model for which the indices are being returned.
+% ARG dimNo : the dimension for which the presence of missing data
+% is being looked at.
+% RETURN ind : indices of training data along that dimension which
+% isn't missing.
+%
+% DESC returns the indices of data which is not missing for a given
+% dimension in the GP-LVM and a block number in the PITC approximation.
+% ARG model : the model for which the indices are being returned.
+% ARG dimNo : the dimension for which the presence of missing data
+% is being looked at.
+% ARG blockNo : the block number in the PITC approximation for
+% which the indices are required.
+% RETURN ind : indices of training data along that dimension which
+% isn't missing.
+%
+% SEEALSO : gpCreate
+%
+% COPYRIGHT : Neil D. Lawrence, 2006
 
 % FGPLVM
 

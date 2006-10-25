@@ -69,11 +69,7 @@ while startVal <= size(X, 1)
       switch model.approx
        case 'ftc'
         Kinvk = model.invK_uu*KX_star;
-       case 'dtc'
-        Kinvk = (model.invK_uu - (1/model.beta)*model.Ainv)*KX_star;
-       case 'fitc' 
-        Kinvk = (model.invK_uu - (1/model.beta)*model.Ainv)*KX_star;
-       case 'pitc'
+       case {'dtc', 'fitc', 'pitc'}
         Kinvk = (model.invK_uu - (1/model.beta)*model.Ainv)*KX_star;
       end
       varsig = diagK - sum(KX_star.*Kinvk, 1)';

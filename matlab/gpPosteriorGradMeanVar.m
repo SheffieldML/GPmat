@@ -45,11 +45,7 @@ gsigmavar = zeros(size(X, 2), model.d);
 switch model.approx
  case 'ftc'
   Kinvgk = model.invK_uu*gX;
- case 'dtc'
-  Kinvgk = (model.invK_uu - (1/model.beta)*model.Ainv)*gX;
- case 'fitc'
-  Kinvgk = (model.invK_uu - (1/model.beta)*model.Ainv)*gX;  
- case 'pitc'
+ case {'dtc', 'fitc', 'pitc'}
   Kinvgk = (model.invK_uu - (1/model.beta)*model.Ainv)*gX;
  otherwise
   error('Unrecognised approximation type');

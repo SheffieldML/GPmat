@@ -1,10 +1,22 @@
+function modelRet = fgplvmTest
+
 % FGPLVMTEST Test the gradients of the gpCovGrads function and the fgplvm models.
+% FORMAT
+% DESC runs some tests on the GP-LVM code in the FGPLVM toolbox to
+% test that it is working.
+% RETURN model : a cell array of models used for testing.
+%
+% SEEALSO : modelTest
+%
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006
+
 
 % FGPLVM
 
 q = 2;
 d = 3;
 N = 10;
+Nseq =4;
 k = 5;
 kernType = {'rbf', 'lin', 'rbfard', 'mlp', 'mlpard', 'white'};
 kernType = 'rbf';
@@ -20,6 +32,7 @@ Yorig = randn(N, d);
 indMissing = find(rand(N, d)>0.7);
 %indMissing = [9 19 29];
 approxType = {'ftc', 'dtc', 'fitc', 'pitc'};
+counter = 0;
 for back = [false true]
 %  for missing = [false true]
   for missing = [false]
@@ -102,6 +115,13 @@ for back = [false true]
           end
           gradientCheck(initParams, 'fgplvmObjective', 'fgplvmGradient', ...
                         model);
+          seqX = randn(Nseq, model.q);
+          seqY = randn(Nseq, model.d);
+          seqY(find(rand(Nseq, model.d)>0.7)) = NaN;
+          gradientCheck(seqX(:)', 'fgplvmSequenceObjective', 'fgplvmSequenceGradient', ...
+                        model, seqY);
+          counter = counter + 1;
+          modelRet{counter} = model;
         end
       end
     end
