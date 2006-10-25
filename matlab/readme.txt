@@ -1,5 +1,12 @@
 This toolbox stores datasets and gives commands for accessing them.
 
+Version 0.13
+------------
+
+Added processing for CMU data base motion capture figure 35. To load, the data should be downloaded from the CMU motion capture data base, http://mocap.cs.cmu.edu, and placed in baseDir/mocap/cmu/35/, where baseDir is the directory where you have placed 'datasetsDirectory.m'. You need the amc files and the asf file. 
+
+Removed Example 86 motion 10 from the CMU motion capture data base.
+
 Version 0.121
 -------------
 

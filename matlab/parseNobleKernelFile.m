@@ -1,6 +1,16 @@
 function [K, labels] = parseNobleKernelFile(fileName)
 
-% PARSENOBLEKERNELFILE Load wireless strength data.
+% PARSENOBLEKERNELFILE Parse a kernel file from Bill Stafford Noble.
+% FORMAT
+% DESC loads the data from a kernel file as written by Bill
+% Stafford Noble's code (see for example http://noble.gs.washington.edu/proj/yeast/).
+% ARG fileName : the name of the file in which the data is stored.
+% RETURN K : the kernel matrix that was stored in the file.
+% RETURN labels : labels associated with the kernel matrix.
+%
+% SEEALSO : mapLoadData, parseWirelessData
+%
+% COPYRIGHT : Neil D. Lawrence, 2006
 
 % DATASETS
 

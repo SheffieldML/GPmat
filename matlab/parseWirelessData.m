@@ -1,6 +1,23 @@
 function [strength, time, x, y, storedMacs] = parseWirelessData(fileName)
 
 % PARSEWIRELESSDATA Load wireless strength data.
+% FORMAT
+% DESC loads wireless strength data as written by the University of
+% Washington by Brian Ferris.
+% ARG fileName : the file name to load the data from.
+% RETURN strength : the strengths of the wireless access points
+% read.
+% RETURN time : the time at which the wireless access points were
+% read.
+% RETURN x : the 'ground truth' x location of the device at the
+% time.
+% RETURN y : the 'ground truth' y location of the device at the
+% time.
+% RETURN macs : the mac addresses of the devices that were read.
+%
+% SEEALSO : lvmLoadData
+%
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
 % DATASETS
 

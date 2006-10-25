@@ -1,6 +1,16 @@
 function connect = mocapConnections(fileName, pointNames);
 
 % MOCAPCONNECTIONS Give a connection matrix for the motion capture data.
+% FORMAT
+% DESC load a connection matrix for txt file based mocap data.
+% ARG fileName : the file from which to load the connectivity data.
+% ARG pointNames : the names of the points in the file, with the
+% ordering matching orderings in any data files to be loaded in (as
+% returned by MOCAPPARSETEXT).
+%
+% SEEALSO : mocapLoadTextData, mocapParseText
+%
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
 % DATASETS
 

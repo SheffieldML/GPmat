@@ -1,6 +1,17 @@
 function [points, pointNames, times] = mocapParseText(fileName);
 
 % MOCAPPARSETEXT Parse a motion capture text file.
+% FORMAT
+% DESC parses a motion capture text file and returns point
+% positions, point names and times.
+% ARG fileName : the file name in which the data is stored.
+% RETURN points : point positions extracted from the file.
+% RETURN pointNames : the names of the points in the files.
+% RETURN times : the timing of each individual frame in the file.
+%
+% SEEALSO : mocapConnections, mocapLoadTextData
+%
+% COPYRIGHT : Neil D. Lawrence, 2006
 
 % DATASETS
 

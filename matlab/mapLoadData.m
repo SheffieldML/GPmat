@@ -1,6 +1,29 @@
 function [X, y, XTest, yTest] = mapLoadData(dataset, seedVal)
 
-% MAPLOADDATA Load a dataset.
+% MAPLOADDATA Load a mapping model dataset (e.g. classification, regression).
+% FORMAT
+% DESC loads a data set for a mapping modelling problem
+% (e.g. classification or regression).
+% ARG dataset : the name of the data set to be loaded. Currently
+% the possible names are 'usps', 'usps.' where . is a digit between
+% 0 and 9, 'spgp1d', 'twoclusters', 'regressionOne',
+% 'regressionTwo', 'regressionThree', 'regressionFour',
+% 'classificationTwo', 'classificationThree', 'orderedOne',
+% 'orderedTwo', 'ionosphere'.
+% ARG seedVal : a seed value for generating the data set (default
+% is 1e5). Note that in many cases a generated data set will be
+% saved and loaded from disc the next time the function is
+% called. In these cases this value, if changed, won't have an effect.
+% RETURN X : the training input data loaded in.
+% RETURN y : the training target data loaded in.
+% RETURN XTest : the test input data loaded in. If no test set is
+% available it is empty.
+% RETURN yTest : a test target data.
+%
+% SEEALSO : lvmLoadData, datasetsDirectory
+%
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
+
 
 % DATASETS
 
@@ -15,41 +38,6 @@ yTest = [];
 baseDir = datasetsDirectory;
 
 switch dataset
-  %/~
- case 'pumadynSeeger'
-  data = load([baseDir 'Dataset.data']);
-  ind = randperm(size(data, 1));
-  indTr = ind(1:7168);
-  indTe = ind(7169:end);
-  X = data(indTr, 1:end-1);
-  y = data(indTr, end);
-  XTest = data(indTe, 1:end-1);
-  yTest = data(indTe, end);
-  Xscale = sqrt(var(X));
-  for j = 1:length(Xscale);
-    X(:, j) = X(:, j)/Xscale(j);
-    XTest(:, j) = XTest(:, j)/Xscale(j);
-  end
-  augX = [X ones(size(X, 1), 1)];
-  w = inv(augX'*augX)*augX'*y;
-  y = y -augX*w;
-  augTestX = [XTest ones(size(XTest, 1), 1)];
-  yTest = yTest - augTestX*w;
-  yscale = sqrt(var(y));
-  y = y/yscale;
-  yTest = yTest/yscale;
- case 'pumadyn'
-
-  % Data is variance 1, no need to normalise.
-  data = load([baseDir 'Dataset.data']);
-  ind = randperm(size(data, 1));
-  indTr = ind(1:7168);
-  indTe = ind(7169:end);
-  X = data(indTr, 1:end-1);
-  y = data(indTr, end);
-  XTest = data(indTe, 1:end-1);
-  yTest = data(indTe, end);
- %~/
  case 'usps'
   load([baseDir 'usps_train']);
   X = ALL_DATA;
@@ -101,6 +89,28 @@ switch dataset
       y = real(gaussSamp(K, 1)') + randn(N, 1)*0.1;
 
       save([baseDir 'spgp1DData.mat'], 'numIn', 'N', 'X', 'y')
+    else
+      error(lasterr);
+    end
+  end
+ case 'twoclusters'
+  try 
+    load([baseDir 'twoclusters.mat'])
+  catch
+    [void, errid] = lasterr;
+    if strcmp(errid, 'MATLAB:load:couldNotReadFile')
+      numIn = 1;
+      N = 200;
+      X1 = rand(N/2, numIn)-1.5;
+      X2 = rand(N/2, numIn)+.5;
+      X = [X1; X2];
+      kern = kernCreate(X, 'rbf');
+      kern.variance = 1;
+      kern.inverseWidth = 100;      
+      K = kernCompute(kern, X);
+      y = real(gaussSamp(K, 1)') + randn(N, 1)*0.1;
+
+      save([baseDir 'twoclusters.mat'], 'numIn', 'N', 'X', 'y')
     else
       error(lasterr);
     end
@@ -345,4 +355,43 @@ switch dataset
   yTest = y(testInd, :);
   X = X(trainInd, :);
   y = y(trainInd, :);
+
+  %/~
+ case 'pumadynSeeger'
+  data = load([baseDir 'Dataset.data']);
+  ind = randperm(size(data, 1));
+  indTr = ind(1:7168);
+  indTe = ind(7169:end);
+  X = data(indTr, 1:end-1);
+  y = data(indTr, end);
+  XTest = data(indTe, 1:end-1);
+  yTest = data(indTe, end);
+  Xscale = sqrt(var(X));
+  for j = 1:length(Xscale);
+    X(:, j) = X(:, j)/Xscale(j);
+    XTest(:, j) = XTest(:, j)/Xscale(j);
+  end
+  augX = [X ones(size(X, 1), 1)];
+  w = inv(augX'*augX)*augX'*y;
+  y = y -augX*w;
+  augTestX = [XTest ones(size(XTest, 1), 1)];
+  yTest = yTest - augTestX*w;
+  yscale = sqrt(var(y));
+  y = y/yscale;
+  yTest = yTest/yscale;
+ case 'pumadyn'
+
+  % Data is variance 1, no need to normalise.
+  data = load([baseDir 'Dataset.data']);
+  ind = randperm(size(data, 1));
+  indTr = ind(1:7168);
+  indTe = ind(7169:end);
+  X = data(indTr, 1:end-1);
+  y = data(indTr, end);
+  XTest = data(indTe, 1:end-1);
+  yTest = data(indTe, end);
+ %~/
+ otherwise
+  error('Unknown data set requested.')
+
 end
