@@ -1,5 +1,14 @@
 Please note that this toolbox requires MATLAB 7.0 or higher to run. The toolbox relies on the optimi and ndlutil toolboxes, available at http://www.dcs.shef.ac.uk/~neil/optimi/downloadFiles and http://www.dcs.shef.ac.uk/~neil/ndultil/downloadFiles/.
 
+Version 0.163
+-------------
+
+This release removes the stubs for several KernDiagGradX.m files, which
+were confusing kernDiagGradX.m, which assumes they only exist if the function
+is implemented. For the kernel types 'lin', 'poly', 'mlp', and their 'ard'
+counter-types, these files existed but weren't yet implemented.
+
+
 Version 0.162
 -------------
 

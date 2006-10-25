@@ -16,9 +16,14 @@ The kern toolbox depends on the <a href="http://www.dcs.shef.ac.uk/~neil/ndlutil
 
 <h3>Release Information</h3>
 
-<p>Current release is 0.162.
+<p>Current release is 0.163.
 
-<p>This release implements some Matern kernels, the rational quadratic and Mark Gibbs's non-stationary kernel.
+<p> This release removes the stubs for several KernDiagGradX.m files, which
+were confusing kernDiagGradX.m, which assumes they only exist if the function
+is implemented. For the kernel types 'lin', 'poly', 'mlp', and their 'ard'
+counter-types, these files existed but weren't yet implemented.
+
+<p>Release 0.162  implements some Matern kernels, the rational quadratic and Mark Gibbs's non-stationary kernel.
 
 <p>Release 0.161 introduced the single input motif kernel for the GPSIM
 toolbox. Also there is much more documentation, and a new file
