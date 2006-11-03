@@ -1,6 +1,6 @@
 function [Y, connect] = mocapLoadTextData(dataset, centre)
 
-% MOCAPLOADDATA Load a motion capture data set from a text file.
+% MOCAPLOADTEXTDATA Load a motion capture data set from a text file.
 % FORMAT
 % DESC Load a motion capture data set from a text file.
 % ARG dataset : the name of the file without the .txt extension.

@@ -133,10 +133,10 @@ switch dataset
   [Y, lbls, Ytest, lblstest] = lvmLoadData('cmu35WalkJog');
   skel = acclaimReadSkel([baseDir 'mocap\cmu\35\35.asf']);
   [tmpchan, skel] = acclaimLoadChannels([baseDir 'mocap\cmu\35\35_01.amc'], skel);
-  xyzInd = [1 2 3];
-  xyzDiffInd = [];
-  rotInd = [4 5 6];
-  rotDiffInd = [];
+  xyzInd = [1];
+  xyzDiffInd = [2 3];
+  rotInd = [4];
+  rotDiffInd = [5 6];
   generalInd = [7:38 41:47 49:50 53:59 61:62];
 
   jointAngles  = asin(sin(pi*Y(:, generalInd)/180));
