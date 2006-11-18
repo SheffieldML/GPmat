@@ -1,0 +1,7 @@
+# These are files that should be packaged for the GP software
+dir: html
+~/mlprojects/gp/html/index.html
+~/mlprojects/gp/html/demSpgp1d1.png
+~/mlprojects/gp/html/demSpgp1d2.png
+~/mlprojects/gp/html/demSpgp1d3.png
+~/mlprojects/gp/html/demSpgp1d4.png
