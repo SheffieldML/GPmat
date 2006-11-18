@@ -67,6 +67,8 @@ if isfield(options, 'back') & ~isempty(options.back)
     % Match back model to initialisation.
     model.back = mappingOptimise(model.back, model.y, model.X);
   end
+  % Now update latent positions with the back constraints output.
+  model.X = modelOut(model.back, model.y);
 end
 
 initParams = fgplvmExtractParam(model);

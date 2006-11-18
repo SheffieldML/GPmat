@@ -21,7 +21,7 @@ k = 5;
 kernType = {'rbf', 'lin', 'rbfard', 'mlp', 'mlpard', 'white'};
 kernType = 'rbf';
 backType = 'mlp';
-dynType = 'gp';
+dynType = 'gpTime';
 learn = true; % dont' test learning of dynamics.
 diff = false; % Use diffs for generating dynamics.
 seq(1) = 5;
@@ -87,6 +87,10 @@ for back = [false true]
              case 'gp'
               model = fgplvmAddDynamics(model, 'gp', optionsDyn, ...
                                         diff, learn, seq);
+             case 'gpTime'
+              t = [1:size(Y, 1)]';
+              model = fgplvmAddDynamics(model, 'gpTime', optionsDyn, ...
+                                        t, diff, learn, seq);
              otherwise
               model = fgplvmAddDynamics(model, dynType);
               

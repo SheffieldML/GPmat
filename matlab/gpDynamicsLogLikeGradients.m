@@ -1,6 +1,17 @@
 function g = gpDynamicsLogLikeGradients(model)
 
 % GPDYNAMICSLOGLIKEGRADIENTS Gradients of the GP dynamics wrt parameters.
+% FORMAT
+% DESC Computes the gradients with respect to the log likelihood of
+% the GP dynamics in a GP-LVM model.
+% ARG model : the GP model for which log likelihood is to be
+% computed.
+% RETURN g : the gradients of the log likelihood with respect to
+% the latent points and (optionally) parameters.
+%
+% SEEALSO : gpLogLikeGradients, gpDynamicsCreate, gpDynamicsLogLikelihood, modelLogLikelihood
+%
+% COPYRIGHT : Neil D. Lawrence and Cark Henrik Ek, 2006
 
 % FGPLVM
 

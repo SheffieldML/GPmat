@@ -1,6 +1,11 @@
 The FGPLVM toolbox is a new implementation of the GP-LVM that uses the Pseudo-Input method of Snelson and Ghahramani (NIPS 2005) for sparsification and efficiency improvements. 
 
 
+Version 0.142
+-------------
+
+Fixed bug in fgplvmCreate.m where the back constraints were set up, but the latent positions were not being set according to the back constraints in the returned model.
+
 Version 0.141
 -------------
 

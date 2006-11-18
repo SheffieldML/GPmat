@@ -11,7 +11,7 @@ function model = gpDynamicsSetLatentValues(model, X)
 %
 % SEEALSO : gpDynamicsCreate, gpDynamicsLogLikelihood
 %
-% COPYRIGHT : Neil D. Lawrence and Cark Ek, 2006
+% COPYRIGHT : Neil D. Lawrence and Cark Henrik Ek, 2006
 
 % FGPLVM
 

@@ -1,6 +1,16 @@
 function param = gpDynamicsExtractParam(model)
 
 % GPDYNAMICSEXTRACTPARAM Extract parameters from the GP dynamics model.
+% FORMAT
+% DESC extracts the model parameters from a structure containing
+% the information about a Gaussian process dynamics model.
+% ARG model : the model structure containing the information about
+% the model.
+% RETURN params : a vector of parameters from the model.
+%
+% SEEALSO : gpExtractParam, gpDynamicsCreate, gpDynamicsExpandParam, modelExtractParam
+%
+% COPYRIGHT : Neil D. Lawrence, 2006
 
 % FGPLVM
 

@@ -1,15 +1,15 @@
 function ll = gpDynamicsLogLikelihood(model)
 
-% GPDYNAMICSLOGLIKELIHOOD Give the log likelihood of the dynamics part.
+% GPDYNAMICSLOGLIKELIHOOD Give the log likelihood of GP dynamics.
 % FORMAT
-% DESC Computes the log likelihood of a the dynamics in a GP-LVM model.
+% DESC Computes the log likelihood of GP dynamics in a GP-LVM model.
 % ARG model : the GP model for which log likelihood is to be
 % computed.
 % RETURN ll : the log likelihood of the data in the GP model.
 %
 % SEEALSO : gpDynamicsCreate, gpDynamicsLogLikeGradients, modelLogLikelihood
 %
-% COPYRIGHT : Neil D. Lawrence and Cark Ek, 2006
+% COPYRIGHT : Neil D. Lawrence and Cark Henrik Ek, 2006
 
 % FGPLVM
 

@@ -4,10 +4,9 @@ function model = gpDynamicsCreate(q, d, latentVals, options, varargin)
 % FORMAT
 % DESC creates a Gaussian process model for dealing with dynamics
 % in the latent space of a GP-LVM.
-% ARG q : input data dimension.
-% ARG d : the number of processes (i.e. output data dimension).
-% ARG X : the input data matrix.
-% ARG y : the target (output) data.
+% ARG q : the latent space dimension.
+% ARG q : the latent space dimension.
+% ARG X : the latent variables.
 % ARG options : options structure as defined by gpOptions.m.
 % ARG diff : Whether or not to use differences between points in
 % the latent space as the targets for the GP or absolute location of
@@ -23,7 +22,7 @@ function model = gpDynamicsCreate(q, d, latentVals, options, varargin)
 %
 % SEEALSO : gpCreate, gpDynamicsLatentGradients, gpDynamicsSetLatentValues, gpDynamicsLogLikelihood
 %
-% COPYRIGHT : Neil D. Lawrence and Carl Ek, 2005, 2006
+% COPYRIGHT : Neil D. Lawrence and Carl Henrik Ek, 2005, 2006
 
 % FGPLVM
 

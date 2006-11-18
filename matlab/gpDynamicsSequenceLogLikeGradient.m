@@ -1,6 +1,6 @@
 function gX = gpDynamicsSequenceLogLikeGradient(model, Xraw)
 
-% GPDYNAMICSSEQUENCELOGLIKEGRADIENT Log-likelihood gradient for of a sequence of the GP-LVM dyanmics.
+% GPDYNAMICSSEQUENCELOGLIKEGRADIENT Log-likelihood gradient for of a sequence of the GP-LVM dynamics.
 % FORMAT
 % DESC returns the gradient of the log likelihood with respect to
 % the latent position, where the log likelihood is conditioned on
