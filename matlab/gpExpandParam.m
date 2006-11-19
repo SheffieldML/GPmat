@@ -31,6 +31,15 @@ startVal = endVal +1;
 endVal = endVal + model.kern.nParams;
 model.kern = kernExpandParam(model.kern, params(startVal:endVal));
 
+% Check if there is a mean function.
+if isfield(model, 'meanFunction') & ~isempty(model.meanFunction)
+  startVal = endVal + 1;
+  endVal = endVal + model.meanFunction.numParams;
+  model.meanFunction = modelExpandParam(model.meanFunction, ...
+                                        params(startVal:endVal));
+end
+
+% Check if the output scales are being learnt.
 if model.learnScales
   startVal = endVal + 1;
   endVal = endVal + model.d;

@@ -28,6 +28,11 @@ options.optimiser = 'conjgrad';
 % Set to 1 to learn output scales.
 options.learnScales = 0;
 
+% Set to a given mean function to have a mean function.
+options.meanFunction = [];
+% Options structure for mean function options.
+options.meanFunctionOptions = [];
+
 % Set to 1 if output processes have a shared variance.
 options.isSpherical = 1;
 

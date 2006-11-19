@@ -29,6 +29,7 @@ function [mu, covarSigma, factors] = gpPosteriorMeanCovar(model, X);
 
 % GP
 
+% Just call gpPosteriorMeanVar for means.
 mu = gpPosteriorMeanVar(model, X);
 
 if nargout > 1

@@ -14,19 +14,28 @@ function params = gpExtractParam(model)
 
 % GP
 
+% Check if the output scales are being learnt.
 if model.learnScales
   fhandle = str2func([model.scaleTransform 'Transform']);
   scaleParams = fhandle(model.scale, 'xtoa');
 else
   scaleParams = [];
 end
+
+% Check if there is a mean function.
+if isfield(model, 'meanFunction') & ~isempty(model.meanFunction)
+  meanFuncParams = modelExtractParam(model.meanFunction);
+else
+  meanFuncParams =[];
+end
+
 switch model.approx
  case 'ftc'
-  params =  [kernExtractParam(model.kern) scaleParams];
+  params =  [kernExtractParam(model.kern) meanFuncParams scaleParams];
  case {'dtc', 'fitc', 'pitc'}
   fhandle = str2func([model.betaTransform 'Transform']);
   paramPart = [kernExtractParam(model.kern) ...
-               scaleParams fhandle(model.beta, 'xtoa')];
+               scaleParams meanFuncParams fhandle(model.beta, 'xtoa')];
   if model.fixInducing
     params = paramPart;
   else

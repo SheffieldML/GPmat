@@ -26,6 +26,7 @@ end
 if size(X, 1) > 1
   error('This function only handles one data-point at a time')
 end
+
 switch model.approx
  case 'ftc'
   gX = kernGradX(model.kern, X, model.X);
@@ -35,8 +36,8 @@ switch model.approx
   kX = kernCompute(model.kern, X, model.X_u)';
  otherwise
   error('Unrecognised approximation type');
-  
 end
+
 diaggK = kernDiagGradX(model.kern, X);
 
 gmu = zeros(size(X, 2), model.d);
@@ -52,7 +53,7 @@ switch model.approx
 end
 
 gsigmavar = repmat(diaggK' - 2*Kinvgk'*kX, 1, model.d);
-gmu = gX'*model.alpha; 
+gmu = gX'*model.alpha;
 
 gmu = gmu.*repmat(model.scale, model.q, 1);
 gsigmavar = gsigmavar.*repmat(model.scale.*model.scale, model.q, 1);

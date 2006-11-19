@@ -33,7 +33,7 @@ end
 
 model.type = 'gp';
 model.approx = options.approx;
-
+  
 model.learnScales = options.learnScales;
 model.scaleTransform = 'negLogLogit';
 
@@ -43,6 +43,18 @@ model.y = y;
 model.q = size(X, 2);
 model.d = size(y, 2);
 model.N = size(y, 1);
+
+% Set up a mean function if one is given.
+if isfield(options, 'meanFunction') & ~isempty(options.meanFunction)
+  if isstruct(options.meanFunction)
+    model.meanFunction = options.meanFunction;
+  else
+    if ~isempty(options.meanFunction)
+      model.meanFunction = modelCreate(options.meanFunction, model.q, model.d, options.meanFunctionOptions);
+    end
+  end
+end
+
 
 model.optimiser = options.optimiser;
 

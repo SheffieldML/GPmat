@@ -94,9 +94,15 @@ while startVal <= size(X, 1)
   end
   
   
-  % Rescale and add the bias mean back in.
-  mu(indices,:) = mu(indices, :).*repmat(model.scale, length(indices), 1) + repmat(model.bias, length(indices), 1);
-  
+  % Rescale the mean
+  mu(indices,:) = mu(indices, :).*repmat(model.scale, length(indices), 1);
+  % Add the bias back in.
+  mu(indices, :) = mu(indices, :) + repmat(model.bias, length(indices), 1);
+  % If the mean function is present, add it it.
+  if isfield(model, 'meanFunction') & ~isempty(model.meanFunction)
+    mu(indices, :) = mu(indices, :) + modelOut(model.meanFunction, ...
+                                               X(indices, :));
+  end
   % rescale the variances
   if nargout > 1
     varsigma(indices, :) = varsigma(indices, :).* ...

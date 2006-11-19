@@ -2,7 +2,7 @@ function ll = gpLogLikelihood(model)
 
 % GPLOGLIKELIHOOD Compute the log likelihood of a GP.
 % FORMAT
-% DESC Computes the log likelihood of a data set given a GP model.
+% DESC computes the log likelihood of a data set given a GP model.
 % ARG model : the GP model for which log likelihood is to be
 % computed.
 % RETURN ll : the log likelihood of the data in the GP model.

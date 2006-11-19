@@ -69,6 +69,7 @@ gX_u = [];
 gX = [];
 
 g_scaleBias = gpScaleBiasGradient(model);
+g_meanFunc = gpMeanFunctionGradient(model);
 
 switch model.approx
  case 'ftc'
@@ -110,7 +111,7 @@ switch model.approx
       gParam = gParam + kernGradient(model.kern, X, gK);
     end
   end
-  gParam = [gParam g_scaleBias];
+  gParam = [gParam g_meanFunc g_scaleBias];
  case {'dtc', 'fitc', 'pitc'}
   % Sparse approximations.
   [gK_u, gK_uf, gK_star, g_beta] = gpCovGrads(model, M);
@@ -175,7 +176,7 @@ switch model.approx
   % Deterministic training conditional.  
 
   % append beta gradient to end of parameters
-  gParam = [g_param(:)' g_scaleBias g_beta];
+  gParam = [g_param(:)' g_meanFunc g_scaleBias g_beta];
  
  case 'fitc'
   % Fully independent training conditional.
@@ -192,7 +193,7 @@ switch model.approx
   g_param = g_param + kernDiagGradient(model.kern, X, gK_star);
 
   % append beta gradient to end of parameters  
-  gParam = [g_param(:)' g_scaleBias g_beta];
+  gParam = [g_param(:)' g_meanFunc g_scaleBias g_beta];
 
  case 'pitc'
   % Partially independent training conditional.
@@ -231,7 +232,7 @@ switch model.approx
   end
 
   % append beta gradient to end of parameters
-  gParam = [g_param(:)' g_scaleBias g_beta];
+  gParam = [g_param(:)' g_meanFunc g_scaleBias g_beta];
 
  otherwise
   error('Unrecognised model approximation');
