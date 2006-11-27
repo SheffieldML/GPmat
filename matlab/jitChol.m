@@ -13,6 +13,7 @@ function [UC, jitter] = jitChol(A, maxTries)
 % before giving up (default 10).
 % RETURN U : the Cholesky decomposition for the matrix.
 %
+% FORMAT
 % DESC attempts a Cholesky decomposition on the given matrix, if
 % matrix isn't positive definite the function adds 'jitter' and tries
 % again. Thereafter the amount of jitter is multiplied by 10 each time

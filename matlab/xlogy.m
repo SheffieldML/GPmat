@@ -8,6 +8,7 @@ function z = xlogy(x, y)
 % ARG y : the y argument in x*log(y).
 % RETURN z : returns z where z = x*log(y).
 % 
+% FORMAT
 % DESC computes the function x*log(x), taking account for the fact
 % that the answer is zero if x=0.
 % ARG x : the argument in x*log(x).

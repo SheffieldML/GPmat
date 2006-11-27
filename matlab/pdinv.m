@@ -19,6 +19,7 @@ function [Ainv, UC, jitter] = pdinv(A, UC)
 % decomposition.
 % RETURN U : the Cholesky decomposition of A.
 %
+% FORMAT
 % DESC inverts a positive definite matrix given the Cholesky
 % decomposition of A. If jitter is used then the
 % amount of jitter used is returned. 
