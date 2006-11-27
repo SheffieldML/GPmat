@@ -1,10 +1,16 @@
-function prepareplot(limitVal, figNo)
+function preparePlot(limitVal, figNo)
 
 % PREPAREPLOT Helper function for tidying up the plot before printing.
+% FORMAT
+% DESC is a helper function for tidying up a plot before printing. 
+% ARG limitVal : the limits to be applied to the axes.
+% ARG figNo : the figure number to apply the plot preparation to.
+% 
+% COPYRIGHT : Neil D. Lawrence, 2005
+% 
+% SEEALSO : zeroAxes
 
 % NDLUTIL
-
-% GENERAL
 
 axis equal
 

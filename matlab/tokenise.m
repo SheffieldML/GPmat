@@ -1,6 +1,16 @@
 function tokens = tokenise(string, delim)
 
 % TOKENISE Split a string into separate tokens.
+% FORMAT
+% DESC takes a string and splits it into separate tokens. 
+% ARG string : the string to be split into parts.
+% ARG delim : the delimiter to use in splitting the string
+% (default is ' ').
+% RETURN tokens : a cell array of tokens split from the string.
+%
+% SEEALSO stringSplit
+%
+% COPYRIGHT : Neil D. Lawrence, 2005
 
 % NDLUTIL
 

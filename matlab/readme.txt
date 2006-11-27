@@ -1,6 +1,12 @@
 This toolbox implements some generic functions used by other toolboxes. Originally it was spun out of the IVM 0.221 toolbox.
 
 
+Version 0.153
+-------------
+
+Added comments to files and changed jitChol, pdinv and logdet so that
+they can return any jitter added.
+
 Version 0.152
 -------------
 

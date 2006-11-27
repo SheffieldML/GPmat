@@ -1,6 +1,18 @@
 function [columnNames, data] = tableRead(fileName, separator)
 
 % TABLEREAD Read in data which has column titles in the first line and separated values in each other line.
+% FORMAT 
+% DESC reads in data from a file that has column titles in the first line and
+% separated values in every other line. 
+% ARG fileName : file name in which the data is stored.
+% ARG separator : separator between the columns (default ',').
+% RETURN columnNames : the names of the columns taken from the
+% first line.
+% RETURN data : the data, taken from the remaining lines.
+%
+% SEEALSO : fopen, fgetl
+%
+% COPYRIGHT : Neil D. Lawrence, 2004
 
 % NDLUTIL 
 

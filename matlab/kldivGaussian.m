@@ -1,6 +1,17 @@
 function kl = kldivGaussian(mean1, cov1, mean2, cov2)
 
 % KLDIVGAUSSIAN Give the KL divergence between two Gaussians.
+% FORMAT
+% DESC returns the Kullback-Leibler divergence between two
+% Gaussians with given means and covariances.
+% ARG mean1 : mean of the first Gaussian.
+% ARG cov1 : covariance of the first Gaussian.
+% ARG mean2 : mean of the second Gaussian.
+% ARG cov2 : covariance of the second Gaussian.
+%
+% SEEALSO : logdet, pdinv
+%
+% COPYRIGHT : Neil D. Lawrence, 2005
 
 % NDLUTIL
 

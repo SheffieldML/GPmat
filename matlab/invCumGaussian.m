@@ -1,6 +1,14 @@
 function y = invCumGaussian(x)
 
-% INVCUMGAUSSIAN Inverser of the cumulative Gaussian.
+% INVCUMGAUSSIAN Computes inverse of the cumulative Gaussian.
+% FORMAT
+% DESC computes the inverse of the cumulative Gaussian.
+% ARG x : value between 0 and 1 to map onto the real line.
+% ARG y : the inverse of the cumulative Gaussian.
+%
+% SEEALSO : cumGaussian, erfinv
+% 
+% COPYRIGHT : Neil D. Lawrence, 2005
 
 % NDLUTIL
 

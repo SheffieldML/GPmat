@@ -1,6 +1,17 @@
 function str = numsf2str(num, sf);
 
 % NUMSF2STR Convert number to a string with a number of significant digits.
+% FORMAT
+% DESC converts a number to a string with a given number of
+% significant digits.
+% ARG num : the number to convert.
+% ARG sf : the number of significant figures to show in the string.
+% RETURN str : the string containing the number with the given
+% number of significant digits.
+%
+% COPYRIGHT : Neil D. Lawrence, 2005
+%
+% SEEALSO : num2str, fprintf
 
 % NDLUTIL
 

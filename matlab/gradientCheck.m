@@ -1,6 +1,24 @@
 function gradientCheck(params, objectiveFunction, gradientFunction, varargin)
 
 % GRADIENTCHECK Check gradients of objective function.
+% FORMAT
+% DESC checks the supplied gradient function and the supplied
+% objective function to ensure that the numerical gradients (as
+% computed with the objective function) match the analytically
+% computed gradients.
+% ARG params : the parameters at which the gradients will be
+% checked.
+% ARG objectiveFunction : function handle for the objective
+% function.
+% ARG gradientFunction : function handle for the objective
+% function.
+% ARG P1, P2, P3 ... : additional arguments that are passed to the
+% objective and gradient functions (after the parameter vector
+% which is always assumed to be the first argument passed).
+%
+% SEEALSO : modelObjective, modelGradient, modelCreate
+%
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
 % NDLUTIL
 

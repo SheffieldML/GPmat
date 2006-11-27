@@ -1,6 +1,17 @@
 function [ax, data] = scatterPlot(X, YLbls, markerSize);
 
 % SCATTERPLOT 2-D scatter plot of labelled points.
+% FORMAT
+% DESC plots a 2-D scatter plot of labelled points.
+% ARG X : x points to plot.
+% ARG lbls : the labels to plot.
+% ARG markerSize : the size of the markers to use.
+% RETURN ax : the axis handle of the plot.
+% RETURN data : the handles of the data points.
+%
+% SEEALSO : plot, getSymbols
+% 
+% COPYRIGHT : Neil D. Lawrence, 2005
 
 % NDLUTIL
 

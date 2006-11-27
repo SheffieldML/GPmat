@@ -1,6 +1,18 @@
 function zeroAxes(axesHandle, tickRatio, fontSize, fontName)
 
 % ZEROAXES A function to move the axes crossing point to the origin.
+% FORMAT
+% DESC moves the crossing point of the axes to the origin. 
+% ARG axesHandle : the handle of the axes to zero.
+% ARG tickRatio : the ratio of the axis length to the tick length
+% (default 0.025).
+% ARG fontSize : the font size for the axes (default 14).
+% ARG fontName : the name of the font for the axes (default
+% 'times').
+% 
+% SEEALSO : plot
+%
+% COPYRIGHT : Neil D. Lawrence, 2005
 
 % NDLUTIL
 

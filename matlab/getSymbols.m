@@ -1,6 +1,15 @@
 function symbol = getSymbols(number)
 
-% GETSYMBOLS Get a cell structure of different plot symbols.
+% GETSYMBOLS Get a cell array of different plot symbols.
+% FORMAT
+% DESC returns a cell array of different plot symbols. A maximum of
+% 66 distinct symbols will be created.
+% ARG number : the number of different plot symbols required.
+% RETURN symbol : cell array of the different symbols.
+%
+% SEEALSO : plot
+%
+% COPYRIGHT : Neil D. Lawrence, 2005
 
 % NDLUTIL
 

@@ -1,6 +1,16 @@
 function D = sparseDiag(d)
 
 % SPARSEDIAG Create a diagonal matrix that is sparse from a vector.
+% FORMAT
+% DESC creates a diagonal matrix that is sparse from a vector.
+% ARG d : the diagonal vector from which the sparse diagonal matrix
+% is formed.
+% RETURN D : the sparse diagonal matrix containing the vector as
+% its diagonal.
+%
+% SEEALSO : diag, spdiags
+%
+% COPYRIGHT : Neil D. Lawrence, 2005
 
 % NDLUTIL
 
