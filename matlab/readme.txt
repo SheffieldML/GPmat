@@ -5,7 +5,7 @@ Version 0.153
 -------------
 
 Added comments to files and changed jitChol, pdinv and logdet so that
-they can return any jitter added.
+they can return any jitter added. If the return the jitter then they don't emit a warning.
 
 Version 0.152
 -------------
