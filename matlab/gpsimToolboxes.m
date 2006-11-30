@@ -1,7 +1,8 @@
 % GPSIMTOOLBOXES Toolboxes for the GPSIM software.
 
 importLatest('netlab');
-importLatest('optimi');
-importLatest('ndlutil');
-importLatest('mltools');
+importTool('optimi');
+importTool('ndlutil');
+importTool('mltools');
 importLatest('kern');
+importLatest('fgplvm');

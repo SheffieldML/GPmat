@@ -18,7 +18,7 @@ function model = gpsimExpandParam(model, params)
 % COPYRIGHT : Neil D. Lawrence, 2006
 
 % GPSIM
-
+params = real(params);
 if isfield(model, 'fix')
   for i = 1:length(model.fix)
     params(model.fix(i).index) = model.fix(i).value;
