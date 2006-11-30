@@ -32,3 +32,4 @@ if isfield(model, 'fix')
     param(model.fix(i).index) = model.fix(i).value;
   end
 end
+param = real(param);

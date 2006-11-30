@@ -105,7 +105,7 @@ if isfield(options, 'fix')
 end
 
 % The basal transcriptions rates must be postitive.
-model.bTransform = 'negLogLogit';
+model.bTransform = optimiDefaultConstraint('positive');
 
 % This forces kernel compute.
 params = gpsimExtractParam(model);
