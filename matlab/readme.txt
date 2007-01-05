@@ -1,8 +1,11 @@
-
-
 The optimi toolbox is a helper toolbox that provides non-linear transformations for changing the regime across which parameters are optimised.
 
 For example it allows variances to be optimised in log space using expTransform. sigmoidTransform allows parameters to be constrained to be between 0 and 1, negLogLogitTransform constrains a parameter to be positive.
+
+Version 0.132
+-------------
+
+Included a function to return the default functions to be used for particular constraints and a function to return the default optimiser.
 
 Version 0.131
 -------------
