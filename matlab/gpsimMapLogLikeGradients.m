@@ -20,6 +20,7 @@ function g = gpsimMapLogLikeGradients(model, gfdata)
 % COPYRIGHT : Magnus Rattray and Neil D. Lawrence, 2006
 
 % GPSIM
+
 dataRespond = false;
 if dataRespond & nargin < 2
   [void, gfdata] = gpsimMapFunctionalLogLikeGradients(model);

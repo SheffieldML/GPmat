@@ -7,6 +7,18 @@ dir: html
 ~/mlprojects/gpsim/html/demBarenco1_basal.png
 ~/mlprojects/gpsim/html/demBarenco1_sensitivity.png
 ~/mlprojects/gpsim/html/demBarenco1_decay.png
+~/mlprojects/gpsim/html/demBarencoMap1Rbflinearprofile1_slide.png
+~/mlprojects/gpsim/html/demBarencoMap1Rbflinearprofile2_slide.png
+~/mlprojects/gpsim/html/demBarencoMap1Rbflinearprofile3_slide.png
+~/mlprojects/gpsim/html/demBarencoMap1Mlplinearprofile1_slide.png
+~/mlprojects/gpsim/html/demBarencoMap1Mlplinearprofile2_slide.png
+~/mlprojects/gpsim/html/demBarencoMap1Mlplinearprofile3_slide.png
+~/mlprojects/gpsim/html/demBarencoMap1Rbfexpprofile1_slide.png
+~/mlprojects/gpsim/html/demBarencoMap1Rbfexpprofile2_slide.png
+~/mlprojects/gpsim/html/demBarencoMap1Rbfexpprofile3_slide.png
+~/mlprojects/gpsim/html/demBarencoMap1Mlpexpprofile1_slide.png
+~/mlprojects/gpsim/html/demBarencoMap1Mlpexpprofile2_slide.png
+~/mlprojects/gpsim/html/demBarencoMap1Mlpexpprofile3_slide.png
 dir: data
 ~/mlprojects/gpsim/matlab/data/resultsMartino_exprs.xls
 ~/mlprojects/gpsim/matlab/data/resultsMartino_se.xls

@@ -13,17 +13,20 @@ function ll = gpsimMapLogLikelihood(model, df)
 
 % GPSIM
 
+numData = length(model.t);
+
 ll = model.f'*model.invK*model.f ...
      - model.logDetCovf + model.logDetK;
-for i = 1:length(model.t)
+for i = 1:numData
   for j = 1:model.numGenes
-    beta_ij = 1/model.yvar(i+(j-1)*length(model.t));
+    ind = i + (j-1)*numData;
+    beta_ij = 1/model.yvar(ind);
     factor = (model.ypred(model.times_index(i), j)...
-              - model.y(i+(j-1)*length(model.t)));
+              - model.y(ind));
     ll = ll + factor*factor*beta_ij + log(beta_ij);
   end
 end
 
-ll = ll + length(model.t)*model.numGenes*log(2*pi);
+ll = ll + numData*model.numGenes*log(2*pi);
 
 ll = -.5*ll;

@@ -102,6 +102,18 @@ else
 end
 model.numParams = model.kern.nParams;
 
+% Initialise any mean function
+if isfield(options, 'meanFunction') & ~isempty(options.meanFunction)
+  if isstruct(options.meanFunction) 
+    model.meanFunction = options.meanFunction;
+  else
+    model.meanFunction = ...
+        modelCreate(options.meanFunction, size(model.mapt, 1), 1, ...
+                    options.meanFunctionOptions);
+  end
+  model.numParams = model.numParams + model.meanFunction.numParams;
+end
+
 % Initialise posterior at zero
 model.f = zeros(length(model.mapt), 1);
 model.varf = ones(size(model.f));   %Variances
@@ -116,7 +128,5 @@ model = gpsimMapUpdateG(model);
 model = gpsimMapUpdateYpred(model);
 
 % Switch off update of f to update kernels & W.
-model.updateF = false;
 model = gpsimMapUpdateKernels(model);
 model = gpsimMapFunctionalUpdateW(model);
-model.updateF = true;

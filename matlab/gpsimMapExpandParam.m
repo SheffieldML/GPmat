@@ -31,6 +31,16 @@ end
 startVal = 1;
 endVal = model.kern.nParams;
 model.kern = kernExpandParam(model.kern, params(startVal:endVal));
+
+% Check if there is a mean function.
+if isfield(model, 'meanFunction') & ~isempty(model.meanFunction)
+  startVal = endVal + 1;
+  endVal = endVal + model.meanFunction.numParams;
+  model.meanFunction = modelExpandParam(model.meanFunction, ...
+                                        params(startVal:endVal));
+end
+
+
 model = gpsimMapUpdateKernels(model);
-%model = gpsimMapFunctionalUpdateW(model);
 model = gpsimMapUpdatePosteriorCovariance(model);
+model.updateW = true; % Needs to be re-done after parameter change.

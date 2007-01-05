@@ -1,3 +1,8 @@
+Version 0.11
+------------
+
+Updated release with correction to Hessian for non-linear response model and modular code for the MAP approximation.
+
 Version 0.1
 -----------
 
