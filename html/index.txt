@@ -16,7 +16,9 @@ module modelling software (GPSIM) available for <a href="http://www.cs.man.ac.uk
 
 <h3>Release Information</h3>
 
-Current release is 0.11.
+<p>Current release is 0.11.
+
+<p>Release with scripts to recreate results in NIPS paper and at NIPS workshop talk. Updated release with correction to Hessian for non-linear response model and modular code for the MAP approximation. 
 
 <p>The first release is 0.1, and includes software used to create preliminary
 results to be submitted to the Gaussian Processes in Practice Workshop.
