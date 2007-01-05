@@ -1,8 +1,25 @@
 function model = kbrCreate(inputDim, outputDim, options)
 
-% KBRCREATE Create a kernel based regression model.
+% KBRCREATE Create a KBR model.
+% The kernel based regression model is simply a model for least
+% squares regression in a kernel feature space. Any kernel from the KERN
+% toolbox can be specified. The model was developed for providing kernel
+% based back constraints in the GP-LVM. Please consider using a Gaussian
+% process model (through the GP toolbox) if you are interested in the
+% model for regression.
+%
+% FORMAT
+% DESC creates a kernel based regression
+%  model structure given an options structure. 
+% ARG options : an options structure that determines the form of the model.
+% RETURN model : the model structure with the default parameters placed in.
+%
+% SEEALSO : kbrOptions, kbrParamInit, modelCreate
+%
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
 % MLTOOLS
+
 
 model.type = 'kbr';
 model.inputDim = inputDim;
@@ -17,5 +34,4 @@ else
 end
 
 model.K = kernCompute(model.kern, options.X);
-model.A = randn(model.numData, outputDim)/sqrt(model.numData+1);
-model.bias = randn(1, outputDim)/sqrt(model.numData+1);
+model = kbrParamInit(model);

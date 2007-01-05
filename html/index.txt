@@ -1,0 +1,22 @@
+<head>
+<title>Matlab Machine Learning Tools Toolbox - Examples</title>
+</head>
+
+<body><div class="section">
+
+<h1>Matlab MLTOOLS Toolbox</h1>
+
+This page describes the mltools toolbox for MATLAB available for <a href="http://www.cs.man.ac.uk/neill-bin/software/downloadForm.cgi?toolbox=mltools">download here</a>. 
+
+<h3>Release Information</h3>
+
+<p>Current release is 0.122. 
+
+<p>Latest release is inline with GPSIM toolbox.
+
+<p>This toolbox offers wrapper functions and simple implementations of various machine learning tools. The toolbox is used for providing back constraints for the <a href="http://www.cs.man.ac.uk/neill-bin/software/downloadForm.cgi?toolbox=fgplvm">FGPLVM</a> toolbox.
+
+<p>It is likely in the future that a lot of the standard functionality available in NOISE, KERN, NDLUTIL etc. will be moved into this toolbox.
+
+<p>Old releases include vrs 0.1 and vrs 0.11 and vrs 0.111.
+</div></body>

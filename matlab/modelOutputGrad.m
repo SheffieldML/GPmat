@@ -7,9 +7,12 @@ function g = modelOutputGrad(model, X)
 % ARG model : the model structure for which gradients are computed.
 % ARG X : input locations where gradients are to be computed.
 % RETURN g : gradients of the model output with respect to the
-% model parameters for the given input locations.
+% model parameters for the given input locations. The size of the
+% returned matrix is of dimension number of data x number of
+% parameters x number of model outputs (which maintains
+% compatability with NETLAB).
 %
-% SEEALSO : modelCreate, modelLogLikelihood, modelLogLikeGradients
+% SEEALSO : modelCreate, modelLogLikelihood, modelLogLikeGradients, mlpderiv
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
@@ -19,9 +22,9 @@ fhandle = str2func([model.type 'OutputGrad']);
 gtemp = fhandle(model, X);
 
 if isfield(model, 'paramGroups')
-  g = zeros(size(X, 1), size(kern.paramGroups, 2), size(gtemp, 3));
+  g = zeros(size(X, 1), size(model.paramGroups, 2), size(gtemp, 3));
   for i = 1:size(gtemp, 3)
-    g = gtemp(:, :, i)*kern.paramGroups;
+    g = gtemp(:, :, i)*model.paramGroups;
   end
 else 
   g = gtemp;

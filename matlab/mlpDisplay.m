@@ -1,6 +1,14 @@
 function mlpDisplay(model, spacing)
 
 % MLPDISPLAY Display the multi-layer perceptron model.
+% FORMAT
+% DESC displaces the contents of a multi-layer perceptron model.
+% ARG model : the model to be displayed.
+% ARG spacing : optional spacing to place before model display.
+%
+% SEEALSO : mlpCreate
+%
+% COPYRIGHT : Neil D. Lawrence, 2006
 
 % MLTOOLS
 

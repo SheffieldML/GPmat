@@ -13,9 +13,9 @@ function [Y, Z] = mlpOut(model, X);
 % ARG X : the input data for which the output is required.
 % RETURN Y : the output.
 % RETURN Z : the hidden layer activations.
-
+%
 % SEEALSO : mlpfwd, mlp, modelOut
-
+%
 % COPYRIGHT : Neil D. Lawrence, 2006
 
 % MLTOOLS
