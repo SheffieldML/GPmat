@@ -1,0 +1,48 @@
+
+
+<head>
+<title>Matlab Kernel Toolbox - Examples</title>
+</head>
+
+<body><div class="section">
+
+<h1>Matlab Kernel Toolbox</h1>
+
+This page describes the kernel toolbox for MATLAB available for <a href="http://www.cs.man.ac.uk/neill-bin/software/downloadForm.cgi?toolbox=kern">download here</a>. 
+
+<h3>Dependencies</h3>
+
+The kern toolbox depends on the <a href="http://www.cs.man.ac.uk/~neill/ndlutil/downloadFiles/"><code>ndlutil</code> toolbox</a> and the <a href="http://www.cs.man.ac.uk/~neill/optimi/downloadFiles/"><code>optimi</code> toolbox</a>. You can use your username and password for accessing these toolboxes.
+
+<h3>Release Information</h3>
+
+<p>Current release is 0.161.
+
+<p>This release introduces the single input motif kernel for the GPSIM
+toolbox. Also there is much more documentation, and a new file
+kernelGenerator.py for creating the basic files for your own kernels. 
+
+<p>This toolbox allows computation of several different kernels and their gradients. You can add kernels to the toolbox by creating versions of the relevant files. Once added, they can be tested using the <code>kernTest</code>. For example you can test the RBF kernel by writing
+
+<p><code>&gt;&gt; kernTest('rbf')</code>
+
+<p>There are several kernels implemented, the ones that are being maintained for the latest release are:
+
+<p><code>lin
+linard
+rbf
+rbfard
+mlp
+mlpard
+poly
+polyard
+white
+whitefixed
+bias
+cmpnd
+tensor (tensor kernels).
+file (a kernel written in a file).
+</code>
+
+<p>A new kernel can be created using the compound kernel, <code>cmpnd</code>. The compound kernel is made up of sums of individual kernels. Most often you will need to create a kernel containing a base kernel (e.g. <code>rbf</code>) and adding a white noise kernel, <code>white</code> and perhaps a constant offset through the bias kernel <code>bias</code>. On initialisation most kernel parameters are set to 1. Exceptions are ARD scale parameters, and the variance of the white and bias kernels.
+</div></body>
