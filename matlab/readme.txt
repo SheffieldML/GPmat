@@ -1,7 +1,7 @@
 Version 0.11
 ------------
 
-Updated release with correction to Hessian for non-linear response model and modular code for the MAP approximation. Removed update of kernel parameters 'Hessian correction'.
+Release with scripts to recreate results in NIPS paper and at NIPS workshop talk. Updated release with correction to Hessian for non-linear response model and modular code for the MAP approximation. Removed update of kernel parameters 'Hessian correction'.
 
 Version 0.1
 -----------
