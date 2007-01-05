@@ -1,4 +1,5 @@
 function kern = simKernParamInit(kern)
+
 % SIMKERNPARAMINIT SIM kernel parameter initialisation.
 % The single input motif (SIM) kernel is specifically designed for
 % working with gene networks where there is assumed to be a single
@@ -44,4 +45,6 @@ kern.inverseWidth = 1;
 kern.nParams = 3;
 
 kern.transforms.index = [1 2 3];
-kern.transforms.type = 'negLogLogit';
+kern.transforms.type = optimiDefaultConstraint('positive');
+
+kern.isStationary = false;

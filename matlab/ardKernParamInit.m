@@ -69,6 +69,8 @@ kern.inputScales = 0.999*ones(1, kern.inputDimension);
 kern.nParams = 5 + kern.inputDimension;
 
 kern.transforms(1).index = [1 2 3 4 5];
-kern.transforms(1).type = 'negLogLogit';
+kern.transforms(1).type = optimiDefaultConstraint('positive');
 kern.transforms(2).index = [6:kern.nParams];
-kern.transforms(2).type = 'sigmoid';
+kern.transforms(2).type = optimiDefaultConstraint('zeroone');
+
+kern.isStationary = false;

@@ -74,9 +74,14 @@ for i = 1:length(kern.comp)
 end
 kern.paramGroups = speye(kern.nParams);
 
-% Summarise the total white variance in the field whiteVariance.
+% Summarise the total white variance in the field whiteVariance and
+% find out whether the kernel is stationary.
 kern.whiteVariance = 0;
+kern.isStationary = true;
 for i = 1:length(kern.comp)
+  if ~kern.comp{i}.isStationary
+    kern.isStationary = false;
+  end
   if strcmp(kern.comp{i}.type, 'white')
     kern.whiteVariance = kern.whiteVariance + kern.comp{i}.variance;
   else

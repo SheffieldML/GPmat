@@ -48,14 +48,27 @@ if iscell(kernelType)
     % compound kernel type
     start = 2;
     kern.type = 'cmpnd';
+   case 'exp'
+    % componentiated kernel type
+    start = 2;
+    kern.type = 'exp';
    otherwise
     % compound kernel type
     start = 1;
     kern.type = 'cmpnd';
   end
-  for i = start:length(kernelType)
-    kern.comp{i-start+1} = kernCreate(X, kernelType{i});
-    kern.comp{i-start+1}.index = [];
+  switch kern.type
+   case {'multi', 'tensor', 'cmpnd'}
+    for i = start:length(kernelType)
+      kern.comp{i-start+1} = kernCreate(X, kernelType{i});
+      kern.comp{i-start+1}.index = [];
+    end
+   case 'exp'
+    if start == length(kernelType)
+      kern.argument = kernCreate(X, kernelType{start});
+    else
+      kern.argument = kernCreate(X, kernelType(start:end));
+    end
   end
   kern = kernParamInit(kern);
 elseif isstruct(kernelType)

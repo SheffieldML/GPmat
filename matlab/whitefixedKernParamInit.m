@@ -30,3 +30,4 @@ function kern = whitefixedKernParamInit(kern)
 kern.variance = exp(-2);
 kern.nParams = 0;
 
+kern.isStationary = true;

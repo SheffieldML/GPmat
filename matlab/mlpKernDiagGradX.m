@@ -1,6 +1,5 @@
 function gX = mlpKernDiagGradX(kern, X)
 
-
 % MLPKERNDIAGGRADX Gradient of MLP kernel's diagonal with respect to X.
 % FORMAT
 % DESC computes the gradient of the diagonal of the multi-layer perceptron kernel matrix with

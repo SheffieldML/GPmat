@@ -44,9 +44,14 @@ for i = 1:length(kern.comp)
 end
 kern.paramGroups = speye(kern.nParams);
 
-% Warn if component kernels have white variance.
+% Warn if component kernels have white variance and check if
+% resulting kernel is stationary.
+kern.isStationary = true;
 whiteVariance = 0;
 for i = 1:length(kern.comp)
+  if ~kern.comp{i}.isStationary
+    kern.isStationary = false;
+  end
   if strcmp(kern.comp{i}.type, 'white')
     whiteVariance = whiteVariance + kern.comp{i}.variance;
   else

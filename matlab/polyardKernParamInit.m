@@ -42,7 +42,8 @@ kern.nParams = 3 + kern.inputDimension;
 kern.degree = 2;
 
 kern.transforms(1).index = [1 2 3];
-kern.transforms(1).type = 'negLogLogit';
+kern.transforms(1).type = optimiDefaultConstraint('positive');
 kern.transforms(2).index = [4:kern.nParams];
-kern.transforms(2).type = 'sigmoid';
+kern.transforms(2).type = optimiDefaultConstraint('zeroone');
 
+kern.isStationary = false;

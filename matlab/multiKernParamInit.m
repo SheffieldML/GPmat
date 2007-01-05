@@ -40,8 +40,11 @@ end
 
 % the number of blocks should be the length of comp.
 kern.numBlocks = length(kern.comp);
-
+kern.isStationary = true;
 for i = 1:length(kern.comp)
+  if ~kern.comp{i}.isStationary
+    kern.isStationary = false;
+  end
   kern.comp{i} = kernParamInit(kern.comp{i});
   kern.nParams = kern.nParams + kern.comp{i}.nParams;
   kern.comp{i}.index = [];

@@ -31,4 +31,6 @@ kern.variance = 1;
 kern.nParams = 3;
 
 kern.transforms.index = [1 2 3];
-kern.transforms.type = 'negLogLogit';
+kern.transforms.type = optimiDefaultConstraint('positive');
+
+kern.isStationary = true;

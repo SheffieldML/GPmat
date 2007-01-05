@@ -99,7 +99,7 @@ prefix + 'KernDiagGradX.m' :
 % KERN
 
 ''',
-prefix + 'KernDiagGradient.m' :
+prefix + 'KernDiagGradient.template' :
 ''' function g = ''' + prefix + '''KernDiagGradient(kern, x, covDiag)
 
 % ''' + ucPrefix + '''KERNDIAGGRADIENT Compute the gradient of the ''' + ucPrefix + ''' kernel\'s diagonal wrt parameters.

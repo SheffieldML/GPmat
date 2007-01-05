@@ -30,4 +30,6 @@ kern.lengthScale = 1;
 kern.nParams = 2;
 
 kern.transforms.index = [1 2];
-kern.transforms.type = 'negLogLogit';
+kern.transforms.type = optimiDefaultConstraint('positive');
+
+kern.isStationary = true;

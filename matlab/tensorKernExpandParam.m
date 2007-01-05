@@ -1,6 +1,5 @@
 function kern = tensorKernExpandParam(kern, params)
 
-
 % TENSORKERNEXPANDPARAM Create kernel structure from TENSOR kernel's parameters.
 % FORMAT
 % DESC returns a tensor product kernel structure filled with the

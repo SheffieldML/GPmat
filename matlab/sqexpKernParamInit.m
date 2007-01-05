@@ -2,8 +2,7 @@ function kern = sqexpKernParamInit(kern)
 
 % SQEXPKERNPARAMINIT SQEXP kernel parameter initialisation.
 % This kernel is a 'pre-packaged' compound kernel of the form
-% {'rbfard', 'linard', 'bias', 'white'}. The input scales are shared
-% between the linear and RBF ARD kernels. Using this kernel removes
+% {'rbf', 'lin', 'bias', 'white'}. Using this kernel removes
 % the overhead of mutliple calls through the 'cmpnd' kernel.
 % 
 % SEEALSO sqexpKernParamInit
@@ -28,4 +27,6 @@ kern.biasVariance = 1;
 kern.nParams = 4;
 
 kern.transforms(1).index = [1 2 3 4];
-kern.transforms(1).type = 'negLogLogit';
+kern.transforms(1).type = optimiDefaultConstraint('positive');
+
+kern.isStationary = false;

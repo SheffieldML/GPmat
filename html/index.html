@@ -1,31 +1,137 @@
 <html>
+<head>
+<title>The University of Manchester</title>
+
+<meta name="description" content="">
+<meta name="keywords" content="">
+<meta name="author" content="">
+
+
+</head>
+<body bgcolor="#ffffff" topmargin="0" leftmargin="0" marginheight="0" marginwidth="0">
+
+
+<table border="0" cellpadding="0" cellspacing="0" align="right">
+<tr>
+<td><!--***************************************************************************************-->
+<A onmouseover="window.status&#13;&#10;='Homepage';
+ return true"
+ onmouseout ="window.status=''; return true" href="http://www.cs.manchester.ac.uk/" >
+home</A>&nbsp;&nbsp;<font color="#660099">|</font>&nbsp;&nbsp; <!--***************************************************************************************-->
+
+</td>
+
+<td><!--***************************************************************************************-->
+<A onmouseover="window.status&#13;&#10;='Research';
+ return true"
+ onmouseout ="window.status=''; return true" href="http://www.cs.manchester.ac.uk/ai/" >
+research</A>&nbsp;&nbsp;<font color="#660099">|</font>&nbsp;&nbsp; <!--***************************************************************************************-->
+</td>
+
+
+<td><!--***************************************************************************************-->
+<A onmouseover="window.status&#13;&#10;='People
+ in the group'; return true"
+ onmouseout ="window.status=''; return true" href="http://www.cs.manchester.ac.uk/ai/people/" >
+people</A>&nbsp;&nbsp;<font color="#660099">|</font>&nbsp;&nbsp; <!--***************************************************************************************-->
+</td>
+
+</tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="436">
+
+<tr>
+<td width="47" valign="top"><!--***************************************************************************************-->&nbsp; 
+<!--***************************************************************************************-->
+</td>
+<td><!--***************************************************************************************-->
+<a href="http://www.manchester.ac.uk/"
+ onMouseOver 
+="window.status='image1'; return true"
+ onMouseOut="window.status=''; return true" 
+      align="right" valign  ="top" 
+     ; <P 
+     ><IMG alt="University Logo" title="Manchester Est. 1824" src="http://www.cs.manchester.ac.uk/ai/pictures/icons/est1824.gif"> <!--***************************************************************************************-->
+</td></tr></table></body><head>
+   <link href="http://www.cs.manchester.ac.uk/css/_print.css"
+    type="text/css" rel="stylesheet" media="print" />
+
+    <link href="http://www.cs.manchester.ac.uk/css/_base.css"
+    type="text/css" rel="stylesheet" media="screen" />
+    <style type="text/css" media="screen">
+    /*<![CDATA[*/
+    <!--
+    @import url(http://www.cs.manchester.ac.uk/css/_layout.css);
+    @import url(http://www.cs.manchester.ac.uk/css/_navigation.css);
+    @import url(http://www.cs.manchester.ac.uk/css/_forms.css);
+    @import url(http://www.cs.manchester.ac.uk/css/_boxes.css);
+    -->
+    /*]]>*/
+
+    .currentsection  {
+	 background-color: #f0f0ff; 
+	 color:#000;
+	 display: block; 
+	 font-weight:normal;
+	 padding: 4px 4px 5px 4px;
+	 text-decoration:none; 
+    }
+    .multilevel-linkdiv-0 {
+	 background-color: #f0f0ff; 
+	 margin-left: 1.0em;
+         text-align: left
+    }
+    a.greylink:link    { color: #c0c0c0; }
+    a.greylink:visited { color: #d0d0d0; }
+		
+    .lined {
+	 border-style: solid;
+	 border-color: #006073;
+	 border-bottom-width: 0px;
+	 border-top-width: 1px;
+	 border-left-width: 0px;
+	 border-right-width: 0px;
+    }
+    table, caption {
+      font-size: inherit;
+      font-weight: inherit;
+      font-style: inherit;
+      font-variant: inherit;
+    }
+    </style>
+
+    <style type="text/css" media="screen">
+    /*<![CDATA[*/
+    <!--
+    .section {margin-left: 4em}
+    body { background-image: url(http://www.cs.manchester.ac.uk/ai//pictures/icons/logoleft.gif); }
+    div.locator { background-color: #6666cc; background-image: url(); background-repeat: no-repeat; border: none; margin: 1px 0 0 0; padding: 0; width: 184px; height: 92px; }
+    -->
+    /*]]>*/
+    </style>
+<!--  End of Style Sheet CSS -->
+</head>
 
 <head>
 <title>Matlab Kernel Toolbox - Examples</title>
 </head>
 
-<body>
+<body><div class="section">
 
 <h1>Matlab Kernel Toolbox</h1>
 
-This page describes the kernel toolbox for MATLAB available for <a href="http://ext.dcs.shef.ac.uk/~u0015/cgi-bin/downloadForm.cgi?toolbox=kern">download here</a>. 
+This page describes the kernel toolbox for MATLAB available for <a href="http://www.cs.man.ac.uk/neill-bin/software/downloadForm.cgi?toolbox=kern">download here</a>. 
 
 <h3>Dependencies</h3>
 
-The kern toolbox depends on the <a href="http://www.dcs.shef.ac.uk/~neil/ndlutil/downloadFiles/"><code>ndlutil</code> toolbox</a> and the <a href="http://www.dcs.shef.ac.uk/~neil/optimi/downloadFiles/"><code>optimi</code> toolbox</a>. You can use your username and password for accessing these toolboxes.
+The kern toolbox depends on the <a href="http://www.cs.man.ac.uk/~neill/ndlutil/downloadFiles/"><code>ndlutil</code> toolbox</a> and the <a href="http://www.cs.man.ac.uk/~neill/optimi/downloadFiles/"><code>optimi</code> toolbox</a>. You can use your username and password for accessing these toolboxes.
 
 <h3>Release Information</h3>
 
-<p>Current release is 0.163.
+<p>Current release is 0.161.
 
-<p> This release removes the stubs for several KernDiagGradX.m files, which
-were confusing kernDiagGradX.m, which assumes they only exist if the function
-is implemented. For the kernel types 'lin', 'poly', 'mlp', and their 'ard'
-counter-types, these files existed but weren't yet implemented.
-
-<p>Release 0.162  implements some Matern kernels, the rational quadratic and Mark Gibbs's non-stationary kernel.
-
-<p>Release 0.161 introduced the single input motif kernel for the GPSIM
+<p>This release introduces the single input motif kernel for the GPSIM
 toolbox. Also there is much more documentation, and a new file
 kernelGenerator.py for creating the basic files for your own kernels. 
 
@@ -52,5 +158,36 @@ file (a kernel written in a file).
 </code>
 
 <p>A new kernel can be created using the compound kernel, <code>cmpnd</code>. The compound kernel is made up of sums of individual kernels. Most often you will need to create a kernel containing a base kernel (e.g. <code>rbf</code>) and adding a white noise kernel, <code>white</code> and perhaps a constant offset through the bias kernel <code>bias</code>. On initialisation most kernel parameters are set to 1. Exceptions are ARD scale parameters, and the variance of the white and bias kernels.
-</body>
-</html>
+</div></body>
+<p><center>Page last modified on Fri Jan  5 12:37:06 GMT 2007.</center>
+<!-- footer -->
+
+<body>
+    <div id="footer">
+      <div class="links">
+        <p>
+          | 
+          <a href="http://www.manchester.ac.uk/aboutus/documents/disclaimer/"
+             title="Disclaimer">Disclaimer</a> |
+             <a href="http://www.manchester.ac.uk/aboutus/documents/privacy/"
+             title="Privacy">Privacy</a> |
+             <a href="http://www.manchester.ac.uk/aboutus/documents/copyright/"
+             title="Copyright Notice">Copyright notice</a> |
+             <a href="http://www.manchester.ac.uk/aboutus/documents/accessibility/"
+             title="Accessibility">Accessibility</a> |
+             <a href="http://www.manchester.ac.uk/aboutus/documents/foi/"
+             title="Freedom of information">Freedom of information</a> | 
+             <a href="http://www.manchester.ac.uk/aboutus/contact/feedback/"
+             title="Feedback">Feedback</a> |
+        </p>
+
+      </div>
+      <div class="pagestatus">
+        <p>Please contact
+          <a href="mailto:webmaster.cs@manchester.ac.uk">webmaster.cs@manchester.ac.uk</a>
+          with comments and suggestions
+        </p>
+      </div>
+    </div>
+
+  </body>
