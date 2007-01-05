@@ -1,0 +1,15 @@
+function ll = kbrLogLikelihood(model)
+
+% KBRLOGLIKELIHOOD Log likelihood of KBR model.
+% FORMAT
+% DESC computes the log likelihood of  the kernel based regression model.
+% ARG model : the model structure for which log likelihood is being computed.
+% RETURN ll : the computed log likelihood.
+%
+% SEEALSO : kbrCreate, kbrLogLikeGradients, modelLogLikelihood
+%
+% COPYRIGHT : Neil D. Lawrence, 2007
+
+% MLTOOLS
+
+
