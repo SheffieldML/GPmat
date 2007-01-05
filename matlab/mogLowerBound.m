@@ -1,6 +1,6 @@
 function lll = mogLowerBound(model)
 
-% MOGLOGLIKELIHOOD Computes lower bound on log likelihood for an MOG model.
+% MOGLOWERBOUND Computes lower bound on log likelihood for an MOG model.
 % FORMAT
 % DESC computes the variational lower bound on the log likelihood
 % of a mixtures of probabilistic PCA model.
