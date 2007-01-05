@@ -27,3 +27,20 @@ if isfield(model, 'fix')
   end
 end
 param = real(param);
+
+% Check if there is a mean function.
+if isfield(model, 'meanFunction') & ~isempty(model.meanFunction)
+  if nargout>1
+    [meanFuncParams, meanFuncNames] = modelExtractParam(model.meanFunction);
+  else
+    meanFuncParams = modelExtractParam(model.meanFunction);
+  end
+else
+  meanFuncParams =[];
+  meanFuncNames = [];
+end
+
+param = [param meanFuncParams];
+if nargout > 1
+  names = {names{:} meanFuncNames{:}};
+end

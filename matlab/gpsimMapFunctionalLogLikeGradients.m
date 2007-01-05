@@ -13,16 +13,18 @@ function [g, gdata] = gpsimMapFunctionalLogLikeGradients(model)
 % COPYRIGHT : Magnus Rattray and Neil D. Lawrence, 2006
 
 gdata = zeros(1, model.numMapPts);
-
+numData = length(model.t);
 for k=model.times_index(1)+1:(model.numMapPts)
   temp=0;
-  for i=1:length(model.t)
+  for i=1:numData
     arg = model.t(i)-model.mapt(k);
     if arg >= 0 
       for j=1:model.numGenes
-        beta_ij=1/model.yvar(i+(j-1)*length(model.t));
-        factor=(model.ypred(model.times_index(i), j)-model.y(i+(j-1)*length(model.t)))*beta_ij;
+        ind = (i + (j-1)*numData);
+        beta_ij=1/model.yvar(ind);
+        factor=(model.ypred(model.times_index(i), j)-model.y(ind))*beta_ij;
         temp=temp+factor*model.g_grad(k)*exp(-model.D(j)*arg)*model.S(j);
+        %disp(factor)
       end
     end
   end
@@ -31,4 +33,3 @@ end
 
 % Add term from prior.
 g = gdata - (model.invK*model.f)';
-

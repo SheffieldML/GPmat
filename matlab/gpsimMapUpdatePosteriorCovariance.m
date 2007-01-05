@@ -17,10 +17,31 @@ function model = gpsimMapUpdatePosteriorCovariance(model)
 
 % GPSIM
 
-model.invCovf = model.invK + model.W;
-[model.covf, U, jitter] = pdinv(model.invCovf);
-if jitter > 1e-4
-  fprintf('Warning: gpsimMapUpdatePosteriorCovariance added jitter of %2.4f\n', jitter)
+
+[U, Lambda] = eig(model.W);
+
+lambda = diag(Lambda);
+[lambda, order] = sort(lambda, 1, 'descend');
+U = U(:, order);
+% Hack to deal with non positive definite matrix.
+lambda(find(lambda<0)) = 0;
+ind = find(lambda)~=0;
+LambdaHalf  = sparseDiag(sqrt(lambda));
+LambdaHalf = LambdaHalf(ind, ind);
+model.Whalf = U(:, ind)*LambdaHalf;
+if size(model.Whalf, 2) == 0;
+  model.Whalf = zeros(size(model.Whalf, 1), 1);
 end
-model.logDetCovf = - logdet(model.invCovf, U); 
+model.invCovf = model.invK + model.Whalf*model.Whalf';
+KWhalf = model.K*model.Whalf;
+inner = eye(size(model.Whalf, 2)) +model.Whalf'*KWhalf;
+[innerInv, U] = pdinv(inner);
+logDetInner = logdet(inner, U); 
+model.covf = model.K - KWhalf*innerInv*KWhalf';
+model.logDetCovf = (model.logDetK - logDetInner);                                                 
+%[model.covf, U, jitter] = pdinv(model.invCovf);
+%if jitter > 1e-4
+%  fprintf('Warning: gpsimMapUpdatePosteriorCovariance added jitter of %2.4f\n', jitter)
+%end
+%model.logDetCovf = - logdet(model.invCovf, U); 
 model.varf = diag(model.covf);

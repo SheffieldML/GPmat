@@ -17,6 +17,7 @@ function gpsimMapBarencoResults(model, type, expNo, printResults)
 
 % GPSIM
 
+type(1) = upper(type(1));
 if nargin < 4
   printResults = false;
 end
@@ -49,7 +50,7 @@ for j = 1:length(model.comp)
 %   scalePred = sqrt(var(dataF));
 %~/  
 
-  scalePred = sqrt(var(model.comp{j}.f));
+  scalePred = sqrt(var(model.comp{j}.g));
 
   % Info from Martino Paper:
   % 'True f' from Figure 3.
@@ -81,11 +82,12 @@ for j = 1:length(model.comp)
     hold on;
     bh = plot(model.comp{j}.mapt, model.comp{j}.f+2*sqrt(model.comp{j}.varf),'--');
     bh =[bh plot(model.comp{j}.mapt, model.comp{j}.f-2*sqrt(model.comp{j}.varf),'--')];
-   case 'exp'
-    figure, lin = plot(model.comp{j}.mapt,exp(model.comp{j}.f), '-');
+   otherwise
+    func = str2func(model.comp{j}.nonLinearity);
+    figure, lin = plot(model.comp{j}.mapt, func(model.comp{j}.f), '-');
     hold on;
-    bh = plot(model.comp{j}.mapt, exp(model.comp{j}.f+2*sqrt(model.comp{j}.varf)),'--');
-    bh = [bh plot(model.comp{j}.mapt, exp(model.comp{j}.f-2*sqrt(model.comp{j}.varf)),'--')];
+    bh = plot(model.comp{j}.mapt, func(model.comp{j}.f+2*sqrt(model.comp{j}.varf)),'--');
+    bh = [bh plot(model.comp{j}.mapt, func(model.comp{j}.f-2*sqrt(model.comp{j}.varf)),'--')];
   end
   lin = [lin plot(0:2:12, barencof,'rx')];
   set(bh, 'lineWidth', 3);
@@ -94,14 +96,17 @@ for j = 1:length(model.comp)
   set(gca, 'fontname', 'arial', 'fontsize', 24, 'xlim', xlim)
   kernName = model.comp{j}.kern.type;
   kernName(1) = upper(kernName(1));
+  
   switch model.comp{j}.nonLinearity
    case 'linear'
     set(gca, 'ylim', [-2 4])
-   case 'exp'
+   case {'exp', 'negLogLogit'}
     set(gca, 'ylim', [0 6])
   end
+  nonLinearity = model.comp{j}.nonLinearity;
+  nonLinearity(1) = upper(nonLinearity(1));
   fileName = ['demBarenco' type num2str(expNo) kernName ...
-              model.comp{j}.nonLinearity 'profile' num2str(j) '_slide'];
+              nonLinearity '_profile' num2str(j) '_slide'];
   if printResults 
     print('-depsc', ['../tex/diagrams/' fileName]);
   end

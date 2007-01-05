@@ -16,15 +16,12 @@ function [model, ll] = gpsimMapUpdateKernels(model)
 % GPSIM
 
 model.K = kernCompute(model.kern, model.mapt);
+model.K = model.K + eye(size(model.K, 1))*1e-6;
 % Add jitter.
-[model.invK, U, jitter] = pdinv(model.K);
-if jitter>1e-4
-  fprintf('Warning: gpsimMapUpdateKernels added jitter of %2.4f\n', jitter)
-end
+[model.invK, U] = pdinv(model.K);
+%if jitter>1e-4
+%  fprintf('Warning: gpsimMapUpdateKernels added jitter of %2.4f\n', jitter)
+%end
 model.logDetK = logdet(model.K, U);
 model = gpsimMapUpdatePosteriorCovariance(model);
 
-if model.updateF
-  options = defaultOptions;
-  [model, ll] = gpsimMapUpdateF(model, options);
-end

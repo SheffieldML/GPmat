@@ -1,4 +1,4 @@
-% DEMBARENCOMAP4 Optimise model using MAP approximation with MLP kernel and exponential response.
+% DEMBARENCOMAP4 Optimise model using MAP approximation with MLP kernel and exp response.
 
 % GPSIM
 
@@ -21,8 +21,11 @@ options.includeNoise = 1;
 options.intPoints = 161;
 
 for i =1:3
+  times = times;
   options.B = origModel.comp{1}.B;
+  options.B = options.B;
   options.D = origModel.comp{1}.D;
+  options.D = options.D;
   options.S = origModel.comp{1}.S;
   model.comp{i} = gpsimMapCreate(numGenes, 1, times, y{i}, yvar{i}, options);
   if strcmp(options.kern, 'mlp')
@@ -38,11 +41,15 @@ end
 paramvec{1} = gpsimMapExtractParam(model.comp{1}); %vector of gamma estimates
 
 eta=0.02;
-iters = 100; %Number of optimisation iterations
+iters = 50; %Number of optimisation iterations
 for ii=1:iters %Start optimisation
   
   for rep=1:length(model.comp) %Work out likelihood gradient for each replicate    
+    options = defaultOptions;
+    options(1) = 1;
+    model.comp{rep} = gpsimMapUpdateF(model.comp{rep}, options);
     ll(ii, rep) = gpsimMapLogLikelihood(model.comp{rep});
+    
     dg{rep} = gpsimMapLogLikeGradients(model.comp{rep});    
   end 
   fprintf('Iteration %d, log-likelihood %2.4f\t%2.4f\t%2.4f\n', ...
