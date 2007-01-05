@@ -16,9 +16,10 @@ The kern toolbox depends on the <a href="http://www.cs.man.ac.uk/~neill/ndlutil/
 
 <h3>Release Information</h3>
 
-<p>Current release is 0.161.
+<p>Current release is 0.165.
 
-<p>This release introduces the single input motif kernel for the GPSIM
+
+<p>Release 0.161 introduced the single input motif kernel for the GPSIM
 toolbox. Also there is much more documentation, and a new file
 kernelGenerator.py for creating the basic files for your own kernels. 
 
