@@ -39,11 +39,11 @@ results to be submitted to the Gaussian Processes in Practice Workshop.
     </td>
     <td width="35%">
 
-<p align="center">0.161<br>
-0.151<br>
-0.13<br>
-0.13<br>
-0.12</p>
+<p align="center">0.165<br>
+0.154<br>
+0.132<br>
+0.131<br>
+0.122</p>
 
     </td>
   </tr>

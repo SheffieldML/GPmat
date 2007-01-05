@@ -1,7 +1,7 @@
 Version 0.11
 ------------
 
-Updated release with correction to Hessian for non-linear response model and modular code for the MAP approximation.
+Updated release with correction to Hessian for non-linear response model and modular code for the MAP approximation. Removed update of kernel parameters 'Hessian correction'.
 
 Version 0.1
 -----------
