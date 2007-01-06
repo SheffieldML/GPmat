@@ -11,6 +11,8 @@ function model = gpsimMapUpdateYpred(model)
 %
 % COPYRIGHT : Magnus Rattray and Neil D. Lawrence, 2006
 
+% GPSIM
+
 % Run the dynamics forward from t=0 for the numerical approximation.
 start = model.times_index(1)+1;
 for j = 1:model.numGenes

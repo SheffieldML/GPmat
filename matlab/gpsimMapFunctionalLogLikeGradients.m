@@ -12,6 +12,8 @@ function [g, gdata] = gpsimMapFunctionalLogLikeGradients(model)
 %
 % COPYRIGHT : Magnus Rattray and Neil D. Lawrence, 2006
 
+% GPSIM
+
 gdata = zeros(1, model.numMapPts);
 numData = length(model.t);
 for k=model.times_index(1)+1:(model.numMapPts)

@@ -1,6 +1,6 @@
 function f = gpsimMapFunctionalExtractParam(model)
 
-% GPSIMMAPEXTRACTPARAM Extract the function values from a GPSIMMAP model.
+% GPSIMMAPFUNCTIONALEXTRACTPARAM Extract the function values from a GPSIMMAP model.
 % FORMAT
 % DESC extracts the function values from a structure containing
 % the information about a Gaussian process for single input motif

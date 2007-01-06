@@ -1,6 +1,6 @@
 function model = gpsimMapUpdateG(model)
 
-% GPSIMMAPUDATEG Update the nonlinear transformation of f.
+% GPSIMMAPUPDATEG Update the nonlinear transformation of f.
 % FORMAT
 % DESC updates the fields of model associated with the non-linear
 % transformation of f, namely g, g_grad and g_grad2.
