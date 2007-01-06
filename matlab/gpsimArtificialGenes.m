@@ -1,6 +1,6 @@
 function y = gpsimArtificialGenes(t, alpha, mu, sigma, B, S, D)
 
-% GPSIMARTIFICALGENES Give artifical genes from given parameters.
+% GPSIMARTIFICIALGENES Give artifical genes from given parameters.
 
 % GPSIM
 

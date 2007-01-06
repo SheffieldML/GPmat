@@ -14,6 +14,8 @@ function [model, ll] = gpsimMapUpdateF(model, options)
 % 
 % COPYRIGHT : Neil D. Lawrence, 2006
 
+% GPSIM
+
 display = options(1);
 tolf = options(2);
 tol = options(3);

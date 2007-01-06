@@ -1,4 +1,4 @@
-% DEMTOYPROBLEM Generate an artifical data set and solve with GPSIM.
+% DEMTOYPROBLEM1 Generate an artifical data set and solve with GPSIM.
 
 % GPSIM
 

@@ -12,4 +12,6 @@ function H = gpsimMapFunctionalLogLikeHessian(model)
 %
 % COPYRIGHT : Magnus Rattray and Neil D. Lawrence, 2006
 
+% GPSIM
+
 H = - model.W - model.invK;
