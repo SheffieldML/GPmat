@@ -3,6 +3,9 @@
 importLatest('ndlutil');
 importLatest('kern');
 importLatest('prior');
-importLatest('noise');
+importTool('noise');
+importLatest('ncnm');
 importLatest('optimi');
 importLatest('rochol');
+importTool('mltools');
+importTool('datasets');

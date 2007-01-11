@@ -1,6 +1,17 @@
-function L = ivmEPLogLikelihood(model, x, y);
+function L = ivmEpLogLikelihood(model, x, y);
 
-% IVMEPLOGLIKELIHOOD Return the EP approximation to the log-likelihood for the IVM (as given in Kuss & Rasmussen).
+% IVMEPLOGLIKELIHOOD Return the EP approximation to the log-likelihood.
+% FORMAT
+% DESC computes the EP approximation to the log likelihood as given
+% in the JMLR paper of Kuss & Rasmussen.
+% ARG model : the IVM model for which the approximation is to be
+% computed.
+% RETURN L : the log likelihood of the data according to teh EP
+% approximation.
+%
+% COPYRIGHT : Neil D. Lawrence, 2006
+%
+% SEEALSO : ivmCreate, ivmApproxLogLikelihood
 
 % IVM
 

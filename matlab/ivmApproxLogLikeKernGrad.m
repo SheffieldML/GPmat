@@ -1,6 +1,16 @@
 function g = ivmApproxLogLikeKernGrad(model)
 
 % IVMAPPROXLOGLIKEKERNGRAD Gradient of the approximate likelihood wrt kernel parameters.
+% FORMAT
+% DESC computes the gradient of the approximate log likelihood with
+% respect to any kernel parameters.
+% ARG model : the model for which the gradients are to be computed.
+% RETURN g : gradient of the log likelihood with respect to the
+% kernel parameters
+% 
+% SEEALSO : kernGradient, ivmCovarianceGradient, ivmCreate
+%
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
 % IVM
 

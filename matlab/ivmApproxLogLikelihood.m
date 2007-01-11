@@ -1,6 +1,19 @@
 function L = ivmApproxLogLikelihood(model);
 
 % IVMAPPROXLOGLIKELIHOOD Return the approximate log-likelihood for the IVM.
+% FORMAT
+% DESC evaluates the approximate log likelihood fro the IVM. The
+% approximate log likelihood involves only those points in the
+% active set. It is basically the approximate likelihood for EP
+% (see e.g. Kuss and Rasmussen's JMLR paper), but it is missing the
+% terms that are directly dependent on the noise model.
+% ARG model : the IVM model for which the approximate log
+% likelihood is to be computed.
+% RETURN L : the approximate log likelihood of the active set.
+%
+% COPYRIGHT : Neil D. Lawrence, 2005, 2004
+%
+% SEEALSO : ivmApproxLogLikeKernGrad, ivmApproxGradX
 
 % IVM
 

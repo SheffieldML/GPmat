@@ -1,6 +1,17 @@
 function L = ivmLogLikelihood(model, x, y);
 
 % IVMLOGLIKELIHOOD Return the log-likelihood for the IVM.
+% FORMAT
+% DESC computes the log likelihood of the given data points under
+% the IVM and the given noise model.
+% ARG model : the model for which the log likelihood is computed.
+% ARG x : the input locations.
+% ARG y : the target values.
+%
+% SEEALSO : ivmNegLogLikelihood, ivmPosteriorMeanVar,
+% noiseLogLikelihood
+%
+% COPYRIGHT : Neil D. Lawrence
 
 % IVM
 

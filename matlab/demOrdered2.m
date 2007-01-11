@@ -1,23 +1,28 @@
-% DEMORDERED2 Run a demonstration of the ordered categories noise model.
+% DEMORDERED2 Run a demonstration of the ordered categories noise model (circular data).
 
 % IVM
 
+randn('seed', 1e5);
+rand('seed', 1e5);
 
-[X, y] = mappingLoadData('orderedTwo');
+dataSetName = 'orderedTwo';
+experimentNo = 2;
 
-noiseModel = 'ordered';
-selectionCriterion = 'entropy';
-% Use a kernel consisting of an RBF ard kernel, a linear ard kernel and a
-% bias term.
-kernelType = {'rbfard', 'linard', 'bias', 'white'};
+% load data
+[X, y] = mapLoadData(dataSetName);
 
+
+% Set up model
 options = ivmOptions;
+options.noise = 'ordered';
+% Learn the noise model for the ordered categorical case.
 options.noiseIters = 100;
 options.display = 2;
-dVal = 100;
+% Use a kernel consisting of an RBF ard kernel, a linear ard kernel and a
+% bias term.
+options.kern = {'rbfard', 'linard', 'bias', 'white'};
 
-% Initialise the IVM.
-model = ivm(X, y, kernelType, noiseModel, selectionCriterion, dVal);
+model = ivmCreate(size(X, 1), size(y, 2), X, y, options);
 
 % Constrain the ARD parameters in the RBF and linear kernels to be the same.
 model.kern = cmpndTieParameters(model.kern, {[3, 6], [4, 7]});
@@ -53,6 +58,15 @@ model = ivmOptimiseIVM(model, options.display);
 ivmDisplay(model);
 
 
+% Save the results.
+capName = dataSetName;;
+capName(1) = upper(capName(1));
+[kern, noise, ivmInfo] = ivmDeconstruct(model);
+save(['dem' capName num2str(experimentNo) '.mat'], ...
+     'kern', ...
+     'noise', ...
+     'ivmInfo');
 
-
-
+if exist('printDiagram') & printDiagram
+  ivmPrintPlot(model, 'ivmContour', [], [], [], capName, experimentNo);
+end

@@ -1,6 +1,16 @@
 function model = ivmEpUpdateM(model, index)
 
 % IVMEPUPDATEM Update matrix M, L, varSigma and mu for EP.
+% FORMAT
+% DESC performs an EP update on the IVM model's represenations for
+% a given point.
+% ARG model : the mode for which the update will be done.
+% ARG index : the index of the point for which the update will take
+% place.
+%
+% SEEALSO : ivmEpUpdatePoint, ivmDowndateSites
+%
+% COPYRIGHT : Neil D. Lawrence, 2006
 
 % IVM
 

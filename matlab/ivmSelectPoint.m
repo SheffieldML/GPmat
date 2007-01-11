@@ -1,12 +1,23 @@
 function [indexSelect, infoChange] = ivmSelectPoint(model, add);
 
 % IVMSELECTPOINT Choose a point for inclusion or removal.
+% FORMAT
+% DESC identifies the next point for inclusion or removal.
+% ARG model : IVM structure for which the next point is being
+% selected.
+% ARG add : flag which indicates whether or not we are adding a
+% point. If we are not adding we are assumed to be removing a point
+% (default is true).
+%
+% SEEALSO : ivmOptimiseIVM, ivmSelectPoints, ivmCreate
+%
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2007
 
 % IVM
 
 if nargin < 2
   % If add is 1, then we are including a point.
-  add = 1;
+  add = true;
 end
 
 switch model.selectionCriterion

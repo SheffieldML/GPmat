@@ -1,25 +1,29 @@
-% DEMREGRESSION2 The data-set is sampled from a GP with known parameters.
+% DEMREGRESSION1 The data-set is sampled from a GP with known parameters.
 
 % IVM
 
-% Sample a regression data-set.
-[X, y] = mappingLoadData('regressionTwo');
+randn('seed', 1e5);
+rand('seed', 1e5);
 
-noiseModel = 'gaussian';
-selectionCriterion = 'entropy';
+dataSetName = 'regressionTwo';
+experimentNo = 2;
 
-% Just use the rbf ard kernel.
-kernelType = {'rbfard', 'linard', 'white'};
+% load data
+[X, y] = mapLoadData(dataSetName);
 
+
+% Set up model
 options = ivmOptions;
+options.noise = 'gaussian';
+% Learn the noise model for the ordered categorical case.
 options.display = 2;
-dVal = 100;
+% Use a kernel consisting of an RBF ard kernel, a linear ard kernel and a
+% bias term.
+options.kern = {'rbfard', 'linard', 'white'};
 
-i = 0;
-% Initialise the IVM model.
-model = ivm(X, y, kernelType, noiseModel, selectionCriterion, dVal);
+model = ivmCreate(size(X, 1), size(y, 2), X, y, options);
+
 model.kern = cmpndTieParameters(model.kern, {[3, 6], [4, 7]});
-
 if options.display > 1
   [h1, h2] = ivm3dPlot(model, 'mesh', i);
   drawnow
@@ -47,3 +51,19 @@ end
 model = ivmOptimiseIVM(model, options.display);
 
 ivmDisplay(model);
+
+% Save the results.
+capName = dataSetName;;
+capName(1) = upper(capName(1));
+[kern, noise, ivmInfo] = ivmDeconstruct(model);
+save(['dem' capName num2str(experimentNo) '.mat'], ...
+     'kern', ...
+     'noise', ...
+     'ivmInfo');
+
+if exist('printDiagram') & printDiagram
+  ivmPrintPlot(model, 'mesh', [], [], [], capName, experimentNo);
+end
+
+
+

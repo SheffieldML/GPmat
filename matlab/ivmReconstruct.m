@@ -1,6 +1,22 @@
 function model = ivmReconstruct(kern, noise, ivmInfo, X, y)
 
 % IVMRECONSTRUCT Reconstruct an IVM form component parts.
+% FORMAT
+% DESC takes component parts of an IVM model and reconstructs the
+% IVM model. The component parts are normally retrieved from a
+% saved file.
+% ARG kern : a kernel structure for the IVM.
+% ARG noise : a noise structure for the IVM.
+% ARG ivmInfo : the active set and the inactive set of the IVM as
+% well as the site parameters, stored in a structure.
+% ARG X : the input training data for the IVM.
+% ARG y : the output target training data for the IVM.
+% RETURN model : an IVM model structure that combines the component
+% parts.
+% 
+% SEEALSO : ivmDeconstruct, ivmCreate, ivmComputeLandM
+%
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
 % IVM
 

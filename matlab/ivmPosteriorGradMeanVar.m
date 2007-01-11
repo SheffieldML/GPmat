@@ -1,6 +1,20 @@
 function [gmu, gsigmavar] = ivmPosteriorGradMeanVar(model, X);
 
 % IVMPOSTERIORGRADMEANVAR Gradient of mean and variances of the posterior wrt X.
+% FORMAT
+% DESC computes the gradient of the mean and variances of the
+% posterior distribution of a IVM with respect to the
+% input locations.
+% ARG model : the model for which gradients are to be computed.
+% ARG X : the input locations where gradients are to be computed.
+% RETURN gmu : the gradient of the posterior mean with respect to
+% the input locations.
+% RETURN gsigmavar : the gradient of the posterior variances with
+% respect to the input locations.
+%
+% SEEALSO : ivmCreate, ivmPosteriorMeanVar, gpPosteriorGradMeanVar
+%
+% COPYRIGHT : Neil D. Lawrence, 2003, 2004
 
 % IVM
 

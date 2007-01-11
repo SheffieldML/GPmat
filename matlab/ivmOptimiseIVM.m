@@ -1,6 +1,18 @@
 function model = ivmOptimiseIVM(model, display)
 
 % IVMOPTIMISEIVM Selects the points for an IVM model.
+% FORMAT
+% DESC selects points in an IVM model for inclusion in the active
+% set.
+% ARG model : the model for which the points are to be selected.
+% ARG display : the display level, should be 0, 1 or 2. The higher
+% the display, the more verbose.
+% RETURN model : the model with the active set selected.
+% 
+% SEEALSO : ivmInit, ivmSelectVisualise, ivmAddPoint,
+% ivmSelectPoint, ivmEpUpdatePoint
+% 
+% COPYRIGHT : Neil D. Lawrence, 2003, 2004, 2005
 
 % IVM
 

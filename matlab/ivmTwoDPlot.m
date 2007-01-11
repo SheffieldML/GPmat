@@ -2,8 +2,6 @@ function ivmTwoDPlot(model, iter, X, y)
 
 % IVMTWODPLOT Make a 2-D plot of the IVM.
 
-% IVM
-
 if nargin < 4
   X = model.X;
   y = model.y;

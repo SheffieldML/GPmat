@@ -3,7 +3,6 @@ function model = ivmEpOptimise(model, prior, display, innerIters, ...
 
 % IVMEPOPTIMISE Optimise the IVM making use of point removal.
 
-% IVM
 
 if nargin < 6
   optimiseNoise = 1;

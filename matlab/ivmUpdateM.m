@@ -1,7 +1,18 @@
 function model = ivmUpdateM(model, index)
 
 % IVMUPDATEM Update matrix M, L, v and mu.
-
+% FORMAT
+% DESC updates the stored representations in the IVM (M, L,
+% v and mu) given a new data point.
+% ARG model : the model for which the represenations are to be
+% updated.
+% ARG index : the index of the data point that is being included.
+% RETURN model : the returned model with all the representations up
+% to date.
+%
+% SEEALSO : ivmCreate, ivmAddPoint, kernCompute
+%
+% COPYRIGHT : Neil D. Lawrence, 2005
 % IVM
 
 activePoint = length(model.I)+1;

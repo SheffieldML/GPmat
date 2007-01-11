@@ -1,6 +1,17 @@
 function model = ivmInit(model, d)
 
 % IVMINIT Initialise the IVM model.
+% FORMAT
+% DESC sets up some initial matrices and vectors in the IVM
+% representation in preparation for learning.
+% ARG model : the model to be set up.
+% ARG d : optional value of the active set size (if not given,
+% model.d is used).
+% RETURN model : model with various matrices set up for learning.
+%
+% SEEALSO : ivmOptimiseIVM, ivmSelectPoints
+%
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
 % IVM
 

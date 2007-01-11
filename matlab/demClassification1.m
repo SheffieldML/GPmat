@@ -1,24 +1,26 @@
-% DEMCLASSIFICATION1 Test IVM code on a toy feature selection
+% DEMCLASSIFICATION1 Test IVM code on a toy feature selection.
 
 % IVM
 
+% Fix seeds
+randn('seed', 1e5);
+rand('seed', 1e5);
 
-% Generate a toy data-set
-[X, y] = mappingLoadData('classificationOne', 1e6);
+dataSetName = 'classificationOne';
+experimentNo = 1;
 
-% The probit is a classification noise model.
-noiseModel = 'probit'; 
-selectionCriterion = 'entropy';
+% load data
+[X, y] = mapLoadData(dataSetName);
 
-% Use a combination of an MLP and linear ARD kernel.
-kernelType = {'mlpard', 'linard', 'white'};
-dVal = 100;
 
+% Set up model
 options = ivmOptions;
 options.display = 2;
+options.numActive = 100;
+% Use a combination of an MLP and linear ARD kernel.
+options.kern = {'mlpard', 'linard', 'white'};
 
-% Initialise the model.
-model = ivm(X, y, kernelType, noiseModel, selectionCriterion, dVal);
+model = ivmCreate(size(X, 1), size(y, 2), X, y, options);
 
 % Constrain the ARD parameters in the MLP and linear kernels to be the same.
 model.kern = cmpndTieParameters(model.kern, {[4, 7], [5, 8]});
@@ -39,13 +41,28 @@ for i = 1:options.extIters;
 end
 model = ivmOptimiseIVM(model, options.display);
 if options.display > 1
-    ivm3dPlot(model, 'ivmContour', i);
+  ivm3dPlot(model, 'ivmContour', i);
 end
 % display active points.
 model = ivmOptimiseIVM(model, options.display);
 
 % Display the final model.
 ivmDisplay(model);
+
+% Save the results.
+capName = dataSetName;;
+capName(1) = upper(capName(1));
+[kern, noise, ivmInfo] = ivmDeconstruct(model);
+save(['dem' capName num2str(experimentNo) '.mat'], ...
+     'kern', ...
+     'noise', ...
+     'ivmInfo');
+
+if exist('printDiagram') & printDiagram
+  ivmPrintPlot(model, 'ivmContour', [], [], [], capName, experimentNo);
+end
+
+
 
 
 

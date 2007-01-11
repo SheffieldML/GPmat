@@ -1,6 +1,18 @@
 function model = ivmOptimiseKernel(model, display, iters);
 
 % IVMOPTIMISEKERNEL Optimise the kernel parameters.
+% FORMAT
+% DESC optimises the kernel parameters of the IVM model.
+% ARG model : the model for which the kernel parameters are to be
+% optimised. 
+% ARG display : how much to display during optimisation (defaults
+% to level 1).
+% ARG iters : how many iterations of optimisation to use (defaults
+% to 500).
+%
+% SEEALSO : optimiseParams, defaultOptions, ivmKernelObjective, ivmKernelGradient
+%
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
 % IVM
 

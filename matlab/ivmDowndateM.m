@@ -1,6 +1,20 @@
 function model = ivmDowndateM(model, index)
 
 % IVMDOWNDATEM Remove point from M, L, mu and varSigma.
+% FORMAT 
+% DESC removes the given data point from the IVM representations,
+% in particular the matrices M and L. As well as from mu and
+% varSigma. Unfortunately this operation can be numerically
+% unstable: if it is done too many times these represenations must
+% be recomputed (see ivmComputeLandM).
+% ARG model : the model from which the point is to be removed.
+% ARG index : the index of the point to remove from the model.
+% 
+% SEEALSO : ivmRemovePoint, ivmEpUpdatePoint, ivmComputeLandM,
+% ivmUpdateM, rocholhFactorise, rocholFactorise, rocholTransMultiply,
+% rocholForeSub
+%
+% COPYRIGHT : Neil D. Lawrence, 2005
 
 % IVM
 

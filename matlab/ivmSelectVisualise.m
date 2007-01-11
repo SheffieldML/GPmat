@@ -1,6 +1,18 @@
 function ivmSelectVisualise(model, display, k, dataIndexSelect)
 
 % IVMSELECTVISUALISE Visualise the selected point.
+% FORMAT
+% DESC visualises the IVM learning by showing which point has been
+% selected.
+% ARG model : the model for which the visualisation is occuring.
+% ARG display : the verbosity level (whether or not to display in a
+% plot, 1 - don't plot, 2 - attempt to plot).
+% ARG k : the point inclusion number that we are displaying.
+% ARG index : the index of the data point that is being included.
+%
+% COPYRIGHT : Neil D. Lawrence, 2005
+%
+% SEEALSO : ivmCreate, ivmLogLikelihood, ivmOptions
 
 % IVM
 
