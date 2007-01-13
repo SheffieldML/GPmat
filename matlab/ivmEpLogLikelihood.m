@@ -6,7 +6,7 @@ function L = ivmEpLogLikelihood(model, x, y);
 % in the JMLR paper of Kuss & Rasmussen.
 % ARG model : the IVM model for which the approximation is to be
 % computed.
-% RETURN L : the log likelihood of the data according to teh EP
+% RETURN L : the log likelihood of the data according to the EP
 % approximation.
 %
 % COPYRIGHT : Neil D. Lawrence, 2006

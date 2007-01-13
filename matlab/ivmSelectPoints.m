@@ -1,6 +1,6 @@
 function model = ivmSelectPoints(model, display)
 
-% IVMSELECTPOINT Selects the point for an IVM.
+% IVMSELECTPOINTS Selects the point for an IVM.
 % FORMAT
 % DESC is an alternative selection approach to ivmOptimiseIVM. It
 % performs EP style updates and point swaps as well as point

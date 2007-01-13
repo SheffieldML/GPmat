@@ -1,12 +1,13 @@
-% DEMREGRESSION2 The data-set is sampled from a GP with known parameters.
+% DEMCLASSIFICATION3 IVM for classification on a data-set sampled from a GP with null category.
 
 % IVM
 
+% Fix seeds
 randn('seed', 1e5);
 rand('seed', 1e5);
 
-dataSetName = 'regressionTwo';
-experimentNo = 2;
+dataSetName = 'classificationThree';
+experimentNo = 3;
 
 % load data
 [X, y] = mapLoadData(dataSetName);
@@ -14,42 +15,33 @@ experimentNo = 2;
 
 % Set up model
 options = ivmOptions;
-options.noise = 'gaussian';
-% Learn the noise model for the ordered categorical case.
 options.display = 2;
-% Use a kernel consisting of an RBF ard kernel, a linear ard kernel and a
-% bias term.
-options.kern = {'rbfard', 'linard', 'white'};
+options.kern = {'rbf', 'white'};
 
 model = ivmCreate(size(X, 1), size(y, 2), X, y, options);
 
-model.kern = cmpndTieParameters(model.kern, {[3, 6], [4, 7]});
 if options.display > 1
-  [h1, h2] = ivm3dPlot(model, 'mesh', i);
-  drawnow
+  ivm3dPlot(model, 'ivmContour', i);
 end
+for i = 1:options.extIters;
 
-for i = 1:options.extIters
-  % Plot the data.
   % Select the active set.
   model = ivmOptimiseIVM(model, options.display);
+  % Plot the data.
   if options.display > 1
-    delete(h2)
-    [h1, h2] = ivm3dPlot(model, 'mesh', i);
-    drawnow
+    ivm3dPlot(model, 'ivmContour', i);
   end
-  % Optimise kernel parameters.
+  % Optimise the kernel parameters.
   model = ivmOptimiseKernel(model, options.display, options.kernIters);
-
 end
 model = ivmOptimiseIVM(model, options.display);
 if options.display > 1
-  delete(h2)
-  [h1, h2] = ivm3dPlot(model, 'mesh', i);
+  ivm3dPlot(model, 'ivmContour', i);
 end
-% Show the active points.
+% display active points.
 model = ivmOptimiseIVM(model, options.display);
 
+% Display the final model.
 ivmDisplay(model);
 
 % Save the results.
@@ -62,8 +54,12 @@ save(['dem' capName num2str(experimentNo) '.mat'], ...
      'ivmInfo');
 
 if exist('printDiagram') & printDiagram
-  ivmPrintPlot(model, 'mesh', [], [], [], capName, experimentNo);
+  ivmPrintPlot(model, 'ivmContour', [], [], [], capName, experimentNo);
 end
+
+
+
+
 
 
 

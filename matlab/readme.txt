@@ -1,3 +1,7 @@
+Changes in vs 0.4
+-----------------
+
+The toolbox has been brought into line with other toolboxes on the site. Now the ivm model is created using ivmCreate, and all the model options are set in ivmOptions. The files are now better descrived. The null category noise model examples are now integrated with the IVM (the main ncnm code is in the NOISE toolbox).
 
 Changes in vs 0.33
 ------------------
