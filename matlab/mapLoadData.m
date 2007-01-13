@@ -36,8 +36,47 @@ XTest = [];
 yTest = [];
 
 baseDir = datasetsDirectory;
+dirSep = filesep;
+semiSup = false;
 
+if length(dataset)>5 & strcmp(dataset(1:6), 'gunnar')
+  % Data set is one of Gunnar Raetsch's
+  ind = find(dataset==':');
+  dataSetName = dataset(ind(1)+1:ind(2)-1);
+  dataSetNum = dataset(ind(2)+1:end);
+  filebase = [baseDir dirSep 'gunnar' dirSep dataSetName dirSep dataSetName];
+  X=load([filebase '_train_data_' num2str(dataSetNum) '.asc']);
+  y=load([filebase '_train_labels_' num2str(dataSetNum) '.asc']);
+  XTest=load([filebase '_test_data_' num2str(dataSetNum) '.asc']);
+  yTest=load([filebase '_test_labels_' num2str(dataSetNum) '.asc']);
+  return
+elseif length(dataset)>3 & strcmp(dataset(1:4), 'semi')
+  % Data set is semi-supervised learning.
+  ind = find(dataset==':');
+  labProb = str2num(dataset(ind(2)+1:end));
+  % Extract dataset part
+  dataset = dataset(ind(1)+1:ind(2)-1);
+  semiSup = true;
+end
+  
 switch dataset
+ case 'unlabelledOne'
+  numDataPart = 100;
+  [X, y] = generateCrescentData(numDataPart);
+  
+ case 'classificationOne'
+  try
+    load([baseDir 'classificationOneData'])
+  catch
+    [void, errid] = lasterr;
+    if strcmp(errid, 'MATLAB:load:couldNotReadFile')
+      X = [randn(100,2)-[zeros(100, 1) 6*ones(100, 1)]; randn(100,2)+[zeros(100, 1) 6*ones(100, 1)]; randn(100, 2)];
+      y = [ones(200, 1); -ones(100, 1)];
+      save([baseDir 'classificationOneData.mat'], 'X', 'y')
+    else
+      error(lasterr);  
+    end
+  end
  case 'usps'
   load([baseDir 'usps_train']);
   X = ALL_DATA;
@@ -72,6 +111,46 @@ switch dataset
   end
   y = y(:, digitNo+1);
   yTest = yTest(:, digitNo+1);
+ case 'threeFive'
+   load([baseDir 'usps_train'])
+   X = ALL_DATA;
+   y = ALL_T;
+   load([baseDir 'usps_test'])
+   XTest = ALL_DATA;
+   yTest = ALL_T;
+   classTrue = 3;
+   for i = [0 1 2 4 6 7 8 9];
+     index = find(y == i);
+     X(index, :) = [];
+     y(index, :) = [];
+     index = find(yTest == i);
+     XTest(index, :) = [];
+     yTest(index, :) = [];
+   end
+   y = (y == classTrue)*2 - 1;
+   yTest = (yTest == classTrue)*2 - 1;
+ case 'fourNine'
+  load([baseDir 'usps_train'])
+  X = ALL_DATA;
+  y = ALL_T;
+  load([baseDir 'usps_test'])
+  XTest = ALL_DATA;
+  yTest = ALL_T;
+  classTrue = 4;
+  for i = [0 1 2 3 5 6 7 8];
+    index = find(y == i);
+    X(index, :) = [];
+    y(index, :) = [];
+    index = find(yTest == i);
+    XTest(index, :) = [];
+    yTest(index, :) = [];
+  end
+  y = (y == classTrue)*2 - 1;
+  yTest = (yTest == classTrue)*2 - 1;
+  
+ case 'thorsten'
+  [y, X] = svmlread([baseDir 'example2/train_transduction.dat']);
+  [yTest, XTest] = svmlread([baseDir 'example2/test.dat']);
 
  case 'spgp1d'
   try 
@@ -394,4 +473,9 @@ switch dataset
  otherwise
   error('Unknown data set requested.')
 
+end
+
+if semiSup % Test if data is for semi-supervised learning.
+  indUnlabelled = find(rand(size(y, 1), 1)>labProb);
+  y(indUnlabelled, :) = NaN;
 end

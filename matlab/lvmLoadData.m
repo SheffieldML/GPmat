@@ -25,7 +25,7 @@ function [Y, lbls, Ytest, lblstest] = lvmLoadData(dataset)
 
 % get directory
 baseDir = datasetsDirectory;
-
+dirSep = filesep;
 lbls = [];
 switch dataset
  
@@ -57,10 +57,10 @@ switch dataset
   Y(find(Y==-100))=NaN;
   Y = (Y + 85)/15;
 
-   case 'cmu35gplvm'
+ case 'cmu35gplvm'
   [Y, lbls, Ytest, lblstest] = lvmLoadData('cmu35WalkJog');
-  skel = acclaimReadSkel([baseDir 'mocap\cmu\35\35.asf']);
-  [tmpchan, skel] = acclaimLoadChannels([baseDir 'mocap\cmu\35\35_01.amc'], skel);
+  skel = acclaimReadSkel([baseDir 'mocap' dirSep 'cmu' dirSep '35' dirSep '35.asf']);
+  [tmpchan, skel] = acclaimLoadChannels([baseDir 'mocap' dirSep 'cmu' dirSep '35' dirSep '35_01.amc'], skel);
 
   Ytest = Ytest(find(lblstest(:, 2)), :);
   lblstest = lblstest(find(lblstest(:, 2)), 2);
@@ -128,72 +128,46 @@ switch dataset
   lblstest = [];
 
  case 'cmu35Taylor'
-  % An attempt to recreate the CMU 35 data set as Graham Taylor has
-  % it in his NIPS 2006 paper.
-  [Y, lbls, Ytest, lblstest] = lvmLoadData('cmu35WalkJog');
-  skel = acclaimReadSkel([baseDir 'mocap\cmu\35\35.asf']);
-  [tmpchan, skel] = acclaimLoadChannels([baseDir 'mocap\cmu\35\35_01.amc'], skel);
-  xyzInd = [1];
-  xyzDiffInd = [2 3];
-  rotInd = [4];
-  rotDiffInd = [5 6];
+  % The CMU 35 data set as Graham Taylor et al. have it in their
+  % NIPS 2006 paper.
+  [rawY, lbls, rawYtest, lblstest] = lvmLoadData('cmu35WalkJog');
+  rawYtest = rawYtest(45:end, :);
+  lblstest = lblstest(45:end, 2);
+  skel = acclaimReadSkel([baseDir 'mocap' dirSep 'cmu' dirSep '35' dirSep '35.asf']);
+  [tmpchan, skel] = acclaimLoadChannels([baseDir 'mocap' dirSep 'cmu' dirSep '35' dirSep '35_01.amc'], skel);
+  posInd = [1 2 3];
+  rotInd = [4 5 6];
   generalInd = [7:38 41:47 49:50 53:59 61:62];
-
-  jointAngles  = asin(sin(pi*Y(:, generalInd)/180));
-  jointAnglesTest  = asin(sin(pi*Ytest(:, generalInd)/180));
+  
+  rawY = [rawY(:, posInd) sind(rawY(:, rotInd)) cosd(rawY(:, rotInd)) asind(sind(rawY(:, generalInd)))];
+  rawYtest = [rawYtest(:, posInd) sind(rawYtest(:, rotInd)) cosd(rawYtest(:, rotInd)) asind(sind(rawYtest(:, generalInd)))];
   
   endInd = [];
   for i = 1:size(lbls, 2)
     endInd = [endInd max(find(lbls(:, i)))];
   end
-  catJointAngles = [];
-  xyzDiff = [];
-  catSinCos = [];
+  Y = [];
   startInd = 1;
   for i = 1:length(endInd)
     ind1 = startInd:endInd(i)-1;
     ind2 = startInd+1:endInd(i);
-    catJointAngles = [catJointAngles; ...
-                      jointAngles(ind1, :) ...
-                      jointAngles(ind2, :)];
-    xyzDiff = [xyzDiff;
-               Y(ind1, xyzDiffInd) - Y(ind2, xyzDiffInd) ...
-               Y(ind1, xyzInd) Y(ind2, xyzInd)];
-    catSinCos = [catSinCos; ...
-                 sin(pi*Y(ind1, rotInd)/180) sin(pi*Y(ind2, rotInd)/180) ...
-                 sin(pi*Y(ind1, rotDiffInd)/180)-sin(pi*Y(ind2, rotDiffInd)/180) ...
-                 cos(pi*Y(ind1, rotInd)/180) cos(pi*Y(ind2, rotInd)/180) ...
-                 cos(pi*Y(ind1, rotDiffInd)/180)-cos(pi*Y(ind2, rotDiffInd)/180)];
+    Y = [Y; rawY(ind1, :) rawY(ind2, :)];
     startInd = endInd(i)+1;
-  end
-  Y = [catJointAngles xyzDiff catSinCos];
+  end  
   lbls = [];
   
   endInd = [];
   for i = 1:size(lblstest, 2)
     endInd = [endInd max(find(lblstest(:, i)))];
   end
-  catJointAnglesTest = [];
-  xyzDiffTest = [];
-  catSinCosTest = [];
+  Ytest = [];
   startInd = 1;
   for i = 1:length(endInd)
     ind1 = startInd:endInd(i)-1;
     ind2 = startInd+1:endInd(i);
-    catJointAnglesTest = [catJointAnglesTest; ...
-                      jointAnglesTest(ind1, :) ...
-                      jointAnglesTest(ind2, :)];
-    xyzDiffTest = [xyzDiffTest;
-                   Ytest(ind1, xyzDiffInd) - Ytest(ind2, xyzDiffInd) ...
-                   Ytest(ind1, xyzInd) Ytest(ind2, xyzInd)];
-    catSinCosTest = [catSinCosTest; ...
-                 sin(pi*Ytest(ind1, rotInd)/180) sin(pi*Ytest(ind2, rotInd)/180) ...
-                 sin(pi*Ytest(ind1, rotDiffInd)/180)-sin(pi*Ytest(ind2, rotDiffInd)/180) ...
-                 cos(pi*Ytest(ind1, rotInd)/180) cos(pi*Ytest(ind2, rotInd)/180) ...
-                 cos(pi*Ytest(ind1, rotDiffInd)/180)-cos(pi*Ytest(ind2, rotDiffInd)/180)];
+    Ytest = [Ytest; rawYtest(ind1, :) rawYtest(ind2, :)];
     startInd = endInd(i)+1;
   end                                                
-  Ytest = [catJointAnglesTest xyzDiffTest catSinCosTest];
   lblstest = [];
 
   
@@ -203,7 +177,7 @@ switch dataset
   catch
     [void, errid] = lasterr;
     if strcmp(errid, 'MATLAB:load:couldNotReadFile');
-      skel = acclaimReadSkel([baseDir 'mocap\cmu\35\35.asf']);
+      skel = acclaimReadSkel([baseDir 'mocap' dirSep 'cmu' dirSep '35' dirSep '35.asf']);
       examples = ...
           {'01', '02', '03', '04', '05', '06', '07', '08', '09', '10', ...
            '11', '12', '13', '14', '15', '16', '17', '19', '20', ...
@@ -215,7 +189,7 @@ switch dataset
       totLength = 0;
       totTestLength = 0;
       for i = 1:length(examples)
-        [tmpchan, skel] = acclaimLoadChannels([baseDir 'mocap\cmu\35\35_' ...
+        [tmpchan, skel] = acclaimLoadChannels([baseDir 'mocap' dirSep 'cmu' dirSep '35' dirSep '35_' ...
                             examples{i} '.amc'], skel);
         tY{i} = tmpchan(1:4:end, :);
         tlbls{i} = repmat(exlbls(i, :), size(tY{i}, 1), 1);
@@ -231,7 +205,7 @@ switch dataset
         lbls(startInd:endInd, :) = tlbls{i};
       end
       for i = 1:length(testExamples)
-        [tmpchan, skel] = acclaimLoadChannels([baseDir 'mocap\cmu\35\35_' ...
+        [tmpchan, skel] = acclaimLoadChannels([baseDir 'mocap' dirSep 'cmu' dirSep '35' dirSep '35_' ...
                             testExamples{i} '.amc'], skel);
         tYtest{i} = tmpchan(1:4:end, :);
         tlblstest{i} = repmat(testexlbls(i, :), size(tYtest{i}, 1), 1);
@@ -252,7 +226,7 @@ switch dataset
     end
   end
 
-   case 'vowels'
+ case 'vowels'
   load([baseDir 'jon_vowel_data']);
   Y = [a_raw; ae_raw; ao_raw; ...
        e_raw; i_raw; ibar_raw; ...
@@ -331,6 +305,77 @@ switch dataset
   Y = X_data(:, 1:1000)';
 
   %/~
+ case 'fourWalks'
+  try 
+    load([baseDir 'fourWalks.mat']);
+  catch
+    [void, errid] = lasterr;
+    if strcmp(errid, 'MATLAB:load:couldNotReadFile');
+      
+      subj = {'35', '10', '12', '16'};
+      examples = {'02', '04', '01', '15'};
+      exlbls = eye(4);
+      startVals = [55, 222, 22, 62];
+      endVals = [338, 499, 328, 342];
+      diffInd = [1 3 5];
+      totLength = 0;
+      totTestLength = 0;
+      for i = 1:length(examples)
+        skel = acclaimReadSkel([baseDir 'mocap' dirSep 'cmu' dirSep subj{i} dirSep subj{i} ...
+                            '.asf']);
+        [tmpchan, skel] = acclaimLoadChannels([baseDir 'mocap' dirSep 'cmu' dirSep subj{i} dirSep subj{i} '_' ...
+                            examples{i} '.amc'], skel);
+        tY{i} = tmpchan(startVals(i):4:endVals(i), :);
+        % Make given indices differences.
+        tY{i}(:, diffInd) = tmpchan(startVals(i)+1:4:endVals(i)+1, diffInd)...
+            - tY{i}(:, diffInd);
+        tlbls{i} = repmat(exlbls(i, :), size(tY{i}, 1), 1);
+        totLength = totLength + size(tY{i}, 1);
+      end
+      Y = zeros(totLength, size(tY{1}, 2));
+      lbls = zeros(totLength, size(tlbls{1}, 2));
+      endInd = 0;
+      for i = 1:length(tY)
+        startInd = endInd + 1;
+        endInd = endInd + size(tY{i}, 1);
+        Y(startInd:endInd, :) = tY{i};
+        lbls(startInd:endInd, :) = tlbls{i};
+      end
+      Ytest = [];
+      lblstest = [];
+      subj = {'35', '12', '16', '12', '07', '07', '08', '08'};
+      examples = {'03', '02', '21', '03', '01', '02', '01', '02'};
+      testexlbls = eye(8);
+      startVals = ones(1, 8);
+      endVals = 200*ones(1, 8);
+      totLength = 0;
+      totTestLength = 0;
+      for i = 1:length(examples)
+        skel = acclaimReadSkel([baseDir 'mocap' dirSep 'cmu' dirSep subj{i} dirSep subj{i} ...
+                            '.asf']);
+        [tmpchan, skel] = acclaimLoadChannels([baseDir 'mocap' dirSep 'cmu' dirSep subj{i} dirSep subj{i} '_' ...
+                            examples{i} '.amc'], skel);
+        tYtest{i} = tmpchan(startVals(i):4:endVals(i), :);
+        tYtest{i}(:, diffInd) = tmpchan(startVals(i)+1:4:endVals(i)+1, diffInd)...
+            - tYtest{i}(:, diffInd);
+        tlblstest{i} = repmat(testexlbls(i, :), size(tYtest{i}, 1), 1);
+        totLength = totLength + size(tYtest{i}, 1);
+      end
+      Ytest = zeros(totTestLength, size(tYtest{1}, 2));
+      lblstest = zeros(totTestLength, size(tlblstest{1}, 2));
+      endInd = 0;
+      for i = 1:length(tYtest)
+        startInd = endInd + 1;
+        endInd = endInd + size(tYtest{i}, 1);
+        Ytest(startInd:endInd, :) = tYtest{i};
+        lblstest(startInd:endInd, :) = tlblstest{i};
+      end
+      save([baseDir 'fourWalks.mat'], 'Y', 'lbls', 'Ytest', 'lblstest');
+    else
+      error(lasterr);
+    end
+  end
+
  case 'walkSitJog'
   Y = mocapLoadTextData([baseDir 'walkSitJog']);
   Y = Y(1:4:end, :)*200;
@@ -351,8 +396,8 @@ switch dataset
   catch    
     [void, errid] = lasterr;
     if strcmp(errid, 'MATLAB:load:couldNotReadFile')
-      skel = acclaimReadSkel([baseDir 'mocap\cmu\86\86.asf']);
-      [channels, skel] = acclaimLoadChannels([baseDir 'mocap\cmu\86\86_10.amc'], skel);
+      skel = acclaimReadSkel([baseDir 'mocap' dirSep 'cmu' dirSep '86' dirSep '86.asf']);
+      [channels, skel] = acclaimLoadChannels([baseDir 'mocap' dirSep 'cmu' dirSep '86' dirSep '86_10.amc'], skel);
       % Remove root z & x pos channels.
       channels(:, [1 3]) = zeros(size(channels, 1), 2);
       Y = channels(1:4:end, :);

@@ -1,5 +1,10 @@
 This toolbox stores datasets and gives commands for accessing them.
 
+Version 0.131
+-------------
+
+Moved functionality from mappingLoadData, ivmLoadData and ncnmLoadData into mapLoadData.
+
 Version 0.13
 ------------
 
