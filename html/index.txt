@@ -8,13 +8,8 @@
 
 <h1>Matlab Ndlutil Toolbox</h1>
 
-This page describes the utilities toolbox for MATLAB available for <a href="http://www.cs.man.ac.uk/neill-bin/software/downloadForm.cgi?toolbox=ndlutil">download here</a>. 
+This page describes the utilities toolbox for MATLAB.
 
+RELEASEINFORMATION
 
-
-<h3>Release Information</h3>
-
-<p>Current release is 0.154. 
-
-<p>This toolbox offers several different functions that are used in other toolboxes.
 </div></body>

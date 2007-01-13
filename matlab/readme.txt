@@ -1,5 +1,11 @@
 This toolbox implements some generic functions used by other toolboxes. Originally it was spun out of the IVM 0.221 toolbox.
 
+Version 0.155
+-------------
+
+Moved lnCumGaussSum from NCNM toolbox to this toolbox as part of merge of NCNM toolbox into NOISE and IVM toolboxes.
+
+
 Version 0.154
 -------------
 
