@@ -1,8 +1,27 @@
 function g = orderedNoiseGradientParam(noise, mu, varsigma, y)
 
-% ORDEREDNOISEGRADIENTPARAM Gradient of the ordered categorical noise model's parameters.
+
+% ORDEREDNOISEGRADIENTPARAM Gradient of ORDERED noise's parameters.
+% FORMAT
+% DESC computes the gradient of the log Z of the ordered categorical noise model with respect to the of functions with respect to the
+% ordered categorical
+% noise's parameters. 
+% ARG noise : the noise structure for which the gradients are being
+% computed.
+% ARG mu : the input means for which the gradients are being computed.
+% ARG varSigma : the input variances for which the gradients are being computed.
+% ARG y : the target values for the noise model.
+% RETURN g : gradients of the log Z with respect to
+% the noise parameters. The ordering of the vector should match
+% that provided by the function noiseExtractParam.
+%
+%
+% SEEALSO orderedNoiseParamInit, orderednoiseGradVals, noiseGradientParam
+%
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
 % NOISE
+
 
 D = size(y, 2);
 c = 1./sqrt(noise.variance + varsigma);

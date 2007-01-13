@@ -1,36 +1,343 @@
-<html>
-
 <head>
-<meta http-equiv="Content-Language" content="en-gb">
-<title>Matlab Noise Toolbox - Examples</title>
+
+<meta name="description" content="">
+
+<meta name="keywords" content="">
+
+<meta name="author" content="">
+
+
+
+
+
 </head>
 
-<body>
+<body bgcolor="#ffffff" topmargin="0" leftmargin="0" marginheight="0" marginwidth="0">
+
+
+
+
+
+<table border="0" cellpadding="0" cellspacing="0" align="right">
+
+<tr>
+
+<td><!--***************************************************************************************-->
+
+<A onmouseover="window.status&#13;&#10;='Homepage';
+
+ return true"
+
+ onmouseout ="window.status=''; return true" href="http://www.cs.manchester.ac.uk/" >
+
+home</A>&nbsp;&nbsp;<font color="#660099">|</font>&nbsp;&nbsp; <!--***************************************************************************************-->
+
+
+
+</td>
+
+
+
+<td><!--***************************************************************************************-->
+
+<A onmouseover="window.status&#13;&#10;='Research';
+
+ return true"
+
+ onmouseout ="window.status=''; return true" href="http://www.cs.manchester.ac.uk/ai/" >
+
+research</A>&nbsp;&nbsp;<font color="#660099">|</font>&nbsp;&nbsp; <!--***************************************************************************************-->
+
+</td>
+
+
+
+
+
+<td><!--***************************************************************************************-->
+
+<A onmouseover="window.status&#13;&#10;='People
+
+ in the group'; return true"
+
+ onmouseout ="window.status=''; return true" href="http://www.cs.manchester.ac.uk/ai/people/" >
+
+people</A>&nbsp;&nbsp;<font color="#660099">|</font>&nbsp;&nbsp; <!--***************************************************************************************-->
+
+</td>
+
+
+
+</tr>
+
+</table>
+
+
+
+<table border="0" cellpadding="0" cellspacing="0" width="436">
+
+
+
+<tr>
+
+<td width="47" valign="top"><!--***************************************************************************************-->&nbsp; 
+
+<!--***************************************************************************************-->
+
+</td>
+
+<td><!--***************************************************************************************-->
+
+<a href="http://www.manchester.ac.uk/"
+
+ onMouseOver 
+
+="window.status='image1'; return true"
+
+ onMouseOut="window.status=''; return true" 
+
+      align="right" valign  ="top" 
+
+     ; <P 
+
+     ><IMG alt="University Logo" title="Manchester Est. 1824" src="http://www.cs.manchester.ac.uk/ai/pictures/icons/est1824.gif"> <!--***************************************************************************************-->
+
+</td></tr></table></body>
+<head>
+
+   <link href="http://www.cs.manchester.ac.uk/css/_print.css"
+
+    type="text/css" rel="stylesheet" media="print" />
+
+
+
+    <link href="http://www.cs.manchester.ac.uk/css/_base.css"
+
+    type="text/css" rel="stylesheet" media="screen" />
+
+    <style type="text/css" media="screen">
+
+    /*<![CDATA[*/
+
+    <!--
+
+    @import url(http://www.cs.manchester.ac.uk/css/_layout.css);
+
+    @import url(http://www.cs.manchester.ac.uk/css/_navigation.css);
+
+    @import url(http://www.cs.manchester.ac.uk/css/_forms.css);
+
+    @import url(http://www.cs.manchester.ac.uk/css/_boxes.css);
+
+    -->
+
+    /*]]>*/
+
+
+
+    .currentsection  {
+
+	 background-color: #f0f0ff; 
+
+	 color:#000;
+
+	 display: block; 
+
+	 font-weight:normal;
+
+	 padding: 4px 4px 5px 4px;
+
+	 text-decoration:none; 
+
+    }
+
+    .multilevel-linkdiv-0 {
+
+	 background-color: #f0f0ff; 
+
+	 margin-left: 1.0em;
+
+         text-align: left
+
+    }
+
+    a.greylink:link    { color: #c0c0c0; }
+
+    a.greylink:visited { color: #d0d0d0; }
+
+		
+
+    .lined {
+
+	 border-style: solid;
+
+	 border-color: #006073;
+
+	 border-bottom-width: 0px;
+
+	 border-top-width: 1px;
+
+	 border-left-width: 0px;
+
+	 border-right-width: 0px;
+
+    }
+
+    table, caption {
+
+      font-size: inherit;
+
+      font-weight: inherit;
+
+      font-style: inherit;
+
+      font-variant: inherit;
+
+    }
+
+    </style>
+
+
+
+    <style type="text/css" media="screen">
+
+    /*<![CDATA[*/
+
+    <!--
+
+    .section {margin-left: 4em}
+
+    body { background-image: url(http://www.cs.manchester.ac.uk/ai//pictures/icons/logoleft.gif); }
+
+    div.locator { background-color: #6666cc; background-image: url(); background-repeat: no-repeat; border: none; margin: 1px 0 0 0; padding: 0; width: 184px; height: 92px; }
+
+    -->
+
+    /*]]>*/
+
+    </style>
+
+<!--  End of Style Sheet CSS -->
+
+</head>
+
+
+
+
+<head>
+
+<title>Matlab Noise Toolbox - Examples</title>
+
+</head>
+
+
+
+<body><div class="section">
+
+
 
 <h1>Matlab Noise Toolbox</h1>
 
-This page describes the noise model toolbox for MATLAB available for <a href="http://ext.dcs.shef.ac.uk/~u0015/cgi-bin/downloadForm.cgi?toolbox=noise">download here</a>. 
 
-<h3>Dependencies</h3>
 
-The noise toolbox depends on the <a href="http://www.dcs.shef.ac.uk/~neil/ndlutil/downloadFiles/"><code>ndlutil</code> toolbox</a> and the <a href="http://www.dcs.shef.ac.uk/~neil/optimi/downloadFiles/"><code>optimi</code> toolbox</a>. You can use your user name and password for accessing these toolboxes.
 
-Important, you must use vrs 0.152 or greater of the NDLUTIL toolbox with version 0.131 or greater of this toolbox. 
+<p>The NOISE software can be downloaded
+<a href="http://www.cs.man.ac.uk/neill-bin/software/downloadForm.cgi?toolbox=noise">here</a>.
+<h2>Release Information</h2>
+<p>Current release is 0.14.
+</table>
 
-<h3>Release Information</h3>
 
-<p>Current release is 0.131. 
+
+
+
+<p>As of version 0.14, the NCNM noise model has been incorporated into this toolbox.
+
+
 
 <p>This toolbox allows computation of several different noise models and their gradients. You can add noise models to the toolbox by creating versions of the relevant files. Once added, they can be tested using the <code>noiseTest</code>. For example you can test the probit noise model by writing
 
+
+
 <p><code>&gt;&gt; noiseTest('probit')</code>
+
+
 
 <p>There are several noise models implemented, the mains ones that are being maintained for the latest release are:
 
+
+
 <p><code>gaussian
+
 ordered
+
 probit
+
 </code>
 
-These noise models are Gaussian (standard Gaussian noise), probitistic regression for binary classificaiton and ordered categorical for ordered categories (ordinal regression).</body>
-</html>
+
+
+These noise models are Gaussian (standard Gaussian noise), probitistic regression for binary classificaiton and ordered categorical for ordered categories (ordinal regression).</div></body>
+
+<p><center>Page updated on Sat Jan 13 00:58:02 2007</center><!-- footer -->
+
+
+
+<body>
+
+    <div id="footer">
+
+      <div class="links">
+
+        <p>
+
+          | 
+
+          <a href="http://www.manchester.ac.uk/aboutus/documents/disclaimer/"
+
+             title="Disclaimer">Disclaimer</a> |
+
+             <a href="http://www.manchester.ac.uk/aboutus/documents/privacy/"
+
+             title="Privacy">Privacy</a> |
+
+             <a href="http://www.manchester.ac.uk/aboutus/documents/copyright/"
+
+             title="Copyright Notice">Copyright notice</a> |
+
+             <a href="http://www.manchester.ac.uk/aboutus/documents/accessibility/"
+
+             title="Accessibility">Accessibility</a> |
+
+             <a href="http://www.manchester.ac.uk/aboutus/documents/foi/"
+
+             title="Freedom of information">Freedom of information</a> | 
+
+             <a href="http://www.manchester.ac.uk/aboutus/contact/feedback/"
+
+             title="Feedback">Feedback</a> |
+
+        </p>
+
+
+
+      </div>
+
+      <div class="pagestatus">
+
+        <p>Please contact
+
+          <a href="mailto:webmaster.cs@manchester.ac.uk">webmaster.cs@manchester.ac.uk</a>
+
+          with comments and suggestions
+
+        </p>
+
+      </div>
+
+    </div>
+
+
+
+  </body>
+

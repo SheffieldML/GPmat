@@ -1,7 +1,15 @@
 function noise = noiseParamInit(noise, y)
 
 % NOISEPARAMINIT Noise model's parameter initialisation.
-
+% FORMAT
+% DESC initialises the
+%  noise structure with some default parameters.
+% ARG noise : the noise structure which requires initialisation.
+% RETURN noise : the noise structure with the default parameters placed in.
+%
+% SEEALSO : noiseCreate
+%
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005
 % NOISE
 
 % If this flag is set then the noise model leads to constant values of

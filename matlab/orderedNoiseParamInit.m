@@ -1,8 +1,23 @@
 function noise = orderedNoiseParamInit(noise, y)
 
-% ORDEREDNOISEPARAMINIT Ordered categorical noise model's parameter initialisation.
+
+% ORDEREDNOISEPARAMINIT ORDERED noise parameter initialisation.
+% The ordered categorical noise model is an ordinal regression noise
+% model. The real line is divided into categories, which have some
+% ordering (such as small, medium, large).
+%
+% FORMAT
+% DESC initialises the ordered categorical
+%  noise structure with some default parameters.
+% ARG noise : the noise structure which requires initialisation.
+% RETURN noise : the noise structure with the default parameters placed in.
+%
+% SEEALSO : noiseCreate, noiseParamInit
+%
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
 % NOISE
+
 
 if nargin > 1
   noise.C = max(max(y))+1;
@@ -19,7 +34,7 @@ noise.nParams = noise.C-2 + noise.numProcess;
 if noise.C > 2
   noise.widths = repmat(1/(noise.C-2), noise.C-2, 1);
   noise.transforms.index = [noise.numProcess+1:noise.nParams];
-  noise.transforms.type = 'negLogLogit';
+  noise.transforms.type = optimiDefaultConstraint('positive');
 else 
   noise.widths = [];
 end

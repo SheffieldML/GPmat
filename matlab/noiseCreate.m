@@ -1,6 +1,17 @@
 function noise = noiseCreate(noiseType, y)
 
 % NOISECREATE Initialise a noise structure.
+% FORMAT
+% DESC takes a noise type and a target vector and initialises a
+% noise structure from it. The parameters of the noise structure
+% are the set by calling noiseParamInit.
+% ARG noiseType : the type of noise to be created (e.g. 'gaussian',
+% 'probit', 'ncnm').
+% ARG y : the target vector.
+%
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005
+%
+% SEEALSO : noiseParamInit
 
 % NOISE
 

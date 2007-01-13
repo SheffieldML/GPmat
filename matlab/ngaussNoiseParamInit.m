@@ -1,11 +1,18 @@
 function noise = ngaussNoiseParamInit(noise, y)
 
-% NGAUSSNOISEPARAMINIT noiseless Gaussian noise model's parameter initialisation.
+
+% NGAUSSNOISEPARAMINIT NGAUSS noise parameter initialisation.
+% FORMAT
+% DESC initialises the noiseless Gaussian
+%  noise structure with some default parameters.
+% ARG noise : the noise structure which requires initialisation.
+% RETURN noise : the noise structure with the default parameters placed in.
+%
+% SEEALSO : noiseCreate, noiseParamInit
+%
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
 % NOISE
-
-% NOISE
-
 
 
 if nargin > 1

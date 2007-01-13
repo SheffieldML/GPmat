@@ -5,7 +5,7 @@ function e = negNoiseLogLikelihood(params, model, prior)
 % NOISE
 
 model.noise = noiseExpandParam(model.noise, params);
-fhandle = str2func([model.noise.type 'LogLikelihood']);
+fhandle = str2func([model.noise.type 'NoiseLogLikelihood']);
 e = - fhandle([], [], model);
 
 if prior

@@ -1,8 +1,23 @@
 function noise = cmpndNoiseParamInit(noise, y)
 
-% CMPNDNOISEPARAMINIT Compound noise model's parameter initialisation.
+% CMPNDNOISEPARAMINIT CMPND noise parameter initialisation.
+% The compound noise model is a wrapper noise model for allowing each output 
+% of a the model to have a different noise model.
+%
+% SEEALSO : cmpndKernParamInit
+%
+% FORMAT
+% DESC initialises the compound
+%  noise structure with some default parameters.
+% ARG noise : the noise structure which requires initialisation.
+% RETURN noise : the noise structure with the default parameters placed in.
+%
+% SEEALSO : noiseCreate, noiseParamInit
+%
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
 % NOISE
+
 
 if nargin > 1
   if length(noise.comp) ~= size(y, 2)
