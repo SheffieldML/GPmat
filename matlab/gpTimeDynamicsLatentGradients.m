@@ -1,6 +1,6 @@
 function gX = gpTimeDynamicsLatentGradients(model);
 
-% GPDYNAMICSLATENTGRADIENTS Gradients of the X vector given the time dynamics model.
+% GPTIMEDYNAMICSLATENTGRADIENTS Gradients of the X vector given the time dynamics model.
 % FORMAT
 % DESC Compute the gradients of the log likelihood of a Gaussian 
 % proces time dynamics model with respect to the latent points in the

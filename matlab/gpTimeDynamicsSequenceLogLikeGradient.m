@@ -1,6 +1,6 @@
 function gX = gpTimeDynamicsSequenceLogLikeGradient(model, latentValsRaw, t)
 
-% GPDYNAMICSSEQUENCELOGLIKEGRADIENT Log-likelihood gradient for of a sequence of the GP-LVM time dynamics.
+% GPTIMEDYNAMICSSEQUENCELOGLIKEGRADIENT Log-likelihood gradient for of a sequence of the GP-LVM time dynamics.
 % FORMAT
 % DESC returns the gradient of the log likelihood with respect to
 % the latent position, where the log likelihood is conditioned on
