@@ -21,7 +21,6 @@ function gX = rbfKernGradX(kern, X, X2)
 
 % KERN
 
-
 gX = zeros(size(X2, 1), size(X2, 2), size(X, 1));
 for i = 1:size(X, 1);
   gX(:, :, i) = rbfKernGradXpoint(kern, X(i, :), X2);

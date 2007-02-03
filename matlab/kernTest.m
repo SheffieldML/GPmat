@@ -1,4 +1,4 @@
-function kernRet = kernTest(kernType);
+function kernRet = kernTest(kernType, numIn);
 
 % KERNTEST Run some tests on the specified kernel.
 % FORMAT
@@ -19,8 +19,10 @@ function kernRet = kernTest(kernType);
 
 % KERN
 
+if nargin < 2
+  numIn = 4;
+end
 numData = 20;
-numIn = 4;
 
 % Generate some x positions.
 x = randn(numData, numIn);

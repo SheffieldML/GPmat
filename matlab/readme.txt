@@ -1,5 +1,10 @@
 Please note that this toolbox requires MATLAB 7.0 or higher to run. The toolbox relies on the optimi and ndlutil toolboxes, available at http://www.dcs.shef.ac.uk/~neil/optimi/downloadFiles and http://www.dcs.shef.ac.uk/~neil/ndultil/downloadFiles/.
 
+Version 0.166
+-------------
+
+Added periodic version of RBF kernel (see Rasmussen and Williams pg 92 or Mackay's introduction to GPs (1998)) and periodic version of Gibbs's non-statinary kernel (see e.g. pg 93 of Rasmussen and Williams).
+
 Version 0.165
 -------------
 

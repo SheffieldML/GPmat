@@ -1,8 +1,8 @@
-function [params, names] = gibbsKernExtractParam(kern)
+function [params, names] = gibbsperiodicKernExtractParam(kern)
 
-% GIBBSKERNEXTRACTPARAM Extract parameters from the GIBBS kernel structure.
+% GIBBSPERIODICKERNEXTRACTPARAM Extract parameters from the GIBBSPERIODIC kernel structure.
 % FORMAT
-% DESC extracts parameters from the Mark Gibbs's non-stationary
+% DESC extracts parameters from the Gibbs-kernel derived periodic
 % kernel structure into a vector of parameters for optimisation.
 % ARG kern : the kernel structure containing the parameters to be
 % extracted.
@@ -12,7 +12,7 @@ function [params, names] = gibbsKernExtractParam(kern)
 % positive only parameters could be logged before being returned).
 %
 % FORMAT
-% DESC extracts parameters and parameter names from the Mark Gibbs's non-stationary
+% DESC extracts parameters and parameter names from the Gibbs-kernel derived periodic
 % kernel structure.
 % ARG kern : the kernel structure containing the parameters to be
 % extracted.
@@ -23,10 +23,10 @@ function [params, names] = gibbsKernExtractParam(kern)
 % RETURN names : cell array of strings containing names for each
 % parameter.
 %
-% SEEALSO gibbsKernParamInit, gibbsKernExpandParam, kernExtractParam, scg, conjgrad
+% SEEALSO gibbsperiodicKernParamInit, gibbsperiodicKernExpandParam, kernExtractParam, scg, conjgrad
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
-%
+% COPYRIGHT : Neil D. Lawrence, 2007
+
 % KERN
 
 params = zeros(1, kern.nParams);

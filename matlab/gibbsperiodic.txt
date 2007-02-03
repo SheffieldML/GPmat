@@ -1,0 +1,23 @@
+% This kernel is a periodic kernel constructed by mapping a one
+% dimensional input into a two dimensional space,
+%
+% u_1(x) = cos(x), u_2(x) = sin(x)
+%
+% A Gibbs kernel is then applied in the resulting
+% two dimensional space. The resulting form of the covariance is
+% then
+% Given 
+% r = 2*sin((x_i-x_j)/2)
+% 
+% we have
+% k(x_i, x_j) = sigma2*Z*exp(-r^2/(l(x)*l(x) + l(x')*l(x')))
+%
+% where
+% Z = sqrt(2*l(x)*l(x')/(l(x)*l(x) + l(x')*l(x'))
+%
+% The parameters are sigma2, the process variance (kern.variance),
+% and the parameters of l(x) which is a periodic function that can be specified by the user.
+%
+% SEEALSO : mlpCreate, gibbsperiodicKernSetLengthScaleFunc%
+%
+% SEEALSO : gibssKernParamInit

@@ -17,7 +17,6 @@ function gibbsKernDisplay(kern, spaceNum)
 
 % KERN
 
-
 if nargin > 1
 else
   spaceNum = 0;

@@ -28,7 +28,6 @@ function [params, names] = rbfKernExtractParam(kern)
 
 % KERN
 
-
 params = [kern.inverseWidth kern.variance];
 if nargout > 1
   names={'inverse width', 'variance'};
