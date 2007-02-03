@@ -22,6 +22,7 @@ function gradientCheck(params, objectiveFunction, gradientFunction, varargin)
 
 % NDLUTIL
 
+
 if isstr(objectiveFunction)
   objectiveFunction = str2func(objectiveFunction);
 end
