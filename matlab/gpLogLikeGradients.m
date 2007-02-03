@@ -69,7 +69,11 @@ gX_u = [];
 gX = [];
 
 g_scaleBias = gpScaleBiasGradient(model);
-g_meanFunc = gpMeanFunctionGradient(model);
+if isfield(model, 'meanFunction') & ~isempty(model.meanFunction)
+  g_meanFunc = gpMeanFunctionGradient(model);
+else
+  g_meanFunc = [];
+end
 
 switch model.approx
  case 'ftc'

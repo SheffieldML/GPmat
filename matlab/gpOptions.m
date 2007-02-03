@@ -23,7 +23,7 @@ else
 end
 
 % Select type of optimiser.
-options.optimiser = 'conjgrad';
+options.optimiser = optimiDefaultOptimiser;
 
 % Set to 1 to learn output scales.
 options.learnScales = 0;

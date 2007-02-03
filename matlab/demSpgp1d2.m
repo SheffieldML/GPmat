@@ -15,7 +15,8 @@ experimentNo = 2;
 % Set up model
 options = gpOptions('fitc');
 options.numActive = 9;
-options.optimiser = 'conjgrad';
+options.optimiser = 'optimiMinimize';
+
 % use the deterministic training conditional.
 q = size(X, 2);
 d = size(y, 2);

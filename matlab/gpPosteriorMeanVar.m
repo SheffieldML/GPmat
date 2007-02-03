@@ -52,12 +52,13 @@ while startVal <= size(X, 1)
   end
 
   % Compute mean, using precomputed alpha vector.
-  if ~isfield(model, 'isMissingData') | ~model.isMissingData
+  if ~isfield(model, 'isMissingData') | ~model.isMissingData ... 
+    | ~strcmp(model.approx, 'ftc')
     mu(indices, :) = KX_star'*model.alpha;
   else
     for i = 1:model.d
       mu(indices, i) = KX_star(model.indexPresent{i}, :)' ...
-         *model.alpha(model.indexPresent{i}, i);
+          *model.alpha(model.indexPresent{i}, i);
     end
   end
   

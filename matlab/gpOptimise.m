@@ -43,7 +43,13 @@ else
   optim = str2func('conjgrad');
 end
 
-params = optim('gpObjective', params,  options, ...
-               'gpGradient', model);
+if strcmp(func2str(optim), 'optimiMinimize')
+  % Carl Rasmussen's minimize function 
+  params = optim('gpObjectiveGradient', params, options, model);
+else
+  % NETLAB style optimization.
+  params = optim('gpObjective', params,  options, ...
+                 'gpGradient', model);
+end
 
 model = gpExpandParam(model, params);

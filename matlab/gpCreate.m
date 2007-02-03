@@ -35,7 +35,7 @@ model.type = 'gp';
 model.approx = options.approx;
   
 model.learnScales = options.learnScales;
-model.scaleTransform = 'negLogLogit';
+model.scaleTransform = optimiDefaultConstraint('positive');
 
 model.X = X;
 model.y = y;
@@ -137,7 +137,7 @@ switch options.approx
     model.X_u = model.X(ind, :);
   end
   model.beta = options.beta;
-  model.betaTransform = 'negLogLogit';  
+  model.betaTransform =  optimiDefaultConstraint('positive');  
 end
 if model.k>model.N
   error('Number of active points cannot be greater than number of data.')

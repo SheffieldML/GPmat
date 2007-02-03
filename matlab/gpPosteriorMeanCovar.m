@@ -52,24 +52,44 @@ end
 if nargout > 1
   % Compute kernel for new point.
   K = kernCompute(model.kern, X);
-  switch model.approx
-   case 'ftc'
-    Kinvk = model.invK_uu*KX_star;
-   case {'dtc', 'fitc', 'pitc'}
-    Kinvk = (model.invK_uu - (1/model.beta)*model.Ainv)*KX_star;
-  end
-  
-  covarsig = K - KX_star'*Kinvk;
-  if isfield(model, 'beta')
-    covarsig = covarsig + eye(size(X, 1))*(1/model.beta);
-  end
-  if nargout>2
-    covarSigma = covarsig;
-    factors = model.scale.*model.scale;
+  if ~model.isMissingData
+    switch model.approx
+     case 'ftc'
+      Kinvk = model.invK_uu*KX_star;
+     case {'dtc', 'fitc', 'pitc'}
+      Kinvk = (model.invK_uu - (1/model.beta)*model.Ainv)*KX_star;
+    end
+    
+    covarsig = K - KX_star'*Kinvk;
+    if isfield(model, 'beta')
+      covarsig = covarsig + eye(size(X, 1))*(1/model.beta);
+    end
+    if nargout>2
+      covarSigma = covarsig;
+      factors = model.scale.*model.scale;
+    else
+      for i = 1:model.d
+        covarSigma{i} = covarsig*model.scale(i)*model.scale(i);
+      end
+    end
   else
     for i = 1:model.d
-      covarSigma{i} = covarsig*model.scale(i)*model.scale(i);
+      switch model.approx
+       case 'ftc'
+        Kinvk{i} = model.invK_uu{i}*KX_star;
+       case {'dtc', 'fitc', 'pitc'}
+        Kinvk{i} = (model.invK_uu - (1/model.beta)*model.Ainv{i})*KX_star;
+      end      
+      covarsig{i} = K - KX_star'*Kinvk{i};
+      if isfield(model, 'beta')
+        covarsig{i} = covarsig{i} + eye(size(X, 1))*(1/model.beta);
+      end
+      if nargout>2
+        error(['Cannot return covariance and scales with models ' ...
+               'trained on missing data.'])
+      else
+        covarSigma{i} = covarsig{i}*model.scale(i)*model.scale(i);
+      end
     end
   end
-end
-    
+end 

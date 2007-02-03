@@ -57,31 +57,34 @@ end
 K = kernGradX(model.kern, X);
 
 
-for i = 1:model.q
-  switch model.approx
-   case 'ftc'
-    KinvgK = model.invK_uu*squeeze(gX(:, i, :));
-   case {'dtc', 'fitc', 'pitc'}
-    KinvgK = (model.invK_uu - (1/model.beta)*model.Ainv)*squeeze(gX(:, i, :));
-   otherwise
-    error('Unrecognised approximation type');
-  end
-  kXTKinvgK = kX_star'*KinvgK;
-  gCovar{i} = squeeze(K(:, i, :))-kXTKinvgK - diag(diag(kXTKinvgK));
-  gmu{i} = squeeze(gX(:, i, :))'*model.alpha.*repmat(model.scale, ...
-                                                    size(X, 1), 1);
-end
-
-
-% Deal with scaling.
-if nargout < 3
+if ~model.isMissingData
   for i = 1:model.q
-    for j = 1:model.d
-      gsigmavar{i, j} = gCovar{i}*model.scale(j)*model.scale(j);
+    switch model.approx
+     case 'ftc'
+      KinvgK = model.invK_uu*squeeze(gX(:, i, :));
+     case {'dtc', 'fitc', 'pitc'}
+      KinvgK = (model.invK_uu - (1/model.beta)*model.Ainv)*squeeze(gX(:, i, :));
+     otherwise
+      error('Unrecognised approximation type');
     end
+    kXTKinvgK = kX_star'*KinvgK;
+    gCovar{i} = squeeze(K(:, i, :))-kXTKinvgK - diag(diag(kXTKinvgK));
+    gmu{i} = squeeze(gX(:, i, :))'*model.alpha.*repmat(model.scale, ...
+                                                      size(X, 1), 1);
+  end
+  
+  
+  % Deal with scaling.
+  if nargout < 3
+    for i = 1:model.q
+      for j = 1:model.d
+        gsigmavar{i, j} = gCovar{i}*model.scale(j)*model.scale(j);
+      end
+    end
+  else
+    factors = model.scale.*model.scale;
+    gsigmavar = gCovar;
   end
 else
-  factors = model.scale.*model.scale;
-  gsigmavar = gCovar;
+  error('Not yet implemented for models trained on missing data.');
 end
-  
