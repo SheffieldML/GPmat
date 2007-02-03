@@ -1,6 +1,16 @@
-function h = fgplvmPrintPlot(model, lbls, capName, experimentNo)
+function fgplvmPrintPlot(model, lbls, capName, experimentNo)
 
 % FGPLVMPRINTPLOT Print latent space for learnt model.
+% FORMAT 
+% DESC prints a latent space repsresentation for an FGPLVM model.
+% ARG model : the model to use for plotting the latent space.
+% ARG lbls : any lables that are available for plotting.
+% ARG capName : the name of the saved plots.
+% ARG experimentNo : the experiment number to assign to the files.
+% 
+% SEEALSO : lvmScatterPlot
+% 
+% COPYRIGHT : Neil D. Lawrence, 2006
 
 % FGPLVM
 

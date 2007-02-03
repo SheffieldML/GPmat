@@ -1,0 +1,196 @@
+
+
+<head>
+<title>Fast Gaussian Process Latent Variable Model - MATLAB Software</title>
+</head>
+
+<body><div class="section">
+
+<h1>Fast GP-LVM Software</h1>
+
+<p>This page describes examples of how to use the fast Gaussian process latent variable model Software (FGPLVM) available for <a href="http://www.cs.man.ac.uk/neill-bin/software/downloadForm.cgi?toolbox=fgplvm">download here</a>. 
+
+<p>Alternative GP-LVM implementations from this site:
+
+<p>The GP-LVM C++ software is available from <a href="http://www.cs.man.ac.uk/~neill/gplvmcpp/">here</a>.
+
+<p>The original MATLAB version of the toolbox is available here <a href="http://www.cs.man.ac.uk/~neill/gplvm/">here</a>.
+
+<h2>Release Information</h2>
+
+RELEASEINFORMATION
+
+This version splits the Gaussian process portion into a new GP toolbox, the corresponding version is 0.1. Fixed bug in gpDynamicsExpandParam, gpDynamicsExractParam and gpDynamicsLogLikeGradient where 'fixInducing' option  was not being dealt with.
+
+<h3>Version 0.142</h3>
+
+<p>Fixed bug in fgplvmCreate.m where the back constraints were set up, but the latent positions were not being set according to the back constraints in the returned model.
+
+<h3>Version 0.141</h3>
+
+<p>Changed GP-LVM default optimiser to scg rather than conjgrad. Added fgplvmOptimiseSequence and dependent files. This is for optimising a test sequence in the latent space, for the case where there are dynamics on the model.
+
+<h3>Version 0.14</h3>
+
+<p>Carl Ek implemented multiple sequences in the gpDynamics model used for dynamics in the GPLVM, this was refined and integrated by Neil.
+
+<p>Fixed two bugs in gpPosteriorGradMeanVar which appeared if fitc was used or the scales on the outputs were non-zero. This in turn affected fgplvmOptimisePoint.
+
+<p>Default under back constraints switched to not optimise towards a PCA initialisation.
+
+<p>Fixed bug in fgplvmReadFromFID where the old form of fgplvmCreate was being called.
+
+
+<h3>Version 0.132</h3>
+
+<p>Release 0.132 includes two speed improvements on the pitc approximation. Thanks to <a href="http://www.gatsby.ucl.ac.uk/~snelson/">Ed Snelson</a> for pointing out that it was unusually slow! New versions of the NDLUTIL and KERN toolbox are also required.
+
+<p>Release 0.131 adds the ability to handle missing data and a new reversible dynamics model.
+
+<p>Release 0.13 is a (hopefully) fairly stable base release for which several results in forthcoming papers will be created. Additional features are better decompartmentalisation of dynamics models, regularisation of inducing variable's inputs and introduction of fgplvmOptions and gpOptions for setting default options for the models.
+
+<p>Release 0.11 is the first release that contains the fully independent training conditional approximation (Snelson and Ghahramani, Quinonero Candela and Rasmussen).  
+
+<p>Release 0.1 is a pre-release to make some of the model functionality available. The some of the different approximations (such as fully independent training conditional and partially independent training conditional) are not yet implemented and the dynamics currently has no sparse approximations associated.
+
+<p>This toolbox also implements back constraints (joint work with Joaquin Quinonero Candela). The mappings that can be used as back constraints are those described in <a href="http://www.cs.man.ac.uk/~neill/mltools/downloadFiles/">the MLTOOLS toolbox</a>.
+
+<p>The toolboxes required to run the FGPLVM toolbox are listed below.</p>
+
+RELEASEINFORMATION
+
+
+<p>Finally you will also need the <a href="http://www.ncrg.aston.ac.uk/netlab/">NETLAB toolbox</a> in your path. If you need to load in a file written from the GPLVMCPP toolbox you will need <a href="http://www.cs.man.ac.uk/~neill/noise/downloadFiles/">the NOISE toolbox (vrs 0.13)</a>.
+
+<h2>Examples</h2>
+
+<h3>Sparse Pseudo-input Gaussian Processes</h3>
+
+<p>The sparse approximation used in this toolbox is based on the Sparse Pseudo-input Gaussian Process model described by  <a href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Snelson:pseudo05&printAbstract=1">Snelson and Ghahramani</a>. Also provided are the extensions suggested by <a href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Quinonero:unifying05">Quinonero-Candela and Rasmussen</a>. They provide a unifying terminology for describing these approximations which we shall use in what follows.
+
+<p>There are three demos provided for Gaussian process regression in 1-D. They each use a different form of likelihood approximation. The first demonstration uses the `projected latent variable' approach first described by <a href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Csato:sparse02&printAbstract=1">Csato and Opper</a> and later used by <a href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Seeger:fast03&printAbstract=1">Seeger <i>et al.</i></a>. In the terminology of Quinonero-Candela and Rasmussen (QR-terminology) this is known as the `deterministic training conditional' (DTC) approximation.
+
+<p>To use this approximation the following script can be run.
+<p><code>
+&gt;&gt; demSpgp1d1
+</code>
+<p>The result of the script is given in the plot below.
+<p><center><img src="demSpgp1d1.png" width ="50%"><br>
+Gaussian process using the DTC approximation with nine inducing variables. Data is shown as red spots, posterior mean prediction is shown as a blue line and two standard deviations are given as dashed blue lines.</center>
+
+<p>The improved approximation suggested by Snelson and Ghahramani, in QR-terminology this is known as the fully independent training conditional (FITC). To try this approximation run the following script
+<p><code>
+&gt;&gt; demSpgp1d2
+</code>
+<p>The result of the script is given on the left of the plot below.
+<p><center><img src="demSpgp1d2.png" width="49%"><img src="demSpgp1d3.png" width="49%"><br>
+<i>Left</i>: Gaussian process using the FITC approximation with nine inducing variables. Data is shown as red spots, posterior mean prediction is shown as a blue line and two standard deviations are given as dashed blue lines. <i>Right</i>: Similar but for the PITC approximation, again with nine inducing variables.</center>
+
+<p>At the <a href="http://www.dcs.shef.ac.uk/ml/gprt/">Sheffield Gaussian Process Round Table</a> Lehel Csato pointed out that the Bayesian Committee Machine of <a href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?group=bcm&printAbstract=1">Schwaighofer and Tresp</a> can also be viewed within the same framework. This idea is formalised in <a href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Quinonero:unifying05&printAbstract=1">Qunionenro-Candela and Rasmussen's</a> review. This approximation is known as the `partially independent training conditional' (PITC) in QR-terminology. To try this approximation run the following script
+<p><code>
+&gt;&gt; demSpgp1d3
+</code>
+<p>The result of the script is given on the right of the plot above.
+
+<p>Finally we can compare these results to the result from the full Gaussian process on the data with the correct hyper-parameters. To do this the following script can be run.
+<p><code>
+&gt;&gt; demSpgp1d4
+</code>
+<p>The result of the script is given in the plot below.
+<p><center><img src="demSpgp1d4.png" width="50%"><br>
+Full Gaussian process on the toy data with the correct hyper-parameters. Data is shown as red spots, posterior mean prediction is shown as a blue line and two standard deviations are given as dashed blue lines.</center>
+
+<h3>GP-LVM</h3>
+
+<p>The three approximations outlined above can be used to speed up learning in the GP-LVM. They have the advantage over the IVM approach taken in the <a href="http://www.cs.man.ac.uk/~neill/gplvm/">original GP-LVM toolbox</a> that the algorithm is fully convergent and the final mapping from latent space to data space takes into account all of the data (not just the points in the active set).
+
+<p>As well as the new sparse approximation the new toolbox allows the GP-LVM to be run with dynamics as suggested by <a href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Wang:gpdm05&printAbstract=1">Wang <i>et al.</i></a>.
+
+<p>Finally, the new toolbox allows the incorporation of `back constraints' in learning. Back constraints force the latent points to be a smooth function of the data points. This means that points that are close in data space are constrained to be close in latent space. For the standard GP-LVM points close in latent space are constrained to be close in data space, but the converse is not true.
+
+<p>Various combinations of back constraints and different approximations are used in the exmaples below.
+
+<h3>Oil Data</h3>
+
+<p>The `oil data' is commonly used as a bench mark for visualisation algorithms. For more details on the data see <a href="http://www.ncrg.aston.ac.uk/GTM/3PhaseData.html">this page</a>.
+
+<p>The <a href="http://www.cs.man.ac.uk/~neill/gplvmcpp">C++ implementation of the GP-LVM</a> has details on training the full GP-LVM with this data set. Here we will consider the three different approximations outlined above.
+
+<h4>FITC Approximation</h4>
+
+In all the examples we give there will be 100 points in the active set. We first considered the FITC approximation. The script <code>demOil1.m</code> runs the FITC approximation giving the result on the left of the figure shown below.
+
+<p><center><img src="demOil1.png" width="49%"><img src="demOil2.png" width="49%"><br>
+<i>Left</i>: GP-LVM on the oil data using the FITC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses.  One hundred inducing variables are used. <i>Right</i>: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.</center>
+
+<p>Back constraints can be added to each of these approximations. In the example on the right we used a back constraint given by a multi-layer perceptron with 15 hidden nodes. This example can be recreated with <code>demOil2.m</code>.
+
+<h4>DTC Approximation</h4>
+
+<p>The other approximations can also be used, in the figures below we give results from the DTC approximation. The can be recreated using <code>demOil3.m</code> and <code>demOil4.m</code>.
+
+<p><center><img src="demOil3.png" width="49%"><img src="demOil4.png" width="49%"><br>
+<i>Left</i>: GP-LVM on the oil data using the DITC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses.  One hundred inducing variables are used. <i>Right</i>: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.</center>
+
+<h4>PITC Approximation</h4>
+
+<p>Finally we show results using the PITC approximation, these results can be recreated using the scripts <code>demOil5.m</code> and <code>demOil6.m</code>.
+
+<p><center><img src="demOil5.png" width="49%"><img src="demOil6.png" width="49%"><br>
+<i>Left</i>: GP-LVM on the oil data using the PITC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses.  One hundred inducing variables are used. <i>Right</i>: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.</center>
+
+
+<h3>Back Constraints and Dynamics</h3>
+
+First we will demonstrate the dynamics functionality of the toolbox. We raw x-y-z values from a motion capture data set, the <code>Figure Run 1</code> example available <a href="http://accad.osu.edu/research/mocap/mocap_data.htm">from Ohio State University</a>. To run without dynamics use the script:
+<p><code>
+&gt;&gt; demOil1
+</code>
+
+<p>The results are given on the left of the figure below.
+
+<p><center><img src="demStick1.png" width="49%"><br>
+GP-LVM on the motion capture data without dynamics in the latent space. </center>
+
+<p>Notice that the sequence (which is a few strides of a man running) is split into several sub-sequences. These sub-sequences are aligned to the strides of the man. By introducing a dynamics prior, we can force the sequence to link up. Samples from the dynamics prior used are shown in the plot below.
+
+<p><center><img src="dynamicsSamp1.png" width="49%"><img src="dynamicsSamp2.png" width="49%"><br>
+<img src="dynamicsSamp3.png" width="49%"><img src="dynamicsSamp4.png" width="49%">
+Samples from the dynamics prior which is placed over the latent space. This prior has <i>Left</i>: GP-LVM on the motion capture data without dynamics in the latent space. <i>Right</i>: GP-LVM with dynamics. Samples from the dynamics prior used are given in the figure above.</center>
+
+<p>This prior is used in the model to obtain the results below,
+
+<p><code>
+&gt;&gt; demStick2
+</code>
+
+<p><center><img src="demStick2.png" width="49%"><br>
+GP-LVM with dynamics. Samples from the dynamics prior used are given in the figure above.</center>
+
+Note now the circular form of the latent space. 
+
+Back constraints can also be used to achieve a similar effect,
+
+<p><code>
+&gt;&gt; demStick3
+</code>
+
+<p><center><img src="demStick3.png" width="49%"><br>
+GP-LVM with back constraints. A RBF kernel mapping was used to form the back constraints with the inverse width set to 1e-4 (<i>i.e.</i>length scale set to 100).</center>
+
+<h3>Loop Closure in Robotics</h3>
+
+In on-going work with Dieter Fox and Brian Ferris at the University of Washington we are interested in loop closure for robotic navigation, included as an example is a data set of a robot completing a loop while reading wireless access point signal strengths. To produce a neat track and close the loop it turns out it is necessary to use dynamics and back constraints as seen in the images below. These results can be recreated with <p><code>demRobotWireless1.m</code> through <code>demRobotWireless4.m</code>.
+</code>
+
+<p><center><img src="demRobotWireless1.png" width="49%"><img src="demRobotWireless2.png" width="49%"><br>
+<p><img src="demRobotWireless3.png" width="49%"><img src="demRobotWireless4.png" width="49%"><br>
+Use of back constraints and dynamics to obtain loop closure in a robot navigation example. <i>Top Left</i>: GP-LVM without back constraints or dynamics, <i>Top right</i>: GP-LVM with back constraints, no dynamics, <i>Bottom Left</i>: GP-LVM with dynamics, no back constraints, <i>Bottom right</i>: GP-LVM with back constraints and dynamics. </center>
+
+<h3>Vocal Joystick and Vowel Data</h3>
+
+Another ongoing piece of work with Jeff Bilmes and Jon Malkin involves embedding vowel sounds in a two dimensional space as part of <a href="http://ssli.ee.washington.edu/vj">vocal joystick</a> system. Jon has provided a simple data set of 2,700 examples of different vowels. These are embedded in a two dimensional latent space with and without back constraints.
+
+<p><center><img src="demVowels2.png" width="49%"><img src="demVowels3.png" width="49%"><br>
+<i>Left</i>: embedding of the vowel data without back constraints, <i>Right</i>: embedding of the vowel data with back constraints. <i>/a/</i> - red cross, <i>/ae/</i> - green circle, <i>/ao/</i> - blue plus, <i>/e/</i> - cyan asterix, <i>/i/</i> - magenta square, <i>/ibar/</i> - yellow diamond, <i>/o/</i> - red down triangle, <i>/schwa/</i> - green up triangle, <i>/u/</i> - blue left triangle.
+</div></body>

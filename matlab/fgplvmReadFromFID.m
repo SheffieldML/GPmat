@@ -1,6 +1,17 @@
 function [model, lbls] = fgplvmReadFromFID(FID)
 
 % FGPLVMREADFROMFID Load from a FID produced by the C++ implementation.
+% FORMAT
+% DESC loads in from a file stream the data format produced by the
+% C++ implementation of the GP-LVM.
+% ARG FID : the file ID from where the data is loaded.
+% RETURN model : the model loaded in from the file.
+% RETURN lbls : any data labels associated with the data in the
+% model.
+%
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006
+%
+% SEEALSO : fgplvmReadFromFile
 
 % FGPLVM
 

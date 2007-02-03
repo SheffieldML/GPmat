@@ -1,4 +1,4 @@
-function g = fgplvmSequenceGradient(xvec, model, Y)
+function g = fgplvmSequenceGradient(xvec, model, Y, varargin)
 
 % FGPLVMSEQUENCEGRADIENT Wrapper function for gradient of a latent sequence.
 % FORMAT
@@ -11,6 +11,8 @@ function g = fgplvmSequenceGradient(xvec, model, Y)
 % ARG model : the trained GP-LVM model that is being optimised.
 % ARG Y : the position in data space for which the latent sequence is
 % being optimised.
+% ARG P1, P2, P3 ... : optional additional arguments to be passed
+% to the model sequence log likelihood gradient.
 % RETURN g : the gradient of the log likelihood with respect to the
 % latent positions.
 %
@@ -21,6 +23,6 @@ function g = fgplvmSequenceGradient(xvec, model, Y)
 % FGPLVM
 
 X = reshape(xvec, size(Y, 1), model.q);
-g = - fgplvmSequenceLogLikeGradient(model, X, Y);
+g = - fgplvmSequenceLogLikeGradient(model, X, Y, varargin{:});
 
 g = g(:)';

@@ -1,4 +1,4 @@
-function g = fgplvmLogLikeGradients(model)
+function [g, gParam] = fgplvmLogLikeGradients(model)
 
 % FGPLVMLOGLIKEGRADIENTS Compute the gradients for the FGPLVM.
 % FORMAT
@@ -7,8 +7,18 @@ function g = fgplvmLogLikeGradients(model)
 % positions of the GP-LVM model. 
 % ARG model : the FGPLVM structure containing the parameters and
 % the latent positions.
-% RETURN g : the gradients of the latent positions and the
-% parameters of the GP-LVM model.
+% RETURN g : the gradients of the latent positions (or the back 
+% constraint's parameters) and the parameters of the GP-LVM model.
+%
+% FORMAT
+% DESC returns the gradients of the log likelihood with respect to the
+% parameters of the GP-LVM model and with respect to the latent
+% positions of the GP-LVM model in seperate matrices. 
+% ARG model : the FGPLVM structure containing the parameters and
+% the latent positions.
+% RETURN gX : the gradients of the latent positions (or the back
+% constraint's parameters).
+% RETURN gParam : gradients of the parameters of the GP-LVM model.
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 %
@@ -52,18 +62,12 @@ else
   gParam = [gX_u(:)' gParam];
 end
 
-% Check for back constraints.
-if isfield(model, 'back')
-  g_w = modelOutputGrad(model.back, model.y);
-  g_modelParams = zeros(size(g_w, 2), 1);
-  for i = 1:model.q
-    g_modelParams = g_modelParams + g_w(:, :, i)'*gX(:, i);
-  end
-  g = [g_modelParams(:)' gParam];
+g_X_or_back = fgplvmBackConstraintGrad(model, gX);
+if nargout>1
+  g = g_X_or_back;
 else
-  g = [gX(:)' gParam];
+  g = [g_X_or_back(:)' gParam];
 end
-
 
 
 

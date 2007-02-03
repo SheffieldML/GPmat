@@ -1,4 +1,4 @@
-% DEMCMU35GPLVM1 Learn a GPLVM on CMU 35 data set.
+% DEMCMU35GPLVM2 Learn a GPLVM on CMU 35 data set.
 
 % FGPLVM
 
@@ -11,7 +11,7 @@ rand('seed', 1e5);
 seq = cumsum(sum(lbls)) - [1:31];
 
 dataSetName = 'cmu35gplvm';
-experimentNo = 1;
+experimentNo = 2;
 
 % load data
 [Y, lbls, Ytest, lblstest] = lvmLoadData(dataSetName);
@@ -27,17 +27,17 @@ options = fgplvmOptions('fitc');
 options.optimiser = 'conjgrad';
 options.back = 'mlp';
 options.backOptions = mlpOptions(10);
-options.numActive = 200;
+options.numActive = 100;
 options.fixInducing = 1;
 options.fixIndices = round(linspace(1, size(Y, 1), options.numActive));
-latentDim = 4;
+latentDim = 3;
 
 d = size(Y, 2);
 model = fgplvmCreate(latentDim, d, Y, options);
 
 % Add dynamics model.
 optionsDyn = gpOptions('fitc');
-optionsDyn.numActive = 200;
+optionsDyn.numActive = 100;
 optionsDyn.fixInducing = 1;
 optionsDyn.kern = kernCreate(model.X, {'rbf', 'white'});
 optionsDyn.kern.comp{1}.inverseWidth = 0.2;

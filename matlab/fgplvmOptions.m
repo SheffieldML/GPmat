@@ -18,8 +18,9 @@ function options = fgplvmOptions(varargin);
 
 % Get default options from Gaussian process.
 options = gpOptions(varargin{:});
-% switch optimiser to scaled conjugate gradient.
-options.optimiser = 'scg';
+
+% switch optimiser to the OPTIMI specified default.
+options.optimiser = optimiDefaultOptimiser;
 
 % How to initialise X.
 options.initX = 'ppca';

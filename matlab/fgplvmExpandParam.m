@@ -17,7 +17,7 @@ function model = fgplvmExpandParam(model, params)
 % FGPLVM
 
 startVal = 1;
-if isfield(model, 'back')
+if isfield(model, 'back') & ~isempty(model.back)
   endVal = model.back.numParams;
   model.back = modelExpandParam(model.back, params(startVal:endVal));
   model.X = modelOut(model.back, model.y);

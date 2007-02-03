@@ -11,19 +11,13 @@ function ll = fgplvmPointLogLikelihood(model, x, y)
 % ARG y : the observed data point for which the posterior
 % distribution will be evaluated.
 %
-% SEEALSO : fgplvmCreate, fgplvmOptimisePoint, fgplvmPointObjective
+% SEEALSO : gpPointLogLikelihood, fgplvmCreate, fgplvmOptimisePoint, fgplvmPointObjective
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
 % FGPLVM
 
-logTwoPi = log(2*pi);
-[mu, varSigma] = gpPosteriorMeanVar(model, x);
-ll = zeros(size(x, 1), 1);
-ydiff = y-mu;
-ll = log(varSigma) + (ydiff.*ydiff)./varSigma +logTwoPi;
-ll(find(isnan(ll)))=0;
-ll = -0.5*sum(ll, 2);
+ll = gpPointLogLikelihood(model, x, y);
 % check if there is a prior over latent space 
 if isfield(model, 'prior')
   for i = 1:size(x, 1)

@@ -15,7 +15,7 @@ function Xout = fgplvmOptimiseSequence(model, X, Y, display, iters);
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
-% SEEALSO : fgplvmCreate, fgplvmOptimsiePoint, fgplvmSequenceObjective, fgplvmSequenceGradient
+% SEEALSO : fgplvmCreate, fgplvmOptimisePoint, fgplvmSequenceObjective, fgplvmSequenceGradient
 
 % FGPLVM
 
@@ -42,6 +42,15 @@ else
   optim = str2func('scg');
 end
 
-Xout = reshape(optim('fgplvmSequenceObjective', X(:)',  options, ...
-          'fgplvmSequenceGradient', model, Y), size(X, 1), size(X, 2));
+if strcmp(func2str(optim), 'optimiMinimize')
+  % Carl Rasmussen's minimize function 
+  Xout = optim('fgplvmSequenceObjectiveGradient', X(:)', options, ...
+               model, Y);
+else
+  % NETLAB style optimization.
+  Xout = optim('fgplvmSequenceObjective', X(:)',  options, ...
+                 'fgplvmSequenceGradient', model, Y);
+end
+
+Xout = reshape(Xout, size(X, 1), size(X, 2));
 

@@ -1,6 +1,7 @@
-function f = fgplvmSequenceObjective(xvec, model, Y, varargin)
+function f = fgplvmSequenceObjectiveGradient(xvec, model, Y)
 
-% FGPLVMSEQUENCEOBJECTIVE Wrapper function for objective of a single sequence in latent space and the corresponding output sequence.
+% FGPLVMSEQUENCEOBJECTIVEGRADIENT Wrapper function for objective
+% and gradient of a single sequence in latent space and the corresponding output sequence.
 % FORMAT
 % DESC provides a wrapper function for the negative log probability
 % of a given data sequence under the posterior distribution of the
@@ -10,10 +11,10 @@ function f = fgplvmSequenceObjective(xvec, model, Y, varargin)
 % ARG model : the model structure for which the negative log
 % probability of the given data under the posterior is to be computed.
 % ARG Y : time ordered locations in data spaces for the sequence.
-% ARG P1, P2, P3 ... : optional additional arguments to be passed
-% to the model sequence log likelihood.
 % RETURN f : the negative of the log probability of the given data
 % sequence under the posterior distribution induced by the training data.
+% RETURN g : the gradient of the negative of the returned log probability
+% with respect to the latent sequence.
 % 
 % SEEALSO : fgplvmCreate, fgplvmSequenceLogLikelihood, fgplvmOptimiseSequence
 %
@@ -21,5 +22,21 @@ function f = fgplvmSequenceObjective(xvec, model, Y, varargin)
 
 % FGPLVM
 
-X = reshape(xvec, size(Y, 1), model.q);
-f = - fgplvmSequenceLogLikelihood(model, X, Y, varargin{:});
+% Check how the optimiser has given the parameters
+if size(xvec, 1) > size(xvec, 2)
+  % As a column vector ... transpose everything.
+  transpose = true;
+  X = reshape(xvec', size(Y, 1), model.q);
+else
+  transpose = false;
+  X = reshape(xvec, size(Y, 1), model.q);
+end
+f = - fgplvmSequenceLogLikelihood(model, X, Y);
+
+if nargout > 1
+  g = - fgplvmSequenceLogLikeGradient(model, X, Y);
+  g = g(:)';  
+end
+if transpose
+  g = g';
+end

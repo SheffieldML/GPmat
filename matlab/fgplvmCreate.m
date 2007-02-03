@@ -69,9 +69,13 @@ if isfield(options, 'back') & ~isempty(options.back)
   end
   % Now update latent positions with the back constraints output.
   model.X = modelOut(model.back, model.y);
+else
+  model.back = [];
 end
+model.dynamics = [];
 
 initParams = fgplvmExtractParam(model);
+model.numParams = length(initParams);
 % This forces kernel computation.
 model = fgplvmExpandParam(model, initParams);
 

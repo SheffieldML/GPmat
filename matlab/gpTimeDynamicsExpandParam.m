@@ -1,6 +1,6 @@
-function model = gpDynamicsExpandParam(model, params)
+function model = gpTimeDynamicsExpandParam(model, params)
 
-% GPDYNAMICSEXPANDPARAM Place the parameters vector into the model for GP dynamics.
+% GPTIMEDYNAMICSEXPANDPARAM Place the parameters vector into the model for GP time dynamics.
 % FORMAT
 % DESC takes the given vector of parameters and places them in the
 % model structure, it then updates any stored representations that
@@ -13,7 +13,7 @@ function model = gpDynamicsExpandParam(model, params)
 % RETURN model : a returned model structure containing the updated
 % parameters.
 % 
-% SEEALSO : gpExpandParam, gpDynamicsCreate, gpDynamicsExtractParam, modelExtractParam, gpUpdateKernels
+% SEEALSO : gpExpandParam, gpTimeDynamicsCreate, gpTimeDynamicsExtractParam, modelExtractParam, gpUpdateKernels
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
@@ -23,7 +23,6 @@ function model = gpDynamicsExpandParam(model, params)
 % get the current parameter vector
 origParam = gpExtractParam(model);
 
-% Get X_u
 if ~isfield(model, 'fixInducing') | ~model.fixInducing
   % Substitute for X_u.
   paramsEnd = model.k*model.q;
@@ -34,13 +33,11 @@ else
   model.X_u = model.X(model.inducingIndices, :);
   paramsEnd = 0;
 end
-
 % Subsitute for any parameters to be optimised.
 if model.learn
   origParam(paramsEnd+1:end) = params(paramsEnd+1:end);
 elseif model.learnScales
   switch model.approx
-    % This relies on scale parameters being at end of vector.
    case 'ftc'
     endVal = length(origParam);
     startVal = endVal-model.d+1;
@@ -48,7 +45,7 @@ elseif model.learnScales
     endVal = length(origParam)-1;
     startVal = endVal-model.d+1;
   end
-  origParam(startVal:endVal) = params(paramsEnd+1:end);    
+  origParam(startVal:endVal) = params(paramsEnd+1:end);
 end
 
 % Now use the standard gpExpandParam

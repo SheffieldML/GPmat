@@ -1,4 +1,4 @@
-function ll = fgplvmSequenceLogLikelihood(model, X, Y)
+function ll = fgplvmSequenceLogLikelihood(model, X, Y, varargin)
 
 % FGPLVMSEQUENCELOGLIKELIHOOD Log-likelihood of a sequence for the GP-LVM.
 % FORMAT
@@ -11,6 +11,9 @@ function ll = fgplvmSequenceLogLikelihood(model, X, Y)
 % will be evaluated.
 % ARG Y : the observed data sequence for which the posterior
 % distribution will be evaluated.
+% ARG P1, P2, P3 ... : optional additional arguments to be passed
+% to the dynamics' model sequence log likelihood.
+% RETURN ll : the sequence log likelihood.
 %
 % SEEALSO : fgplvmCreate, fgplvmOptimiseSequence, fgplvmSequenceObjective
 %
@@ -19,37 +22,64 @@ function ll = fgplvmSequenceLogLikelihood(model, X, Y)
 % FGPLVM
 
 logTwoPi = log(2*pi);
-[mu, covarSigma, factors] = gpPosteriorMeanCovar(model, X);
-missing = true;
-if ~any(isnan(Y))
-  U = jitChol(covarSigma);
-  missing = false;
-end
-Ydiff = (Y-mu);
-ll =0;
-for i = 1:model.d
-  if missing
-    ind = find(~isnan(Ydiff(:, i)));
-    if length(ind) ~= 0    
-      U = jitChol(covarSigma(ind, ind));
+if model.isMissingData
+  [mu, covarSigma]  = gpPosteriorMeanCovar(model, X);
+  for i = 1:model.d
+    missing = true;
+    if ~any(isnan(Y(:, i)))
+      U = jitChol(covarSigma{i});
+      missing = false;
     end
-  else
-    ind = [1:size(Ydiff, 1)]';
+    Ydiff = (Y(:, i)-mu(:, i));
+    ll = 0;
+    if missing
+      ind = find(~isnan(Ydiff));
+      if length(ind) ~= 0    
+        U = jitChol(covarSigma{i}(ind, ind));
+      end
+    else
+      ind = [1:size(Ydiff, 1)]';
+    end
+    if length(ind) ~= 0    
+      UinvYdiff = U'\Ydiff(ind);
+      logDet = logdet([], U);
+      ll = ll + logDet + (UinvYdiff'*UinvYdiff);
+      ll = ll + logTwoPi*length(ind);
+    end
   end
-  if length(ind) ~= 0    
-    UinvYdiff = U'\Ydiff(ind, i);
-    logDet = logdet([], U);
-    ll = ll + logDet + log(factors(i)) + (UinvYdiff'*UinvYdiff)/factors(i);
-    ll = ll + logTwoPi*length(ind);
+else
+  [mu, covarSigma, factors] = gpPosteriorMeanCovar(model, X);
+  missing = true;
+  if ~any(isnan(Y))
+    U = jitChol(covarSigma);
+    missing = false;
+  end
+  Ydiff = (Y-mu);
+  ll =0;
+  for i = 1:model.d
+    if missing
+      ind = find(~isnan(Ydiff(:, i)));
+      if length(ind) ~= 0    
+        U = jitChol(covarSigma(ind, ind));
+      end
+    else
+      ind = [1:size(Ydiff, 1)]';
+    end
+    if length(ind) ~= 0    
+      UinvYdiff = U'\Ydiff(ind, i);
+      logDet = logdet([], U);
+      ll = ll + logDet + log(factors(i)) + (UinvYdiff'*UinvYdiff)/factors(i);
+      ll = ll + logTwoPi*length(ind);
+    end
   end
 end
 ll = -0.5*ll;
-
-
+  
+  
 if isfield(model, 'dynamics') & ~isempty(model.dynamics)
   % A dynamics model is being used.
   feval = str2func([model.dynamics.type 'SequenceLogLikelihood']);
-  ll = ll + feval(model.dynamics, X);
+  ll = ll + feval(model.dynamics, X, varargin{:});
 elseif isfield(model, 'prior') &  ~isempty(model.prior)
   for i = 1:size(X, 1)
     ll = ll + priorLogProb(model.prior, X(i, :));

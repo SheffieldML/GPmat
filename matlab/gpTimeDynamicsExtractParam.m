@@ -1,6 +1,6 @@
-function [param, names] = gpDynamicsExtractParam(model)
+function [param, names] = gpTimeDynamicsExtractParam(model)
 
-% GPDYNAMICSEXTRACTPARAM Extract parameters from the GP dynamics model.
+% GPTIMEDYNAMICSEXTRACTPARAM Extract parameters from the GP time dynamics model.
 % FORMAT
 % DESC extracts the model parameters from a structure containing
 % the information about a Gaussian process dynamics model.
@@ -14,7 +14,7 @@ function [param, names] = gpDynamicsExtractParam(model)
 % RETURN params : a vector of parameters from the model.
 % RETURN names : cell array of parameter names.
 %
-% SEEALSO : gpExtractParam, gpDynamicsCreate, gpDynamicsExpandParam, modelExtractParam
+% SEEALSO : gpExtractParam, gpTimeDynamicsCreate, gpTimeDynamicsExpandParam, modelExtractParam
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
@@ -35,7 +35,7 @@ end
 if ~model.learn 
   % If we aren't learning model parameters extract only X_u;
   if ~model.learnScales
-    if isfield(model, 'fixInducing') & model.fixInducing
+    if isfield(model, 'fixInducing') & mdoel.fixInducing
       param = [];
       names = {};
     else
@@ -46,7 +46,7 @@ if ~model.learn
       end
     end
   else
-    % Learning scales, but not parameters.
+    % learning scales but not parameters
     switch model.approx
      case 'ftc'
       param =  param(end-model.d + 1:end);
@@ -55,7 +55,7 @@ if ~model.learn
       end
      case {'dtc', 'fitc', 'pitc'}
       if isfield(model, 'fixInducing') & model.fixInducing
-        param = param(end-model.d:end-1);
+        param =  param(end-model.d:end-1);
         if returnNames
           names = names(end-model.d:end-1);
         end

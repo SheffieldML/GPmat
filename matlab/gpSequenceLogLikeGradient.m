@@ -20,9 +20,13 @@ function g = gpSequenceLogLikeGradient(model, X, Y)
 % FGPLVM
 
 logTwoPi = log(2*pi);
-[mu, covarSigma, factors] = gpPosteriorMeanCovar(model, X);
-[dmu, dcovar, factors] = gpPosteriorGradMeanCovar(model, X);
-
+if model.isMissingData
+  [mu, covarSigma] = gpPosteriorMeanCovar(model, X);
+  [dmu, dcovar] = gpPosteriorGradMeanCovar(model, X);
+else
+  [mu, covarSigma, factors] = gpPosteriorMeanCovar(model, X);
+  [dmu, dcovar, factors] = gpPosteriorGradMeanCovar(model, X);
+end
 
 % For more general models this should be done with the noise
 % toolbox (see ivmGradX in the ivm toolbox for more details).

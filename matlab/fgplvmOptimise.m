@@ -44,7 +44,13 @@ else
   optim = str2func('scg');
 end
 
-params = optim('fgplvmObjective', params,  options, ...
-               'fgplvmGradient', model);
+if strcmp(func2str(optim), 'optimiMinimize')
+  % Carl Rasmussen's minimize function 
+  params = optim('fgplvmObjectiveGradient', params, options, model);
+else
+  % NETLAB style optimization.
+  params = optim('fgplvmObjective', params,  options, ...
+                 'fgplvmGradient', model);
+end
 
 model = fgplvmExpandParam(model, params);

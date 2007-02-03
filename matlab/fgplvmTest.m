@@ -19,10 +19,12 @@ N = 10;
 Nseq =4;
 k = 5;
 kernType = {'rbf', 'lin', 'rbfard', 'mlp', 'mlpard', 'white'};
-kernType = 'rbf';
+kernType = {'rbf', 'white'};
 backType = 'mlp';
+%dynType = 'gp';
 dynType = 'gpTime';
 learn = true; % dont' test learning of dynamics.
+learn = false;
 diff = false; % Use diffs for generating dynamics.
 seq(1) = 5;
 seq(2) = 10;
@@ -33,10 +35,12 @@ indMissing = find(rand(N, d)>0.7);
 %indMissing = [9 19 29];
 approxType = {'ftc', 'dtc', 'fitc', 'pitc'};
 counter = 0;
-for back = [false true]
-%  for missing = [false true]
-  for missing = [false]
-    for fixInducing = [false true] 
+for back = false
+%for back = [false true]
+%  for missing = [false true] 
+    for missing = false
+      for fixInducing = true
+%      for fixInducing = [false true] 
       Y = Yorig;
       if missing
         Y(indMissing) = NaN;
@@ -44,7 +48,8 @@ for back = [false true]
       if back & missing
         continue
       end
-      for dyn = [false true];
+      for dyn = true
+%      for dyn = [false true];
         for a = 1:length(approxType)
           options = fgplvmOptions(approxType{a});
           options.learnScales = learnScales;
@@ -52,8 +57,10 @@ for back = [false true]
           options.numActive = k;
           options.isSpherical = ~missing;
           options.isMissingData = missing;
-          optionsDyn = options;
           options.fixInducing = fixInducing;
+          optionsDyn = options;
+          optionsDyn.isSpherical = true;
+          optionsDyn.isMissingData = false;
           if back & dyn
             disp(['Back constrained, ' ...
                   'with dynamics and ' approxType{a} ...
@@ -74,6 +81,7 @@ for back = [false true]
           if fixInducing
             disp(['Inducing variables fixed.'])
             options.fixIndices = round(linspace(1, size(Y, 1), k));
+            optionsDyn.fixIndices = round(linspace(1, size(Y, 1)-2, k));
           end
                     
           if back
@@ -104,6 +112,7 @@ for back = [false true]
           initParams = randn(size(initParams));%./(100*randn(size(initParams)));
           % This forces kernel computation.
           model = fgplvmExpandParam(model, initParams);
+          argin = {};
           if dyn
             if strcmp(dynType, 'robOne')
               aveR = mean(model.dynamics.r);
@@ -113,17 +122,27 @@ for back = [false true]
               aveR = mean(model.dynamics.r);
               model.dynamics.b = model.dynamics.a/aveR;
             end
+            if strcmp(dynType, 'gpTime')
+              argin = {(2:Nseq)'};
+            end
+            
           end
           if ~back & ~dyn
             gpCovGradsTest(model);
           end
-          gradientCheck(initParams, 'fgplvmObjective', 'fgplvmGradient', ...
-                        model);
-          seqX = randn(Nseq, model.q);
-          seqY = randn(Nseq, model.d);
-          seqY(find(rand(Nseq, model.d)>0.7)) = NaN;
-          gradientCheck(seqX(:)', 'fgplvmSequenceObjective', 'fgplvmSequenceGradient', ...
-                        model, seqY);
+          fprintf('Check learning gradients\n');
+          modelGradientCheck(model);
+          if ~missing
+            seqX = randn(Nseq, model.q);
+            seqY = randn(Nseq, model.d);
+            seqY(find(rand(Nseq, model.d)>0.7)) = NaN;
+            fprintf('Checking Sequence gradients\n');
+            gradientCheck(seqX(:)', 'fgplvmSequenceObjective', 'fgplvmSequenceGradient', ...
+                          model, seqY, argin{:});
+          else
+            warning(['Not checking sequence optimisation for missing ' ...
+                     'data.']);
+          end
           counter = counter + 1;
           modelRet{counter} = model;
         end

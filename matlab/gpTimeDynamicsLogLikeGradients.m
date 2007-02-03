@@ -1,6 +1,6 @@
-function g = gpDynamicsLogLikeGradients(model)
+function g = gpTimeDynamicsLogLikeGradients(model)
 
-% GPDYNAMICSLOGLIKEGRADIENTS Gradients of the GP dynamics wrt parameters.
+% GPTIMEDYNAMICSLOGLIKEGRADIENTS Gradients of the GP dynamics wrt parameters.
 % FORMAT
 % DESC Computes the gradients with respect to the log likelihood of
 % the GP dynamics in a GP-LVM model.
@@ -9,9 +9,9 @@ function g = gpDynamicsLogLikeGradients(model)
 % RETURN g : the gradients of the log likelihood with respect to
 % the latent points and (optionally) parameters.
 %
-% SEEALSO : gpLogLikeGradients, gpDynamicsCreate, gpDynamicsLogLikelihood, modelLogLikelihood
+% SEEALSO : gpLogLikeGradients, gpTimeDynamicsCreate, gpTimeDynamicsLogLikelihood, modelLogLikelihood
 %
-% COPYRIGHT : Neil D. Lawrence and Cark Henrik Ek, 2006
+% COPYRIGHT : Neil D. Lawrence, 2006
 
 % FGPLVM
 
@@ -37,7 +37,7 @@ if ~model.learn
       g =  [g(end-model.d + 1:end)];
      case {'dtc', 'fitc', 'pitc'}
       if isfield(model, 'fixInducing') & model.fixInducing
-        g =  g(end-model.d:end-1);
+        g = g(end-model.d:end-1);
       else
         g =  [g(1:model.k*model.q) g(end-model.d:end-1)];
       end

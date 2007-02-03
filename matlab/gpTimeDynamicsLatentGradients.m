@@ -1,17 +1,17 @@
-function gX = gpDynamicsLatentGradients(model);
+function gX = gpTimeDynamicsLatentGradients(model);
 
-% GPDYNAMICSLATENTGRADIENTS Gradients of the X vector given the dynamics model.
+% GPDYNAMICSLATENTGRADIENTS Gradients of the X vector given the time dynamics model.
 % FORMAT
 % DESC Compute the gradients of the log likelihood of a Gaussian 
-% proces dynamics model with respect to the latent points in the
+% proces time dynamics model with respect to the latent points in the
 % GP-LVM model.
 % ARG model : the GP model for which log likelihood is to be
 % computed.
 % RETURN gX : the gradients with respec to latent points.
 %
-% SEEALSO : gpDynamicsCreate, gpDynamicsLogLikelihood
+% SEEALSO : gpTimeDynamicsCreate, gpTimeDynamicsLogLikelihood
 %
-% COPYRIGHT : Neil D. Lawrence and Cark Ek, 2006
+% COPYRIGHT : Neil D. Lawrence, 2006
 
 % FGPLVM
 
@@ -20,24 +20,9 @@ function gX = gpDynamicsLatentGradients(model);
 % length(model.seq)
 gX = zeros(model.N+length(model.seq), model.d);
   
-% First compute the regular gX for these models.
-[void, gX_u, gDynX] = gpLogLikeGradients(model);
-
-% Decide where to include gX_u.
-if ~strcmp(model.approx, 'ftc') & model.fixInducing
-  gDynX(model.inducingIndices, :) = gDynX(model.inducingIndices, :) + gX_u;
-else
-  switch model.approx
-   case {'dtc', 'fitc', 'pitc'}
-    if isfield(model, 'inducingPrior') & ~isempty(model.inducingPrior)
-      gX_u = gX_u + priorGradient(model.inducingPrior, model.X_u);
-    end
-   otherwise
-    % do nothing
-  end
-end
-
 %/~
+% First compute the regular gX for these models.
+%[void, void, gDynX] = gpLogLikeGradients(model);
 % switch model.approx
 %  case 'ftc'
 %   [void, void, gDynX] = gpLogLikeGradients(model);
@@ -62,7 +47,7 @@ end
 % Deal with the fact that X appears in the *target* for the dynamics.
 switch model.approx
  case 'ftc'
-  for i =1:model.q
+  for i =1:model.d
     gX(ind_out, i) = gX(ind_out, i) - 1/model.scale(i)*model.invK_uu*model.m(:, i);
     if model.diff
       gX(ind_in, i) = gX(ind_in, i) + 1/model.scale(i)*model.invK_uu*model.m(:, i);
@@ -74,7 +59,7 @@ switch model.approx
   AinvK_uf = pdinv((1/model.beta)*model.K_uu  ...
                    + model.K_uf*model.K_uf') ...
       *model.K_uf;
-  for i = 1:model.q 
+  for i = 1:model.d 
     gX(ind_out, i) = gX(ind_out, i) ...
         - 1/model.scale(i)*model.beta*model.m(:, i) ...
         + 1/model.scale(i)*model.beta*model.K_uf' ...
@@ -92,10 +77,10 @@ switch model.approx
   K_ufDinv = model.K_uf*model.Dinv;;
   AinvK_ufDinv = model.Ainv*K_ufDinv;
   
-  for i = 1:model.q
+  for i = 1:model.d
     gX(ind_out, i) = gX(ind_out, i) ...
         -model.beta/model.scale(i)*sparseDiag(1./model.diagD)*model.m(:, i) ...
-        + model.beta/model.scale(i)*K_ufDinv'*AinvK_ufDinv*model.m(:, i);
+        +model.beta/model.scale(i)*K_ufDinv'*AinvK_ufDinv*model.m(:, i);
     if model.diff
       gX(ind_in, i) = gX(ind_in, i) ...
           + model.beta/model.scale(i)*sparseDiag(1./model.diagD)*model.m(:, i) ...
@@ -119,7 +104,7 @@ switch model.approx
     ind = startVal:endVal;
     K_ufDinv = model.K_uf(:, ind)*model.Dinv{i};
     AinvK_ufDinv = model.Ainv*K_ufDinv;
-    for j = 1:model.q      
+    for j = 1:model.d      
       gX(ind_out(ind), j) = gX(ind_out(ind), j) - model.beta/model.scale(j)*model.Dinv{i}*model.m(ind, j);
       if model.diff
         gX(ind_in(ind), j) = gX(ind_in(ind), j) - model.beta/model.scale(j)*model.Dinv{i}*model.m(ind, j); 
@@ -136,15 +121,5 @@ switch model.approx
   end
 end % ends approximation cases
 
-
-gX(ind_in,:) = gX(ind_in,:) + gDynX;
-
-% If there is a prior field, use it on the first point in each sequence
-if isfield(model, 'prior') &  ~isempty(model.prior)
-  gX(1,:) = gX(1,:) + priorGradient(model.prior, model.X(1,:));
-  for i = 2:length(model.seq)
-    gX(model.seq(i-1)-1,:) = gX(model.seq(i-1)-1,:) + priorGradient(model.prior, model.X(model.seq(i-1)-i,:));
-  end
-end
-
-
+% Perhaps think about dealing with first latent point in each
+% sequence with a prior.
