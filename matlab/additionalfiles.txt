@@ -2,5 +2,7 @@
 dir: examples
 ~/datasets/mocap/Swagger.bvh
 ~/datasets/mocap/horse.bvh
+~/datasets/mocap/Swagger.bvh
+~/datasets/mocap/horse.bvh
 dir: html
 ~/mlprojects/mocap/html/index.html

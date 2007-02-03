@@ -1,4 +1,9 @@
-This toolbox allows MATLAB to read in and write bvh files. There are also routines for visualising the files in MATLAB.
+This toolbox allows MATLAB to read in and write bvh files and read acclaim files. There are also routines for visualising the files in MATLAB.
+
+Version 0.132 Release Notes
+---------------------------
+
+Moved tree handling code into NDLUTIL toolbox, version 0.156.
 
 Version 0.131 Release Notes
 ---------------------------

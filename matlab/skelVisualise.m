@@ -1,7 +1,16 @@
 function handle = skelVisualise(channels, skel, padding)
 
-% SKELVISUALISE For updating a skel representation of 3-D data.
-
+% SKELVISUALISE For drawing a skel representation of 3-D data.
+% FORMAT
+% DESC draws a skeleton representation in a 3-D plot.
+% ARG channels : the channels to update the skeleton with.
+% ARG skel : the skeleton structure.
+% RETURN handle : a vector of handles to the plotted structure.
+%
+% SEEALSO : skelModify
+%
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006
+  
 % MOCAP
 
 if nargin<3

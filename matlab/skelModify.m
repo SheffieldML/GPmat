@@ -1,6 +1,15 @@
 function skelModify(handle, channels, skel, padding)
 
-% SKELMODIFY Helper code for visualisation of skel data.
+% SKELMODIFY Update visualisation of skeleton data.
+% FORMAT
+% DESC updates a skeleton representation in a 3-D plot.
+% ARG handle : a vector of handles to the structure to be updated.
+% ARG channels : the channels to update the skeleton with.
+% ARG skel : the skeleton structure.
+%
+% SEEALSO : skelVisualise
+%
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
 % MOCAP
 

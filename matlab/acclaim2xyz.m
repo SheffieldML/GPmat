@@ -1,6 +1,6 @@
 function xyz = acclaim2xyz(skel, channels)
 
-% SKEL2XYZ Compute XYZ values given skeleton structure and channels.
+% ACCLAIM2XYZ Compute XYZ values given skeleton structure and channels.
 
 % MOCAP
 
