@@ -1,5 +1,9 @@
 This toolbox provides various machine learning tools, either through wrapping other toolboxes (such as NETLAB) or providing the tool directly. It was designed originally as part of splitting the GPLVM and FGPLVM toolboxes.
 
+Version 0.124
+-------------
+
+Added model gradient checker and added rbfperiodic function to provide a length scale for the gibbsperiodic kernel.
 
 Version 0.123
 -------------

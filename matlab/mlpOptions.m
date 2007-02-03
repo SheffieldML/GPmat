@@ -24,4 +24,4 @@ if nargin < 1
 end
 options.hiddenDim = numHidden;
 options.activeFunc = 'linear';
-options.optimiser = 'conjgrad';
+options.optimiser = optimiDefaultOptimiser;

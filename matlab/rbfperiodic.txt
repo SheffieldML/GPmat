@@ -1,0 +1,8 @@
+% This model is a periodic, single input, model. The model is based on
+% constructing an RBF network in the two dimensional space given by x_1 =
+% sin(theta) and x_2 = cos(theta).  This leads to basis functions of
+% the form.
+%
+% phi(theta) = exp(-2/sigma2*sin^2(0.5*(theta - m)))
+%
+% SEEALSO : rbfperiodicKernCreate, rbfCreate

@@ -8,9 +8,42 @@
 
 RELEASEINFORMATION
 
-<p>This toolbox offers wrapper functions and simple implementations of various machine learning tools. The toolbox is used for providing back constraints for the <a href="http://www.cs.man.ac.uk/neill-bin/software/downloadForm.cgi?toolbox=fgplvm">FGPLVM</a> toolbox.
+<p>Added periodic RBF network.
+
+<p>Added model gradient checker.
+
+<p>This toolbox offers wrapper functions and simple implementations of various machine learning tools. The toolbox was originally constructed for providing back constraints for the <a href="http://www.cs.man.ac.uk/neill-bin/software/downloadForm.cgi?toolbox=fgplvm">FGPLVM</a> toolbox.
 
 <p>It is likely in the future that a lot of the standard functionality available in NOISE, KERN, NDLUTIL etc. will be moved into this toolbox.
 
-<p>Old releases include vrs 0.1 and vrs 0.11 and vrs 0.111.
+<h3>Old Version Release Notes</h3>
+
+<h4>Version 0.123</h4>
+
+<p>Minor release in line with IVM toolbox 0.4.
+
+<h4>Version 0.122</h4>
+
+<p>Added Hessian code for base model type and for MLP. Added Viterbi alignment code, viterbiAlign.
+
+<h4>Version 0.121</h4>
+
+<p>Various minor bug fixes and changes which seem to have gone undocumented.
+
+<h4>Version 0.12</h4>
+
+<p>Extended model type to be a generic container module for optimising any model. Added model test for testing a created model. The code is still in a bit of flux though with some design decisions not made and some code untested.
+
+<h4>Version 0.111</h4>
+
+<p>Fixed bug in kbr where bias parameter fields where still being referred to as b.Also acknowledged the fact that the isomap graph may not be fully connected in isomapEmbed, but don't yet deal with it properly. Finally added lleEmbed.m for wrapping the lle code.
+
+<h4>Version 0.11</h4>
+
+<p>Updated release for operation with FGPLVM toolbox 0.13. Structure of model creation changed and functions of the form modelOptions.m included for setting default options of the various machine learning models.
+
+<h4>Version 0.1</h4>
+
+<p>The first release of the toolbox with various wrappers for NETLAB functions. Also latent variable model visualisation code was moved into this toolbox.
+
 </div></body>

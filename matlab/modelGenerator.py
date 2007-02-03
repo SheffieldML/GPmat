@@ -140,7 +140,7 @@ prefix + 'ExtractParam.m' :
 
 ''',
 prefix + 'LogLikeGradients.m' : 
-'''function gX = ''' + prefix + '''LogLikeGradients(model)
+'''function g = ''' + prefix + '''LogLikeGradients(model)
 
 % ''' + ucPrefix + '''LOGLIKEGRADIENTS Gradient of ''' + ucPrefix + ''' model log likelihood with respect to parameters.
 % FORMAT
@@ -171,12 +171,14 @@ prefix + 'ParamInit.m' :
 
 ''',
 prefix + 'Create.m' : 
-'''function model = ''' + prefix + '''Create(options)
+'''function model = ''' + prefix + '''Create(inputDim, outputDim, options)
 
 % ''' + ucPrefix + '''CREATE Create a ''' + ucPrefix + ''' model.''' + modelDescription + '''
 % FORMAT
 % DESC creates a ''' + longName + '''
-%  model structure given an options structure. 
+% model structure given an options structure. 
+% ARG inputDim : the input dimension of the model.
+% ARG outputDim : the output dimension of the model.
 % ARG options : an options structure that determines the form of the model.
 % RETURN model : the model structure with the default parameters placed in.
 %
