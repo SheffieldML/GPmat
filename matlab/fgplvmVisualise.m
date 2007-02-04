@@ -54,7 +54,7 @@ set(gcf, 'WindowButtonDownFcn', 'lvmClassVisualise(''click'')')
 figure(2)
 clf
 
-if strcmp(visualiseFunction(1:5), 'image') & length(varargin)>0
+if length(visualiseFunction)>4 & strcmp(visualiseFunction(1:5), 'image') & length(varargin)>0
   set(gcf, 'menubar', 'none')
   xPixels = 115;
   yPixels = 115;
@@ -67,7 +67,7 @@ else
   visualiseInfo.visualiseAxes =subplot(1, 1, 1);
 end
 visData = zeros(1,model.d);
-if(strcmp(visualiseFunction(1:5), 'image'))
+if(length(visualiseFunction)>4 & strcmp(visualiseFunction(1:5), 'image'))
   visData(1) = min(min(model.y));
   visData(end) = max(max(model.y));
 else

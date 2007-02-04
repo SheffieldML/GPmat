@@ -8,21 +8,11 @@
 
 <h1>Fast GP-LVM Software</h1>
 
-<p>This page describes examples of how to use the fast Gaussian process latent variable model Software (FGPLVM) available for <a href="http://www.cs.man.ac.uk/neill-bin/software/downloadForm.cgi?toolbox=fgplvm">download here</a>. 
-
-<p>Alternative GP-LVM implementations from this site:
-
-<p>The GP-LVM C++ software is available from <a href="http://www.cs.man.ac.uk/~neill/gplvmcpp/">here</a>.
-
-<p>The original MATLAB version of the toolbox is available here <a href="http://www.cs.man.ac.uk/~neill/gplvm/">here</a>.
-
-<h2>Release Information</h2>
+<p>This page describes examples of how to use the fast Gaussian process latent variable model Software (FGPLVM).. 
 
 RELEASEINFORMATION
 
 This version splits the Gaussian process portion into a new GP toolbox, the corresponding version is 0.1. Fixed bug in gpDynamicsExpandParam, gpDynamicsExractParam and gpDynamicsLogLikeGradient where 'fixInducing' option  was not being dealt with.
-
-<h3>Version 0.142</h3>
 
 <p>Fixed bug in fgplvmCreate.m where the back constraints were set up, but the latent positions were not being set according to the back constraints in the returned model.
 
@@ -55,12 +45,11 @@ This version splits the Gaussian process portion into a new GP toolbox, the corr
 
 <p>This toolbox also implements back constraints (joint work with Joaquin Quinonero Candela). The mappings that can be used as back constraints are those described in <a href="http://www.cs.man.ac.uk/~neill/mltools/downloadFiles/">the MLTOOLS toolbox</a>.
 
-<p>The toolboxes required to run the FGPLVM toolbox are listed below.</p>
+<p>Alternative GP-LVM implementations from this site:
 
-RELEASEINFORMATION
+<p>The GP-LVM C++ software is available from <a href="http://www.cs.man.ac.uk/~neill/gplvmcpp/">here</a>.
 
-
-<p>Finally you will also need the <a href="http://www.ncrg.aston.ac.uk/netlab/">NETLAB toolbox</a> in your path. If you need to load in a file written from the GPLVMCPP toolbox you will need <a href="http://www.cs.man.ac.uk/~neill/noise/downloadFiles/">the NOISE toolbox (vrs 0.13)</a>.
+<p>The original MATLAB version of the toolbox is available here <a href="http://www.cs.man.ac.uk/~neill/gplvm/">here</a>.
 
 <h2>Examples</h2>
 

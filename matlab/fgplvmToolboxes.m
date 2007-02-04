@@ -6,4 +6,5 @@ importLatest('optimi');
 importLatest('datasets');
 importLatest('mltools');
 importLatest('kern');
+importLatest('ndlutil');
 importLatest('gp');
