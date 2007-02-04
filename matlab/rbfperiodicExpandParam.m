@@ -27,6 +27,7 @@ model.thetaBar = reshape(params(startVal:endVal), model.inputDim, ...
 startVal = endVal+1;
 endVal = endVal + model.hiddenDim;
 model.sigma2 = reshape(fhandle(params(startVal:endVal), 'atox'), 1, model.hiddenDim);
+model.sigma2 = real(model.sigma2);
 startVal = endVal+1;
 endVal = endVal + model.hiddenDim*model.outputDim;
 model.weights = reshape(params(startVal:endVal), model.hiddenDim, ...

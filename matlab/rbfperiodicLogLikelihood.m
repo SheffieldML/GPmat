@@ -15,3 +15,4 @@ function ll = rbfperiodicLogLikelihood(model)
 ypred = rbfperiodicOut(model, model.X);
 
 ll = - 0.5.*(sum(sum((model.y-ypred).^2)));
+ll = real(ll);

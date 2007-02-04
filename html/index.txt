@@ -8,15 +8,14 @@
 
 RELEASEINFORMATION
 
-<p>Added periodic RBF network.
+<p>Added multimodel for learning multiple indepedent models with shared parameters.
 
-<p>Added model gradient checker.
-
-<p>This toolbox offers wrapper functions and simple implementations of various machine learning tools. The toolbox was originally constructed for providing back constraints for the <a href="http://www.cs.man.ac.uk/neill-bin/software/downloadForm.cgi?toolbox=fgplvm">FGPLVM</a> toolbox.
-
-<p>It is likely in the future that a lot of the standard functionality available in NOISE, KERN, NDLUTIL etc. will be moved into this toolbox.
 
 <h3>Old Version Release Notes</h3>
+
+<h4>Version 0.124</h4>
+
+<p>Added periodic RBF network and model gradient checker.
 
 <h4>Version 0.123</h4>
 
