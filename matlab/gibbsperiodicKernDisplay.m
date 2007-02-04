@@ -19,12 +19,12 @@ function gibbsperiodicKernDisplay(kern, spacing)
 
 if nargin > 1
 else
-  spaceNum = 0;
+  spacing = 0;
 end
-spacing = repmat(32, 1, spaceNum);
+spacing = repmat(32, 1, spacing);
 spacing = char(spacing);
 fprintf(spacing);
 fprintf('Periodic Gibbs variance: %2.4f\n', kern.variance)
 fprintf(spacing);
 fprintf('Periodic Gibbs length scale function: \n')
-modelDisplay(kern.lengthScaleFunc, spaceNum + 2);
+modelDisplay(kern.lengthScaleFunc, length(spacing) + 2);

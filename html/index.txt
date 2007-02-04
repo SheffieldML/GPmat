@@ -12,6 +12,10 @@ This page describes the kernel toolbox for MATLAB available for <a href="http://
 
 RELEASEINFORMATION
 
+Minor bug fixes.
+
+<h3>Version 0.166</h3>
+
 Added periodic version of RBF kernel (see Rasmussen and Williams pg 92 or Mackay's introduction to GPs (1998)) and periodic version of Gibbs's non-statinary kernel (see e.g. pg 93 of Rasmussen and Williams).
 
 <h3>Version 0.165</h3>

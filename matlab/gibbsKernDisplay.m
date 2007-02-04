@@ -27,4 +27,4 @@ fprintf(spacing);
 fprintf('GIBBS variance: %2.4f\n', kern.variance)
 fprintf(spacing);
 fprintf('GIBBS length scale function: \n')
-modelDisplay(kern.lengthScaleFunc, spaceNum + 2);
+modelDisplay(kern.lengthScaleFunc, length(spacing) + 2);
