@@ -20,9 +20,7 @@
 
 RELEASEINFORMATION
 
-Various minor changes for enabling back constraints in hierarchical GP-LVM models.
-
-<p>Finally you will also need the <a href="http://www.ncrg.aston.ac.uk/netlab/">NETLAB toolbox</a>.
+<p>Various minor changes for enabling back constraints in hierarchical GP-LVM models.
 
 <h3>Old Versions</h3>
 

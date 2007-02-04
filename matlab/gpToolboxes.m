@@ -1,5 +1,6 @@
 % GPTOOLBOXES Load in the relevant toolboxes for GP.
 
+importLatest('netlab');
 importLatest('mocap');
 importLatest('ndlutil');
 importLatest('prior');
