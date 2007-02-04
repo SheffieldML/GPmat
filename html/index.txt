@@ -8,7 +8,15 @@
 
 <p>This page describes examples of how to use the Gaussian Process  Software (GP).
 
-<p>Additional GP related software from this site:
+RELEASEINFORMATION
+
+<p>Various minor changes for enabling back constraints in hierarchical GP-LVM models.
+
+<h3>Old Versions</h3>
+
+<p>Release 0.1 splits away the Gaussian process section of the FGPLVM toolbox into this separate toolbox.
+
+<h2>Other GP related software</h2>
 
 <p>The GP-LVM C++ software is available from <a href="http://www.cs.man.ac.uk/~neill/gplvmcpp/">here</a>.
 
@@ -17,14 +25,6 @@
 <p>The MATLAB IVM toolbox is available here <a href="http://www.cs.man.ac.uk/~neill/ivm/">here</a>.
 
 <p>The original MATLAB GP-LVM toolbox is available here <a href="http://www.cs.man.ac.uk/~neill/gplvm/">here</a>.
-
-RELEASEINFORMATION
-
-<p>Various minor changes for enabling back constraints in hierarchical GP-LVM models.
-
-<h3>Old Versions</h3>
-
-<p>Release 0.1 splits away the Gaussian process section of the FGPLVM toolbox into this separate toolbox.
 
 
 <h2>Examples</h2>
