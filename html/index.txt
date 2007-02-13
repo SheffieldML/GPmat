@@ -1,5 +1,5 @@
 <head>
-<title>Matlab Machine Learning Tools Toolbox - Examples</title>
+<title>Matlab Machine Learning Tools Toolbox</title>
 </head>
 
 <body><div class="section">
@@ -8,10 +8,11 @@
 
 RELEASEINFORMATION
 
+Modified kbrParamInit to scale alpha weights and biases by number of data. Added 'dynamicsSliderChange' to lvmClassVisualise to allow visulisation of models with 'gpTime' style-dynamics.
+
+<h4>Version 0.125</h4>
+
 <p>Added multimodel for learning multiple indepedent models with shared parameters.
-
-
-<h3>Old Version Release Notes</h3>
 
 <h4>Version 0.124</h4>
 

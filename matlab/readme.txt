@@ -3,6 +3,8 @@ This toolbox provides various machine learning tools, either through wrapping ot
 Version 0.126
 -------------
 
+Modified kbrParamInit to scale alpha weights and biases by number of data. Added 'dynamicsSliderChange' to lvmClassVisualise to allow visulisation of models with 'gpTime' style-dynamics.
+
 Version 0.125
 -------------
 
