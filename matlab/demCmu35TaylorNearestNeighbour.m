@@ -1,5 +1,7 @@
 % DEMCMU35TAYLORNEARESTNEIGHBOUR Recreate the Nearest Neighbour result from Taylor et al, NIPS 2006.
 
+% FGPLVM
+
 datasetName = 'cmu35Taylor';
 [Y, lbls, Ytest, lblsTest] = lvmLoadData(datasetName);
 load cmu35TaylorScaleBias

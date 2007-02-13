@@ -1,5 +1,9 @@
 The FGPLVM toolbox is a new implementation of the GP-LVM that uses the Pseudo-Input method of Snelson and Ghahramani (NIPS 2005) for sparsification and efficiency improvements. 
 
+Version 0.151
+-------------
+
+In this version results for the CMU Mocap data set of subject 35 running and walking are included, as well as some minor changes to allow hierarchical GP-LVMs to be used.
 
 Version 0.15
 ------------

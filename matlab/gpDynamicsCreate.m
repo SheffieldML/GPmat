@@ -69,3 +69,4 @@ model.diff = diff;
 model.learn = learn;
 model.type = 'gpDynamics';
 model.seq = seq;
+model.dynamicsType = 'auto-regressive';

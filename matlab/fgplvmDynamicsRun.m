@@ -1,6 +1,13 @@
 function fgplvmDynamicsRun
 
-% FGPLVMDYNAMICSRUN Visualise the manifold.
+% FGPLVMDYNAMICSRUN Runs auto regressive dynamics in a forward manner.
+% FORMAT
+% DESC runs auto regressive dynamics in a forward manner until the
+% global variable visualiseInfo.runDynamics is set false..
+%
+% SEEALSO : fgplvmAddDynamics, fgplvmVisualise
+%
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
 % FGPLVM
 
@@ -22,7 +29,7 @@ while visualiseInfo.clicked & visualiseInfo.runDynamics
                                 Y, visualiseInfo.varargin{:});
   visualiseInfo.latentPos = modelSamp(visualiseInfo.model.dynamics, ...
                                       visualiseInfo.latentPos);
-  pause(0.0001)
+  pause(0.1)
 end
 
 

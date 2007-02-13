@@ -43,8 +43,35 @@ visualiseInfo.dynamicsRadio = ...
               'position', [0 0 0.2 0.05], ...
               'Callback', 'lvmClassVisualise(''toggleDynamics'')', ...
               'value', 0);
-if ~isfield(model, 'dynamics') & ~isempty(model.dynamics)
+
+visualiseInfo.dynamicsSlider = ...
+    uicontrol('Style', 'slider', ...
+              'String', 'Time', ...
+              'sliderStep', [0.01, 0.1], ...
+              'units', 'normalized', ...
+              'position', [0 0.95 1 0.05], ...
+              'callback', 'lvmClassVisualise(''dynamicsSliderChange'')');
+
+if ~isfield(model, 'dynamics') | isempty(model.dynamics)
   set(visualiseInfo.dynamicsRadio, 'visible', 'off');
+  set(visualiseInfo.dynamicsSlider, 'visible', 'off');
+else
+  if ~isfield(model.dynamics, 'dynamicsType') 
+    set(visualiseInfo.dynamicsRadio, 'visible', 'on');
+    set(visualiseInfo.dynamicsSlider, 'visible', 'off');
+  else
+    switch model.dynamics.dynamicsType
+     case 'regressive'
+      set(visualiseInfo.dynamicsRadio, 'visible', 'off');
+      set(visualiseInfo.dynamicsSlider, 'visible', 'on');
+      set(visualiseInfo.dynamicsSlider, 'min', min(model.dynamics.X), ...
+                        'max', max(model.dynamics.X), ...
+                        'value', model.dynamics.X(1))
+     case 'auto-regressive'
+      set(visualiseInfo.dynamicsRadio, 'visible', 'on');
+      set(visualiseInfo.dynamicsSlider, 'visible', 'off');
+    end
+  end
 end
 visualiseInfo.runDynamics = 0;
 % Set the callback function

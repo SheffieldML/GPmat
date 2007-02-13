@@ -36,7 +36,7 @@ end
 if nargin>5
   diff = varargin{2};
 else 
-  diff = 1;
+  diff = 0;
 end
 if nargin > 6
   learn = varargin{3};
@@ -78,3 +78,4 @@ model.diff = diff;
 model.learn = learn;
 model.type = 'gpTimeDynamics';
 model.seq = seq;
+model.dynamicsType = 'regressive';

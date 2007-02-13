@@ -8,19 +8,24 @@
 
 <h1>Fast GP-LVM Software</h1>
 
-<p>This page describes examples of how to use the fast Gaussian process latent variable model Software (FGPLVM).. 
+<p>This page describes examples of how to use the fast Gaussian process latent variable model Software (FGPLVM).
 
 RELEASEINFORMATION
+
+In this version results for the CMU Mocap data set from <a href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Taylor:motion06&printAbstract=1">Taylor et al.</a> of subject 35 running and walking are included, as well as some minor changes to allow hierarchical GP-LVMs to be used.
+
+
+<h4>Version 0.15</h4>
 
 This version splits the Gaussian process portion into a new GP toolbox, the corresponding version is 0.1. Fixed bug in gpDynamicsExpandParam, gpDynamicsExractParam and gpDynamicsLogLikeGradient where 'fixInducing' option  was not being dealt with.
 
 <p>Fixed bug in fgplvmCreate.m where the back constraints were set up, but the latent positions were not being set according to the back constraints in the returned model.
 
-<h3>Version 0.141</h3>
+<h4>Version 0.141</h4>
 
 <p>Changed GP-LVM default optimiser to scg rather than conjgrad. Added fgplvmOptimiseSequence and dependent files. This is for optimising a test sequence in the latent space, for the case where there are dynamics on the model.
 
-<h3>Version 0.14</h3>
+<h4>Version 0.14</h4>
 
 <p>Carl Ek implemented multiple sequences in the gpDynamics model used for dynamics in the GPLVM, this was refined and integrated by Neil.
 
@@ -31,7 +36,7 @@ This version splits the Gaussian process portion into a new GP toolbox, the corr
 <p>Fixed bug in fgplvmReadFromFID where the old form of fgplvmCreate was being called.
 
 
-<h3>Version 0.132</h3>
+<h4>Version 0.132</h4>
 
 <p>Release 0.132 includes two speed improvements on the pitc approximation. Thanks to <a href="http://www.gatsby.ucl.ac.uk/~snelson/">Ed Snelson</a> for pointing out that it was unusually slow! New versions of the NDLUTIL and KERN toolbox are also required.
 
@@ -52,42 +57,6 @@ This version splits the Gaussian process portion into a new GP toolbox, the corr
 <p>The original MATLAB version of the toolbox is available here <a href="http://www.cs.man.ac.uk/~neill/gplvm/">here</a>.
 
 <h2>Examples</h2>
-
-<h3>Sparse Pseudo-input Gaussian Processes</h3>
-
-<p>The sparse approximation used in this toolbox is based on the Sparse Pseudo-input Gaussian Process model described by  <a href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Snelson:pseudo05&printAbstract=1">Snelson and Ghahramani</a>. Also provided are the extensions suggested by <a href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Quinonero:unifying05">Quinonero-Candela and Rasmussen</a>. They provide a unifying terminology for describing these approximations which we shall use in what follows.
-
-<p>There are three demos provided for Gaussian process regression in 1-D. They each use a different form of likelihood approximation. The first demonstration uses the `projected latent variable' approach first described by <a href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Csato:sparse02&printAbstract=1">Csato and Opper</a> and later used by <a href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Seeger:fast03&printAbstract=1">Seeger <i>et al.</i></a>. In the terminology of Quinonero-Candela and Rasmussen (QR-terminology) this is known as the `deterministic training conditional' (DTC) approximation.
-
-<p>To use this approximation the following script can be run.
-<p><code>
-&gt;&gt; demSpgp1d1
-</code>
-<p>The result of the script is given in the plot below.
-<p><center><img src="demSpgp1d1.png" width ="50%"><br>
-Gaussian process using the DTC approximation with nine inducing variables. Data is shown as red spots, posterior mean prediction is shown as a blue line and two standard deviations are given as dashed blue lines.</center>
-
-<p>The improved approximation suggested by Snelson and Ghahramani, in QR-terminology this is known as the fully independent training conditional (FITC). To try this approximation run the following script
-<p><code>
-&gt;&gt; demSpgp1d2
-</code>
-<p>The result of the script is given on the left of the plot below.
-<p><center><img src="demSpgp1d2.png" width="49%"><img src="demSpgp1d3.png" width="49%"><br>
-<i>Left</i>: Gaussian process using the FITC approximation with nine inducing variables. Data is shown as red spots, posterior mean prediction is shown as a blue line and two standard deviations are given as dashed blue lines. <i>Right</i>: Similar but for the PITC approximation, again with nine inducing variables.</center>
-
-<p>At the <a href="http://www.dcs.shef.ac.uk/ml/gprt/">Sheffield Gaussian Process Round Table</a> Lehel Csato pointed out that the Bayesian Committee Machine of <a href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?group=bcm&printAbstract=1">Schwaighofer and Tresp</a> can also be viewed within the same framework. This idea is formalised in <a href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Quinonero:unifying05&printAbstract=1">Qunionenro-Candela and Rasmussen's</a> review. This approximation is known as the `partially independent training conditional' (PITC) in QR-terminology. To try this approximation run the following script
-<p><code>
-&gt;&gt; demSpgp1d3
-</code>
-<p>The result of the script is given on the right of the plot above.
-
-<p>Finally we can compare these results to the result from the full Gaussian process on the data with the correct hyper-parameters. To do this the following script can be run.
-<p><code>
-&gt;&gt; demSpgp1d4
-</code>
-<p>The result of the script is given in the plot below.
-<p><center><img src="demSpgp1d4.png" width="50%"><br>
-Full Gaussian process on the toy data with the correct hyper-parameters. Data is shown as red spots, posterior mean prediction is shown as a blue line and two standard deviations are given as dashed blue lines.</center>
 
 <h3>GP-LVM</h3>
 
