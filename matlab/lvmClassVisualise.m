@@ -45,7 +45,22 @@ switch call
  case 'toggleDynamics'
   visualiseInfo.runDynamics = ~visualiseInfo.runDynamics;
   set(visualiseInfo.dynamicsRadio, 'value', visualiseInfo.runDynamics);
-  
+
+ case 'dynamicsSliderChange'
+  X = modelOut(visualiseInfo.model.dynamics, get(visualiseInfo.dynamicsSlider, 'value'));
+  x = X(1);
+  y = X(2);
+  visualiseInfo.latentPos = [x, y];
+  set(visualiseInfo.latentHandle, 'xdata', x, 'ydata', y);
+  fhandle = str2func([visualiseInfo.model.type 'PosteriorMeanVar']);
+  [mu, varsigma] = fhandle(visualiseInfo.model, [x y]);
+  if isfield(visualiseInfo.model, 'noise')
+    Y = noiseOut(visualiseInfo.model.noise, mu, varsigma);
+  else
+    Y = mu;
+  end
+  visualiseInfo.visualiseModify(visualiseInfo.visHandle, ...
+                                Y, visualiseInfo.varargin{:});
 end
 
 
