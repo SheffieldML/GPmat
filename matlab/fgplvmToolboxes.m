@@ -7,4 +7,5 @@ importLatest('datasets');
 importLatest('mltools');
 importLatest('kern');
 importLatest('ndlutil');
+importLatest('mocap');
 importLatest('gp');

@@ -27,7 +27,7 @@ bodyInd = [21:50];
 for experimentNo = 1:3;
 
   % Load saved model.
-  capName = dataSetName;;
+  capName = dataSetName;
   capName(1) = upper(capName(1));
   load(['dem' capName num2str(experimentNo) '.mat']);
   startInd = 63;

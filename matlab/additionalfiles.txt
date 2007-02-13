@@ -3,8 +3,6 @@ dir: .
 ~/mlprojects/fgplvm/matlab/cmu35TaylorScaleBias.mat
 dir: html
 ~/mlprojects/fgplvm/html/index.html
-~/mlprojects/fgplvm/html/demCmu35gplvmReconstruct1.png
-~/mlprojects/fgplvm/html/demCmu35gplvmReconstruct2.png
 ~/mlprojects/fgplvm/html/demOil1.png
 ~/mlprojects/fgplvm/html/demOil2.png
 ~/mlprojects/fgplvm/html/demOil3.png
@@ -26,3 +24,5 @@ dir: html
 ~/mlprojects/fgplvm/html/dynamicsSamp2.png
 ~/mlprojects/fgplvm/html/dynamicsSamp3.png
 ~/mlprojects/fgplvm/html/dynamicsSamp4.png
+~/mlprojects/fgplvm/html/demCmu35gplvmLegReconstruct1_8.png
+~/mlprojects/fgplvm/html/demCmu35gplvmLegReconstruct1_9.png
