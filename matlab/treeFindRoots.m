@@ -6,7 +6,7 @@ function ind = treeFindRoots(tree)
 % ARG tree : tree for which root nodes are being sought.
 % RETURN ind : indices of root nodes.
 %
-% SEEALSO : treeFindParents, treeFindChildren
+% SEEALSO : treeFindParents, treeFindChildren, treeFindLeaves
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 

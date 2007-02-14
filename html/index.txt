@@ -8,6 +8,10 @@
 
 RELEASEINFORMATION
 
+<p>Added treeFindLeaves.
+
+<h4>Version 0.156</h5>
+
 <p>Moved treeFindParents, treeFindChildren and treeSwapNode into this toolbox from MOCAP toolbox.
 
 <h4>Version 0.155</h4>
