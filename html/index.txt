@@ -6,10 +6,14 @@
 
 <h1>MATLAB Motion Capture Toolbox</h1>
 
-The MATLAB motion capture toolbox allows loading and playing of BVH files in MATLAB. It is available to <a href="http://www.cs.man.ac.uk/neill-bin/software/downloadForm.cgi?toolbox=mocap">download here</a>.
+The MATLAB motion capture toolbox allows loading and playing of BVH files in MATLAB. 
 
 
 RELEASEINFORMATION
+
+Bug fix release, to deal with bugs in mocapResultsCppBvh, thanks to Cedric Vanaken for pointing out the problem.
+
+<h4>Release 0.132</h4>
 
 Moved tree handling code into NDLUTIL toolbox, version 0.156.
 

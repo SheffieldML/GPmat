@@ -1,5 +1,10 @@
 This toolbox allows MATLAB to read in and write bvh files and read acclaim files. There are also routines for visualising the files in MATLAB.
 
+Version 0.133 Release Notes
+---------------------------
+
+Bug fix release, to deal with bugs in mocapResultsCppBvh, thanks to Cedric Vanaken for pointing out the problem.
+
 Version 0.132 Release Notes
 ---------------------------
 

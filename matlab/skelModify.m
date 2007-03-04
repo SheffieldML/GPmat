@@ -1,4 +1,4 @@
-function skelModify(handle, channels, skel, padding)
+function skelModify(handle, channels, skel, padding, zeroIndices)
 
 % SKELMODIFY Update visualisation of skeleton data.
 % FORMAT
