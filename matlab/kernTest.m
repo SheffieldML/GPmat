@@ -8,14 +8,16 @@ function kernRet = kernTest(kernType, numIn);
 % {'cmpnd', 'rbf', 'lin', 'white'}.
 % RETURN kern : the kernel that was generated for the tests.
 % 
+% FORMAT
 % DESC runs some tests on a given kernel structure to ensure it is
 % correctly implemented.
 % ARG kern : kernel structure to test.
+% ARG numIn : the number of input dimensions.
 % RETURN kern : the kernel as it was used in the tests.
 % 
 % SEEALSO : kernCreate
 %
-% COPYRIGHT : Neil D. Lawrence, 2004, 2005
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2007
 
 % KERN
 

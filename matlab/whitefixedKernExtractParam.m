@@ -1,4 +1,4 @@
-function params = whitefixedKernExtractParam(kern)
+function [params, names] = whitefixedKernExtractParam(kern)
 
 
 % WHITEFIXEDKERNEXTRACTPARAM Extract parameters from the WHITEFIXED kernel structure.

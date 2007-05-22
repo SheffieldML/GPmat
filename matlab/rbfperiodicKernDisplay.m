@@ -29,3 +29,5 @@ fprintf('Periodic inverse width: %2.4f (length scale %2.4f)\n', ...
         kern.inverseWidth, 1/sqrt(kern.inverseWidth));
 fprintf(spacing);
 fprintf('Periodic variance: %2.4f\n', kern.variance)
+fprintf(spacing);
+fprintf('Periodic period: %2.4f\n', kern.period)

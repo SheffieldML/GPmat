@@ -6,13 +6,9 @@
 
 <h1>Matlab Kernel Toolbox</h1>
 
-This page describes the kernel toolbox for MATLAB available for <a href="http://www.cs.man.ac.uk/neill-bin/software/downloadForm.cgi?toolbox=kern">download here</a>. 
-
-<h3>Release Information</h3>
-
 RELEASEINFORMATION
 
-Minor bug fixes.
+Added 'translate' kernel which allows wrapping of other kernels with a kernel that translates the input location. Useful for moving the non-stationarity around the input space.
 
 <h3>Version 0.166</h3>
 

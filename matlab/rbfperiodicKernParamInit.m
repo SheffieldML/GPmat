@@ -41,6 +41,8 @@ kern.inverseWidth = 1;
 kern.variance = 1;
 kern.nParams = 2;
 
+kern.period = 2*pi;
+
 % Constrains parameters positive for optimisation.
 kern.transforms.index = [1 2];
 kern.transforms.type = optimiDefaultConstraint('positive');

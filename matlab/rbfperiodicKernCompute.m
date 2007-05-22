@@ -22,14 +22,14 @@ function [k, n2] = rbfperiodicKernCompute(kern, x, x2)
 
 % KERN
 
-
+factor = 2*pi/kern.period;
 if nargin < 3
-  n2 = sin(0.5*(repmat(x, 1, size(x, 1)) - repmat(x', size(x, 1), 1)));
+  n2 = sin(0.5*factor*(repmat(x, 1, size(x, 1)) - repmat(x', size(x, 1), 1)));
   n2 = n2.*n2;
   wi2 = (2 .* kern.inverseWidth);
   k = kern.variance*exp(-n2*wi2);
 else
-  n2 = sin(0.5*(repmat(x, 1, size(x2, 1)) - repmat(x2', size(x, 1), 1)));  
+  n2 = sin(0.5*factor*(repmat(x, 1, size(x2, 1)) - repmat(x2', size(x, 1), 1)));  
   n2 = n2.*n2;
   wi2 = (2 .* kern.inverseWidth);
   k = kern.variance*exp(-n2*wi2);

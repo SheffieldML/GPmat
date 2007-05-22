@@ -44,6 +44,20 @@ void CKern::getPriorLogProb(CMatrix& G) const
 {
 }
 
+void CKern::getGradTransParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise) const
+{
+  assert(g.getRows()==1);
+  assert(g.getCols()==getNumParams());
+  getGradParams(g, X, X2, cvGrd, regularise);
+  double val;
+  double param;
+  for(int i=0; i<getNumTransforms(); i++)
+    {
+    val=g.getVal(getTransformIndex(i));
+    param=getParam(getTransformIndex(i));
+    g.setVal(val*getTransformGradFact(param, i), getTransformIndex(i));
+  }
+}
 void CKern::getGradTransParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise) const
 {
   assert(g.getRows()==1);
@@ -237,6 +251,21 @@ void CCmpndKern::compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const
 	}
     }
 }
+void CCmpndKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad, bool regularise) const
+{
+  assert(g.getRows()==1);
+  assert(g.getCols()==getNumParams());
+  int start = 0;
+  int end = 0;
+  for(int i=0; i<components.size(); i++)
+    {
+      end = start+components[i]->getNumParams()-1;
+      CMatrix subg(1, components[i]->getNumParams());
+      components[i]->getGradParams(subg, X, X2, covGrad, regularise);
+      g.setMatrix(0, start, subg);
+      start = end+1;
+    }
+}
 void CCmpndKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
   assert(g.getRows()==1);
@@ -251,6 +280,20 @@ void CCmpndKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covG
       g.setMatrix(0, start, subg);
       start = end+1;
     }
+}
+double CCmpndKern::getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
+{
+  assert(index>=0);
+  assert(index<nParams);
+  int start=0;
+  int end=0;
+  for(int i=0; i<components.size(); i++)
+  {
+    end = start+components[i]->getNumParams()-1;
+    if(index<end)
+      return components[i]->getGradParam(index-start, X, X2, covGrad);
+  }
+  return -1;
 }
 double CCmpndKern::getGradParam(int index, const CMatrix& X, const CMatrix& covGrad) const
 {
@@ -361,7 +404,7 @@ void CWhiteKern::setInitParam()
   setName("white noise");
   setParamName("variance", 0);
   variance = exp(-2.0);
-  addTransform(new CNegLogLogitTransform, 0);
+  addTransform(new CExpTransform, 0);
 }
 
 inline double CWhiteKern::diagComputeElement(const CMatrix& X, int index) const
@@ -412,10 +455,10 @@ void CWhiteKern::getGradX(vector<CMatrix*>& gX, const CMatrix& X, const CMatrix&
   if(!addG)
   {
     for(int i=0; i<gX.size(); i++)
-	{
-	  assert(gX[i]->getRows()==X2.getRows());
-	  assert(gX[i]->getCols()==X2.getCols());
-	  gX[i]->zeros();
+    {
+      assert(gX[i]->getRows()==X2.getRows());
+      assert(gX[i]->getCols()==X2.getCols());
+      gX[i]->zeros();
     }
   }
 }
@@ -451,6 +494,11 @@ void CWhiteKern::compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const
   assert(K.rowsMatch(X));
   assert(K.getCols()==X2.getRows());
   K.zeros();
+}
+double CWhiteKern::getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
+{
+  assert(index==0);
+  return 0.0;
 }
 double CWhiteKern::getGradParam(int index, const CMatrix& X, const CMatrix& covGrad) const
 {
@@ -491,7 +539,7 @@ void CBiasKern::setInitParam()
   setName("bias");
   setParamName("variance", 0);
   variance = exp(-2.0);
-  addTransform(new CNegLogLogitTransform, 0);
+  addTransform(new CExpTransform, 0);
 }
 
 double CBiasKern::diagComputeElement(const CMatrix& X, int index) const
@@ -580,10 +628,15 @@ void CBiasKern::compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const
   assert(K.getCols()==X2.getRows());
   K.setVals(variance);
 }
+double CBiasKern::getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const 
+{
+  assert(index==0);
+  return covGrad.sum();
+}
 double CBiasKern::getGradParam(int index, const CMatrix& X, const CMatrix& covGrad) const 
 {
   assert(index==0);
-  return sum(covGrad);
+  return covGrad.sum();
 }
 // the RBF kernel.
 CRbfKern::CRbfKern() : updateXused(false)
@@ -620,8 +673,8 @@ void CRbfKern::setInitParam()
   inverseWidth = 1.0;
   setParamName("variance", 1);
   variance = 1.0;
-  addTransform(new CNegLogLogitTransform, 0);
-  addTransform(new CNegLogLogitTransform, 1);
+  addTransform(new CExpTransform, 0);
+  addTransform(new CExpTransform, 1);
 }
 
 inline double CRbfKern::diagComputeElement(const CMatrix& X, int index) const
@@ -701,15 +754,15 @@ void CRbfKern::getGradX(vector<CMatrix*>& gX, const CMatrix& X, const CMatrix& X
     assert(gX[i]->getRows()==X2.getRows());
     assert(gX[i]->getCols()==X2.getCols());
     for(int k=0; k<X2.getRows(); k++)
-	{
-	  double n2 = X.dist2Row(i, X2, k);
-	  for(int j=0; j<X2.getCols(); j++)
       {
-        double val = pf*(X2.getVal(k, j)-X.getVal(i, j))*exp(-n2*wi2);
-        if(addG)
-          gX[i]->addVal(val, k, j);
-        else 
-          gX[i]->setVal(val, k, j);
+	double n2 = X.dist2Row(i, X2, k);
+	for(int j=0; j<X2.getCols(); j++)
+	  {
+	    double val = pf*(X2.getVal(k, j)-X.getVal(i, j))*exp(-n2*wi2);
+	    if(addG)
+	      gX[i]->addVal(val, k, j);
+	    else 
+	      gX[i]->setVal(val, k, j);
       }
 	}
   }
@@ -751,6 +804,36 @@ void CRbfKern::updateX(const CMatrix& X)
     }
   }
 }
+void CRbfKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad, bool regularise) const
+{
+  assert(g.getRows()==1);
+  assert(g.getCols()==nParams);
+  assert(X.getRows()==covGrad.getRows());
+  assert(X2.getRows()==covGrad.getCols());
+  double g1=0.0;
+  double g2=0.0;
+  double halfInverseWidth=0.5*inverseWidth;
+  double halfVariance=0.5*variance;
+
+  int nrows = X.getRows();
+  for(int j=0; j<nrows; j++)
+  {
+    for(int i=0; i<X2.getRows(); i++)
+    {
+      double k = 0;
+      double dist2 = 0;
+      dist2 = X2.dist2Row(i, X, j);
+      k = exp(-dist2*halfInverseWidth);
+      double kcg_ij = k*covGrad.getVal(j,i);
+      g1 -= halfVariance*dist2*kcg_ij; // dk()/dgamma in SBIK paper
+      g2 += kcg_ij;                    // dk()/dalpha in SBIK paper
+    }
+  }
+  g.setVal(g1, 0);
+  g.setVal(g2, 1);
+  if(regularise)
+    addPriorGrad(g);
+}
 
 void CRbfKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
@@ -791,6 +874,13 @@ void CRbfKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGra
     addPriorGrad(g);
 }
 
+double CRbfKern::getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
+{
+  assert(index>=0);
+  assert(index<nParams);
+  cerr << "Error getGradParam is not currently implemented for CRbfKern" << endl;
+  exit(1);
+}
 double CRbfKern::getGradParam(int index, const CMatrix& X, const CMatrix& covGrad) const
 {
   assert(index>=0);
@@ -832,7 +922,7 @@ void CLinKern::setInitParam()
   setName("linear");
   setParamName("variance", 0);
   variance = 1.0;
-  addTransform(new CNegLogLogitTransform, 0);
+  addTransform(new CExpTransform, 0);
 }
 
 double CLinKern::diagComputeElement(const CMatrix& X, int index1) const
@@ -929,6 +1019,21 @@ void CLinKern::compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const
   assert(K.getCols()==X2.getRows());
   K.gemm(X, X2, variance, 0.0, "n", "t");
 }
+double CLinKern::getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
+{
+  assert(index==0);
+  assert(X.getRows()==covGrad.getRows());
+  assert(X2.getRows()==covGrad.getCols());
+  double dot;
+  double g1=0.0;
+  for(int i=0; i<X.getRows(); i++)
+    for(int j=0; j<X2.getRows(); j++)
+      {
+	dot = X.dotRowRow(i, X2, j);
+	g1 += dot*covGrad.getVal(i, j);
+    }
+  return g1;
+}
 double CLinKern::getGradParam(int index, const CMatrix& X, const CMatrix& covGrad) const
 {
   assert(index==0);
@@ -938,10 +1043,10 @@ double CLinKern::getGradParam(int index, const CMatrix& X, const CMatrix& covGra
   double g1=0.0;
   for(int i=0; i<X.getRows(); i++)
     for(int j=0; j<X.getRows(); j++)
-      {
-	dot = X.dotRowRow(i, X, j);
-	g1 += dot*covGrad.getVal(i, j);
-      }
+    {
+      dot = X.dotRowRow(i, X, j);
+      g1 += dot*covGrad.getVal(i, j);
+    }
   return g1;
 }
   
@@ -983,9 +1088,9 @@ void CMlpKern::setInitParam()
   biasVariance = 10.0;
   setParamName("variance", 2);
   variance = 1.0;
-  addTransform(new CNegLogLogitTransform, 0);
-  addTransform(new CNegLogLogitTransform, 1);
-  addTransform(new CNegLogLogitTransform, 2);
+  addTransform(new CExpTransform, 0);
+  addTransform(new CExpTransform, 1);
+  addTransform(new CExpTransform, 2);
 }
 
 inline double CMlpKern::diagComputeElement(const CMatrix& X, int index) const
@@ -1099,6 +1204,43 @@ double CMlpKern::computeElement(const CMatrix& X1, int index1,
   double denom2=weightVariance*X2.norm2Row(index2)+biasVariance+1.0;  
   return variance*asin(numer/sqrt(denom1*denom2));
 }
+void CMlpKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad, bool regularise) const
+{
+  assert(g.getRows()==1);
+  assert(g.getCols()==nParams);
+  double g1=0.0;
+  double g2=0.0;
+  double g3=0.0;
+  innerProdi.resize(1, X.getRows());
+  innerProdj.resize(1, X2.getRows());
+  for(int j=0; j<X2.getRows(); j++)
+    innerProdj.setVal(X2.norm2Row(j), j);
+  // do off diagonal gradients first.
+  for(int i=0; i<X.getRows(); i++)
+  {
+    innerProdi.setVal(X.norm2Row(i), i);
+    for(int j=0; j<X2.getRows(); j++)
+    {	  
+      double crossProd=X.dotRowRow(i, X2, j);
+      double numer=weightVariance*crossProd + biasVariance;
+      double denomi=weightVariance*innerProdi.getVal(i)+biasVariance+1.0;  
+      double denomj=weightVariance*innerProdj.getVal(j)+biasVariance+1.0;  
+      double denom = sqrt(denomi*denomj);
+      double arg = numer/denom;
+      double baseCovGrad = variance/sqrt(1-arg*arg)*covGrad.getVal(i, j);
+      double denom3=denom*denom*denom;
+      g1+=baseCovGrad*(crossProd/denom-0.5*numer/denom3*(denomi*innerProdj.getVal(j) + innerProdi.getVal(i)*denomj));
+      g2+=baseCovGrad*(1.0/denom-0.5*numer/denom3*((innerProdi.getVal(i)+innerProdj.getVal(j))*weightVariance +2.0*biasVariance+2.0));
+      g3+=asin(arg)*covGrad.getVal(i, j);
+    }
+  }
+  g.setVal(g1, 0);
+  g.setVal(g2, 1);
+  g.setVal(g3, 2);
+  if(regularise)
+    addPriorGrad(g);
+  
+}
 void CMlpKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
   assert(g.getRows()==1);
@@ -1106,27 +1248,27 @@ void CMlpKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGra
   double g1=0.0;
   double g2=0.0;
   double g3=0.0;
-  innerProd.resize(1, X.getRows());
+  innerProdi.resize(1, X.getRows());
 
   // do off diagonal gradients first.
   for(int i=0; i<X.getRows(); i++)
-    {
-      innerProd.setVal(X.norm2Row(i), i);
-      for(int j=0; j<i; j++)
-	{	  
-	  double crossProd=X.dotRowRow(i, X, j);
-	  double numer=weightVariance*crossProd + biasVariance;
-	  double denomi=weightVariance*innerProd.getVal(i)+biasVariance+1.0;  
-	  double denomj=weightVariance*innerProd.getVal(j)+biasVariance+1.0;  
-	  double denom = sqrt(denomi*denomj);
-	  double arg = numer/denom;
-	  double baseCovGrad = variance/sqrt(1-arg*arg)*covGrad.getVal(i, j);
-	  double denom3=denom*denom*denom;
-	  g1+=baseCovGrad*(crossProd/denom-0.5*numer/denom3*(denomi*innerProd.getVal(j) + innerProd.getVal(i)*denomj));
-	  g2+=baseCovGrad*(1.0/denom-0.5*numer/denom3*((innerProd.getVal(i)+innerProd.getVal(j))*weightVariance +2.0*biasVariance+2.0));
-	  g3+=asin(arg)*covGrad.getVal(i, j);
-	}
+  {
+    innerProdi.setVal(X.norm2Row(i), i);
+    for(int j=0; j<i; j++)
+    {	  
+      double crossProd=X.dotRowRow(i, X, j);
+      double numer=weightVariance*crossProd + biasVariance;
+      double denomi=weightVariance*innerProdi.getVal(i)+biasVariance+1.0;  
+      double denomj=weightVariance*innerProdi.getVal(j)+biasVariance+1.0;  
+      double denom = sqrt(denomi*denomj);
+      double arg = numer/denom;
+      double baseCovGrad = variance/sqrt(1-arg*arg)*covGrad.getVal(i, j);
+      double denom3=denom*denom*denom;
+      g1+=baseCovGrad*(crossProd/denom-0.5*numer/denom3*(denomi*innerProdi.getVal(j) + innerProdi.getVal(i)*denomj));
+      g2+=baseCovGrad*(1.0/denom-0.5*numer/denom3*((innerProdi.getVal(i)+innerProdi.getVal(j))*weightVariance +2.0*biasVariance+2.0));
+      g3+=asin(arg)*covGrad.getVal(i, j);
     }
+  }
   // double the result due to symmetry.
   g1*=2;
   g2*=2;
@@ -1134,14 +1276,14 @@ void CMlpKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGra
   // add effect of diagonals.
   for(int i=0; i<X.getRows(); i++)
     {
-      double numer = weightVariance*innerProd.getVal(i)+biasVariance;
+      double numer = weightVariance*innerProdi.getVal(i)+biasVariance;
       double denom = numer+1.0;
       double denom3=denom*denom*denom;
       double arg = numer/denom;
       double baseCovGrad = variance/sqrt(1-arg*arg)*covGrad.getVal(i, i);
-      g1+=baseCovGrad*(innerProd.getVal(i)/denom-0.5*numer/denom3*(2*denom*innerProd.getVal(i)));
+      g1+=baseCovGrad*(innerProdi.getVal(i)/denom-0.5*numer/denom3*(2*denom*innerProdi.getVal(i)));
       
-      g2+=baseCovGrad*(1.0/denom-0.5*numer/denom3*(2.0*weightVariance*innerProd.getVal(i)+2.0*biasVariance+2.0));
+      g2+=baseCovGrad*(1.0/denom-0.5*numer/denom3*(2.0*weightVariance*innerProdi.getVal(i)+2.0*biasVariance+2.0));
       g3+=asin(arg)*covGrad.getVal(i, i);
 
     }
@@ -1151,6 +1293,13 @@ void CMlpKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGra
   if(regularise)
     addPriorGrad(g);
 
+}
+double CMlpKern::getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
+{
+  assert(index>=0);
+  assert(index<nParams);
+  cerr << "Error getGradParam is not currently implemented for CMlpKern" << endl;
+  exit(1);
 }
 double CMlpKern::getGradParam(int index, const CMatrix& X, const CMatrix& covGrad) const
 {
@@ -1244,9 +1393,9 @@ void CPolyKern::setInitParam()
   biasVariance = 1.0;
   setParamName("variance", 2);
   variance = 1.0;
-  addTransform(new CNegLogLogitTransform, 0);
-  addTransform(new CNegLogLogitTransform, 1);
-  addTransform(new CNegLogLogitTransform, 2);
+  addTransform(new CExpTransform, 0);
+  addTransform(new CExpTransform, 1);
+  addTransform(new CExpTransform, 2);
   degree = 2.0;
 }
 
@@ -1350,6 +1499,33 @@ double CPolyKern::computeElement(const CMatrix& X1, int index1,
   double arg=weightVariance*X1.dotRowRow(index1, X2, index2) + biasVariance;
   return variance*pow(arg, degree);
 }
+void CPolyKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad, bool regularise) const
+{
+  assert(g.getRows()==1);
+  assert(g.getCols()==nParams);
+  double g1=0.0;
+  double g2=0.0;
+  double g3=0.0;
+  innerProdi.resize(1, X.getRows());
+  // do off diagonal gradients first.
+  for(int i=0; i<X.getRows(); i++) {
+    innerProdi.setVal(X.norm2Row(i),i);
+    for(int j=0; j<X2.getRows(); j++) {
+      double crossProd=X.dotRowRow(i, X2, j);
+      double arg=weightVariance*crossProd + biasVariance;
+      double base = variance*degree*pow(arg, degree-1)*covGrad.getVal(i, j);	  
+      g1+=crossProd*base;
+      g2+=base;
+      g3+=pow(arg, degree)*covGrad.getVal(i, j);
+    }
+  }
+  g.setVal(g1, 0);
+  g.setVal(g2, 1);
+  g.setVal(g3, 2);
+  if(regularise)
+    addPriorGrad(g);
+
+}
 void CPolyKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
   assert(g.getRows()==1);
@@ -1357,11 +1533,11 @@ void CPolyKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGr
   double g1=0.0;
   double g2=0.0;
   double g3=0.0;
-  innerProd.resize(1, X.getRows());
+  innerProdi.resize(1, X.getRows());
   // do off diagonal gradients first.
   for(int i=0; i<X.getRows(); i++)
     {
-      innerProd.setVal(X.norm2Row(i),i);
+      innerProdi.setVal(X.norm2Row(i),i);
       for(int j=0; j<i; j++)
 	{
 	  
@@ -1380,9 +1556,9 @@ void CPolyKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGr
   // add effect of diagonals.
   for(int i=0; i<X.getRows(); i++)
     {
-      double arg = weightVariance*innerProd.getVal(i)+biasVariance;
+      double arg = weightVariance*innerProdi.getVal(i)+biasVariance;
       double base = variance*degree*pow(arg, degree-1)*covGrad.getVal(i, i);	  
-      g1+=innerProd.getVal(i)*base;
+      g1+=innerProdi.getVal(i)*base;
       g2+=base;
       g3+=pow(arg,degree)*covGrad.getVal(i, i);
 
@@ -1393,6 +1569,13 @@ void CPolyKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGr
   if(regularise)
     addPriorGrad(g);
 
+}
+double CPolyKern::getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
+{
+  assert(index>=0);
+  assert(index<nParams);
+  cerr << "Error getGradParam is not currently implemented for CPolyKern" << endl;
+  exit(1);
 }
 double CPolyKern::getGradParam(int index, const CMatrix& X, const CMatrix& covGrad) const
 {
@@ -1448,7 +1631,7 @@ void CLinardKern::setInitParam()
   setName("linear ARD");
   setParamName("variance", 0);
   variance = 1.0;
-  addTransform(new CNegLogLogitTransform, 0);
+  addTransform(new CExpTransform, 0);
   scales.resize(1, getInputDim());
   scales.setVals(0.5);
   for(int i=1; i<getInputDim()+1; i++)
@@ -1562,7 +1745,34 @@ double CLinardKern::computeElement(const CMatrix& X1, int index1,
     }
   return val*variance;
 }
+void CLinardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad, bool regularise) const
+{
+  assert(g.getRows()==1);
+  assert(g.getCols()==nParams);
+  double g1=0.0;
+  for(int i=0; i<X.getRows(); i++) {
+    for(int j=0; j<X2.getRows(); j++) {
+      double val=0.0;
+      for(int k=0; k<getInputDim(); k++)
+	val += X.getVal(i, k)*X2.getVal(j, k)*scales.getVal(k);
+      g1+=covGrad.getVal(i, j)*val;
+    }
+  }
+  g.setVal(g1, 0);
+  for(int k=0; k<getInputDim(); k++) {
+    double g2=0.0;
+    for(int i=0; i<X.getRows(); i++) {
+      for(int j=0; j<X2.getRows(); j++) {
+	g2+=X.getVal(i, k)*X2.getVal(j, k)*covGrad.getVal(i, j);
+      }
+    }
+    g2*=variance;
+    g.setVal(g2, k+1);
+  }
+  if(regularise)
+    addPriorGrad(g);
 
+}
 void CLinardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
   assert(g.getRows()==1);
@@ -1607,6 +1817,13 @@ void CLinardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cov
     addPriorGrad(g);
 
 }
+double CLinardKern::getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
+{
+  assert(index>=0);
+  assert(index<nParams);
+  cerr << "Error getGradParam is not currently implemented for CLinardKern" << endl;
+  exit(1);
+}
 double CLinardKern::getGradParam(int index, const CMatrix& X, const CMatrix& covGrad) const
 {
   assert(index>=0);
@@ -1614,7 +1831,6 @@ double CLinardKern::getGradParam(int index, const CMatrix& X, const CMatrix& cov
   cerr << "Error getGradParam is not currently implemented for CLinardKern" << endl;
   exit(1);
 }
-
 // the RBF ARD kernel.
 CRbfardKern::CRbfardKern()
 {
@@ -1649,10 +1865,10 @@ void CRbfardKern::setInitParam()
   setName("RBF ARD");
   setParamName("inverseWidth", 0);
   inverseWidth=1.0;
-  addTransform(new CNegLogLogitTransform, 0);
+  addTransform(new CExpTransform, 0);
   setParamName("variance", 1);
   variance = 1.0;
-  addTransform(new CNegLogLogitTransform, 1);
+  addTransform(new CExpTransform, 1);
   scales.resize(1, getInputDim());
   gscales.resize(1, getInputDim());
   scales.setVals(0.5);
@@ -1768,6 +1984,47 @@ double CRbfardKern::computeElement(const CMatrix& X1, int index1,
   return variance*exp(-val*inverseWidth*0.5);
 }
 
+void CRbfardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad, bool regularise) const
+{
+  assert(g.getRows()==1);
+  assert(g.getCols()==nParams);
+  double g1=0.0;
+  double g2=0.0;
+  gscales.zeros();
+  double halfInverseWidth = 0.5*inverseWidth;
+  for(int i=0; i<X.getRows(); i++)
+    {
+      for(int j=0; j<X2.getRows(); j++)
+	{
+	  double val = 0.0;
+	  for(int k=0; k<getInputDim(); k++)
+	    {
+	      double x = X.getVal(i, k);
+	      x-=X2.getVal(j, k);
+	      val+=x*scales.getVal(k)*x;
+	    }
+	  double kCovGrad = exp(-halfInverseWidth*val)*covGrad.getVal(i, j);
+	  g1-=0.5*val*kCovGrad*variance;
+	  g2+=kCovGrad;
+	  for(int k=0; k<getInputDim(); k++)
+	    {
+	      double g3=gscales.getVal(k);
+	      double xi=X.getVal(i, k);
+	      double xj=X2.getVal(j, k);
+	      g3+=inverseWidth*kCovGrad*(xi*xj-.5*xi*xi-.5*xj*xj)*variance;
+	      gscales.setVal(g3, k);
+	    }
+	}
+    }
+  g.setVal(g1, 0);
+  g.setVal(g2, 1);
+  for(int k=0; k<getInputDim(); k++)
+    g.setVal(gscales.getVal(k), k+2);
+  if(regularise)
+    addPriorGrad(g);
+
+}
+
 void CRbfardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
   assert(g.getRows()==1);
@@ -1813,6 +2070,13 @@ void CRbfardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cov
     addPriorGrad(g);
 
 }
+double CRbfardKern::getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
+{
+  assert(index>=0);
+  assert(index<nParams);
+  cerr << "Error getGradParam is not currently implemented for CRbfardKern" << endl;
+  exit(1);
+}
 double CRbfardKern::getGradParam(int index, const CMatrix& X, const CMatrix& covGrad) const
 {
   assert(index>=0);
@@ -1856,13 +2120,13 @@ void CMlpardKern::setInitParam()
   setName("MLP ARD");
   setParamName("weightVariance", 0);
   weightVariance=10.0;
-  addTransform(new CNegLogLogitTransform, 0);
+  addTransform(new CExpTransform, 0);
   setParamName("biasVariance", 1);
   biasVariance=10.0;
-  addTransform(new CNegLogLogitTransform, 1);
+  addTransform(new CExpTransform, 1);
   setParamName("variance", 2);
   variance = 1.0;
-  addTransform(new CNegLogLogitTransform, 2);
+  addTransform(new CExpTransform, 2);
   scales.resize(1, getInputDim());
   gscales.resize(1, getInputDim());
   scales.setVals(0.5);
@@ -2033,16 +2297,17 @@ double CMlpardKern::computeElement(const CMatrix& X1, int index1,
   return variance*asin(numer/sqrt(denom1*denom2));
 }
 
-void CMlpardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
+void CMlpardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad, bool regularise) const
 {
   assert(g.getRows()==1);
   assert(g.getCols()==nParams);
   double g1=0.0;
   double g2=0.0;
   double g3=0.0;
-  innerProd.resize(1, X.getRows());
+  innerProdi.resize(1, X.getRows());
+  innerProdj.resize(1, X2.getRows());
   gscales.zeros();
-  innerProd.zeros();
+  innerProdi.zeros();
   for(int i=0; i<X.getRows(); i++)
     {
       double val=0.0;
@@ -2051,7 +2316,81 @@ void CMlpardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cov
 	  double x = X.getVal(i, k);
 	  val+=x*x*scales.getVal(k);
 	}
-      innerProd.setVal(val, i);
+      innerProdi.setVal(val, i);
+    }
+  for(int j=0; j<X2.getRows(); j++)
+    {
+      double val=0.0;
+      for(int k=0; k<getInputDim(); k++)
+	{
+	  double x = X2.getVal(j, k);
+	  val+=x*x*scales.getVal(k);
+	}
+      innerProdj.setVal(val, j);
+    }
+  
+  for(int i=0; i<X.getRows(); i++)
+    {
+      for(int j=0; j<X2.getRows(); j++)
+	{
+	  double val=0.0;
+	  for(int k=0; k<getInputDim(); k++)
+	    {
+	      double xi = X.getVal(i, k);
+	      double xj = X2.getVal(j, k);
+	      val+=xi*xj*scales.getVal(k);
+	    }
+	  double crossProd=val;
+	  double numer=weightVariance*val + biasVariance;
+	  double denomi=weightVariance*innerProdi.getVal(i)+biasVariance+1.0;  
+	  double denomj=weightVariance*innerProdj.getVal(j)+biasVariance+1.0;  
+	  double denom = sqrt(denomi*denomj);
+	  double arg = numer/denom;
+	  double baseCovGrad = variance/sqrt(1-arg*arg)*covGrad.getVal(i, j);
+	  double denom3=denom*denom*denom;
+	  g1+=baseCovGrad*(val/denom-0.5*numer/denom3*(denomi*innerProdj.getVal(j) + innerProdi.getVal(i)*denomj));
+	  g2+=baseCovGrad*(1.0/denom-0.5*numer/denom3*((innerProdi.getVal(i)+innerProdj.getVal(j))*weightVariance+2.0*biasVariance+2.0));
+	  g3+=asin(arg)*covGrad.getVal(i, j);
+
+
+	  for(int k=0; k<getInputDim(); k++)
+	    {
+	      double g4=gscales.getVal(k);
+	      double xik=X.getVal(i, k);
+	      double xjk=X2.getVal(j, k);
+	      g4+=(xik*xjk/denom - 0.5*numer/denom3*(xik*xik*denomj + xjk*xjk*denomi))*baseCovGrad*weightVariance;
+	      gscales.setVal(g4, k);
+	    }
+	}
+    }
+  g.setVal(g1, 0);
+  g.setVal(g2, 1);
+  g.setVal(g3, 2);
+  for(int k=0; k<getInputDim(); k++)
+    g.setVal(gscales.getVal(k), k+3);
+  if(regularise)
+    addPriorGrad(g);
+
+}
+void CMlpardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
+{
+  assert(g.getRows()==1);
+  assert(g.getCols()==nParams);
+  double g1=0.0;
+  double g2=0.0;
+  double g3=0.0;
+  innerProdi.resize(1, X.getRows());
+  gscales.zeros();
+  innerProdi.zeros();
+  for(int i=0; i<X.getRows(); i++)
+    {
+      double val=0.0;
+      for(int k=0; k<getInputDim(); k++)
+	{
+	  double x = X.getVal(i, k);
+	  val+=x*x*scales.getVal(k);
+	}
+      innerProdi.setVal(val, i);
     }
   
   for(int i=0; i<X.getRows(); i++)
@@ -2067,14 +2406,14 @@ void CMlpardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cov
 	    }
 	  double crossProd=val;
 	  double numer=weightVariance*val + biasVariance;
-	  double denomi=weightVariance*innerProd.getVal(i)+biasVariance+1.0;  
-	  double denomj=weightVariance*innerProd.getVal(j)+biasVariance+1.0;  
+	  double denomi=weightVariance*innerProdi.getVal(i)+biasVariance+1.0;  
+	  double denomj=weightVariance*innerProdi.getVal(j)+biasVariance+1.0;  
 	  double denom = sqrt(denomi*denomj);
 	  double arg = numer/denom;
 	  double baseCovGrad = variance/sqrt(1-arg*arg)*covGrad.getVal(i, j);
 	  double denom3=denom*denom*denom;
-	  g1+=baseCovGrad*(val/denom-0.5*numer/denom3*(denomi*innerProd.getVal(j) + innerProd.getVal(i)*denomj));
-	  g2+=baseCovGrad*(1.0/denom-0.5*numer/denom3*((innerProd.getVal(i)+innerProd.getVal(j))*weightVariance+2.0*biasVariance+2.0));
+	  g1+=baseCovGrad*(val/denom-0.5*numer/denom3*(denomi*innerProdi.getVal(j) + innerProdi.getVal(i)*denomj));
+	  g2+=baseCovGrad*(1.0/denom-0.5*numer/denom3*((innerProdi.getVal(i)+innerProdi.getVal(j))*weightVariance+2.0*biasVariance+2.0));
 	  g3+=asin(arg)*covGrad.getVal(i, j);
 
 
@@ -2096,14 +2435,14 @@ void CMlpardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cov
   // add effect of diagonals.
   for(int i=0; i<X.getRows(); i++)
     {
-      double numer = weightVariance*innerProd.getVal(i)+biasVariance;
+      double numer = weightVariance*innerProdi.getVal(i)+biasVariance;
       double denom = numer+1.0;
       double denom3=denom*denom*denom;
       double arg = numer/denom;
       double baseCovGrad = variance/sqrt(1-arg*arg)*covGrad.getVal(i, i);
-      g1+=baseCovGrad*(innerProd.getVal(i)/denom-0.5*numer/denom3*(2*denom*innerProd.getVal(i)));
+      g1+=baseCovGrad*(innerProdi.getVal(i)/denom-0.5*numer/denom3*(2*denom*innerProdi.getVal(i)));
       
-      g2+=baseCovGrad*(1.0/denom-0.5*numer/denom3*(2.0*weightVariance*innerProd.getVal(i)+2.0*biasVariance+2.0));
+      g2+=baseCovGrad*(1.0/denom-0.5*numer/denom3*(2.0*weightVariance*innerProdi.getVal(i)+2.0*biasVariance+2.0));
       g3+=asin(arg)*covGrad.getVal(i, i);
 
       for(int k=0; k<getInputDim(); k++)
@@ -2124,6 +2463,13 @@ void CMlpardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cov
 
 }
 double CMlpardKern::getGradParam(int index, const CMatrix& X, const CMatrix& covGrad) const
+{
+  assert(index>=0);
+  assert(index<nParams);
+  cerr << "Error getGradParam is not currently implemented for CMlpardKern" << endl;
+  exit(1);
+}
+double CMlpardKern::getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
 {
   assert(index>=0);
   assert(index<nParams);
@@ -2208,13 +2554,13 @@ void CPolyardKern::setInitParam()
   setName("Polynomial ARD");
   setParamName("weightVariance", 0);
   weightVariance=1.0;
-  addTransform(new CNegLogLogitTransform, 0);
+  addTransform(new CExpTransform, 0);
   setParamName("biasVariance", 1);
   biasVariance=1.0;
-  addTransform(new CNegLogLogitTransform, 1);
+  addTransform(new CExpTransform, 1);
   setParamName("variance", 2);
   variance = 1.0;
-  addTransform(new CNegLogLogitTransform, 2);
+  addTransform(new CExpTransform, 2);
   scales.resize(1, getInputDim());
   gscales.resize(1, getInputDim());
   scales.setVals(0.5);
@@ -2358,6 +2704,50 @@ double CPolyardKern::computeElement(const CMatrix& X1, int index1,
   return variance*pow(arg, degree);
 }
 
+void CPolyardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad, bool regularise) const
+{
+  assert(g.getRows()==1);
+  assert(g.getCols()==nParams);
+  double g1=0.0;
+  double g2=0.0;
+  double g3=0.0;
+  innerProdi.resize(1, X.getRows());
+  gscales.zeros();
+  
+  for(int i=0; i<X.getRows(); i++)
+    {
+      for(int j=0; j<X2.getRows(); j++)
+	{
+	  double val=0.0;
+	  for(int k=0; k<getInputDim(); k++)
+	    {
+	      val+=X.getVal(i, k)*X2.getVal(j, k)*scales.getVal(k);
+	    }
+	  double crossProd=val;
+	  double arg=weightVariance*val + biasVariance;
+	  double baseCovGrad = variance*degree*pow(arg, degree-1)*covGrad.getVal(i, j);
+	  g1+=baseCovGrad*val;
+	  g2+=baseCovGrad;
+	  g3+=pow(arg, degree)*covGrad.getVal(i, j);
+
+
+	  for(int k=0; k<getInputDim(); k++)
+	    {
+	      double g4=gscales.getVal(k);
+	      g4+=X.getVal(i, k)*X2.getVal(j, k)*baseCovGrad*weightVariance;
+	      gscales.setVal(g4, k);
+	    }
+	}
+    }
+  g.setVal(g1, 0);
+  g.setVal(g2, 1);
+  g.setVal(g3, 2);
+  for(int k=0; k<getInputDim(); k++)
+    g.setVal(gscales.getVal(k), k+3);
+  if(regularise)
+    addPriorGrad(g);
+
+}
 void CPolyardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
   assert(g.getRows()==1);
@@ -2365,9 +2755,9 @@ void CPolyardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& co
   double g1=0.0;
   double g2=0.0;
   double g3=0.0;
-  innerProd.resize(1, X.getRows());
+  innerProdi.resize(1, X.getRows());
   gscales.zeros();
-  innerProd.zeros();
+  innerProdi.zeros();
   for(int i=0; i<X.getRows(); i++)
     {
       double val=0.0;
@@ -2376,7 +2766,7 @@ void CPolyardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& co
 	  double x = X.getVal(i, k);
 	  val+=x*x*scales.getVal(k);
 	}
-      innerProd.setVal(val, i);
+      innerProdi.setVal(val, i);
     }
   
   for(int i=0; i<X.getRows(); i++)
@@ -2412,9 +2802,9 @@ void CPolyardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& co
   // add effect of diagonals.
   for(int i=0; i<X.getRows(); i++)
     {
-      double arg = weightVariance*innerProd.getVal(i)+biasVariance;
+      double arg = weightVariance*innerProdi.getVal(i)+biasVariance;
       double baseCovGrad = variance*degree*pow(arg, degree-1)*covGrad.getVal(i, i);
-      g1+=baseCovGrad*innerProd.getVal(i);
+      g1+=baseCovGrad*innerProdi.getVal(i);
       
       g2+=baseCovGrad;
       g3+=pow(arg, degree)*covGrad.getVal(i, i);
@@ -2437,6 +2827,13 @@ void CPolyardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& co
 
 }
 double CPolyardKern::getGradParam(int index, const CMatrix& X, const CMatrix& covGrad) const
+{
+  assert(index>=0);
+  assert(index<nParams);
+  cerr << "Error getGradParam is not currently implemented for CPolyardKern" << endl;
+  exit(1);
+}
+double CPolyardKern::getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
 {
   assert(index>=0);
   assert(index<nParams);

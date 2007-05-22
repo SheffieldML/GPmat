@@ -43,11 +43,12 @@ function gX = rbfperiodicKernGradXpoint(kern, x, X2)
 
 % PERIODICKERNGRADXPOINT Gradient with respect to one point of x.
 
+factor = 2*pi/kern.period;
 gX = zeros(size(X2));
-arg = (X2 - x)/2;
+arg = factor*(X2 - x)/2;
 sinarg = sin(arg);
 n2 = sinarg.*sinarg;
 wi2 = (2 .* kern.inverseWidth);
 rbfPart = kern.variance*exp(-n2*wi2);
 
-gX = kern.inverseWidth*cos(arg).*sinarg.*2.*rbfPart;
+gX = factor*kern.inverseWidth*cos(arg).*sinarg.*2.*rbfPart;

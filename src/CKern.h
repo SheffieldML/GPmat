@@ -126,6 +126,17 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
       exit(1);
     }
   // Compute the gradient of the kernel matrix with respect to parameters given an additional gradient matrix.
+  virtual void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise=true) const
+    {
+      assert(g.getRows()==1);
+      assert(g.getCols()==nParams);
+      assert(X.getRows()==cvGrd.getRows());
+      assert(X2.getRows()==cvGrd.getCols());
+      for(int i=0; i<nParams; i++)
+	g.setVal(getGradParam(i, X, X2, cvGrd), i);
+      if(regularise)
+	addPriorGrad(g);
+    }
   virtual void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const
     {
       assert(g.getRows()==1);
@@ -138,6 +149,7 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
 	addPriorGrad(g); /// don't forget to add prior gradient at the end.
     }
   // Get gradient of a particular parameter.
+  virtual double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const=0;
   virtual double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const=0;
   // Called to indicate the value of X has changed and kernel should do any
   // precomputation it needs to do per value of X.
@@ -242,6 +254,7 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
   virtual void extractParamFromMxArray(const mxArray* matlabArray);
 #endif /* _NDLMATLAB*/
   // Get the gradient of the transformed parameters.
+  void getGradTransParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise=true) const;
   void getGradTransParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
   // specify tests for equality between kernels.
   bool equals(const CKern& kern, double tol=ndlutil::MATCHTOL) const;
@@ -306,7 +319,9 @@ class CCmpndKern: public CKern {
 		 const CMatrix& X2, int index2) const;
   void compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const;
   void compute(CMatrix& K, const CMatrix& X) const;
+  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise=true) const;
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
+  double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
   double priorLogProb() const;
   void addPrior(CDist* prior, int index);
@@ -362,6 +377,7 @@ class CWhiteKern: public CKern {
 		 const CMatrix& X2, int index2) const;
   void  compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const;
   void compute(CMatrix& K, const CMatrix& X) const;
+  double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
 
 
@@ -398,6 +414,7 @@ class CBiasKern: public CKern {
 		 const CMatrix& X2, int index2) const;
   void compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const;
   void compute(CMatrix& K, const CMatrix& X) const;
+  double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
 
 
@@ -434,6 +451,8 @@ class CRbfKern: public CKern {
   double computeElement(const CMatrix& X1, int index1, 
 		  const CMatrix& X2, int index2) const;
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
+  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise=true) const;
+  double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
   void updateX(const CMatrix& X);
 
@@ -473,6 +492,7 @@ class CLinKern: public CKern {
 		 const CMatrix& X2, int index2) const;
   void compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const;
   void compute(CMatrix& K, const CMatrix& X) const;
+  double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
 
 
@@ -506,14 +526,17 @@ class CMlpKern: public CKern {
   double getWhite() const;
   double computeElement(const CMatrix& X1, int index1, 
 		  const CMatrix& X2, int index2) const;
+  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise=true) const;
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
+  double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
 
  private:
   double weightVariance;
   double biasVariance;
   double variance;
-  mutable CMatrix innerProd;
+  mutable CMatrix innerProdi;
+  mutable CMatrix innerProdj;
 };
 
 // Polynomial Kernel, not generally recommended as it `extreme behaviour' outside the region where the argument's absolute value is less than 1.
@@ -550,7 +573,9 @@ class CPolyKern: public CKern {
   double getWhite() const;
   double computeElement(const CMatrix& X1, int index1, 
 		  const CMatrix& X2, int index2) const;
+  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise=true) const;
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
+  double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
   void writeParamsToStream(ostream& out) const;
   void readParamsFromStream(istream& in);
@@ -563,7 +588,7 @@ class CPolyKern: public CKern {
   double biasVariance;
   double variance;
   double degree;
-  mutable CMatrix innerProd;
+  mutable CMatrix innerProdi;
 };
 
 // Linear ARD Kernel --- automatic relevance determination version of the linear kernel.
@@ -592,7 +617,9 @@ class CLinardKern: public CArdKern {
   double getWhite() const;
   double computeElement(const CMatrix& X1, int index1, 
 		 const CMatrix& X2, int index2) const;
+  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise = true) const;
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise = true) const;
+  double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
 
 
@@ -626,7 +653,9 @@ class CRbfardKern: public CArdKern {
   double getWhite() const;
   double computeElement(const CMatrix& X1, int index1, 
 		 const CMatrix& X2, int index2) const;
+  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise=true) const;
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
+  double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
 
 
@@ -662,7 +691,9 @@ class CMlpardKern: public CArdKern {
   double getWhite() const;
   double computeElement(const CMatrix& X1, int index1, 
 		 const CMatrix& X2, int index2) const;
+  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise=true) const;
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
+  double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
 
 
@@ -670,7 +701,8 @@ class CMlpardKern: public CArdKern {
   double weightVariance;
   double biasVariance;
   double variance;
-  mutable CMatrix innerProd;
+  mutable CMatrix innerProdi;
+  mutable CMatrix innerProdj;
   mutable CMatrix gscales;
 };
 
@@ -708,7 +740,9 @@ class CPolyardKern: public CArdKern {
   double getWhite() const;
   double computeElement(const CMatrix& X1, int index1, 
 		 const CMatrix& X2, int index2) const;
+  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise=true) const;
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
+  double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
   void writeParamsToStream(ostream& out) const;
   void readParamsFromStream(istream& in);
@@ -719,7 +753,8 @@ class CPolyardKern: public CArdKern {
   double biasVariance;
   double variance;
   double degree;
-  mutable CMatrix innerProd;
+  mutable CMatrix innerProdi;
+  mutable CMatrix innerProdj;
   mutable CMatrix gscales;
 };
 
