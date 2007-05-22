@@ -8,6 +8,10 @@
 
 RELEASEINFORMATION
 
+Minor modifications including modelAddDynamics file. 
+
+<h4>Version 0.126</h4>
+
 Modified kbrParamInit to scale alpha weights and biases by number of data. Added 'dynamicsSliderChange' to lvmClassVisualise to allow visulisation of models with 'gpTime' style-dynamics.
 
 <h4>Version 0.125</h4>

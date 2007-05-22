@@ -10,15 +10,19 @@ function g = mlpOutputGradX(model, X)
 %
 % SEEALSO : mlpOutputGrad, modelOutputGradX
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
+% COPYRIGHT : Neil D. Lawrence, 2006, 2007
 
 % MLTOOLS
 
-[Y, Z] = mlpOut(model, X);
-gprime = 1-Z.*Z;
-g = zeros(size(X, 1), model.inputDim, model.outputDim);
-for i = 1:size(X, 1)
-  for j = 1:size(X, 2)
-  g(i, j, :) = shiftdim((gprime(i, :).*model.w1(j, :))*model.w2, -1);
+if length(model.hiddenDim) == 1
+  [Y, Z] = mlpOut(model, X);
+  gprime = 1-Z.*Z;
+  g = zeros(size(X, 1), model.inputDim, model.outputDim);
+  for i = 1:size(X, 1)
+    for j = 1:size(X, 2)
+      g(i, j, :) = shiftdim((gprime(i, :).*model.w1(j, :))*model.w2, -1);
+    end
   end
+else
+  error('Not yet implemented for more than one hidden layer')
 end

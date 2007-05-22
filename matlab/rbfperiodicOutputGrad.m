@@ -1,4 +1,4 @@
- function g = rbfperiodicOutputGrad(model, X)
+function g = rbfperiodicOutputGrad(model, X)
 
 % RBFPERIODICOUTPUTGRAD Evaluate derivatives of RBFPERIODIC model outputs with respect to parameters.
 % FORMAT

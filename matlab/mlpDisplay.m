@@ -24,8 +24,17 @@ fprintf(spacing);
 fprintf('  Input units: %d\n', model.inputDim);
 fprintf(spacing);
 fprintf('  Output units: %d\n', model.outputDim);
-fprintf(spacing);
-fprintf('  Hidden units: %d\n', model.nhidden);
+if length(model.hiddenDim)==1
+  fprintf(spacing);
+  fprintf('  Hidden units: %d\n', model.hiddenDim);
+else
+  fprintf(spacing);
+  fprintf('  Hidden layers: %d\n', length(model.hiddenDim));
+  for i = 1:length(model.hiddenDim)
+    fprintf(spacing);
+    fprintf('    Layer 1: %d nodes\n', model.hiddenDim(i));
+  end
+end
 fprintf(spacing);
 fprintf('  Number of parameters: %d\n', model.numParams);
 fprintf(spacing);

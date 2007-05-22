@@ -14,6 +14,9 @@ function modelRet = modelTest(modelType, numIn, varargin)
 
 % MLTOOLS
 
+%if exist([modelType 'Test']) == 2
+%  feval([modelType 'Test'])
+%end
 if ~isstruct(modelType)
   if nargin < 2
     numIn = 4;
