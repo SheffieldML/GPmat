@@ -54,8 +54,10 @@ elseif model.kern.numBlocks>1
     decayIndices(end+1) = decayIndices(end) + 2;
   end
 end
+
+% Account for decay in mean.
 g(decayIndices) = g(decayIndices) ...
-    + gd.*negLogLogitTransform(model.D, 'gradfact');
+    + gd.*expTransform(model.D, 'gradfact');
 
 g = [g gb];
 

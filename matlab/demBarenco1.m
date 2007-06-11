@@ -12,9 +12,9 @@ options.includeNoise = 1;
 % the corresponding sensitivity (see just after eqn 2 in the
 % mathematical methods of Barenco et al.)
 options.fix(1).index = 8;
-options.fix(1).value = negLogLogitTransform(0.8, 'xtoa');;
+options.fix(1).value = expTransform(0.8, 'xtoa');;
 options.fix(2).index = 9;
-options.fix(2).value = negLogLogitTransform(1, 'xtoa');;
+options.fix(2).value = expTransform(1, 'xtoa');;
 
 
 % initialise the model.
