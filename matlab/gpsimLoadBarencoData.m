@@ -71,17 +71,19 @@ else
   end
   order = [1 4 5 6 7 2 3 8 11 12 13 14 9 10 15 18 19 20 21 16 17]; 
   
-  
+  %/~
   % Perform some normalisation.
   % Make sure that the average for each slide in log space is the
   % same.
   mVal = zeros(size(mean(numeric1)));
   mVal = mVal - mean(mVal);
+  %~/
   rawExp = numeric1(ind, order)';
+  %/~
   for i = 1:size(rawExp, 2)
     rawExp(:, i) = rawExp(:, i) - mVal';
   end
-  
+  %~/
   rawVar = numeric2(ind, order)';
   rawVar = rawVar.*rawVar; % convert standard deviations to variances.
   

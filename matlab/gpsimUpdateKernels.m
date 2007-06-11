@@ -14,7 +14,9 @@ function model = gpsimUpdateKernels(model)
 
 % GPSIM
 
-model.K = real(kernCompute(model.kern, model.t));
+  
+
+model.K = real(kernCompute(model.kern, model.t))+diag(model.yvar);
 [model.invK, U, jitter] = pdinv(model.K);
 if jitter>1e-4
   fprintf('Warning: gpsimUpdateKernels added jitter of %2.4f\n', jitter)

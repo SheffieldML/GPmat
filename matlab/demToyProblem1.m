@@ -54,11 +54,11 @@ options = gpsimOptions;
 % Fix one decay (from the fourth gene --- p21) to 0.8 hr^-1, and
 % the corresponding sensitivity to 1
 options.fix(1).index = 8;
-options.fix(1).value = negLogLogitTransform(0.8, 'xtoa');;
+options.fix(1).value = expTransform(0.8, 'xtoa');;
 options.fix(2).index = 9;
-options.fix(2).value = negLogLogitTransform(1, 'xtoa');;
+options.fix(2).value = expTransform(1, 'xtoa');;
 options.fix(3).index = 15;
-options.fix(3).value = negLogLogitTransform(0.2, 'xtoa');;
+options.fix(3).value = expTransform(0.2, 'xtoa');;
 
 
 model = gpsimCreate(5, 1, datat, dataY, avals./(bvals.*bvals), options);
