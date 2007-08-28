@@ -15,8 +15,30 @@ function [param, names] = gpsimCandidateExtractParam(model)
 
 % GPSIM
 
+
 if nargout>1
-  [param, names] = gpsimExtractParam(model.candidate);
+  [param, names] = kernExtractParam(model.candidate.kern);
+  for i=1:length(model.candidate.mu);
+    names{end+1}=['Basal transcription ' num2str(i)];
+  end
 else
-  param = gpsimExtractParam(model.candidate);
+  param = kernExtractParam(model.candidate.kern);
+end
+fhandle = str2func([model.candidate.bTransform 'Transform']);
+param = [param fhandle(model.candidate.B, 'xtoa')];
+
+
+if isfield(model, 'fix')
+  for i = 1:length(model.candidate.fix)
+    param(model.candidate.fix(i).index) = model.candidate.fix(i).value;
+  end
+end
+param = real(param);
+
+% Remove main kernel parameters.
+for i = model.kern.nParams:-1:1
+  if nargout>1
+    names(i)=[];
+  end
+  param(i) = [];
 end

@@ -16,17 +16,17 @@ function [gParam, gX_u, gX] = gpsimCandidateLogLikeGradients(model, X, M, X_u)
 
 if nargin < 4
   if nargin < 3
-    M = model.m;
+    M = model.candidate.m;
   end
   if nargin < 2
-    t = model.t;
+    t = model.candidate.t;
   end
 end
 
 gX_u = [];
 gX = [];
 
-g_scaleBias = gpScaleBiasGradient(model);
+%g_scaleBias = gpScaleBiasGradient(model);
 if isfield(model, 'meanFunction') & ~isempty(model.meanFunction)
   g_meanFunc = gpMeanFunctionGradient(model);
 else
@@ -36,7 +36,7 @@ end
 [gK_uf, gK_star] = gpsimCandidateCovGrads(model, M);
   
 %%% Compute Gradients of Kernel Parameters %%%
-g_param = kernGradient(model.candidate.kern, model.t, model.candidate.t, gK_uf);
+g_param = kernGradient(model.candidate.kern, model.candidate.t, model.t, gK_uf);
   
 % deal with diagonal term's affect on kernel parameters.
 g_param = g_param + kernGradient(model.candidate.kern, model.t, gK_star);
