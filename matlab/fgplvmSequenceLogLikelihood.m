@@ -18,8 +18,13 @@ function ll = fgplvmSequenceLogLikelihood(model, X, Y, varargin)
 % SEEALSO : fgplvmCreate, fgplvmOptimiseSequence, fgplvmSequenceObjective
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
+%
+% MODIFICATIONS : Carl Henrik Ek, 2007
 
 % FGPLVM
+if(nargin<3)
+  error('This function requires at least two arguments.');
+end
 
 logTwoPi = log(2*pi);
 if model.isMissingData
@@ -79,7 +84,11 @@ ll = -0.5*ll;
 if isfield(model, 'dynamics') & ~isempty(model.dynamics)
   % A dynamics model is being used.
   feval = str2func([model.dynamics.type 'SequenceLogLikelihood']);
-  ll = ll + feval(model.dynamics, X, varargin{:});
+  if isfield(model, 'dynamicsBalancing') & ~isempty(model.dynamicsBalancing)
+    ll = ll + model.dynamicsBalancing*feval(model.dynamics, X, varargin{:});
+  else
+    ll = ll + feval(model.dynamics, X, varargin{:});
+  end
 elseif isfield(model, 'prior') &  ~isempty(model.prior)
   for i = 1:size(X, 1)
     ll = ll + priorLogProb(model.prior, X(i, :));

@@ -24,7 +24,7 @@ legInd = [8:14];
 % Indices associated with upper body.
 bodyInd = [21:50];
 
-for experimentNo = 1:3;
+for experimentNo = 1:4;
 
   % Load saved model.
   capName = dataSetName;

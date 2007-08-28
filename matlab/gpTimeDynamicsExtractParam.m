@@ -35,7 +35,7 @@ end
 if ~model.learn 
   % If we aren't learning model parameters extract only X_u;
   if ~model.learnScales
-    if isfield(model, 'fixInducing') & mdoel.fixInducing
+    if isfield(model, 'fixInducing') & model.fixInducing
       param = [];
       names = {};
     else

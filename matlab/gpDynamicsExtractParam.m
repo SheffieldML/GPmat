@@ -1,4 +1,4 @@
-function [param, names] = gpDynamicsExtractParam(model)
+function [param, names] = gpDynamicsExtractParam(model, dim)
 
 % GPDYNAMICSEXTRACTPARAM Extract parameters from the GP dynamics model.
 % FORMAT
@@ -8,6 +8,7 @@ function [param, names] = gpDynamicsExtractParam(model)
 % the model.
 % RETURN params : a vector of parameters from the model.
 %
+% FORMAT
 % DESC does the same as above, but also returns parameter names.
 % ARG model : the model structure containing the information about
 % the model.
@@ -17,6 +18,8 @@ function [param, names] = gpDynamicsExtractParam(model)
 % SEEALSO : gpExtractParam, gpDynamicsCreate, gpDynamicsExpandParam, modelExtractParam
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
+%
+% MODIFICATIONS : Carl Henrik Ek, 2007
 
 % FGPLVM
 

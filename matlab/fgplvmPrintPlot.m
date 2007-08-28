@@ -36,7 +36,11 @@ figure
 clf
 ax = axes('position', [0.05 0.05 0.9 0.9]);
 hold on
-lvmTwoDPlot(model.X, lbls, getSymbols(size(lbls, 2)));
+if ~isempty(lbls)
+  lvmTwoDPlot(model.X, lbls, getSymbols(size(lbls, 2)));
+else
+  lvmTwoDPlot(model.X, lbls);
+end
 xLim = [min(model.X(:, 1)) max(model.X(:, 1))]*1.1;
 yLim = [min(model.X(:, 2)) max(model.X(:, 2))]*1.1;
 set(ax, 'xLim', xLim);

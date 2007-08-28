@@ -18,14 +18,25 @@ function g = fgplvmSequenceLogLikeGradient(model, X, Y, varargin)
 % SEEALSO : fgplvmSequenceLogLikelihood, fgplvmOptimiseSequence, fgplvmSequenceLogLikeGradient
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
+%
+% MODIFICATIONS : Cark Henrik Ek, 2007
 
 % FGPLVM
+if(nargin<3)
+  error('This function requires at least two arguments');
+end
 
 g = gpSequenceLogLikeGradient(model, X, Y);
 
 if isfield(model, 'dynamics') & ~isempty(model.dynamics)
   % A dynamics model is being used.
   feval = str2func([model.dynamics.type 'SequenceLogLikeGradient']);
+  % 'balancing' of the dynamics alla Urtasun.
+  if isfield(model, 'balancing') & ~isempty(model.balancing)
+    g = g + model.balancing*feval(model.dynamics, X);
+  else
+    g = g + feval(model.dynamics, X);
+  end
   g = g + feval(model.dynamics, X, varargin{:});
 elseif isfield(model, 'prior') &  ~isempty(model.prior)
   for i = 1:size(X, 1)

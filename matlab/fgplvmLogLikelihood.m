@@ -14,7 +14,7 @@ function ll = fgplvmLogLikelihood(model)
 
 % FGPLVM
 
-
+ 
 ll = gpLogLikelihood(model);
 
 if isfield(model, 'dynamics') & ~isempty(model.dynamics)

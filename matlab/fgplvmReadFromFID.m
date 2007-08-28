@@ -143,12 +143,7 @@ model = fgplvmCreate(latentDim, size(y, 2), y, options);
 model.X = X;
 model.scale = noise.scale;
 model.bias = noise.bias;
-for i = 1:model.d
-  model.m(:, i) = (y(:, i) - model.bias(i));
-  if model.scale(i)
-    model.m(:, i) = y(:, i)/model.scale(i);
-  end
-end
+model.m = gpComputeM(model);
 
 % This forces kernel computation.
 initParams = fgplvmExtractParam(model);
