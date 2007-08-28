@@ -1,7 +1,25 @@
 #include "CTransform.h"
 
 const double CTransform::eps = 1e-16;
-
+CTransform* CTransform::defaultPositive()
+{
+  return new CExpTransform();
+}
+CTransform* CTransform::defaultZeroOne()
+{
+  return new CSigmoidTransform();
+}
+CTransform* CTransform::getNewTransformPointer(const string transformType)
+{
+  if(transformType=="negLogLogit")
+    return new CNegLogLogitTransform();
+  else if(transformType=="sigmoid")
+    return new CSigmoidTransform();
+  else if(transformType=="exp")
+    return new CExpTransform();
+  else
+    throw ndlexceptions::Error("Transform type " + transformType + " is currently unknown.");
+}
 CExpTransform::CExpTransform()
 {
   transform = 1;
@@ -60,7 +78,6 @@ double CNegLogLogitTransform::xtoa(double x) const
 double CNegLogLogitTransform::gradfact(double x) const
 {
   double g;
-  assert(x>-limVal);
   if(x<limVal)
     g=(exp(x)-1)/exp(x);
   else
@@ -92,6 +109,49 @@ double CSigmoidTransform::gradfact(double x) const
   return x*(1-x);
 }
 
+void CParamTransforms::writeParamsToStream(ostream& out) const
+{
+  writeToStream(out, "numTransforms", getNumTransforms());
+  for(int i=0; i<getNumTransforms(); i++)
+  {
+    writeToStream(out, "type", getTransformType(i));
+    writeToStream(out, "index", getTransformIndex(i));
+  }
+}
+void CParamTransforms::readParamsFromStream(istream& in)
+{
+  transforms.clear();
+  transIndex.clear();
+  int numTrans = readIntFromStream(in, "numTransforms");
+  for(int i=0; i<numTrans; i++)
+  {
+    string trtype = readStringFromStream(in, "type");
+    int trIndex = readIntFromStream(in, "index");
+    addTransform(CTransform::getNewTransformPointer(trtype), trIndex);
+  }
+}
+void CParamTransforms::display(ostream& out) const
+{
+  out << "Parameter Transforms:" << endl;
+  for(int i=0; i<getNumTransforms(); i++)
+  {
+    out << "Transform type: " << getTransformType(i) << endl;
+    out << "Transform index: " << getTransformIndex(i) << endl;
+  }
+}
+bool CParamTransforms::equals(CParamTransforms transforms) const
+{
+  if(getNumTransforms()!=transforms.getNumTransforms())
+    return false;
+  for(int i=0; i<getNumTransforms(); i++)
+  {
+    if(getTransformType(i)!=transforms.getTransformType(i))
+      return false;
+    if(getTransformIndex(i)!=transforms.getTransformIndex(i))
+      return false;
+  }
+  return true;
+}
 
 #ifdef _NDLMATLAB
 mxArray* CParamTransforms::toMxArray() const
@@ -105,14 +165,13 @@ mxArray* CParamTransforms::toMxArray() const
   const char *compType[1];
   string trType;
   for(int i=0; i<getNumTransforms(); i++)
-    {
-      ind.setVals((double)(getTransformIndex(i)+1));
-      mxSetField(transformsArray, i, "index", ind.toMxArray());
-      trType = getTransformType(i);
-      compType[0] = trType.c_str();
-      mxSetField(transformsArray, i, "type", 
-		 mxCreateCharMatrixFromStrings(1, compType));
-    }
+  {
+    ind.setVals((double)(getTransformIndex(i)+1));
+    mxSetField(transformsArray, i, "index", ind.toMxArray());
+    trType = getTransformType(i);
+    compType[0] = trType.c_str();
+    mxSetField(transformsArray, i, "type", mxCreateCharMatrixFromStrings(1, compType));
+  }
   return transformsArray;
 }
 void CParamTransforms::fromMxArray(const mxArray* transformArray)
@@ -122,22 +181,16 @@ void CParamTransforms::fromMxArray(const mxArray* transformArray)
   vector<int> transformIndex;
   int counter = 0;
   for(int i=0; i<numTransforms; i++)
+  {
+    transformType=mxArrayExtractStringField(transformArray, "type", i);
+    transformIndex=mxArrayExtractVectorIntField(transformArray, "index", i);
+    for(int j=0; j<transformIndex.size(); j++)
     {
-      transformType=mxArrayExtractStringField(transformArray, "type", i);
-      transformIndex=mxArrayExtractVectorIntField(transformArray, "index", i);
-      for(int j=0; j<transformIndex.size(); j++)
-	{
-	  counter++;
-	  if(transformType=="negLogLogit")
-	    addTransform(new CNegLogLogitTransform, transformIndex[j]-1);
-	  else if(transformType=="sigmoid")
-	    addTransform(new CSigmoidTransform, transformIndex[j]-1);
-	  else if(transformType=="exp")
-	    addTransform(new CExpTransform, transformIndex[j]-1);
-	  else
-	    cerr << "Transform type " << transformType << " is currently unknown."<< endl;
-	}
-    }    
+      counter++;
+      CTransform* trans = CTransform::getNewTransformPointer(transformType);
+      addTransform(trans, transformIndex[j]-1);
+    }
+  }
 }
 
 #endif
