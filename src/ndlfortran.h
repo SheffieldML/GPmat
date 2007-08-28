@@ -65,5 +65,19 @@ extern "C" void dtransr_(double* A,
 		       const int& lwork,
 		       int& iok);
 
+// this is l-bfgs from http://www.ece.northwestern.edu/%7Enocedal/lbfgs.html
+extern "C" void lbfgs_(const int& numVariables, 
+		       const int& numCorrections,
+		       double* X,
+		       const double& funcVal,   // set by user to be func val.
+		       const double* gradVals,  // set by user to be grad vals.
+		       const bool diagCo,
+		       const double* diag,
+		       const int[2] iPrint,
+		       const double& prec,
+		       const double& xtol,
+		       double* W, // work vector size N(2M+1) + 2M
+		       int& iFlag);
+
 
 #endif

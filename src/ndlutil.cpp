@@ -190,6 +190,30 @@ namespace ndlutil {
 	return x2 * w;
       }
   }
+
+  // Give a random perumation of numbers.
+  vector<unsigned long> randpermTrunc(unsigned long maxVal, unsigned long length)
+  {
+	assert(length<=maxVal);
+    vector<unsigned long> perm;
+    vector<unsigned long> indices;
+    for(unsigned long i=0; i < maxVal; i++)
+    {
+      indices.push_back(i);
+    }
+    for(unsigned long i=0; i<length; i++)
+    {
+		unsigned long ind = (unsigned long)(ndlutil::rand()*indices.size());
+      perm.push_back(indices[ind]);
+      indices.erase(indices.begin()+ind);
+    }
+    return perm;
+  }
+  // give a truncation of a random permutation of numbers
+  vector<unsigned long> randperm(unsigned long maxVal)
+  {
+    return randpermTrunc(maxVal, maxVal);
+  }
   /******* Mersenne Twister Random number generator. **************/
   /* 
    A C-program for MT19937, with initialization improved 2002/1/26.

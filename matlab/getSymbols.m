@@ -13,7 +13,7 @@ function symbol = getSymbols(number)
 
 % NDLUTIL
 
-symbolColour = {'r', 'g', 'b', 'c', 'm', 'y'};
+symbolColour = {'r', 'g', 'b', 'c', 'm'}; %, 'y'};
 symbolShape = {'x', 'o', '+', '*', 's', 'd', 'v', '^', '<', '>', 'p'};
 counter = 0;
 while counter < number

@@ -679,15 +679,15 @@ doublereal dgrand_(integer *n)
 	    .088144619,.087187293,.086260215,.085361834,.084490706,.083645487,
 	    .082824924,.082027847,.081253162,.080499844,.079766932,.079053527,
 	    .078358781,.077681899 };
-    static real u = 0.f;
+    static doublereal u = 0.f;
 
     /* System generated locals */
-    real ret_val;
+    doublereal ret_val;
 
     /* Local variables */
     static doublereal a;
     static integer i__;
-    static real v, w;
+    static doublereal v, w;
     extern doublereal rand_(integer *);
 
 /* EXCEPT ON THE FIRST CALL GRAND RETURNS A */
@@ -1048,7 +1048,7 @@ L140:
     integer i__1, i__2;
 
     /* Local variables */
-    static real b;
+    static doublereal b;
     static integer i__, j, k, i1, i2, j1, m2, n1, ia, ib, kmi, max__, ncount;
 
 /* A IS A ONE-DIMENSIONAL ARRAY OF LENGTH MN=M*N, WHICH */
@@ -1225,7 +1225,7 @@ L93:
     integer i__1, i__2;
 
     /* Local variables */
-    static real b, c__, d__;
+    static doublereal b, c__, d__;
     static integer i__, j, k, i1, i2, j1, n1, im, i1c, i2c, ir0, ir1, ir2, 
 	    kmi, max__, ncount;
 

@@ -3,6 +3,7 @@
 #include <cmath>
 #include <climits>
 #include <cfloat>
+#include <cassert>
 #ifndef M_PI
 #define M_PI 3.1415926535897932384626433832795
 #endif
@@ -10,7 +11,9 @@
 #define M_LN2 0.69314718055994530941723212145818
 #endif
 #ifdef _MSC_VER
+#define __DBL_MIN__ 2.2250738585072014e-308
 #define isnan(x) _isnan(x)
+#define isinf(x) !_finite(x)
 #pragma warning(disable:4018) // < signed/unsigned mismatch
 #pragma warning(disable:4267) // conversion from size_t to int
 #pragma warning(disable:4800) // forcing double to bool (performance warning)
@@ -62,6 +65,11 @@ namespace ndlutil {
   double randn();
   // uniform deviates from (0.0, 1.0)
   double rand(); 
+
+  // Give a random perumation of numbers.
+  vector<unsigned long> randperm(unsigned long maxVal);
+  // give a truncation of a random permutation of numbers
+  vector<unsigned long> randpermTrunc(unsigned long maxVal, unsigned long length);
 
   /******** Mersenne Twister Random number generator ********/
   /* 
