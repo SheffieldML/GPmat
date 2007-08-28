@@ -35,21 +35,19 @@ class CDataModel : public CMatinterface // a model of a data set.
 #endif
 
 };
-class COptimisableModel : public CDataModel, public COptimisable
-{
+class COptimisableModel : public CDataModel, public COptimisable {
  public:
-  virtual inline void setVerbosity(const int val) const
-    {
+  virtual inline void setVerbosity(const int val) const {
       verbosity = val;
-    }  
-  virtual inline int getVerbosity() const
-    {
-      return verbosity;
-    }
+  }  
+  virtual inline int getVerbosity() const {
+    return verbosity;
+  }
  private:
   mutable int verbosity;
   
 };
+
 class CMapModel : public CDataModel // a model which maps from one data space to another.
 {
  public:

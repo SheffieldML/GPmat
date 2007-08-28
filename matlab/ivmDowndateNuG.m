@@ -14,7 +14,12 @@ function model = ivmDowndateNuG(model, index)
 
 % IVM
 
-
-model.nu(index, :) = 1./(1./model.beta(index, :) - model.varSigma(index, :));
+if isfield(model.kern, 'whiteVariance')
+  subTerm = model.varSigma(index, :)-model.kern.whiteVariance;
+else
+  subTerm = model.varSigma(index, :);
+end
+subTerm = model.varSigma(index, :);
+model.nu(index, :) = 1./(1./model.beta(index, :) - subTerm);
 model.g(index, :) = model.nu(index, :).*(model.mu(index, :) - model.m(index, :));
 

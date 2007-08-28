@@ -59,21 +59,24 @@ lengthIndex = length(model.I);
 betaChange = 1;
 oldBeta = model.beta;
 counter = 0;
+updateCount = 0;
 while betaChange > tol
   I = model.I;
-  counter = counter + 1;
+  updateCount = updateCount + 1;
   for i = I'
+    counter = counter + 1;
     model = ivmEpUpdatePoint(model, i);
-    if ~rem(counter, 101)
+    if ~rem(counter, 100)
       model = ivmComputeLandM(model);  
       [model.mu, model.varSigma] = ivmPosteriorMeanVar(model, model.X);
       model = ivmUpdateNuG(model);
+      fprintf('EP Recompute\n')
     end
   end
   model = ivmComputeLandM(model);  
   [model.mu, model.varSigma] = ivmPosteriorMeanVar(model, model.X);
   model = ivmUpdateNuG(model);
   betaChange = full(max(abs(model.beta - oldBeta)));
-  fprintf('EP Update %d, beta change %2.4f\n', counter, betaChange)
+  fprintf('EP Update %d, beta change %2.4f\n', updateCount, betaChange)
   oldBeta =  model.beta;
 end

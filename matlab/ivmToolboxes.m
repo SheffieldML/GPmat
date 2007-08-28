@@ -1,5 +1,6 @@
 % IVMTOOLBOXES Load in the toolboxes for the IVM.
 
+importLatest('netlab');
 importLatest('kern');
 importLatest('prior');
 importLatest('svml');

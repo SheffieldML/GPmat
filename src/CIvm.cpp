@@ -368,8 +368,9 @@ int CIvm::entropyPointAdd()
 int CIvm::randomPointAdd() 
 {
   // choose point from inactive set to add randomly.
-  int index = rand();
-  index = (index*inactiveSet.size())/RAND_MAX;
+  // Fix here 16/7/2007 --- change use of rand.
+  double prop = ndlutil::rand();
+  int index = (int)(prop*inactiveSet.size());
   index = inactiveSet[index];
   changeEntropy(entropyChangeAdd(index));
   return index;
@@ -558,21 +559,21 @@ CIvm::CIvm(const CMatrix& inData,
 
   for(int i=0; i<activeSet.size(); i++)
     K.setVal(kern.diagComputeElement(X, activeSet[i]), i, i);
-  K.writeMatlabFile("crap.mat", "K");
+  //  K.writeMatlabFile("crap.mat", "K");
   for(int j=0; j<numCovStruct; j++)
     {
       L[j].deepCopy(K);
-      L[j].updateMatlabFile("crap.mat", "KL");
+      //L[j].updateMatlabFile("crap.mat", "KL");
       for(int i=0; i<activeSetSize; i++)
 	{
 	  double lval = L[j].getVal(i, i);
 	  lval += 1/beta.getVal(i, j);
 	  L[j].setVal(lval, i, i);
 	}
-      L[j].updateMatlabFile("crap.mat", "KB");
+      //L[j].updateMatlabFile("crap.mat", "KB");
       L[j].setSymmetric(true);
       L[j].chol("L");
-      L[j].updateMatlabFile("crap.mat", "L");
+      //L[j].updateMatlabFile("crap.mat", "L");
       Linv[j].deepCopy(L[j]);
       // TODO should not use regular inverse here as matrix is lower triangular.
       Linv[j].inv();

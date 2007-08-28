@@ -16,7 +16,7 @@ experimentNo = 2;
 
 
 options = ivmOptions;
-options.kern = 'mlp';
+options.kern = {'mlp', 'white'};
 options.display = 2;
 options.numActive = 100;
 
