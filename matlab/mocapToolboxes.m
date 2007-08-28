@@ -1,2 +1,2 @@
-% Toolboxes required by the MOCAP toolbox.
+% MOCAPTOOLBOXES Toolboxes required by the MOCAP toolbox.
 importLatest('ndlutil')

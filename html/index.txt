@@ -11,19 +11,19 @@ The MATLAB motion capture toolbox allows loading and playing of BVH files in MAT
 
 RELEASEINFORMATION
 
-Bug fix release, to deal with bugs in mocapResultsCppBvh, thanks to Cedric Vanaken for pointing out the problem.
+<p>This latest release is a bug fix release, to deal with bugs in mocapResultsCppBvh, thanks to Cedric Vanaken for pointing out the problem.
 
 <h4>Release 0.132</h4>
 
-Moved tree handling code into NDLUTIL toolbox, version 0.156.
+<p>Moved tree handling code into NDLUTIL toolbox, version 0.156.
 
 <h4>Release 0.131</h4>
 
-This release fixes a bug where the left was displayed on the right and vice versa.
+<p>This release fixes a bug where the left was displayed on the right and vice versa.
 
 <h4>Release 0.13</h4>
 
-New in this release is the ability to lad data in the acclaim ASF/AMC format. See the example below for details.
+<p>New in this release is the ability to lad data in the acclaim ASF/AMC format. See the example below for details.
 
 
 <h2>Examples</h2>
