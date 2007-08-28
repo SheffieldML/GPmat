@@ -234,10 +234,10 @@ switch model.approx
     g_param = g_param ...
               + kernGradient(model.kern, X(ind, :), gK_star{i});
   end
-
+  
   % append beta gradient to end of parameters
   gParam = [g_param(:)' g_meanFunc g_scaleBias g_beta];
-
+  
  otherwise
   error('Unrecognised model approximation');
 end
