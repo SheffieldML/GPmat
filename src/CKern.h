@@ -49,6 +49,7 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
       for(int i=0; i<indices.size(); i++)
 	d.setVal(diagComputeElement(X, indices[i]), i);
     }
+ 
   // Set the parameters of the kernel.
   virtual void setParam(double, int)=0;
   // Get gradients of the kernel with respect to input values.
@@ -148,7 +149,23 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
       if(regularise)
 	addPriorGrad(g); /// don't forget to add prior gradient at the end.
     }
-  // Get gradient of a particular parameter.
+  virtual void getDiagGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrad, bool regularise=true) const
+    {
+	  //TODO Code explicitly for things like RBF where it will always be zero.
+      CMatrix xi(1, X.getCols());
+	  CMatrix cvGradi(1, 1);
+	  CMatrix gtemp(1, g.getCols());
+	  g.zeros();
+	  for(int i=0; i<X.getRows(); i++)
+	  {
+		xi.copyRowRow(0, X, i);
+		cvGradi.copyRowRow(0, cvGrad, i);
+		cvGradi.setSymmetric(true);
+		getGradParams(gtemp, xi, cvGradi, regularise);
+	    g.axpy(gtemp, 1.0);
+	  }
+	}
+	// Get gradient of a particular parameter.
   virtual double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const=0;
   virtual double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const=0;
   // Called to indicate the value of X has changed and kernel should do any
@@ -256,6 +273,7 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
   // Get the gradient of the transformed parameters.
   void getGradTransParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise=true) const;
   void getGradTransParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
+  void getDiagGradTransParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
   // specify tests for equality between kernels.
   bool equals(const CKern& kern, double tol=ndlutil::MATCHTOL) const;
   

@@ -72,6 +72,20 @@ void CKern::getGradTransParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGr
       g.setVal(val*getTransformGradFact(param, i), getTransformIndex(i));
     }  
 }
+void CKern::getDiagGradTransParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise) const
+{
+  assert(g.getRows()==1);
+  assert(g.getCols()==getNumParams());
+  getDiagGradParams(g, X, cvGrd, regularise);
+  double val;
+  double param;
+  for(int i=0; i<getNumTransforms(); i++)
+    {
+      val=g.getVal(getTransformIndex(i));
+      param=getParam(getTransformIndex(i));
+      g.setVal(val*getTransformGradFact(param, i), getTransformIndex(i));
+    }  
+}
 bool CKern::equals(const CKern& kern, double tol) const
 {
   if(getType()!=kern.getType())
