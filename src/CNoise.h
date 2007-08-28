@@ -308,42 +308,51 @@ class CGaussianNoise : public CNoise {
   void out(CMatrix& yPred, CMatrix& errorBarOut, const CMatrix& muTest, const CMatrix& varSigmaTest) const;
   void likelihoods(CMatrix& L, const CMatrix& muTest, const CMatrix& varSigmaTest, const CMatrix& yTest) const;
   double logLikelihood(const CMatrix& muTest, const CMatrix& varSigmaTest, const CMatrix& yTest) const;
-  double logLikelihood() const
-    {
-      return logLikelihood(mu, varSigma, y);
-    }
+  double logLikelihood() const {
+    return logLikelihood(mu, varSigma, y);
+  }
   void  getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
   
-  inline double getMu(int i, int j) const
-    {
-      return mu.getVal(i, j);
-    }
-  inline void setMu(double val, int i, int j) 
-    {
-      mu.setVal(val, i, j);
-    }
-  inline double getVarSigma(int i, int j) const
-    {
-      return varSigma.getVal(i, j);
-    }
-  inline void setVarSigma(double val, int i, int j) 
-    {
-      assert(!isnan(val));
-      assert(val>=0);
-      varSigma.setVal(val, i, j);
-    }
-  inline double getTarget(int i, int j) const
-    {
-      return y.getVal(i, j);
-    }
-  void setTarget(const CMatrix& vals)
-    {
-      y.deepCopy(vals);
-      setNumData(vals.getRows());
-      setNumProcesses(vals.getCols());
-      initStoreage();
-      initNames();      
-    }
+  inline double getMu(int i, int j) const {
+    return mu.getVal(i, j);
+  }
+  inline void setMu(double val, int i, int j) {
+    mu.setVal(val, i, j);
+  }
+  inline double getVarSigma(int i, int j) const {
+    return varSigma.getVal(i, j);
+  }
+  inline void setVarSigma(double val, int i, int j) {
+    assert(!isnan(val));
+    assert(val>=0);
+    varSigma.setVal(val, i, j);
+  }
+  inline double getTarget(int i, int j) const {
+    return y.getVal(i, j);
+  }
+  void setTarget(const CMatrix& vals) {
+    y.deepCopy(vals);
+    setNumData(vals.getRows());
+    setNumProcesses(vals.getCols());
+    initStoreage();
+    initNames();      
+  }
+  double getBiasVal(const int index) const {
+    assert(index<getNumProcesses());
+    assert(index>=0);
+    return bias.getVal(0, index);
+  }
+  void setBiasVal(const double val, const int index) {
+    assert(index<getNumProcesses());
+    assert(index>=0);
+    bias.setVal(val, 0, index);
+  }
+  void setBias(const CMatrix& bia) {
+    assert(bia.getRows()==1);
+    assert(bia.getCols()==getNumProcesses());
+    bias.deepCopy(bia);
+  }
+  
 #ifdef _NDLMATLAB
   // Adds parameters to the mxArray.
   void addParamToMxArray(mxArray* matlabArray) const;
@@ -351,7 +360,7 @@ class CGaussianNoise : public CNoise {
   void extractParamFromMxArray(const mxArray* matlabArray);
 #endif
  private:
-
+  
   double sigma2;
   CMatrix bias;
 };
