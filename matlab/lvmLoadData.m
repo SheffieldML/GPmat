@@ -57,6 +57,13 @@ switch dataset
   Y(find(Y==-100))=NaN;
   Y = (Y + 85)/15;
 
+ case 'osr'
+  t = linspace(-pi, pi, 256);
+  window = (cos(t) + 1)/2;
+  [x, fs] = wavread([baseDir 'osr' dirSep 'OSR_uk_000_0020_8k.wav']);
+  [r, theta] = stft(x, fs, 256, window);
+  Y = [r(:, 1:32) theta(:, 1:32)];
+  
  case 'cmu35gplvm'
   [Y, lbls, Ytest, lblstest] = lvmLoadData('cmu35WalkJog');
   skel = acclaimReadSkel([baseDir 'mocap' dirSep 'cmu' dirSep '35' dirSep '35.asf']);
