@@ -10,28 +10,33 @@
 const string DISTVERSION="0.1";
 
 // Base distribution class.
-class CDist : public CMatinterface, public CTransformable {
+class CDist : public CMatInterface, public CStreamInterface, public CTransformable {
   
  public:
   CDist(){}
   virtual ~CDist(){}
   int getNumParams() const
-    {
-      return nParams;
-    }
+  {
+    return nParams;
+  }
   void setNumParams(int num)
-    {
-      nParams = num;
-    }
+  {
+    nParams = num;
+  }
   virtual double getParam(int paramNo) const=0;
   virtual void setParam(double val, int paramNo)=0;
   virtual void getGradParams(CMatrix& g) const
-    {
-      // This is a dummy function
-      cerr << "getGradParams should not be used in CDist" << endl;
-      exit(1);
-    }
-
+  {
+    // This is a dummy function
+    cerr << "getGradParams should not be used in CDist" << endl;
+    exit(1);
+  }
+  string getBaseType() const
+  {
+    return "dist";
+  }
+  
+  
 #ifdef _NDLMATLAB
   // returns an mxArray of the dist for use with matlab.
   virtual mxArray* toMxArray() const;
@@ -106,6 +111,7 @@ class CDist : public CMatinterface, public CTransformable {
     }
   
  private:
+  void _init();
   int nParams;
   string type;
   string distName;
@@ -134,6 +140,7 @@ class CGaussianDist : public CDist {
   double logProb(double val) const;
 
  private:
+   void _init();
   double precision;
 };
 
@@ -155,6 +162,7 @@ class CGammaDist : public CDist {
   double logProb(double val) const;
 
  private:
+   void _init();
   double a;
   double b;
 };
@@ -177,10 +185,11 @@ class CWangDist : public CDist {
   double logProb(double val) const;
 
  private:
+   void _init();
   double M;
 };
 // A class which stores distributions in a container for priors over parameters.
-class CParamPriors : CMatinterface {
+class CParamPriors : CMatInterface {
   
  public:
 #ifdef _NDLMATLAB
@@ -279,7 +288,7 @@ class CRegularisable {
 	  getline(in, line);
 	  ndlstrutil::tokenise(tokens, line, "=");
 	  if(tokens.size()>2 || tokens[0]!="priorIndex")
-	    throw ndlexceptions::FileFormatError();
+	    throw ndlexceptions::StreamFormatError("priorIndex");
 	  prior = readDistFromStream(in);
 	  addPrior(prior, atol(tokens[1].c_str()));
 	  tokens.clear();

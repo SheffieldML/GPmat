@@ -3,30 +3,20 @@
 
 void CDist::writeParamsToStream(ostream& out) const
 {
-  out << "numParams=" << getNumParams() << endl;
-  for(int i=0; i<getNumParams()-1; i++)
-    out << getParam(i) << " ";
-  out << getParam(getNumParams()-1) << endl;
+  writeToStream(out, "numParams", getNumParams());
+  CMatrix par(1, getNumParams());
+  getParams(par);
+  par.toStream(out);
 }
 void CDist::readParamsFromStream(istream& in)
 {
-  string line;
-  vector<string> tokens;
-  getline(in, line);
-  ndlstrutil::tokenise(tokens, line, "=");
-  if(tokens.size()>2 || tokens[0]!="numParams")
-    throw ndlexceptions::FileFormatError();
-  int numParams=atol(tokens[1].c_str());
-  CMatrix par(1, numParams);
-  tokens.clear();
-  getline(in, line);
-  ndlstrutil::tokenise(tokens, line, " ");
-  for(int i=0; i<numParams; i++)
-    par.setVal(atof(tokens[i].c_str()), i);
-  if(numParams==getNumParams())
+  int nPars = readIntFromStream(in, "numParams");
+  CMatrix par(1, nPars);
+  par.fromStream(in);
+  if(nPars==getNumParams())
     setParams(par);
   else
-    throw ndlexceptions::FileFormatError();
+    throw ndlexceptions::StreamFormatError("numParams", "Listed number of parameters does not match computed number of parameters.");
 }
 bool CDist::equals(const CDist& dist, double tol) const
 {
@@ -69,10 +59,10 @@ mxArray* CDist::toMxArray() const
 void CDist::fromMxArray(const mxArray* matlabArray) 
 {
   string mxType = mxArrayExtractStringField(matlabArray, "type");
-  if(mxType!=type)
-    {
-      throw ndlexceptions::MatlabInterfaceError("Error mismatch between saved type, " + mxType + ", and Class type, " + type + ".");
-    }
+  if(mxType!=getType())
+  {
+    throw ndlexceptions::FileReadError("Error mismatch between saved type, " + mxType + ", and Class type, " + getType() + ".");
+  }
   mxArray* transformArray = mxArrayExtractMxArrayField(matlabArray, "transforms");
   // transforms field.
   transformsFromMxArray(transformArray);
@@ -103,10 +93,12 @@ void CDist::addParamToMxArray(mxArray* matlabArray) const
 #endif /* _NDLMATLAB*/
 CGaussianDist::CGaussianDist()
 {
+  _init();
   setInitParam();
 }
 CGaussianDist::CGaussianDist(const CGaussianDist& dist) : precision(dist.precision)
 {
+  _init();
 }
 CGaussianDist::~CGaussianDist()
 {
@@ -117,39 +109,37 @@ void CGaussianDist::setParam(double val, int index)
   assert(index>=0);
   assert(index<getNumParams());
   switch(index)
-    {
-    case 0:
-      precision = val;
-      break;
-    default:
-      cerr << "No such parameter" << endl;
-      exit(1);
-    }
-
+  {
+  case 0:
+    precision = val;
+    break;
+  default:
+    throw ndlexceptions::Error("Requested parameter doesn't exist.");
+  } 
 }
 double CGaussianDist::getParam(const int index) const
 {
   assert(index>=0);
   assert(index<getNumParams());
   switch(index)
-    {
-    case 0:
-      return precision;
-    default:
-      cerr << "No such parameter" << endl;
-      exit(1);
-    }
-  // WVB ADDED
-  return -1;
+  {
+  case 0:
+    return precision;
+  default:
+    throw ndlexceptions::Error("Requested parameter doesn't exist.");
+  }
+}
+void CGaussianDist::_init()
+{
+  setNumParams(1);
+  setType("gaussian");
+  setName("Gaussian prior");
+  setParamName("precision", 0);
+  addTransform(new CNegLogLogitTransform, 0);
 }
 void CGaussianDist::setInitParam()
 {
-  setType("gaussian");
-  setNumParams(1);
-  setName("Gaussian prior");
-  setParamName("precision", 0);
   precision = 1.0;
-  addTransform(new CNegLogLogitTransform, 0);
 }
 double CGaussianDist::logProb(double x) const
 {
@@ -163,10 +153,12 @@ double CGaussianDist::getGradInput(double x) const
 // Gamma prior.
 CGammaDist::CGammaDist()
 {
+  _init();
   setInitParam();
 }
 CGammaDist::CGammaDist(const CGammaDist& dist) : a(dist.a), b(dist.b)
 {
+  _init();
 }
 CGammaDist::~CGammaDist()
 {
@@ -176,47 +168,45 @@ void CGammaDist::setParam( double val,  int index)
   assert(index>=0);
   assert(index<getNumParams());
   switch(index)
-    {
-    case 0:
-      a = val;
-      break;
-    case 1:
-      b = val;
-      break;
-    default:
-      cerr << "No such parameter" << endl;
-      exit(1);
-    }
-
+  {
+  case 0:
+    a = val;
+    break;
+  case 1:
+    b = val;
+    break;
+  default:
+    throw ndlexceptions::Error("Requested parameter doesn't exist.");
+  }
 }
 double CGammaDist::getParam(const int index) const
 {
   assert(index>=0);
   assert(index<getNumParams());
   switch(index)
-    {
-    case 0:
-      return a;
-    case 1:
-      return b;
-    default:
-      cerr << "No such parameter" << endl;
-      exit(1);
-    }
-  // WVB ADDED
-  return -1;
+  {
+  case 0:
+    return a;
+  case 1:
+    return b;
+  default:
+    throw ndlexceptions::Error("Requested parameter doesn't exist.");
+  }
+}
+void CGammaDist::_init()
+{
+  setNumParams(2);  
+  setType("gamma");
+  setName("gamma prior");
+  setParamName("a", 0);
+  addTransform(new CNegLogLogitTransform, 0);
+  setParamName("b", 1);
+  addTransform(new CNegLogLogitTransform, 1);
 }
 void CGammaDist::setInitParam()
 {
-  setType("gamma");
-  setName("gamma prior");
-  setNumParams(2);  
-  setParamName("a", 0);
   a=1e-6;
-  setParamName("b", 1);
   b=1e-6;
-  addTransform(new CNegLogLogitTransform, 0);
-  addTransform(new CNegLogLogitTransform, 1);
 }
 double CGammaDist::logProb(double x) const
 {
@@ -230,10 +220,12 @@ double CGammaDist::getGradInput(double x) const
 // Wang's unusual prior from the GPDM thesis.
 CWangDist::CWangDist()
 {
+  _init();
   setInitParam();
 }
 CWangDist::CWangDist(const CWangDist& dist) : M(dist.M)
 {
+  _init();
 }
 CWangDist::~CWangDist()
 {
@@ -243,38 +235,37 @@ void CWangDist::setParam( double val,  int index)
   assert(index>=0);
   assert(index<getNumParams());
   switch(index)
-    {
-    case 0:
-      M = val;
-      break;
-    default:
-      cerr << "No such parameter" << endl;
-      exit(1);
-    }
-
+  {
+  case 0:
+    M = val;
+    break;
+  default:
+    throw ndlexceptions::Error("Requested parameter doesn't exist.");
+  }
 }
 double CWangDist::getParam(const int index) const
 {
   assert(index>=0);
   assert(index<getNumParams());
   switch(index)
-    {
-    case 0:
-      return M;
-    default:
-      cerr << "No such parameter" << endl;
-      exit(1);
-    }
-  return -1;
+  {
+  case 0:
+    return M;
+  default:
+    throw ndlexceptions::Error("Requested parameter doesn't exist.");
+  }
 }
-void CWangDist::setInitParam()
+void CWangDist::_init()
 {
   setType("wang");
   setName("Wang's GPDM prior");
   setNumParams(1);  
   setParamName("M", 0);
-  M=1;
   addTransform(new CNegLogLogitTransform, 0);
+}
+void CWangDist::setInitParam()
+{
+  M=1;
 }
 double CWangDist::logProb(double x) const
 {
@@ -297,14 +288,14 @@ mxArray* CParamPriors::toMxArray() const
   const char *compType[1];
   string trType;
   for(int i=0; i<getNumDists(); i++)
-    {
-      ind.setVals((double)(getDistIndex(i)+1));
-      mxSetField(distsArray, i, "index", ind.toMxArray());
-      trType = getDistType(i);
-      compType[0] = trType.c_str();
-      mxSetField(distsArray, i, "type", 
-		 mxCreateCharMatrixFromStrings(1, compType));
-    }
+  {
+    ind.setVals((double)(getDistIndex(i)+1));
+    mxSetField(distsArray, i, "index", ind.toMxArray());
+    trType = getDistType(i);
+    compType[0] = trType.c_str();
+    mxSetField(distsArray, i, "type", 
+	       mxCreateCharMatrixFromStrings(1, compType));
+  }
   return distsArray;
 }
 void CParamPriors::fromMxArray(const mxArray* distArray)
@@ -314,50 +305,39 @@ void CParamPriors::fromMxArray(const mxArray* distArray)
   vector<int> distIndex;
   int counter = 0;
   for(int i=0; i<numDists; i++)
+  {
+    distType=mxArrayExtractStringField(distArray, "type", i);
+    distIndex=mxArrayExtractVectorIntField(distArray, "index", i);
+    for(int j=0; j<distIndex.size(); j++)
     {
-      distType=mxArrayExtractStringField(distArray, "type", i);
-      distIndex=mxArrayExtractVectorIntField(distArray, "index", i);
-      for(int j=0; j<distIndex.size(); j++)
-	{
-	  counter++;
-	  if(distType=="gamma")
-	    addDist(new CGammaDist, distIndex[j]-1);
-	  else if(distType=="wang")
-	    addDist(new CWangDist, distIndex[j]-1);
-	  else if(distType=="gaussian")
-	    addDist(new CGaussianDist, distIndex[j]-1);
-	  else
-	    cerr << "Dist type " << distType << " is currently unknown."<< endl;
-	}
-    }    
+      counter++;
+      if(distType=="gamma")
+	addDist(new CGammaDist, distIndex[j]-1);
+      else if(distType=="wang")
+	addDist(new CWangDist, distIndex[j]-1);
+      else if(distType=="gaussian")
+	addDist(new CGaussianDist, distIndex[j]-1);
+      else
+	throw ndlexceptions::NotImplementedError("Dist type " + distType + " is currently not implemented.");
+    }
+  }    
 }
 
 #endif
+
 void writeDistToStream(const CDist& dist, ostream& out)
 {
-  out << "distVersion=" << DISTVERSION << endl;
-  out << "type=" << dist.getType() << endl;
-  dist.writeParamsToStream(out);
+  dist.toStream(out);
 }
 CDist* readDistFromStream(istream& in)
 {
+  double ver = CStreamInterface::readVersionFromStream(in); 
+  string tbaseType = CStreamInterface::getBaseTypeStream(in);
+  if(tbaseType != "dist")
+    throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, dist.");
   CDist* pdist;
-  string line;
-  vector<string> tokens;
-  // first line is version info.
-  getline(in, line);
-  ndlstrutil::tokenise(tokens, line, "=");
-  if(tokens.size()>2 || tokens[0]!="distVersion")
-    throw ndlexceptions::FileFormatError();
-  if(tokens[1]!="0.1")
-    throw ndlexceptions::FileVersionError();
-  // next line is type.
-  tokens.clear();
-  getline(in, line);
-  ndlstrutil::tokenise(tokens, line, "=");
-  if(tokens.size()>2 || tokens[0]!="type")
-    throw ndlexceptions::FileFormatError();
-  string type=tokens[1];
+
+  string type = CStreamInterface::getTypeStream(in);
   if(type=="gaussian")
     pdist = new CGaussianDist();
   else if(type=="gamma")
@@ -365,8 +345,7 @@ CDist* readDistFromStream(istream& in)
   else if(type=="wang")
     pdist = new CWangDist();
   else
-    throw ndlexceptions::FileFormatError();
-  pdist->readParamsFromStream(in);
-    
+    throw ndlexceptions::StreamFormatError("type", "Unknown distribution type " + type + ".");
+  pdist->readParamsFromStream(in);  
   return pdist;
 }
