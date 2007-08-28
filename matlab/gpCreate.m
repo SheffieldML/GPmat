@@ -14,6 +14,8 @@ function model = gpCreate(q, d, X, y, options);
 % SEEALSO : gpOptions, modelCreate
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
+%
+% MODIFICATIONS : Cark Henrik Ek, 2007
 
 % GP
 
@@ -81,6 +83,16 @@ else
     end
   end
 end
+if(isfield(options,'scale2var1'))
+  if(options.scale2var1)
+    model.scale = std(model.y);
+    model.scale(find(model.scale==0)) = 1;
+    if(model.learnScales)
+      warning('Both learn scales and scale2var1 set for GP');
+    end
+  end
+end
+
 
 model.m = gpComputeM(model);
 
@@ -161,4 +173,5 @@ initParams = gpExtractParam(model);
 
 % This forces kernel computation.
 model = gpExpandParam(model, initParams);
+
 

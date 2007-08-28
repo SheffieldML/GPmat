@@ -47,7 +47,7 @@ switch model.approx
       ll = ll - 0.5*((-(model.N-model.k)*log(model.beta) ...
                       - model.logDetK_uu +model.logdetA(i)) ...
                      - (e'*model.Ainv{i}*e ...
-                   -model.m(ind, i)'*model.m(ind, i))* ...
+                        -model.m(ind, i)'*model.m(ind, i))* ...
                      model.beta);
       if(isnan(ll))
         error('Log likelihood is NaN')
@@ -149,4 +149,6 @@ switch model.approx
     ll = -0.5*ll;
   end
 end
-ll = ll - sum(log(model.scale));
+if model.learnScales
+  ll = ll - sum(log(model.scale));
+end

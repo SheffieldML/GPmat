@@ -27,11 +27,17 @@ switch model.approx
  case 'ftc'
   % Long term should allow different kernels in each dimension here.
   model.K_uu = kernCompute(model.kern, X);
-  
+    
   if ~isfield(model, 'isSpherical') | model.isSpherical
+    % Add inverse beta to diagonal if it exists.
+    if isfield(model, 'beta')
+      model.K_uu(1:size(model.K_uu, 1)+1:end) = ...
+          model.K_uu(1:size(model.K_uu, 1)+1:end) + 1./model.beta;
+    end
     [model.invK_uu, U] = pdinv(model.K_uu);
     model.logDetK_uu = logdet(model.K_uu, U);
   else   
+    % TODO: Need to deal with adding in beta here.
     for i = 1:model.d
       ind = gpDataIndices(model, i);
       [model.invK_uu{i}, U] = pdinv(model.K_uu(ind, ind));
