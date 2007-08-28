@@ -24,4 +24,4 @@ ivmInfo.I = model.I;
 ivmInfo.J = model.J;
 ivmInfo.m = model.m;
 ivmInfo.beta = model.beta;
-
+ivmInfo.type = 'ivm';

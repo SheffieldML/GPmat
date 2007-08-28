@@ -1,50 +1,72 @@
 #include "CIvm.h"
-CIvm::CIvm(const CMatrix& inData, const CMatrix& targetData, 
-	   CKern& kernel, CNoise& noiseModel, int selectCrit,
-	   int dVal, int verbosity) 
-  : X(inData), y(targetData), kern(kernel), 
-    noise(noiseModel), selectionCriterion(selectCrit), numTarget(y.getCols()), numData(y.getRows()), lastEntropyChange(0.0), cumEntropy(0.0), activeSetSize(dVal)
+
+CIvm::CIvm()
+{ 
+  _init();
+  pkern=NULL;
+  pnoise=NULL;
+}
+void CIvm::_init()
 {
+  setType("ivm");
+  setName("informative vector machine");
+  lastEntropyChange = 0.0;
+  cumEntropy = 0.0;
+  epUpdate = false;
+  terminate = false;
+}
+CIvm::CIvm(CMatrix* inData, CMatrix* targetData, 
+	   CKern* pkernel, CNoise* pnoiseModel, int selectCrit,
+	   int dVal, int verbosity) 
+  : CMapModel(inData->getCols(), targetData->getCols(), inData->getRows()), CProbabilisticOptimisable(), pX(inData), py(targetData), pkern(pkernel), 
+    pnoise(pnoiseModel), selectionCriterion(selectCrit), numTarget(targetData->getCols()), numData(targetData->getRows()), activeSetSize(dVal)
+{
+  _init();
   if(dVal>numData)
     throw ndlexceptions::Error("Active set is larger than data set.");
-  assert(X.getRows()==y.getRows());
+  assert(pX->getRows()==py->getRows());
   setVerbosity(verbosity);
-  terminate = false;
-  noise.setVerbosity(getVerbosity());
-  epUpdate = false;
-  loadedModel = false;
+  pnoise->setVerbosity(getVerbosity());
   init();
 }
-CIvm::CIvm(const CMatrix& actX, const CMatrix& actY, 
-     const CMatrix& mmat, const CMatrix& betamat, 
-     const vector<int> actSet, CKern& kernel, 
-     CNoise& noiseModel, int selectCrit, 
-	   int verbosity) : X(actX), y(actY), activeX(actX), activeY(actY), m(mmat), beta(betamat), kern(kernel), activeSet(actSet), noise(noiseModel), selectionCriterion(selectCrit), numTarget(actY.getCols()), numData(actY.getRows()), lastEntropyChange(0.0), cumEntropy(0.0), activeSetSize(activeSet.size())
+CIvm::CIvm(CMatrix& actX, CMatrix& actY, 
+	   CMatrix& mmat, CMatrix& betamat, 
+	   vector<int> actSet, CKern* pkernel, 
+	   CNoise* pnoiseModel, int selectCrit, 
+	   int verbosity) 
+  : CMapModel(actX.getCols(), actY.getCols(), actX.getRows()), 
+    CProbabilisticOptimisable(), pX(&actX), py(&actY), 
+    activeX(actX), activeY(actY), m(mmat), beta(betamat), 
+    pkern(pkernel), activeSet(actSet), pnoise(pnoiseModel), 
+    selectionCriterion(selectCrit),  activeSetSize(activeSet.size())
 {
   assert(activeX.getRows()==activeY.getRows());
+  _init();
   setVerbosity(verbosity);
-  terminate = false;
-  noise.setVerbosity(getVerbosity());
-  epUpdate = false;
-  loadedModel = true;
+  pnoise->setVerbosity(getVerbosity());
   initStoreage();
   updateK();
   updateInvK();
   for(int j=0; j<numCovStruct; j++)
+  {
+    L[j].deepCopy(K);
+    for(int i=0; i<activeSetSize; i++)
     {
-      L[j].deepCopy(K);
-      for(int i=0; i<activeSetSize; i++)
-	{
-	  double lval = L[j].getVal(i, i);
-	  lval += 1/beta.getVal(i, j);
-	  L[j].setVal(lval, i, i);
-	}
-      L[j].setSymmetric(true);
-      L[j].chol("L");
-      Linv[j].deepCopy(L[j]);
-      // TODO should not use regular inverse here as matrix is lower triangular.
-      Linv[j].inv();
+      double lval = L[j].getVal(i, i);
+      lval += 1/beta.getVal(i, j);
+      L[j].setVal(lval, i, i);
     }
+    L[j].setSymmetric(true);
+    L[j].chol("L");
+    Linv[j].deepCopy(L[j]);
+    // TODO should not use regular inverse here as matrix is lower triangular.
+    Linv[j].inv();
+  }
+}
+void CIvm::init()
+{
+  initStoreage();
+  initVals();
 }
 void CIvm::test(const CMatrix& ytest, const CMatrix& Xin) const
 {
@@ -53,7 +75,7 @@ void CIvm::test(const CMatrix& ytest, const CMatrix& Xin) const
   CMatrix muout(Xin.getRows(), numTarget);
   CMatrix varSigmaOut(Xin.getRows(), numTarget);
   posteriorMeanVar(muout, varSigmaOut, Xin);
-  noise.test(muout, varSigmaOut, ytest);
+  pnoise->test(muout, varSigmaOut, ytest);
 }
 void CIvm::likelihoods(CMatrix& pout, CMatrix& yTest, const CMatrix& Xin) const
 {
@@ -63,17 +85,17 @@ void CIvm::likelihoods(CMatrix& pout, CMatrix& yTest, const CMatrix& Xin) const
   CMatrix muout(Xin.getRows(), numTarget);
   CMatrix varSigmaOut(Xin.getRows(), numTarget);
   posteriorMeanVar(muout, varSigmaOut, Xin);
-  noise.likelihoods(pout, muout, varSigmaOut, yTest);
+  pnoise->likelihoods(pout, muout, varSigmaOut, yTest);
 }
 double CIvm::logLikelihood(const CMatrix& yTest, const CMatrix& Xin) const
 {
   assert(yTest.getRows()==Xin.getRows());
-  assert(getNumInputs()==Xin.getCols());
-  assert(getNumProcesses()==yTest.getCols());
+  assert(getInputDim()==Xin.getCols());
+  assert(getOutputDim()==yTest.getCols());
   CMatrix muout(Xin.getRows(), numTarget);
   CMatrix varSigmaOut(Xin.getRows(), numTarget);
   posteriorMeanVar(muout, varSigmaOut, Xin);
-  return noise.logLikelihood(muout, varSigmaOut, yTest)+kern.priorLogProb();
+  return pnoise->logLikelihood(muout, varSigmaOut, yTest)+pkern->priorLogProb();
 }
 void CIvm::out(CMatrix& yout, const CMatrix& Xin) const
 {
@@ -82,7 +104,7 @@ void CIvm::out(CMatrix& yout, const CMatrix& Xin) const
   CMatrix muout(Xin.getRows(), numTarget);
   CMatrix varSigmaOut(Xin.getRows(), numTarget);
   posteriorMeanVar(muout, varSigmaOut, Xin);
-  noise.out(yout, muout, varSigmaOut);
+  pnoise->out(yout, muout, varSigmaOut);
 }
 void CIvm::out(CMatrix& yout, CMatrix& probout, const CMatrix& Xin) const
 {
@@ -91,49 +113,57 @@ void CIvm::out(CMatrix& yout, CMatrix& probout, const CMatrix& Xin) const
   CMatrix muout(Xin.getRows(), numTarget);
   CMatrix varSigmaOut(Xin.getRows(), numTarget);
   posteriorMeanVar(muout, varSigmaOut, Xin);
-  noise.out(yout, probout, muout, varSigmaOut);
+  pnoise->out(yout, probout, muout, varSigmaOut);
+}
+double CIvm::outGradParams(CMatrix& g, const CMatrix &Xin, const int pointNo, const int outputNo) const
+{
+  throw ndlexceptions::NotImplementedError("outGradParams not yet implemented for CIvm.");
+}
+double CIvm::outGradX(CMatrix& g, const CMatrix &Xin, const int pointNo, const int outputNo) const
+{
+  throw ndlexceptions::NotImplementedError("outGradX not yet implemented for CIvm.");
 }
 void CIvm::posteriorMeanVar(CMatrix& mu, CMatrix& varSigma, const CMatrix& Xin) const
 {
   assert(mu.getCols()==numTarget);
   assert(varSigma.getCols()==numTarget);
   CMatrix kX(activeSetSize, Xin.getRows());
-  kern.compute(kX, activeX, Xin);
+  pkern->compute(kX, activeX, Xin);
   if(numCovStruct==1)
-      {
-	kX.trsm(L[0], 1.0, "L", "L", "N", "N"); // now it is Linvk
-	for(int i=0; i<Xin.getRows(); i++)
-	  {
-	    double vsVal = kern.diagComputeElement(Xin, i) - kX.norm2Col(i);
-	    assert(vsVal>=0);
-	    for(int j=0; j<numTarget; j++)
-	      varSigma.setVal(vsVal, i, j);	    
-	  }
-	kX.trsm(L[0], 1.0, "L", "L", "T", "N"); // now it is Kinvk
-	mu.gemm(kX, m, 1.0, 0.0, "T", "N");
-      }
-  else
+  {
+    kX.trsm(L[0], 1.0, "L", "L", "N", "N"); // now it is Linvk
+    for(int i=0; i<Xin.getRows(); i++)
     {
-      CMatrix Lk(activeSetSize, Xin.getRows());
-      
-      for(int k=0; k<numCovStruct; k++)
-	{
-	  Lk.deepCopy(kX);
-	  Lk.trsm(L[k], 1.0, "L", "L", "N", "N");
-	  for(int i=0; i<Xin.getRows(); i++)
-	    {
-	      double vsVal=kern.diagComputeElement(Xin, i) - Lk.norm2Col(i);
-	      assert(vsVal>=0);
-	      varSigma.setVal(vsVal, i, k);
-	    }
-	  Lk.trsm(L[k], 1.0, "L", "L", "T", "N"); // now it is Kinvk
-	  mu.gemvColCol(k, Lk, m, k, 1.0, 0.0, "N");
-	}
+      double vsVal = pkern->diagComputeElement(Xin, i) - kX.norm2Col(i);
+      assert(vsVal>=0);
+      for(int j=0; j<numTarget; j++)
+	varSigma.setVal(vsVal, i, j);	    
     }
+    kX.trsm(L[0], 1.0, "L", "L", "T", "N"); // now it is Kinvk
+    mu.gemm(kX, m, 1.0, 0.0, "T", "N");
+  }
+  else
+  {
+    CMatrix Lk(activeSetSize, Xin.getRows());
+      
+    for(int k=0; k<numCovStruct; k++)
+    {
+      Lk.deepCopy(kX);
+      Lk.trsm(L[k], 1.0, "L", "L", "N", "N");
+      for(int i=0; i<Xin.getRows(); i++)
+      {
+	double vsVal=pkern->diagComputeElement(Xin, i) - Lk.norm2Col(i);
+	assert(vsVal>=0);
+	varSigma.setVal(vsVal, i, k);
+      }
+      Lk.trsm(L[k], 1.0, "L", "L", "T", "N"); // now it is Kinvk
+      mu.gemvColCol(k, Lk, m, k, 1.0, 0.0, "N");
+    }
+  }
 }
 void CIvm::initStoreage()
 {
-  if(noise.isSpherical())
+  if(pnoise->isSpherical())
     numCovStruct = 1;
   else
     numCovStruct = numTarget;
@@ -154,14 +184,14 @@ void CIvm::initStoreage()
   L = new CMatrix[numCovStruct];
   Linv = new CMatrix[numCovStruct];
   for(int c=0; c<numCovStruct; c++)
-    {
-      M[c].resize(activeSetSize, numData);
-      L[c].resize(activeSetSize, activeSetSize);
-      Linv[c].resize(activeSetSize, activeSetSize);
-    }
+  {
+    M[c].resize(activeSetSize, numData);
+    L[c].resize(activeSetSize, activeSetSize);
+    Linv[c].resize(activeSetSize, activeSetSize);
+  }
   // set up K invK and covGrad
   K.resize(activeSetSize, activeSetSize);
-  activeX.resize(activeSetSize, X.getCols());
+  activeX.resize(activeSetSize, pX->getCols());
   activeY.resize(activeSetSize, numTarget);
   invK.resize(activeSetSize, activeSetSize);
   invK.setSymmetric(true);
@@ -180,32 +210,32 @@ void CIvm::initVals()
   nu.setVals(0.0);
   // set g to zeros(size of y)
   g.setVals(0.0);
-  // set noise.varSigma to diagonal of kernel.
-  noise.setMus(0.0);
+  // set pnoise->varSigma to diagonal of kernel.
+  pnoise->setMus(0.0);
   double dk=0.0;
   for(int i=0; i<numData; i++)
+  {
+    dk = pkern->diagComputeElement(*pX, i);
+    for(int j=0; j<numTarget; j++)
     {
-      dk = kern.diagComputeElement(X, i);
-      for(int j=0; j<numTarget; j++)
-	{
-	  noise.setVarSigma(dk, i, j);
-	}
+      pnoise->setVarSigma(dk, i, j);
     }
+  }
   for(int c=0; c<numCovStruct; c++)
-    {
-      M[c].setVals(0.0);
-      L[c].setVals(0.0);
-      Linv[c].setVals(0.0);
-    }
+  {
+    M[c].setVals(0.0);
+    L[c].setVals(0.0);
+    Linv[c].setVals(0.0);
+  }
   invK.zeros();
   covGrad.zeros();
   
   // fill the inactive set.
   inactiveSet.erase(inactiveSet.begin(), inactiveSet.end());
   for(int i=0; i<numData; i++)
-    {
-      inactiveSet.push_back(i);
-    }
+  {
+    inactiveSet.push_back(i);
+  }
   
   // empty the active set.
   activeSet.erase(activeSet.begin(), activeSet.end());
@@ -217,17 +247,17 @@ void CIvm::selectPoints()
   if(getVerbosity()>1)
     cout << "Selecting " << activeSetSize << " points ... " << endl;
   for(int k=0; k<activeSetSize; k++)
-    {
-      index = selectPointAdd();
-      addPoint(index);
-      if(getVerbosity()>2)
-	cout << k << "th addition: added point " << index << endl;
+  {
+    index = selectPointAdd();
+    addPoint(index);
+    if(getVerbosity()>2)
+      cout << k << "th addition: added point " << index << endl;
       
-    }
+  }
   if(getVerbosity()>1)
     cout << "... done." << endl;
   if(isEpUpdate())
-    cerr << "EP update not yet implemented.";
+    throw ndlexceptions::NotImplementedError("EP update not yet implemented.");
 }
 void CIvm::addPoint(int index)
 {
@@ -237,31 +267,31 @@ void CIvm::addPoint(int index)
   updateSite(index);
   updateM(index);
   inactiveSet.erase(pos);
-  activeX.copyRowRow(activeSet.size(), X, index);
-  activeY.copyRowRow(activeSet.size(), y, index);
+  activeX.copyRowRow(activeSet.size(), *pX, index);
+  activeY.copyRowRow(activeSet.size(), *py, index);
   activeSet.push_back(index);
   updateNuG();
 }
 void CIvm::updateSite(int index)
 {
   int actIndex = activeSet.size();
-  noise.updateSites(m, beta, actIndex, g, nu, index);
+  pnoise->updateSites(m, beta, actIndex, g, nu, index);
   for(int j=0; j<beta.getCols(); j++)
+  {
+    double betVal = beta.getVal(actIndex, j);
+    if(betVal<0)
     {
-      double betVal = beta.getVal(actIndex, j);
-      if(betVal<0)
-	{
-	  if(noise.isLogConcave())
-	    {
-	      cerr << "Error beta less than zero for log concave model.";
-	    }
-	  else
-	    {
-	      beta.setVal(1e-6, actIndex, j);
-	      cout << "Beta less than zero fixing to 1e-6." << endl;
-	    }
-	}
+      if(pnoise->isLogConcave())
+      {
+        cout << "Warning: beta less than zero for log concave model." << endl;
+      }
+      else
+      {
+	beta.setVal(1e-6, actIndex, j);
+	cout << "Beta less than zero fixing to 1e-6." << endl;
+      }
     }
+  }
   
 }
 
@@ -269,64 +299,64 @@ void CIvm::updateM(int index)
 {
   int activePoint = activeSet.size();
   for(int i=0; i<Kstore.getRows(); i++)
-    {
-      Kstore.setVal(kern.computeElement(X, i, X, index), i, activePoint);      
-    }
+  {
+    Kstore.setVal(pkern->computeElement(*pX, i, *pX, index), i, activePoint);      
+  }
   // add white noise term to relevant index.
   double val = Kstore.getVal(index, activePoint);
-  Kstore.setVal(val+kern.getWhite(), index, activePoint);
+  Kstore.setVal(val+pkern->getWhite(), index, activePoint);
   double lValInv = 0.0;
   double vs = 0.0;
   double ms = 0.0;
   double sVal = 0.0;
   for(int c=0; c<numCovStruct; c++)
-    {      
-      lValInv = sqrt(nu.getVal(index, c));
-      // set s from the kernel -- it is a column vector..
-      Kstore.getMatrix(s, 0, numData-1, activePoint, activePoint);
-      M[c].getMatrix(a, 0, activeSetSize-1, index, index);
-      s.gemv(M[c], a, -1.0, 1.0, "t");
-      if(lValInv<NULOW)
-	cout << "Warning: square root of nu is " << lValInv << endl;
-      // place the vector s at the bottom of M.
-      s.trans();
-      M[c].setMatrix(activePoint, 0, s);
-      s.trans();
-      M[c].scaleRow(activePoint, lValInv);
-      a.trans(); // turn a into a row vector.
-      L[c].setMatrix(activePoint, 0, a);
-      L[c].setVal(1/lValInv, activePoint, activePoint);
-      a.trans(); // turn a into a column vector.
-      // update the varSigma and mu systems.
-      double varSig = 0.0;
-      for(int i=0; i<numData; i++)
-	{
-	  sVal = s.getVal(i, 0);
-	  varSig = noise.getVarSigma(i, c)
-	    -sVal*sVal*nu.getVal(index, c);
-	  if(isnan(varSig))
-	    cout << "varSigma is varSig" << endl;
-	  noise.setVarSigma(varSig, i, c);
-	  noise.setMu(noise.getMu(i, c) + g.getVal(index, c)*sVal, i, c);
-	}
+  {      
+    lValInv = sqrt(nu.getVal(index, c));
+    // set s from the kernel -- it is a column vector..
+    Kstore.getMatrix(s, 0, numData-1, activePoint, activePoint);
+    M[c].getMatrix(a, 0, activeSetSize-1, index, index);
+    s.gemv(M[c], a, -1.0, 1.0, "t");
+    if(lValInv<NULOW)
+      cout << "Warning: square root of nu is " << lValInv << endl;
+    // place the vector s at the bottom of M.
+    s.trans();
+    M[c].setMatrix(activePoint, 0, s);
+    s.trans();
+    M[c].scaleRow(activePoint, lValInv);
+    a.trans(); // turn a into a row vector.
+    L[c].setMatrix(activePoint, 0, a);
+    L[c].setVal(1/lValInv, activePoint, activePoint);
+    a.trans(); // turn a into a column vector.
+    // update the varSigma and mu systems.
+    double varSig = 0.0;
+    for(int i=0; i<numData; i++)
+    {
+      sVal = s.getVal(i, 0);
+      varSig = pnoise->getVarSigma(i, c)
+      -sVal*sVal*nu.getVal(index, c);
+      if(isnan(varSig))
+	cout << "varSigma is varSig" << endl;
+      pnoise->setVarSigma(varSig, i, c);
+      pnoise->setMu(pnoise->getMu(i, c) + g.getVal(index, c)*sVal, i, c);
     }
+  }
   // this happens for spherical noise models.
   if(numCovStruct==1 && numTarget > 1)
+  {
+    double varSig = 0.0;
+    for(int c=1; c<numTarget; c++)
     {
-      double varSig = 0.0;
-      for(int c=1; c<numTarget; c++)
-	{
 
-	  for(int i=0; i<numData; i++)
-	    {
-	      sVal = s.getVal(i, 0);
-	      varSig = noise.getVarSigma(i, c)
-		-sVal*sVal*nu.getVal(index, c);
-	      noise.setVarSigma(varSig, i, c);
-	      noise.setMu(noise.getMu(i, c) + g.getVal(index, c)*sVal, i, c);
-	    }
-	}
+      for(int i=0; i<numData; i++)
+      {
+	sVal = s.getVal(i, 0);
+	varSig = pnoise->getVarSigma(i, c)
+	-sVal*sVal*nu.getVal(index, c);
+	pnoise->setVarSigma(varSig, i, c);
+	pnoise->setMu(pnoise->getMu(i, c) + g.getVal(index, c)*sVal, i, c);
+      }
     }
+  }
 
 }
 int CIvm::selectPointAdd() 
@@ -334,22 +364,22 @@ int CIvm::selectPointAdd()
   // returns data index of point to add.
   int index = 0;
   switch(selectionCriterion)
-    {
-    case RANDOM:
-      index = randomPointAdd();
-      break;
-    case ENTROPY:
+  {
+  case RANDOM:
+    index = randomPointAdd();
+    break;
+  case ENTROPY:
+    index = entropyPointAdd();
+    break;
+  case RENTROPY:
+    if(activeSet.size()>0)
       index = entropyPointAdd();
-      break;
-    case RENTROPY:
-      if(activeSet.size()>0)
-	index = entropyPointAdd();
-      else
-	index = randomPointAdd();
-      break;
-    default:
-      cerr << "Data point selection type not specified";
-    }
+    else
+      index = randomPointAdd();
+    break;
+  default:
+    throw ndlexceptions::NotImplementedError("Data point selection type not known");
+  }
   return index;
 }
 int CIvm::entropyPointAdd()
@@ -360,7 +390,7 @@ int CIvm::entropyPointAdd()
   for(int i=0; i<inactiveSet.size(); i++)
     delta.push_back(entropyChangeAdd(inactiveSet[i]));
   vector<double>::iterator maxVal = 
-    max_element(delta.begin(), delta.end());
+  max_element(delta.begin(), delta.end());
   changeEntropy(*maxVal);  // store global entropy change.
   return inactiveSet[maxVal - delta.begin()];
 }
@@ -382,17 +412,17 @@ double CIvm::entropyChangeAdd(int index) const
   // make sure that index is in the inactive set.
   assert(find(inactiveSet.begin(), inactiveSet.end(), index)!=inactiveSet.end());
   double entChange=0.0;
-  if(noise.isSpherical())
-    {
-      entChange = -.5*log(1-noise.getVarSigma(index, 0)
-			   *nu.getVal(index, 0)+1e-300)*numTarget;
-    }
+  if(pnoise->isSpherical())
+  {
+    entChange = -.5*log(1-pnoise->getVarSigma(index, 0)
+			*nu.getVal(index, 0)+1e-300)*numTarget;
+  }
   else
-    {
-      for(int j=0; j<numTarget; j++)
-	entChange += -.5*log(1-noise.getVarSigma(index, j)
-			      *nu.getVal(index, j)+1e-300);
-    }
+  {
+    for(int j=0; j<numTarget; j++)
+      entChange += -.5*log(1-pnoise->getVarSigma(index, j)
+			   *nu.getVal(index, j)+1e-300);
+  }
   return entChange;
 }
 int CIvm::selectPointRemove()
@@ -400,17 +430,17 @@ int CIvm::selectPointRemove()
   // returns data index of point to remove.
   int index = 0;
   switch(selectionCriterion)
-    {
-    case RANDOM:
-      index = randomPointRemove();
-      break;
-    case ENTROPY:
-    case RENTROPY:
-      index = entropyPointRemove();
-      break;
-    default:
-      cerr << "Data point selection type not specified";
-    }
+  {
+  case RANDOM:
+    index = randomPointRemove();
+    break;
+  case ENTROPY:
+  case RENTROPY:
+    index = entropyPointRemove();
+    break;
+  default:
+    throw ndlexceptions::NotImplementedError("Data point selection type not known");
+  }
   return index;
 }
 int CIvm::entropyPointRemove() 
@@ -420,7 +450,7 @@ int CIvm::entropyPointRemove()
   for(int i=0; i<activeSet.size(); i++)
     delta.push_back(entropyChangeRemove(activeSet[i]));
   vector<double>::iterator maxVal = 
-    max_element(delta.begin(), delta.end());
+  max_element(delta.begin(), delta.end());
   changeEntropy(*maxVal);
   return inactiveSet[maxVal - delta.begin()];
 }
@@ -440,37 +470,37 @@ double CIvm::entropyChangeRemove(int index) const
   // make sure that index is in the active set.
   assert(find(activeSet.begin(), activeSet.end(), index)!=activeSet.end());
   double entChange = 0.0;
-  if(noise.isSpherical())
-    {
-      entChange = -.5*log(1-noise.getVarSigma(index, 0)
-			   *beta.getVal(activeSet[index], 0)+1e-300)*numTarget;
-    }
+  if(pnoise->isSpherical())
+  {
+    entChange = -.5*log(1-pnoise->getVarSigma(index, 0)
+			*beta.getVal(activeSet[index], 0)+1e-300)*numTarget;
+  }
   else
-    {
-      for(int j=0; j<numTarget; j++)
-	entChange += -.5*log(1-noise.getVarSigma(index, j)
-			      *beta.getVal(activeSet[index], j)+1e-300);
-    }
+  {
+    for(int j=0; j<numTarget; j++)
+      entChange += -.5*log(1-pnoise->getVarSigma(index, j)
+			   *beta.getVal(activeSet[index], j)+1e-300);
+  }
   return entChange;
 }
 void CIvm::updateNuG()
 {
   for(int i=0; i<numData; i++)
-    noise.getNuG(g, nu, i);
+    pnoise->getNuG(g, nu, i);
 }
 void CIvm::updateK() const
 {
   double kVal=0.0;
   for(int i=0; i<activeSet.size(); i++)
+  {
+    K.setVal(pkern->diagComputeElement(activeX, i), i, i);
+    for(int j=0; j<i; j++)
     {
-      K.setVal(kern.diagComputeElement(activeX, i), i, i);
-      for(int j=0; j<i; j++)
-	{
-	  kVal=kern.computeElement(activeX, i, activeX, j);
-	  K.setVal(kVal, i, j);
-	  K.setVal(kVal, j, i);
-	}
+      kVal=pkern->computeElement(activeX, i, activeX, j);
+      K.setVal(kVal, i, j);
+      K.setVal(kVal, j, i);
     }
+  }
   K.setSymmetric(true);
 }
 void CIvm::updateInvK(int dim) const
@@ -484,111 +514,108 @@ void CIvm::updateInvK(int dim) const
   invK.pdinv(U);
 }
   
-double CIvm::approxLogLikelihood() const
+double CIvm::logLikelihood() const
 {
   double L=0.0;
   updateK();
   CMatrix invKm(invK.getRows(), 1);
-  if(noise.isSpherical())
-    {
-      updateInvK(0);
-    }
+  if(pnoise->isSpherical())
+  {
+    updateInvK(0);
+  }
   for(int j=0; j<m.getCols(); j++)
-    {
-      if(!noise.isSpherical())
-	updateInvK(j);
-      invK.setSymmetric(true);
-      invKm.symvColCol(0, invK, m, j, 1.0, 0.0, "u");
-      L -= .5*(logDetK + invKm.dotColCol(0, m, j));
-    }
-  L+=kern.priorLogProb();
+  {
+    if(!pnoise->isSpherical())
+      updateInvK(j);
+    invK.setSymmetric(true);
+    invKm.symvColCol(0, invK, m, j, 1.0, 0.0, "u");
+    L -= .5*(logDetK + invKm.dotColCol(0, m, j));
+  }
+  L+=pkern->priorLogProb();
   return L;
 }  
-void CIvm::approxLogLikelihoodGradient(CMatrix& g) const
+double CIvm::logLikelihoodGradient(CMatrix& g) const
 {
   assert(g.getRows()==1);
   assert(g.getCols()==getOptNumParams());
   g.zeros();
   CMatrix tempG(1, getOptNumParams());
-  kern.updateX(X);
   updateK();
-  if(noise.isSpherical())
-    {
-      updateInvK(0);
-    }
+  if(pnoise->isSpherical())
+  {
+    updateInvK(0);
+  }
   for(int j=0; j<m.getCols(); j++)
+  {
+    if(!pnoise->isSpherical())
     {
-      if(!noise.isSpherical())
-	{
-	  updateInvK(j);
-	}
-      updateCovGradient(j);
-      if(j==0)
-	kern.getGradTransParams(tempG, activeX, covGrad, true);
-      else
-	kern.getGradTransParams(tempG, activeX, covGrad, false);
-      
-      g+=tempG;
-      
+      updateInvK(j);
     }
+    updateCovGradient(j);
+    if(j==0)
+      pkern->getGradTransParams(tempG, activeX, covGrad, true);
+    else
+      pkern->getGradTransParams(tempG, activeX, covGrad, false);
+      
+    g+=tempG;
+      
+  }
+  return logLikelihood();
 }
 
 
 #ifdef _NDLMATLAB
-CIvm::CIvm(const CMatrix& inData, 
-	   const CMatrix& targetData, 
-	   CKern& kernel, 
-	   CNoise& noiseModel, 
+CIvm::CIvm(CMatrix* inData, 
+	   CMatrix* targetData, 
+	   CKern* pkernel, 
+	   CNoise* pnoiseModel, 
 	   const string ivmInfoFile, 
 	   const string ivmInfoVariable, 
 	   int verbos) : 
-  X(inData), y(targetData), 
-  kern(kernel), noise(noiseModel), 
-  numTarget(y.getCols()), numData(y.getRows()),  
-  lastEntropyChange(0.0), cumEntropy(0.0), 
-  epUpdate(false), terminate(false), loadedModel(true)
+  CMapModel(inData->getCols(), targetData->getCols(), inData->getRows()), CProbabilisticOptimisable(), pX(inData), py(targetData), 
+  pkern(pkernel), pnoise(pnoiseModel), 
+  numTarget(py->getCols()), numData(py->getRows())
 {
+  _init();
+  assert(pX->getRows()==py->getRows());
   setVerbosity(verbos);
   readMatlabFile(ivmInfoFile, ivmInfoVariable);
   initStoreage(); // storeage has to be allocated after finding active set size.
-  for(int i=0; i<numData; i++)
+  for(int i=0; i<getNumData(); i++)
     for(int j=0; j<activeSetSize; j++)
-      Kstore.setVal(kern.computeElement(X, i, X, activeSet[j]), i, j);
+      Kstore.setVal(pkern->computeElement(*pX, i, *pX, activeSet[j]), i, j);
   
   Kstore.getMatrix(K, activeSet, 0, activeSetSize-1);
 
   for(int i=0; i<activeSet.size(); i++)
-    K.setVal(kern.diagComputeElement(X, activeSet[i]), i, i);
-  //  K.writeMatlabFile("crap.mat", "K");
+    K.setVal(pkern->diagComputeElement(*pX, activeSet[i]), i, i);
   for(int j=0; j<numCovStruct; j++)
+  {
+    L[j].deepCopy(K);
+    for(int i=0; i<activeSetSize; i++)
     {
-      L[j].deepCopy(K);
-      //L[j].updateMatlabFile("crap.mat", "KL");
-      for(int i=0; i<activeSetSize; i++)
-	{
-	  double lval = L[j].getVal(i, i);
-	  lval += 1/beta.getVal(i, j);
-	  L[j].setVal(lval, i, i);
-	}
-      //L[j].updateMatlabFile("crap.mat", "KB");
-      L[j].setSymmetric(true);
-      L[j].chol("L");
-      //L[j].updateMatlabFile("crap.mat", "L");
-      Linv[j].deepCopy(L[j]);
-      // TODO should not use regular inverse here as matrix is lower triangular.
-      Linv[j].inv();
-      M[j].gemm(Linv[j], Kstore, 1.0, 0.0, "n", "t");
+      double lval = L[j].getVal(i, i);
+      lval += 1/beta.getVal(i, j);
+      L[j].setVal(lval, i, i);
     }
+      
+    L[j].setSymmetric(true);
+    L[j].chol("L");
+    Linv[j].deepCopy(L[j]);
+    // TODO should not use regular inverse here as matrix is lower triangular.
+    Linv[j].inv();
+    M[j].gemm(Linv[j], Kstore, 1.0, 0.0, "n", "t");
+  }
   for(int i=0; i<activeSetSize; i++)
-    {
-      activeX.copyRowRow(i, X, activeSet[i]);
-      activeY.copyRowRow(i, X, activeSet[i]);
-    }
+  {
+    activeX.copyRowRow(i, *pX, activeSet[i]);
+    activeY.copyRowRow(i, *py, activeSet[i]);
+  }
   CMatrix mu(numData, numTarget);
   CMatrix varSigma(numData, numTarget);
-  posteriorMeanVar(mu, varSigma, X);
-  noise.setMus(mu);
-  noise.setVarSigmas(varSigma);
+  posteriorMeanVar(mu, varSigma, *pX);
+  pnoise->setMus(mu);
+  pnoise->setVarSigmas(varSigma);
   updateNuG();
 }
 mxArray* CIvm::toMxArray() const
@@ -612,10 +639,10 @@ mxArray* CIvm::toMxArray() const
   CMatrix tempM(numData, m.getCols());
   CMatrix tempB(numData, beta.getCols());
   for(int i=0; i<activeSet.size(); i++)
-    {
-      tempM.copyRowRow(activeSet[i], m, i);
-      tempB.copyRowRow(activeSet[i], beta, i);
-    }
+  {
+    tempM.copyRowRow(activeSet[i], m, i);
+    tempB.copyRowRow(activeSet[i], beta, i);
+  }
   
   mxSetField(matlabArray, 0, "m", tempM.toMxArray());
   mxSetField(matlabArray, 0, "beta", tempB.toMxArray());
@@ -623,6 +650,11 @@ mxArray* CIvm::toMxArray() const
 }
 void CIvm::fromMxArray(const mxArray* matlabArray)
 {
+  string mxType = mxArrayExtractStringField(matlabArray, "type");
+  if(mxType!=getType())
+  {
+    throw ndlexceptions::FileReadError("Error mismatch between saved type, " + mxType + ", and Class type, " + getType() + ".");
+  }
   activeSet = mxArrayExtractVectorIntField(matlabArray, "I");
   for(int i=0; i<activeSet.size(); i++)
     activeSet[i]--;
@@ -637,10 +669,10 @@ void CIvm::fromMxArray(const mxArray* matlabArray)
   m.resize(activeSetSize, tempM.getCols());
   beta.resize(activeSetSize, tempB.getCols());
   for(int i=0; i<activeSet.size(); i++)
-    {
-      m.copyRowRow(i, tempM, activeSet[i]);
-      beta.copyRowRow(i, tempB, activeSet[i]);
-    }
+  {
+    m.copyRowRow(i, tempM, activeSet[i]);
+    beta.copyRowRow(i, tempB, activeSet[i]);
+  }
   assert(activeSetSize<numData);
   assert(m.getCols()==numTarget);
   assert(beta.dimensionsMatch(m));
@@ -651,48 +683,50 @@ void CIvm::fromMxArray(const mxArray* matlabArray)
 void CIvm::optimise(int maxIters, int kernIters, int noiseIters)
 {
   if(getVerbosity()>2)
-    {
-      cout << "Initial model:" << endl;
-      display(cout);
-    }
-
+  {
+    cout << "Initial model:" << endl;
+    display(cout);
+  }
+  
   if(kernIters>0 || noiseIters>0)
+  {
+    for(int iters=0; iters<maxIters; iters++)
     {
-      for(int iters=0; iters<maxIters; iters++)
-	{
-
-	  if(getVerbosity()>1)
-	    cout << "IVM External Iteration: " << iters+1 << endl;
-	  if(kernIters>0)
-	    {
-	      init();
-	      selectPoints();
-	      if(getVerbosity()>2 && getOptNumParams()<10)
-		checkGradients();
-	      if(getVerbosity()>1)
-		cout << "Optimising kernel parameters ..." <<endl;
-	      scgOptimise(kernIters);
-	      if(getVerbosity()>1)
-		cout << "... done. " << endl;
-	      if(getVerbosity()>2)
-		kern.display(cout);
-	    }
-	  if(noiseIters>0)
-	    {
-	      init();
-	      selectPoints();
-	      if(getVerbosity()>2 && noise.getOptNumParams()<10)
-		noise.checkGradients();
-	      if(getVerbosity()>1)
-		cout << "Optimising noise parameters ..." <<endl;
-	      noise.scgOptimise(noiseIters);
-	      if(getVerbosity()>1)
-		cout << "... done." <<endl;
-	      if(getVerbosity()>2)
-		noise.display(cout);
-	    }
-	}
+      
+      if(getVerbosity()>1)
+	cout << "IVM External Iteration: " << iters+1 << endl;
+      if(kernIters>0)
+      {
+	init();
+	selectPoints();
+	if(getVerbosity()>2 && getOptNumParams()<10)
+	  checkGradients();
+	if(getVerbosity()>1)
+	  cout << "Optimising kernel parameters ..." <<endl;
+	setMaxIters(kernIters);
+	runDefaultOptimiser();
+	if(getVerbosity()>1)
+	  cout << "... done. " << endl;
+	if(getVerbosity()>2)
+	  pkern->display(cout);
+      }
+      if(noiseIters>0)
+      {
+	init();
+	selectPoints();
+	if(getVerbosity()>2 && pnoise->getOptNumParams()<10)
+	  pnoise->checkGradients();
+	if(getVerbosity()>1)
+	  cout << "Optimising noise parameters ..." <<endl;
+	pnoise->setMaxIters(noiseIters);
+	pnoise->runDefaultOptimiser();
+	if(getVerbosity()>1)
+	  cout << "... done." <<endl;
+	if(getVerbosity()>2)
+	  pnoise->display(cout);
+      }
     }
+  }
   init();
   selectPoints();
   if(getVerbosity()>0)
@@ -700,9 +734,9 @@ void CIvm::optimise(int maxIters, int kernIters, int noiseIters)
 }
 bool CIvm::equals(const CIvm& model, double tol) const
 {
-  if(!noise.equals(model.noise, tol))
+  if(!pnoise->equals(*model.pnoise, tol))
     return false;
-  if(!kern.equals(model.kern, tol))
+  if(!pkern->equals(*model.pkern, tol))
     return false;
   if(!m.equals(model.m, tol))
     return false;
@@ -719,9 +753,9 @@ void CIvm::display(ostream& os) const
   cout << "IVM Model: " << endl;
   cout << "Active Set Size: " << activeSetSize << endl;
   cout << "Kernel Type: " << endl;
-  kern.display(os);
+  pkern->display(os);
   cout << "Noise Type: " << endl;
-  noise.display(os);
+  pnoise->display(os);
 }
 
 void CIvm::updateCovGradient(int index) const
@@ -734,48 +768,72 @@ void CIvm::updateCovGradient(int index) const
   covGrad.scale(-0.5);
 }
 
+void CIvm::writeParamsToStream(ostream& out) const
+{
+  writeToStream(out, "numData", getNumData());
+  writeToStream(out, "outputDim", getOutputDim());
+  writeToStream(out, "inputDim", getInputDim());
+  writeToStream(out, "activeSetSize", getActiveSetSize());
 
+  pkern->toStream(out);
+  pnoise->toStream(out);
+
+  writeToStream(out, "activeSet", activeSet);
+  activeY.toStream(out);
+  activeX.toStream(out);
+  m.toStream(out);
+  beta.toStream(out);
+}
+void CIvm::readParamsFromStream(istream& in)
+{
+  setNumData(readIntFromStream(in, "numData"));
+  setOutputDim(readIntFromStream(in, "outputDim"));
+  setInputDim(readIntFromStream(in, "inputDim"));
+
+  activeSetSize = readIntFromStream(in, "activeSetSize");
+
+  // initialise storage
+  initStoreage();
+
+  // read kernel from the stream.
+  //delete pkern; --- want to destroy it if it exists ... but not sure how to.
+  pkern = readKernFromStream(in);
+
+  // read noise model from the stream.
+  //delete pnoise -- same as above.
+  pnoise = readNoiseFromStream(in);
+
+  activeSet = readVectorIntFromStream(in, "activeSet");
+  if(activeSet.size() != getActiveSetSize())
+    throw ndlexceptions::StreamFormatError("activeSetSize", "Number of active points does not match active set size.");
+  activeY.fromStream(in);
+  if(activeY.getCols() !=getOutputDim())
+    throw ndlexceptions::StreamFormatError("outputDim", "Number of columns of activeY does not match output dimension.");
+  if(activeY.getRows() != getActiveSetSize())
+    throw ndlexceptions::StreamFormatError("activeSetSize", "Number of rowss of activeY does not match active set size.");
+    
+  activeX.fromStream(in);
+  if(activeX.getCols() !=getInputDim())
+    throw ndlexceptions::StreamFormatError("inputDim", "Number of columns of activeX does not match input dimension.");
+  if(activeX.getRows() != getActiveSetSize())
+    throw ndlexceptions::StreamFormatError("activeSetSize", "Number of rowss of activeX does not match active set size.");
+    
+  m.fromStream(in);
+  if(m.getCols() != getOutputDim())
+    throw ndlexceptions::StreamFormatError("outputDim", "Number of columns of m does not match output dimension.");
+  if(m.getRows() != getActiveSetSize())
+    throw ndlexceptions::StreamFormatError("activeSetSize", "Number of rowss of m does not match active set size.");
+    
+  beta.fromStream(in);
+  if(beta.getCols() !=getOutputDim())
+    throw ndlexceptions::StreamFormatError("outputDim", "Number of columns of beta does not match output dimension.");
+  if(beta.getRows() != getActiveSetSize())
+    throw ndlexceptions::StreamFormatError("activeSetSize", "Number of rowss of beta does not match active set size.");
+    
+}
 void writeIvmToStream(const CIvm& model, ostream& out)
 {
-  out << "ivmVersion=" << IVMVERSION << endl;
-  out << "activeSetSize=" << model.getActiveSetSize() << endl;
-  out << "numProcesses=" << model.getNumProcesses() << endl;
-  out << "numFeatures=" << model.getNumInputs() << endl;
-
-  writeKernToStream(model.kern, out);
-  writeNoiseToStream(model.noise, out);
-
-  for(int i=0; i<model.getActiveSetSize(); i++)
-    {
-      out << model.getActivePoint(i) << " ";
-      for(int j=0; j<model.getNumProcesses(); j++)
-	{
-	  double yval = model.y.getVal(model.getActivePoint(i), j);
-	  if((yval - (int)yval)==0.0)
-	    out << (int)yval << " ";
-	  else
-	    out << yval << " ";
-	}
-      for(int j=0; j<model.getNumProcesses(); j++)
-	{
-	  out << model.m.getVal(i, j) << " ";
-	}
-      for(int j=0; j<model.getNumProcesses(); j++)
-	{
-	  out << model.beta.getVal(i, j) << " ";
-	}
-      for(int j=0; j<model.getNumInputs()-1; j++)
-	{
-	  double x = model.getActiveX(i, j);
-	  if(x!=0.0)
-	    out << j+1 << ":" << x << " ";
-	}
-      double x = model.getActiveX(i, model.getNumInputs()-1);
-      if(x!=0.0)
-	out << model.getNumInputs() << ":" << x << endl;
-      else
-	out << endl;
-    }
+  model.toStream(out);
 }
 void writeIvmToFile(const CIvm& model, const string modelFileName, const string comment)
 {
@@ -791,83 +849,11 @@ void writeIvmToFile(const CIvm& model, const string modelFileName, const string 
   out.close();
 }
 
+
 CIvm* readIvmFromStream(istream& in)
 {
-  string line;
-  vector<string> tokens;
-  // first line is version info.
-  ndlstrutil::getline(in, line);
-  ndlstrutil::tokenise(tokens, line, "=");
-  if(tokens.size()>2 || tokens[0]!="ivmVersion")
-    throw ndlexceptions::FileFormatError();
-  if(tokens[1]!="0.1")
-    throw ndlexceptions::FileFormatError();
-
-  // next line is active set size
-  tokens.clear();
-  ndlstrutil::getline(in, line);
-  ndlstrutil::tokenise(tokens, line, "=");
-  if(tokens.size()>2 || tokens[0]!="activeSetSize")
-    throw ndlexceptions::FileFormatError();
-  int activeSetSize=atoi(tokens[1].c_str());
-  
-  // next line is number of processes
-  tokens.clear();
-  ndlstrutil::getline(in, line);
-  ndlstrutil::tokenise(tokens, line, "=");
-  if(tokens.size()>2 || tokens[0]!="numProcesses")
-    throw ndlexceptions::FileFormatError();
-  int numProcesses=atoi(tokens[1].c_str());
-
-  // next line is number of features
-  tokens.clear();
-  ndlstrutil::getline(in, line);
-  ndlstrutil::tokenise(tokens, line, "=");
-  if(tokens.size()>2 || tokens[0]!="numFeatures")
-    throw ndlexceptions::FileFormatError();
-  int numFeatures=atoi(tokens[1].c_str());
-
-  CKern* pkern = readKernFromStream(in);
-  CNoise* pnoise = readNoiseFromStream(in);
-
-  CMatrix m(activeSetSize, numProcesses);
-  CMatrix beta(activeSetSize, numProcesses);
-  CMatrix activeX(activeSetSize, numFeatures, 0.0);
-  CMatrix activeY(activeSetSize, numProcesses);
-  vector<int> activeSet;
-  for(int i=0; i<activeSetSize; i++)
-    {
-      tokens.clear();
-      ndlstrutil::getline(in, line);
-      ndlstrutil::tokenise(tokens, line, " ");
-      activeSet.push_back(atol(tokens[0].c_str()));
-      for(int j=0; j<numProcesses; j++)
-	{
-	  activeY.setVal(atof(tokens[j+1].c_str()), i, j);
-	}
-      for(int j=0; j<numProcesses; j++)
-	{
-	  m.setVal(atof(tokens[j+numProcesses+1].c_str()), i, j);
-	}
-      for(int j=0; j<numProcesses; j++)
-	{
-	  beta.setVal(atof(tokens[j+2*numProcesses+1].c_str()), i, j);
-	}
-      // get activeX and activeY now.
-      for(int j=numProcesses*3+1; j<tokens.size(); j++)
-	{
-	  int ind = tokens[j].find(':');
-	  // TODO Check that : is in the string.
-	  string featStr=tokens[j].substr(0, ind);
-	  string featValStr=tokens[j].substr(ind+1, tokens[j].size()-ind);
-	  int featNum = atoi(featStr.c_str());
-	  if(featNum<1 || featNum>numFeatures)
-	    throw ndlexceptions::FileFormatError("Corrupt file format.");
-	  double featVal = atof(featValStr.c_str());
-	  activeX.setVal(featVal, i, featNum-1);	  
-	}
-    }
-  CIvm* pmodel= new CIvm(activeX, activeY, m, beta, activeSet, *pkern, *pnoise); 
+  CIvm* pmodel = new CIvm();
+  pmodel->fromStream(in);
   return pmodel;
 }
 
@@ -880,13 +866,13 @@ CIvm* readIvmFromFile(const string modelFileName, int verbosity)
   if(!in.is_open()) throw ndlexceptions::FileReadError(modelFileName);
   CIvm* pmodel;
   try
-    {
-      pmodel = readIvmFromStream(in);
-    }
-  catch(ndlexceptions::FileFormatError err)
-    {
-      throw ndlexceptions::FileFormatError(modelFileName);
-    }
+  {
+    pmodel = readIvmFromStream(in);
+  }
+  catch(ndlexceptions::StreamFormatError err)
+  {
+    throw ndlexceptions::FileFormatError(modelFileName, err);
+  }
   if(verbosity>0)
     cout << "... done." << endl;
   in.close();

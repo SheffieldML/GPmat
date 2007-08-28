@@ -1,35 +1,43 @@
 #ifndef CIVM_H
 #define CIVM_H
-#include "CDataModel.h"
+#include "CMltools.h"
 using namespace std;
 
 const double NULOW=1e-16;
 const string IVMVERSION="0.1";
 
-class CIvm : public COptimisableModel {
+class CIvm : public CMapModel, public CProbabilisticOptimisable, public CMatInterface
+{
  public:
+  CIvm();
   // Constructor given a filename.
   CIvm(const string modelFileName, int verbos=2);
   // Constructor given a kernel and a noise model.
-  CIvm(const CMatrix& inData, const CMatrix& targetData, 
-       CKern& kernel, CNoise& noiseModel, int selectCrit,
+  CIvm(CMatrix* inData, CMatrix* targetData, 
+       CKern* kernel, CNoise* noiseModel, int selectCrit,
        int dVal, int verbos=2);
-  CIvm(const CMatrix& actX, const CMatrix& actY, 
-       const CMatrix& mmat, const CMatrix& betamat, 
-       const vector<int> actSet, CKern& kernel, 
-       CNoise& noiseModel, int selectCrit=ENTROPY, 
+  CIvm(CMatrix& actX, CMatrix& actY, 
+       CMatrix& mmat, CMatrix& betamat, 
+       vector<int> actSet, CKern* kernel, 
+       CNoise* noiseModel, int selectCrit=ENTROPY, 
        int verbos=2);
 
 #ifdef _NDLMATLAB
   // Constructor using file containing ivmInfo.
-  CIvm(const CMatrix& inData, 
-       const CMatrix& targetData, 
-       CKern& kernel, 
-       CNoise& noiseModel, 
+  CIvm(CMatrix* inData, 
+       CMatrix* targetData, 
+       CKern* kernel, 
+       CNoise* noiseModel, 
        const string ivmInfoFile, 
        const string ivmInfoVariable, 
        int verbos=2);
 #endif
+
+
+  void writeParamsToStream(ostream& os) const;
+  void readParamsFromStream(istream& is);
+  // initialise the model.
+  void init();
   // Initialise the storeage for the model.
   void initStoreage();
   // Set the initial values for the model.
@@ -49,142 +57,127 @@ class CIvm : public COptimisableModel {
   int randomPointRemove(); // remove a point selected randomly.
   double entropyChangeRemove(int) const; // entropy change associated with removing a point
   void test(const CMatrix& ytest, const CMatrix& Xin) const;
+
   void likelihoods(CMatrix& pout, CMatrix& yTest, const CMatrix& Xin) const;
   double logLikelihood(const CMatrix& yTest, const CMatrix& Xin) const;
+
+  // For MapModel interface.
   void out(CMatrix& yPred, const CMatrix& inData) const;
   void out(CMatrix& yPred, CMatrix& probPred, const CMatrix& inData) const;
+  double outGradParams(CMatrix& g, const CMatrix& Xin, const int pointNo, const int outputNo) const;
+  double outGradX(CMatrix& g, const CMatrix& Xin, const int pointNo, const int outputNo) const;
+
   void posteriorMeanVar(CMatrix& mu, CMatrix& varSigma, const CMatrix& X) const;
   string getNoiseName() const
-    {
-      return noise.getNoiseName();
-    }
+  {
+    return pnoise->getName();
+  }
   inline void changeEntropy(double val)
-    {
-      cumEntropy += val;
-      lastEntropyChange = val;
-    }
+  {
+    cumEntropy += val;
+    lastEntropyChange = val;
+  }
 
   // Gradient routines
   void updateCovGradient(int index) const;
   
 
   inline void setTerminate(const bool val)
-    {
-      terminate = val;
-    }
+  {
+    terminate = val;
+  }
   inline void setEpUpdate(const bool val)
-    {
-      epUpdate = val;
-    }
+  {
+    epUpdate = val;
+  }
   inline bool isTerminate() const
-    {
-      return terminate;
-    }
+  {
+    return terminate;
+  }
   inline bool isEpUpdate() const 
-    {
-      return epUpdate;
-    }
+  {
+    return epUpdate;
+  }
   void updateNuG();
   // update K with the kernel computed from the active points.
   void updateK() const;
   // update invK with the inverse of the kernel plus beta terms computed from the active points.
   void updateInvK(int index=0) const;
   // compute the approximation to the log likelihood.
-  double approxLogLikelihood() const;
+  double logLikelihood() const;
   // compute the gradients of the approximation wrt parameters.
-  void approxLogLikelihoodGradient(CMatrix& g) const;
+  double logLikelihoodGradient(CMatrix& g) const;
   
   void optimise(int maxIters=15, int kernIters=100, int noiseIters=100);
   bool equals(const CIvm& model, double tol=ndlutil::MATCHTOL) const;
   void display(ostream& os) const;
 
+ 
   inline int getOptNumParams() const
-    {
-      return kern.getNumParams();
-    }    
+  {
+    return pkern->getNumParams();
+  }    
   void getOptParams(CMatrix& param) const
-    {
-      kern.getTransParams(param);
-    }
+  {
+    pkern->getTransParams(param);
+  }
   void setOptParams(const CMatrix& param)
-    {
-      kern.setTransParams(param);
-    }
-  string getType() const
-    {
-      return type;
-    }
-  void setType(const string name)
-    {
-      type = name;
-    }
+  {
+    pkern->setTransParams(param);
+  }
+  
   string getTypeSelection() const
+  {
+    switch(selectionCriterion)
     {
-      switch(selectionCriterion)
-	{
-	case ENTROPY:
-	  return "entropy";
-	case RENTROPY:
-	  return "rentropy";
-	case RANDOM:
-	  return "random";
-	default:
-	  cerr << "Unrecognised selection criterion." << endl;
-	}
+    case ENTROPY:
+      return "entropy";
+    case RENTROPY:
+      return "rentropy";
+    case RANDOM:
+      return "random";
+    default:
+      cerr << "Unrecognised selection criterion." << endl;
     }
+  }
   void setTypeSelection(const string val) 
-    {
-      if(val=="entropy")
-	selectionCriterion=ENTROPY;
-      else if(val=="rentropy")
-	selectionCriterion=RENTROPY;
-      else if(val=="random")
-	selectionCriterion=RANDOM;
-      else
-	cerr << "Unrecognised selection criterion " << val << "." << endl;
-    }
+  {
+    if(val=="entropy")
+      selectionCriterion=ENTROPY;
+    else if(val=="rentropy")
+      selectionCriterion=RENTROPY;
+    else if(val=="random")
+      selectionCriterion=RANDOM;
+    else
+      cerr << "Unrecognised selection criterion " << val << "." << endl;
+  }
   void setTypeSelection(int val)
-    {
-      assert(val>=ENTROPY && val<=RANDOM);
-      selectionCriterion=val;
-    }
-  void computeObjectiveGradParams(CMatrix& g) const
-    {
-      approxLogLikelihoodGradient(g);
-      g.negate();
-    }
-  double computeObjectiveVal() const
-    {
-      return -approxLogLikelihood();
-    }
+  {
+    assert(val>=ENTROPY && val<=RANDOM);
+    selectionCriterion=val;
+  }
+  
 #ifdef _NDLMATLAB
   mxArray* toMxArray() const;
   void fromMxArray(const mxArray* matlabArray);
 #endif
-  const CMatrix& X;
 
   int getActiveSetSize() const
-    {
-      return activeSetSize;
-    }
-  int getNumProcesses() const
-    {
-      return numTarget;
-    }
-  int getNumInputs() const
-    {
-      return activeX.getCols();
-    }
+  {
+    return activeSetSize;
+  }
+  
   double getActiveX(int i, int j) const
-    {
-      return activeX.getVal(i, j);
-    }
+  {
+    return activeX.getVal(i, j);
+  }
   int getActivePoint(int i) const
-    {
-      return activeSet[i];
-    }
+  {
+    return activeSet[i];
+  }
   // arguably these are noise model associated.
-  const CMatrix& y;
+  CMatrix* pX;
+  CMatrix* py;
   
   CMatrix nu;
   CMatrix g;
@@ -219,12 +212,15 @@ class CIvm : public COptimisableModel {
   vector<int> activeSet;
   vector<int> inactiveSet;
 
-  CKern& kern;
-  CNoise& noise;
+  CKern* pkern;
+  CNoise* pnoise;
   enum{ENTROPY, RENTROPY, RANDOM};
 
 
  private:
+
+  void _init();
+
   bool terminate;
   bool epUpdate;
   bool loadedModel;
