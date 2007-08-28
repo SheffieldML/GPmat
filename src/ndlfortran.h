@@ -71,9 +71,9 @@ extern "C" void lbfgs_(const int& numVariables,
 		       double* X,
 		       const double& funcVal,   // set by user to be func val.
 		       const double* gradVals,  // set by user to be grad vals.
-		       const bool diagCo,
+		       const int& diagCo,
 		       const double* diag,
-		       const int[2] iPrint,
+		       const int iPrint[2],
 		       const double& prec,
 		       const double& xtol,
 		       double* W, // work vector size N(2M+1) + 2M

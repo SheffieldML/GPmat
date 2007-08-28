@@ -23,7 +23,7 @@
 #include "ndlexceptions.h"
 using namespace std;
 namespace ndlutil {
-  const double MATCHTOL = 1e-12;
+  const double MATCHTOL = 1e-10;
   const double EPS=DBL_EPSILON;
   const double SMALLVAL=1e-6;
   const double GRADCHANGE=1e-6;

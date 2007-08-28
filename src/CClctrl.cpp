@@ -89,7 +89,10 @@ int CClctrl::readSvmlDataFile(CMatrix& X, CMatrix& y, const string fileName)
 		{
 		  int ind = token.find(':');
 		  if(ind==std::string::npos || ind < 0)
-		    throw ndlexceptions::FileFormatError(fileName);
+      {
+        ndlexceptions::StreamFormatError err("");
+        throw ndlexceptions::FileFormatError(fileName, err);
+      }
 		  string featStr=token.substr(0, ind);
 		  int featNum = atoi(featStr.c_str());
 		  if(featNum>maxFeat)
@@ -145,7 +148,10 @@ int CClctrl::readSvmlDataFile(CMatrix& X, CMatrix& y, const string fileName)
 		      string featValStr=token.substr(ind+1, token.size()-ind);
 		      int featNum = atoi(featStr.c_str());
 		      if(featNum<1 || featNum>maxFeat || pointNo<0 || pointNo>=numData)
-			throw ndlexceptions::FileFormatError(fileName);
+          {
+            ndlexceptions::StreamFormatError err("");
+			throw ndlexceptions::FileFormatError(fileName, err);
+          }
 		      
 		      double featVal = atof(featValStr.c_str());
 		      X.setVal(featVal, pointNo, featNum-1);
@@ -181,7 +187,7 @@ void CClctrl::readData(CMatrix& X, CMatrix& y, const string fileName)
       X.readMatlabFile(fileName, "X");
       y.readMatlabFile(fileName, "y");
 #else
-      throw ndlexceptions::Error("MATLAB not incorporated at compile time");
+      throw ndlexceptions::MatlabInterfaceError("MATLAB not incorporated at compile time");
 #endif
       break;
     default:

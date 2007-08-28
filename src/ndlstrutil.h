@@ -8,6 +8,7 @@
 #include "ndlexceptions.h"
 namespace ndlstrutil
 {
+  std::string dirSep = "/";
   // allocate doubles in 100k chunks.
   const int ALLOCATECHUNK=(int)(100*(double)1024/(double)sizeof(double));
   // split a string into tokes given a delimiter.
@@ -15,7 +16,7 @@ namespace ndlstrutil
 		const std::string& str,
 		const std::string& delimiters = " ");
   // a version of getline which ignores lines starting with #.
-  void getline(std::istream& in, std::string& line);
+  bool getline(std::istream& in, std::string& line);
   // take a string and sent it to an output stream placing carriage returns correctly.
   void wrapOutputText(std::ostream& out, const std::string description, const int width, const int padding);
   // convert an integer to a string.

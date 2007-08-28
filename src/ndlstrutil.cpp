@@ -9,23 +9,26 @@ void ndlstrutil::tokenise(std::vector<std::string>& tokens,
   
   while (std::string::npos!=pos 
 	 || std::string::npos!=lastPos)
-    {
-      // Found a token, add it to the vector.
-      tokens.push_back(str.substr(lastPos, pos - lastPos));
-      // Skip delimiters.  Note the "not_of"
-      lastPos = str.find_first_not_of(delimiters, pos);
-      // Find next "non-delimiter"
-      pos = str.find_first_of(delimiters, lastPos);
-    }
+  {
+    // Found a token, add it to the vector.
+    tokens.push_back(str.substr(lastPos, pos - lastPos));
+    // Skip delimiters.  Note the "not_of"
+    lastPos = str.find_first_not_of(delimiters, pos);
+    // Find next "non-delimiter"
+    pos = str.find_first_of(delimiters, lastPos);
+  }
 }
 
-void ndlstrutil::getline(std::istream& in, std::string& line)
+bool ndlstrutil::getline(std::istream& in, std::string& line)
 {
+  bool val = false;
   do
-    {
-      std::getline(in, line);
-    }
+  {
+    if(std::getline(in, line))
+      val = true;
+  }
   while(line[0]=='#');
+  return val;
 }
 void ndlstrutil::wrapOutputText(std::ostream& out, const std::string description, const int width, const int padding)
 {
@@ -37,16 +40,16 @@ void ndlstrutil::wrapOutputText(std::ostream& out, const std::string description
   size_t remain = width-padding;
   out << padStr;
   for(size_t i=0; i<tokens.size(); i++)
+  {
+    remain -= (tokens[i].size()+1);
+    if (remain<1)
     {
-      remain -= (tokens[i].size()+1);
-      if (remain<1)
-	{
-	  out << std::endl;
-	  out << padStr;
-	  remain=width-padding-tokens[i].size()-1;
-	}
-      out << tokens[i] << " ";
+      out << std::endl;
+      out << padStr;
+      remain=width-padding-tokens[i].size()-1;
     }
+    out << tokens[i] << " ";
+  }
 }
 std::string ndlstrutil::itoa(long value, int base)
 {
@@ -56,10 +59,10 @@ std::string ndlstrutil::itoa(long value, int base)
   if (base < 2 || base > 16) throw ndlexceptions::Error("Unrecognised base in ndlstrutil::itoa()");
   long quotient = value;
   do 
-    {
-      buf += "0123456789abcdef"[ std::abs( quotient % base ) ];
-      quotient /= base;
-    } 
+  {
+    buf += "0123456789abcdef"[ std::abs( quotient % base ) ];
+    quotient /= base;
+  } 
   while ( quotient );
   // Append the negative sign for base 10
   if ( value < 0 && base == 10) buf += '-';
