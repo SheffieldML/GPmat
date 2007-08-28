@@ -3,6 +3,8 @@ This toolbox provides various machine learning tools, either through wrapping ot
 Version 0.128
 -------------
 
+Fixed Viterbi alignment algorithm, thanks to Raquel Urtasun for pointing out the problems with it.
+
 Carl Henrik Ek added embeddings with maximum variance unfolding (landmark and normal) to the toolbox. Also several files modified by Carl to allow a single output dimension of a model to be manipulated.
 
 Version 0.127

@@ -43,30 +43,29 @@ else
       model.X = varargin{1};
     end
   end
-end
 
-options = optOptions;
-options(14) = iters;
-options(9) = 1;
-options(1) = display;
-
-
-
-params = modelExtractParam(model);
-if(~isempty(params))
-  if isfield(model, 'optimiser')
-    optim = str2func(model.optimiser);
+  options = optOptions;
+  options(14) = iters;
+  options(9) = 1;
+  options(1) = display;
+  
+  
+  
+  params = modelExtractParam(model);
+  if(~isempty(params))
+    if isfield(model, 'optimiser')
+      optim = str2func(model.optimiser);
+    else
+      optim = str2func('conjgrad');
+    end
+    
+    params = optim('modelObjective', params,  options, ...
+                   'modelGradient', model);
+    
+    model = modelExpandParam(model, params);
   else
-    optim = str2func('conjgrad');
+    warning('This Model Has No Parameters To Optimise');
   end
-  
-  params = optim('modelObjective', params,  options, ...
-		 'modelGradient', model);
-  
-  model = modelExpandParam(model, params);
-else
-  warning('This Model Has No Parameters To Optimise');
 end
-
 
 
