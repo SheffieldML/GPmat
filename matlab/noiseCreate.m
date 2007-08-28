@@ -34,9 +34,11 @@ else
   noise.type = noiseType;
 end
 
+
 if nargin>1
   noise = noiseParamInit(noise, y);
 end
+
 
 % Check if the noise model has bespoke site update code
 if exist([noise.type 'NoiseSites'])==2

@@ -16,10 +16,15 @@ using namespace std;
 
 const string NOISEVERSION="0.1";
 // The basic noise class. The class allows its parameters to be transformed or optimised. Also noise models can be loaded from matlab files.
-class CNoise : public CTransformable, public COptimisable, public CMatinterface {
+class CNoise : public CTransformable, public COptimisable, public CStreamInterface, public CMatInterface {
  public:
   // constructors
-  CNoise() {}
+  CNoise() {  }
+  CNoise(CMatrix* pyin) : py(pyin)
+  {
+    setNumData(py->getRows());
+    setOutputDim(py->getCols());
+  }
   virtual ~CNoise(){}
   
   // pure virtual functions
@@ -33,24 +38,24 @@ class CNoise : public CTransformable, public COptimisable, public CMatinterface 
   virtual void getGradParams(CMatrix& g) const=0;
   virtual void getGradInputs(double& dlnZ_dmu, double& dlnZ_dvs, int i, int j) const=0;
   virtual void getGradInputs(CMatrix& dlnZ_dmu, CMatrix& dlnZ_dvs) const
+  {
+    // gradient with respect to mu and varSigma of log likelihood.  
+    assert(dlnZ_dmu.dimensionsMatch(dlnZ_dvs));
+    assert(dlnZ_dmu.getRows()==nData);
+    assert(dlnZ_dmu.getCols()==nProcesses);
+    
+    double gmu;
+    double gvs;
+    for(int i=0; i<dlnZ_dmu.getRows(); i++)
     {
-      // gradient with respect to mu and varSigma of log likelihood.  
-      assert(dlnZ_dmu.dimensionsMatch(dlnZ_dvs));
-      assert(dlnZ_dmu.getRows()==nData);
-      assert(dlnZ_dmu.getCols()==nProcesses);
-      
-      double gmu;
-      double gvs;
-      for(int i=0; i<dlnZ_dmu.getRows(); i++)
-	{
-	  for(int j=0; j<dlnZ_dmu.getCols(); j++)
-	    {
-	      getGradInputs(gmu, gvs, i, j);
-	      dlnZ_dmu.setVal(gmu, i, j);
-	      dlnZ_dvs.setVal(gvs, i, j);
-	    }
-	}
+      for(int j=0; j<dlnZ_dmu.getCols(); j++)
+      {
+	getGradInputs(gmu, gvs, i, j);
+	dlnZ_dmu.setVal(gmu, i, j);
+	dlnZ_dvs.setVal(gvs, i, j);
+      }
     }
+  }
   // Nu and G are combinations of gradients with respect to the mean and variance of the noise model.
   virtual void getNuG(CMatrix& g, CMatrix& nu, int index) const;
   virtual void updateSites(CMatrix& m, CMatrix& beta, int actIndex, const CMatrix& g, const CMatrix& nu, int index) const;
@@ -71,201 +76,206 @@ class CNoise : public CTransformable, public COptimisable, public CMatinterface 
   virtual void extractParamFromMxArray(const mxArray* matlabArray);
 #endif
   // non virtual functions
-  inline void setVerbosity(int val)
-    {
-      verbosity = val;
-    }
-  inline int getVerbosity() const
-    {
-      return verbosity;
-    }
   inline void setType(const string name)
-    {
-      type = name;
-    }
+  {
+    type = name;
+  }
   inline string getType() const
-    {
-      return type;
-    }
-  inline string getNoiseName() const
-    {
-      return noiseName;
-    }
-  inline void setNoiseName(const string name)
-    {
-      noiseName = name;
-    }
-
+  {
+    return type;
+  }
+  string getBaseType() const
+  {
+    return "noise";
+  }
+  inline string getName() const
+  {
+    return noiseName;
+  }
+  inline void setName(const string name)
+  {
+    noiseName = name;
+  }
+  
   void getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
-
+  
   // Functions arising from optimisable.
   int getOptNumParams() const
-    {
-      return getNumParams();
-    }
+  {
+    return getNumParams();
+  }
   void getOptParams(CMatrix& params) const
-    {
-      getTransParams(params);
-    }
+  {
+    getTransParams(params);
+  }
   void setOptParams(const CMatrix& params)
-    {
-      setTransParams(params);
-    }
-  void computeObjectiveGradParams(CMatrix& g) const
-    {
-      getGradTransParams(g);
-      g.negate();
-    }
+  {
+    setTransParams(params);
+  }
+  double computeObjectiveGradParams(CMatrix& g) const
+  {
+    getGradTransParams(g);
+    g.negate();
+    return -logLikelihood();
+  }
   double computeObjectiveVal() const
-    {
-      return -logLikelihood();
-     }
-
-
+  {
+    return -logLikelihood();
+  }
+  
+  
   inline bool isLogConcave() const
-    {
-      return logConcave;
-    }
+  {
+    return logConcave;
+  }
   inline bool isSpherical() const
-    {
-      return spherical;
-    }
+  {
+    return spherical;
+  }
   inline bool isMissing() const
-    {
-      return missing;
-    }
+  {
+    return missing;
+  }
   inline int getNumParams() const
-    {
-      return nParams;
-    }
-  inline int getNumProcesses() const
-    {
-      return nProcesses;
-    }
+  {
+    return nParams;
+  }
+  inline int getOutputDim() const
+  {
+    return nProcesses;
+  }
   inline int getNumData() const
-    {
-      return nData;
-    }
+  {
+    return nData;
+  }
   virtual string getParamName(int index) const
-    {
-      assert(index>=0);
-      assert(index<paramNames.size());
-      return paramNames[index];
-    }
+  {
+    assert(index>=0);
+    assert(index<paramNames.size());
+    return paramNames[index];
+  }
   void setParamName(const string paramName, int index)
+  {
+    assert(index>=0);
+    assert(index<getNumParams());
+    if(paramNames.size() == index)
+      paramNames.push_back(paramName);
+    else 
     {
-      assert(index>=0);
-      assert(index<getNumParams());
-      if(paramNames.size() == index)
-	paramNames.push_back(paramName);
-      else 
-	{
-	  if(paramNames.size()<index)
-	    paramNames.resize(index+1, "no name");
-	  paramNames[index] = paramName;
-	}
+      if(paramNames.size()<index)
+	paramNames.resize(index+1, "no name");
+      paramNames[index] = paramName;
     }
-
+  }
+  
   virtual void setMu(double val, int i, int j)=0;
   virtual double getMu(int i, int j) const=0;
   virtual void setVarSigma(double val, int i, int j)=0;
   virtual double getVarSigma(int i, int j) const=0;
   virtual double getTarget(int i, int j) const=0;
-  virtual void setTarget(const CMatrix& vals)=0;
-
+  virtual void setTarget(CMatrix* vals)
+  {
+    py=vals;
+    setNumData(vals->getRows());
+    setOutputDim(vals->getCols());
+    initStoreage();
+    initNames();      
+  }
+  
   virtual void setMus(double val)
-    {
-      for(int i=0; i<getNumData(); i++)
-	for(int j=0; j<getNumProcesses(); j++)
-	  setMu(val, i, j);
-    }
+  {
+    for(int i=0; i<getNumData(); i++)
+      for(int j=0; j<getOutputDim(); j++)
+	setMu(val, i, j);
+  }
   virtual void setVarSigmas(double val)
-    {
-      for(int i=0; i<getNumData(); i++)
-	for(int j=0; j<getNumProcesses(); j++)
-	  setVarSigma(val, i, j);
-    }
-
+  {
+    for(int i=0; i<getNumData(); i++)
+      for(int j=0; j<getOutputDim(); j++)
+	setVarSigma(val, i, j);
+  }
+  
   virtual void setMus(const CMatrix& vals)
-    {
-      assert(vals.getRows()==getNumData());
-      assert(vals.getCols()==getNumProcesses());
-      for(int i=0; i<getNumData(); i++)
-	for(int j=0; j<getNumProcesses(); j++)
-	  setMu(vals.getVal(i, j), i, j);
-    }
+  {
+    assert(vals.getRows()==getNumData());
+    assert(vals.getCols()==getOutputDim());
+    for(int i=0; i<getNumData(); i++)
+      for(int j=0; j<getOutputDim(); j++)
+	setMu(vals.getVal(i, j), i, j);
+  }
   virtual void setVarSigmas(const CMatrix& vals)
-    {
-      assert(vals.getRows()==getNumData());
-      assert(vals.getCols()==getNumProcesses());
-      for(int i=0; i<getNumData(); i++)
-	for(int j=0; j<getNumProcesses(); j++)
-	  setVarSigma(vals.getVal(i, j), i, j);
-    }
+  {
+    assert(vals.getRows()==getNumData());
+    assert(vals.getCols()==getOutputDim());
+    for(int i=0; i<getNumData(); i++)
+      for(int j=0; j<getOutputDim(); j++)
+	setVarSigma(vals.getVal(i, j), i, j);
+  }
   bool equals(const CNoise& noise, double tol=ndlutil::MATCHTOL) const;
 #ifdef _NDLMATLAB
   virtual void setVarSigmas(const mxArray* matlabArray)
-    {
-      CMatrix varsig;
-      varsig.fromMxArray(matlabArray);
-      setVarSigmas(varsig);
-    }
+  {
+    CMatrix varsig;
+    varsig.fromMxArray(matlabArray);
+    setVarSigmas(varsig);
+  }
   virtual void setMus(const mxArray* matlabArray)
-    {
-      CMatrix mus;
-      mus.fromMxArray(matlabArray);
-      setMus(mus);
-    }
+  {
+    CMatrix mus;
+    mus.fromMxArray(matlabArray);
+    setMus(mus);
+  }
   virtual mxArray* varSigmaToMxArray() const
-    {
-      return varSigma.toMxArray();
-    }
+  {
+    return varSigma.toMxArray();
+  }
   virtual mxArray* muToMxArray() const
-    {
-      return mu.toMxArray();
-    }
-
+  {
+    return mu.toMxArray();
+  }
+  
   virtual mxArray* targetToMxArray() const
-    {
-      return y.toMxArray();
-    }
+  {
+    return py->toMxArray();
+  }
 #endif
- 
+
+  CMatrix* py;
+  
  protected:
   CMatrix mu;
   CMatrix varSigma;
-  CMatrix y;
-
-
+  
+  
   inline void setLogConcave(const bool val)
-    {
-      logConcave = val;
-    }
+  {
+    logConcave = val;
+  }
   inline void setMissing(const bool val) 
-    {
-      missing = val;
-    }
+  {
+    missing = val;
+  }
   inline void setSpherical(const bool val)
-    {
-      spherical = val;
-    }
+  {
+    spherical = val;
+  }
   inline void setNumParams(int num) 
-    {
-      nParams = num;
-    }
-  inline void setNumProcesses(int num) 
-    {
-      nProcesses = num;
-    }
+  {
+    nParams = num;
+  }
+  inline void setOutputDim(int num) 
+  {
+    nProcesses = num;
+  }
   
  protected:
   inline void setNumData(int num) 
-    {
-      nData = num;
-    }
+  {
+    nData = num;
+  }
 
  private:
-  int verbosity;
+   void _init();
   bool spherical;
   bool logConcave;
   bool missing;
@@ -280,20 +290,24 @@ class CNoise : public CTransformable, public COptimisable, public CMatinterface 
 class CGaussianNoise : public CNoise {
  public:  
   // constructors
-  CGaussianNoise(){}
-  CGaussianNoise(const CMatrix& yin)
-    {
-      setTarget(yin);
-      initVals();
-      initParams();
-    }
+  CGaussianNoise()
+  {
+    _init();
+  }
+  CGaussianNoise(CMatrix* pyin) 
+  {
+    _init();
+    setTarget(pyin);
+    initVals();
+    initParams();
+  }
   ~CGaussianNoise();
   
   void initStoreage();
   void initNames();
   void initVals();
   void initParams();
-
+  
   ostream& display(ostream& os);
   void setParams(const CMatrix& params);
   void setParam(double val, int index);
@@ -308,48 +322,50 @@ class CGaussianNoise : public CNoise {
   void out(CMatrix& yPred, CMatrix& errorBarOut, const CMatrix& muTest, const CMatrix& varSigmaTest) const;
   void likelihoods(CMatrix& L, const CMatrix& muTest, const CMatrix& varSigmaTest, const CMatrix& yTest) const;
   double logLikelihood(const CMatrix& muTest, const CMatrix& varSigmaTest, const CMatrix& yTest) const;
-  double logLikelihood() const {
-    return logLikelihood(mu, varSigma, y);
+  double logLikelihood() const 
+  {
+    return logLikelihood(mu, varSigma, *py);
   }
   void  getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
   
-  inline double getMu(int i, int j) const {
+  inline double getMu(int i, int j) const 
+  {
     return mu.getVal(i, j);
   }
-  inline void setMu(double val, int i, int j) {
+  inline void setMu(double val, int i, int j) 
+  {
     mu.setVal(val, i, j);
   }
-  inline double getVarSigma(int i, int j) const {
+  inline double getVarSigma(int i, int j) const 
+  {
     return varSigma.getVal(i, j);
   }
-  inline void setVarSigma(double val, int i, int j) {
+  inline void setVarSigma(double val, int i, int j) 
+  {
     assert(!isnan(val));
     assert(val>=0);
     varSigma.setVal(val, i, j);
   }
-  inline double getTarget(int i, int j) const {
-    return y.getVal(i, j);
+  inline double getTarget(int i, int j) const 
+  {
+    return py->getVal(i, j);
   }
-  void setTarget(const CMatrix& vals) {
-    y.deepCopy(vals);
-    setNumData(vals.getRows());
-    setNumProcesses(vals.getCols());
-    initStoreage();
-    initNames();      
-  }
-  double getBiasVal(const int index) const {
-    assert(index<getNumProcesses());
+  double getBiasVal(const int index) const 
+  {
+    assert(index<getOutputDim());
     assert(index>=0);
     return bias.getVal(0, index);
   }
-  void setBiasVal(const double val, const int index) {
-    assert(index<getNumProcesses());
+  void setBiasVal(const double val, const int index) 
+  {
+    assert(index<getOutputDim());
     assert(index>=0);
     bias.setVal(val, 0, index);
   }
-  void setBias(const CMatrix& bia) {
+  void setBias(const CMatrix& bia) 
+  {
     assert(bia.getRows()==1);
-    assert(bia.getCols()==getNumProcesses());
+    assert(bia.getCols()==getOutputDim());
     bias.deepCopy(bia);
   }
   
@@ -360,6 +376,8 @@ class CGaussianNoise : public CNoise {
   void extractParamFromMxArray(const mxArray* matlabArray);
 #endif
  private:
+
+  void _init();
   
   double sigma2;
   CMatrix bias;
@@ -369,39 +387,44 @@ class CGaussianNoise : public CNoise {
 class CScaleNoise : public CNoise {
  public:  
   // constructors
-  CScaleNoise(){}
-  CScaleNoise(const CMatrix& yin)
-    {
-      setTarget(yin);
-      initParams();
-    }
+  CScaleNoise()
+  {
+    _init();
+  }
+  CScaleNoise(CMatrix* pyin)
+  {
+    _init();
+    setTarget(pyin);
+    initVals();
+    initParams(); 
+  }
   ~CScaleNoise();
   
   double getScale(int index) const
-    {
-      assert(index<getNumProcesses()&&index>=0);
-      return scale.getVal(index);
-    }
+  {
+    assert(index<getOutputDim()&&index>=0);
+    return scale.getVal(index);
+  }
   void setScale(double val, int index)
-    {
-      assert(index<getNumProcesses()&&index>=0);
-      scale.setVal(val, index);
-    }
+  {
+    assert(index<getOutputDim()&&index>=0);
+    scale.setVal(val, index);
+  }
   double getBias(int index) const
-    {
-      assert(index<getNumProcesses()&&index>=0);
-      return bias.getVal(index);
-    }
+  {
+    assert(index<getOutputDim()&&index>=0);
+    return bias.getVal(index);
+  }
   void setBias(double val, int index)
-    {
-      assert(index<getNumProcesses()&&index>=0);
-      bias.setVal(val, index);
-    }
+  {
+    assert(index<getOutputDim()&&index>=0);
+    bias.setVal(val, index);
+  }
   void initStoreage();
   void initNames();
   void initVals();
   void initParams();
-
+  
   ostream& display(ostream& os);
   void setParams(const CMatrix& params);
   void setParam(double val, int index);
@@ -417,41 +440,34 @@ class CScaleNoise : public CNoise {
   void likelihoods(CMatrix& L, const CMatrix& muTest, const CMatrix& varSigmaTest, const CMatrix& yTest) const;
   double logLikelihood(const CMatrix& muTest, const CMatrix& varSigmaTest, const CMatrix& yTest) const;
   double logLikelihood() const
-    {
-      return logLikelihood(mu, varSigma, y);
-    }
+  {
+    return logLikelihood(mu, varSigma, *py);
+  }
   void  getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
   
   inline double getMu(int i, int j) const
-    {
-      return mu.getVal(i, j);
-    }
+  {
+    return mu.getVal(i, j);
+  }
   inline void setMu(double val, int i, int j) 
-    {
-      mu.setVal(val, i, j);
-    }
+  {
+    mu.setVal(val, i, j);
+  }
   inline double getVarSigma(int i, int j) const
-    {
-      return varSigma.getVal(i, j);
-    }
+  {
+    return varSigma.getVal(i, j);
+  }
   inline void setVarSigma(double val, int i, int j) 
-    {
-      assert(!isnan(val));
-      assert(val>=0);
-      varSigma.setVal(val, i, j);
-    }
+  {
+    assert(!isnan(val));
+    assert(val>=0);
+    varSigma.setVal(val, i, j);
+  }
   inline double getTarget(int i, int j) const
-    {
-      return y.getVal(i, j);
-    }
-  void setTarget(const CMatrix& vals)
-    {
-      y.deepCopy(vals);
-      setNumData(vals.getRows());
-      setNumProcesses(vals.getCols());
-      initStoreage();
-      initNames();      
-    }
+  {
+    return py->getVal(i, j);
+  }
+ 
 #ifdef _NDLMATLAB
   // Adds parameters to the mxArray.
   void addParamToMxArray(mxArray* matlabArray) const;
@@ -459,29 +475,35 @@ class CScaleNoise : public CNoise {
   void extractParamFromMxArray(const mxArray* matlabArray);
 #endif
  private:
-
+  void _init();
   double sigma2;
   CMatrix bias;
   CMatrix scale;
 };
 
 // The probit noise model often used for classification.
-class CProbitNoise : public CNoise {
+class CProbitNoise : public CNoise 
+{
  public:  
   // constructors
-  CProbitNoise(){}
-  CProbitNoise(const CMatrix& yin)
-    {
-      setTarget(yin);
-      initParams();
-    }
+  CProbitNoise()
+  {
+    _init();
+  }
+  CProbitNoise(CMatrix* pyin) 
+  {
+    _init();
+    setTarget(pyin);
+    initVals();
+    initParams(); 
+  }
   ~CProbitNoise();
   
   void initStoreage();
   void initNames();
   void initVals();
   void initParams();
-
+  
   ostream& display(ostream& os);
   void setParams(const CMatrix& params);
   void setParam(double val, int index);
@@ -495,49 +517,43 @@ class CProbitNoise : public CNoise {
   void likelihoods(CMatrix& L, const CMatrix& muTest, const CMatrix& varSigmaTest, const CMatrix& yTest) const;
   double logLikelihood(const CMatrix& muTest, const CMatrix& varSigmaTest, const CMatrix& yTest) const;
   double logLikelihood() const
-    {
-      return logLikelihood(mu, varSigma, y);
-    }
+  {
+    return logLikelihood(mu, varSigma, *py);
+  }
   void  getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
   
   inline double getMu(int i, int j) const
-    {
-      return mu.getVal(i, j);
-    }
+  {
+    return mu.getVal(i, j);
+  }
   inline void setMu(double val, int i, int j) 
-    {
-      mu.setVal(val, i, j);
-    }
+  {
+    mu.setVal(val, i, j);
+  }
   inline double getVarSigma(int i, int j) const
-    {
-      return varSigma.getVal(i, j);
-    }
+  {
+    return varSigma.getVal(i, j);
+  }
   inline void setVarSigma(double val, int i, int j) 
-    {
-      assert(!isnan(val));
-      assert(val>=0);
-      varSigma.setVal(val, i, j);
-    }
+  {
+    assert(!isnan(val));
+    assert(val>=0);
+    varSigma.setVal(val, i, j);
+  }
   inline double getTarget(int i, int j) const
-    {
-      return y.getVal(i, j);
-    }
-  virtual void setTarget(const CMatrix& vals)
-    {
-      y.deepCopy(vals);
-      setNumData(vals.getRows());
-      setNumProcesses(vals.getCols());
-      initStoreage();
-      initNames();      
-    }
+  {
+    return py->getVal(i, j);
+  }
+  
 #ifdef _NDLMATLAB
   // Adds parameters to the mxArray.
   void addParamToMxArray(mxArray* matlabArray) const;
   // Gets the parameters from the mxArray.
   void extractParamFromMxArray(const mxArray* matlabArray);
 #endif
-
+  
  private:
+  void _init();
   double sigma2;
   CMatrix bias;
 };
@@ -546,12 +562,17 @@ class CProbitNoise : public CNoise {
 class CNcnmNoise : public CNoise {
  public:  
   // constructors
-  CNcnmNoise(){}
-  CNcnmNoise(const CMatrix& yin)
-    {
-      setTarget(yin);
-      initParams();
-    }
+  CNcnmNoise()
+  {
+    _init();
+  }
+  CNcnmNoise(CMatrix* pyin) 
+  {
+    _init();
+    setTarget(pyin);
+    initVals();
+    initParams(); 
+  }
   ~CNcnmNoise();
   
   void initStoreage();
@@ -574,59 +595,56 @@ class CNcnmNoise : public CNoise {
   void writeParamsToStream(ostream& out) const;
   void readParamsFromStream(istream& in);
   double logLikelihood() const
-    {
-      return logLikelihood(mu, varSigma, y);
-    }
+  {
+    return logLikelihood(mu, varSigma, *py);
+  }
   void  getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
   
   inline double getMu(int i, int j) const
-    {
-      return mu.getVal(i, j);
-    }
+  {
+    return mu.getVal(i, j);
+  }
   inline void setMu(double val, int i, int j) 
-    {
-      mu.setVal(val, i, j);
-    }
+  {
+    mu.setVal(val, i, j);
+  }
   inline double getVarSigma(int i, int j) const
-    {
-      return varSigma.getVal(i, j);
-    }
+  {
+    return varSigma.getVal(i, j);
+  }
   inline void setVarSigma(double val, int i, int j) 
-    {
-      if(isnan(val))
-	throw ndlexceptions::Error("varSigma is being set with value NaN.");
-      assert(val>=0);
-      varSigma.setVal(val, i, j);
-    }
+  {
+    if(isnan(val))
+      throw ndlexceptions::Error("varSigma is being set with value NaN.");
+    assert(val>=0);
+    varSigma.setVal(val, i, j);
+  }
   inline void setSplitGamma(const bool val)
-    {
-      splitGamma=val;
-    }
+  {
+    splitGamma=val;
+  }
   bool isSplitGamma() const
-    {
-      return splitGamma;
-    }
+  {
+    return splitGamma;
+  }
   inline double getTarget(int i, int j) const
-    {
-      return y.getVal(i, j);
-    }
-  void setTarget(const CMatrix& vals)
-    {
-      y.deepCopy(vals);
-      setSplitGamma(false);
-      setNumData(vals.getRows());
-      setNumProcesses(vals.getCols());
-      initStoreage();
-      initNames();      
-    }
+  {
+    return py->getVal(i, j);
+  }
+  void setTarget(CMatrix* vals)
+  {
+    setSplitGamma(false);
+    CNoise::setTarget(vals);
+  }
 #ifdef _NDLMATLAB
   // Adds parameters to the mxArray.
   void addParamToMxArray(mxArray* matlabArray) const;
   // Gets the parameters from the mxArray.
   void extractParamFromMxArray(const mxArray* matlabArray);
 #endif
-
+  
  private:
+  void _init();
   double gamman;
   double gammap;
   bool splitGamma;
@@ -637,29 +655,37 @@ class CNcnmNoise : public CNoise {
 class COrderedNoise : public CNoise {
  public:  
   // constructors
-  COrderedNoise(){}
-  COrderedNoise(const CMatrix& yin)
-    {
-      setTarget(yin);
-      initParams();
-    }
-  COrderedNoise(const CMatrix& yin, int numCts) : numCats(numCts)
-    {
-      setTarget(yin);
-      initParams();
-    }
+  COrderedNoise()
+  {
+    _init();
+  }
+  COrderedNoise(CMatrix* pyin) : numCats(1)
+  {
+    _init();
+    setTarget(pyin);
+    initVals();
+    initParams(); 
+  }
+  COrderedNoise(CMatrix* pyin, int numCts) : numCats(numCts)
+  {
+    _init();
+    setTarget(pyin);
+    initVals();
+    initParams(); 
+  }
   ~COrderedNoise();
   
   int getNumCategories() const
-    {
-      return numCats;
-    }
+  {
+    return numCats;
+  }
   void setNumCategories(int val)
-    {
-      assert(val>1);
-      numCats=val;
-    }
-
+  {
+    assert(val>1);
+    numCats=val;
+    initStoreage();
+  }
+  
   void initStoreage();
   void initNames();
   void initVals();
@@ -680,55 +706,48 @@ class COrderedNoise : public CNoise {
   void writeParamsToStream(ostream& out) const;
   void readParamsFromStream(istream& in);
   double logLikelihood() const
-    {
-      return logLikelihood(mu, varSigma, y);
-    }
+  {
+    return logLikelihood(mu, varSigma, *py);
+  }
   void  getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
   
   inline double getMu(int i, int j) const
-    {
-      return mu.getVal(i, j);
-    }
+  {
+    return mu.getVal(i, j);
+  }
   inline void setMu(double val, int i, int j) 
-    {
-      mu.setVal(val, i, j);
-    }
+  {
+    mu.setVal(val, i, j);
+  }
   inline double getVarSigma(int i, int j) const
-    {
-      return varSigma.getVal(i, j);
-    }
+  {
+    return varSigma.getVal(i, j);
+  }
   inline void setVarSigma(double val, int i, int j) 
-    {
-      if(isnan(val))
-	throw ndlexceptions::Error("varSigma is being set with value NaN.");
-      assert(val>=0);
-      varSigma.setVal(val, i, j);
-    }
+  {
+    if(isnan(val))
+      throw ndlexceptions::Error("varSigma is being set with value NaN.");
+    assert(val>=0);
+    varSigma.setVal(val, i, j);
+  }
   inline double getTarget(int i, int j) const
-    {
-      return y.getVal(i, j);
-    }
-  void setTarget(const CMatrix& vals)
-    {
-      y.deepCopy(vals);
-      setNumData(vals.getRows());
-      setNumProcesses(vals.getCols());
-      initStoreage();
-      initNames();      
-    }
+  {
+    return py->getVal(i, j);
+  }
 #ifdef _NDLMATLAB
   // Adds parameters to the mxArray.
   void addParamToMxArray(mxArray* matlabArray) const;
   // Gets the parameters from the mxArray.
   void extractParamFromMxArray(const mxArray* matlabArray);
 #endif
-
+  
  private:
+   void _init();
   int numCats;
   CMatrix widths;
   double sigma2;
   CMatrix bias;
-
+  
   mutable CMatrix gwidth;
 };
 
