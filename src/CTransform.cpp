@@ -2,6 +2,36 @@
 
 const double CTransform::eps = 1e-16;
 
+CExpTransform::CExpTransform()
+{
+  transform = 1;
+  setType("exp");
+}
+  
+double CExpTransform::atox(double a) const
+{
+  double x=0;
+  if(a<-limVal)
+    x = exp(-limVal);
+  else if(a<limVal)
+    x=exp(a);
+  else
+    x = exp(limVal);
+  assert(!isnan(x));
+  return x;
+}
+double CExpTransform::xtoa(double x) const
+{
+  assert(x>0);
+  double a=log(x);
+  assert(!isnan(a));
+  return a;
+}
+double CExpTransform::gradfact(double x) const
+{
+  return x;
+}
+
 CNegLogLogitTransform::CNegLogLogitTransform()
 {
   transform = 1;
@@ -102,6 +132,8 @@ void CParamTransforms::fromMxArray(const mxArray* transformArray)
 	    addTransform(new CNegLogLogitTransform, transformIndex[j]-1);
 	  else if(transformType=="sigmoid")
 	    addTransform(new CSigmoidTransform, transformIndex[j]-1);
+	  else if(transformType=="exp")
+	    addTransform(new CExpTransform, transformIndex[j]-1);
 	  else
 	    cerr << "Transform type " << transformType << " is currently unknown."<< endl;
 	}

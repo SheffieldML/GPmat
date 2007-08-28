@@ -23,18 +23,17 @@ void COptimisable::checkGradients()
   getOptParams(params);
   origParams.deepCopy(params);
   computeObjectiveGradParams(analyticGrad);
-  for(int j=0; j<nParams; j++)
-    {
-      origParam = origParams.getVal(j);
-      params.setVal(origParam + change, j);
-      setOptParams(params);
-      objectivePlus = computeObjectiveVal();
-      params.setVal(origParam - change, j);
-      setOptParams(params);
-      objectiveMinus = computeObjectiveVal();
-      numericalDiff.setVal(0.5*(objectivePlus - objectiveMinus)/change, j);
-      params.setVal(origParams.getVal(j), j);
-    }
+  for(int j=0; j<nParams; j++) {
+    origParam = origParams.getVal(j);
+    params.setVal(origParam + change, j);
+    setOptParams(params);
+    objectivePlus = computeObjectiveVal();
+    params.setVal(origParam - change, j);
+    setOptParams(params);
+    objectiveMinus = computeObjectiveVal();
+    numericalDiff.setVal(0.5*(objectivePlus - objectiveMinus)/change, j);
+    params.setVal(origParams.getVal(j), j);
+  }
   
   cout << "Numerical differences:" << endl << numericalDiff << endl;
   cout << "Analytic gradients:" << endl << analyticGrad << endl;
@@ -268,25 +267,25 @@ void COptimisable::scgOptimise(int maxIters, const double objectiveTol, const do
 
     // 7 Check whether a successful error reduction can be made.
     if(Delta >= 0.0)  // update is successful
-	{
-	  w.deepCopy(wPlus); 	  
-	  oldObj = newObj;
-	  computeObjectiveGradParams(rp);
-	  rp.negate();
-	  lambdaBar = 0; 
-	  success = true;
+      {
+	w.deepCopy(wPlus); 	  
+	oldObj = newObj;
+	computeObjectiveGradParams(rp);
+	rp.negate();
+	lambdaBar = 0; 
+	success = true;
 	  // 7.a Check for algorithm restart.
 	  if(k % nParams == 0) // restart algorithm
 	    p.deepCopy(rp); 
 	  else
-      {	      
-        double rpnorm2 = rp.norm2Row(0);
-        double rrp = r.dotRowRow(0, rp, 0); 
+	    {	      
+	      double rpnorm2 = rp.norm2Row(0);
+	      double rrp = r.dotRowRow(0, rp, 0); 
 	      
-        beta = (rpnorm2 - rrp)/mu;
-        p.scale(beta); 
-        p.axpy(rp, 1.0);
-      }
+	      beta = (rpnorm2 - rrp)/mu;
+	      p.scale(beta); 
+	      p.axpy(rp, 1.0);
+	    }
 	  
 	  r.deepCopy(rp);
 	  
@@ -295,11 +294,11 @@ void COptimisable::scgOptimise(int maxIters, const double objectiveTol, const do
 	  if(lambda<1e-15) lambda = 1e-15;
 	}
     else // no reduction in error is possible.
-	{
-	  setOptParams(w);
-	  lambdaBar = lambda; 
-	  success = false; 
-	}
+      {
+	setOptParams(w);
+	lambdaBar = lambda; 
+	success = false; 
+      }
     
     // 8 Increase the scale parameter
     if(Delta < 0.25) lambda *= 4.0;
@@ -309,10 +308,13 @@ void COptimisable::scgOptimise(int maxIters, const double objectiveTol, const do
       cout << "Iteration: " << k << " Error: " << oldObj << " Scale: " << lambda << endl;
     if (success && fabs(p.max()*alpha) < paramTol && max(fabs(newObj-oldObj)) < objectiveTol)
       {
-      if(getVerbosity()>2)
-        cout << "Convergence criterion for parameters and objective met" << endl;
-      return;
-    }
+	if(getVerbosity()>2)
+	  {
+	    cout << "Convergence criterion for parameters and objective met" << endl;
+	    cout << "Largest tolerance " << fabs(newObj - oldObj) << endl;
+	  }
+	return;
+      }
   }
   cout << "Warning: Maximum number of iterations has been exceeded" << endl;
 }

@@ -1,6 +1,10 @@
 function options = optOptions;
 
 % OPTOPTIONS Give optimisation options for NETLAB.
+% FORMAT
+% DESC returns a default options vector for NETLAB.
+% RETURN options : a set of options.
+%
 
 % OPTIMI
 
