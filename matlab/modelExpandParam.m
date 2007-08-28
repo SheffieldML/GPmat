@@ -1,4 +1,4 @@
-function model = modelExpandParam(model, params)
+function model = modelExpandParam(model, params, dim)
 
 % MODELEXPANDPARAM Update a model structure with parameters.
 % FORMAT
@@ -16,6 +16,8 @@ function model = modelExpandParam(model, params)
 % SEEALSO : modelExtractParam, scg, conjgrad
 % 
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
+%
+% MODIFICATIONS : Cark Henrik Ek, 2007
 
 % MLTOOLS
 
@@ -24,4 +26,8 @@ if isfield(model, 'paramGroups')
 end
 
 fhandle = str2func([model.type 'ExpandParam']);
-model = fhandle(model, params);
+if(nargin<3)
+  model = fhandle(model, params);
+else
+  model = fhandle(model,params,dim);
+end

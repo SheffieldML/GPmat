@@ -6,9 +6,15 @@
 
 <h1>Matlab MLTOOLS Toolbox</h1>
 
+The main objective of this toolbox is to integrate several machine learning methods with in a consistent framework which is coded in a compatible way with the methods available in the other toolboxes on this site. Whilst the other toolboxes typically reflect research projects, this toolbox reflects other researchers work or known algorithms. The code either provides 'wrappers' for other researchers code or independent implementations. Examples of code that is wrapped include LLE, Isomap, MVU, NETLAB.
+
 RELEASEINFORMATION
 
-Minor modifications including modelAddDynamics file. 
+Carl Henrik Ek added embeddings with maximum variance unfolding (landmark and normal) to the toolbox. Also several files modified by Carl to allow a single output dimension of a model to be manipulated.
+
+<h4>Version 0.127</h4>
+
+Minor modifications including adding file modelAddDynamics to replace fgplvmAddDynamics.
 
 <h4>Version 0.126</h4>
 

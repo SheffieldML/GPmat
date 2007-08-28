@@ -1,4 +1,4 @@
-function [params, names] = modelExtractParam(model)
+function [params, names] = modelExtractParam(model, dim)
 
 % MODELEXTRACTPARAM Extract the parameters of a model.
 % FORMAT
@@ -11,12 +11,18 @@ function [params, names] = modelExtractParam(model)
 % SEEALSO : modelExpandParam, scg, conjgrad
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
+%
+% MODIFICATIONS : Cark Henrik Ek, 2007
 
 % MLTOOLS
 
 fhandle = str2func([model.type 'ExtractParam']);
 if nargout < 2
-  params = fhandle(model);
+ if(nargin<2)
+    params = fhandle(model);
+  else
+    params = fhandle(model,dim);
+  end
 else
   [params, namesTemp] = fhandle(model);
 

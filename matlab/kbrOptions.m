@@ -4,6 +4,7 @@ function options = kbrOptions(X)
 % FORMAT
 % DESC creates a default options structure for the 
 % kernel based regression model structure.
+% ARG X : the input data for the kernel regression.
 % RETURN options : the default options structure.
 %
 % SEEALSO : kbrCreate, modelOptions

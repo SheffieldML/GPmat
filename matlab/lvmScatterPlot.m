@@ -55,6 +55,13 @@ else
   [mu, varsigma] = feval(fhandle, model, XTest);
 end
 
+d = size(mu, 2);
+if size(varsigma, 2) == 1
+  dataMaxProb = -0.5*d*log(varsigma);
+else
+  dataMaxProb = -.5*sum(log(varsigma), 2);
+end
+
 if isempty(ax)
   figure(1)
   clf
@@ -65,7 +72,9 @@ else
 end
 hold on
 
-C = log10(reshape(1./varsigma(:, 1), size(X1)));
+C = reshape(dataMaxProb, size(X1));
+
+% Rescale it
 C = C - min(min(C));
 C = C/max(max(C));
 C = round(C*63);

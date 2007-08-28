@@ -34,3 +34,5 @@ if ~isempty(lbl)
 else
   returnVal = plot(X(:, 1), X(:, 2), 'rx');
 end
+set(returnVal, 'markersize', 10);
+set(returnVal, 'linewidth', 2);

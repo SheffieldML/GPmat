@@ -4,12 +4,14 @@ function model = modelOptimise(model, varargin)
 % FORMAT
 % DESC is a wrapper function that optimises a given model.
 % ARG model : the model to be optimised. 
-% ARG P1, P2, P3 ... : optional additional arguments.
+% ARG P1, P2, P3... : optional additional arguments.
 % RETURN model : the optimised model.
 %
 % SEEALSO : modelObjective, modelGradient
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
+%
+% MODIFICATIONS : Cark Henrik Ek, 2007
  
 % MLTOOLS
 
@@ -51,15 +53,20 @@ options(1) = display;
 
 
 params = modelExtractParam(model);
-if isfield(model, 'optimiser')
-  optim = str2func(model.optimiser);
+if(~isempty(params))
+  if isfield(model, 'optimiser')
+    optim = str2func(model.optimiser);
+  else
+    optim = str2func('conjgrad');
+  end
+  
+  params = optim('modelObjective', params,  options, ...
+		 'modelGradient', model);
+  
+  model = modelExpandParam(model, params);
 else
-  optim = str2func('conjgrad');
+  warning('This Model Has No Parameters To Optimise');
 end
 
-params = optim('modelObjective', params,  options, ...
-               'modelGradient', model);
-
-model = modelExpandParam(model, params);
 
 
