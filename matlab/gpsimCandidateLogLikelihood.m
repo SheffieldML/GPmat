@@ -15,17 +15,15 @@ function ll = gpsimCandidateLogLikelihood(model)
 % GPSIM
 
 
-base = (model.logDetK - model.candidate.logDetA) + 
-  
 dim = size(model.y, 1);
 
-invK_ffm = model.candiate.invK*model.m;
-K_ufinvK_ffm = model.K_uf*invK_ffm;
+invK_ffm = model.candidate.invK*model.candidate.m;
+K_ufinvK_ffm = model.candidate.K_uf*invK_ffm;
 
 ll = -0.5*(dim*log(2*pi) + model.candidate.logDetK ...
            + model.candidate.logDetA ...
            - model.logDetK ...
-           + sum(sum(invK_ffm.*model.m))...
+           + sum(sum(invK_ffm.*model.candidate.m))...
            - sum(sum((model.candidate.Ainv*K_ufinvK_ffm).*K_ufinvK_ffm)));
 
 %/~ In case we need priors in.

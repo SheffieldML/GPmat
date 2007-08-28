@@ -16,15 +16,15 @@ function model = gpsimCandidateUpdateKernels(model)
 
 
 numBlocks = model.kern.numBlocks;
-for j = 1:model.candidate.numGenes
-  for i = 1:j-1
-    model.candiate.Kcomp{i, j} = 
-  end
-  model.candidate.Kcomp{j, j} = 
-end
+% for j = 1:model.candidate.numGenes
+%   for i = 1:j-1
+%     model.candiate.Kcomp{i, j} = 
+%   end
+%   model.candidate.Kcomp{j, j} = 
+% end
 model.candidate.K = zeros(size(model.candidate.y, 1));
 numCanTimePoints = length(model.candidate.t);
-numCanTimePoints = length(model.t);
+numTimePoints = length(model.t);
 iEndVal = 0;
 for i = 1:model.candidate.numGenes
   iStartVal = iEndVal + 1;
@@ -35,7 +35,7 @@ for i = 1:model.candidate.numGenes
                                  model.candidate.t, ...
                                  model.candidate.t, ...
                                  numBlocks + i, ...
-                                 numBlocks + i))+diag(model.candiate.yvar);
+                                 numBlocks + i));
   % Compute cross covariances with other candidate points.
   jEndVal = 0;
   for j = 1:i-1
@@ -57,12 +57,13 @@ for i = 1:model.candidate.numGenes
     jEndVal = jEndVal + numTimePoints;
     model.candidate.K_uf(jStartVal:jEndVal, iStartVal:iEndVal) = ...
         real(multiKernComputeBlock(model.candidate.kern, ...
-                                   model.candidate.t, ...
                                    model.t, ...
+                                   model.candidate.t, ...
                                    numBlocks + i, ...
                                    j));
   end
 end
+model.candidate.K = model.candidate.K + diag(model.candidate.yvar);
 [model.candidate.invK, U, jitter] = pdinv(model.candidate.K);
 if jitter>1e-4
   fprintf('Warning: gpsimCandidateUpdateKernels added jitter of %2.4f to K\n', jitter)
@@ -73,7 +74,7 @@ model.candidate.logDetK = logdet(model.candidate.K, U);
 model.candidate.A = model.K ...
     + model.candidate.K_uf*model.candidate.invK*model.candidate.K_uf';
 
-[mode.candidate.Ainv, UA, jitter] = pdinv(model.candidate.A);
+[model.candidate.Ainv, UA, jitter] = pdinv(model.candidate.A);
 if jitter>1e-4
   fprintf('Warning: gpsimCandidateUpdate Kernels added jitter of %2.4f to A\n', jitter);
 end
