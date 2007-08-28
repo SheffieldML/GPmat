@@ -43,7 +43,7 @@ i = 1;
 % Create a kernel with component i missing.
 tempKern = tensorKernSlash(kern, i);
 % Compute kernel matrix from that kernel.
-Kslash = kernCompute(tempKern, X, X2);
+Kslash = kernCompute(tempKern, X, X2)';
 
 
 if ~isempty(kern.comp{i}.index)
@@ -70,7 +70,7 @@ for i = 2:length(kern.comp)
   % Create a kernel with component i missing.
   tempKern = tensorKernSlash(kern, i);
   % Compute kernel matrix from that kernel.
-  Kslash = kernCompute(tempKern, X, X2);
+  Kslash = kernCompute(tempKern, X, X2)';
   
   if ~isempty(kern.comp{i}.index)
     % only part of the data is involved with the kernel.

@@ -4,8 +4,10 @@ function kern = kernReadParamsFromFID(kern, FID)
 
 % KERN
 
-if strcmp(kern.type, 'cmpnd')
+if strcmp(kern.type, 'cmpnd') || strcmp(kern.type, 'tensor')
   kern = cmpndKernReadParamsFromFID(kern, FID);
+elseif strcmp(kern.type, 'tensor')
+  kern = tensorKernReadParamsFromFID(kern, FID);
 else
   lineStr = getline(FID);
   tokens = tokenise(lineStr, '=');

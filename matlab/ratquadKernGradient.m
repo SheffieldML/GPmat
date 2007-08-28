@@ -53,7 +53,7 @@ else
 end
 baseVal = (1+n2*wi2);
 kbase = baseVal.^-kern.alpha;
-kbase2 = -kern.alpha*baseVal.^-(kern.alpha+1);
+kbase2 = -kern.alpha*kbase./baseVal;
 g(1) = -kern.variance*sum(sum(varargin{end}.*(n2*wi2/kern.alpha.*kbase2 ...
                                              + log(baseVal).*kbase)));
 g(2) = -kern.variance*sum(sum(varargin{end}.*n2.*kbase2))*2*wi2/kern.lengthScale;

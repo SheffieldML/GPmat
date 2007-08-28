@@ -2,6 +2,7 @@
 #define CKERN_H
 #include <cmath>
 #include "CTransform.h"
+#include "CDataModel.h"
 #include "CMatrix.h"
 #include "CDist.h"
 #include "ndlstrutil.h"
@@ -20,10 +21,10 @@ const string KERNVERSION="0.1";
 // over parameters; CTransformable, for allowing parameters to be
 // transformed so that they are only optimised in, for example,
 // positive half-spaces
-class CKern : public CMatinterface, public CTransformable, public CRegularisable {
+
+class CKern : public CMatInterface, public CStreamInterface, public CTransformable, public CRegularisable {
  public:
-  CKern()
-    {}
+  CKern() {}
   CKern(const CMatrix& X){}
   
   virtual ~CKern(){}
@@ -35,26 +36,31 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
   virtual double diagComputeElement(const CMatrix& X, int index) const=0;
   // compute the entire diagonal
   virtual void diagCompute(CMatrix& d, const CMatrix& X) const
-    {
-      assert(X.rowsMatch(d));
-      assert(d.getCols()==1);
-      for(int i=0; i<X.getRows(); i++)
-	d.setVal(diagComputeElement(X, i), i);
-    }
+  {
+    assert(X.rowsMatch(d));
+    assert(d.getCols()==1);
+    for(int i=0; i<X.getRows(); i++)
+	    d.setVal(diagComputeElement(X, i), i);
+  }
   // Compute the diagonal at particular indices.
   virtual void diagCompute(CMatrix& d, const CMatrix& X, const vector<int> indices) const
-    {
-      assert(d.getRows()==indices.size());
-      assert(d.getCols()==1);
-      for(int i=0; i<indices.size(); i++)
-	d.setVal(diagComputeElement(X, indices[i]), i);
-    }
+  {
+    assert(d.getRows()==indices.size());
+    assert(d.getCols()==1);
+    for(int i=0; i<indices.size(); i++)
+	    d.setVal(diagComputeElement(X, indices[i]), i);
+  }
  
   // Set the parameters of the kernel.
   virtual void setParam(double, int)=0;
   // Get gradients of the kernel with respect to input values.
   //   g[i].val(k,j) = d kern(X_row_i,X2_row_k)/ d x_component_j
-  virtual void getGradX(vector<CMatrix*>& g, const CMatrix& X, const CMatrix& X2, const bool addG=false) const=0;
+  virtual void getGradX(vector<CMatrix*>& gX, const CMatrix& X, const CMatrix& X2, const bool addG=false) const
+  {
+    for(int i=0; i<X.getRows(); i++)
+      getGradX(*gX[i], X, i, X2, addG);
+  }
+  virtual void getGradX(CMatrix& g, const CMatrix& X, const int pointNo, const CMatrix& X2, const bool addG=false) const=0;
   // Get gradients of the kernel diagonal with respect to input values.
   // WVB: I think this is separate from getGradX just because the diagonal vals
   // (i.e. kern(X_row_i,X_row_i) should always be taken from the same matrix X.
@@ -75,19 +81,19 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
   // Compute specified rows and columns of the kernel matrix.
   virtual void compute(CMatrix& K, const CMatrix& X1, const vector<int> indices1,
 			  const CMatrix& X2, const vector<int> indices2) const
+  {
+    assert(K.rowsMatch(X1));
+    assert(K.getCols()==X2.getRows());
+    for(int i=0; i<indices1.size(); i++)
     {
-      assert(K.rowsMatch(X1));
-      assert(K.getCols()==X2.getRows());
-      for(int i=0; i<indices1.size(); i++)
-	{
-	  for(int j=0; j<indices2.size(); j++)
-	    {
-	      assert(indices1[i]<K.getRows());
-	      assert(indices2[j]<K.getCols());
-	      K.setVal(computeElement(X1, indices1[i], X2, indices2[j]), indices1[i], indices2[j]);
-	    }
-	}
+      for(int j=0; j<indices2.size(); j++)
+      {
+	assert(indices1[i]<K.getRows());
+	assert(indices2[j]<K.getCols());
+	K.setVal(computeElement(X1, indices1[i], X2, indices2[j]), indices1[i], indices2[j]);
+      }
     }
+  }
   // Compute the kernel matrix for a data set.
   virtual void compute(CMatrix& K, const CMatrix& X) const
     {
@@ -108,17 +114,27 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
     }
   // Compute portions of the kernel matrix.
   virtual void compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const
+  {
+    assert(K.rowsMatch(X));
+    assert(K.getCols()==X2.getRows());
+    for(int i=0; i<K.getRows(); i++)
     {
-      assert(K.rowsMatch(X));
-      assert(K.getCols()==X2.getRows());
-      for(int i=0; i<K.getRows(); i++)
-	{
-	  for(int j=0; j<K.getCols(); j++)
-	    {
-	      K.setVal(computeElement(X, i, X2, j), i, j);
-	    }
-	}	      
+      for(int j=0; j<K.getCols(); j++)
+      {
+	K.setVal(computeElement(X, i, X2, j), i, j);
+      }
+    }	      
+  }
+  // Compute portions of the kernel matrix.
+  virtual void compute(CMatrix& K, const CMatrix& X, const CMatrix& X2, const int row) const
+  {
+    assert(K.rowsMatch(X));
+    assert(K.getCols()==1);
+    for(int i=0; i<K.getRows(); i++)
+    {
+      K.setVal(computeElement(X, i, X2, row), i, 0);
     }
+  }
   // Dummy function to allow CTransformable to be used.
   virtual void getGradParams(CMatrix& g) const
     {
@@ -179,6 +195,15 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
     }
   // Get a particular parameter.
   virtual double getParam(int) const=0;
+  // Test if kernel leads to stationary functions.
+  bool isStationary() const
+  {
+    return stationary;
+  }
+  void setStationary(bool val)
+  {
+    stationary = val;
+  }
   // Set the parameters from a vector of parameters.
   void setParams(const CMatrix& paramVec)
     {
@@ -193,14 +218,18 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
     }
   // Return a string representing the kernel type.
   inline string getType() const
-    {
+  {
       return type;
-    }
+  }
   // Set a string representing the kernel type.
   inline void setType(const string name)
-    {
-      type = name;
-    }
+  {
+    type = name;
+  }
+  string getBaseType() const
+  {
+    return "kern";
+  }
   // Get the long name of the kernel.
   inline string getName() const
     {
@@ -224,9 +253,9 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
     }
   // How many kernel parameters are there?
   inline int getNumParams() const
-    {
-      return nParams;
-    }
+  {
+    return nParams;
+  }
   // Assign a name to the kernel parameters.
   void setParamName(const string name, int index)
     {
@@ -276,7 +305,7 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
   void getDiagGradTransParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
   // specify tests for equality between kernels.
   bool equals(const CKern& kern, double tol=ndlutil::MATCHTOL) const;
-  
+
  protected:
   int nParams;
   string kernName;
@@ -284,10 +313,12 @@ class CKern : public CMatinterface, public CTransformable, public CRegularisable
   vector<string> paramNames;
  private:
   int inputDim;
+  bool stationary;
 };
 
 // CArdKern is the base class for any kernel that uses multiple input parameters.
 class CArdKern : public CKern {
+ public:
 #ifdef _NDLMATLAB
   virtual void addParamToMxArray(mxArray* matlabArray) const;
   // Gets the parameters from the mxArray.
@@ -298,8 +329,109 @@ class CArdKern : public CKern {
   CMatrix scales;
 };
 
+// Component kernel (such as cmpnd or tensor)
+class CComponentKern : public CKern 
+{
+ public:
+  CComponentKern() {}
+  CComponentKern(const CComponentKern& kern) : components(kern.components)
+  {
+  }
+  virtual int addKern(CKern* kern)
+  {
+    components.push_back(kern);
+    int oldNParams = nParams;
+    nParams+=kern->getNumParams();
+    for(int i=0; i<kern->getNumTransforms(); i++)
+      addTransform(kern->getTransform(i), kern->getTransformIndex(i)+oldNParams);      
+    return components.size()-1;
+    setStationary(isStationary() && kern->isStationary());
+  }
+  virtual void setParam(double val, int paramNo)
+  {
+    int start = 0;
+    int end = 0;
+    for(size_t i=0; i<components.size(); i++)
+    {
+      end = start+components[i]->getNumParams()-1;
+      if(paramNo <= end)
+      {
+	components[i]->setParam(val, paramNo-start);
+	return;
+      }
+      
+      start = end + 1;
+    }
+  }
+  // Parameters are kernel parameters
+  virtual double getParam(int paramNo) const
+  {
+    int start = 0;
+    int end = 0;
+    for(size_t i=0; i<components.size(); i++)
+    {
+      end = start+components[i]->getNumParams()-1;
+      if(paramNo <= end)
+	return components[i]->getParam(paramNo-start);
+      start = end + 1;
+    }
+    return -1;
+  }
+  virtual string getParamName(int paramNo) const
+  {
+    int start = 0;
+    int end = 0;
+    for(size_t i=0; i<components.size(); i++)
+    {
+      end = start+components[i]->getNumParams()-1;
+      if(paramNo <= end)
+	return components[i]->getType() + components[i]->getParamName(paramNo-start);
+      start = end + 1;
+    }
+    return "";
+  }
+  virtual void updateX(const CMatrix& X)
+  {
+    for(size_t i=0; i<components.size(); i++)
+      components[i]->updateX(X);
+  }
+  virtual void addPrior(CDist* prior, int index) 
+  {
+    throw ndlexceptions::Error("Error cannot add priors to component kernels directly, please add to the components.");
+  }
+
+  virtual double priorLogProb() const
+  {
+    double L = 0.0;
+    for(int i=0; i<components.size(); i++)
+    {
+      L+=components[i]->priorLogProb();
+    }
+    return L;
+  }
+  
+  virtual void readParamsFromStream(istream& in); 
+  virtual void writeParamsToStream(ostream& out) const;
+  virtual int getNumKerns() const
+  {
+    return components.size();
+  }
+
+  
+  
+#ifdef _NDLMATLAB
+  // sets the parameters in the mxArray.
+  virtual void addParamToMxArray(mxArray* matlabArray) const;
+  // Gets the parameters from the mxArray.
+  virtual void extractParamFromMxArray(const mxArray* matlabArray); 
+#endif
+ protected:
+  // this is a heterogeneous container.
+  vector<CKern*> components;
+  
+};
 // Compound Kernel --- This kernel combines other kernels additively together.
-class CCmpndKern: public CKern {
+class CCmpndKern: public CComponentKern {
  public:
   CCmpndKern();
   CCmpndKern(int inDim);
@@ -307,65 +439,86 @@ class CCmpndKern: public CKern {
   ~CCmpndKern();
   CCmpndKern(const CCmpndKern&);
   CCmpndKern* clone() const
-    {
-      return new CCmpndKern(*this);
-    }
+  {
+    return new CCmpndKern(*this);
+  }
   CCmpndKern(vector<CKern*> kernels);
   
   double getVariance() const;
   void setVariance(double val)
+  {
+    double totalVariance = getVariance();
+    double factor = val/totalVariance;
+    for(size_t i=0; i<components.size(); i++)
     {
-      double totalVariance = getVariance();
-      double factor = val/totalVariance;
-      for(size_t i=0; i<components.size(); i++)
-	{
-	  double newVariance = components[i]->getVariance()*factor;
-	  components[i]->setVariance(newVariance);
-	}
-      
-    }
+      double newVariance = components[i]->getVariance()*factor;
+      components[i]->setVariance(newVariance);
+    }  
+  }
   double getWhite() const;
   void setInitParam();
   double diagComputeElement(const CMatrix& X, int index1) const;
   void diagCompute(CMatrix& d, const CMatrix& X) const;
-  void setParam(double val, int paramNum);
-  double getParam(int paramNum) const;
-  string getParamName(int index) const;
-  void getGradX(vector<CMatrix*>& g, const CMatrix& X, const CMatrix& X2, const bool addG=false) const;
+  void getGradX(CMatrix& g, const CMatrix& X, const int pointNo, const CMatrix& X2, const bool addG=false) const;
   void getDiagGradX(CMatrix& g, const CMatrix& X, const bool addG=false) const;
   double computeElement(const CMatrix& X1, int index1, 
 		 const CMatrix& X2, int index2) const;
-  void compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const;
   void compute(CMatrix& K, const CMatrix& X) const;
+  void compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const;
+  void compute(CMatrix& K, const CMatrix& X, const CMatrix& X2, const int row) const;
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise=true) const;
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
-  double priorLogProb() const;
-  void addPrior(CDist* prior, int index);
-  void updateX(const CMatrix& X);
-
-
-  void writeParamsToStream(ostream& out) const;
-  void readParamsFromStream(istream& in);
-  int addKern(CKern* kern);
-
-  int getNumKerns() const
-    {
-      return components.size();
-    }
-#ifdef _NDLMATLAB
-  // Kernel specific code for toMxArray() call.
-  void addParamToMxArray(mxArray* matlabArray) const;
-  // Kernel specific code for fromMxArray() call.
-  void extractParamFromMxArray(const mxArray* matlabArray);
-#endif
- private:
-  // this is a heterogeneous container.
-  vector<CKern*> components;
-  
-
+private:
+  void _init();
 };
+
+// Tensor Kernel --- This kernel combines other multiplicitavely together.
+class CTensorKern: public CComponentKern {
+ public:
+  CTensorKern();
+  CTensorKern(int inDim);
+  CTensorKern(const CMatrix& X);
+  ~CTensorKern();
+  CTensorKern(const CTensorKern&);
+  CTensorKern* clone() const
+  {
+    return new CTensorKern(*this);
+  }
+  CTensorKern(const CTensorKern&, int i);
+  CTensorKern(vector<CKern*> kernels);
+  
+  double getVariance() const;
+  void setVariance(double val)
+  {
+    double totalVariance = getVariance();
+    double factor = val/totalVariance;
+    for(size_t i=0; i<components.size(); i++)
+    {
+      double newVariance = components[i]->getVariance()*factor;
+      components[i]->setVariance(newVariance);
+    } 
+  }
+  double getWhite() const;
+  void setInitParam();
+  double diagComputeElement(const CMatrix& X, int index1) const;
+  void diagCompute(CMatrix& d, const CMatrix& X) const;
+  void getGradX(CMatrix& g, const CMatrix& X, const int pointNo, const CMatrix& X2, const bool addG=false) const;
+  void getDiagGradX(CMatrix& g, const CMatrix& X, const bool addG=false) const;
+  double computeElement(const CMatrix& X1, int index1, const CMatrix& X2, int index2) const;
+  void compute(CMatrix& K, const CMatrix& X) const;
+  void compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const;
+  void compute(CMatrix& K, const CMatrix& X, const CMatrix& X2, const int row) const;
+  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise=true) const;
+  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
+  double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
+  double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
+  int addKern(CKern* kern);
+private:
+  void _init();
+};
+
 // White Noise Kernel.
 class CWhiteKern: public CKern {
  public:
@@ -375,31 +528,33 @@ class CWhiteKern: public CKern {
   ~CWhiteKern();
   CWhiteKern(const CWhiteKern&);
   CWhiteKern* clone() const
-    {
-      return new CWhiteKern(*this);
-    }
+  {
+    return new CWhiteKern(*this);
+  }
   double getVariance() const;
   void setVariance(double val)
-    {
-      variance = val;
-    }
+  {
+    variance = val;
+  }
   void setInitParam();
   double diagComputeElement(const CMatrix& X, int index) const;
   void diagCompute(CMatrix& d, const CMatrix& X) const;
   void setParam(double val, int paramNum);
   double getParam(int paramNum) const;
-  void getGradX(vector<CMatrix*>& g, const CMatrix& X, const CMatrix& X2, const bool addG=false) const;
+  void getGradX(CMatrix& g, const CMatrix& X, const int pointNo, const CMatrix& X2, const bool addG=false) const;
   void getDiagGradX(CMatrix& g, const CMatrix& X, const bool addG=false) const;
   double getWhite() const;
   double computeElement(const CMatrix& X1, int index1, 
-		 const CMatrix& X2, int index2) const;
-  void  compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const;
+			const CMatrix& X2, int index2) const;
   void compute(CMatrix& K, const CMatrix& X) const;
+  void compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const;
+  void compute(CMatrix& K, const CMatrix& X, const CMatrix& X2, const int row) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
 
 
  private:
+  void _init();
   double variance;
 };
 
@@ -412,32 +567,34 @@ class CBiasKern: public CKern {
   ~CBiasKern();
   CBiasKern(const CBiasKern&);
   CBiasKern* clone() const
-    {
-      return new CBiasKern(*this);
-    }
+  {
+    return new CBiasKern(*this);
+  }
   double getVariance() const;
   void setVariance(double val)
-    {
-      variance = val;
-    }
+  {
+    variance = val;
+  }
   void setInitParam();
   double diagComputeElement(const CMatrix& X, int index) const;
   void diagCompute(CMatrix& d, const CMatrix& X) const;
   void setParam(double val, int paramNum);
   double getParam(int paramNum) const;
-  void getGradX(vector<CMatrix*>& g, const CMatrix& X, const CMatrix& X2, const bool addG=false) const;
+  void getGradX(CMatrix& g, const CMatrix& X, const int pointNo, const CMatrix& X2, const bool addG=false) const;
   void getDiagGradX(CMatrix& g, const CMatrix& X, const bool addG=false) const;
   double getWhite() const;
   double computeElement(const CMatrix& X1, int index1,
 		 const CMatrix& X2, int index2) const;
-  void compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const;
   void compute(CMatrix& K, const CMatrix& X) const;
+  void compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const;
+  void compute(CMatrix& K, const CMatrix& X, const CMatrix& X2, const int row) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
 
 
 
  private:
+  void _init();
   double variance;
 
 };
@@ -450,36 +607,164 @@ class CRbfKern: public CKern {
   ~CRbfKern();
   CRbfKern(const CRbfKern&);
   CRbfKern* clone() const
-    {
-      return new CRbfKern(*this);
-    }
+  {
+    return new CRbfKern(*this);
+  }
   double getVariance() const;
   void setVariance(double val)
-    {
-      variance = val;
-    }
+  {
+    variance = val;
+  }
   void setInitParam();
   double diagComputeElement(const CMatrix& X, int index) const;
   void diagCompute(CMatrix& d, const CMatrix& X) const;
   void setParam(double val, int paramNum);
   double getParam(int paramNum) const;
-  void getGradX(vector<CMatrix*>& g, const CMatrix& X, const CMatrix& X2, const bool addG=false) const;
+  void getGradX(CMatrix& g, const CMatrix& X, const int pointNo, const CMatrix& X2, const bool addG=false) const;
   void getDiagGradX(CMatrix& g, const CMatrix& X, const bool addG=false) const;
   double getWhite() const;
   double computeElement(const CMatrix& X1, int index1, 
-		  const CMatrix& X2, int index2) const;
+			const CMatrix& X2, int index2) const;
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise=true) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
   void updateX(const CMatrix& X);
-
+  
  private:
+  void _init();
   bool updateXused;
   double variance;
   double inverseWidth;
   mutable CMatrix Xdists;
+  
+};
 
+// Rational Quadratic Kernel
+class CRatQuadKern: public CKern {
+ public:
+  CRatQuadKern();
+  CRatQuadKern(int inDim);
+  CRatQuadKern(const CMatrix& X);
+  ~CRatQuadKern();
+  CRatQuadKern(const CRatQuadKern&);
+  CRatQuadKern* clone() const
+  {
+    return new CRatQuadKern(*this);
+  }
+  double getVariance() const;
+  void setVariance(double val)
+  {
+    variance = val;
+  }
+  void setInitParam();
+  double diagComputeElement(const CMatrix& X, int index) const;
+  void diagCompute(CMatrix& d, const CMatrix& X) const;
+  void setParam(double val, int paramNum);
+  double getParam(int paramNum) const;
+  void getGradX(CMatrix& g, const CMatrix& X, const int pointNo, const CMatrix& X2, const bool addG=false) const;
+  void getDiagGradX(CMatrix& g, const CMatrix& X, const bool addG=false) const;
+  double getWhite() const;
+  double computeElement(const CMatrix& X1, int index1, 
+			const CMatrix& X2, int index2) const;
+  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
+  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise=true) const;
+  double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
+  double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
+  void updateX(const CMatrix& X);
+  
+ private:
+  void _init();
+  bool updateXused;
+  double variance;
+  double alpha;
+  double lengthScale;
+  mutable CMatrix Xdists;
+  
+};
+
+// Matern kernel with dof=3/2.
+class CMatern32Kern: public CKern {
+ public:
+  CMatern32Kern();
+  CMatern32Kern(int inDim);
+  CMatern32Kern(const CMatrix& X);
+  ~CMatern32Kern();
+  CMatern32Kern(const CMatern32Kern&);
+  CMatern32Kern* clone() const
+  {
+    return new CMatern32Kern(*this);
+  }
+  double getVariance() const;
+  void setVariance(double val)
+  {
+    variance = val;
+  }
+  void setInitParam();
+  double diagComputeElement(const CMatrix& X, int index) const;
+  void diagCompute(CMatrix& d, const CMatrix& X) const;
+  void setParam(double val, int paramNum);
+  double getParam(int paramNum) const;
+  void getGradX(CMatrix& g, const CMatrix& X, const int pointNo, const CMatrix& X2, const bool addG=false) const;
+  void getDiagGradX(CMatrix& g, const CMatrix& X, const bool addG=false) const;
+  double getWhite() const;
+  double computeElement(const CMatrix& X1, int index1, 
+			const CMatrix& X2, int index2) const;
+  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
+  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise=true) const;
+  double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
+  double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
+  void updateX(const CMatrix& X);
+  
+ private:
+  void _init();
+  bool updateXused;
+  double variance;
+  double lengthScale;
+  mutable CMatrix Xdists;
+  
+};
+
+// Matern kernel with dof=5/2.
+class CMatern52Kern: public CKern {
+ public:
+  CMatern52Kern();
+  CMatern52Kern(int inDim);
+  CMatern52Kern(const CMatrix& X);
+  ~CMatern52Kern();
+  CMatern52Kern(const CMatern52Kern&);
+  CMatern52Kern* clone() const
+  {
+    return new CMatern52Kern(*this);
+  }
+  double getVariance() const;
+  void setVariance(double val)
+  {
+    variance = val;
+  }
+  void setInitParam();
+  double diagComputeElement(const CMatrix& X, int index) const;
+  void diagCompute(CMatrix& d, const CMatrix& X) const;
+  void setParam(double val, int paramNum);
+  double getParam(int paramNum) const;
+  void getGradX(CMatrix& g, const CMatrix& X, const int pointNo, const CMatrix& X2, const bool addG=false) const;
+  void getDiagGradX(CMatrix& g, const CMatrix& X, const bool addG=false) const;
+  double getWhite() const;
+  double computeElement(const CMatrix& X1, int index1, 
+			const CMatrix& X2, int index2) const;
+  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
+  void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise=true) const;
+  double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
+  double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
+  void updateX(const CMatrix& X);
+  
+ private:
+  void _init();
+  bool updateXused;
+  double variance;
+  double lengthScale;
+  mutable CMatrix Xdists;
+  
 };
 
 // Linear Kernel, also known as the inner product kernel.
@@ -491,30 +776,32 @@ class CLinKern: public CKern {
   ~CLinKern();
   CLinKern(const CLinKern&);
   CLinKern* clone() const
-    {
-      return new CLinKern(*this);
-    }
+  {
+    return new CLinKern(*this);
+  }
   double getVariance() const;
   void setVariance(double val)
-    {
-      variance = val;
-    }
+  {
+    variance = val;
+  }
   void setInitParam();
   double diagComputeElement(const CMatrix& X, int index) const;
   void setParam(double val, int paramNum);
   double getParam(int paramNum) const;
-  void getGradX(vector<CMatrix*>& g, const CMatrix& X, const CMatrix& X2, const bool addG=false) const;
+  void getGradX(CMatrix& g, const CMatrix& X, const int pointNo, const CMatrix& X2, const bool addG=false) const;
   void getDiagGradX(CMatrix& g, const CMatrix& X, const bool addG=false) const;
   double getWhite() const;
   double computeElement(const CMatrix& X1, int index1, 
-		 const CMatrix& X2, int index2) const;
-  void compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const;
+			const CMatrix& X2, int index2) const;
   void compute(CMatrix& K, const CMatrix& X) const;
+  void compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const;
+  void compute(CMatrix& K, const CMatrix& X, const CMatrix& X2, const int row) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
 
 
  private:
+  void _init();
   double variance;
 };
 
@@ -527,29 +814,30 @@ class CMlpKern: public CKern {
   ~CMlpKern();
   CMlpKern(const CMlpKern&);
   CMlpKern* clone() const
-    {
-      return new CMlpKern(*this);
-    }
+  {
+    return new CMlpKern(*this);
+  }
   double getVariance() const;
   void setVariance(double val)
-    {
-      variance = val;
-    }
+  {
+    variance = val;
+  }
   void setInitParam();
   double diagComputeElement(const CMatrix& X, int index) const;
   void setParam(double val, int paramNum);
   double getParam(int paramNum) const;
-  void getGradX(vector<CMatrix*>& g, const CMatrix& X, const CMatrix& X2, const bool addG=false) const;
+  void getGradX(CMatrix& g, const CMatrix& X, const int pointNo, const CMatrix& X2, const bool addG=false) const;
   void getDiagGradX(CMatrix& g, const CMatrix& X, const bool addG=false) const;
   double getWhite() const;
   double computeElement(const CMatrix& X1, int index1, 
-		  const CMatrix& X2, int index2) const;
+			const CMatrix& X2, int index2) const;
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise=true) const;
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
-
+  
  private:
+  void _init();
   double weightVariance;
   double biasVariance;
   double variance;
@@ -566,31 +854,31 @@ class CPolyKern: public CKern {
   ~CPolyKern();
   CPolyKern(const CPolyKern&);
   CPolyKern* clone() const
-    {
-      return new CPolyKern(*this);
-    }
+  {
+    return new CPolyKern(*this);
+  }
   void setDegree(double val)
-    {
-      degree = val;
-    }
+  {
+    degree = val;
+  }
   double getDegree() const
-    {
-      return degree;
-    }
+  {
+    return degree;
+  }
   double getVariance() const;
   void setVariance(double val)
-    {
-      variance = val;
-    }
+  {
+    variance = val;
+  }
   void setInitParam();
   double diagComputeElement(const CMatrix& X, int index) const;
   void setParam(double val, int paramNum);
   double getParam(int paramNum) const;
-  void getGradX(vector<CMatrix*>& g, const CMatrix& X, const CMatrix& X2, const bool addG=false) const;
+  void getGradX(CMatrix& g, const CMatrix& X, const int pointNo, const CMatrix& X2, const bool addG=false) const;
   void getDiagGradX(CMatrix& g, const CMatrix& X, const bool addG=false) const;
   double getWhite() const;
   double computeElement(const CMatrix& X1, int index1, 
-		  const CMatrix& X2, int index2) const;
+			const CMatrix& X2, int index2) const;
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise=true) const;
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
@@ -602,6 +890,7 @@ class CPolyKern: public CKern {
   void extractParamFromMxArray(const mxArray* matlabArray);
 #endif
  private:
+  void _init();
   double weightVariance;
   double biasVariance;
   double variance;
@@ -618,30 +907,31 @@ class CLinardKern: public CArdKern {
   ~CLinardKern();
   CLinardKern(const CLinardKern&);
   CLinardKern* clone() const
-    {
-      return new CLinardKern(*this);
-    }
+  {
+    return new CLinardKern(*this);
+  }
   double getVariance() const;
   void setVariance(double val)
-    {
-      variance = val;
-    }
+  {
+    variance = val;
+  }
   void setInitParam();
   double diagComputeElement(const CMatrix& X, int index) const;
   void setParam(double val, int paramNum);
   double getParam(int paramNum) const;
-  void getGradX(vector<CMatrix*>& g, const CMatrix& X, const CMatrix& X2, const bool addGrad=false) const;
+  void getGradX(CMatrix& g, const CMatrix& X, const int pointNo, const CMatrix& X2, const bool addG=false) const;
   void getDiagGradX(CMatrix& g, const CMatrix& X, const bool addGrad=false) const;
   double getWhite() const;
   double computeElement(const CMatrix& X1, int index1, 
-		 const CMatrix& X2, int index2) const;
+			const CMatrix& X2, int index2) const;
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise = true) const;
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise = true) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
-
-
+  
+  
  private:
+  void _init();
   double variance;
 };
 
@@ -654,30 +944,31 @@ class CRbfardKern: public CArdKern {
   ~CRbfardKern();
   CRbfardKern(const CRbfardKern&);
   CRbfardKern* clone() const
-    {
-      return new CRbfardKern(*this);
-    }
+  {
+    return new CRbfardKern(*this);
+  }
   double getVariance() const;
   void setVariance(double val)
-    {
-      variance = val;
-    }
+  {
+    variance = val;
+  }
   void setInitParam();
   double diagComputeElement(const CMatrix& X, int index) const;
   void setParam(double val, int paramNum);
   double getParam(int paramNum) const;
-  void getGradX(vector<CMatrix*>& g, const CMatrix& X, const CMatrix& X2, const bool addGrad=false) const;
+  void getGradX(CMatrix& g, const CMatrix& X, const int pointNo, const CMatrix& X2, const bool addG=false) const;
   void getDiagGradX(CMatrix& g, const CMatrix& X, const bool addGrad=false) const;
   double getWhite() const;
   double computeElement(const CMatrix& X1, int index1, 
-		 const CMatrix& X2, int index2) const;
+			const CMatrix& X2, int index2) const;
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise=true) const;
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
-
-
+  
+  
  private:
+  void _init();
   double variance;
   double inverseWidth;
   mutable CMatrix gscales;
@@ -692,30 +983,31 @@ class CMlpardKern: public CArdKern {
   ~CMlpardKern();
   CMlpardKern(const CMlpardKern&);
   CMlpardKern* clone() const
-    {
-      return new CMlpardKern(*this);
-    }
+  {
+    return new CMlpardKern(*this);
+  }
   double getVariance() const;
   void setVariance(double val)
-    {
-      variance = val;
-    }
+  {
+    variance = val;
+  }
   void setInitParam();
   double diagComputeElement(const CMatrix& X, int index) const;
   void setParam(double val, int paramNum);
   double getParam(int paramNum) const;
-  void getGradX(vector<CMatrix*>& g, const CMatrix& X, const CMatrix& X2, const bool addGrad=false) const;
+  void getGradX(CMatrix& g, const CMatrix& X, const int pointNo, const CMatrix& X2, const bool addG=false) const;
   void getDiagGradX(CMatrix& g, const CMatrix& X, const bool addGrad=false) const;
   double getWhite() const;
   double computeElement(const CMatrix& X1, int index1, 
-		 const CMatrix& X2, int index2) const;
+			const CMatrix& X2, int index2) const;
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise=true) const;
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
-
-
+  
+  
  private:
+  void _init();
   double weightVariance;
   double biasVariance;
   double variance;
@@ -733,40 +1025,41 @@ class CPolyardKern: public CArdKern {
   ~CPolyardKern();
   CPolyardKern(const CPolyardKern&);
   CPolyardKern* clone() const
-    {
-      return new CPolyardKern(*this);
-    }
+  {
+    return new CPolyardKern(*this);
+  }
   void setDegree(double val)
-    {
-      degree = val;
-    }
+  {
+    degree = val;
+  }
   double getDegree() const
-    {
-      return degree;
-    }
+  {
+    return degree;
+  }
   double getVariance() const;
   void setVariance(double val)
-    {
-      variance = val;
-    }
+  {
+    variance = val;
+  }
   void setInitParam();
   double diagComputeElement(const CMatrix& X, int index) const;
   void setParam(double val, int paramNum);
   double getParam(int paramNum) const;
-  void getGradX(vector<CMatrix*>& g, const CMatrix& X, const CMatrix& X2, const bool addGrad=false) const;
+  void getGradX(CMatrix& g, const CMatrix& X, const int pointNo, const CMatrix& X2, const bool addG=false) const;
   void getDiagGradX(CMatrix& g, const CMatrix& X, const bool addGrad=false) const;
   double getWhite() const;
   double computeElement(const CMatrix& X1, int index1, 
-		 const CMatrix& X2, int index2) const;
+			const CMatrix& X2, int index2) const;
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise=true) const;
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
   double getGradParam(int index, const CMatrix& X, const CMatrix& cvGrd) const;
   void writeParamsToStream(ostream& out) const;
   void readParamsFromStream(istream& in);
-
-
+  
+  
  private:
+  void _init();
   double weightVariance;
   double biasVariance;
   double variance;
@@ -779,6 +1072,7 @@ class CPolyardKern: public CArdKern {
 ostream& operator<<(ostream& os, const CKern& A);
 void writeKernToStream(const CKern& kern, ostream& out);
 CKern* readKernFromStream(istream& in);
+
 
 
 #endif

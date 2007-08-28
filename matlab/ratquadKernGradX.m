@@ -34,7 +34,7 @@ function gX = ratquadKernGradXpoint(kern, x, X2)
 gX = zeros(size(X2));
 n2 = dist2(X2, x);
 wi2 = (.5/(kern.lengthScale*kern.lengthScale*kern.alpha));
-ratquadPart = kern.alpha*kern.variance*(1+n2*wi2).^-(kern.alpha+1);
+ratquadPart = kern.variance*(1+n2*wi2).^-(kern.alpha+1)/(kern.lengthScale*kern.lengthScale);
 for i = 1:size(x, 2)
-  gX(:, i) =(X2(:, i) - x(i)).*ratquadPart/(kern.lengthScale*kern.lengthScale*kern.alpha);
+  gX(:, i) =(X2(:, i) - x(i)).*ratquadPart;
 end
