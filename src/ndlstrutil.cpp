@@ -1,5 +1,9 @@
 #include "ndlstrutil.h"
 
+std::string ndlstrutil::dirSep()
+{
+  return "/";
+}
 void ndlstrutil::tokenise(std::vector<std::string>& tokens,
 			  const std::string& str,
 			  const std::string& delimiters)

@@ -8,7 +8,6 @@
 #include "ndlexceptions.h"
 namespace ndlstrutil
 {
-  std::string dirSep = "/";
   // allocate doubles in 100k chunks.
   const int ALLOCATECHUNK=(int)(100*(double)1024/(double)sizeof(double));
   // split a string into tokes given a delimiter.
@@ -21,6 +20,7 @@ namespace ndlstrutil
   void wrapOutputText(std::ostream& out, const std::string description, const int width, const int padding);
   // convert an integer to a string.
   std::string itoa(long value, int base=10);
+  std::string dirSep();
 }
 
 #endif
