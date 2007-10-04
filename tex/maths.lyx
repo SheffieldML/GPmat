@@ -1,5 +1,5 @@
-#LyX 1.4.1 created this file. For more info see http://www.lyx.org/
-\lyxformat 245
+#LyX 1.5.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 276
 \begin_document
 \begin_header
 \textclass sheftech
@@ -16,13 +16,21 @@ pdftoolbar=false]{hyperref}
 \end_preamble
 \language english
 \inputencoding auto
-\fontscheme default
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
 \graphics default
 \paperfontsize default
 \spacing single
 \papersize default
 \use_geometry false
 \use_amsmath 1
+\use_esint 0
 \cite_engine basic
 \use_bibtopic false
 \paperorientation portrait
@@ -35,7 +43,8 @@ pdftoolbar=false]{hyperref}
 \papersides 1
 \paperpagestyle default
 \tracking_changes false
-\output_changes true
+\output_changes false
+\author "" 
 \end_header
 
 \begin_body
@@ -55,12 +64,14 @@ Linear System
 
 \begin_layout Standard
 The original inspiration for this system is in 
-\begin_inset LatexCommand \cite{Barenco:ranked06}
+\begin_inset LatexCommand cite
+key "Barenco:ranked06"
 
 \end_inset
 
  other work in this area has been performed by 
-\begin_inset LatexCommand \cite{Rogers:model06}
+\begin_inset LatexCommand cite
+key "Rogers:model06"
 
 \end_inset
 
@@ -289,6 +300,36 @@ h_{ji}\left(t^{\prime},t\right) & = & \frac{e^{\left(\frac{D_{j}l}{2}\right)^{2}
 \end_inset
 
 
+\end_layout
+
+\begin_layout Section
+Limit as 
+\begin_inset Formula $t\rightarrow\infty$
+\end_inset
+
+and 
+\begin_inset Formula $t^{\prime}\rightarrow\infty$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this limit, keeping 
+\begin_inset Formula $t^{\prime}-t$
+\end_inset
+
+ finite we loose the effect of the initial conditions, 
+\begin_inset Formula \begin{eqnarray*}
+h_{ji}\left(t^{\prime},t\right) & = & \frac{e^{\left(\frac{D_{j}l}{2}\right)^{2}}}{\left(D_{i}+D_{j}\right)}\left\{ e^{-D_{j}\left(t^{\prime}-t\right)}\left[\mathrm{erf}\left(\frac{t^{\prime}-t}{l}-\frac{D_{j}l}{2}\right)+1\right]\right\} .\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Gradients
 \end_layout
 
 \begin_layout Standard
@@ -582,7 +623,7 @@ y_{j}\left(t\right)=\frac{B_{j}}{D_{j}}+e^{-D_{j}t}\int_{0}^{t}\mathrm{d}u\,\, g
 \end_inset
 
  The log-likelihood of data 
-\begin_inset Formula $D=\{ y_{ij}\}$
+\begin_inset Formula $D=\{y_{ij}\}$
 \end_inset
 
  for gene 
@@ -595,7 +636,7 @@ y_{j}\left(t\right)=\frac{B_{j}}{D_{j}}+e^{-D_{j}t}\int_{0}^{t}\mathrm{d}u\,\, g
 
  is, 
 \begin_inset Formula \[
-p\left(D|f,\left\{ B_{j},\theta_{j},D_{j}\right\} \right)=-\frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{G}\left[\beta_{ij}\left(y_{j}\left(t_{i}\right)-y_{ij}\right)^{2}+\log\left(\beta_{ij}\right)\right]-\frac{NG}{2}\log\left(2\pi\right)\ .\]
+\log p\left(D|f,\left\{ B_{j},\theta_{j},D_{j}\right\} \right)=-\frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{G}\left[\beta_{ij}\left(y_{j}\left(t_{i}\right)-y_{ij}\right)^{2}+\log\left(\beta_{ij}\right)\right]-\frac{NG}{2}\log\left(2\pi\right)\ .\]
 
 \end_inset
 
@@ -737,7 +778,7 @@ The gradient and Hessian of the unnormalised log posterior
  The Laplace approximation to the log marginal likelihood is (ignoring terms
  that do not involve model parameters), 
 \begin_inset Formula \begin{eqnarray}
-\log p\left(D|\{ B_{j},\theta_{j},D_{j}\},\gamma\right) & \simeq & \log p\left(D|\hat{\mathbf{f}}\right)-\mbox{$\frac{1}{2}$}\hat{\mathbf{f}}^{\mathrm{T}}\mathbf{K}^{-1}\hat{\mathbf{f}}-\mbox{$\frac{1}{2}$}\log|\mathbf{W}+\mathbf{K}^{-1}|-\mbox{$\frac{1}{2}$}\log|\mathbf{K}|\nonumber \\
+\log p\left(D|\{B_{j},\theta_{j},D_{j}\},\gamma\right) & \simeq & \log p\left(D|\hat{\mathbf{f}}\right)-\mbox{$\frac{1}{2}$}\hat{\mathbf{f}}^{\mathrm{T}}\mathbf{K}^{-1}\hat{\mathbf{f}}-\mbox{$\frac{1}{2}$}\log|\mathbf{W}+\mathbf{K}^{-1}|-\mbox{$\frac{1}{2}$}\log|\mathbf{K}|\nonumber \\
  & = & \log p\left(D|\hat{\mathbf{f}}\right)-\mbox{$\frac{1}{2}$}\hat{\mathbf{f}}^{\mathrm{T}}\mathbf{K}^{-1}\hat{\mathbf{f}}-\mbox{$\frac{1}{2}$}\log|\mathbf{I}+\mathbf{K}\mathbf{W}|\label{eqn_marginal}\end{eqnarray}
 
 \end_inset
@@ -905,7 +946,8 @@ w_{kl}=-\nabla_{k}\nabla_{l}\log p\left(D|\mathbf{f}\right) & = & \delta_{kl}\ta
 .
  The only term that contributes to this is the final one in equation\InsetSpace ~
 (
-\begin_inset LatexCommand \ref{eqn_marginal}
+\begin_inset LatexCommand ref
+reference "eqn_marginal"
 
 \end_inset
 
@@ -929,7 +971,8 @@ w_{kl}=-\nabla_{k}\nabla_{l}\log p\left(D|\mathbf{f}\right) & = & \delta_{kl}\ta
  where we have used the self-consistent condition that the first term in
  equation\InsetSpace ~
 (
-\begin_inset LatexCommand \ref{eqn_hessian_pos}
+\begin_inset LatexCommand ref
+reference "eqn_hessian_pos"
 
 \end_inset
 
@@ -942,7 +985,8 @@ w_{kl}=-\nabla_{k}\nabla_{l}\log p\left(D|\mathbf{f}\right) & = & \delta_{kl}\ta
 
  >From equation\InsetSpace ~
 (
-\begin_inset LatexCommand \ref{eqn_hessian_pos}
+\begin_inset LatexCommand ref
+reference "eqn_hessian_pos"
 
 \end_inset
 
@@ -1107,7 +1151,9 @@ y\left(t\right)\]
 \end_layout
 
 \begin_layout Standard
-\begin_inset LatexCommand \bibtex[plain]{lawrence,other,zbooks}
+\begin_inset LatexCommand bibtex
+options "plain"
+bibfiles "lawrence,other,zbooks"
 
 \end_inset
 
