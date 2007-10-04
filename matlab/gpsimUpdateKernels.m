@@ -14,7 +14,6 @@ function model = gpsimUpdateKernels(model)
 
 % GPSIM
 
-  
 
 model.K = real(kernCompute(model.kern, model.t))+diag(model.yvar);
 [model.invK, U, jitter] = pdinv(model.K);

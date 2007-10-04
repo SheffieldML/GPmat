@@ -1,3 +1,8 @@
+Version 0.111
+-------------
+
+Mistakenly the technical noise was not being added in the kernel computation, change to gpsimUpdateKernels.m.
+
 Version 0.11
 ------------
 
