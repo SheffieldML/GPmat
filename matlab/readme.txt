@@ -3,7 +3,9 @@ Please note that this toolbox requires MATLAB 7.0 or higher to run. The toolbox 
 Version 0.168
 -------------
 
-Found a bug in tensor gradient which meant gradients weren't being computed correctly with respect to X when more X and X2 are both provided as input arguments and both have length larger than 1.
+Found a bug in tensor gradient which meant gradients weren't being computed correctly with respect to X when more X and X2 are both provided as input arguments and both have length larger than 1. 
+
+Antti Honkela improved the numerial stability of the sim kernel through judicious use of erfc.
 
 Version 0.167
 -------------

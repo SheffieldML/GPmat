@@ -47,8 +47,18 @@ sigma = sqrt(2/simKern.inverseWidth);
 
 invSigmaDiffT = 1/sigma*diffT;
 halfSigmaD_i = 0.5*sigma*simKern.decay;
-K = exp(halfSigmaD_i*halfSigmaD_i)...
-    *(exp(-simKern.decay*diffT).*(erf(invSigmaDiffT - halfSigmaD_i) ...
-                            + erf(t2Mat/sigma + halfSigmaD_i)));
+
+%lnPart1 = log(erf(invSigmaDiffT - halfSigmaD_i) + erf(t2Mat/sigma + halfSigmaD_i));
+lnPart1 = zeros(size(t1Mat));
+warnState = warning('query', 'MATLAB:log:logOfZero');
+warning('off', 'MATLAB:log:logOfZero');
+I = (real(halfSigmaD_i - invSigmaDiffT) > 0);
+J = ~I;
+lnPart1(I) = log(  erfc( real(halfSigmaD_i - invSigmaDiffT(I))) ...
+		 - erfc( real(halfSigmaD_i + t2Mat(I)/sigma)));
+lnPart1(J) = log(- erfc(-real(halfSigmaD_i - invSigmaDiffT(J))) ...
+		 + erfc(-real(halfSigmaD_i + t2Mat(J)/sigma)));
+warning(warnState.state, 'MATLAB:log:logOfZero');
+K = exp(halfSigmaD_i*halfSigmaD_i - simKern.decay*diffT + lnPart1);
 
 K = 0.5*sqrt(simKern.variance)*sqrt(rbfKern.variance)*K*sqrt(pi)*sigma;
