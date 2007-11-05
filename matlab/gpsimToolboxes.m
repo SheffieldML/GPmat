@@ -4,5 +4,5 @@ importLatest('netlab');
 importLatest('optimi');
 importLatest('ndlutil');
 importLatest('mltools');
-importLatest('kern');
-importLatest('fgplvm');
+importTool('kern');
+importLatest('gp');
