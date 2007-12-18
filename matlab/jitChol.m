@@ -68,6 +68,11 @@ for i = 1:maxTries
   end
   if nonPosDef
     jitter = jitter*10;
+    if i==maxTries
+      error(['Matrix is non positive definite tried ' num2str(i) ...
+             ' times adding jitter, but failed with jitter ' ...
+             'of ' num2str(jitter) '. Increase max tries'])
+    end
   else
     error(lasterr)
   end

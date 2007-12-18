@@ -8,6 +8,10 @@
 
 RELEASEINFORMATION
 
+Antti Honkela provided the files lnDiffErfs and gradLnDiffErfs to assist in computing the DISIM kernel from the kernel toolbox stably.
+
+<h4>Version 0.157</h4>
+
 <p>Added treeFindLeaves.
 
 <h4>Version 0.156</h5>

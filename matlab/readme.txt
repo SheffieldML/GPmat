@@ -1,5 +1,10 @@
 This toolbox implements some generic functions used by other toolboxes. Originally it was spun out of the IVM 0.221 toolbox.
 
+Version 0.158
+-------------
+
+Antti Honkela provided the files lnDiffErfs and gradLnDiffErfs to assist in computing the DISIM kernel from the kernel toolbox stably.
+
 Version 0.157
 -------------
 
