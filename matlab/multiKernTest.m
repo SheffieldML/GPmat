@@ -1,6 +1,4 @@
-% function kernRet = multiKernTest(kernType, tieParams);
-kernType = {'multi', 'rbf', 'sim', 'sim'};
-tieParams = {[1 4 7]};
+function kernRet = multiKernTest(kernType, tieParams);
 
 % MULTIKERNTEST Run some tests on the multiple output block kernel.
 % FORMAT
@@ -25,7 +23,7 @@ tieParams = {[1 4 7]};
 % {'multi', 'rbf', 'sim', 'sim'}.
 % ARG tieParams : some parameters must be the same for the multiple
 % output kernel to make sense. For example, in the RBF and SIM
-% case, teh inverse widths of the kernels must be the same. If the
+% case, the inverse widths of the kernels must be the same. If the
 % kernel type is {'multi', 'rbf', 'sim', 'sim'} then this can be
 % forced by specifying TIEPARAMS as {[1 4 7]}. See MODELTIEPARAM
 % for more details on the form of this argument.

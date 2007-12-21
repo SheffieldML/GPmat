@@ -6,18 +6,18 @@ function kernRet = kernTest(kernType, numIn, tieParamNames);
 % correctly implemented.
 % ARG kernType : type of kernel to test. For example, 'rbf' or
 % {'cmpnd', 'rbf', 'lin', 'white'}.
-% ARG numIn : the number of input dimensions.
+% ARG numIn : the number of input dimensions (default is 4).
 % ARG tieParamNames : cell array of regular expressions for parameter
-% names that should be tied
+% names that should be tied (default is none).
 % RETURN kern : the kernel that was generated for the tests.
 % 
 % FORMAT
 % DESC runs some tests on a given kernel structure to ensure it is
 % correctly implemented.
 % ARG kern : kernel structure to test.
-% ARG numIn : the number of input dimensions.
+% ARG numIn : the number of input dimensions (default is 4).
 % ARG tieParamNames : cell array of regular expressions for parameter
-% names that should be tied
+% names that should be tied (default is none).
 % RETURN kern : the kernel as it was used in the tests.
 % 
 % SEEALSO : kernCreate
