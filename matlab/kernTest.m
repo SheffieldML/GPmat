@@ -1,4 +1,4 @@
-function kernRet = kernTest(kernType, numIn);
+function kernRet = kernTest(kernType, numIn, tieParamNames);
 
 % KERNTEST Run some tests on the specified kernel.
 % FORMAT
@@ -6,6 +6,8 @@ function kernRet = kernTest(kernType, numIn);
 % correctly implemented.
 % ARG kernType : type of kernel to test. For example, 'rbf' or
 % {'cmpnd', 'rbf', 'lin', 'white'}.
+% ARG numIn : the number of input dimensions.
+% ARG tieParamNames : cell array of parameter names that should be tied
 % RETURN kern : the kernel that was generated for the tests.
 % 
 % FORMAT
@@ -13,16 +15,22 @@ function kernRet = kernTest(kernType, numIn);
 % correctly implemented.
 % ARG kern : kernel structure to test.
 % ARG numIn : the number of input dimensions.
+% ARG tieParamNames : cell array of parameter names that should be tied
 % RETURN kern : the kernel as it was used in the tests.
 % 
 % SEEALSO : kernCreate
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2007
+%
+% COPYRIGHT : Antti Honkela, 2007
 
 % KERN
 
 if nargin < 2
   numIn = 4;
+end
+if nargin < 3
+  tieParamNames = {};
 end
 numData = 20;
 
@@ -44,29 +52,55 @@ else
   end
   
   % Set the parameters randomly.
-  params = kernExtractParam(kern);
+  [params, paramnames] = kernExtractParam(kern);
+  if iscell(tieParamNames),
+    tieParams = cell(size(tieParamNames));
+    paramExpand = eye(length(params));
+    toRemove = [];
+    for l = 1:length(tieParamNames),
+      ties = strfind(paramnames, tieParamNames{l});
+      tieParams{l} = [];
+      for k = 1:length(ties),
+	if ~isempty(ties{k}),
+	  tieParams{l} = [tieParams{l}, k];
+	end
+      end
+      if ~isempty(tieParams{l}),
+	paramExpand(:, tieParams{l}(1)) = sum(paramExpand(:, tieParams{l}), 2);
+	toRemove = [toRemove, tieParams{l}(2:end)];
+      end
+    end
+    paramExpand(:, sort(toRemove)) = [];
+  else
+    paramExpand = tieParamNames;
+    % !!!HACK!!!
+    toRemove = find(sum(paramExpand - eye(size(paramExpand)), 2));
+  end
+  paramPack = paramExpand' ./ repmat(sum(paramExpand', 2), [1, size(paramExpand, 1)]);
+  params = params * paramPack';
   params = randn(size(params))./sqrt(randn(size(params)).^2);
-  kern = kernExpandParam(kern, params);
+  kern = kernExpandParam(kern, params * paramExpand');
 end
 
-covGrad = ones(numData);
+covGrad = ones(size(kernCompute(kern, x)));
 epsilon = 1e-6;
-params = kernExtractParam(kern);
+params = kernExtractParam(kern) * paramPack';
 origParams = params;
 for i = 1:length(params);
   params = origParams;
   params(i) = origParams(i) + epsilon;
-  kern = kernExpandParam(kern, params);
+  kern = kernExpandParam(kern, params * paramExpand');
   Lplus(i) = full(sum(sum(kernCompute(kern, x))));
   params(i) = origParams(i) - epsilon;
-  kern = kernExpandParam(kern, params);
+  kern = kernExpandParam(kern, params * paramExpand');
   Lminus(i) = full(sum(sum(kernCompute(kern, x))));
 end
 params = origParams;
-kern = kernExpandParam(kern, params);
+kern = kernExpandParam(kern, params * paramExpand');
 [void, names] = kernExtractParam(kern);
+names(toRemove) = [];
 gLDiff = .5*(Lplus - Lminus)/epsilon;
-g = kernGradient(kern, x, covGrad);
+g = kernGradient(kern, x, covGrad) * paramExpand;
 
 
 paramMaxDiff = max(max(abs(gLDiff-g)));
@@ -82,77 +116,89 @@ if paramMaxDiff > 2*epsilon
   for i = 1:length(names)
     spaceLen = l - length(names{i});
     space = char(repmat(32, 1, spaceLen));
-    fprintf([space names{i} ':\t%4.6f\t%4.6f\t%4.6f\n'], ...
+    fprintf([space names{i} ':\t%4.6g\t%4.6g\t%4.6g\n'], ...
             g(i), gLDiff(i), gLDiff(i) - g(i));
   end
 end
-
-Lplus = zeros(size(x));
-Lminus = zeros(size(x));
-gx = zeros(size(x));
-origX = x;
-for i = 1:size(x, 1)
-  for j = 1:size(x, 2)
+try 
+  Lplus = zeros(size(x));
+  Lminus = zeros(size(x));
+  gx = zeros(size(x));
+  origX = x;
+  for i = 1:size(x, 1)
+    for j = 1:size(x, 2)
+      x = origX;
+      x(i, j) = origX(i, j) + epsilon;
+      K = kernCompute(kern, x);
+      Lplus(i, j) =  full(sum(sum(K)));
+      LplusDiag(i, j) = full(trace(K));
+      x(i, j) = origX(i, j) - epsilon;
+      K = kernCompute(kern, x);
+      Lminus(i, j) = full(sum(sum(K)));
+      LminusDiag(i, j) = full(trace(K));
+    end
     x = origX;
-    x(i, j) = origX(i, j) + epsilon;
-    K = kernCompute(kern, x);
-    Lplus(i, j) =  full(sum(sum(K)));
-    LplusDiag(i, j) = full(trace(K));
-    x(i, j) = origX(i, j) - epsilon;
-    K = kernCompute(kern, x);
-    Lminus(i, j) = full(sum(sum(K)));
-    LminusDiag(i, j) = full(trace(K));
+    gx(i, :) = 2*sum(kernGradX(kern, x(i, :), x), 1);
+    gxDiag(i, :) = kernDiagGradX(kern, x(i, :));
   end
-  x = origX;
-  gx(i, :) = 2*sum(kernGradX(kern, x(i, :), x), 1);
-  gxDiag(i, :) = kernDiagGradX(kern, x(i, :));
-end
 
-gXDiff = .5*(Lplus - Lminus)/epsilon;
-xMaxDiff = max(max(abs(gx-gXDiff)));
-
-if xMaxDiff > 2*epsilon
-  fprintf('gX\n')
-  disp(gx)
-  fprintf('gXDiff\n')
-  disp(gXDiff)
-end
-
-gXDiagDiff = .5*(LplusDiag - LminusDiag)/epsilon;
-xDiagMaxDiff = max(max(abs(gxDiag-gXDiagDiff)));
-
-if xDiagMaxDiff > 2*epsilon
- fprintf('gxDiag\n')
- disp(gxDiag)
- fprintf('gXDiagDiff\n')
- disp(gXDiagDiff)
+  gXDiff = .5*(Lplus - Lminus)/epsilon;
+  xMaxDiff = max(max(abs(gx-gXDiff)));
+  
+  if xMaxDiff > 2*epsilon
+    fprintf('gX\n')
+    disp(gx)
+    fprintf('gXDiff\n')
+    disp(gXDiff)
+  end
+  
+  gXDiagDiff = .5*(LplusDiag - LminusDiag)/epsilon;
+  xDiagMaxDiff = max(max(abs(gxDiag-gXDiagDiff)));
+  
+  if xDiagMaxDiff > 2*epsilon
+    fprintf('gxDiag\n')
+    disp(gxDiag)
+    fprintf('gXDiagDiff\n')
+    disp(gXDiagDiff)
+  end
+catch
+  fprintf('kernGradX has an error.\n')
+  xMaxDiff = 0;
+  xDiagMaxDiff = 0;
 end
 
 K = kernCompute(kern, x);
 traceK =  full(trace(K));
-traceK2 = full(sum(kernDiagCompute(kern, x)));
+K2 = kernDiagCompute(kern, x);
+traceK2 = full(sum(K2));
 traceDiff = traceK - traceK2; 
+%if abs(traceDiff) > 2*epsilon,
+%  fprintf('kernDiagCompute is not in sync with kernCompute.\n')
+%  fprintf('diag(kernCompute)\tkernDiagCompute')
+%  disp([diag(K), K2])
+%end
 
-covGrad = ones(numData, numData/2);
+covGrad = ones(size(kernCompute(kern, x, x2)));
 epsilon = 1e-6;
-params = kernExtractParam(kern);
+params = kernExtractParam(kern) * paramPack';
 origParams = params;
 Lplus = zeros(size(params));
 Lminus = zeros(size(params));
 for i = 1:length(params);
   params = origParams;
   params(i) = origParams(i) + epsilon;
-  kern = kernExpandParam(kern, params);
+  kern = kernExpandParam(kern, params * paramExpand');
   Lplus(i) = full(sum(sum(kernCompute(kern, x, x2))));
   params(i) = origParams(i) - epsilon;
-  kern = kernExpandParam(kern, params);
+  kern = kernExpandParam(kern, params * paramExpand');
   Lminus(i) = full(sum(sum(kernCompute(kern, x, x2))));
 end
 params = origParams;
-kern = kernExpandParam(kern, params);
+kern = kernExpandParam(kern, params * paramExpand');
 [void, names] = kernExtractParam(kern);
+names(toRemove) = [];
 gL2Diff = .5*(Lplus - Lminus)/epsilon;
-g = kernGradient(kern, x, x2, covGrad);
+g = kernGradient(kern, x, x2, covGrad) * paramExpand;
 
 param2MaxDiff = max(max(abs(gL2Diff-g)));
 if param2MaxDiff > 2*epsilon
@@ -167,17 +213,17 @@ if param2MaxDiff > 2*epsilon
   for i = 1:length(names)
     spaceLen = l - length(names{i});
     space = char(repmat(32, 1, spaceLen));
-    fprintf([space names{i} ':\t%4.6f\t%4.6f\t%4.6f\n'], ...
+    fprintf([space names{i} ':\t%4.6g\t%4.6g\t%4.6g\n'], ...
             g(i), gL2Diff(i), gL2Diff(i) - g(i));
   end
 end
 
 
-fprintf('Trace max diff: %2.6f.\n', traceDiff);
-fprintf('Param max diff: %2.6f.\n', paramMaxDiff)
-fprintf('Param X2 max diff: %2.6f.\n', param2MaxDiff)
-fprintf('X max diff: %2.6f.\n', xMaxDiff)
-fprintf('XDiag max diff: %2.6f.\n', xDiagMaxDiff)
+fprintf('Trace max diff: %2.6g.\n', traceDiff);
+fprintf('Param max diff: %2.6g.\n', paramMaxDiff)
+fprintf('Param X2 max diff: %2.6g.\n', param2MaxDiff)
+fprintf('X max diff: %2.6g.\n', xMaxDiff)
+fprintf('XDiag max diff: %2.6g.\n', xDiagMaxDiff)
 fprintf('\n');
 
 if nargout > 0

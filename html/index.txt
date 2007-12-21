@@ -8,6 +8,16 @@
 
 RELEASEINFORMATION
 
+Further improvements on the stability of the sim kernel. Addition of the driven input single input motif kernel (Antti Honkela) and the modification of the multiKern type to allow each block to have a different number of time points (Pei Gao).
+
+<h3>Version 0.168</h3>
+
+Found a bug in tensor gradient which meant gradients weren't being computed correctly with respect to X when more X and X2 are both provided as input arguments and both have length larger than 1. 
+
+Antti Honkela improved the numerial stability of the sim kernel through judicious use of erfc.
+
+<h3>Version 0.167</h3>
+
 Added 'translate' kernel which allows wrapping of other kernels with a kernel that translates the input location. Useful for moving the non-stationarity around the input space.
 
 <h3>Version 0.166</h3>
@@ -24,7 +34,6 @@ This release removes the stubs for several KernDiagGradX.m files, which
 were confusing kernDiagGradX.m, which assumes they only exist if the function
 is implemented. For the kernel types 'lin', 'poly', 'mlp', and their 'ard'
 counter-types, these files existed but weren't yet implemented.
-
 
 <h3>Version 0.162</h3>
 

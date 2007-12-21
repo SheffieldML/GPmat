@@ -21,3 +21,4 @@
 
 % KERN
 
+error('simKernDiagGradient not yet implemented.')

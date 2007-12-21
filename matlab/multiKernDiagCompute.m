@@ -11,15 +11,34 @@ function k = multiKernDiagCompute(kern, x)
 % SEEALSO : multiKernParamInit, kernDiagCompute, kernCreate, multiKernCompute
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
+%
+% COPYRIGHT : Pei Gao, 2007
 
 % KERN
 
-k = zeros(size(x, 1)*kern.numBlocks, 1);
-endVal = size(x, 1);
-startVal = 1;
-for i = 1:length(kern.comp)
-  k(startVal:endVal, 1)  = kernDiagCompute(kern.comp{i}, x);
-  startVal = endVal + 1;
-  endVal = endVal + size(x, 1);
+if iscell(x)
+  dim = 0;
+  for i = 1:length(x)
+    dim = dim + length(x{i});
+  end
+  k = zeros(dim, 1);
+  startVal = 1;
+  endVal = length(x{1});
+  for i = 1:length(kern.comp)
+    k(startVal:endVal) = kernDiagCompute(kern.comp{i}, x{i});
+    startVal = endVal + 1;
+    if i+1 <= length(kern.comp)
+      endVal = endVal + length(x{i+1});
+    end
+  end
+else
+  k = zeros(size(x, 1)*kern.numBlocks, 1);
+  endVal = size(x, 1);
+  startVal = 1;
+  for i = 1:length(kern.comp)
+    k(startVal:endVal, 1)  = kernDiagCompute(kern.comp{i}, x);
+    startVal = endVal + 1;
+    endVal = endVal + size(x, 1);
+  end
 end
 

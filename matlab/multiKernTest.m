@@ -1,39 +1,48 @@
-function kernRet = multiKernTest(kernType, tieParams);
+% function kernRet = multiKernTest(kernType, tieParams);
+kernType = {'multi', 'rbf', 'sim', 'sim'};
+tieParams = {[1 4 7]};
 
 % MULTIKERNTEST Run some tests on the multiple output block kernel.
-% FORMAT
-% DESC runs some tests on the specified kernel to ensure it is
-% correctly implemented.
-% ARG kernType : type of kernel to test. Must be a cell structure
-% whose first entry is 'multi', for example
-% {'multi', 'rbf', 'sim', 'sim'}.
-% RETURN kern : the kernel that was generated for the tests.
 %
-% DESC runs some tests on the specified kernel to ensure it is
-% correctly implemented.
-% ARG kern : kernel structure containing kernel to be tested.
-% RETURN kern : the kernel structure as it was used in the tests.
-% 
-% DESC runs some tests on the specified kernel to ensure it is
-% correctly implemented, some of the parameters of the different
-% kernels forming the multiKern are forced to be the same. These
-% are specified by TIEPARAMS.
-% ARG kernType : type of kernel to test. Must be a cell structure
-% whose first entry is 'multi', for example
-% {'multi', 'rbf', 'sim', 'sim'}.
-% ARG tieParams : some parameters must be the same for the multiple
-% output kernel to make sense. For example, in the RBF and SIM
-% case, teh inverse widths of the kernels must be the same. If the
-% kernel type is {'multi', 'rbf', 'sim', 'sim'} then this can be
-% forced by specifying TIEPARAMS as {[1 4 7]}. See MODELTIEPARAM
-% for more details on the form of this argument.
-% RETURN kern : the kernel that was generated for the tests.
-% 
-% SEEALSO : multiKernParamInit, modelTieParam
+%	Description:
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
+%	KERN = MULTIKERNTEST(KERNTYPE) runs some tests on the specified
+%	kernel to ensure it is correctly implemented.
+%	 Returns:
+%	  KERN - the kernel that was generated for the tests.
+%	 Arguments:
+%	  KERNTYPE - type of kernel to test. Must be a cell structure whose
+%	   first entry is 'multi', for example {'multi', 'rbf', 'sim',
+%	   'sim'}.
+%	DESC runs some tests on the specified kernel to ensure it is
+%	correctly implemented.
+%	ARG kern : kernel structure containing kernel to be tested.
+%	RETURN kern : the kernel structure as it was used in the tests.
+%	
+%	DESC runs some tests on the specified kernel to ensure it is
+%	correctly implemented, some of the parameters of the different
+%	kernels forming the multiKern are forced to be the same. These
+%	are specified by TIEPARAMS.
+%	ARG kernType : type of kernel to test. Must be a cell structure
+%	whose first entry is 'multi', for example
+%	{'multi', 'rbf', 'sim', 'sim'}.
+%	ARG tieParams : some parameters must be the same for the multiple
+%	output kernel to make sense. For example, in the RBF and SIM
+%	case, teh inverse widths of the kernels must be the same. If the
+%	kernel type is {'multi', 'rbf', 'sim', 'sim'} then this can be
+%	forced by specifying TIEPARAMS as {[1 4 7]}. See MODELTIEPARAM
+%	for more details on the form of this argument.
+%	RETURN kern : the kernel that was generated for the tests.
+%	
+%	
+%
+%	See also
+%	MULTIKERNPARAMINIT, MODELTIEPARAM
 
-% KERN
+
+%	Copyright (c) 2006 Neil D. Lawrence
+% 	multiKernTest.m version 1.2
+
 
 numData = 20;
 numIn = 1;
@@ -60,10 +69,10 @@ else
   params = randn(size(params))./sqrt(randn(size(params)).^2);
   kern = kernExpandParam(kern, params);
 end
-
-covGrad = randn(numData*kern.numBlocks);
-covGrad = covGrad*covGrad';
-%covGrad = ones(numData*kern.numBlocks);
+ 
+% covGrad = randn(numData*kern.numBlocks);
+% covGrad = covGrad*covGrad';
+covGrad = ones(numData*kern.numBlocks);
 epsilon = 1e-6;
 params = kernExtractParam(kern);
 origParams = params;
@@ -81,7 +90,6 @@ kern = kernExpandParam(kern, params);
 [void, names] = kernExtractParam(kern);
 gLDiff = .5*(Lplus - Lminus)/epsilon;
 g = kernGradient(kern, x, covGrad);
-
 
 paramMaxDiff = max(max(abs(gLDiff-g)));
 if paramMaxDiff > 2*epsilon
@@ -149,10 +157,11 @@ traceK =  full(trace(K));
 traceK2 = full(sum(kernDiagCompute(kern, x)));
 traceDiff = traceK - traceK2; 
 
-covGrad = randn(numData*kern.numBlocks, numData/2*kern.numBlocks);
+% covGrad = randn(numData*kern.numBlocks, numData/2*kern.numBlocks);
+covGrad = ones(numData*kern.numBlocks, numData/2*kern.numBlocks);
 epsilon = 1e-6;
-params = kernExtractParam(kern);
-origParams = params;
+% params = kernExtractParam(kern);
+% origParams = params;
 Lplus = zeros(size(params));
 Lminus = zeros(size(params));
 for i = 1:length(params);
