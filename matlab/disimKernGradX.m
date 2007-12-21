@@ -1,8 +1,8 @@
 function gX = disimKernGradX(kern, x, x2)
 
-% SIMKERNGRADX Gradient of SIM kernel with respect to a point x.
+% DISIMKERNGRADX Gradient of DISIM kernel with respect to a point x.
 % FORMAT
-% DESC computes the gradient of the single input motif
+% DESC computes the gradient of the driven input single input motif
 % kernel with respect to the input positions. 
 % ARG kern : kernel structure for which gradients are being
 % computed.
@@ -13,7 +13,7 @@ function gX = disimKernGradX(kern, x, x2)
 % dimensions in X.
 %
 % FORMAT
-% DESC computes the gradident of the single input motif
+% DESC computes the gradident of the driven input single input motif
 % kernel with respect to the input positions where both the row
 % positions and column positions are provided separately.
 % ARG kern : kernel structure for which gradients are being
@@ -26,9 +26,11 @@ function gX = disimKernGradX(kern, x, x2)
 % points in X2 and numInputs is the number of input
 % dimensions in X.
 %
-% SEEALSO simKernParamInit, kernGradX, simKernDiagGradX
+% SEEALSO disimKernParamInit, kernGradX, disimKernDiagGradX
 %
-% COPYRIGHT : Neil D. Lawrence, 2006; Antti Honkela, 2007
+% COPYRIGHT : Neil D. Lawrence, 2006
+%
+% COPYRIGHT : Antti Honkela, 2007
 
 % KERN
 
