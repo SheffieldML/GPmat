@@ -3,52 +3,45 @@ kernType = {'multi', 'rbf', 'sim', 'sim'};
 tieParams = {[1 4 7]};
 
 % MULTIKERNTEST Run some tests on the multiple output block kernel.
+% FORMAT
+% DESC runs some tests on the specified kernel to ensure it is
+% correctly implemented.
+% ARG kernType : type of kernel to test. Must be a cell structure
+% whose first entry is 'multi', for example
+% {'multi', 'rbf', 'sim', 'sim'}.
+% RETURN kern : the kernel that was generated for the tests.
 %
-%	Description:
+% DESC runs some tests on the specified kernel to ensure it is
+% correctly implemented.
+% ARG kern : kernel structure containing kernel to be tested.
+% RETURN kern : the kernel structure as it was used in the tests.
+% 
+% DESC runs some tests on the specified kernel to ensure it is
+% correctly implemented, some of the parameters of the different
+% kernels forming the multiKern are forced to be the same. These
+% are specified by TIEPARAMS.
+% ARG kernType : type of kernel to test. Must be a cell structure
+% whose first entry is 'multi', for example
+% {'multi', 'rbf', 'sim', 'sim'}.
+% ARG tieParams : some parameters must be the same for the multiple
+% output kernel to make sense. For example, in the RBF and SIM
+% case, teh inverse widths of the kernels must be the same. If the
+% kernel type is {'multi', 'rbf', 'sim', 'sim'} then this can be
+% forced by specifying TIEPARAMS as {[1 4 7]}. See MODELTIEPARAM
+% for more details on the form of this argument.
+% RETURN kern : the kernel that was generated for the tests.
+% 
+% SEEALSO : multiKernParamInit, modelTieParam
 %
-%	KERN = MULTIKERNTEST(KERNTYPE) runs some tests on the specified
-%	kernel to ensure it is correctly implemented.
-%	 Returns:
-%	  KERN - the kernel that was generated for the tests.
-%	 Arguments:
-%	  KERNTYPE - type of kernel to test. Must be a cell structure whose
-%	   first entry is 'multi', for example {'multi', 'rbf', 'sim',
-%	   'sim'}.
-%	DESC runs some tests on the specified kernel to ensure it is
-%	correctly implemented.
-%	ARG kern : kernel structure containing kernel to be tested.
-%	RETURN kern : the kernel structure as it was used in the tests.
-%	
-%	DESC runs some tests on the specified kernel to ensure it is
-%	correctly implemented, some of the parameters of the different
-%	kernels forming the multiKern are forced to be the same. These
-%	are specified by TIEPARAMS.
-%	ARG kernType : type of kernel to test. Must be a cell structure
-%	whose first entry is 'multi', for example
-%	{'multi', 'rbf', 'sim', 'sim'}.
-%	ARG tieParams : some parameters must be the same for the multiple
-%	output kernel to make sense. For example, in the RBF and SIM
-%	case, teh inverse widths of the kernels must be the same. If the
-%	kernel type is {'multi', 'rbf', 'sim', 'sim'} then this can be
-%	forced by specifying TIEPARAMS as {[1 4 7]}. See MODELTIEPARAM
-%	for more details on the form of this argument.
-%	RETURN kern : the kernel that was generated for the tests.
-%	
-%	
-%
-%	See also
-%	MULTIKERNPARAMINIT, MODELTIEPARAM
+% COPYRIGHT : Neil D. Lawrence, 2006
 
-
-%	Copyright (c) 2006 Neil D. Lawrence
-% 	multiKernTest.m version 1.2
-
+% KERN
 
 numData = 20;
 numIn = 1;
 
 if ~iscell(kernType) & ~isstruct(kernType)
-  error('Input type to multiKernTest should be a struct or a cell cell.');
+  error('Input type to multiKernTest should be a struct or a cell array.');
 end
 if iscell(kernType) & ~strcmp(kernType{1}, 'multi')
   error('Input kern type to multi kern test should have first entry ''multi''.')

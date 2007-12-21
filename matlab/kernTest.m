@@ -7,7 +7,8 @@ function kernRet = kernTest(kernType, numIn, tieParamNames);
 % ARG kernType : type of kernel to test. For example, 'rbf' or
 % {'cmpnd', 'rbf', 'lin', 'white'}.
 % ARG numIn : the number of input dimensions.
-% ARG tieParamNames : cell array of parameter names that should be tied
+% ARG tieParamNames : cell array of regular expressions for parameter
+% names that should be tied
 % RETURN kern : the kernel that was generated for the tests.
 % 
 % FORMAT
@@ -15,7 +16,8 @@ function kernRet = kernTest(kernType, numIn, tieParamNames);
 % correctly implemented.
 % ARG kern : kernel structure to test.
 % ARG numIn : the number of input dimensions.
-% ARG tieParamNames : cell array of parameter names that should be tied
+% ARG tieParamNames : cell array of regular expressions for parameter
+% names that should be tied
 % RETURN kern : the kernel as it was used in the tests.
 % 
 % SEEALSO : kernCreate
@@ -58,7 +60,8 @@ else
     paramExpand = eye(length(params));
     toRemove = [];
     for l = 1:length(tieParamNames),
-      ties = strfind(paramnames, tieParamNames{l});
+      %ties = strfind(paramnames, tieParamNames{l});
+      ties = regexp(paramnames, tieParamNames{l});
       tieParams{l} = [];
       for k = 1:length(ties),
 	if ~isempty(ties{k}),
@@ -73,8 +76,11 @@ else
     paramExpand(:, sort(toRemove)) = [];
   else
     paramExpand = tieParamNames;
-    % !!!HACK!!!
-    toRemove = find(sum(paramExpand - eye(size(paramExpand)), 2));
+    toRemove = [];
+    for k=1:size(paramExpand, 2),
+      I = find(paramExpand(:, k));
+      toRemove = [toRemove, I(2:end)'];
+    end
   end
   paramPack = paramExpand' ./ repmat(sum(paramExpand', 2), [1, size(paramExpand, 1)]);
   params = params * paramPack';
@@ -82,7 +88,17 @@ else
   kern = kernExpandParam(kern, params * paramExpand');
 end
 
-covGrad = ones(size(kernCompute(kern, x)));
+% Test for positive definiteness
+K = kernCompute(kern, x);
+e = eig(K);
+if min(e) > 0,
+  fprintf('The kernel is positive definite.\n');
+else
+  fprintf('The kernel is not positive definite: max eig %g, min eig %g\n', ...
+	  max(e), min(e));
+end
+
+covGrad = ones(size(K));
 epsilon = 1e-6;
 params = kernExtractParam(kern) * paramPack';
 origParams = params;
