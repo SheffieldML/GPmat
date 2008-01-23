@@ -3,7 +3,7 @@ This toolbox implements some generic functions used by other toolboxes. Original
 Version 0.159
 -------------
 
-Minor release for dimensional reduction demos.
+Minor release for dimensional reduction demos. Added centeringMatrix.m.
 
 Version 0.158
 -------------

@@ -8,7 +8,7 @@
 
 RELEASEINFORMATION
 
-Minor release for dimensional reduction demos.
+Minor release for dimensional reduction demos. Added centeringMatrix.m.
 
 <h4>Version 0.158</h4>
 
