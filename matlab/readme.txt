@@ -1,5 +1,10 @@
 This toolbox implements some generic functions used by other toolboxes. Originally it was spun out of the IVM 0.221 toolbox.
 
+Version 0.159
+-------------
+
+Minor release for dimensional reduction demos.
+
 Version 0.158
 -------------
 

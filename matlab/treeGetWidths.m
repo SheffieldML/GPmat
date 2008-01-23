@@ -11,7 +11,7 @@ function [widths, maxDepth, nodePositions] = treeGetWidths(tree)
 % RETURN nodePositions : stores the nodeIndex present at depth i
 % and breadth j.
 %
-% COPYRIGHT : Andrew Moore, 2006
+% COPYRIGHT : Andrew J. Moore, 2006
 % 
 % SEEALSO : treeFindParents, treeFindChildren
 

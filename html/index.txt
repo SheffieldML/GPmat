@@ -8,6 +8,10 @@
 
 RELEASEINFORMATION
 
+Minor release for dimensional reduction demos.
+
+<h4>Version 0.158</h4>
+
 Antti Honkela provided the files lnDiffErfs and gradLnDiffErfs to assist in computing the DISIM kernel from the kernel toolbox stably.
 
 <h4>Version 0.157</h4>
