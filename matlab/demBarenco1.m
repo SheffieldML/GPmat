@@ -94,7 +94,7 @@ for j = 1:length(model.comp)
   set(lin, 'markersize', 20);
   set(gca, 'fontname', 'arial', 'fontsize', 24, 'xlim', xlim)
   fileName = ['demBarenco1_profile' num2str(j)];
-  print('-deps', ['../tex/diagrams/' fileName]);
+%  print('-deps', ['../tex/diagrams/' fileName]);
   pos = get(gcf, 'paperposition')
   origpos = pos;
   pos(3) = pos(3)/2;
@@ -120,7 +120,7 @@ figure
 bar([model.comp{1}.B(order); B]', 0.6); colormap([0 0 0; 1 1 1]);
 set(gca, 'xticklabel', {'DDB2', 'hPA26', 'TNFRSF20b', 'p21', 'BIK'})
 fileName = ['demBarenco1_basal'];
-print('-deps', ['../tex/diagrams/' fileName]);
+%print('-deps', ['../tex/diagrams/' fileName]);
 pos = get(gcf, 'paperposition')
 origpos = pos;
 pos(3) = pos(3)/2;
@@ -128,7 +128,7 @@ pos(4) = pos(4)/2;
 set(gcf, 'paperposition', pos);
 lineWidth = get(gca, 'lineWidth');
 set(gca, 'lineWidth', lineWidth*2);
-print('-dpng', ['../html/' fileName])
+%print('-dpng', ['../html/' fileName])
 set(gcf, 'paperposition', origpos)
 set(gca, 'lineWidth', lineWidth);
 
@@ -138,7 +138,7 @@ bar([model.comp{1}.S(order); S]', 0.6); colormap([0 0 0; 1 1 1]);
 set(gca, 'xticklabel', {'DDB2', 'hPA26', 'TNFRSF20b', 'p21', ...
                     'BIK'})
 fileName = ['demBarenco1_sensitivity'];
-print('-deps', ['../tex/diagrams/' fileName]);
+%print('-deps', ['../tex/diagrams/' fileName]);
 pos = get(gcf, 'paperposition')
 origpos = pos;
 pos(3) = pos(3)/2;
@@ -146,7 +146,7 @@ pos(4) = pos(4)/2;
 set(gcf, 'paperposition', pos);
 lineWidth = get(gca, 'lineWidth');
 set(gca, 'lineWidth', lineWidth*2);
-print('-dpng', ['../html/' fileName])
+%print('-dpng', ['../html/' fileName])
 set(gcf, 'paperposition', origpos)
 set(gca, 'lineWidth', lineWidth);
 
@@ -156,7 +156,7 @@ bar([model.comp{1}.D(order); D]', 0.6); colormap([0 0 0; 1 1 1]);
 set(gca, 'xticklabel', {'DDB2', 'hPA26', 'TNFRSF20b', 'p21', ...
                     'BIK'})
 fileName = ['demBarenco1_decay'];
-print('-deps', ['../tex/diagrams/' fileName]);
+%print('-deps', ['../tex/diagrams/' fileName]);
 pos = get(gcf, 'paperposition')
 origpos = pos;
 pos(3) = pos(3)/2;
@@ -164,7 +164,7 @@ pos(4) = pos(4)/2;
 set(gcf, 'paperposition', pos);
 lineWidth = get(gca, 'lineWidth');
 set(gca, 'lineWidth', lineWidth*2);
-print('-dpng', ['../html/' fileName])
+%print('-dpng', ['../html/' fileName])
 set(gcf, 'paperposition', origpos)
 set(gca, 'lineWidth', lineWidth);
 
