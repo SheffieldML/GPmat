@@ -20,7 +20,7 @@ function model = gpsimCreate(numGenes, numProteins, times, geneVals, ...
 % system.
 % ARG times : the time points where the data is to be modelled.
 % ARG geneVals : the values of each gene at the different time points.
-% ARG geneVars : the varuabces of each gene at the different time points.
+% ARG geneVars : the variances of each gene at the different time points.
 % ARG options : options structure, the default options can be
 % generated using gpsimOptions.
 % RETURN model : model structure containing default
@@ -47,19 +47,45 @@ end
 model.type = 'gpsim';
 
 kernType1{1} = 'multi';
-kernType2{1} = 'multi';
-tieParam = [2]; % These are the indices of the inverse widths which
+
+tieParam{1} = [2]; % These are the indices of the inverse widths which
                 % need to be constrained to be equal.
 for i = 1:numGenes
   kernType1{i+1} = 'sim';
   if i>1
-    tieParam = [tieParam tieParam(end)+3];
+    tieParam{1} = [tieParam{1} tieParam{1}(end)+3];
   end
 end
 
 model.y = geneVals(:);
-model.yvar = geneVars(:);
-model.kern = kernCreate(times, kernType1);
+model.yvar = zeros(size(geneVars(:)));
+
+model.includeNoise = options.includeNoise;
+
+% Check if we have a noise term.
+if model.includeNoise
+  % Create a new multi kernel to contain the noise term.
+  kernType2{1} = 'multi';
+  % NEIL: Need to set up tie param to hold the variances of the white kernels
+  % the same ... perhaps have an option that determines to do this or not.
+  % tieParam{2} = INDEX OF FIRST NOISE VARIANCE; % These are the indices of the variances.
+
+  % Set the new multi kernel to just contain 'white' kernels.
+  for i = 1:numGenes
+    kernType2{i+1} = 'white';
+    % NEIL Again, need to get the right indices on tie param if the
+    % variances are to be 'tied'.
+    %if i>1
+    %  tieParam = [tieParam{2} tieParam{2}(end)+1];
+    %end
+  end
+  % Now create model with a 'cmpnd' (compound) kernel build from two
+  % multi-kernels. The first multi-kernel is the sim-sim one the next
+  % multi-kernel is the white-white one. 
+  model.kern = kernCreate(times, {'cmpnd', kernType1, kernType2});
+else
+  model.kern = kernCreate(times, kernType1);
+end
 %/~ This is if we need to place priors on parameters ...
 % for i = 1:length(model.kern.numBlocks)
 %   % Priors on the sim kernels.
@@ -82,13 +108,18 @@ model.kern = kernCreate(times, kernType1);
 % model.bprior.a = 1;
 % model.bprior.b = 1;
 %~/
-model.kern = modelTieParam(model.kern, {tieParam});
+model.kern = modelTieParam(model.kern, tieParam);
 
 % The decays and sensitivities are actually stored in the kernel.
 % We'll put them here as well for convenience.
 for i = 1:model.kern.numBlocks
-  model.D(i) = model.kern.comp{i}.decay;
-  model.S(i) = sqrt(model.kern.comp{i}.variance);
+  if model.includeNoise
+    model.D(i) = model.kern.comp{1}.comp{i}.decay;
+    model.S(i) = sqrt(model.kern.comp{1}.comp{i}.variance);
+  else
+    model.D(i) = model.kern.comp{i}.decay;
+    model.S(i) = sqrt(model.kern.comp{i}.variance);
+  end
 end
 
 model.numParams = numGenes + model.kern.nParams;

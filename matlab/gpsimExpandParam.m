@@ -39,8 +39,13 @@ model.B = fhandle(params(endVal+1:end), 'atox');
 % The decays and sensitivities are actually stored in the kernel.
 % We'll put them here as well for convenience.
 for i = 1:model.kern.numBlocks
-  model.D(i) = model.kern.comp{i}.decay;
-  model.S(i) = sqrt(model.kern.comp{i}.variance);
+  if model.includeNoise
+    model.D(i) = model.kern.comp{1}.comp{i}.decay;
+    model.S(i) = sqrt(model.kern.comp{1}.comp{i}.variance);
+  else
+    model.D(i) = model.kern.comp{i}.decay;
+    model.S(i) = sqrt(model.kern.comp{i}.variance);
+  end
 end
 model.mu = model.B./model.D;
 
