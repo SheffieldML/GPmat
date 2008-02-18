@@ -8,6 +8,10 @@
 
 RELEASEINFORMATION
 
+Minor changes to kernCreate for multiKern structures where there are different numbers of points in each block.
+
+<h3>Version 0.17</h3>
+
 Further improvements on the stability of the sim kernel. Addition of the driven input single input motif kernel (Antti Honkela) and the modification of the multiKern type to allow each block to have a different number of time points (Pei Gao).
 
 <h3>Version 0.168</h3>
