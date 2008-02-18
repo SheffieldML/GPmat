@@ -27,6 +27,8 @@ ll = -0.5*(dim*log(2*pi) + model.candidate.logDetK ...
            - sum(sum((model.candidate.Ainv*K_ufinvK_ffm).*K_ufinvK_ffm)));
 
 %/~ In case we need priors in.
-%ll = ll + kernPriorLogProb(model.candidate.kern);
-%ll = ll + priorLogProb(model.candidate.bprior, model.B);
+if isfield(model.candidate, 'bprior'),
+  ll = ll + kernPriorLogProb(model.candidate.kern);
+  ll = ll + priorLogProb(model.candidate.bprior, model.B);
+end
 %~/

@@ -13,10 +13,14 @@ function ll = gpsimLogLikelihood(model)
 
 % GPSIM
 
+
 dim = size(model.y, 1);
 ll = -dim*log(2*pi) - model.logDetK - model.m'*model.invK*model.m;
 ll = ll*0.5;
+
 %/~ In case we need priors in.
-%ll = ll + kernPriorLogProb(model.kern);
-%ll = ll + priorLogProb(model.bprior, model.B);
+if isfield(model, 'bprior'),
+  ll = ll + kernPriorLogProb(model.kern);
+  ll = ll + priorLogProb(model.bprior, model.B);
+end
 %~/

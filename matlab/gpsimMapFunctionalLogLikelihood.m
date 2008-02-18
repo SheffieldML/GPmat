@@ -10,8 +10,17 @@ function ll = gpsimMapFunctionalLogLikelihood(model)
 % 
 % SEEALSO : gpsimMapCreate, gpsimMapLogLikelihood, gpsimMapFunctionalLogLikeGradients
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
+% COPYRIGHT : Neil D. Lawrence, 2006, modified by Pei Gao, 2008
 
 % GPSIM
 
 ll = gpsimMapLogLikelihood(model);
+
+% Add constraints
+if isfield(model, 'priorProtein') && ~isempty(model.priorProtein)
+  nCons = length(model.priorProtein);
+  for i=1:nCons
+    ftimeIndex = find((model.priorProteinTimes(i)-model.mapt)==0);
+    ll = ll - 0.5*model.consLambda*(model.f(ftimeIndex) - model.priorProtein(i))^2;
+  end
+end

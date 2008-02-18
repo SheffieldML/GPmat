@@ -15,7 +15,7 @@ function model = gpsimExpandParam(model, params)
 % 
 % SEEALSO : gpsimCreate, gpsimExtractParam, modelExtractParam, gpsimUpdateKernels
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
+% COPYRIGHT : Neil D. Lawrence, 2006, modified by Pei Gao, 2008
 
 % GPSIM
 
@@ -38,21 +38,57 @@ model.B = fhandle(params(endVal+1:end), 'atox');
 
 % The decays and sensitivities are actually stored in the kernel.
 % We'll put them here as well for convenience.
-for i = 1:model.kern.numBlocks
-  if model.includeNoise
-    model.D(i) = model.kern.comp{1}.comp{i}.decay;
-    model.S(i) = sqrt(model.kern.comp{1}.comp{i}.variance);
-  else
-    model.D(i) = model.kern.comp{i}.decay;
-    model.S(i) = sqrt(model.kern.comp{i}.variance);
+if isfield(model, 'proteinPrior') && ~isempty(model.proteinPrior)
+  for i = 2:model.kern.numBlocks
+    if model.includeNoise
+      model.D(i-1) = model.kern.comp{1}.comp{i}.decay;
+      model.S(i-1) = sqrt(model.kern.comp{1}.comp{i}.variance);
+    else
+      model.D(i-1) = model.kern.comp{i}.decay;
+      model.S(i-1) = sqrt(model.kern.comp{i}.variance);
+    end
+  end  
+else
+  for i = 1:model.kern.numBlocks
+    if model.includeNoise
+      model.D(i) = model.kern.comp{1}.comp{i}.decay;
+      model.S(i) = sqrt(model.kern.comp{1}.comp{i}.variance);
+    else
+      model.D(i) = model.kern.comp{i}.decay;
+      model.S(i) = sqrt(model.kern.comp{i}.variance);
+    end
   end
+  
 end
 model.mu = model.B./model.D;
 
 model = gpsimUpdateKernels(model);
-lengthObs = size(model.t, 1);
-ind = 1:lengthObs;
-for i = 1:model.numGenes
-  model.m(ind) = model.y(ind) - model.mu(i)*ones(lengthObs, 1);
-  ind = ind + lengthObs;
+
+if isfield(model, 'proteinPrior') && ~isempty(model.proteinPrior)
+  if model.includeNoise
+    yInd = 1:model.kern.comp{1}.diagBlockDim{2};
+    mInd = model.kern.comp{1}.diagBlockDim{1} + yInd;
+    for i = 1:model.numGenes
+      model.m(mInd) = model.y(yInd) - model.mu(i)* ...
+          ones(model.kern.comp{1}.diagBlockDim{i+1},1);
+      yInd = yInd + model.kern.comp{1}.diagBlockDim{i+1};
+      mInd = mInd + model.kern.comp{1}.diagBlockDim{i+1};
+    end
+  else
+    yInd = 1:model.kern.diagBlockDim{2};
+    mInd = model.kern.diagBlockDim{1} + yInd;
+    for i = 1:model.numGenes
+      model.m(mInd) = model.y(yInd) - model.mu(i)*ones(model.kern.diagBlockDim{i+1}, ...
+                                                     1);
+      yInd = yInd + model.kern.diagBlockDim{i+1};
+      mInd = mInd + model.kern.diagBlockDim{i+1};
+    end
+  end
+else
+  lengthObs = size(model.t, 1);
+  ind = 1:lengthObs;
+  for i = 1:model.numGenes
+    model.m(ind) = model.y(ind) - model.mu(i)*ones(lengthObs, 1);
+    ind = ind + lengthObs;
+  end
 end

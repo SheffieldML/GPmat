@@ -26,7 +26,6 @@ end
 fhandle = str2func([model.bTransform 'Transform']);
 param = [param fhandle(model.B, 'xtoa')];
 
-
 if isfield(model, 'fix')
   for i = 1:length(model.fix)
     param(model.fix(i).index) = model.fix(i).value;

@@ -19,7 +19,7 @@ function [y, yvar, gene, times, scale, rawExp, rawVar] = gpsimLoadBarencoData
 
 % GPSIM
 
-if exist('./data/barencoData.mat') == 2
+if exist('./data/barencoData.mat') == 2 
   load('./data/barencoData.mat');
 else
   
@@ -95,6 +95,26 @@ else
                                                       % ... recover
                                                       % variance in exp
                                                       % space.
+  
+
+  
+  
+%     rawExp = zeros(36, length(genes));
+%   rawVar = zeros(36, length(genes));
+%   yFull = zeros(36, length(genes));
+%   yFullVar = zeros(36, length(genes));
+%   for k=1:length(genes),
+%     I = strcmp(genes{k}, exprs.genes);
+%     prof = exprs.data(:, I, :);
+%     rawExp(:, k) = squeeze(prof(3, 1, :));
+%     rawVar(:, k) = squeeze(diff(prof([4, 2], 1, :)));
+%     for l=1:36,
+%       t = do_distfit(exp(prof(:, 1, l))', @norminv);
+%       yFull(l, k) = t(1);
+%       yFullVar(l, k) = t(2) .^ 2;
+%     end
+%   end
+  
   
   
   % Rescale so that average standard deviation of curves is 1.

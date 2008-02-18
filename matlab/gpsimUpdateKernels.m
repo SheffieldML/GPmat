@@ -10,12 +10,26 @@ function model = gpsimUpdateKernels(model)
 %
 % SEEALSO gpsimExpandParam, gpsimCreate
 %
-% COPYRIGHT Neil D. Lawrence, 2006
+% COPYRIGHT Neil D. Lawrence, 2006, modified by Pei Gao, 2008
 
 % GPSIM
+  
+eps = 1e-6;                             % minimum noise variance for the
+                                        % RBF kernel of TF.
 
+if isfield(model, 'proteinPrior') && isfield(model, 'timesCell')
+  k = real(kernCompute(model.kern, model.timesCell));
+  if model.includeNoise
+    noiseVar = [zeros(model.kern.comp{1}.diagBlockDim{1}, 1); model.yvar];
+  else
+    noiseVar = [eps*ones(model.kern.diagBlockDim{1}, 1); model.yvar];
+  end
+else
+  k = real(kernCompute(model.kern, model.t));
+  noiseVar = model.yvar;
+end
 
-model.K = real(kernCompute(model.kern, model.t))+diag(model.yvar);
+model.K = k + diag(noiseVar);
 [model.invK, U, jitter] = pdinv(model.K);
 if jitter>1e-4
   fprintf('Warning: gpsimUpdateKernels added jitter of %2.4f\n', jitter)

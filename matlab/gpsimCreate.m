@@ -20,7 +20,7 @@ function model = gpsimCreate(numGenes, numProteins, times, geneVals, ...
 % system.
 % ARG times : the time points where the data is to be modelled.
 % ARG geneVals : the values of each gene at the different time points.
-% ARG geneVars : the variances of each gene at the different time points.
+% ARG geneVars : the varuabces of each gene at the different time points.
 % ARG options : options structure, the default options can be
 % generated using gpsimOptions.
 % RETURN model : model structure containing default
@@ -28,7 +28,7 @@ function model = gpsimCreate(numGenes, numProteins, times, geneVals, ...
 %
 % SEEALSO : modelCreate, gpsimOptions
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
+% COPYRIGHT : Neil D. Lawrence, 2008, modified by P. Gao
 
 % GPSIM
 
@@ -48,19 +48,43 @@ model.type = 'gpsim';
 
 kernType1{1} = 'multi';
 
-tieParam{1} = [2]; % These are the indices of the inverse widths which
-                % need to be constrained to be equal.
-for i = 1:numGenes
-  kernType1{i+1} = 'sim';
-  if i>1
+if isfield(options, 'proteinPrior') && ~isempty(options.proteinPrior)
+  model.proteinPrior = options.proteinPrior;
+  kernType1{2} = 'rbf';
+  if isfield(options, 'proteinPriorTimes')
+    timesCell{1} = options.proteinPriorTimes;
+  else
+    timesCell{1} = times;
+  end
+  tieParam{1} = [1];                    % RBF kernel parameters: inverse
+                                        % widths and variance.
+  for i = 1:numGenes
+    kernType1{i+2} = 'sim';
+    timesCell{i+1} = times; 
     tieParam{1} = [tieParam{1} tieParam{1}(end)+3];
+  end  
+  model.timesCell = timesCell;
+else
+  timesCell = times;                     % Non-cell structure in this case
+  tieParam{1} = [2]; % These are the indices of the inverse widths which
+                % need to be constrained to be equal.
+  for i = 1:numGenes
+    kernType1{i+1} = 'sim';
+    if i>1
+      tieParam{1} = [tieParam{1} tieParam{1}(end)+3];
+    end
   end
 end
 
 model.y = geneVals(:);
-model.yvar = zeros(size(geneVars(:)));
 
 model.includeNoise = options.includeNoise;
+
+% if model.includeNoise
+%   model.yvar = zeros(size(geneVars(:)));
+% else
+  model.yvar = geneVars(:);
+% end
 
 % Check if we have a noise term.
 if model.includeNoise
@@ -71,63 +95,95 @@ if model.includeNoise
   % tieParam{2} = INDEX OF FIRST NOISE VARIANCE; % These are the indices of the variances.
 
   % Set the new multi kernel to just contain 'white' kernels.
-  for i = 1:numGenes
-    kernType2{i+1} = 'white';
-    % NEIL Again, need to get the right indices on tie param if the
-    % variances are to be 'tied'.
-    %if i>1
-    %  tieParam = [tieParam{2} tieParam{2}(end)+1];
-    %end
+  if isfield(model, 'proteinPrior') && ~isempty(model.proteinPrior)
+    for i = 1:(numGenes+1)
+      kernType2{i+1} = 'white';
+      % NEIL Again, need to get the right indices on tie param if the
+      % variances are to be 'tied'.
+      %if i>1
+      %  tieParam = [tieParam{2} tieParam{2}(end)+1];
+      %end
+    end    
+  else
+    for i = 1:numGenes
+      kernType2{i+1} = 'white';
+      % NEIL Again, need to get the right indices on tie param if the
+      % variances are to be 'tied'.
+      %if i>1
+      %  tieParam = [tieParam{2} tieParam{2}(end)+1];
+      %end
+    end
   end
   % Now create model with a 'cmpnd' (compound) kernel build from two
   % multi-kernels. The first multi-kernel is the sim-sim one the next
   % multi-kernel is the white-white one. 
-  model.kern = kernCreate(times, {'cmpnd', kernType1, kernType2});
+  model.kern = kernCreate(timesCell, {'cmpnd', kernType1, kernType2});
 else
-  model.kern = kernCreate(times, kernType1);
+  model.kern = kernCreate(timesCell, kernType1);
 end
-%/~ This is if we need to place priors on parameters ...
-% for i = 1:length(model.kern.numBlocks)
-%   % Priors on the sim kernels.
-%   model.kern.comp{i}.priors = priorCreate('gamma');
-%   model.kern.comp{i}.priors.a = 1;
-%   model.kern.comp{i}.priors.b = 1;
-%   if i == 1
-%     % For first kernel place prior on inverse width.
-%     model.kern.comp{i}.priors.index = [1 2 3];
-%   else
-%     % For other kernels don't place prior on inverse width --- as
-%     % they are all tied together and it will be counted multiple
-%     % times.
-%     model.kern.comp{i}.priors.index = [1 3];
-%   end
-% end
 
-% Prior on the b values.
-% model.bprior = priorCreate('gamma');
-% model.bprior.a = 1;
-% model.bprior.b = 1;
+%/~ This is if we need to place priors on parameters ...
+if isfield(options, 'addPriors') && options.addPriors,
+  for i = 1:length(model.kern.numBlocks)
+    % Priors on the sim kernels.
+    model.kern.comp{i}.priors = priorCreate('gamma');
+    model.kern.comp{i}.priors.a = 1;
+    model.kern.comp{i}.priors.b = 1;
+    if i == 1
+      % For first kernel place prior on inverse width.
+      model.kern.comp{i}.priors.index = [1 2 3];
+    else
+      % For other kernels don't place prior on inverse width --- as
+      % they are all tied together and it will be counted multiple
+      % times.
+      model.kern.comp{i}.priors.index = [1 3];
+    end
+  end
+
+  % Prior on the b values.
+  model.bprior = priorCreate('gamma');
+  model.bprior.a = 1;
+  model.bprior.b = 1;
+end
 %~/
 model.kern = modelTieParam(model.kern, tieParam);
 
 % The decays and sensitivities are actually stored in the kernel.
 % We'll put them here as well for convenience.
-for i = 1:model.kern.numBlocks
-  if model.includeNoise
-    model.D(i) = model.kern.comp{1}.comp{i}.decay;
-    model.S(i) = sqrt(model.kern.comp{1}.comp{i}.variance);
-  else
-    model.D(i) = model.kern.comp{i}.decay;
-    model.S(i) = sqrt(model.kern.comp{i}.variance);
-  end
+if isfield(model, 'proteinPrior') && ~isempty(model.proteinPrior)
+  for i = 2:model.kern.numBlocks
+    if model.includeNoise
+      model.D(i-1) = model.kern.comp{1}.comp{i}.decay;
+      model.S(i-1) = sqrt(model.kern.comp{1}.comp{i}.variance);
+    else
+      model.D(i-1) = model.kern.comp{i}.decay;
+      model.S(i-1) = sqrt(model.kern.comp{i}.variance);
+    end
+  end  
+else
+  for i = 1:model.kern.numBlocks
+    if model.includeNoise
+      model.D(i) = model.kern.comp{1}.comp{i}.decay;
+      model.S(i) = sqrt(model.kern.comp{1}.comp{i}.variance);
+    else
+      model.D(i) = model.kern.comp{i}.decay;
+      model.S(i) = sqrt(model.kern.comp{i}.variance);
+    end
+  end 
 end
 
 model.numParams = numGenes + model.kern.nParams;
 model.numGenes = numGenes;
 model.mu = mean(geneVals);
 model.B = model.D.*model.mu;
-model.m = model.y;
-model.t = times;
+
+if isfield(model, 'proteinPrior') && ~isempty(model.proteinPrior)
+  dim = size(model.proteinPrior, 1) + size(model.y, 1);
+  model.m = [model.proteinPrior; model.y];
+else
+  model.m = model.y;
+  model.t = times;
+end
 
 model.optimiser = options.optimiser;
 

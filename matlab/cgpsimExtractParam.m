@@ -1,4 +1,4 @@
-function param = cgpsimExtractParam(model)
+function [param, names] = cgpsimExtractParam(model)
 
 % CGPSIMEXTRACTPARAM Extract parameters from compound GPSIM model.
 % FORMAT
@@ -13,4 +13,8 @@ function param = cgpsimExtractParam(model)
 
 % GPSIM
 
-param = gpsimExtractParam(model.comp{1});
+if nargout == 1,
+  param = gpsimExtractParam(model.comp{1});
+else
+  [param, names] = gpsimExtractParam(model.comp{1});
+end

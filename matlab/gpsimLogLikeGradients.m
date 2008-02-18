@@ -9,35 +9,63 @@ function g = gpsimLogLikeGradients(model)
 % 
 % SEEALSO : gpsimCreate, gpsimLogLikelihood, gpsimGradient
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
+% COPYRIGHT : Neil D. Lawrence, 2006, modified by Pei Gao, 2008
 
 % GPSIM
 
 covGrad = -model.invK + model.invK*model.m*model.m'*model.invK;
 covGrad = 0.5*covGrad;
-g = kernGradient(model.kern, model.t, covGrad);
+if isfield(model, 'proteinPrior') && ~isempty(model.proteinPrior)
+  g = kernGradient(model.kern, model.timesCell, covGrad);
+else
+  g = kernGradient(model.kern, model.t, covGrad);
+end
 
 %/~ In case we need priors in.
 % Add contribution of any priors 
-% g = g + kernPriorGradient(model.kern);
+if isfield(model, 'bprior'),
+  g = g + kernPriorGradient(model.kern);
+end
 %~/
 
-
 gmuFull = model.m'*model.invK;
-numData = size(model.t, 1);
-ind = 1:numData;
-gmu = zeros(size(1, model.numGenes));
-for i = 1:model.numGenes
-  gmu(i) = sum(gmuFull(ind));
-  ind = ind + numData;
+
+if isfield(model, 'proteinPrior') && ~isempty(model.proteinPrior)
+  if model.includeNoise
+    ind = model.kern.comp{1}.diagBlockDim{1} + (1:model.kern.comp{1}.diagBlockDim{2});
+    gmu = zeros(size(1, model.numGenes));
+
+    for i = 1:model.numGenes
+      gmu(i) = sum(gmuFull(ind));
+      ind = ind + model.kern.comp{1}.diagBlockDim{i+1};
+    end
+  else
+    ind = model.kern.diagBlockDim{1} + (1:model.kern.diagBlockDim{2});
+    gmu = zeros(size(1, model.numGenes));
+
+    for i = 1:model.numGenes
+      gmu(i) = sum(gmuFull(ind));
+      ind = ind + model.kern.diagBlockDim{i+1};
+    end
+  end
+  
+else
+  numData = size(model.t, 1);
+  ind = 1:numData;
+  gmu = zeros(size(1, model.numGenes));
+  for i = 1:model.numGenes
+    gmu(i) = sum(gmuFull(ind));
+    ind = ind + numData;
+  end
 end
+
 gb = gmu./model.D;
 fhandle = str2func([model.bTransform 'Transform']);
 %/~ In case we need priors in.
 % Add prior on B if it exists.
-% if isfield(model, 'bprior');
-%  gb = gb + priorGradient(model.bprior, model.B);
-% end
+if isfield(model, 'bprior');
+  gb = gb + priorGradient(model.bprior, model.B);
+end
 %~/ 
 gb = gb.*fhandle(model.B, 'gradfact');
 
@@ -49,9 +77,16 @@ gd = -gmu.*model.B./(model.D.*model.D);
 if model.kern.numBlocks == 1
   decayIndices = 1;
 elseif model.kern.numBlocks>1
-  decayIndices = [1 4];
-  for i = 3:model.kern.numBlocks
-    decayIndices(end+1) = decayIndices(end) + 2;
+  if isfield(model, 'proteinPrior') && ~isempty(model.proteinPrior)
+    decayIndices = [3];
+    for i = 3:model.kern.numBlocks
+      decayIndices(end+1) = decayIndices(end) + 2;
+    end    
+  else
+    decayIndices = [1 4];
+    for i = 3:model.kern.numBlocks
+      decayIndices(end+1) = decayIndices(end) + 2;
+    end
   end
 end
 
