@@ -17,22 +17,41 @@ function g = gpsimMapLogLikeGradients(model, gfdata)
 % SEEALSO : gpsimMapCreate, gpsimMapLogLikelihood,
 % gpsimMapGradient, gpsimMapFunctionalLogLikeGradients
 %
-% COPYRIGHT : Magnus Rattray and Neil D. Lawrence, 2006
+% COPYRIGHT : Magnus Rattray and Neil D. Lawrence, 2006, modified by Pei Gao
 
 % GPSIM
 
+% kernel parameters
 dataRespond = false;
 if dataRespond & nargin < 2
   [void, gfdata] = gpsimMapFunctionalLogLikeGradients(model);
 end
 covGrad = model.invK*(model.f*model.f'+model.covf)*model.invK  ...
            - model.invK;
-covGrad = covGrad*.5;
+covGrad = covGrad*0.5;
 if dataRespond
   covGrad = covGrad - model.invK*model.covf*diag(model.covf* ...
                                                  model.W)*gfdata;
 end
-g = kernGradient(model.kern, model.mapt, covGrad);
+gkern = kernGradient(model.kern, model.mapt, covGrad);
+
+% model parameters
+gmodel = gpsimMapMarginalLikeliGradient(model);
+
+g = [gkern gmodel];
 
 % Add term arising from data likelihood (pg 125 in Rasmussen & Williams).
-g = g;
+if strcmp(model.nonLinearity, 'linear')
+  g1 = 0;
+else
+%  g1 = 0;
+  g1 = gpsimMapLikeliGradientImplicit(model);
+end
+
+g = g + g1;
+
+if isfield(model, 'fix')
+  for i = 1:length(model.fix)
+    g(model.fix(i).index) = 0;
+  end
+end

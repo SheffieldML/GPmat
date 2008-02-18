@@ -11,7 +11,7 @@ function model = gpsimMapUpdatePosteriorCovariance(model)
 % updated.
 % RETURN model : the model with the updated representation.
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
+% COPYRIGHT : Neil D. Lawrence, 2006, modified by Pei Gao
 %
 % SEEALSO : gpsimMapUpdateKernels, gpsimMapFunctionalUpdateW
 
@@ -44,4 +44,16 @@ model.logDetCovf = (model.logDetK - logDetInner);
 %  fprintf('Warning: gpsimMapUpdatePosteriorCovariance added jitter of %2.4f\n', jitter)
 %end
 %model.logDetCovf = - logdet(model.invCovf, U); 
-model.varf = diag(model.covf);
+if isfield(model,'priorProtein') && ~isempty(model.priorProtein)
+  nCons = length(model.priorProtein);
+  consMat = zeros(size(model.covf));
+  for k = 1:nCons
+    ftimeIndex = find((model.priorProteinTimes(k)-model.mapt)==0);
+    consMat(ftimeIndex,ftimeIndex) = model.consLambda;
+  end
+  hf = inv(model.invCovf+consMat);
+else
+  hf = model.covf;
+end
+
+model.varf = diag(hf);

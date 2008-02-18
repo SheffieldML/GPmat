@@ -5,4 +5,3 @@ importLatest('optimi');
 importLatest('ndlutil');
 importLatest('mltools');
 importTool('kern');
-importLatest('gp');
