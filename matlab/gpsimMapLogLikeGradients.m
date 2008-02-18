@@ -47,7 +47,7 @@ if strcmp(model.nonLinearity, 'linear')
   g1 = 0;
 else
 %  g1 = 0;
-  g1 = gpsimMapLikeliGradientImplicit(model);
+  g1 = gpsimMapLikeGradientImplicit(model);
 end
 
 g = g + g1;

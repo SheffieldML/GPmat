@@ -124,7 +124,7 @@ else
   model.kern = kernCreate(timesCell, kernType1);
 end
 
-%/~ This is if we need to place priors on parameters ...
+% This is if we need to place priors on parameters ...
 if isfield(options, 'addPriors') && options.addPriors,
   for i = 1:length(model.kern.numBlocks)
     % Priors on the sim kernels.
@@ -147,7 +147,7 @@ if isfield(options, 'addPriors') && options.addPriors,
   model.bprior.a = 1;
   model.bprior.b = 1;
 end
-%~/
+
 model.kern = modelTieParam(model.kern, tieParam);
 
 % The decays and sensitivities are actually stored in the kernel.

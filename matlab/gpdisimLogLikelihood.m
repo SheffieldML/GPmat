@@ -1,6 +1,6 @@
-function ll = gpsimLogLikelihood(model)
+function ll = gpdisimLogLikelihood(model)
 
-% GPSIMLOGLIKELIHOOD Compute the log likelihood of a GPSIM model.
+% GPDISIMLOGLIKELIHOOD Compute the log likelihood of a GPDISIM model.
 % FORMAT
 % DESC computes the log likelihood of the given Gaussian process
 % for use in a single input motif protein network.

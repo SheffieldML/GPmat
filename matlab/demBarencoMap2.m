@@ -1,4 +1,4 @@
-% DEMBARENCOMAP1 Optimise model using MAP approximation with MLP kernel and exp response, using SCG optimisation and new PUMA processed data.
+% DEMBARENCOMAP2 Optimise model using MAP approximation with MLP kernel and exp response, using SCG optimisation and new PUMA processed data.
 
 % GPSIM
 clear,clc

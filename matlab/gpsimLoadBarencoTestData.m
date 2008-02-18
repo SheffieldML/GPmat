@@ -1,6 +1,6 @@
-function [y, yvar, gene, times, scale, rawExp, rawVar] = gpsimLoadBarencoData
+function [y, yvar, gene, times, scale, rawExp, rawVar] = gpsimLoadBarencoTestData
 
-% GPSIMLOADBARENCODATA Load in Martino Barenco's data as processed by mmgMOS.
+% GPSIMLOADBARENCOTESTDATA Load in Martino Barenco's test data as processed by mmgMOS.
 % FORMAT
 % DESC loads in from the two Excel spread sheets
 % (resultsMartino_exprs.xls and resultsMartino_se.xls) the data
@@ -13,14 +13,14 @@ function [y, yvar, gene, times, scale, rawExp, rawVar] = gpsimLoadBarencoData
 % RETURN rawExp : the raw gene expresion level.
 % RETURN rawVar : the raw variance of the gene expression.
 % 
-% SEEALSO : demBarenco1, demBarencoMap1
+% SEEALSO : demBarencoRank
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
+% COPYRIGHT : Neil D. Lawrence, 2007
 
 % GPSIM
 
-if exist('./data/barencoData.mat') == 2 
-  load('./data/barencoData.mat');
+if exist('./data/barencoDataTest.mat') == 2
+  load('./data/barencoDataTest.mat');
 else
   
   % These excel files include results processed directly from the
@@ -71,15 +71,19 @@ else
   end
   order = [1 4 5 6 7 2 3 8 11 12 13 14 9 10 15 18 19 20 21 16 17]; 
   
+  
   % Perform some normalisation.
   % Make sure that the average for each slide in log space is the
   % same.
   mVal = zeros(size(mean(numeric1)));
   mVal = mVal - mean(mVal);
+  
   rawExp = numeric1(ind, order)';
+  
   for i = 1:size(rawExp, 2)
     rawExp(:, i) = rawExp(:, i) - mVal';
   end
+  
   rawVar = numeric2(ind, order)';
   rawVar = rawVar.*rawVar; % convert standard deviations to variances.
   
@@ -91,26 +95,6 @@ else
                                                       % ... recover
                                                       % variance in exp
                                                       % space.
-  
-
-  
-  
-%     rawExp = zeros(36, length(genes));
-%   rawVar = zeros(36, length(genes));
-%   yFull = zeros(36, length(genes));
-%   yFullVar = zeros(36, length(genes));
-%   for k=1:length(genes),
-%     I = strcmp(genes{k}, exprs.genes);
-%     prof = exprs.data(:, I, :);
-%     rawExp(:, k) = squeeze(prof(3, 1, :));
-%     rawVar(:, k) = squeeze(diff(prof([4, 2], 1, :)));
-%     for l=1:36,
-%       t = do_distfit(exp(prof(:, 1, l))', @norminv);
-%       yFull(l, k) = t(1);
-%       yFullVar(l, k) = t(2) .^ 2;
-%     end
-%   end
-  
   
   
   % Rescale so that average standard deviation of curves is 1.
@@ -124,5 +108,5 @@ else
   yvar{2} = yFullVar(8:14, :);
   yvar{3} = yFullVar(15:21, :);
   times = [0 2 4 6 8 10 12]';
-  save('./data/barencoData.mat', 'y', 'yvar', 'gene', 'times', 'scale', 'rawVar', 'rawExp');
+  save('./data/barencoDataTest.mat', 'y', 'yvar', 'gene', 'times', 'scale', 'rawVar', 'rawExp');
 end
