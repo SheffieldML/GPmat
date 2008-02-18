@@ -28,7 +28,9 @@ function model = gpsimCreate(numGenes, numProteins, times, geneVals, ...
 %
 % SEEALSO : modelCreate, gpsimOptions
 %
-% COPYRIGHT : Neil D. Lawrence, 2008, modified by P. Gao
+% COPYRIGHT : Neil D. Lawrence, 2006, 2007
+%
+% MODIFIED : Pei Gao, 2008
 
 % GPSIM
 

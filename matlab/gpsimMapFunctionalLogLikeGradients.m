@@ -10,7 +10,9 @@ function [g, gdata] = gpsimMapFunctionalLogLikeGradients(model)
 % 
 % SEEALSO : gpsimMapCreate, gpsimMapUpdateYpred
 %
-% COPYRIGHT : Magnus Rattray and Neil D. Lawrence, 2006, modified by Pei Gao, 2008
+% COPYRIGHT : Magnus Rattray and Neil D. Lawrence, 2006
+%  
+% MODIFIED : Pei Gao, 2008
 
 % GPSIM
 

@@ -11,7 +11,9 @@ function [param, names] = gpsimMapExtractParam(model)
 %
 % SEEALSO : gpsimMapCreate, gpsimMapExpandParam, modelExtractParam
 %
-% COPYRIGHT : Neil D. Lawrence, 2006, modified by Pei Gao, 2008
+% COPYRIGHT : Neil D. Lawrence, 2006
+%  
+% MODIFIED : Pei Gao, 2008
 
 % GPSIM
 

@@ -11,7 +11,9 @@ function model = gpsimMapUpdatePosteriorCovariance(model)
 % updated.
 % RETURN model : the model with the updated representation.
 %
-% COPYRIGHT : Neil D. Lawrence, 2006, modified by Pei Gao
+% COPYRIGHT : Neil D. Lawrence, 2006
+%  
+% MODIFIED : Pei Gao, 2008
 %
 % SEEALSO : gpsimMapUpdateKernels, gpsimMapFunctionalUpdateW
 

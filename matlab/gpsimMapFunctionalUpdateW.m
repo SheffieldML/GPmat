@@ -11,8 +11,9 @@ function model = gpsimMapFunctionalUpdateW(model)
 %
 % SEEALSO : gpsimMapCreate, gpsimMapFunctionalGradient, gpsimMapUpdatePosteriorCovariance
 %
-% COPYRIGHT : Magnus Rattray and Neil D. Lawrence, 2006, modified by Pei Gao, 2008
-
+% COPYRIGHT : Magnus Rattray and Neil D. Lawrence, 2006
+%  
+% MODIFIED : Pei Gao, 2008
 
 % GPSIM
 

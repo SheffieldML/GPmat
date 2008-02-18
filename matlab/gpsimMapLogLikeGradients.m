@@ -17,7 +17,9 @@ function g = gpsimMapLogLikeGradients(model, gfdata)
 % SEEALSO : gpsimMapCreate, gpsimMapLogLikelihood,
 % gpsimMapGradient, gpsimMapFunctionalLogLikeGradients
 %
-% COPYRIGHT : Magnus Rattray and Neil D. Lawrence, 2006, modified by Pei Gao
+% COPYRIGHT : Magnus Rattray and Neil D. Lawrence, 2006
+%  
+% MODIFIED : Pei Gao, 2008
 
 % GPSIM
 

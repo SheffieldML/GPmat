@@ -11,7 +11,9 @@ function gpsimMapBarencoResults(model, type, expNo, printResults, scale)
 % ARG printResults : function prints the plots if set to true
 % (default is false).
 %
-% COPYRIGHT : Magnus Rattray and Neil D. Lawrence, 2006, modified by Pei Gao, 2008
+% COPYRIGHT : Magnus Rattray and Neil D. Lawrence, 2006
+%
+% MODIFIED : Pei Gao, 2008
 %
 % SEEALSO : demBarencoMap1
 

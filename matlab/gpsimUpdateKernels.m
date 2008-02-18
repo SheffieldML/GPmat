@@ -10,7 +10,9 @@ function model = gpsimUpdateKernels(model)
 %
 % SEEALSO gpsimExpandParam, gpsimCreate
 %
-% COPYRIGHT Neil D. Lawrence, 2006, modified by Pei Gao, 2008
+% COPYRIGHT Neil D. Lawrence, 2006
+%  
+% MODIFIED : Pei Gao, 2008
 
 % GPSIM
   
