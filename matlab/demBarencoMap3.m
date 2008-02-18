@@ -1,4 +1,4 @@
-% DEMBARENCOMAP17 Optimise model using MAP approximation with MLP kernel and linear response, using SCG optimisation and new PUMA processed data with noise variance estimation.
+% DEMBARENCOMAP3 Optimise model using MAP approximation with MLP kernel and linear response, using SCG optimisation and new PUMA processed data with noise variance estimation.
 
 % GPSIM
 clear,clc

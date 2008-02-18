@@ -1,6 +1,6 @@
-function g = gpsimLogLikeGradients(model)
+function g = gpdisimLogLikeGradients(model)
 
-% GPSIMLOGLIKEGRADIENTS Compute the gradients of the log likelihood of a GPSIM model.
+% GPDISIMLOGLIKEGRADIENTS Compute the gradients of the log likelihood of a GPDISIM model.
 % FORMAT
 % DESC computes the gradients of the log likelihood of the given
 % Gaussian process for use in a single input motif protein network.
@@ -11,7 +11,7 @@ function g = gpsimLogLikeGradients(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
-% MODIFIED : Pei Gao, 2008
+% COPYRIGHT : Antti Honkela, 2007
   
 % GPSIM
 
@@ -54,6 +54,7 @@ if isfield(model, 'proteinPrior') && ~isempty(model.proteinPrior)
 else
   numData = size(model.t, 1);
   ind = 1:numData;
+  ind = ind + numData;
   gmu = zeros(size(1, model.numGenes));
   for i = 1:model.numGenes
     gmu(i) = sum(gmuFull(ind));
@@ -76,21 +77,10 @@ gb = gb.*fhandle(model.B, 'gradfact');
 % clunky and sensitive to changes that take place elsewhere in the
 % code ...
 gd = -gmu.*model.B./(model.D.*model.D);
-if model.kern.numBlocks == 1
-  decayIndices = 1;
-elseif model.kern.numBlocks>1
-  if isfield(model, 'proteinPrior') && ~isempty(model.proteinPrior)
-    decayIndices = [3];
-    for i = 3:model.kern.numBlocks
-      decayIndices(end+1) = decayIndices(end) + 2;
-    end    
-  else
-    decayIndices = [1 4];
-    for i = 3:model.kern.numBlocks
-      decayIndices(end+1) = decayIndices(end) + 2;
-    end
-  end
-end
+decayIndices = [5];
+for i = 3:model.kern.numBlocks
+  decayIndices(end+1) = decayIndices(end) + 2;
+end    
 
 % Account for decay in mean.
 g(decayIndices) = g(decayIndices) ...

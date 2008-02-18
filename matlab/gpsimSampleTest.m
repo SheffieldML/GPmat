@@ -1,4 +1,4 @@
-% GPSIMTEST Test the single input motif code.
+% GPSIMSAMPLETEST Test the single input motif code.
 % FORMAT
 % DESC tests the GPSIM kernels by sampling an f and x for a couple
 % of genes. Double checks that everything is working by solving the
