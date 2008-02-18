@@ -15,8 +15,10 @@ function model = gpsimMapExpandParam(model, params)
 % 
 % SEEALSO : gpsimMapCreate, gpsimMapExtractParam, modelExtractParam, gpsimMapUpdateKernels
 %
-% COPYRIGHT : Neil D. Lawrence, 2006, modified by Pei Gao, 2008
-
+% COPYRIGHT : Neil D. Lawrence, 2006
+%
+% MODIFIED : Pei Gao, 2008
+  
 % GPSIM
 params = real(params);
 if isfield(model, 'fix')

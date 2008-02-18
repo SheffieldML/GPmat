@@ -9,8 +9,10 @@ function g = gpsimLogLikeGradients(model)
 % 
 % SEEALSO : gpsimCreate, gpsimLogLikelihood, gpsimGradient
 %
-% COPYRIGHT : Neil D. Lawrence, 2006, modified by Pei Gao, 2008
-
+% COPYRIGHT : Neil D. Lawrence, 2006
+%
+% MODIFIED : Pei Gao, 2008
+  
 % GPSIM
 
 covGrad = -model.invK + model.invK*model.m*model.m'*model.invK;

@@ -7,7 +7,9 @@ function model = gpsimMapUpdateG(model)
 % ARG model : the model to be updated.
 % ARG model : the model with the updated g representation.
 %
-% COPYRIGHT : Neil D. Lawrence, 2006, modified by Pei Gao, 2008
+% COPYRIGHT : Neil D. Lawrence, 2006
+%  
+% MODIFIED : Pei Gao, 2008
 %
 % SEEALSO : gpsimMapFunctionalExpandParam, gpsimMapCreate
 

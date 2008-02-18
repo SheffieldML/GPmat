@@ -12,7 +12,9 @@ function [model, ll] = gpsimMapUpdateF(model, options)
 % SEEALSO : gpsimMapFunctionalLogLikeGradient,
 % gpsimMapFunctionalLogLikeHessian, gpsimMapCreate
 %
-% COPYRIGHT : Neil D. Lawrence, 2006, modified by Pei Gao, 2008
+% COPYRIGHT : Neil D. Lawrence, 2006
+%  
+% MODIFIED : Pei Gao, 2008
 
 % GPSIM
 

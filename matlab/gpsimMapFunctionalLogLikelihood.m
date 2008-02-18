@@ -10,7 +10,9 @@ function ll = gpsimMapFunctionalLogLikelihood(model)
 % 
 % SEEALSO : gpsimMapCreate, gpsimMapLogLikelihood, gpsimMapFunctionalLogLikeGradients
 %
-% COPYRIGHT : Neil D. Lawrence, 2006, modified by Pei Gao, 2008
+% COPYRIGHT : Neil D. Lawrence, 2006
+%  
+% MODIFIED : Pei Gao, 2008
 
 % GPSIM
 
