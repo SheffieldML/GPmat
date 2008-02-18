@@ -18,7 +18,7 @@ Added 'translate' kernel which allows wrapping of other kernels with a kernel th
 Version 0.166
 -------------
 
-Added periodic version of RBF kernel (see Rasmussen and Williams pg 92 or Mackay's introduction to GPs (1998)) and periodic version of Gibbs's non-statinary kernel (see e.g. pg 93 of Rasmussen and Williams).
+Added periodic version of RBF kernel (see Rasmussen and Williams pg 92 or Mackay's introduction to GPs (1998)) and periodic version of Gibbs's non-stationary kernel (see e.g. pg 93 of Rasmussen and Williams).
 
 Version 0.165
 -------------
