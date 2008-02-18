@@ -1,4 +1,4 @@
-#LyX 1.5.1 created this file. For more info see http://www.lyx.org/
+#LyX 1.5.2 created this file. For more info see http://www.lyx.org/
 \lyxformat 276
 \begin_document
 \begin_header
@@ -44,6 +44,7 @@ pdftoolbar=false]{hyperref}
 \paperpagestyle default
 \tracking_changes false
 \output_changes false
+\author "" 
 \author "" 
 \end_header
 
@@ -636,7 +637,7 @@ y_{j}\left(t\right)=\frac{B_{j}}{D_{j}}+e^{-D_{j}t}\int_{0}^{t}\mathrm{d}u\,\, g
 
  is, 
 \begin_inset Formula \[
-\log p\left(D|f,\left\{ B_{j},\theta_{j},D_{j}\right\} \right)=-\frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{G}\left[\beta_{ij}\left(y_{j}\left(t_{i}\right)-y_{ij}\right)^{2}+\log\left(\beta_{ij}\right)\right]-\frac{NG}{2}\log\left(2\pi\right)\ .\]
+\log p\left(D|f,\left\{ B_{j},\theta_{j},D_{j}\right\} \right)=-\frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{G}\left[\beta_{ij}\left(y_{j}\left(t_{i}\right)-y_{ij}\right)^{2}-\log\left(\beta_{ij}\right)\right]-\frac{NG}{2}\log\left(2\pi\right)\ .\]
 
 \end_inset
 

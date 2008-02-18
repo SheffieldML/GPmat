@@ -4,4 +4,5 @@ importLatest('netlab');
 importLatest('optimi');
 importLatest('ndlutil');
 importLatest('mltools');
-importTool('kern');
+importLatest('kern');
+importLatest('minimize');

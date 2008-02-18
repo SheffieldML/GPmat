@@ -23,3 +23,12 @@ dir: data
 ~/mlprojects/gpsim/matlab/data/resultsMartino_exprs.xls
 ~/mlprojects/gpsim/matlab/data/resultsMartino_se.xls
 ~/mlprojects/gpsim/matlab/data/5-95variance.txt
+~/mlprojects/gpsim/matlab/data/mef2Data.mat
+~/mlprojects/gpsim/matlab/data/ecoliNormalisedData.txt
+# ~/mlprojects/gpsim/matlab/data/barencoMAS5.mat
+# ~/mlprojects/gpsim/matlab/data/barencoData.mat
+# ~/mlprojects/gpsim/matlab/data/barencoMASData.mat
+# ~/mlprojects/gpsim/matlab/data/barencoPUMAData.mat
+# ~/mlprojects/gpsim/matlab/data/barencoPUMADataNoAntti.mat
+
+
