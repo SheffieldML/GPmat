@@ -28,11 +28,21 @@ function kern = kernCreate(X, kernelType)
 % SEEALSO : kernParamInit
 
 % KERN
-
-dim = size(X, 2);
-if dim == 1 & size(X, 1) == 1;
-  dim = X;
+  
+if iscell(X) 
+  for i = 1:length(X)
+    dim(i) = size(X{i}, 2);
+    if dim(i) == 1 & size(X{i}, 1) == 1;   % ???
+      dim(i) = X{i};
+    end
+  end
+else
+  dim = size(X, 2);
+  if dim == 1 & size(X, 1) == 1;
+    dim = X;
+  end
 end
+
 if iscell(kernelType)
   kern.inputDimension = dim;
   switch kernelType{1}
@@ -48,8 +58,12 @@ if iscell(kernelType)
     % compound kernel type
     start = 2;
     kern.type = 'cmpnd';
+   case 'translate'
+    % translate kernel type
+    start = 2;
+    kern.type = 'translate';
    case 'exp'
-    % componentiated kernel type
+    % exponentiated kernel type
     start = 2;
     kern.type = 'exp';
    otherwise
@@ -58,11 +72,21 @@ if iscell(kernelType)
     kern.type = 'cmpnd';
   end
   switch kern.type
-   case {'multi', 'tensor', 'cmpnd'}
+   case 'multi'
+    for i = start:length(kernelType)
+      if iscell(X)
+        kern.comp{i-start+1} = kernCreate(X{i-start+1}, kernelType{i});
+        kern.diagBlockDim{i-start+1} = length(X{i-start+1});
+      else
+        kern.comp{i-start+1} = kernCreate(X, kernelType{i});
+      end
+      kern.comp{i-start+1}.index = [];
+    end
+   case {'tensor', 'cmpnd', 'translate'}
     for i = start:length(kernelType)
       kern.comp{i-start+1} = kernCreate(X, kernelType{i});
       kern.comp{i-start+1}.index = [];
-    end
+    end    
    case 'exp'
     if start == length(kernelType)
       kern.argument = kernCreate(X, kernelType{start});
@@ -76,7 +100,11 @@ elseif isstruct(kernelType)
   kern = kernelType;
 else
   kern.type = kernelType;
-  kern.inputDimension = dim;
+  if iscell(X)
+    kern.inputDimension = dim(i);
+  else
+    kern.inputDimension = dim;
+  end
   kern = kernParamInit(kern);
 end
 kern.Kstore = [];

@@ -1,3 +1,8 @@
+Version 0.171
+-------------
+
+Minor update to kernCreate to handle block kernel with differing number of inputs for each block.
+
 Version 0.17
 ------------
 
