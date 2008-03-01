@@ -16,7 +16,7 @@ function ll = gpsimMapFunctionalLogLikelihood(model)
 
 % GPSIM
 
-ll = gpsimMapLogLikelihood(model);
+ll = gpsimMapLogLikelihood(model)-0.5*model.logDetCovf;
 
 % Add constraints
 if isfield(model, 'priorProtein') && ~isempty(model.priorProtein)

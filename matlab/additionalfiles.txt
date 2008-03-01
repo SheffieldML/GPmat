@@ -1,5 +1,4 @@
 # These are files that should be packaged for the GPSIM software
-
 dir: html
 ~/mlprojects/gpsim/html/index.html
 ~/mlprojects/gpsim/html/demBarenco1_basal.png
@@ -38,6 +37,19 @@ dir: html
 ~/mlprojects/gpsim/html/demMef2Dros2_ExprsProfile_Rep1_Gene7.png
 ~/mlprojects/gpsim/html/demMef2Dros2_ExprsProfile_Rep2_Gene1.png
 ~/mlprojects/gpsim/html/demMef2Dros2_ExprsProfile_Rep3_Gene1.png
+dir: data
+#~/mlprojects/gpsim/matlab/data/resultsMartino_exprs.xls
+#~/mlprojects/gpsim/matlab/data/resultsMartino_se.xls
+~/mlprojects/gpsim/matlab/data/5-95variance.txt
+~/mlprojects/gpsim/matlab/data/mef2Data.mat
+~/mlprojects/gpsim/matlab/data/ecoliNormalisedData.txt
+~/mlprojects/gpsim/matlab/data/barencoMAS5.mat
+~/mlprojects/gpsim/matlab/data/barencoData.mat
+#~/mlprojects/gpsim/matlab/data/barencoDataTest.mat
+~/mlprojects/gpsim/matlab/data/barencoMASData.mat
+~/mlprojects/gpsim/matlab/data/barencoPUMAData.mat
+# ~/mlprojects/gpsim/matlab/data/barencoPUMADataNoAntti.mat
+# dir: html
 # ~/mlprojects/gpsim/html/demBarencoMap1RbfLinear_profile3_slide.png
 # ~/mlprojects/gpsim/html/demBarencoMap2MlpLinear_profile1_slide.png
 # ~/mlprojects/gpsim/html/demBarencoMap2MlpLinear_profile2_slide.png
@@ -48,16 +60,3 @@ dir: html
 # ~/mlprojects/gpsim/html/demBarencoMap4MlpExp_profile1_slide.png
 # ~/mlprojects/gpsim/html/demBarencoMap4MlpExp_profile2_slide.png
 # ~/mlprojects/gpsim/html/demBarencoMap4MlpExp_profile3_slide.png
-dir: data
-~/mlprojects/gpsim/matlab/data/resultsMartino_exprs.xls
-~/mlprojects/gpsim/matlab/data/resultsMartino_se.xls
-~/mlprojects/gpsim/matlab/data/5-95variance.txt
-~/mlprojects/gpsim/matlab/data/mef2Data.mat
-~/mlprojects/gpsim/matlab/data/ecoliNormalisedData.txt
-# ~/mlprojects/gpsim/matlab/data/barencoMAS5.mat
-# ~/mlprojects/gpsim/matlab/data/barencoData.mat
-# ~/mlprojects/gpsim/matlab/data/barencoMASData.mat
-# ~/mlprojects/gpsim/matlab/data/barencoPUMAData.mat
-# ~/mlprojects/gpsim/matlab/data/barencoPUMADataNoAntti.mat
-
-

@@ -20,6 +20,9 @@ here</a>.
 
 RELEASEINFORMATION
 
+Minor fixes of the code for dealing with white noise handling in multiKern.
+
+<h4>Release 0.111</h4>
 
 <p>Release with scripts to recreate results in ECCB submitted paper.
 
@@ -119,17 +122,22 @@ Menten kinetics for the p53 data in this experiment.
 
 <p><code>&gt;&gt; demBarencoMap1 </code>
 
-<p><center><img src="./demBarencoMapMLPAct3MlpMulti_profile1_slide.png" width="60%"><br>
-<img src="./demBarencoMapMLPAct3MlpMulti_profile2_slide.png" width="60%"><br>
-<img src="./demBarencoMapMLPAct3MlpMulti_profile3_slide.png" width="60%"><br>
-<p>Plots of the profiles predicted for each of the three replicates given in the
-experiments. Solid lines are mean predictions, dashed lines are two standard
-deviations of error. </center>
+<p><center><img
+src="./demBarencoMapMLPAct3Mlpmulti_profile1_slide.png"
+width="60%"><br> <img
+src="./demBarencoMapMLPAct3Mlpmulti_profile2_slide.png"
+width="60%"><br> <img
+src="./demBarencoMapMLPAct3Mlpmulti_profile3_slide.png"
+width="60%"><br> <p>Plots of the profiles predicted for each of the
+three replicates given in the experiments. Solid lines are mean
+predictions, dashed lines are two standard deviations of
+error. </center>
 
-<p>The second is <code>demBarencoMap2</code> which is a simple exponential response with an
-MLP style kernel as a prior over the transcription factor
-concentration, and the third is <code>demBarencoMap3</code> which is a recreation of the linear experiment
-given above, made as a sanity check. 
+<p>The second is <code>demBarencoMap2</code> which is a simple
+exponential response with an MLP style kernel as a prior over the
+transcription factor concentration, and the third is
+<code>demBarencoMap3</code> which is a recreation of the linear
+experiment given above, made as a sanity check.
 
 <h4>Repression Solution</h4>
 
@@ -137,7 +145,8 @@ given above, made as a sanity check.
 given in the toolbox. It is <code>demEcoliMap1</code> which fits a
 Gaussian process model to the single input module associated with
 E. coli data set. <code>demEcoliMap1</code> used the same microarray
-data as Khanin et al, 2006. They identify 14 target genes which are
+data as <a
+href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Khanin:repression06&printAbstract=1">Khanin <i>et al.</i>, 2006</a>. They identify 14 target genes which are
 repressed by the TF LexA and the mRNA measurement for these genes are
 collected over six time points.
 
@@ -188,7 +197,7 @@ width="60%"><br>
 <img
 src="./demMapFullEcoliOptimInit4Translatemulti_ExprsProfile_Rep1_Gene13.png"
 width="60%"><br>
-<img src="./<img
+<img 
 src="./demMapFullEcoliOptimInit4Translatemulti_ExprsProfile_Rep1_Gene14.png"
 width="60%">
 
@@ -203,47 +212,42 @@ original scale. Times is measured in minutes.
 <h4>Cascaded Differential Equations</h4>
 
 <p>The last example shows a simple cascade of differential
-equations. We applied the driven input model to a simple
-cascade in Drosophila mesoderm development, focusing on
-the transcription factor Mef2 (Myocyte enhancing factor 2).
-We selected six targets of Mef2 identified by Chromatin
-immunoprecipitation (ChIP-chip) assays [Sandmann et al.,
-2006] and which were observed to be up-regulated after Mef2
-is expressed. Affymetrix time course microarray data from
-wild-type embryos [Tomancak et al., 2002] provides us with
-observations of Mef2 expression (y(t)) and the expression of
-the target genes xj (t) at hourly intervals. The microarray
-time course was replicated three times, and we used all three
-replicates to train the model parameters. The raw data was downloaded
-from ftp://ftp.fruitfly.org/pub/embryo_tc_array_data/. the relevant
-profile (including selected target genes' names, expression levels and
-standard errors) for generating the results shown in the submitted paper are saved in a file called
-<code>./data/mef2Data.mat</code>.
-
-<p>GPDISIM package requires GPSIM package to run the example.
+equations. We applied the driven input model to a simple cascade in
+Drosophila mesoderm development, focusing on the transcription factor
+Mef2 (Myocyte enhancing factor 2).  We selected six targets of Mef2
+identified by Chromatin immunoprecipitation (ChIP-chip) assays [<a
+href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Sandmann:temporal06&printAbstract=1">Sandmann
+<i>et al.</i>, 2006</a>] and which were observed to be up-regulated
+after Mef2 is expressed. Affymetrix time course microarray data from
+wild-type embryos [<a
+href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Tomancak:systematic02&printAbstract=1">Tomancak
+<i>et al.</i>, 2002</a>] provides us with observations of Mef2
+expression (y(t)) and the expression of the target genes xj (t) at
+hourly intervals. The microarray time course was replicated three
+times, and we used all three replicates to train the model
+parameters. The raw data was downloaded from
+ftp://ftp.fruitfly.org/pub/embryo_tc_array_data/. the relevant profile
+(including selected target genes' names, expression levels and
+standard errors) for generating the results shown in the submitted
+paper are saved in a file called <code>./data/mef2Data.mat</code>.
 
 <p>To run the example write
 
 <p><code>&gt;&gt; demGpdisimMef2 </code>
 
-<p><center><img src="./demMef2Dros2TF_profile_Rep1.png"
-width="60%"><br>
-<img
-src="./demMef2Dros2TF_profile_Rep2.png"
-width="60%"><br>
-<img
-src="./demMef2Dros2TF_profile_Rep3.png.png"
-width="60%"><br>
-<p>Plots of the predicted TF profiles for three replicas. Solid lines are mean predictions, dashed lines are two standard
-deviations of error.</center>
+<p><center> 
+<img src="./demMef2Dros2TF_profile_Rep1.png" width="60%"><br> 
+<img src="./demMef2Dros2TF_profile_Rep2.png" width="60%"><br> 
+<img src="./demMef2Dros2TF_profile_Rep3.png" width="60%"><br> <p>Plots of
+the predicted TF profiles for three replicas. Solid lines are mean
+predictions, dashed lines are two standard deviations of
+error.</center>
 
 <p><center><img src="./demMef2Dros2_ExprsProfile_Rep1_Gene1.png"
 width="60%"><br>
-<img
-src="./demMef2Dros2_ExprsProfile_Rep2_Gene1.png"
+<img src="./demMef2Dros2_ExprsProfile_Rep2_Gene1.png"
 width="60%"><br>
-<img
-src="./demMef2Dros2_ExprsProfile_Rep3_Gene1.png"
+<img src="./demMef2Dros2_ExprsProfile_Rep3_Gene1.png"
 width="60%"><br>
 <p>Plots of the predicted driving input Mef2 mRNA profiles for three
 replicas. Solid lines are mean predictions, dashed lines are two
