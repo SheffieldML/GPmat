@@ -8,6 +8,11 @@
 
 RELEASEINFORMATION
 
+
+Further minor updates to kern for working with the new gpsim code (corrected handling of white kernel in multiKern).
+
+<h3>Version 0.171</h3>
+
 Minor changes to kernCreate for multiKern structures where there are different numbers of points in each block.
 
 <h3>Version 0.17</h3>

@@ -1,3 +1,9 @@
+Version 0.172
+-------------
+
+Further minor updates to kern for working with the new gpsim code (corrected handling of white kernel in multiKern).
+
+
 Version 0.171
 -------------
 
