@@ -1,3 +1,8 @@
+Version 0.112
+------------
+
+Minor fixes of the code for dealing with white noise handling in multiKern.
+
 Version 0.111
 -------------
 

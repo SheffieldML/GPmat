@@ -31,11 +31,11 @@ end
 
 for i = 1:numData
   for j = 1:model.numGenes
-        ind = i + (j-1)*numData;
-        beta_ij = 1/yvar(ind);
-        factor = (model.ypred(model.times_index(i), j)...
-            - model.y(ind));
-        ll = ll + factor*factor*beta_ij - log(beta_ij);
+    ind = i + (j-1)*numData;
+    beta_ij = 1/yvar(ind);
+    factor = (model.ypred(model.times_index(i), j)...
+              - model.y(ind));
+    ll = ll + factor*factor*beta_ij - log(beta_ij);
   end
 end
 
