@@ -15,7 +15,7 @@ function model = mogOptimise(model, display, iters)
 
 diffll = 1;
 iter = 0;
-ll = mogLogLikelihood(model);
+ll = mogLowerBound(model);
 while abs(diffll)>1e-6 & iter<iters
   iter = iter + 1;
   model =  mogEstep(model);
@@ -37,7 +37,7 @@ while abs(diffll)>1e-6 & iter<iters
   if display > 1
   else
     oldll = ll;
-    ll = mogLogLikelihood(model);
+    ll = mogLowerBound(model);
   end
   diffll = ll -oldll;
   if display

@@ -9,9 +9,12 @@ function options = mogOptions(numComp)
 %
 % SEEALSO : mogCreate
 % 
-% COPYRIGHT : Neil D. Lawrence, 2006
+% COPYRIGHT : Neil D. Lawrence, 2006, 2008
 
 % MLTOOLS
 
 options.numComponents = numComp;
 options.covtype = 'ppca';
+% Whether it is an infinite mixture (false by default);
+options.isInfinite = false;
+options.a1=1;

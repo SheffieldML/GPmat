@@ -13,7 +13,7 @@ function model = mogCreate(latentDim, dataDim, Y, options)
 %
 % SEEALSO : gmm, modelCreate
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
+% COPYRIGHT : Neil D. Lawrence, 2006, 2008
 
 % MLTOOLS
 
@@ -24,7 +24,11 @@ model.d = dataDim;
 model.N = size(Y, 1);
 
 model.m = options.numComponents;
-
+model.isInfinite = options.isInfinite;
+if model.isInfinite
+  model.a0 = 1;
+  model.a1 = options.a1;
+end
 ind = randperm(model.N);
 ind = ind(1:model.m);
 model.Y = Y;

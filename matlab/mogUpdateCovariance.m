@@ -20,7 +20,7 @@ for i = 1:model.m
   centredY = centredY.*repmat(sqrt(model.posterior(:,i)), 1, model.d);
   switch model.covtype
     case 'ppca'
-     C = (centredY'*centredY)/sum(model.posterior(:, i));
+     C = (centredY'*centredY+0.001*eye(model.d))/sum(model.posterior(:, i)+.001);
      [vec, val] = eig(C);
      val = diag(val);
      [val, ind] = sort(val);
@@ -28,7 +28,7 @@ for i = 1:model.m
      val = val(end:-1:1);
      vec = vec(:, ind(1:model.q));
      sigma2 = mean(val(model.q+1:end));
-     if sigma2<0
+     if sigma2<eps
        sigma2 = eps;
      end
      lambda = val(1:model.q) - sigma2;

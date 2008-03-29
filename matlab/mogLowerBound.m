@@ -9,11 +9,15 @@ function lll = mogLowerBound(model)
 % 
 % SEEALSO : mogCreate, modelLogLikelihood
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
+% COPYRIGHT : Neil D. Lawrence, 2006, 2008
 
 % MLTOOLS
 
 lll = -sum(sum(xlogy(model.posterior)));
+
+if model.isInfinite
+  % DP add in extra posterior entropy etc.
+end
 
 for i = 1:model.m
   centredY = model.Y - repmat(model.mean(i, :), model.N, 1);
