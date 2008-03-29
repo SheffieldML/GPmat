@@ -148,7 +148,7 @@ class CParamTransforms : public CMatInterface, public CStreamInterface
   mxArray* toMxArray() const;
   void fromMxArray(const mxArray* transformArray);
 #endif
-  void addTransform(CTransform* trans, int index) 
+  void addTransform(CTransform* trans, unsigned int index) 
   {
     assert(index>=0);
     transIndex.push_back(index);
@@ -192,9 +192,10 @@ class CTransformable
  public:
 
   // these are the pure virtual functions.
-  virtual int getNumParams() const=0;
-  virtual double getParam(int paramNo) const=0;
-  virtual void setParam(double val, int paramNo)=0;
+  virtual ~CTransformable(){}
+  virtual unsigned int getNumParams() const=0;
+  virtual double getParam(unsigned int paramNo) const=0;
+  virtual void setParam(double val, unsigned int paramNo)=0;
   virtual void getGradParams(CMatrix& g) const=0;
 
   // these are default implementations.
@@ -202,7 +203,7 @@ class CTransformable
   {
     assert(params.getRows()==1);
     assert(params.getCols()==getNumParams());
-    for(int i=0; i<params.getCols(); i++)
+    for(unsigned int i=0; i<params.getCols(); i++)
       params.setVal(getParam(i), i);
   }
   virtual void setParams(const CMatrix& params) 
@@ -235,7 +236,7 @@ class CTransformable
     assert(transParam.getCols()==getNumParams());
     getParams(transParam);
     double val;
-    for(int i=0; i<transArray.transIndex.size(); i++) 
+    for(unsigned int i=0; i<transArray.transIndex.size(); i++) 
     {
       val=transParam.getVal(transArray.transIndex[i]);
       transParam.setVal(transArray.transforms[i]->xtoa(val), transArray.transIndex[i]);
@@ -262,7 +263,7 @@ class CTransformable
     assert(transParam.getCols()==getNumParams());
     CMatrix param(transParam);
     double val = 0.0;
-    for(int i=0; i<transArray.transIndex.size(); i++) 
+    for(unsigned int i=0; i<transArray.transIndex.size(); i++) 
     {
       val = param.getVal(transArray.transIndex[i]);
       param.setVal(transArray.transforms[i]->atox(val), transArray.transIndex[i]);
