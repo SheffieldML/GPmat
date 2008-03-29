@@ -60,6 +60,48 @@ elseif length(dataset)>3 & strcmp(dataset(1:4), 'semi')
 end
   
 switch dataset
+  
+ case 'cedar69'
+  % Data for ICML 2001 paper on noisy KFD.
+  digOne = 6;
+  digTwo = 9;
+
+  directory = [baseDir '\cedar.cd\matlab\16x16\'];
+  load([directory 'digit' num2str(digOne)]);
+  X = digitData;
+  numDataOne = size(digitData, 1);
+  y = zeros(size(digitData, 1), 1);
+  mydigitData = [];
+  digitData = [];
+  load([directory 'digit' num2str(digTwo)]);
+  X = [X; digitData];
+  X = double(X);
+  X = -(X-128)/128; 
+  numDataTwo = size(digitData, 1);
+  y = [y; ones(size(digitData, 1), 1)];
+  
+  if nargin>2
+    % Load test data
+    load([directory 'bsdigit' num2str(digOne)]);
+    XTest = digitData;
+    numDataOne = size(digitData, 1);
+    yTest = zeros(size(digitData, 1), 1);
+    digitData = [];
+    load([directory 'bsdigit' num2str(digTwo)]);
+    XTest = [XTest; digitData];
+    XTest = double(XTest);
+    XTest = -(XTest-128)/128; 
+    yTest = [yTest; ones(size(digitData, 1), 1)];
+  end
+ 
+ case 'sky'
+  load([baseDir 'skydatatrain.mat']);
+  X = double(x)/255;
+  y = double(t)*2 -1;
+  load([baseDir 'skydatavalid.mat']);
+  XTest = double(x)/255;
+  yTest = double(t)*2 -1;
+  
  case 'unlabelledOne'
   numDataPart = 100;
   [X, y] = generateCrescentData(numDataPart);
