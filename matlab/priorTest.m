@@ -1,7 +1,16 @@
 function prior = priorTest(priorType);
 
 % PRIORTEST Run some tests on the specified prior.
-
+% FORMAT
+% DESC runs some checks on the specified prior (gradients etc.).
+% ARG priorType : the prior type to check.
+% RETURN prior : the prior structure that was created to test.
+%
+% SEEALSO : priorParamInit, priorExpandParam, priorExtractParam,
+% priorLogProb, priorGradient
+%
+% COPYRIGHT : Neil D. Lawrence, 2003, 2004
+  
 % PRIOR
 
 prior.type = priorType;

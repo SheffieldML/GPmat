@@ -15,16 +15,16 @@ class CDist : public CMatInterface, public CStreamInterface, public CTransformab
  public:
   CDist(){}
   virtual ~CDist(){}
-  int getNumParams() const
+  unsigned int getNumParams() const
   {
     return nParams;
   }
-  void setNumParams(int num)
+  void setNumParams(unsigned int num)
   {
     nParams = num;
   }
-  virtual double getParam(int paramNo) const=0;
-  virtual void setParam(double val, int paramNo)=0;
+  virtual double getParam(unsigned int paramNo) const=0;
+  virtual void setParam(double val, unsigned int paramNo)=0;
   virtual void getGradParams(CMatrix& g) const
   {
     // This is a dummy function
@@ -58,8 +58,8 @@ class CDist : public CMatInterface, public CStreamInterface, public CTransformab
     {
       assert(g.getRows()==x.getRows());
       assert(g.getCols()==x.getCols());
-      for(int i=0; i<g.getRows(); i++)
-	for(int j=0; j<g.getCols(); j++)
+      for(unsigned int i=0; i<g.getRows(); i++)
+	for(unsigned int j=0; j<g.getCols(); j++)
 	  g.setVal(getGradInput(x.getVal(i, j)), i, j);
     }
   void setInitParam();
@@ -68,12 +68,12 @@ class CDist : public CMatInterface, public CStreamInterface, public CTransformab
   virtual double logProb(const CMatrix& x) const
     {
       double ll = 0.0;
-      for(int i=0; i<x.getRows(); i++)
-	for(int j=0; j<x.getCols(); j++)
+      for(unsigned int i=0; i<x.getRows(); i++)
+	for(unsigned int j=0; j<x.getCols(); j++)
 		ll+=logProb(x.getVal(i, j));
       return ll;
     }
-  void setParamName(const string name, int index)
+  void setParamName(const string name, unsigned int index)
     {
       assert(index>=0);
       assert(index<nParams);
@@ -86,7 +86,7 @@ class CDist : public CMatInterface, public CStreamInterface, public CTransformab
 	  paramNames[index] = name;
 	}
     }
-  virtual string getParamName(int index) const
+  virtual string getParamName(unsigned int index) const
     {
       assert(index>=0);
       assert(index<paramNames.size());
@@ -112,7 +112,7 @@ class CDist : public CMatInterface, public CStreamInterface, public CTransformab
   
  private:
   void _init();
-  int nParams;
+  unsigned int nParams;
   string type;
   string distName;
   vector<string> paramNames;
@@ -133,8 +133,8 @@ class CGaussianDist : public CDist {
     {
       return new CGaussianDist(*this);
     }
-  double getParam(int paramNo) const;
-  void setParam(double val, int paramNo);
+  double getParam(unsigned int paramNo) const;
+  void setParam(double val, unsigned int paramNo);
   double getGradInput(double x) const;
   void setInitParam();
   double logProb(double val) const;
@@ -155,8 +155,8 @@ class CGammaDist : public CDist {
     {
       return new CGammaDist(*this);
     }
-  double getParam(int paramNo) const;
-  void setParam(double val, int paramNo);
+  double getParam(unsigned int paramNo) const;
+  void setParam(double val, unsigned int paramNo);
   double getGradInput(double x) const;
   void setInitParam();
   double logProb(double val) const;
@@ -178,8 +178,8 @@ class CWangDist : public CDist {
     {
       return new CWangDist(*this);
     }
-  double getParam(int paramNo) const;
-  void setParam(double val, int paramNo);
+  double getParam(unsigned int paramNo) const;
+  void setParam(double val, unsigned int paramNo);
   double getGradInput(double x) const;
   void setInitParam();
   double logProb(double val) const;
@@ -196,7 +196,7 @@ class CParamPriors : CMatInterface {
   mxArray* toMxArray() const;
   void fromMxArray(const mxArray* distArray);
 #endif
-  void addDist(CDist* dist, int index)
+  void addDist(CDist* dist, unsigned int index)
     {
       assert(index>=0);
       distIndex.push_back(index);
@@ -208,19 +208,19 @@ class CParamPriors : CMatInterface {
       distIndex.clear();
       dists.clear();
     }
-  inline string getDistType(int ind) const
+  inline string getDistType(unsigned int ind) const
     {
       assert(ind>=0);
       assert(ind<getNumDists());
       return dists[ind]->getType();
     }
-  inline int getDistIndex(int ind) const
+  inline unsigned int getDistIndex(unsigned int ind) const
     {
       assert(ind>=0);
       assert(ind<getNumDists());
       return distIndex[ind];
     }
-  inline int getNumDists() const
+  inline unsigned int getNumDists() const
     {
       return dists.size();
     }
@@ -236,7 +236,7 @@ class CRegularisable {
    virtual ~CRegularisable() {}
 
   // these are the pure virtual functions.
-  virtual int getNumParams() const=0;
+  virtual unsigned int getNumParams() const=0;
   virtual double getParam(int paramNo) const=0;
   virtual void setParam(double val, int paramNo)=0;
   virtual void getGradParams(CMatrix& g) const=0;
@@ -246,14 +246,14 @@ class CRegularisable {
     {
       assert(params.getRows()==1);
       assert(params.getCols()==getNumParams());
-      for(int i=0; i<params.getCols(); i++)
+      for(unsigned int i=0; i<params.getCols(); i++)
 	params.setVal(getParam(i), i);
     }
   virtual void setParams(const CMatrix& params)
     {
       assert(params.getRows()==1);
       assert(params.getCols()==getNumParams());
-      for(int i=0; i<params.getCols(); i++)
+      for(unsigned int i=0; i<params.getCols(); i++)
 	setParam(params.getVal(i), i);
     }
   
@@ -262,7 +262,7 @@ class CRegularisable {
       assert(g.getRows()==1);
       assert(g.getCols()==getNumParams());
       double param=0.0;
-      for(int i=0; i<distArray.distIndex.size(); i++)
+      for(unsigned int i=0; i<distArray.distIndex.size(); i++)
 	{
 	  param=getParam(distArray.distIndex[i]);
 	  g.addVal(getPriorGradInput(param, i), 
@@ -272,7 +272,7 @@ class CRegularisable {
       
   virtual void writePriorsToStream(ostream& out) const
     {
-      for(int i=0; i<distArray.distIndex.size(); i++)
+      for(unsigned int i=0; i<distArray.distIndex.size(); i++)
 	{
 	  out << "priorIndex=" << distArray.distIndex[i] << endl;
 	  writeDistToStream(*distArray.dists[i], out);
@@ -299,7 +299,7 @@ class CRegularisable {
     {
       double L = 0.0;
       double param=0.0;
-      for(int i=0; i<distArray.distIndex.size(); i++)
+      for(unsigned int i=0; i<distArray.distIndex.size(); i++)
 	{
 	  param = getParam(distArray.distIndex[i]);
 	  L+=distArray.dists[i]->logProb(param);
@@ -330,7 +330,7 @@ class CRegularisable {
     {
       return distArray.dists[ind]->getGradInput(val);
     }
-  void addPrior(CDist* dist, int index)
+  void addPrior(CDist* dist, unsigned int index)
     {
       assert(index>=0);
       assert(index<getNumParams());

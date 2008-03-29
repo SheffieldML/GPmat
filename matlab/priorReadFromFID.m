@@ -1,26 +1,20 @@
 function prior = priorReadFromFID(FID)
 
 % PRIORREADFROMFID Read a prior from a C++ written FID.
+% FORMAT
+% DESC loads in from a file stream the data format produced by 
+% C++ implementations.
+% ARG FID : the file ID from where the data is loaded.
+% RETURN prior : the prior loaded in from the file.
+%
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2008
+%
+% SEEALSO : modelReadFromFID, priorCreate, priorReadParamsFromFID
 
 % PRIOR
 
-lineStr = getline(FID);
-tokens = tokenise(lineStr, '=');
-if(length(tokens)~=2 | ~strcmp(tokens{1}, 'distVersion'))
-  error('Incorrect file format.')
-end
-if(~strcmp(tokens{2}, '0.1'))
-  error('Incorrect file version.')
-end
-
-lineStr = getline(FID);
-tokens = tokenise(lineStr, '=');
-if(length(tokens)~=2 | ~strcmp(tokens{1}, 'type'))
-  error('Incorrect file format.')
-end
-type = tokens{2};
+type = readStringFromFID(FID, 'type');
 prior = priorCreate(type);
-
 prior = priorReadParamsFromFID(prior, FID);
 
 

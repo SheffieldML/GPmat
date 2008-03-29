@@ -10,7 +10,7 @@ void CDist::writeParamsToStream(ostream& out) const
 }
 void CDist::readParamsFromStream(istream& in)
 {
-  int nPars = readIntFromStream(in, "numParams");
+  unsigned int nPars = readIntFromStream(in, "numParams");
   CMatrix par(1, nPars);
   par.fromStream(in);
   if(nPars==getNumParams())
@@ -36,7 +36,7 @@ bool CDist::equals(const CDist& dist, double tol) const
 #ifdef _NDLMATLAB
 mxArray* CDist::toMxArray() const
 {
-  int dims[1];
+  unsigned int dims[1];
   dims[0] = 1;
   const char *fieldNames[] = {"type", "transforms"};
   mxArray* matlabArray = mxCreateStructArray(1, dims, 2, fieldNames);
@@ -72,7 +72,7 @@ void CDist::extractParamFromMxArray(const mxArray* matlabArray)
 {
   nParams = mxArrayExtractIntField(matlabArray, "nParams");
   string pName;
-  for(int i=0; i<nParams; i++)
+  for(unsigned int i=0; i<nParams; i++)
     {
       pName=getParamName(i);
       setParam(mxArrayExtractDoubleField(matlabArray, pName), i);  
@@ -83,7 +83,7 @@ void CDist::addParamToMxArray(mxArray* matlabArray) const
   mxAddField(matlabArray, "nParams");
   mxSetField(matlabArray, 0, "nParams", convertMxArray((double)nParams));
   string pName;
-  for(int i=0; i<nParams; i++)
+  for(unsigned int i=0; i<nParams; i++)
     {      
       pName = getParamName(i);
       mxAddField(matlabArray, pName.c_str());      
@@ -104,7 +104,7 @@ CGaussianDist::~CGaussianDist()
 {
 }
 // Gaussian prior.
-void CGaussianDist::setParam(double val, int index)
+void CGaussianDist::setParam(double val, unsigned int index)
 {
   assert(index>=0);
   assert(index<getNumParams());
@@ -117,7 +117,7 @@ void CGaussianDist::setParam(double val, int index)
     throw ndlexceptions::Error("Requested parameter doesn't exist.");
   } 
 }
-double CGaussianDist::getParam(const int index) const
+double CGaussianDist::getParam(unsigned int index) const
 {
   assert(index>=0);
   assert(index<getNumParams());
@@ -163,7 +163,7 @@ CGammaDist::CGammaDist(const CGammaDist& dist) : a(dist.a), b(dist.b)
 CGammaDist::~CGammaDist()
 {
 }
-void CGammaDist::setParam( double val,  int index)
+void CGammaDist::setParam( double val,  unsigned int index)
 {
   assert(index>=0);
   assert(index<getNumParams());
@@ -179,7 +179,7 @@ void CGammaDist::setParam( double val,  int index)
     throw ndlexceptions::Error("Requested parameter doesn't exist.");
   }
 }
-double CGammaDist::getParam(const int index) const
+double CGammaDist::getParam(unsigned int index) const
 {
   assert(index>=0);
   assert(index<getNumParams());
@@ -230,7 +230,7 @@ CWangDist::CWangDist(const CWangDist& dist) : M(dist.M)
 CWangDist::~CWangDist()
 {
 }
-void CWangDist::setParam( double val,  int index)
+void CWangDist::setParam( double val,  unsigned int index)
 {
   assert(index>=0);
   assert(index<getNumParams());
@@ -243,7 +243,7 @@ void CWangDist::setParam( double val,  int index)
     throw ndlexceptions::Error("Requested parameter doesn't exist.");
   }
 }
-double CWangDist::getParam(const int index) const
+double CWangDist::getParam(unsigned int index) const
 {
   assert(index>=0);
   assert(index<getNumParams());
@@ -279,7 +279,7 @@ double CWangDist::getGradInput(double x) const
 #ifdef _NDLMATLAB
 mxArray* CParamPriors::toMxArray() const
 {
-  int dims[1];
+  unsigned int dims[1];
   // dists field.
   const char *transFieldNames[] = {"index", "type"};
   dims[0]=getNumDists();
@@ -287,7 +287,7 @@ mxArray* CParamPriors::toMxArray() const
   CMatrix ind(1, 1);
   const char *compType[1];
   string trType;
-  for(int i=0; i<getNumDists(); i++)
+  for(unsigned int i=0; i<getNumDists(); i++)
   {
     ind.setVals((double)(getDistIndex(i)+1));
     mxSetField(distsArray, i, "index", ind.toMxArray());
@@ -300,15 +300,15 @@ mxArray* CParamPriors::toMxArray() const
 }
 void CParamPriors::fromMxArray(const mxArray* distArray)
 {
-  int numDists = mxGetNumberOfElements(distArray);
+  unsigned int numDists = mxGetNumberOfElements(distArray);
   string distType;
-  vector<int> distIndex;
-  int counter = 0;
-  for(int i=0; i<numDists; i++)
+  vector<unsigned int> distIndex;
+  unsigned int counter = 0;
+  for(unsigned int i=0; i<numDists; i++)
   {
     distType=mxArrayExtractStringField(distArray, "type", i);
     distIndex=mxArrayExtractVectorIntField(distArray, "index", i);
-    for(int j=0; j<distIndex.size(); j++)
+    for(unsigned int j=0; j<distIndex.size(); j++)
     {
       counter++;
       if(distType=="gamma")
