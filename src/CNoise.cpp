@@ -274,7 +274,7 @@ bool CNoise::equals(const CNoise& noise, double tol) const
 }
 void CNoise::writeParamsToStream(ostream& out) const
 {
-  writeToStream(out, "numData", getNumData());
+  //writeToStream(out, "numData", getNumData());
   writeToStream(out, "outputDim", getOutputDim());
   writeToStream(out, "numParams", getNumParams());
   CMatrix par(1, getNumParams());
@@ -283,7 +283,7 @@ void CNoise::writeParamsToStream(ostream& out) const
 }
 void CNoise::readParamsFromStream(istream& in)
 {
-  setNumData(readIntFromStream(in, "numData"));
+  //setNumData(readIntFromStream(in, "numData"));
   setOutputDim(readIntFromStream(in, "outputDim"));
   int numPar = readIntFromStream(in, "numParams");
   CMatrix par(1, numPar);
