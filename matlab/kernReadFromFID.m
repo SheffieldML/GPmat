@@ -1,24 +1,19 @@
 function kern = kernReadFromFID(FID)
 
 % KERNREADFROMFID Load from an FID written by the C++ implementation.
+% FORMAT
+% DESC loads in from a file stream the data format produced by 
+% C++ implementations.
+% ARG FID : the file ID from where the data is loaded.
+% RETURN kern : the kernel loaded in from the file.
+%
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2008
+%
+% SEEALSO : modelReadFromFID, kernCreate, kernReadParamsFromFID
 
 % KERN
 
-lineStr = getline(FID);
-tokens = tokenise(lineStr, '=');
-if(length(tokens)~=2 | ~strcmp(tokens{1}, 'kernVersion'))
-  error('Incorrect file format.')
-end
-if(~strcmp(tokens{2}, '0.1'))
-  error('Incorrect file version.')
-end
-
-lineStr = getline(FID);
-tokens = tokenise(lineStr, '=');
-if(length(tokens)~=2 | ~strcmp(tokens{1}, 'type'))
-  error('Incorrect file format.')
-end
-type = tokens{2};
+type = readStringFromFID(FID, 'type');
 kern = kernCreate(zeros(1), type);
 
 kern = kernReadParamsFromFID(kern, FID);

@@ -17,6 +17,8 @@ function k = kernCompute(kern, x, x2)
 % RETURN K : computed elements of the kernel structure.
 %
 % SEEALSO : kernCreate, kernDiagCompute
+%
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
 % KERN
 

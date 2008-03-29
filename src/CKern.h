@@ -1074,5 +1074,22 @@ void writeKernToStream(const CKern& kern, ostream& out);
 CKern* readKernFromStream(istream& in);
 
 
+#ifdef _NDLPYTHON
+using namespace boost::python;
+
+BOOST_PYTHON_MODULE(ndlkern)
+{ 
+  class_<CKern>("kern", "Base kernel class")
+    .def(init<int, int, double>())
+    .def(init<CKern&>()) // copy constructor
+    .def("diagComputeElement", &CKern::diagComputeElement, "Computes a diagonal element of the kernel matrix")
+  ;
+}
+
+
+
+#endif /* _NDLPYTHON*/
+
+
 
 #endif

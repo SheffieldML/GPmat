@@ -1,25 +1,24 @@
 function kern = componentKernReadParamsFromFID(kern, FID)
 
 % COMPONENTKERNREADPARAMSFROMFID Read a component based kernel from a C++ file.
-
+% FORMAT
+% DESC reads the components fo a kernel from a file written by C++ code.
+% ARG kern : the base kernel to add components to.
+% ARG FID : the input file stream to add from.
+% RETURN kern : the kernel with the components added in.
+%
+% SEEALSO : modelReadFromFID, kernReadFromFID
+%
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2008
+  
 % KERN
 
-lineStr=getline(FID);
-tokens = tokenise(lineStr, '=');
-if(length(tokens)~=2 | ~strcmp(tokens{1}, 'numKerns'))
-  error('Incorrect file format.')
-end
-numKerns=str2num(tokens{2});
-
-lineStr=getline(FID);
-tokens = tokenise(lineStr, '=');
-if(length(tokens)~=2 | ~strcmp(tokens{1}, 'numFeatures'))
-  error('Incorrect file format.')
-end
-kern.inputDimension=str2num(tokens{2});
+kern.inputDimension = readIntFromFID(FID, 'inputDim');
+numParams = readIntFromFID(FID, 'numParams');
+numKerns = readIntFromFID(FID, 'numKerns');
 
 for i=1:numKerns
-  kern.comp{i} = kernReadFromFID(FID);
+  kern.comp{i} = modelReadFromFID(FID);
 end
 
 for i = 1:length(kern.comp)
