@@ -22,9 +22,9 @@ RELEASEINFORMATION
 
 Minor fixes of the code for dealing with white noise handling in multiKern.
 
-<h4>Release 0.111</h4>
+<h4>Release 0.12</h4>
 
-<p>Release with scripts to recreate results in ECCB submitted paper.
+<p>Release with scripts to recreate results in prepared journal paper.
 
 <h4>Release 0.11</h4>
 
