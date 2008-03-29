@@ -1,4 +1,4 @@
-function model = gpUpdateKernels(model, X, X_u, rawBeta)
+function model = gpUpdateKernels(model, X, X_u)
 
 % GPUPDATEKERNELS Update the kernels that are needed.
 % FORMAT
@@ -8,21 +8,22 @@ function model = gpUpdateKernels(model, X, X_u, rawBeta)
 % updated.
 % RETURN model : the model structure with the kernels updated.
 %
+% DESC updates any representations of the kernel in the model
+% structure, such as invK, logDetK or K.
+% ARG model : the model structure for which kernels are being
+% updated.
+% ARG X : the input locations for update of kernels.
+% ARG X_u : the inducing input locations.
+% RETURN model : the model structure with the kernels updated.
+%
 % SEEALSO gpExpandParam, gpCreate
 %
-% COPYRIGHT Neil D. Lawrence, 2005, 2006
+% COPYRIGHT Neil D. Lawrence, 2005, 2006, 2007
 
 % GP
 
 jitter = 1e-6;
 
-if nargin < 4
-  rawBeta = [];
-end
-if ~isempty(rawBeta)
-  fhandle = str2func([model.betaTransform 'Transform']);
-  model.beta = fhandle(rawBeta, 'atox');
-end
 switch model.approx
  case 'ftc'
   % Long term should allow different kernels in each dimension here.
@@ -30,15 +31,25 @@ switch model.approx
     
   if ~isfield(model, 'isSpherical') | model.isSpherical
     % Add inverse beta to diagonal if it exists.
-    if isfield(model, 'beta')
+    if isfield(model, 'beta') & ~isempty(model.beta)
       model.K_uu(1:size(model.K_uu, 1)+1:end) = ...
-          model.K_uu(1:size(model.K_uu, 1)+1:end) + 1./model.beta;
+          model.K_uu(1:size(model.K_uu, 1)+1:end) + 1./model.beta';
     end
     [model.invK_uu, U] = pdinv(model.K_uu);
     model.logDetK_uu = logdet(model.K_uu, U);
   else   
-    % TODO: Need to deal with adding in beta here.
     for i = 1:model.d
+      if isfield(model, 'beta') & ~isempty(model.beta)
+        if size(model.beta, 2) == model.d
+          betaAdd = model.beta(:, i)';
+        else
+          betaAdd = model.beta;
+        end
+        if isfield(model, 'beta') & ~isempty(model.beta)
+          model.K_uu(1:size(model.K_uu, 1)+1:end) = ...
+              model.K_uu(1:size(model.K_uu, 1)+1:end) + 1./betaAdd;
+        end
+      end
       ind = gpDataIndices(model, i);
       [model.invK_uu{i}, U] = pdinv(model.K_uu(ind, ind));
       model.logDetK_uu(i) = logdet(model.K_uu(ind, ind), U);
@@ -58,4 +69,4 @@ switch model.approx
 
 end
 
-model = gpUpdateAD(model);  
+model = gpUpdateAD(model, X);  

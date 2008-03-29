@@ -16,7 +16,7 @@ function [params, names] = gpExtractParam(model)
 %
 % SEEALSO : gpCreate, gpExpandParam, modelExtractParam
 %
-% COPYRIGHT : Neil D. Lawrence, 2005, 2006
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2007
 
 % GP
 
@@ -68,16 +68,33 @@ switch model.approx
   if returnNames
     names = {kernParamNames{:}, meanFuncParamNames{:}, scaleParamNames{:}};
   end
- case {'dtc', 'fitc', 'pitc'}
-  fhandle = str2func([model.betaTransform 'Transform']);
-  betaParam = fhandle(model.beta, 'xtoa');
-  paramPart = [kernParams scaleParams meanFuncParams betaParam];
-  if returnNames
-    for i = 1:length(betaParam)
-      betaParamNames{i} = ['Beta ' num2str(i)];
+  if model.optimiseBeta
+    fhandle = str2func([model.betaTransform 'Transform']);
+    betaParam = fhandle(model.beta, 'xtoa');
+    params = [params betaParam(:)'];
+    if returnNames
+      for i = 1:length(betaParam)
+        betaParamNames{i} = ['Beta ' num2str(i)];
+      end
+      names = {names{:}, betaParamNames{:}};
     end
+  end
+ case {'dtc', 'fitc', 'pitc'}
+  paramPart = [kernParams scaleParams meanFuncParams];
+  if returnNames
     names = {kernParamNames{:}, meanFuncParamNames{:}, ...
-             scaleParamNames{:}, betaParamNames{:}};
+             scaleParamNames{:}};
+  end
+  if model.optimiseBeta
+    fhandle = str2func([model.betaTransform 'Transform']);
+    betaParam = fhandle(model.beta, 'xtoa');
+    paramPart = [paramPart betaParam(:)'];
+    if returnNames
+      for i = 1:length(betaParam)
+        betaParamNames{i} = ['Beta ' num2str(i)];
+      end
+      names = {names{:}, betaParamNames{:}};
+    end
   end
   if model.fixInducing
     params = paramPart;

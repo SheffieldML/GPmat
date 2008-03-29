@@ -28,59 +28,67 @@ indMissing = find(rand(N, d)>0.7);
 %indMissing = [9 19 29];
 approxType = {'ftc', 'dtc', 'fitc', 'pitc'};
 counter = 0;
-for meanFunction = [false true]
-%  for missing = [false true]
-  for missing = [false]
-    for fixInducing = [false true] 
-      Y = Yorig;
-      if missing
-        Y(indMissing) = NaN;
-      end
-      if meanFunction & missing
-        continue
-      end
-      for a = 1:length(approxType)
-        options = gpOptions(approxType{a});
-        options.learnScales = learnScales;
-        options.kern = kernType;
-        options.numActive = k;
-        options.isSpherical = ~missing;
-        options.isMissingData = missing;
-        options.fixInducing = fixInducing;
-        if meanFunction 
-          disp(['Mean Function installed, ' ...
-                'with ' approxType{a} ...
-                ' approximation.'])
-        else
-          disp([approxType{a} ' approximation.'])  
-        end
+for optimiseBeta = [false true]
+  for meanFunction = [false true]
+    %  for missing = [false true]
+    for missing = [false]
+      for fixInducing = [false true] 
+        Y = Yorig;
         if missing
-          disp(['Missing data used.'])
+          Y(indMissing) = NaN;
         end
-        if fixInducing
-          disp(['Inducing variables fixed.'])
-          options.fixIndices = round(linspace(1, size(Y, 1), k));
+        if meanFunction & missing
+          continue
         end
+        for a = 1:length(approxType)
+          options = gpOptions(approxType{a});
+          options.learnScales = learnScales;
+          options.kern = kernType;
+          options.numActive = k;
+          options.isSpherical = ~missing;
+          options.isMissingData = missing;
+          options.fixInducing = fixInducing;
+          options.optimiseBeta = optimiseBeta;
+          if optimiseBeta & strcmp(approxType{a}, 'ftc')
+            options.beta = 1000;
+          end
+          if meanFunction 
+            disp(['Mean Function installed, ' ...
+                  'with ' approxType{a} ...
+                  ' approximation.'])
+          else
+            disp([approxType{a} ' approximation.'])  
+          end
+          if missing
+            disp(['Missing data used.'])
+          end
+          if fixInducing
+            disp(['Inducing variables fixed.'])
+            options.fixIndices = round(linspace(1, size(Y, 1), k));
+          end
+          if ~optimiseBeta
+            disp(['Beta not optimised.'])
+          end
         
-        if meanFunction
-          options.meanFunction = meanFunctionType;
-          options.meanFunctionOptions = feval([meanFunctionType 'Options']);
+          if meanFunction
+            options.meanFunction = meanFunctionType;
+            options.meanFunctionOptions = feval([meanFunctionType 'Options']);
+          end
+          model = gpCreate(q, d, X, Y, options);
+          
+          
+          initParams = gpExtractParam(model);
+          % this creates some nasty parameters.
+          initParams = randn(size(initParams));%./(100*randn(size(initParams)));
+          
+          % This forces kernel computation.
+          model = gpExpandParam(model, initParams);
+          gpCovGradsTest(model);
+          modelGradientCheck(model);
+          counter = counter + 1;
+          modelRet{counter} = model;
         end
-        model = gpCreate(q, d, X, Y, options);
-        
-        
-        initParams = gpExtractParam(model);
-        % this creates some nasty parameters.
-        initParams = randn(size(initParams));%./(100*randn(size(initParams)));
-        
-        % This forces kernel computation.
-        model = gpExpandParam(model, initParams);
-        gpCovGradsTest(model);
-        modelGradientCheck(model);
-        counter = counter + 1;
-        modelRet{counter} = model;
       end
     end
-  end
   end
 end

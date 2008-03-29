@@ -21,6 +21,9 @@ q = size(X, 2);
 d = size(y, 2);
 
 model = gpCreate(q, d, X, y, options);
+model.X_u = randn(9, 1)*0.25 - 0.75;
+params = gpExtractParam(model);
+model = gpExpandParam(model, params);
 
 % Optimise the model.
 iters = 1000;

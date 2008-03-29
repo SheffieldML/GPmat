@@ -1,4 +1,4 @@
-function [gParam, gX_u, gX] = gpLogLikeGradients(model, X, M, X_u)
+function [gParam, gX_u, gX, g_beta] = gpLogLikeGradients(model, X, M, X_u)
 
 % GPLOGLIKEGRADIENTS Compute the gradients for the parameters and X.
 % FORMAT
@@ -24,12 +24,26 @@ function [gParam, gX_u, gX] = gpLogLikeGradients(model, X, M, X_u)
 % locations. This is used for computing gradients in the GP-LVM.
 % ARG : model : the model structure for which gradients are computed.
 % RETURN gParam : the gradient of the log likelihood with respect to
+% the model parameters (including any gradients with respect to beta).
+% RETURN gX_u : the gradient of the log likelihood with respect to
+% the inducing variables. If inducing variables aren't being used
+% this returns zero.
+% RETURN gX : the gradient of the log likelihood with respect to
+% the input data locations.
+%
+% DESC computes the gradients of the Gaussian process log
+% likelihood with respect to the parameters of the model, with
+% respect to any inducing variables and with respect to input data
+% locations. This is used for computing gradients in the GP-LVM.
+% ARG : model : the model structure for which gradients are computed.
+% RETURN gParam : the gradient of the log likelihood with respect to
 % the model parameters.
 % RETURN gX_u : the gradient of the log likelihood with respect to
 % the inducing variables. If inducing variables aren't being used
 % this returns zero.
 % RETURN gX : the gradient of the log likelihood with respect to
 % the input data locations.
+% RETURN gbeta : the gradient of the log likelihood with respect to beta.
 %
 % DESC computes the gradients of the Gaussian process log
 % likelihood with respect to the model parameters (and optionally,
@@ -46,7 +60,7 @@ function [gParam, gX_u, gX] = gpLogLikeGradients(model, X, M, X_u)
 %
 % SEEALSO : gpLogLikelihood, modelLogLikeGradients, fgplvmLogLikeGradients
 %
-% COPYRIGHT : Neil D. Lawrence, 2005, 2006
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2007
 
 
 % GP
@@ -90,8 +104,12 @@ switch model.approx
   end
   
   %%% Gradients of Kernel Parameters %%%
-  gParam = zeros(1, model.kern.nParams);
-
+  g_param = zeros(1, model.kern.nParams);
+  if isfield(model, 'beta')
+    g_beta = 0;
+  else
+    g_beta = [];
+  end
   for k = 1:model.d
     gK = localCovarianceGradients(model, M(:, k), k);
     if nargout > 2
@@ -107,15 +125,28 @@ switch model.approx
     end
     %%% Compute Gradients of Kernel Parameters %%%
     if model.isMissingData
-      gParam = gParam ...
+      g_param = g_param ...
                + kernGradient(model.kern, ...
                               X(model.indexPresent{k}, :), ...
                               gK);
     else
-      gParam = gParam + kernGradient(model.kern, X, gK);
+      g_param = g_param + kernGradient(model.kern, X, gK);
+    end
+    if isfield(model, 'beta') & model.optimiseBeta
+      if size(model.beta, 1) == 1
+        g_beta = g_beta + sum(diag(gK));
+      elseif size(model.beta, 2)==1 ...
+            & size(model.beta, 1)==model.N
+        g_beta = g_beta + diag(gK);
+      elseif size(model.beta, 2) == model.d ...
+            & size(model.beta, 1) == model.N
+        g_beta(:, k) = diag(gK);
+      else
+        error('Unusual dimensions for model.beta.');
+      end
     end
   end
-  gParam = [gParam g_meanFunc g_scaleBias];
+   
  case {'dtc', 'fitc', 'pitc'}
   % Sparse approximations.
   [gK_u, gK_uf, gK_star, g_beta] = gpCovGrads(model, M);
@@ -173,15 +204,13 @@ switch model.approx
   error('Unknown model approximation.')
 end
 
+
 switch model.approx
  case 'ftc'
   % Full training conditional. Nothing required here.
  case 'dtc'
   % Deterministic training conditional.  
-
-  % append beta gradient to end of parameters
-  gParam = [g_param(:)' g_meanFunc g_scaleBias g_beta];
- 
+   
  case 'fitc'
   % Fully independent training conditional.
   
@@ -196,8 +225,6 @@ switch model.approx
   % deal with diagonal term's affect on kernel parameters.
   g_param = g_param + kernDiagGradient(model.kern, X, gK_star);
 
-  % append beta gradient to end of parameters  
-  gParam = [g_param(:)' g_meanFunc g_scaleBias g_beta];
 
  case 'pitc'
   % Partially independent training conditional.
@@ -235,11 +262,20 @@ switch model.approx
               + kernGradient(model.kern, X(ind, :), gK_star{i});
   end
   
-  % append beta gradient to end of parameters
-  gParam = [g_param(:)' g_meanFunc g_scaleBias g_beta];
-  
  otherwise
   error('Unrecognised model approximation');
+end
+
+if nargout < 4
+  if (~isfield(model, 'optimiseBeta') & ~strcmp(model.approx, 'ftc')) ...
+      | model.optimiseBeta
+    % append beta gradient to end of parameters
+    gParam = [g_param(:)' g_meanFunc g_scaleBias g_beta];
+  else
+    gParam = [g_param(:)' g_meanFunc g_scaleBias];
+  end
+else
+    gParam = [g_param(:)' g_meanFunc g_scaleBias];
 end
 
 % if there is only one output argument, pack gX_u and gParam into it.

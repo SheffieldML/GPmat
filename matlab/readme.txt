@@ -1,5 +1,11 @@
 The GP toolbox is an implementation of the GPs that uses the Pseudo-Input method of Snelson and Ghahramani (NIPS 2005) for sparsification as well as extensions given by Quinonero-Candela and Rasmussen (JMLR 2005).
 
+
+Version 0.13
+------------
+
+Changes to allow more flexibility in optimisation of beta.
+
 Version 0.12
 ------------
 

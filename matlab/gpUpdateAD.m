@@ -82,10 +82,12 @@ switch model.approx
   if ~isfield(model, 'isSpherical') | model.isSpherical
     model.diagD = 1 + model.beta*model.diagK ...
         - model.beta*sum(model.K_uf.*(model.invK_uu*model.K_uf), 1)';
+    % model.diagDdivBeta = 1/model.beta + model.diagK - sum(model.K_uf.*(model.invK_uu*model.K_uf), 1)';
     model.Dinv = sparseDiag(1./model.diagD);
+    % model.betaDinv = sparseDiag(1./model.diagDdivBeta);
     K_ufDinvK_uf = model.K_uf*model.Dinv*model.K_uf';
     model.A = 1/model.beta*model.K_uu + K_ufDinvK_uf;    
-
+    % model.betaA = model.K_uu 
     % This can become unstable when K_ufDinvK_uf is low rank.
     [model.Ainv, U] = pdinv(model.A);
     model.logDetA = logdet(model.A, U);

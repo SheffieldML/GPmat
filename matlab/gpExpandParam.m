@@ -48,6 +48,14 @@ if model.learnScales
   model.m = gpComputeM(model);
 end
 
+% Check if beta is being optimised.
+if model.optimiseBeta
+  startVal = endVal + 1;
+  endVal = endVal + prod(size(model.beta));
+  fhandle = str2func([model.betaTransform 'Transform']);
+  model.beta = fhandle(params(startVal:endVal), 'atox');
+end
+
 % Record the total number of parameters.
 model.nParams = endVal;
 
@@ -56,7 +64,7 @@ switch model.approx
  case 'ftc'
   model = gpUpdateKernels(model, model.X, model.X_u);
  case {'dtc', 'fitc', 'pitc'}
-  model = gpUpdateKernels(model, model.X, model.X_u, params(end));
+  model = gpUpdateKernels(model, model.X, model.X_u);
  otherwise
   error('Unknown approximation type.')
 end

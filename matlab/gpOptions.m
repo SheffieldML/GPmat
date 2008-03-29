@@ -12,7 +12,7 @@ function options = gpOptions(approx);
 %
 % SEEALSO : gpCreate
 %
-% COPYRIGHT : Neil D. Lawrence, 2006, 2005
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2007
 
 % GP
 
@@ -25,8 +25,16 @@ end
 % Select type of optimiser.
 options.optimiser = optimiDefaultOptimiser;
 
-% Set to 1 to learn output scales.
-options.learnScales = 0;
+% Set to true to learn output scales.
+options.learnScales = false;
+
+% Set to true to optimise beta.
+switch approx
+ case 'ftc'
+  options.optimiseBeta = false;
+ otherwise
+  options.optimiseBeta = true;
+end
 
 % Set to a given mean function to have a mean function.
 options.meanFunction = [];

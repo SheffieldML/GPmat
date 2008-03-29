@@ -39,6 +39,9 @@ model.approx = options.approx;
 model.learnScales = options.learnScales;
 model.scaleTransform = optimiDefaultConstraint('positive');
 
+model.optimiseBeta = options.optimiseBeta;
+model.betaTransform =  optimiDefaultConstraint('positive');  
+
 model.X = X;
 model.y = y;
 
@@ -132,6 +135,12 @@ switch options.approx
  case 'ftc'
   model.k = 0;
   model.X_u = [];
+  if model.optimiseBeta
+    model.beta = options.beta
+    if isempty(options.beta)
+      error('options.beta cannot be empty if it is being optimised.');
+    end
+  end
  case {'dtc', 'fitc', 'pitc'}
   % Sub-sample inducing variables.
   model.k = options.numActive;
@@ -149,7 +158,6 @@ switch options.approx
     model.X_u = model.X(ind, :);
   end
   model.beta = options.beta;
-  model.betaTransform =  optimiDefaultConstraint('positive');  
 end
 if model.k>model.N
   error('Number of active points cannot be greater than number of data.')
