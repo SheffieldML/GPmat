@@ -1,6 +1,8 @@
 # These are files that should be packaged for the FGPLVM software
 dir: .
 ~/mlprojects/fgplvm/matlab/cmu35TaylorScaleBias.mat
+~/mlprojects/fgplvm/matlab/35.asf
+~/mlprojects/fgplvm/matlab/35_01.amc
 dir: html
 ~/mlprojects/fgplvm/html/index.html
 ~/mlprojects/fgplvm/html/demOil1.png
