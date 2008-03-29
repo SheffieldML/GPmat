@@ -1,6 +1,6 @@
 function handle = stickVisualise(vals, connect)
 
-% STICKVISUALISE For updateing a stick representation of 3-D data.
+% STICKVISUALISE For drawing a stick representation of 3-D data.
 
 % MOCAP
 
