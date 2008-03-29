@@ -24,11 +24,11 @@ switch model.selectionCriterion
  case 'random'
   if add
     indexSelect = ceil(rand(1)*length(model.J));
-    infoChange = -.5*sum(log2(1-model.varSigma(indexSelect, :)* ...
+    infoChange = -.5*sum(log2(1-model.varSigma(indexSelect, :).* ...
                               model.nu(indexSelect, :)), 2);
   else
     indexSelect = ceil(rand(1)*length(model.I));
-    infoChange = -.5*sum(log2(1-model.varSigma(indexSelect, :)* ...
+    infoChange = -.5*sum(log2(1-model.varSigma(indexSelect, :).* ...
                           model.beta(indexSelect, :)+1e-300), 2);
   end
  case 'entropy' 

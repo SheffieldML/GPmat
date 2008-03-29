@@ -1,4 +1,4 @@
-function [model, origI] = ivmReadFromFID(FID)
+function [model, origI] = ivmReadFromFID(FID, varargin)
 
 % IVMREADFROMFID Load from a FID produced by the C++ implementation.
 % FORMAT
@@ -9,44 +9,19 @@ function [model, origI] = ivmReadFromFID(FID)
 % model.
 % RETURN I : the indices of the active points in the original data set.
 %
-% COPYRIGHT : Neil D. Lawrence, 2007
+% COPYRIGHT : Neil D. Lawrence, 2007, 2008
 %
 % SEEALSO : ivmReadFromFile
 
 % IVM
 
-lineStr = getline(FID);
-tokens = tokenise(lineStr, '=');
-if(length(tokens)~=2 | ~strcmp(tokens{1}, 'ivmVersion'))
-  error('Incorrect file format.')
-end
-if(~strcmp(tokens{2}, '0.1'))
-  error('Incorrect file version.')
-end
-version = str2num(tokens{2});
+numData = readIntFromFID(FID, 'numData');
+numProcesses = readIntFromFID(FID, 'outputDim');
+numFeatures = readIntFromFID(FID, 'inputDim');
+activeSetSize = readIntFromFID(FID, 'activeSetSize');
 
-lineStr = getline(FID);
-tokens = tokenise(lineStr, '=');
-if(length(tokens)~=2 | ~strcmp(tokens{1}, 'activeSetSize'))
-  error('Incorrect file format.')
-end
-activeSetSize = str2num(tokens{2});
-
-lineStr = getline(FID);
-tokens = tokenise(lineStr, '=');
-if(length(tokens)~=2 | ~strcmp(tokens{1}, 'numProcesses'))
-  error('Incorrect file format.')
-end
-numProcesses = str2num(tokens{2});
-
-lineStr = getline(FID);
-tokens = tokenise(lineStr, '=');
-if(length(tokens)~=2 | ~strcmp(tokens{1}, 'numFeatures'))
-  error('Incorrect file format.')
-end
-numFeatures = str2num(tokens{2});
-kern = kernReadFromFID(FID);
-noise = noiseReadFromFID(FID);
+kern = modelReadFromFID(FID);
+noise = modelReadFromFID(FID);
 
 X = zeros(activeSetSize, numFeatures);
 y = zeros(activeSetSize, numProcesses);
@@ -55,33 +30,22 @@ beta = zeros(activeSetSize, numProcesses);
 
 origI = zeros(activeSetSize, 1);
 
-for i=1:activeSetSize
-  lineStr = getline(FID);
-  tokens = tokenise(lineStr);
-  for j = 1
-    origI(i) = str2num(tokens{j});
-  end
-  for j=1:numProcesses
-    y(i, j) = str2num(tokens{1+j});
-  end
-  for j=1:numProcesses
-    m(i, j) = str2num(tokens{1+numProcesses+j});
-  end
-  for j=1:numProcesses
-    beta(i, j) = str2num(tokens{1+2*numProcesses+j});
-  end
-  for j=numProcesses*3+2:length(tokens)
-    str = tokens{j};
-    ind = find(str==':');
-    % TODO -- check that ':' is in the string.
-    featStr = str(1:ind-1);
-    featValStr = str(ind+1:end);
-    featNum = str2num(featStr);
-    featVal = str2num(featValStr);
-    X(i, featNum) = featVal;
-  end
+lineStr = getline(FID);
+tokens = tokenise(lineStr, '=');
+if(length(tokens)~=2 | ~strcmp(tokens{1}, 'activeSet'))
+  error('Incorrect file format.')
 end
-
+tokens = tokenise(tokens{2}, ' ');
+if(length(tokens)~=activeSetSize)
+  error('Incorrect file format.')
+end
+for i = 1:activeSetSize
+  origI(i) = str2num(tokens{i});
+end
+y = modelReadFromFID(FID);
+X = modelReadFromFID(FID);
+m = modelReadFromFID(FID);
+beta = modelReadFromFID(FID);
 ivmInfo.J = [];
 ivmInfo.I = 1:activeSetSize;
 ivmInfo.m = m;

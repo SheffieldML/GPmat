@@ -1,3 +1,9 @@
+Changes in vs 0.41
+------------------
+
+Fixed bug where, for multiple outputs, the IVM 'random' point inclusion wasn't computing the entropy change in ivmSelectPoint.
+
+
 Changes in vs 0.4
 -----------------
 

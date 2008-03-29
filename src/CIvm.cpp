@@ -841,8 +841,6 @@ void writeIvmToFile(const CIvm& model, const string modelFileName, const string 
     cout << "Saving model file." << endl;
   ofstream out(modelFileName.c_str());
   if(!out) throw ndlexceptions::FileWriteError(modelFileName);
-  out << setiosflags(ios::scientific);
-  out << setprecision(17);
   if(comment.size()>0)
     out << "# " << comment << endl;
   writeIvmToStream(model, out);
