@@ -237,8 +237,8 @@ class CRegularisable {
 
   // these are the pure virtual functions.
   virtual unsigned int getNumParams() const=0;
-  virtual double getParam(int paramNo) const=0;
-  virtual void setParam(double val, int paramNo)=0;
+  virtual double getParam(unsigned int paramNo) const=0;
+  virtual void setParam(double val, unsigned int paramNo)=0;
   virtual void getGradParams(CMatrix& g) const=0;
 
   // these are default implementations.
@@ -278,11 +278,11 @@ class CRegularisable {
 	  writeDistToStream(*distArray.dists[i], out);
 	}
     }
-  virtual void readPriorsFromStream(istream& in, int numPriors)
+  virtual void readPriorsFromStream(istream& in, unsigned int numPriors)
     {
       string line;
       vector<string> tokens;
-      for(int i=0; i<numPriors; i++)
+      for(unsigned int i=0; i<numPriors; i++)
 	{
 	  CDist* prior;
 	  getline(in, line);
@@ -308,25 +308,25 @@ class CRegularisable {
     }
 
   // These are non-modifiable methods.
-  inline int getNumPriors() const
+  inline unsigned int getNumPriors() const
     {
       return distArray.getNumDists();
     }
-  inline CDist* getPrior(int ind) const
+  inline CDist* getPrior(unsigned int ind) const
     {
       assert(ind>=0);
       assert(ind<getNumPriors());
       return distArray.dists[ind];
     }
-  inline string getPriorType(int ind) const
+  inline string getPriorType(unsigned int ind) const
     {
       return distArray.getDistType(ind);
     }
-  inline int getPriorIndex(int ind) const
+  inline unsigned int getPriorIndex(unsigned int ind) const
     {
       return distArray.getDistIndex(ind);
     }
-  inline double getPriorGradInput(double val, int ind) const
+  inline double getPriorGradInput(double val, unsigned int ind) const
     {
       return distArray.dists[ind]->getGradInput(val);
     }

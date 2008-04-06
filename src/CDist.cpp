@@ -10,6 +10,12 @@ void CDist::writeParamsToStream(ostream& out) const
 }
 void CDist::readParamsFromStream(istream& in)
 {
+  string tbaseType = getBaseTypeStream(in);
+  if(tbaseType != getBaseType())
+    throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
+  string ttype = getTypeStream(in);
+  if(ttype != getType())
+    throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
   unsigned int nPars = readIntFromStream(in, "numParams");
   CMatrix par(1, nPars);
   par.fromStream(in);
@@ -36,7 +42,7 @@ bool CDist::equals(const CDist& dist, double tol) const
 #ifdef _NDLMATLAB
 mxArray* CDist::toMxArray() const
 {
-  unsigned int dims[1];
+  int dims[1];
   dims[0] = 1;
   const char *fieldNames[] = {"type", "transforms"};
   mxArray* matlabArray = mxCreateStructArray(1, dims, 2, fieldNames);
@@ -279,7 +285,7 @@ double CWangDist::getGradInput(double x) const
 #ifdef _NDLMATLAB
 mxArray* CParamPriors::toMxArray() const
 {
-  unsigned int dims[1];
+  int dims[1];
   // dists field.
   const char *transFieldNames[] = {"index", "type"};
   dims[0]=getNumDists();
@@ -307,7 +313,7 @@ void CParamPriors::fromMxArray(const mxArray* distArray)
   for(unsigned int i=0; i<numDists; i++)
   {
     distType=mxArrayExtractStringField(distArray, "type", i);
-    distIndex=mxArrayExtractVectorIntField(distArray, "index", i);
+    distIndex=mxArrayExtractVectorUintField(distArray, "index", i);
     for(unsigned int j=0; j<distIndex.size(); j++)
     {
       counter++;
