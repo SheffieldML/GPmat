@@ -160,26 +160,26 @@ class CParamTransforms : public CMatInterface, public CStreamInterface
     transIndex.clear();
     transforms.clear();
   }
-  inline string getTransformType(int ind) const 
+  inline string getTransformType(unsigned int ind) const 
   {
     assert(ind>=0);
     assert(ind<getNumTransforms());
     return transforms[ind]->getType();
   }
-  inline int getTransformIndex(int ind) const 
+  inline unsigned int getTransformIndex(unsigned int ind) const 
   {
     assert(ind>=0);
     assert(ind<getNumTransforms());
     return transIndex[ind];
   }
-  inline int getNumTransforms() const 
+  inline unsigned int getNumTransforms() const 
   {
     return transforms.size();
   }
 	
 
   vector<CTransform*> transforms;
-  vector<int> transIndex;
+  vector<unsigned int> transIndex;
 };
 
 
@@ -210,23 +210,23 @@ class CTransformable
   {
     assert(params.getRows()==1);
     assert(params.getCols()==getNumParams());
-    for(int i=0; i<params.getCols(); i++)
+    for(unsigned int i=0; i<params.getCols(); i++)
       setParam(params.getVal(i), i);
   }
   
-  virtual double getTransParam(int paramNo) const 
+  virtual double getTransParam(unsigned int paramNo) const 
   {
     assert(paramNo>=0);
     assert(paramNo<getNumParams());
     double param = getParam(paramNo);
-    vector<int>::const_iterator pos = find(transArray.transIndex.begin(), 
+    vector<unsigned int>::const_iterator pos = find(transArray.transIndex.begin(), 
 					   transArray.transIndex.end(), 
 					   paramNo);
     if(pos == transArray.transIndex.end())
       return param;
     else 
     {
-      int ind = pos - transArray.transIndex.begin();
+      unsigned int ind = pos - transArray.transIndex.begin();
       return transArray.transforms[ind]->xtoa(param);
     }
   }
@@ -242,18 +242,18 @@ class CTransformable
       transParam.setVal(transArray.transforms[i]->xtoa(val), transArray.transIndex[i]);
     }  
   }
-  virtual void setTransParam(double val, int paramNo) 
+  virtual void setTransParam(double val, unsigned int paramNo) 
   {
     assert(paramNo>=0);
     assert(paramNo<getNumParams());
     // this casting is required under solaris for some reason
-    vector<int>::iterator pos=find(transArray.transIndex.begin(), 
+    vector<unsigned int>::iterator pos=find(transArray.transIndex.begin(), 
 				   transArray.transIndex.end(), 
 				   paramNo);
     if(pos==transArray.transIndex.end())
       setParam(val, paramNo);
     else {
-      int ind = pos - transArray.transIndex.begin();
+      unsigned int ind = pos - transArray.transIndex.begin();
       setParam(transArray.transforms[ind]->atox(val), paramNo);
     }
   }
@@ -277,7 +277,7 @@ class CTransformable
     getGradParams(g);
     double val;
     double param;
-    for(int i=0; i<transArray.transIndex.size(); i++) 
+    for(size_t i=0; i<transArray.transIndex.size(); i++) 
     {
       val=g.getVal(transArray.transIndex[i]);
       param=getParam(transArray.transIndex[i]);
@@ -286,29 +286,29 @@ class CTransformable
   }
   
   // These are non-modifiable methods.
-  inline int getNumTransforms() const 
+  inline unsigned int getNumTransforms() const 
   {
     return transArray.getNumTransforms();
   }
-  inline CTransform* getTransform(int ind) const 
+  inline CTransform* getTransform(unsigned int ind) const 
   {
     assert(ind>=0);
     assert(ind<getNumTransforms());
     return transArray.transforms[ind];
   }
-  inline string getTransformType(int ind) const 
+  inline string getTransformType(unsigned int ind) const 
   {
     return transArray.getTransformType(ind);
   }
-  inline int getTransformIndex(int ind) const 
+  inline unsigned int getTransformIndex(unsigned int ind) const 
   {
     return transArray.getTransformIndex(ind);
   }
-  inline double getTransformGradFact(double val, int ind) const 
+  inline double getTransformGradFact(double val, unsigned int ind) const 
   {
     return transArray.transforms[ind]->gradfact(val);
   }
-  void addTransform(CTransform* trans, int index) 
+  void addTransform(CTransform* trans, unsigned int index) 
   {
     assert(index>=0);
     assert(index<getNumParams());

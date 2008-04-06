@@ -33,7 +33,7 @@ class COptimisable {
     funcEval = 0;
   }
   virtual ~COptimisable() {}
-  virtual inline void setVerbosity(const int val) const 
+  virtual inline void setVerbosity(int val) const 
   {
     verbosity = val;
   }  
@@ -41,7 +41,7 @@ class COptimisable {
   {
     return verbosity;
   }
-  virtual int getOptNumParams() const=0;
+  virtual unsigned int getOptNumParams() const=0;
   virtual void getOptParams(CMatrix& param) const=0;
   virtual void setOptParams(const CMatrix& param)=0;
   virtual double computeObjectiveGradParams(CMatrix& g) const=0;
@@ -70,7 +70,7 @@ class COptimisable {
   void lineMinimisation(const CMatrix& direction);
   double oneDObjectiveVal(double val);
   void lineMinimisation();
-  void bracketMinimum(double& a, double& b, double& c, double& fa, const int maxStep);
+  void bracketMinimum(double& a, double& b, double& c, double& fa, unsigned int maxStep);
   void setLearnRate(double val)
   {
     learnRate = val;
@@ -135,11 +135,11 @@ class COptimisable {
   {
     return parameterTol;
   }
-  void setDefaultOptimiser(unsigned int val) const
+  void setDefaultOptimiser(int val) const
   {
     defaultOptimiser = val;
   }
-  unsigned int getDefaultOptimiser() const
+  int getDefaultOptimiser() const
   {
     return defaultOptimiser;
   }
@@ -215,7 +215,7 @@ class COptimisable {
 
   mutable int verbosity; 
 
-  mutable unsigned int defaultOptimiser;
+  mutable int defaultOptimiser;
 
   bool funcEvalTerminate;
   bool iterTerminate;

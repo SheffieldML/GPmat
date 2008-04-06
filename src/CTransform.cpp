@@ -112,7 +112,7 @@ double CSigmoidTransform::gradfact(double x) const
 void CParamTransforms::writeParamsToStream(ostream& out) const
 {
   writeToStream(out, "numTransforms", getNumTransforms());
-  for(int i=0; i<getNumTransforms(); i++)
+  for(unsigned int i=0; i<getNumTransforms(); i++)
   {
     writeToStream(out, "type", getTransformType(i));
     writeToStream(out, "index", getTransformIndex(i));
@@ -133,7 +133,7 @@ void CParamTransforms::readParamsFromStream(istream& in)
 void CParamTransforms::display(ostream& out) const
 {
   out << "Parameter Transforms:" << endl;
-  for(int i=0; i<getNumTransforms(); i++)
+  for(unsigned int i=0; i<getNumTransforms(); i++)
   {
     out << "Transform type: " << getTransformType(i) << endl;
     out << "Transform index: " << getTransformIndex(i) << endl;
@@ -143,7 +143,7 @@ bool CParamTransforms::equals(CParamTransforms transforms) const
 {
   if(getNumTransforms()!=transforms.getNumTransforms())
     return false;
-  for(int i=0; i<getNumTransforms(); i++)
+  for(unsigned int i=0; i<getNumTransforms(); i++)
   {
     if(getTransformType(i)!=transforms.getTransformType(i))
       return false;

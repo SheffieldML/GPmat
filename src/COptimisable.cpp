@@ -251,10 +251,10 @@ void COptimisable::scgOptimise()
 	  cout << "Scaled Conjugate Gradient Optimisation." << endl;
 	}
   int nParams = getOptNumParams();
-  double objectiveVal = 0.0;
-  double oldObjective = 0.0;
-  double diffObjective = 0.0;
-  double diffParam = 0.0;
+  //double objectiveVal = 0.0;
+  //double oldObjective = 0.0;
+  //double diffObjective = 0.0;
+  //double diffParam = 0.0;
   
   bool success = true;
   double beta;
@@ -276,15 +276,15 @@ void COptimisable::scgOptimise()
   const double m_step = 1.0e-4;
   const double m_reg = 1.0;
   double oldObj = 0.0;
-  double obj = oldObj;
+  //double obj = oldObj;
   double mu = 0.0;
-  double theta = 0.0;
+  //double theta = 0.0;
   double sigmaInv = 0.0;
   double delta = 0.0;
   double alpha = 0.0;
   double newObj = 0.0;
-  double gamma = 0.0;
-  int j = 1;					// j counts number of iterations.
+  //double gamma = 0.0;
+  //int j = 1;					// j counts number of iterations.
   
   // 1
   lambda = m_reg; // lambda is the scale??
@@ -407,7 +407,7 @@ void COptimisable::cgOptimise()
   
   const double INT = 0.1; // don't reevaluate within 0.1 of the limit of the current bracket.
   const double EXT = 3.0; // extrapolate maximum 3.0 times the current step-size.
-  const int MAX = 20; // maximum 20 function evaluations per line search
+  const unsigned int MAX = 20; // maximum 20 function evaluations per line search
   const double RATIO = 10.0; // maximum allowed slope ratio.
   const double SIG = 0.1; 
   const double RHO = SIG/2.0; // SIG and RHO are the constants controlling the Wolfe-Powell conditions. 
@@ -428,7 +428,6 @@ void COptimisable::cgOptimise()
   // compute initial gradient and function value.
   double f0 = computeObjectiveGradParams(df0);
   funcEval++;  // add to functional computation tally.
-  double fx = f0;
   s.deepCopy(df0);
   s.negate(); // initial search direction (steepest descent)
   double d0 = -s.norm2Row(0);
