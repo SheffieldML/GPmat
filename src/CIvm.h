@@ -6,7 +6,7 @@ using namespace std;
 const double NULOW=1e-16;
 const string IVMVERSION="0.1";
 
-class CIvm : public CMapModel, public CProbabilisticOptimisable, public CMatInterface
+class CIvm : public CMapModel, public CProbabilisticOptimisable, public CStreamInterface, public CMatInterface
 {
  public:
   CIvm();
@@ -15,10 +15,10 @@ class CIvm : public CMapModel, public CProbabilisticOptimisable, public CMatInte
   // Constructor given a kernel and a noise model.
   CIvm(CMatrix* inData, CMatrix* targetData, 
        CKern* kernel, CNoise* noiseModel, int selectCrit,
-       int dVal, int verbos=2);
+       unsigned int dVal, int verbos=2);
   CIvm(CMatrix& actX, CMatrix& actY, 
        CMatrix& mmat, CMatrix& betamat, 
-       vector<int> actSet, CKern* kernel, 
+       vector<unsigned int> actSet, CKern* kernel, 
        CNoise* noiseModel, int selectCrit=ENTROPY, 
        int verbos=2);
 
@@ -43,19 +43,19 @@ class CIvm : public CMapModel, public CProbabilisticOptimisable, public CMatInte
   // Set the initial values for the model.
   void initVals();
   void selectPoints(); // select active set points.
-  void addPoint(int index); // add a point to the model.
-  void updateSite(int index); // update the site parameters at index.
-  void updateM(int index); // update M at index.
+  void addPoint(unsigned int index); // add a point to the model.
+  void updateSite(unsigned int index); // update the site parameters at index.
+  void updateM(unsigned int index); // update M at index.
 
-  int selectPointAdd(); // select a point to add to active set.
-  int entropyPointAdd(); // add a point selected by entropy change.
-  int randomPointAdd();  // add a point selected randomly.
-  double entropyChangeAdd(int) const; // entropy change associated with adding a point
+  unsigned int selectPointAdd(); // select a point to add to active set.
+  unsigned int entropyPointAdd(); // add a point selected by entropy change.
+  unsigned int randomPointAdd();  // add a point selected randomly.
+  double entropyChangeAdd(unsigned int) const; // entropy change associated with adding a point
 
-  int selectPointRemove();  // select a point to remove from the active set.
-  int entropyPointRemove(); // remove a point selected by entropy change.
-  int randomPointRemove(); // remove a point selected randomly.
-  double entropyChangeRemove(int) const; // entropy change associated with removing a point
+  unsigned int selectPointRemove();  // select a point to remove from the active set.
+  unsigned int entropyPointRemove(); // remove a point selected by entropy change.
+  unsigned int randomPointRemove(); // remove a point selected randomly.
+  double entropyChangeRemove(unsigned int) const; // entropy change associated with removing a point
   void test(const CMatrix& ytest, const CMatrix& Xin) const;
 
   void likelihoods(CMatrix& pout, CMatrix& yTest, const CMatrix& Xin) const;
@@ -64,8 +64,8 @@ class CIvm : public CMapModel, public CProbabilisticOptimisable, public CMatInte
   // For MapModel interface.
   void out(CMatrix& yPred, const CMatrix& inData) const;
   void out(CMatrix& yPred, CMatrix& probPred, const CMatrix& inData) const;
-  double outGradParams(CMatrix& g, const CMatrix& Xin, const int pointNo, const int outputNo) const;
-  double outGradX(CMatrix& g, const CMatrix& Xin, const int pointNo, const int outputNo) const;
+  double outGradParams(CMatrix& g, const CMatrix& Xin, unsigned int pointNo, unsigned int outputNo) const;
+  double outGradX(CMatrix& g, const CMatrix& Xin, unsigned int pointNo, unsigned int outputNo) const;
 
   void posteriorMeanVar(CMatrix& mu, CMatrix& varSigma, const CMatrix& X) const;
   string getNoiseName() const
@@ -79,7 +79,7 @@ class CIvm : public CMapModel, public CProbabilisticOptimisable, public CMatInte
   }
 
   // Gradient routines
-  void updateCovGradient(int index) const;
+  void updateCovGradient(unsigned int index) const;
   
 
   inline void setTerminate(const bool val)
@@ -102,18 +102,18 @@ class CIvm : public CMapModel, public CProbabilisticOptimisable, public CMatInte
   // update K with the kernel computed from the active points.
   void updateK() const;
   // update invK with the inverse of the kernel plus beta terms computed from the active points.
-  void updateInvK(int index=0) const;
+  void updateInvK(unsigned int index=0) const;
   // compute the approximation to the log likelihood.
   double logLikelihood() const;
   // compute the gradients of the approximation wrt parameters.
   double logLikelihoodGradient(CMatrix& g) const;
   
-  void optimise(int maxIters=15, int kernIters=100, int noiseIters=100);
+  void optimise(unsigned int maxIters=15, unsigned int kernIters=100, unsigned int noiseIters=100);
   bool equals(const CIvm& model, double tol=ndlutil::MATCHTOL) const;
   void display(ostream& os) const;
 
  
-  inline int getOptNumParams() const
+  inline unsigned int getOptNumParams() const
   {
     return pkern->getNumParams();
   }    
@@ -151,7 +151,7 @@ class CIvm : public CMapModel, public CProbabilisticOptimisable, public CMatInte
     else
       cerr << "Unrecognised selection criterion " << val << "." << endl;
   }
-  void setTypeSelection(int val)
+  void setTypeSelection(unsigned int val)
   {
     assert(val>=ENTROPY && val<=RANDOM);
     selectionCriterion=val;
@@ -162,16 +162,16 @@ class CIvm : public CMapModel, public CProbabilisticOptimisable, public CMatInte
   void fromMxArray(const mxArray* matlabArray);
 #endif
 
-  int getActiveSetSize() const
+  unsigned int getActiveSetSize() const
   {
     return activeSetSize;
   }
   
-  double getActiveX(int i, int j) const
+  double getActiveX(unsigned int i, unsigned int j) const
   {
     return activeX.getVal(i, j);
   }
-  int getActivePoint(int i) const
+  unsigned int getActivePoint(unsigned int i) const
   {
     return activeSet[i];
   }
@@ -209,8 +209,8 @@ class CIvm : public CMapModel, public CProbabilisticOptimisable, public CMatInte
 
   //  COptions options;
   
-  vector<int> activeSet;
-  vector<int> inactiveSet;
+  vector<unsigned int> activeSet;
+  vector<unsigned int> inactiveSet;
 
   CKern* pkern;
   CNoise* pnoise;
@@ -225,11 +225,11 @@ class CIvm : public CMapModel, public CProbabilisticOptimisable, public CMatInte
   bool epUpdate;
   bool loadedModel;
 
-  int numCovStruct;
-  int activeSetSize;
+  unsigned int numCovStruct;
+  unsigned int activeSetSize;
 
-  int numTarget;
-  int numData;
+  unsigned int numTarget;
+  unsigned int numData;
   
   double lastEntropyChange;
   double cumEntropy;

@@ -17,7 +17,7 @@ void CIvm::_init()
 }
 CIvm::CIvm(CMatrix* inData, CMatrix* targetData, 
 	   CKern* pkernel, CNoise* pnoiseModel, int selectCrit,
-	   int dVal, int verbosity) 
+	   unsigned int dVal, int verbosity) 
   : CMapModel(inData->getCols(), targetData->getCols(), inData->getRows()), CProbabilisticOptimisable(), pX(inData), py(targetData), pkern(pkernel), 
     pnoise(pnoiseModel), selectionCriterion(selectCrit), numTarget(targetData->getCols()), numData(targetData->getRows()), activeSetSize(dVal)
 {
@@ -31,7 +31,7 @@ CIvm::CIvm(CMatrix* inData, CMatrix* targetData,
 }
 CIvm::CIvm(CMatrix& actX, CMatrix& actY, 
 	   CMatrix& mmat, CMatrix& betamat, 
-	   vector<int> actSet, CKern* pkernel, 
+	   vector<unsigned int> actSet, CKern* pkernel, 
 	   CNoise* pnoiseModel, int selectCrit, 
 	   int verbosity) 
   : CMapModel(actX.getCols(), actY.getCols(), actX.getRows()), 
@@ -47,10 +47,10 @@ CIvm::CIvm(CMatrix& actX, CMatrix& actY,
   initStoreage();
   updateK();
   updateInvK();
-  for(int j=0; j<numCovStruct; j++)
+  for(unsigned int j=0; j<numCovStruct; j++)
   {
     L[j].deepCopy(K);
-    for(int i=0; i<activeSetSize; i++)
+    for(unsigned int i=0; i<activeSetSize; i++)
     {
       double lval = L[j].getVal(i, i);
       lval += 1/beta.getVal(i, j);
@@ -115,11 +115,11 @@ void CIvm::out(CMatrix& yout, CMatrix& probout, const CMatrix& Xin) const
   posteriorMeanVar(muout, varSigmaOut, Xin);
   pnoise->out(yout, probout, muout, varSigmaOut);
 }
-double CIvm::outGradParams(CMatrix& g, const CMatrix &Xin, const int pointNo, const int outputNo) const
+double CIvm::outGradParams(CMatrix& g, const CMatrix &Xin, unsigned int pointNo, unsigned int outputNo) const
 {
   throw ndlexceptions::NotImplementedError("outGradParams not yet implemented for CIvm.");
 }
-double CIvm::outGradX(CMatrix& g, const CMatrix &Xin, const int pointNo, const int outputNo) const
+double CIvm::outGradX(CMatrix& g, const CMatrix &Xin, unsigned int pointNo, unsigned int outputNo) const
 {
   throw ndlexceptions::NotImplementedError("outGradX not yet implemented for CIvm.");
 }
@@ -132,11 +132,11 @@ void CIvm::posteriorMeanVar(CMatrix& mu, CMatrix& varSigma, const CMatrix& Xin) 
   if(numCovStruct==1)
   {
     kX.trsm(L[0], 1.0, "L", "L", "N", "N"); // now it is Linvk
-    for(int i=0; i<Xin.getRows(); i++)
+    for(unsigned int i=0; i<Xin.getRows(); i++)
     {
       double vsVal = pkern->diagComputeElement(Xin, i) - kX.norm2Col(i);
       assert(vsVal>=0);
-      for(int j=0; j<numTarget; j++)
+      for(unsigned int j=0; j<numTarget; j++)
 	varSigma.setVal(vsVal, i, j);	    
     }
     kX.trsm(L[0], 1.0, "L", "L", "T", "N"); // now it is Kinvk
@@ -146,11 +146,11 @@ void CIvm::posteriorMeanVar(CMatrix& mu, CMatrix& varSigma, const CMatrix& Xin) 
   {
     CMatrix Lk(activeSetSize, Xin.getRows());
       
-    for(int k=0; k<numCovStruct; k++)
+    for(unsigned int k=0; k<numCovStruct; k++)
     {
       Lk.deepCopy(kX);
       Lk.trsm(L[k], 1.0, "L", "L", "N", "N");
-      for(int i=0; i<Xin.getRows(); i++)
+      for(unsigned int i=0; i<Xin.getRows(); i++)
       {
 	double vsVal=pkern->diagComputeElement(Xin, i) - Lk.norm2Col(i);
 	assert(vsVal>=0);
@@ -183,7 +183,7 @@ void CIvm::initStoreage()
 
   L = new CMatrix[numCovStruct];
   Linv = new CMatrix[numCovStruct];
-  for(int c=0; c<numCovStruct; c++)
+  for(unsigned int c=0; c<numCovStruct; c++)
   {
     M[c].resize(activeSetSize, numData);
     L[c].resize(activeSetSize, activeSetSize);
@@ -213,15 +213,15 @@ void CIvm::initVals()
   // set pnoise->varSigma to diagonal of kernel.
   pnoise->setMus(0.0);
   double dk=0.0;
-  for(int i=0; i<numData; i++)
+  for(unsigned int i=0; i<numData; i++)
   {
     dk = pkern->diagComputeElement(*pX, i);
-    for(int j=0; j<numTarget; j++)
+    for(unsigned int j=0; j<numTarget; j++)
     {
       pnoise->setVarSigma(dk, i, j);
     }
   }
-  for(int c=0; c<numCovStruct; c++)
+  for(unsigned int c=0; c<numCovStruct; c++)
   {
     M[c].setVals(0.0);
     L[c].setVals(0.0);
@@ -232,7 +232,7 @@ void CIvm::initVals()
   
   // fill the inactive set.
   inactiveSet.erase(inactiveSet.begin(), inactiveSet.end());
-  for(int i=0; i<numData; i++)
+  for(unsigned int i=0; i<numData; i++)
   {
     inactiveSet.push_back(i);
   }
@@ -243,10 +243,10 @@ void CIvm::initVals()
 }
 void CIvm::selectPoints()
 {
-  int index=0;
+  unsigned int index=0;
   if(getVerbosity()>1)
     cout << "Selecting " << activeSetSize << " points ... " << endl;
-  for(int k=0; k<activeSetSize; k++)
+  for(unsigned int k=0; k<activeSetSize; k++)
   {
     index = selectPointAdd();
     addPoint(index);
@@ -259,11 +259,11 @@ void CIvm::selectPoints()
   if(isEpUpdate())
     throw ndlexceptions::NotImplementedError("EP update not yet implemented.");
 }
-void CIvm::addPoint(int index)
+void CIvm::addPoint(unsigned int index)
 {
   // check index is in inactive set
   assert(find(inactiveSet.begin(), inactiveSet.end(), index)!=inactiveSet.end());
-  vector<int>::iterator pos = find(inactiveSet.begin(), inactiveSet.end(), index);
+  vector<unsigned int>::iterator pos = find(inactiveSet.begin(), inactiveSet.end(), index);
   updateSite(index);
   updateM(index);
   inactiveSet.erase(pos);
@@ -272,11 +272,11 @@ void CIvm::addPoint(int index)
   activeSet.push_back(index);
   updateNuG();
 }
-void CIvm::updateSite(int index)
+void CIvm::updateSite(unsigned int index)
 {
-  int actIndex = activeSet.size();
+  unsigned int actIndex = activeSet.size();
   pnoise->updateSites(m, beta, actIndex, g, nu, index);
-  for(int j=0; j<beta.getCols(); j++)
+  for(unsigned int j=0; j<beta.getCols(); j++)
   {
     double betVal = beta.getVal(actIndex, j);
     if(betVal<0)
@@ -295,10 +295,10 @@ void CIvm::updateSite(int index)
   
 }
 
-void CIvm::updateM(int index)
+void CIvm::updateM(unsigned int index)
 {
-  int activePoint = activeSet.size();
-  for(int i=0; i<Kstore.getRows(); i++)
+  unsigned int activePoint = activeSet.size();
+  for(unsigned int i=0; i<Kstore.getRows(); i++)
   {
     Kstore.setVal(pkern->computeElement(*pX, i, *pX, index), i, activePoint);      
   }
@@ -309,7 +309,7 @@ void CIvm::updateM(int index)
   double vs = 0.0;
   double ms = 0.0;
   double sVal = 0.0;
-  for(int c=0; c<numCovStruct; c++)
+  for(unsigned int c=0; c<numCovStruct; c++)
   {      
     lValInv = sqrt(nu.getVal(index, c));
     // set s from the kernel -- it is a column vector..
@@ -329,7 +329,7 @@ void CIvm::updateM(int index)
     a.trans(); // turn a into a column vector.
     // update the varSigma and mu systems.
     double varSig = 0.0;
-    for(int i=0; i<numData; i++)
+    for(unsigned int i=0; i<numData; i++)
     {
       sVal = s.getVal(i, 0);
       varSig = pnoise->getVarSigma(i, c)
@@ -344,10 +344,10 @@ void CIvm::updateM(int index)
   if(numCovStruct==1 && numTarget > 1)
   {
     double varSig = 0.0;
-    for(int c=1; c<numTarget; c++)
+    for(unsigned int c=1; c<numTarget; c++)
     {
 
-      for(int i=0; i<numData; i++)
+      for(unsigned int i=0; i<numData; i++)
       {
 	sVal = s.getVal(i, 0);
 	varSig = pnoise->getVarSigma(i, c)
@@ -359,10 +359,10 @@ void CIvm::updateM(int index)
   }
 
 }
-int CIvm::selectPointAdd() 
+unsigned int CIvm::selectPointAdd() 
 {
   // returns data index of point to add.
-  int index = 0;
+  unsigned int index = 0;
   switch(selectionCriterion)
   {
   case RANDOM:
@@ -382,12 +382,12 @@ int CIvm::selectPointAdd()
   }
   return index;
 }
-int CIvm::entropyPointAdd()
+unsigned int CIvm::entropyPointAdd()
 {
   // choose point from inactive set to add via entropy selection.
   vector<double> delta;
   delta.reserve(inactiveSet.size());
-  for(int i=0; i<inactiveSet.size(); i++)
+  for(unsigned int i=0; i<inactiveSet.size(); i++)
     delta.push_back(entropyChangeAdd(inactiveSet[i]));
   vector<double>::iterator maxVal = 
   max_element(delta.begin(), delta.end());
@@ -395,18 +395,18 @@ int CIvm::entropyPointAdd()
   return inactiveSet[maxVal - delta.begin()];
 }
 
-int CIvm::randomPointAdd() 
+unsigned int CIvm::randomPointAdd() 
 {
   // choose point from inactive set to add randomly.
   // Fix here 16/7/2007 --- change use of rand.
   double prop = ndlutil::rand();
-  int index = (int)(prop*inactiveSet.size());
+  unsigned int index = (int)(prop*inactiveSet.size());
   index = inactiveSet[index];
   changeEntropy(entropyChangeAdd(index));
   return index;
 }
 
-double CIvm::entropyChangeAdd(int index) const
+double CIvm::entropyChangeAdd(unsigned int index) const
 {
   // compute the entropy change associated with point addition.
   // make sure that index is in the inactive set.
@@ -419,16 +419,16 @@ double CIvm::entropyChangeAdd(int index) const
   }
   else
   {
-    for(int j=0; j<numTarget; j++)
+    for(unsigned int j=0; j<numTarget; j++)
       entChange += -.5*log(1-pnoise->getVarSigma(index, j)
 			   *nu.getVal(index, j)+1e-300);
   }
   return entChange;
 }
-int CIvm::selectPointRemove()
+unsigned int CIvm::selectPointRemove()
 {
   // returns data index of point to remove.
-  int index = 0;
+  unsigned int index = 0;
   switch(selectionCriterion)
   {
   case RANDOM:
@@ -443,11 +443,11 @@ int CIvm::selectPointRemove()
   }
   return index;
 }
-int CIvm::entropyPointRemove() 
+unsigned int CIvm::entropyPointRemove() 
 {
   vector<double> delta;
   delta.reserve(activeSet.size());
-  for(int i=0; i<activeSet.size(); i++)
+  for(unsigned int i=0; i<activeSet.size(); i++)
     delta.push_back(entropyChangeRemove(activeSet[i]));
   vector<double>::iterator maxVal = 
   max_element(delta.begin(), delta.end());
@@ -455,16 +455,16 @@ int CIvm::entropyPointRemove()
   return inactiveSet[maxVal - delta.begin()];
 }
 
-int CIvm::randomPointRemove() 
+unsigned int CIvm::randomPointRemove() 
 {
-  int index = rand();
+  unsigned int index = rand();
   index = (index*activeSet.size())/RAND_MAX;
   index = activeSet[index];
   changeEntropy(entropyChangeRemove(index));
   return index;
 }
 
-double CIvm::entropyChangeRemove(int index) const
+double CIvm::entropyChangeRemove(unsigned int index) const
 {
   // compute entropy change associated with point removal.
   // make sure that index is in the active set.
@@ -477,7 +477,7 @@ double CIvm::entropyChangeRemove(int index) const
   }
   else
   {
-    for(int j=0; j<numTarget; j++)
+    for(unsigned int j=0; j<numTarget; j++)
       entChange += -.5*log(1-pnoise->getVarSigma(index, j)
 			   *beta.getVal(activeSet[index], j)+1e-300);
   }
@@ -485,16 +485,16 @@ double CIvm::entropyChangeRemove(int index) const
 }
 void CIvm::updateNuG()
 {
-  for(int i=0; i<numData; i++)
+  for(unsigned int i=0; i<numData; i++)
     pnoise->getNuG(g, nu, i);
 }
 void CIvm::updateK() const
 {
   double kVal=0.0;
-  for(int i=0; i<activeSet.size(); i++)
+  for(unsigned int i=0; i<activeSet.size(); i++)
   {
     K.setVal(pkern->diagComputeElement(activeX, i), i, i);
-    for(int j=0; j<i; j++)
+    for(unsigned int j=0; j<i; j++)
     {
       kVal=pkern->computeElement(activeX, i, activeX, j);
       K.setVal(kVal, i, j);
@@ -503,10 +503,10 @@ void CIvm::updateK() const
   }
   K.setSymmetric(true);
 }
-void CIvm::updateInvK(int dim) const
+void CIvm::updateInvK(unsigned int dim) const
 {
   invK.deepCopy(K);
-  for(int i=0; i<activeSetSize; i++)
+  for(unsigned int i=0; i<activeSetSize; i++)
     invK.setVal(invK.getVal(i, i) + 1/beta.getVal(i, dim), i, i);
   invK.setSymmetric(true);
   CMatrix U(chol(invK));
@@ -523,7 +523,7 @@ double CIvm::logLikelihood() const
   {
     updateInvK(0);
   }
-  for(int j=0; j<m.getCols(); j++)
+  for(unsigned int j=0; j<m.getCols(); j++)
   {
     if(!pnoise->isSpherical())
       updateInvK(j);
@@ -545,7 +545,7 @@ double CIvm::logLikelihoodGradient(CMatrix& g) const
   {
     updateInvK(0);
   }
-  for(int j=0; j<m.getCols(); j++)
+  for(unsigned int j=0; j<m.getCols(); j++)
   {
     if(!pnoise->isSpherical())
     {
@@ -581,18 +581,18 @@ CIvm::CIvm(CMatrix* inData,
   setVerbosity(verbos);
   readMatlabFile(ivmInfoFile, ivmInfoVariable);
   initStoreage(); // storeage has to be allocated after finding active set size.
-  for(int i=0; i<getNumData(); i++)
-    for(int j=0; j<activeSetSize; j++)
+  for(unsigned int i=0; i<getNumData(); i++)
+    for(unsigned int j=0; j<activeSetSize; j++)
       Kstore.setVal(pkern->computeElement(*pX, i, *pX, activeSet[j]), i, j);
   
   Kstore.getMatrix(K, activeSet, 0, activeSetSize-1);
 
-  for(int i=0; i<activeSet.size(); i++)
+  for(unsigned int i=0; i<activeSet.size(); i++)
     K.setVal(pkern->diagComputeElement(*pX, activeSet[i]), i, i);
-  for(int j=0; j<numCovStruct; j++)
+  for(unsigned int j=0; j<numCovStruct; j++)
   {
     L[j].deepCopy(K);
-    for(int i=0; i<activeSetSize; i++)
+    for(unsigned int i=0; i<activeSetSize; i++)
     {
       double lval = L[j].getVal(i, i);
       lval += 1/beta.getVal(i, j);
@@ -606,7 +606,7 @@ CIvm::CIvm(CMatrix* inData,
     Linv[j].inv();
     M[j].gemm(Linv[j], Kstore, 1.0, 0.0, "n", "t");
   }
-  for(int i=0; i<activeSetSize; i++)
+  for(unsigned int i=0; i<activeSetSize; i++)
   {
     activeX.copyRowRow(i, *pX, activeSet[i]);
     activeY.copyRowRow(i, *py, activeSet[i]);
@@ -626,19 +626,19 @@ mxArray* CIvm::toMxArray() const
   mxArray* matlabArray = mxCreateStructArray(1, dims, 4, fieldNames);
 
   // The I and J fields.
-  vector<int> activeMatlab = activeSet;
-  for(int i=0; i<activeMatlab.size(); i++)
+  vector<unsigned int> activeMatlab = activeSet;
+  for(unsigned int i=0; i<activeMatlab.size(); i++)
     activeMatlab[i]++;
   mxSetField(matlabArray, 0, "I", convertMxArray(activeMatlab));
-  vector<int> inactiveMatlab = inactiveSet;
-  for(int i=0; i<inactiveMatlab.size(); i++)
+  vector<unsigned int> inactiveMatlab = inactiveSet;
+  for(unsigned int i=0; i<inactiveMatlab.size(); i++)
     inactiveMatlab[i]++;
   mxSetField(matlabArray, 0, "J", convertMxArray(inactiveMatlab));
   
   // Other matrix fields.
   CMatrix tempM(numData, m.getCols());
   CMatrix tempB(numData, beta.getCols());
-  for(int i=0; i<activeSet.size(); i++)
+  for(unsigned int i=0; i<activeSet.size(); i++)
   {
     tempM.copyRowRow(activeSet[i], m, i);
     tempB.copyRowRow(activeSet[i], beta, i);
@@ -655,11 +655,11 @@ void CIvm::fromMxArray(const mxArray* matlabArray)
   {
     throw ndlexceptions::FileReadError("Error mismatch between saved type, " + mxType + ", and Class type, " + getType() + ".");
   }
-  activeSet = mxArrayExtractVectorIntField(matlabArray, "I");
-  for(int i=0; i<activeSet.size(); i++)
+  activeSet = mxArrayExtractVectorUintField(matlabArray, "I");
+  for(unsigned int i=0; i<activeSet.size(); i++)
     activeSet[i]--;
-  inactiveSet = mxArrayExtractVectorIntField(matlabArray, "J");
-  for(int i=0; i<inactiveSet.size(); i++)
+  inactiveSet = mxArrayExtractVectorUintField(matlabArray, "J");
+  for(unsigned int i=0; i<inactiveSet.size(); i++)
     inactiveSet[i]--;
   activeSetSize = activeSet.size();
   CMatrix tempM;
@@ -668,7 +668,7 @@ void CIvm::fromMxArray(const mxArray* matlabArray)
   tempB.fromMxArray(mxArrayExtractMxArrayField(matlabArray, "beta"));
   m.resize(activeSetSize, tempM.getCols());
   beta.resize(activeSetSize, tempB.getCols());
-  for(int i=0; i<activeSet.size(); i++)
+  for(unsigned int i=0; i<activeSet.size(); i++)
   {
     m.copyRowRow(i, tempM, activeSet[i]);
     beta.copyRowRow(i, tempB, activeSet[i]);
@@ -680,7 +680,7 @@ void CIvm::fromMxArray(const mxArray* matlabArray)
 }
 #else /* not _NDLMATLAB */
 #endif
-void CIvm::optimise(int maxIters, int kernIters, int noiseIters)
+void CIvm::optimise(unsigned int maxIters, unsigned int kernIters, unsigned int noiseIters)
 {
   if(getVerbosity()>2)
   {
@@ -690,7 +690,7 @@ void CIvm::optimise(int maxIters, int kernIters, int noiseIters)
   
   if(kernIters>0 || noiseIters>0)
   {
-    for(int iters=0; iters<maxIters; iters++)
+    for(unsigned int iters=0; iters<maxIters; iters++)
     {
       
       if(getVerbosity()>1)
@@ -758,7 +758,7 @@ void CIvm::display(ostream& os) const
   pnoise->display(os);
 }
 
-void CIvm::updateCovGradient(int index) const
+void CIvm::updateCovGradient(unsigned int index) const
 {
   CMatrix invKm(invK.getRows(), 1);
   invK.setSymmetric(true);
@@ -770,6 +770,8 @@ void CIvm::updateCovGradient(int index) const
 
 void CIvm::writeParamsToStream(ostream& out) const
 {
+  writeToStream(out, "baseType", getBaseType());
+  writeToStream(out, "type", getType());
   writeToStream(out, "numData", getNumData());
   writeToStream(out, "outputDim", getOutputDim());
   writeToStream(out, "inputDim", getInputDim());
@@ -786,6 +788,12 @@ void CIvm::writeParamsToStream(ostream& out) const
 }
 void CIvm::readParamsFromStream(istream& in)
 {
+  string tbaseType = getBaseTypeStream(in);
+  if(tbaseType != getBaseType())
+    throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
+  string ttype = getTypeStream(in);
+  if(ttype != getType())
+    throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
   setNumData(readIntFromStream(in, "numData"));
   setOutputDim(readIntFromStream(in, "outputDim"));
   setInputDim(readIntFromStream(in, "inputDim"));
@@ -803,7 +811,7 @@ void CIvm::readParamsFromStream(istream& in)
   //delete pnoise -- same as above.
   pnoise = readNoiseFromStream(in);
 
-  activeSet = readVectorIntFromStream(in, "activeSet");
+  activeSet = readVectorUintFromStream(in, "activeSet");
   if(activeSet.size() != getActiveSetSize())
     throw ndlexceptions::StreamFormatError("activeSetSize", "Number of active points does not match active set size.");
   activeY.fromStream(in);
