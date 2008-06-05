@@ -1,43 +1,38 @@
-function    matGrad = lfmGradientH(gamma1, gamma2, sigma2, gradThetaGamma, t, t2)
+function    g = lfmGradientH(gamma1, gamma2, sigma2, gradThetaGamma, t1, t2)
 
+% LFMGRADIENTH Gradient of the function h_i(z) with respect to some of the
+% hyperparameters of the kernel: m_k, C_k, D_k, m_r, C_r or D_r.
+% FORMAT
+% DESC Computes the gradient of the function h_i(z) with respect to some of
+% the parameters of the system (mass, spring or damper).
+% ARG gamma1 : Gamma value for first system.
+% ARG gamma2 : Gamma value for second system.
+% ARG sigma2 : length scale of latent process.
+% ARG gradThetaGamma : Vector with the gradient of gamma1 and gamma2 with
+% respect to the desired parameter.
+% ARG t1 : first time input (number of time points x 1).
+% ARG t2 : second time input (number of time points x 1).
+% RETURN g : Gradient of the function with respect to the desired
+% parameter.
 %
-% Gradient of h_i(gamma1,gamma2,t,t') w.r.t. theta_l, where theta_l can be
-% m_k, C_k, D_k, m_r, C_r or D_r.
+% COPYRIGHT : David Luengo, 2007
 %
-%   matGrad = GPLfmgradThetaHi(gamma1,gamma2,sigma2,gradThetaGamma,t,t2);
+% MODIFICATIONS : David Luengo, 2008
 %
-%   matGrad        - Matrix with the gradients of H_i.
-%   gamma1         - First value of gamma (gamma_r).
-%   gamma2         - Second value of gamma (gamma_k).
-%   sigma2         - Vector Mx1. Length scale of the M input "forces".
-%   gradThetaGamma - Vector 2x1. Gradient of gamma1 and gamma2 with respect
-%                    to the desired parameter.
-%   t              - Vector Tx1. Time instants for x_k.
-%   t2             - Vector T2x1. Time instants for x_r.
-%
-% Author            : David Luengo Garcia
-% Place and Date    : Manchester, 28 October 2007
-% Last Modification : 7 November 2007
+% SEEALSO : lfmKernGradient, lfmXlfmKernGradient, lfmGradientUpsilon
+
+% LFM
 
 
 % Creation of the time matrices
-Tt = repmat(t,1,size(t2, 1));
-Tt2 = repmat(t2',size(t, 1),1);
+
+Tt1 = repmat(t1,1,size(t2, 1));
+Tt2 = repmat(t2',size(t1, 1),1);
 
 % Gradient evaluation
 
-gradThetaGammai = gradThetaGamma(1)*(Tt-Tt2) ...
-    .*exp(gamma1*(Tt-Tt2)).*lfmComputeEdiff(gamma1,sigma2,Tt2,Tt) ...
-    + exp(gamma1*(Tt-Tt2)).* ...
-    lfmGradientEdiff(gamma1,sigma2,gradThetaGamma(1),Tt2,Tt) ...
-    + (gradThetaGamma(1)*Tt2 + gradThetaGamma(2)*Tt) ...
-    .*exp(-(gamma1*Tt2+gamma2*Tt)).*lfmComputeEdiff(gamma1,sigma2,Tt2,0) ...
-    - exp(-(gamma1*Tt2+gamma2*Tt)).* ...
-    lfmGradientEdiff(gamma1,sigma2,gradThetaGamma(1),Tt2,0);
-
-matGrad = ((sigma2*gamma1/2)*gradThetaGamma(1) - ...
-           (sum(gradThetaGamma)/(gamma1+gamma2))) * ...
-          lfmComputeH(gamma1,gamma2,sigma2,t,t2) + ...
-          (exp(sigma2*(gamma1^2)/4)/(gamma1+gamma2)) * ...
-          gradThetaGammai;
-
+g = (lfmGradientUpsilon(gamma1,sigma2,gradThetaGamma(1),Tt2,Tt1) ...
+    + gradThetaGamma(2)*Tt1.*exp(-gamma2*Tt1) ...
+    .* lfmComputeUpsilon(gamma1,sigma2,Tt2,zeros(size(Tt1))) - exp(-gamma2*Tt1) ...
+    .* lfmGradientUpsilon(gamma1,sigma2,gradThetaGamma(1),Tt2,zeros(size(Tt1))) ...
+    - sum(gradThetaGamma)*lfmComputeH(gamma1,gamma2,sigma2,t1,t2))/(gamma1+gamma2);

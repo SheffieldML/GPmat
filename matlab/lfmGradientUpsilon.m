@@ -1,52 +1,79 @@
-function    matGrad = lfmGradientUpsilon(gamma,sigma2,gradThetaGamma,t,t2);
+function    g = lfmGradientUpsilon(gamma,sigma2,gradThetaGamma,Tt1,Tt2);
+
+% LFMGRADIENTUPSILON Gradient of the function \upsilon(z) with respect to
+% one of the hyperparameters of the kernel: m_k, C_k, D_k, m_r, C_r or D_r.
+% FORMAT
+% DESC Computes the gradient of the function \upsilon(z) with respect to
+% one of the parameters of the system (mass, spring or damper).
+% ARG gamma : Gamma value of the system.
+% ARG sigma2 : length scale of latent process.
+% ARG gradThetaGamma : Vector with the gradient of gamma1 and gamma2 with
+% respect to the desired parameter.
+% ARG Tt1 : first time input (number of time points 1 x number of time points 2).
+% ARG Tt2 : second time input (number of time points 1 x number of time points 2).
+% RETURN g : Gradient of the kernel with respect to the desired
+% parameter.
 %
+% COPYRIGHT : David Luengo, 2008
 %
-% Gradient of upsilon_r(gamma_k,t,t') with respect to theta_k, where theta_k
-% can be m_k, C_k or D_k.
-%
-%   matGrad = GPLfmgradThetaupsilon(gamma,sigma2,gradThetaGamma,t,t2);
-%
-%   matGrad        - Matrix with the gradients of the kernel.
-%   gamma          - Propagation constant of the system.
-%   sigma2         - Scalar. Length scale of the r-th input.
-%   gradThetaGamma - Gradient of gamma with respect to theta_k.
-%   t              - Vector Tx1. Time instants for x_k.
-%   t2             - Vector T2x1. Time instants for f_r.
-%
-% Author            : David Luengo Garcia
-% Place and Date    : Manchester, 26 October 2007
-% Last Modification : 26 October 2007
+% SEEALSO : lfmKernGradient, lfmXlfmKernGradient, lfmGradientH
+
+% LFM
 
 
 %Parameters of the function
-
-T = length(t);
-T2 = length(t2);
 
 sigma = sqrt(sigma2);
 
 % Initialization of vectors and matrices
 
-Tt = zeros(T,T2);
-Tt2 = zeros(T,T2);
+g = zeros(size(Tt1));
 
-upsilon = zeros(T,T2);
-matGrad = zeros(T,T2);
+Z1 = (Tt1-Tt2)/sigma - sigma*gamma/2;
+Z2 = Tt2/sigma + sigma*gamma/2;
 
-% Creation of the time matrices
+%%% Gradient Evaluation %%%
 
-t = reshape(t,T,1);
-Tt = repmat(t,1,T2);
-t2 = reshape(t2,1,T2);
-Tt2 = repmat(t2,T,1);
+% Evaluation of the gradient when real(Z1)>=0 and real(Z2)>=0
 
-% Gradient
+ind = (real(Z1)>=0) & (real(Z2)>=0);
+if any(any(ind))
+    g(ind) = exp(sigma2*(gamma^2)/4 - gamma*(Tt1(ind)-Tt2(ind)) ...
+            + log(sigma2*gamma - 2*(Tt1(ind)-Tt2(ind))) + log(gradThetaGamma)) ...
+        - exp(-(Tt1(ind)-Tt2(ind)).*(Tt1(ind)-Tt2(ind))/sigma2 ...
+            + log(sigma*gradThetaGamma) + log(1/sqrt(pi) - Z1(ind).*W(j*Z1(ind)))) ...
+        + exp(-Tt2(ind).*Tt2(ind)/sigma2 - gamma*Tt1(ind) + log(gradThetaGamma) ...
+            + log(Tt1(ind).*W(j*Z2(ind)) + sigma*(1/sqrt(pi) - Z2(ind).*W(j*Z2(ind)))));
+end
 
-upsilon = exp(sigma2*(gamma^2)/4)*exp(-gamma*(Tt-Tt2))...
-    .*(erfz((Tt-Tt2)/sigma-sigma*gamma/2) + erfz(Tt2/sigma+sigma*gamma/2));
+% Evaluation of the gradient when real(Z1)<0 and real(Z2)>=0
 
-matGrad = gradThetaGamma*(sigma2*gamma/2-(Tt-Tt2)).*upsilon + ...
-    exp(sigma2*(gamma^2)/4)*exp(-gamma*(Tt-Tt2)).*...
-    GPLfmgradThetaE(gamma,sigma2,gradThetaGamma,Tt,Tt2);
+ind = (real(Z1)<0) & (real(Z2)>=0);
+if any(any(ind))
+    g(ind) = - exp(-(Tt1(ind)-Tt2(ind)).*(Tt1(ind)-Tt2(ind))/sigma2 ...
+            + log(sigma*gradThetaGamma) + log(1/sqrt(pi) + Z1(ind).*W(-j*Z1(ind)))) ...
+        + exp(-Tt2(ind).*Tt2(ind)/sigma2 - gamma*Tt1(ind) + log(gradThetaGamma) ...
+            + log(Tt1(ind).*W(j*Z2(ind)) + sigma*(1/sqrt(pi) - Z2(ind).*W(j*Z2(ind)))));
+end
 
-return;
+% Evaluation of the gradient when real(Z1)>=0 and real(Z2)<0
+
+ind = (real(Z1)>=0) & (real(Z2)<0);
+if any(any(ind))
+    g(ind) = - exp(-(Tt1(ind)-Tt2(ind)).*(Tt1(ind)-Tt2(ind))/sigma2 ...
+            + log(sigma*gradThetaGamma) + log(1/sqrt(pi) - Z1(ind).*W(j*Z1(ind)))) ...
+        - exp(-Tt2(ind).*Tt2(ind)/sigma2 - gamma*Tt1(ind) + log(gradThetaGamma) ...
+            + log(Tt1(ind).*W(-j*Z2(ind)) - sigma*(1/sqrt(pi) + Z2(ind).*W(-j*Z2(ind)))));
+end
+
+% Evaluation of the gradient when real(Z1)<0 and real(Z2)<0
+
+ind = (real(Z1)<0) & (real(Z2)<0);
+if any(any(ind))
+    g(ind) = - exp(sigma2*(gamma^2)/4 - gamma*(Tt1(ind)-Tt2(ind)) ...
+            + log(sigma2*gamma - 2*(Tt1(ind)-Tt2(ind))) + log(gradThetaGamma)) ...
+        - exp(-(Tt1(ind)-Tt2(ind)).*(Tt1(ind)-Tt2(ind))/sigma2 ...
+            + log(sigma*gradThetaGamma) + log(1/sqrt(pi) + Z1(ind).*W(-j*Z1(ind)))) ...
+        + exp(-Tt2(ind).*Tt2(ind)/sigma2 - gamma*Tt1(ind) + log(gradThetaGamma) ...
+            + log(Tt1(ind).*W(j*Z2(ind)) + sigma*(1/sqrt(pi) - Z2(ind).*W(j*Z2(ind)))));
+end

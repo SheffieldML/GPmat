@@ -19,7 +19,7 @@ function kern = lfmKernParamInit(kern)
 %
 % The kernel is designed to interoperate with the multiple output
 % block kernel so that f(t) can be inferred given several different
-% instantiations of x(t) (associated with different genes).
+% instantiations of x(t).
 %
 % The parameters (m, c, delta and k) are constrained positive.
 %
@@ -33,7 +33,8 @@ function kern = lfmKernParamInit(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% KERN
+% LFM
+
 
 if kern.inputDimension > 1
   error('LFM kernel only valid for one-D input.')
@@ -46,15 +47,17 @@ kern.damper = 1;
 kern.sensitivity = 1;
 
 kern.initVal = 1;
-
-kern.variance = 1;
 kern.inverseWidth = 1;
+kern.variance = 1;
 kern.nParams = 5;
 
 kern.transforms.index = [1 2 3 4];
 kern.transforms.type = optimiDefaultConstraint('positive');
 
 kern.isStationary = false;
+
+maxSerial = double(intmax('uint64'));
+kern.serialNumber = uint64(1+rand(1)*maxSerial);
 
 % Force any precomputation contained in lfmKernExpandParam
 params = lfmKernExtractParam(kern);

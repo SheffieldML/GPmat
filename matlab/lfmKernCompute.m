@@ -2,7 +2,7 @@ function k = lfmKernCompute(kern, t, t2)
 
 % LFMKERNCOMPUTE Compute the LFM kernel given the parameters and X.
 % FORMAT
-% DESC computes the kernel parameters for the single input motif
+% DESC computes the kernel parameters for the latent force model
 % kernel given inputs associated with rows and columns.
 % ARG kern : the kernel structure for which the matrix is computed.
 % ARG t1 : the input matrix associated with the rows of the kernel.
@@ -20,7 +20,7 @@ function k = lfmKernCompute(kern, t, t2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% KERN
+% LFM
 
 
 if nargin < 3
@@ -36,3 +36,5 @@ if nargin < 3;
   k = k + k';
   k = k*0.5;
 end
+
+k = real(k); % introduced Mauricio Alvarez 2008

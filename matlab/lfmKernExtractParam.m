@@ -19,8 +19,8 @@ function [params, names] = lfmKernExtractParam(kern)
 % SEEALSO lfmKernParamInit, lfmKernExpandParam, kernExtractParam, scg, conjgrad
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
-%
-% KERN
+
+% LFM
 
 params = [kern.mass, kern.spring, kern.damper,  kern.inverseWidth, kern.sensitivity];
 if nargout > 1
