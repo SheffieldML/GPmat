@@ -28,4 +28,4 @@ Tt2 = repmat(t2', size(t1, 1), 1);
 % Evaluation of h
 
 h = (lfmComputeUpsilon(gamma1,sigma2,Tt2,Tt1) - exp(-gamma2*Tt1) ...
-    .* lfmComputeUpsilon(gamma1,sigma2,Tt2,zeros(size(Tt1))))/(gamma1+gamma2);
+    .* lfmComputeUpsilon(gamma1,sigma2,Tt2,zeros(size(Tt1))))/(gamma1+gamma2+eps);
