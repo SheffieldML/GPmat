@@ -3,3 +3,5 @@
 importLatest('optimi');
 importLatest('ndlutil');
 importLatest('netlab');
+importLatest('erfcxz')
+importLatest('erfz')

@@ -32,12 +32,13 @@ function [g1, g2] = lfmXrbfKernGradient(lfmKern, rbfKern, t1, t2, covGrad)
 %
 % SEEALSO : multiKernParamInit, multiKernCompute, lfmKernParamInit, rbfKernParamInit
 %
-% COPYRIGHT : David Luengo, 2007
+% COPYRIGHT : David Luengo, 2007, 2008
 %
-% MODIFICATIONS : Neil D. Lawrence, 2007; David Luengo, 2008, Mauricio
-% Alvarez 2008
+% MODIFICATIONS : Neil D. Lawrence, 2007
+%
+% MODIFICATIONS : Mauricio A. Alvarez, 2008
 
-% LFM
+% KERN
 
 if nargin < 5
   covGrad = t2;
@@ -60,7 +61,7 @@ S = lfmKern.sensitivity;
 alpha = C/(2*m);
 omega = sqrt(D/m-alpha^2);
 
-sigma2 = 2/lfmKern.inverseWidth;% Tamporarly changed by Mauricio Alvarez             
+sigma2 = 2/lfmKern.inverseWidth;% Tamporarly changed by MA
 sigma = sqrt(sigma2);
 
 gamma1 = alpha + j*omega;
@@ -138,8 +139,8 @@ else
         - lfmGradientSigmaUpsilon(gamma1,sigma2,Tt,Tt2)));
 end;
 
-% g1(4) = sum(sum(matGrad.*Kxf.*covGrad))*(-(sigma^3)/4); % temporarly introduced by Mauricio Alvarez
-g1(4) = sum(sum(matGrad.*covGrad))*(-(sigma^3)/4); % temporarly introduced by Mauricio Alvarez
+% g1(4) = sum(sum(matGrad.*Kxf.*covGrad))*(-(sigma^3)/4); % temporarly introduced by MA
+g1(4) = sum(sum(matGrad.*covGrad))*(-(sigma^3)/4); % temporarly introduced by MA
 g2(1) = g1(4);
 
 % Gradient with respect to S
@@ -159,5 +160,5 @@ end;
 g1(5) = sum(sum(matGrad.*covGrad));
 
 % Gradient with respect to the "variance" of the RBF
-g2(1) = 0; % Otherwise is counted twice, temporarly changed by Mauricio Alvarez
+g2(1) = 0; % Otherwise is counted twice, temporarly changed by MA
 g2(2) = 0;

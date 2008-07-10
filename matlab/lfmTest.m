@@ -11,7 +11,7 @@ function modelRet = lfmTest
 % COPYRIGHT : Neil D. Lawrence, 2007
 
 
-% LFM
+% KERN
 
 numDisplacements = 2;
 numForces = 1;

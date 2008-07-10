@@ -20,7 +20,7 @@ function k = lfmKernCompute(kern, t, t2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% LFM
+% KERN
 
 
 if nargin < 3
@@ -37,4 +37,4 @@ if nargin < 3;
   k = k*0.5;
 end
 
-k = real(k); % introduced Mauricio Alvarez 2008
+k = real(k); % introduced MA 2008

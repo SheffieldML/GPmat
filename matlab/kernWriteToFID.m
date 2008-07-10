@@ -1,6 +1,6 @@
 function kernWriteToFID(kern, FID)
 
-% KERNREADFROMFID Load from an FID written by the C++ implementation.
+% KERNWRITETOFID Load from an FID written by the C++ implementation.
 % FORMAT
 % DESC loads in from a file stream the data format produced by 
 % C++ implementations.

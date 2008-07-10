@@ -1,6 +1,6 @@
 function    upsilon = lfmComputeUpsilon(gamma,sigma2,Tt1,Tt2);
 
-% LFMCOMPUTEH Helper function for comptuing part of the LFM kernel.
+% LFMCOMPUTEUPSILON Helper function for comptuing part of the LFM kernel.
 % FORMAT
 % DESC computes a portion of the LFM kernel.
 % ARG gamma : Gamma value for the system.
@@ -16,7 +16,7 @@ function    upsilon = lfmComputeUpsilon(gamma,sigma2,Tt1,Tt2);
 %
 % SEEALSO : lfmKernParamInit, lfmXlfmKernCompute, lfmComputeH, W
 
-% LFM
+% KERN
 
 
 % Parameters of the kernel

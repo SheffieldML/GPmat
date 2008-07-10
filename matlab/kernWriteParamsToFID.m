@@ -1,6 +1,6 @@
 function kernWriteParamsToFID(kern, FID)
 
-% KERNWRITEPARAMSFROMFID Write the kernel parameters to a stream.
+% KERNWRITEPARAMSTOFID Write the kernel parameters to a stream.
 % FORMAT
 % DESC writes kernel parameters to a stream.
 % ARG kern : the kernel that the parameters are in.

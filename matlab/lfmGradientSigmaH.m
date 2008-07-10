@@ -11,13 +11,11 @@ function    g = lfmGradientSigmaH(gamma1, gamma2, sigma2, t1, t2);
 % ARG t2 : second time input (number of time points x 1).
 % RETURN g : Gradient of the function with respect to \sigma.
 %
-% COPYRIGHT : David Luengo, 2007
-%
-% MODIFICATIONS : David Luengo, 2008
+% COPYRIGHT : David Luengo, 2007, 2008
 %
 % SEEALSO : lfmKernGradient, lfmXlfmKernGradient, lfmGradientSigmaUpsilon
 
-% LFM
+% KERN
 
 
 % Creation of the time matrices

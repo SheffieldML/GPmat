@@ -21,7 +21,7 @@ function    g = lfmGradientH(gamma1, gamma2, sigma2, gradThetaGamma, t1, t2)
 %
 % SEEALSO : lfmKernGradient, lfmXlfmKernGradient, lfmGradientUpsilon
 
-% LFM
+% KERN
 
 
 % Creation of the time matrices

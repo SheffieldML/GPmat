@@ -37,7 +37,7 @@ function g = ardKernGradient(kern, x, covGrad)
 % RETURN g : gradients of the function of interest with respect to
 % the kernel parameters.
 %
-% SEEALSO ardKernParamInit, kernGradient, ardKernDiagGradient, kernGradX
+% SEEALSO : ardKernParamInit, kernGradient, ardKernDiagGradient, kernGradX
 %
 % COPYRIGHT : Neil D. Lawrence, 2004
 

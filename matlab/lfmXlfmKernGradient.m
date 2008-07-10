@@ -34,12 +34,13 @@ function [g1, g2] = lfmXlfmKernGradient(lfmKern1, lfmKern2, t1, t2, covGrad)
 %
 % SEEALSO : multiKernParamInit, multiKernCompute, lfmKernParamInit, lfmKernExtractParam
 %
-% COPYRIGHT : David Luengo, 2007
+% COPYRIGHT : David Luengo, 2007, 2008
 % 
-% MODIFICATIONS : Neil D. Lawrence, 2007; David Luengo, 2008; Mauricio
-% Alvarez, 2008
+% MODIFICATIONS : Neil D. Lawrence, 2007
+%
+% MODIFICATIONS : Mauricio Alvarez, 2008
 
-% LFM
+% KERN
 
   
 if nargin < 5
@@ -280,5 +281,5 @@ if autoCorr
 else
     g2(5) = sum(sum(S(1)*matGrad.*covGrad));
 end
-g2(4) = 0; % Otherwise is counted twice, temporarly changed by Mauricio Alvarez 
+g2(4) = 0; % Otherwise is counted twice, temporarly changed by MA
 return

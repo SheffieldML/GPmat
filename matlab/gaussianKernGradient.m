@@ -40,7 +40,7 @@ function g = gaussianKernGradient(kern, x, varargin)
 % SEEALSO : gaussianKernParamInit, kernGradient,
 % gaussianKernDiagGradient, kernGradX
 %  
-% COPYRIGH : Mauricio A. Alvarez and Neil D. Lawrence, 2008
+% COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
 
 % KERN
   

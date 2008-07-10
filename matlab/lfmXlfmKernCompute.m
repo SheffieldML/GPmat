@@ -24,11 +24,11 @@ function K = lfmXlfmKernCompute(lfmKern1, lfmKern2, t, t2);
 %
 % SEEALSO : lfmKernParamInit, lfmKernCompute, lfmKernParamInit
 %
-% COPYRIGHT : David Luengo, 2007
+% COPYRIGHT : David Luengo, 2007, 2008
 %  
-% MODIFICATIONS : Neil D. Lawrence, 2007; David Luengo, 2008
+% MODIFICATIONS : Neil D. Lawrence, 2007, 2008
 
-% LFM
+% KERN
   
 if nargin < 4
   t2 = t;
@@ -80,5 +80,5 @@ else
   K = K*sqrt(pi)/(8*lfmKern1.mass*lfmKern2.mass*prod(omega));
 end
 
-K = real(K); % introduced Mauricio Alvarez 2008
+K = real(K); % introduced MA 2008
 

@@ -24,11 +24,12 @@ function K = lfmXrbfKernCompute(lfmKern, rbfKern, t1, t2)
 %
 % SEEALSO : multiKernParamInit, multiKernCompute, lfmKernParamInit, rbfKernParamInit
 %
-% COPYRIGHT : David Luengo, 2007
+% COPYRIGHT : David Luengo, 2007, 2008
 %
-% MODIFICATIONS : Neil D. Lawrence, 2007; David Luengo, 2008
+% MODIFICATIONS : Neil D. Lawrence, 2007
 
-% LFM
+
+% KERN
 
 if nargin < 4
   t2 = t1;

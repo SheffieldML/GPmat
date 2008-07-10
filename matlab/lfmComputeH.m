@@ -10,13 +10,13 @@ function  h = lfmComputeH(gamma1, gamma2, sigma2, t1, t2);
 % ARG t2 : second time input (number of time points x 1).
 % RETURN h : result of this subcomponent of the kernel for the given values.
 %
-% COPYRIGHT : David Luengo, 2007
+% COPYRIGHT : David Luengo, 2007, 2008
 %
-% MODIFICATIONS : Neil D. Lawrence, 2007; David Luengo, 2008
+% MODIFICATIONS : Neil D. Lawrence, 2007
 %
 % SEEALSO : lfmKernParamInit, lfmXlfmKernCompute
 
-% LFM
+% KERN
 
 sigma = sqrt(sigma2);
 

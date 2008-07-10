@@ -11,7 +11,7 @@ function kern = lfmKernParamInit(kern)
 % where m is a mass, c is a damping coefficient, k is a spring constant,
 % S is a scalar sensitivity and delta is a time delay
 % and B is an initial level. 
-  
+%  
 % If f(t) is assumed to come from a
 % Gaussian process with an RBF covariance function x(t) is a Gaussian
 % process with a covariance function provided by the single latent force
@@ -26,14 +26,14 @@ function kern = lfmKernParamInit(kern)
 % FORMAT
 % DESC initialises the latent force model kernel structure with some
 % default parameters.
-% ARG kern : the kernel structure which requires initialisation.
 % RETURN kern : the kernel structure with the default parameters placed in.
+% ARG kern : the kernel structure which requires initialisation.
 %
 % SEEALSO : kernCreate, kernParamInit, lfmKernCompute
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% LFM
+% KERN
 
 
 if kern.inputDimension > 1

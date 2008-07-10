@@ -41,7 +41,7 @@ function g = lfmKernGradient(kern, t, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% LFM
+% KERN
 
 if length(varargin)<2
   t2 = t;

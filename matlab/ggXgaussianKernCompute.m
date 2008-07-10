@@ -1,36 +1,31 @@
 function [K, Linv, Ankinv, Bkinv] = ggXgaussianKernCompute(ggKern, gaussianKern, x, x2)
 
 % GGXGAUSSIANKERNCOMPUTE Compute a cross kernel between the GG and GAUSSIAN kernels.
-%
-%	Description:
-%
-%	K = GGXGAUSSIANKERNCOMPUTE(GGKERN, GAUSSIANKERN, X) computes cross kernel
+% FORMAT
+% DESC computes cross kernel
 %	terms between GG and GAUSSIAN kernels for the multiple output kernel.
-%	 Returns:
-%	  K - block of values from kernel matrix.
-%	 Arguments:
-%	  GGKERN - the kernel structure associated with the GG kernel.
-%	  GAUSSIANKERN - the kernel structure associated with the GAUSSIAN kernel.
-%	  X - inputs for which kernel is to be computed.
+% RETURN k :  block of values from kernel matrix.
+% ARG ggKern : the kernel structure associated with the GG kernel.
+% ARG gaussianKern : the kernel structure associated with the GAUSSIAN kernel.
+% ARG x :  inputs for which kernel is to be computed.
 %
-%	K = GGXGAUSSIANKERNCOMPUTE(GGKERN, GAUSSIANKERN, X, X2) computes cross
+% FORMAT
+% DESC computes cross
 %	kernel terms between GG and GAUSSIAN kernels for the multiple output
 %	kernel.
-%	 Returns:
-%	  K - block of values from kernel matrix.
-%	 Arguments:
-%	  GGKERN - the kernel structure associated with the GG kernel.
-%	  GAUSSIANKERN - the kernel structure associated with the GAUSSIAN kernel.
-%	  X - row inputs for which kernel is to be computed.
-%	  X2 - column inputs for which kernel is to be computed.
+% RETURN K : block of values from kernel matrix.
+% ARG ggKern :  the kernel structure associated with the GG kernel.
+% ARG gaussianKern the kernel structure associated with the GAUSSIAN kernel.
+% ARG x : row inputs for which kernel is to be computed.
+% ARG x2 : column inputs for which kernel is to be computed.
 %	
+% SEEALSO : multiKernParamInit, multiKernCompute, ggKernParamInit, gaussianKernParamInit
 %
-%	See also
-%	MULTIKERNPARAMINIT, MULTIKERNCOMPUTE, GGKERNPARAMINIT, GAUSSIANKERNPARAMINIT
+%
+% COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
 
-
-%	Mauricio Alvarez, march 2008
-
+% KERN
+  
 if nargin < 4
   x2 = x;
 end

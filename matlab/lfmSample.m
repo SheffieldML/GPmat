@@ -1,3 +1,7 @@
+% LFMSAMPLE Sample from LFM kernel
+
+% KERN
+
 numSamp = 100;
 t = linspace(100, 120, numSamp)';
 kern = kernCreate(t, {'multi', 'rbf', 'lfm', 'lfm', 'lfm'});

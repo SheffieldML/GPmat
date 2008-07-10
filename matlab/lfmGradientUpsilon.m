@@ -18,7 +18,7 @@ function    g = lfmGradientUpsilon(gamma,sigma2,gradThetaGamma,Tt1,Tt2);
 %
 % SEEALSO : lfmKernGradient, lfmXlfmKernGradient, lfmGradientH
 
-% LFM
+% KERN
 
 
 %Parameters of the function

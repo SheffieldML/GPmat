@@ -19,7 +19,7 @@
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% LFM
+% KERN
   
 error('lfmKernDiagGradient not yet implemented.')
 

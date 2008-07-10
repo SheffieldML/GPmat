@@ -11,7 +11,7 @@ function ll = lfmLogLikelihood(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% LFM
+% KERN
 
 dim = size(model.y, 1);
 ll = -dim*log(2*pi) - model.logDetK - model.m'*model.invK*model.m;

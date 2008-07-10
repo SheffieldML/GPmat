@@ -17,7 +17,7 @@ function model = lfmExpandParam(model, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% LFM
+% KERN
 
 params = real(params);
 if isfield(model, 'fix')

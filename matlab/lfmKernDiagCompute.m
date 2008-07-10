@@ -13,7 +13,7 @@ function k = lfmKernDiagCompute(kern, t)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% LFM
+% KERN
 
 if size(t, 2) > 1 
   error('Input can only have one column');
