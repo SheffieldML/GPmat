@@ -11,7 +11,7 @@ function val = readStringFromFID(FID, string)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
   
-% NDLUTILS
+% NDLUTIL
   
 lineStr = getline(FID);
 tokens = tokenise(lineStr, '=');

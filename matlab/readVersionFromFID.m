@@ -1,6 +1,6 @@
 function val = readVersionFromFID(FID)
   
-% READDOUBLEFROMFID Read version number from an FID.
+% READVERSIONFROMFID Read version number from an FID.
 % FORMAT
 % DESC reads version number from a stream.
 % ARG FID : stream to read from.
@@ -10,6 +10,6 @@ function val = readVersionFromFID(FID)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
   
-% NDLUTILS
+% NDLUTIL
   
 val = str2num(readStringFromFID(FID, 'version'));

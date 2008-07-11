@@ -12,7 +12,7 @@ function val = readIntFromFID(FID, string)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
   
-% NDLUTILS
+% NDLUTIL
   
   
 val = str2num(readStringFromFID(FID, string));

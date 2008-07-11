@@ -11,6 +11,6 @@ function writeDoubleToFID(FID, name, val)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
   
-% NDLUTILS
+% NDLUTIL
   
 writeStringToFID(FID, name, num2str(val));

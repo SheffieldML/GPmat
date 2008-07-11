@@ -11,7 +11,7 @@ function writeBoolToFID(FID, name, val)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
   
-% NDLUTILS
+% NDLUTIL
   
 if val
   writeStringToFID(FID, name, '1');

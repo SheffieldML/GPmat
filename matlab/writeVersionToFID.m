@@ -1,6 +1,6 @@
 function writeVersionToFID(FID, val)
   
-% WRITEBOOLTOFID Writes a version to an FID.
+% WRITEVERSIONTOFID Writes a version to an FID.
 % FORMAT
 % DESC writes a version from a stream.
 % ARG FID : stream to write to.
@@ -10,7 +10,7 @@ function writeVersionToFID(FID, val)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
   
-% NDLUTILS
+% NDLUTIL
   
 writeStringToFID(FID, 'version', num2str(val));
   
