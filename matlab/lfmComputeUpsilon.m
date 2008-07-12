@@ -1,4 +1,4 @@
-function    upsilon = lfmComputeUpsilon(gamma,sigma2,Tt1,Tt2);
+function upsilon = lfmComputeUpsilon(gamma,sigma2,Tt1,Tt2);
 
 % LFMCOMPUTEUPSILON Helper function for comptuing part of the LFM kernel.
 % FORMAT
@@ -12,25 +12,25 @@ function    upsilon = lfmComputeUpsilon(gamma,sigma2,Tt1,Tt2);
 % RETURN upsilon : result of this subcomponent of the kernel for the given
 % values.
 %
+%
 % COPYRIGHT : David Luengo, 2008
+%
+% MODIFICATIONS  : Mauricio Alvarez, 2008
 %
 % SEEALSO : lfmKernParamInit, lfmXlfmKernCompute, lfmComputeH, W
 
 % KERN
 
 
-% Parameters of the kernel
-
 dev = sqrt(sigma2);
 
 % Initialization of vectors and matrices
 
 upsilon = zeros(size(Tt1));
-Z1 = zeros(size(Tt1));
-Z2 = zeros(size(Tt1));
 
 Z1 = (Tt1-Tt2)/dev - dev*gamma/2;
 Z2 = Tt2/dev + dev*gamma/2;
+
 
 %%% Evaluation of Upsilon %%%
 

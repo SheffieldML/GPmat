@@ -1,4 +1,4 @@
-function  h = lfmComputeH(gamma1, gamma2, sigma2, t1, t2);
+function  h = lfmComputeH(gamma1, gamma2, sigma2, Tt1, Tt2)
 
 % LFMCOMPUTEH Helper function for computing part of the LFM kernel.
 % FORMAT
@@ -14,18 +14,15 @@ function  h = lfmComputeH(gamma1, gamma2, sigma2, t1, t2);
 %
 % MODIFICATIONS : Neil D. Lawrence, 2007
 %
+% MODIFICATIONS : Mauricio Alvarez, 2008
+%
+%
 % SEEALSO : lfmKernParamInit, lfmXlfmKernCompute
 
 % KERN
 
-sigma = sqrt(sigma2);
-
-% Creation of the time matrices
-
-Tt1 = repmat(t1, 1, size(t2, 1));
-Tt2 = repmat(t2', size(t1, 1), 1);
-
 % Evaluation of h
 
 h = (lfmComputeUpsilon(gamma1,sigma2,Tt2,Tt1) - exp(-gamma2*Tt1) ...
-    .* lfmComputeUpsilon(gamma1,sigma2,Tt2,zeros(size(Tt1))))/(gamma1+gamma2+eps);
+    .* lfmComputeUpsilon(gamma1,sigma2,Tt2,zeros(size(Tt1))))/(gamma1+gamma2);
+

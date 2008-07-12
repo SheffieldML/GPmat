@@ -1,4 +1,4 @@
-function    g = lfmGradientSigmaH(gamma1, gamma2, sigma2, t1, t2);
+function    g = lfmGradientSigmaH(gamma1, gamma2, sigma2, Tt1, Tt2)
 
 % LFMGRADIENTSIGMAH Gradient of the function h_i(z) with respect \sigma.
 % FORMAT
@@ -13,15 +13,12 @@ function    g = lfmGradientSigmaH(gamma1, gamma2, sigma2, t1, t2);
 %
 % COPYRIGHT : David Luengo, 2007, 2008
 %
+% MODIFICATIONS : Mauricio Alvarez, 2008
+
 % SEEALSO : lfmKernGradient, lfmXlfmKernGradient, lfmGradientSigmaUpsilon
 
 % KERN
 
-
-% Creation of the time matrices
-
-Tt1 = repmat(t1,1,size(t2, 1));
-Tt2 = repmat(t2',size(t1, 1),1);
 
 % Gradient
 
