@@ -1,0 +1,27 @@
+
+
+<head>
+<title>Matlab Noise Toolbox - Examples</title>
+</head>
+
+<body><div class="section">
+
+<h1>Matlab Noise Toolbox</h1>
+
+RELEASEINFORMATION
+
+
+<p>As of version 0.14, the NCNM noise model has been incorporated into this toolbox.
+
+<p>This toolbox allows computation of several different noise models and their gradients. You can add noise models to the toolbox by creating versions of the relevant files. Once added, they can be tested using the <code>noiseTest</code>. For example you can test the probit noise model by writing
+
+<p><code>&gt;&gt; noiseTest('probit')</code>
+
+<p>There are several noise models implemented, the mains ones that are being maintained for the latest release are:
+
+<p><code>gaussian
+ordered
+probit
+</code>
+
+These noise models are Gaussian (standard Gaussian noise), probistic regression for binary classificaiton and ordered categorical for ordered categories (ordinal regression).</div></body>
