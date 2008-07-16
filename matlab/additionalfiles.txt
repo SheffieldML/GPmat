@@ -1,0 +1,30 @@
+# These are files that should be packaged for the FGPLVM software
+dir: .
+~/mlprojects/fgplvm/matlab/cmu35TaylorScaleBias.mat
+~/mlprojects/fgplvm/matlab/35.asf
+~/mlprojects/fgplvm/matlab/35_01.amc
+dir: html
+~/mlprojects/fgplvm/html/index.html
+~/mlprojects/fgplvm/html/demOil1.png
+~/mlprojects/fgplvm/html/demOil2.png
+~/mlprojects/fgplvm/html/demOil3.png
+~/mlprojects/fgplvm/html/demOil4.png
+~/mlprojects/fgplvm/html/demOil5.png
+~/mlprojects/fgplvm/html/demOil6.png
+~/mlprojects/fgplvm/html/demVowels1.png
+~/mlprojects/fgplvm/html/demVowels2.png
+~/mlprojects/fgplvm/html/demVowels3.png
+~/mlprojects/fgplvm/html/demVowelsInit.png
+~/mlprojects/fgplvm/html/demRobotWireless1.png
+~/mlprojects/fgplvm/html/demRobotWireless2.png
+~/mlprojects/fgplvm/html/demRobotWireless3.png
+~/mlprojects/fgplvm/html/demRobotWireless4.png
+~/mlprojects/fgplvm/html/demStick1.png
+~/mlprojects/fgplvm/html/demStick2.png
+~/mlprojects/fgplvm/html/demStick3.png
+~/mlprojects/fgplvm/html/dynamicsSamp1.png
+~/mlprojects/fgplvm/html/dynamicsSamp2.png
+~/mlprojects/fgplvm/html/dynamicsSamp3.png
+~/mlprojects/fgplvm/html/dynamicsSamp4.png
+~/mlprojects/fgplvm/html/demCmu35gplvmLegReconstruct1_8.png
+~/mlprojects/fgplvm/html/demCmu35gplvmLegReconstruct1_9.png

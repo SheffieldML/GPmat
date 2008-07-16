@@ -1,0 +1,40 @@
+function ll = fgplvmLogLikelihood(model)
+
+% FGPLVMLOGLIKELIHOOD Log-likelihood for a GP-LVM.
+% FORMAT
+% DESC returns the log likelihood for a given GP-LVM model.
+% ARG model : the model for which the log likelihood is to be
+% computed. The model contains the data for which the likelihood is
+% being computed in the 'y' component of the structure.
+% RETURN ll : the log likelihood of the data given the model.
+%
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006
+%
+% SEEALSO : gpLogLikelihood, fgplvmCreate
+
+% FGPLVM
+
+ 
+ll = gpLogLikelihood(model);
+
+if isfield(model, 'dynamics') && ~isempty(model.dynamics)
+  % A dynamics model is being used.
+  ll = ll + modelLogLikelihood(model.dynamics);
+elseif isfield(model, 'prior') &&  ~isempty(model.prior)
+  for i = 1:model.N
+    ll = ll + priorLogProb(model.prior, model.X(i, :));
+  end
+end
+
+switch model.approx
+  case {'dtc', 'fitc', 'pitc'}
+   if isfield(model, 'inducingPrior') && ~isempty(model.inducingPrior)
+     for i = 1:model.k
+       ll = ll + priorLogProb(model.inducingPrior, model.X_u(i, :));    
+     end
+   end
+ otherwise
+  % do nothing
+end
+
+
