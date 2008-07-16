@@ -3,7 +3,7 @@ This toolbox stores datasets and gives commands for accessing them.
 Version 0.132
 -------------
 
-Added loader for Spellman data.
+Added loader for Spellman data and Ripley's crabs data. 
 
 Version 0.131
 -------------
