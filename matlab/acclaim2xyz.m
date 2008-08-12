@@ -1,6 +1,17 @@
 function xyz = acclaim2xyz(skel, channels)
 
 % ACCLAIM2XYZ Compute XYZ values given skeleton structure and channels.
+% FORMAT
+% DESC Computes X, Y, Z coordinates given an acclaim skeleton
+% structure and an associated set of channels.
+% ARG skel : a skeleton for the bvh file.
+% ARG channels : the channels for the bvh file.
+% RETURN xyz : the point cloud positions for the skeleton.
+%
+% COPYRIGHT : Neil D. Lawrence, 2006
+%
+% SEEALSO : skel2xyz, bvh2xyz
+
 
 % MOCAP
 

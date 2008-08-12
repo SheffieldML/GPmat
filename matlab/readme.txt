@@ -1,5 +1,12 @@
 This toolbox allows MATLAB to read in and write bvh files and read acclaim files. There are also routines for visualising the files in MATLAB.
 
+Version 0.134 Release Notes
+---------------------------
+
+Bug fix release, a bug in bvh2xyz meant that if a position was included in the bvh skeleton structure for non-root nodes, the xyz positions were computed incorrectly. Thanks to Richard Widgery and Christopher Hulbert for identifying this problem. 
+
+horse.bvh removed due to copyright reasons. To obtain a license for this file, and plenty of other motion capture data of horses, please contact Richard Widgery of Kinetic Impulse.
+
 Version 0.133 Release Notes
 ---------------------------
 

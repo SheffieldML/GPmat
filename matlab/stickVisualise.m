@@ -1,6 +1,15 @@
 function handle = stickVisualise(vals, connect)
 
 % STICKVISUALISE For drawing a stick representation of 3-D data.
+% FORMAT
+% DESC draws a stick man representation in a 3-D plot.
+% ARG vals : the x,y,z channels to update the skeleton with.
+% ARG connect : the connectivity of the skeleton.
+% RETURN handle : a vector of handles to the plotted structure.
+%
+% SEEALSO : stickModify
+%
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
 % MOCAP
 

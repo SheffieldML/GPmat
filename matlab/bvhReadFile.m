@@ -1,6 +1,17 @@
 function [skel, channels, frameLength] = bvhReadFile(fileName)
 
 % BVHREADFILE Reads a bvh file into a tree structure.
+% FORMAT
+% DESC reads a bvh file into a tree structure and obtains the channels.
+% RETURN skel : the tree structure of the skeleton.
+% RETURN channels : the channels of the data read in.
+% RETURN frameLength : the time for each frame.
+% ARG fileName : the name of the file to read in, in bvh format.
+%
+% COPYRIGHT : Neil D. Lawrence, 2005
+%
+% SEEALSO : acclaimReadSkel, bvhPlayFile, bvhWriteFile
+
 
 % MOCAP
 

@@ -1,6 +1,16 @@
 function xyz = bvh2xyz(skel, channels)
 
 % BVH2XYZ Compute XYZ values given structure and channels.
+% FORMAT
+% DESC Computes X, Y, Z coordinates given a BVH skeleton structure and
+% an associated set of channels.
+% ARG skel : a skeleton for the bvh file.
+% ARG channels : the channels for the bvh file.
+% RETURN xyz : the point cloud positions for the skeleton.
+%
+% COPYRIGHT : Neil D. Lawrence, 2005, 2008
+%
+% SEEALSO : acclaim2xyz, skel2xyz
 
 % MOCAP
 
@@ -31,8 +41,8 @@ for i = 1:length(skel.tree)
     xyzStruct(i).xyz = skel.tree(i).offset + thisPosition;
   else
     xyzStruct(i).xyz = ...
-        skel.tree(i).offset*xyzStruct(skel.tree(i).parent).rotation ...
-        + xyzStruct(skel.tree(i).parent).xyz + thisPosition;
+        (skel.tree(i).offset + thisPosition)*xyzStruct(skel.tree(i).parent).rotation ...
+        + xyzStruct(skel.tree(i).parent).xyz;
     xyzStruct(i).rotation = thisRotation*xyzStruct(skel.tree(i).parent).rotation;
     
   end

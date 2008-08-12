@@ -1,6 +1,16 @@
 function stickModify(handle, values, connect)
 
 % STICKMODIFY Helper code for visualisation of a stick man.
+% FORMAT
+% DESC updates a stick man representation in a 3-D plot.
+% ARG handle : a vector of handles to the structure to be updated.
+% ARG vals : the x,y,z channels to update the skeleton with.
+% ARG connect : the connectivity of the skeleton.
+%
+% SEEALSO : stickVisualise
+%
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006
+
 
 % MOCAP
 

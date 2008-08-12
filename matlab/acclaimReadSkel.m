@@ -1,6 +1,14 @@
 function skel = acclaimReadSkel(fileName)
 
 % ACCLAIMREADSKEL Reads an ASF file into a skeleton structure.
+% FORMAT
+% DESC loads skeleton structure from an acclaim skeleton file.
+% ARG fileName : the file name to load in.
+% RETURN skel : the skeleton for the file.
+% 
+% COPYRIGHT : Neil D. Lawrence, 2006
+% 
+% SEEALSO : acclaimLoadChannels
 
 % MOCAP
 
