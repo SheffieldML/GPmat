@@ -64,16 +64,18 @@ omega = sqrt(D/m-alpha^2);
 sigma2 = 2/lfmKern.inverseWidth;% Tamporarly changed by MA
 sigma = sqrt(sigma2);
 
-gamma1 = alpha + j*omega;
-gamma2 = alpha - j*omega;
+if isreal(omega)
+    gamma = alpha + j*omega;
+    ComputeUpsilon1 = lfmComputeUpsilon(gamma,sigma2,t1, t2, 2);
+else
+    gamma1 = alpha + j*omega;
+    gamma2 = alpha - j*omega;
+    ComputeUpsilon1 = lfmComputeUpsilon(gamma2,sigma2,t1, t2, 2);
+    ComputeUpsilon2 = lfmComputeUpsilon(gamma1,sigma2,t1, t2, 2);
+end
 
-% Initialization of vectors and matrices
 
-T1 = size(t1, 1);
-T2 = size(t2, 1);
-Tt = repmat(t1, 1, T2);
-Tt2 = repmat(transpose(t2), T1, 1);
-matGrad = zeros(T1, T2);
+matGrad = zeros(length(t1), length(t2));
 
 % Gradient with respect to m, C and D
 
@@ -92,30 +94,26 @@ for ind = 1:3 % Parameter (m, D or C)
     gradThetaAlpha = 1/(2*m);
     gradThetaOmega = -C/(2*m*sqrt(4*m*D-C^2));
   end
-  
-  gradThetaGamma1 = gradThetaAlpha + j*gradThetaOmega;
-  gradThetaGamma2 = gradThetaAlpha - j*gradThetaOmega;
-  
+    
   % Gradient evaluation
   
     if isreal(omega)
         gamma = alpha + j*omega;
         gradThetaGamma = gradThetaAlpha + j*gradThetaOmega;
         matGrad(:,:) = -(sigma*sqrt(pi)*S/(2*m*omega)) ...
-            * imag(lfmGradientUpsilon(gamma,sigma2,gradThetaGamma,Tt,Tt2) ...
+            * imag(lfmGradientUpsilon(gamma,sigma2,gradThetaGamma,t1, t2, 1) ...
             - (gradThetaM/m + gradThetaOmega/omega) ...
-            * lfmComputeUpsilon(gamma,sigma2,Tt,Tt2));
+            * ComputeUpsilon1);
     else
         gamma1 = alpha + j*omega;
         gamma2 = alpha - j*omega;
         gradThetaGamma1 = gradThetaAlpha + j*gradThetaOmega;
         gradThetaGamma2 = gradThetaAlpha - j*gradThetaOmega;
         matGrad(:,:) = (sigma*sqrt(pi)*S/(j*4*m*omega)) ...
-            * (lfmGradientUpsilon(gamma2,sigma2,gradThetaGamma2,Tt,Tt2) ...
-            - lfmGradientUpsilon(gamma1,sigma2,gradThetaGamma1,Tt,Tt2) ...
+            * (lfmGradientUpsilon(gamma2,sigma2,gradThetaGamma2, t1, t2, 1) ...
+            - lfmGradientUpsilon(gamma1,sigma2,gradThetaGamma1,t1, t2, 1) ...
             - (gradThetaM/lfmKern.mass + gradThetaOmega/omega) ...
-            * (lfmComputeUpsilon(gamma2,sigma2,Tt,Tt2) ...
-            - lfmComputeUpsilon(gamma1,sigma2,Tt,Tt2)));
+            * (ComputeUpsilon1 - ComputeUpsilon2));
     end
 
     g1(ind) = sum(sum(matGrad.*covGrad));
@@ -127,16 +125,15 @@ end
 if isreal(omega)
     gamma = alpha + j*omega;
     matGrad(:,:) = -(sqrt(pi)*S/(2*m*omega)) ...
-        * imag(lfmComputeUpsilon(gamma,sigma2,Tt,Tt2) ...
-        + sigma*lfmGradientSigmaUpsilon(gamma,sigma2,Tt,Tt2));
+        * imag(ComputeUpsilon1 ...
+        + sigma*lfmGradientSigmaUpsilon(gamma,sigma2,t1, t2, 1));
 else
     gamma1 = alpha + j*omega;
     gamma2 = alpha - j*omega;
     matGrad(:,:) = (sqrt(pi)*S/(j*4*m*omega)) ...
-        *(lfmComputeUpsilon(gamma2,sigma2,Tt,Tt2) ...
-        - lfmComputeUpsilon(gamma1,sigma2,Tt,Tt2) ...
-        + sigma*(lfmGradientSigmaUpsilon(gamma2,sigma2,Tt,Tt2) ...
-        - lfmGradientSigmaUpsilon(gamma1,sigma2,Tt,Tt2)));
+        *(ComputeUpsilon1 - ComputeUpsilon2 ...
+        + sigma*(lfmGradientSigmaUpsilon(gamma2,sigma2,t1,t2,1) ...
+        - lfmGradientSigmaUpsilon(gamma1,sigma2,t1,t2,1)));
 end;
 
 % g1(4) = sum(sum(matGrad.*Kxf.*covGrad))*(-(sigma^3)/4); % temporarly introduced by MA
@@ -146,15 +143,14 @@ g2(1) = g1(4);
 % Gradient with respect to S
 
 if isreal(omega)
-    gamma = alpha + j*omega;
+    % gamma = alpha + j*omega;
     matGrad(:,:) = -(sqrt(pi)*sigma/(2*m*omega)) ...
-        * imag(lfmComputeUpsilon(gamma,sigma2,Tt,Tt2));
+        * imag(ComputeUpsilon1);
 else
-    gamma1 = alpha + j*omega;
-    gamma2 = alpha - j*omega;
+    %gamma1 = alpha + j*omega;
+    %gamma2 = alpha - j*omega;
     matGrad(:,:) = (sqrt(pi)*sigma/(j*4*m*omega)) ...
-        *(lfmComputeUpsilon(gamma2,sigma2,Tt,Tt2) - ...
-          lfmComputeUpsilon(gamma1,sigma2,Tt,Tt2));
+        *(ComputeUpsilon1 - ComputeUpsilon2);
 end;
 
 g1(5) = sum(sum(matGrad.*covGrad));

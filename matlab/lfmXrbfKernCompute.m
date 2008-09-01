@@ -49,19 +49,15 @@ sigma = sqrt(sigma2);
 alpha = lfmKern.damper./(2*lfmKern.mass);
 omega = sqrt(lfmKern.spring./lfmKern.mass - alpha.*alpha);
 
-% Creation of the time matrices
-Tt1 = repmat(t1,1,size(t2, 1));
-Tt2 = repmat(t2',size(t1, 1),1);
-
 % Kernel evaluation
 if isreal(omega)
     gamma = alpha + j*omega;
     K = -(sqrt(pi)*sigma*lfmKern.sensitivity/(2*lfmKern.mass*omega)) ...
-        *imag(lfmComputeUpsilon(gamma,sigma2,Tt1,Tt2));
+        *imag(lfmComputeUpsilon(gamma,sigma2,t1, t2, 2));
 else
     gamma1 = alpha + j*omega;
     gamma2 = alpha - j*omega;
     K(:,:) = (sqrt(pi)*sigma*lfmKern.sensitivity/(j*4*lfmKern.mass*omega)) ...
-        *(lfmComputeUpsilon(gamma2,sigma2,Tt1,Tt2) - ...
-          lfmComputeUpsilon(gamma1,sigma2,Tt1,Tt2));
+        *(lfmComputeUpsilon(gamma2,sigma2,t1, t2, 2 ) - ...
+          lfmComputeUpsilon(gamma1,sigma2,t1, t2, 2));
 end
