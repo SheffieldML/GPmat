@@ -24,7 +24,7 @@ function [Y, Phi] = modelOut(model, X, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 %
-% MODIFICATIONS : Cark Henrik Ek, 2007
+% MODIFICATIONS : Cark Henrik Ek, 2008
 
 % MLTOOLS
 
@@ -33,4 +33,7 @@ if nargout > 1
   [Y, Phi] = fhandle(model, X, varargin{:});
 else
   Y = fhandle(model, X, varargin{:});
+end
+if(isfield(model,'indexOut')&&~isempty(model.indexOut))
+  Y(:,setdiff(1:1:size(Y,2),model.indexOut)) = NaN;
 end

@@ -16,7 +16,8 @@ function g = kbrOutputGrad(model, X, dim)
 % SEEALSO : kbrCreate, kbrderiv
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
-
+%
+% MODIFICATIONS : Carl Henrik Ek, 2008
 
 % MLTOOLS
 

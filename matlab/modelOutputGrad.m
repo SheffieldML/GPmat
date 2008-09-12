@@ -16,7 +16,7 @@ function g = modelOutputGrad(model, X, dim)
 % DESC gives the gradients of the outputs from the model with
 % respect to the parameters for a given set of inputs.
 % ARG model : the model structure for which gradients are computed.
-% ARG X : input locations where gradients are to be computed.
+% ARG X : input locations where gradients are to be comxfputed.
 % ARG dim : the dimension of the model for which gradients are required.
 % RETURN g : gradients of the model output with respect to the
 % model parameters for the given input locations. The size of the

@@ -11,7 +11,7 @@ function model = modelOptimise(model, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
-% MODIFICATIONS : Cark Henrik Ek, 2007
+% MODIFICATIONS : Carl Henrik Ek, 2007
  
 % MLTOOLS
 

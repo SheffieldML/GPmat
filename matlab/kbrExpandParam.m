@@ -12,7 +12,9 @@ function model = kbrExpandParam(model, params,dim);
 % SEEALSO : kbrunpak, kbrCreate, kbrExtractParam
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
-
+%
+% MODIFICATIONS : Carl Henrik Ek, 2008
+%
 % MLTOOLS
 
 if(nargin<3)
