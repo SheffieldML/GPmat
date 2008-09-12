@@ -61,7 +61,8 @@ function [gParam, gX_u, gX, g_beta] = gpLogLikeGradients(model, X, M, X_u)
 % SEEALSO : gpLogLikelihood, modelLogLikeGradients, fgplvmLogLikeGradients
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2007
-
+%
+% MODIFICATIONS : Carl Henrik Ek, 2008
 
 % GP
 
