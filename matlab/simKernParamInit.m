@@ -41,7 +41,7 @@ kern.delay = 0;
 kern.decay = 1;
 kern.initVal = 1;
 kern.variance = 1;
-kern.inverseWidth = 1;
+kern.inverseWidth = rand;
 kern.nParams = 3;
 
 kern.transforms.index = [1 2 3];
