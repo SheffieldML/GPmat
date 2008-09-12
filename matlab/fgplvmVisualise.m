@@ -119,7 +119,11 @@ else
 end
 visualiseInfo.visualiseFunction = str2func(visualiseFunction);
 visHandle = visualiseInfo.visualiseFunction(visData, varargin{:});
-set(visHandle, 'erasemode', 'xor')
+if(iscell(visHandle))
+  set(visHandle{1}, 'erasemode', 'xor')
+else
+  set(visHandle, 'erasemode', 'xor')
+end
 colormap gray
 
 % Pass the data to visualiseInfo

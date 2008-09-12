@@ -14,8 +14,14 @@ function gX = gpDynamicsSequenceLogLikeGradient(model, Xraw)
 % SEEALSO : gpDynamicsSequenceLogLikelihood, fgplvmOptimiseSequence, fgplvmSequenceLogLikeGradient
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
+%
+% MODIFICATIONS : Carl Henrik Ek, 2008
 
 % FGPLVM
+
+if(isfield(model,'indexIn')&&~isempty(model.indexIn)&&length(model.indexIn)~=size(Xraw,2))
+  Xraw = Xraw(:,model.indexIn);
+end
 
 ind_in = 1:size(Xraw, 1)-1;
 ind_out = 2:size(Xraw, 1);

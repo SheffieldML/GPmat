@@ -11,11 +11,15 @@ function model = fgplvmAddDynamics(model, type, varargin)
 % SEEALSO : modelCreate
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2007
-
+%
+% MODIFICATIONS : Carl Henrik Ek, 2008
+%
 % FGPLVM
 
 type = [type 'Dynamics'];
 model.dynamics = modelCreate(type, model.q, model.q, model.X, varargin{:});
 params = fgplvmExtractParam(model);
+model.dynamics.numParams = length(modelExtractParam(model.dynamics));
+model.numParams = model.numParams + model.dynamics.numParams;
 model = fgplvmExpandParam(model, params);
 

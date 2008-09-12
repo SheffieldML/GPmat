@@ -25,6 +25,9 @@ function model = gpTimeDynamicsCreate(q, d, latentVals, options, varargin)
 % SEEALSO : gpCreate, gpDynamicsCreate, gpTimeDynamicsLatentGradients, gpTimeDynamicsSetLatentValues, gpTimeDynamicsLogLikelihood
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
+%
+% MODIFICATIONS : Carl Henrik Ek, 2008
+%
 
 % FGPLVM
 
@@ -64,7 +67,7 @@ startVal = 1;
 for i = 1:length(seq)
   endVal = seq(i);
   startPoints = [startPoints; latentVals(startVal:endVal-1, :)];
-  t2 = [t2; t(startVal+1:endVal, :)];
+  t2 = [t2; t(startVal+1:endVal)];
   y = [y; latentVals(startVal+1:endVal, :)];
   startVal = endVal + 1;
 end

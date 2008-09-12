@@ -23,7 +23,9 @@ if nargin < 3
   t = [2:size(latentValsRaw, 1)]';
   warning('No time inputs provided for gpTimeDynamicsSequenceLogLikelihood')
 end
-
+if(isfield(model,'indexIn')&&~isempty(model.indexIn))
+  latentValsRaw = latentValsRaw(:,model.indexIn);
+end
 
 ind_in = 1:size(latentValsRaw, 1)-1;
 ind_out = 2:size(latentValsRaw, 1);

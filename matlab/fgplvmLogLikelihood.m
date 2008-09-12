@@ -11,7 +11,9 @@ function ll = fgplvmLogLikelihood(model)
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 %
 % SEEALSO : gpLogLikelihood, fgplvmCreate
-
+%
+% MODIFICATIONS : Carl Henrik Ek, 2008
+%
 % FGPLVM
 
  

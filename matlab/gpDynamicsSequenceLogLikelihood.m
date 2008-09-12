@@ -14,8 +14,14 @@ function ll = gpDynamicsSequenceLogLikelihood(model, Xraw)
 % SEEALSO : fgplvmSequenceLogLikelihood, gpDynamicsCreate
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
+%
+% MODIFICATIONS : Carl Henrik Ek, 2008
 
 % FGPLVM
+
+if(isfield(model,'indexIn')&&~isempty(model.indexIn)&&length(model.indexIn)~=size(Xraw,2))
+  Xraw = Xraw(:,model.indexIn);
+end
 
 startVal=1;
 X = Xraw(1:end-1, :);

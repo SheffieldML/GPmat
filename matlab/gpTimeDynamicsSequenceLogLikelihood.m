@@ -16,6 +16,8 @@ function ll = gpTimeDynamicsSequenceLogLikelihood(model, latentValsRaw, t)
 % SEEALSO : fgplvmSequenceLogLikelihood, gpTimeDynamicsCreate
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
+%
+% MODIFICATIONS : Carl Henrik Ek, 2008
 
 % FGPLVM
 
@@ -25,6 +27,9 @@ if nargin < 3
   warning('No time inputs provided for gpTimeDynamicsSequenceLogLikelihood')
 end
 startVal=1;
+if(isfield(model,'indexIn')&&~isempty(model.indexIn))
+  latentValsRaw = latentValsRaw(:,model.indexIn);
+end
 latentVals = latentValsRaw(1:end-1, :);
 
 if model.diff

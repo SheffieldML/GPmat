@@ -12,6 +12,8 @@ function model = gpTimeDynamicsSetLatentValues(model, X)
 % SEEALSO : gpTimeDynamicsCreate, gpTimeDynamicsLogLikelihood
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
+%
+% MODIFICATIONS : Carl Henrik Ek, 2008
 
 % FGPLVM
 
@@ -25,10 +27,24 @@ for i = 1:length(model.seq)
   startVal = endVal + 1;
 end
 
-if model.diff
-  model.y = X(ind_out, :) - X(ind_in, :);
+if(isfield(model,'indexIn')&&~isempty(model.indexIn))
+  model.X = X(ind_in,model.indexIn);
 else
-  model.y = X(ind_out, :);
+  model.X = X(ind_in, :);
+end
+
+if(isfield(model,'indexOut')&&~isempty(model.indexOut))
+  if(model.diff)
+    model.y = X(ind_out,model.indexOut) - X(ind_in,model.indexOut);
+  else
+    model.y = X(ind_out,model.indexOut);
+  end
+else
+  if model.diff
+    model.y = X(ind_out, :) - X(ind_in, :);
+  else
+    model.y = X(ind_out, :);
+  end
 end
 
 model.m = gpComputeM(model);
