@@ -1,4 +1,4 @@
-function lvmPrintPlot(model, lbls, capName, experimentNo)
+function lvmPrintPlot(model, lbls, capName, experimentNo, colour)
 
 % LVMPRINTPLOT Print latent space for learnt model.
 % FORMAT 
@@ -14,7 +14,14 @@ function lvmPrintPlot(model, lbls, capName, experimentNo)
 
 % MLTOOLS
 
-lvmScatterPlot(model, lbls);
+if nargin < 5
+  colour = 0;
+end
+if colour
+  lvmScatterPlotColor(model, lbls);
+else
+  lvmScatterPlot(model, lbls);
+end
 modelType = model.type;
 modelType(1) = upper(modelType(1));
 fileName = ['dem' capName modelType num2str(experimentNo)];

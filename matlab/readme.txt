@@ -3,7 +3,7 @@ This toolbox provides various machine learning tools, either through wrapping ot
 Version 0.1291
 --------------
 
-Changes to modelOutputGrad.m, modelOut.m, kbrOutputGrad.m, kbrExpandParam.m, modelOptimise.m to allow compatibility with SGPLVM and NCCA toolboxes.
+Changes to modelOutputGrad.m, modelOut.m, kbrOutputGrad.m, kbrExpandParam.m, modelOptimise.m to allow compatibility with SGPLVM and NCCA toolboxes. Added a preliminary coding of LLE.
 
 
 Version 0.129
