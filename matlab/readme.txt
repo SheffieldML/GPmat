@@ -1,5 +1,11 @@
 The FGPLVM toolbox is a new implementation of the GP-LVM that uses the Pseudo-Input method of Snelson and Ghahramani (NIPS 2005) for sparsification and efficiency improvements. 
 
+Version 0.153
+-------------
+
+Changes to allow compatibility with SGPLVM and NCCA toolboxes.
+
+
 Version 0.152
 -------------
 
