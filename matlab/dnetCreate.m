@@ -3,12 +3,12 @@ function model = dnetCreate(inputDim, outputDim, Y, options)
 % DNETCREATE Density network model.
 % FORMAT
 % DESC creates a structure for a density network.
-% ARG inputDimension : dimension of input data.
-% ARG outputDim : dimension of target data.
+% ARG inputDimension : dimension of latent data.
+% ARG outputDim : dimension of observed data.
 % ARG Y : the data to be modelled in design matrix format (as many
 % rows as there are data points).
 % ARG options : options structure as returned by dnetCreate.
-% RETURN model : model structure containing the neural network
+% RETURN model : model structure containing the density network
 % specified.
 % 
 % COPYRIGHT : Neil D. Lawrence, 2008

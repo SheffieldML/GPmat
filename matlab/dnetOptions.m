@@ -12,9 +12,10 @@ function options = dnetOptions(mappingType, latentPoints, mappingOptions)
 % ARG latentPoints : number of latent points to use. If give as a vector,
 % layout is assumed to be a grid with rows and columns given by the vector.
 % ARG mappingOptions : the options for the mapping model.
-% RETURN options : default options structure for density network with the specified number of hidden units.
+% RETURN options : default options structure for density network with the
+% specified number of hidden units.
 %
-% SEEALSO : dnetCreate, mlpCreate, rbfCreate, kbrCreate
+% SEEALSO : dnetCreate, modelOptions
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 

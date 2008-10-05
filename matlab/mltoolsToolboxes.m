@@ -6,4 +6,5 @@ importLatest('netlab');
 importLatest('mvu');
 importLatest('lmvu');
 importLatest('lle');
+importLatest('jdqr');
 importLatest('isomap');

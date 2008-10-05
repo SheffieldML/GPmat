@@ -32,27 +32,28 @@ end
 axisHand = gca;
 returnVal = [];
 nextPlot = get(axisHand, 'nextplot');
-if ~isempty(lbl)
-  for i = 1:size(X, 1)
-    if i == 2
-      set(axisHand, 'nextplot', 'add');
-    end
+for i = 1:size(X, 1)
+  if i == 2
+    set(axisHand, 'nextplot', 'add');
+  end
+  if ~isempty(lbl)
     labelNo = find(lbl(i, :));
-    try 
-      returnVal = [returnVal; plot(X(i, 1), X(i, 2), symbol{labelNo})];
-    catch
-      if strcmp(lasterr, 'Index exceeds matrix dimensions.')
-	error(['Only ' num2str(length(symbol)) ' labels supported (it''s easy to add more!)'])
+  else
+    labelNo = 1;
+  end
+  try 
+    returnVal = [returnVal; plot(X(i, 1), X(i, 2), symbol{labelNo})];
+    if connect
+      if i>1
+        line([X(i-1, 1) X(i, 1)], [X(i-1, 2) X(i, 2)]);
       end
     end
-  end
-  set(axisHand, 'nextplot', nextPlot);
-else
-  if connect
-    returnVal = plot(X(:, 1), X(:, 2), 'rx-');
-  else
-    returnVal = plot(X(:, 1), X(:, 2), 'rx');
+  catch
+    if strcmp(lasterr, 'Index exceeds matrix dimensions.')
+      error(['Only ' num2str(length(symbol)) ' labels supported (it''s easy to add more!)'])
+    end
   end
 end
+set(axisHand, 'nextplot', nextPlot);
 set(returnVal, 'markersize', 10);
 set(returnVal, 'linewidth', 2);
