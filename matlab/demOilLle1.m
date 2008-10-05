@@ -13,3 +13,5 @@ lvmScatterPlot(model, lbls);
 if exist('printDiagram') & printDiagram
   lvmPrintPlot(model, lbls, 'Oil', 1);
 end
+
+errors = lvmNearestNeighbour(model, lbls);
