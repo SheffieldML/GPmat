@@ -1,6 +1,6 @@
 function [h, compUp] =  lfmComputeH3(gamma1_p, gamma1_m, sigma2, t1,t2,preFactor,...
     mode, term)
-% LFMCOMPUTEH Helper function for computing part of the LFM kernel.
+% LFMCOMPUTEH3 Helper function for computing part of the LFM kernel.
 % FORMAT
 % DESC computes a portion of the LFM kernel.
 % ARG gamma1 : Gamma value for first system.
@@ -14,8 +14,6 @@ function [h, compUp] =  lfmComputeH3(gamma1_p, gamma1_m, sigma2, t1,t2,preFactor
 % COPYRIGHT : Mauricio Alvarez, 2008
 %
 % MODIFICATIONS : Neil D. Lawrence, 2007
-%
-%
 %
 % SEEALSO : lfmKernParamInit, lfmXlfmKernCompute
 

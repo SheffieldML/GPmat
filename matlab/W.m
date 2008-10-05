@@ -1,6 +1,6 @@
 function [W,failure] = W(Z)
 
-% function [W,failure] = W(Z)
+% W function [W,failure] = W(Z)
 %
 % This function computes the complex scaled complementary error function
 % also known as the FADDEEVA function
@@ -15,8 +15,7 @@ function [W,failure] = W(Z)
 %
 % Translated from F77 to MatLab by Thomas Winiecki 10/05/2006.
 
-% LFM
-
+% 
 % some constants to prevent numerical overflows
 RMAX     = 1e308;
 RMAXREAL = sqrt(RMAX);

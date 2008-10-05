@@ -1,6 +1,6 @@
 function Kc = kernelCenter(K)
 
-% KERNCENTER Attempts to Center Kernel Matrix
+% KERNELCENTER Attempts to Center Kernel Matrix
 % FORMAT
 % DESC returns a centered kernel matrix
 % ARG kernel matrix

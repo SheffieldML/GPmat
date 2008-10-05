@@ -1,6 +1,6 @@
 function  [h, compUp] =  lfmComputeH4(gamma1_p, gamma1_m, sigma2, t1, preFactor, preExp,...
     mode, term )
-% LFMCOMPUTEH Helper function for computing part of the LFM kernel.
+% LFMCOMPUTEH4 Helper function for computing part of the LFM kernel.
 % FORMAT
 % DESC computes a portion of the LFM kernel.
 % ARG gamma1 : Gamma value for first system.
@@ -11,7 +11,9 @@ function  [h, compUp] =  lfmComputeH4(gamma1_p, gamma1_m, sigma2, t1, preFactor,
 % ARG mode: indicates in which way the vectors t1 and t2 must be transposed
 % RETURN h : result of this subcomponent of the kernel for the given values.
 %
-% COPYRIGHT : David Luengo, 2007, Mauricio Alvarez, 2008
+% COPYRIGHT : David Luengo, 2007
+%
+% COPYRIGHT : Mauricio Alvarez, 2008
 %
 % MODIFICATIONS : Neil D. Lawrence, 2007
 %

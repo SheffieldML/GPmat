@@ -17,9 +17,9 @@ function    g = lfmGradientH(gamma1, gamma2, sigma2, gradThetaGamma, t1,t2,...
 % RETURN g : Gradient of the function with respect to the desired
 % parameter.
 %
-% COPYRIGHT : David Luengo, 2007, 2008, Mauricio Alvarez, 2008
+% COPYRIGHT : David Luengo, 2007, 2008
 %
-% MODIFICATIONS : Mauricio Alvarez, 2008
+% COPYRIGHT : Mauricio Alvarez, 2008
 %
 % SEEALSO : lfmKernGradient, lfmXlfmKernGradient, lfmGradientUpsilon
 

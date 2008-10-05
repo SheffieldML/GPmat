@@ -1,6 +1,6 @@
 function    g = lfmGradientSigmaH3(gamma1, gamma2, sigma2, t1, t2, preFactor, mode, term)
 
-% LFMGRADIENTSIGMAH Gradient of the function h_i(z) with respect \sigma.
+% LFMGRADIENTSIGMAH3 Gradient of the function h_i(z) with respect \sigma.
 % FORMAT
 % DESC Computes the gradient of the function h_i(z) with respect to the
 % length-scale of the input "force", \sigma.

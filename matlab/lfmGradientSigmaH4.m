@@ -1,7 +1,7 @@
 function    g = lfmGradientSigmaH4(gamma1, gamma2, sigma2, t1, ...
     preFactor, preExp, mode, term)
 
-% LFMGRADIENTSIGMAH Gradient of the function h_i(z) with respect \sigma.
+% LFMGRADIENTSIGMAH4 Gradient of the function h_i(z) with respect \sigma.
 % FORMAT
 % DESC Computes the gradient of the function h_i(z) with respect to the
 % length-scale of the input "force", \sigma.
@@ -13,10 +13,10 @@ function    g = lfmGradientSigmaH4(gamma1, gamma2, sigma2, t1, ...
 % ARG mode: indicates in which way the vectors t1 and t2 must be transposed
 % RETURN g : Gradient of the function with respect to \sigma.
 %
-% COPYRIGHT : David Luengo, 2007, 2008, Mauricio Alvarez, 2008
+% COPYRIGHT : David Luengo, 2007, 2008
 %
-% MODIFICATIONS : Mauricio Alvarez, 2008
-
+% COPYRIGHT : Mauricio Alvarez, 2008
+%
 % SEEALSO : lfmKernGradient, lfmXlfmKernGradient, lfmGradientSigmaUpsilon
 
 % KERN

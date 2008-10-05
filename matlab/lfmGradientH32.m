@@ -1,6 +1,7 @@
 function g = lfmGradientH32(preFactor, gradThetaGamma, compUpsilon1, ...
     compUpsilon2, mode, term)
-% LFMGRADIENTH Gradient of the function h_i(z) with respect to some of the
+
+% LFMGRADIENTH32 Gradient of the function h_i(z) with respect to some of the
 % hyperparameters of the kernel: m_k, C_k, D_k, m_r, C_r or D_r.
 % FORMAT
 % DESC Computes the gradient of the function h_i(z) with respect to some of
@@ -16,9 +17,9 @@ function g = lfmGradientH32(preFactor, gradThetaGamma, compUpsilon1, ...
 % RETURN g : Gradient of the function with respect to the desired
 % parameter.
 %
-% COPYRIGHT : David Luengo, 2007, 2008, Mauricio Alvarez, 2008
+% COPYRIGHT : David Luengo, 2007, 2008
 %
-% MODIFICATIONS : Mauricio Alvarez, 2008
+% COPYRIGHT : Mauricio Alvarez, 2008
 %
 % SEEALSO : lfmKernGradient, lfmXlfmKernGradient, lfmGradientUpsilon
 
