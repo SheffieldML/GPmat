@@ -33,6 +33,8 @@ function [g1, g2] = simXrbfKernGradient(simKern, rbfKern, t1, t2, covGrad)
 % SEEALSO : multiKernParamInit, multiKernCompute, simKernParamInit, rbfKernParamInit
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
+%
+% MODIFICATIONS : Antti Honkela, 2008
 
 % KERN
 
@@ -49,6 +51,12 @@ end
 if simKern.inverseWidth ~= rbfKern.inverseWidth
   error('Kernels cannot be cross combined if they have different inverse widths.')
 end
+% The SIM kernel implicitly assumes the variance of the RBF kernel
+% for f(t) to be 1. To avoid confusion, the same constraint is
+% enforced here as well.
+if rbfKern.variance ~= 1
+  error('SIM kernel can only be cross combined with an RBF kernel with variance 1.')
+end
 
 k = simXrbfKernCompute(simKern, rbfKern, arg{:});
 dim1 = size(t1, 1);
@@ -59,22 +67,21 @@ diffT = (t1Mat - t2Mat);
 sigma = sqrt(2/simKern.inverseWidth);
 sigma2 = sigma*sigma;
 C_i = sqrt(simKern.variance);
-C_j = sqrt(rbfKern.variance);
 D_i = simKern.decay;
 
 part2 = exp(-t2Mat.*t2Mat/sigma2-t1Mat*D_i)...
         -exp(-diffT.*diffT/sigma2);
 
 dk_dD = sum(sum((k.*(0.5*sigma2*D_i - diffT) ...
-                 + 0.5*C_i*C_j*sigma2*part2).*covGrad));
+                 + 0.5*C_i*sigma2*part2).*covGrad));
 
 dk_dsigma = sum(sum((k.*(1/sigma+0.5*sigma*D_i*D_i) ...
-                     + C_i*C_j*sigma* ...
+                     + C_i*sigma* ...
                      ((-diffT/sigma2-D_i/2).*exp(-diffT.*diffT/sigma2)...
                       +(-t2Mat/sigma2+D_i/2).*exp(-t2Mat.*t2Mat/sigma2-t1Mat*D_i))).*covGrad));
 
 dk_dC = sum(sum(k.*covGrad))/C_i;
-dk_dRbfVariance = 0.5*sum(sum(k.*covGrad))/rbfKern.variance;
+dk_dRbfVariance = 0;
 
 dk_dinvWidth = -0.5*sqrt(2)/(simKern.inverseWidth* ...
                              sqrt(simKern.inverseWidth))*dk_dsigma;

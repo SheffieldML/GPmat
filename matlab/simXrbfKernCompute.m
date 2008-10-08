@@ -25,6 +25,8 @@ function K = simXrbfKernCompute(simKern, rbfKern, t1, t2)
 % SEEALSO : multiKernParamInit, multiKernCompute, simKernParamInit, rbfKernParamInit
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
+%
+% MODIFICATIONS : Antti Honkela, 2008
 
 % KERN
 
@@ -37,6 +39,13 @@ end
 if simKern.inverseWidth ~= rbfKern.inverseWidth
   error('Kernels cannot be cross combined if they have different inverse widths.')
 end
+% The SIM kernel implicitly assumes the variance of the RBF kernel
+% for f(t) to be 1. To avoid confusion, the same constraint is
+% enforced here as well.
+if rbfKern.variance ~= 1
+  error('SIM kernel can only be cross combined with an RBF kernel with variance 1.')
+end
+
 dim1 = size(t1, 1);
 dim2 = size(t2, 1);
 t1 = t1 - simKern.delay;
@@ -75,4 +84,4 @@ lnPart1(I3) = log(- exp(real(halfSigmaD_i + t2Mat(I3)/sigma).^2 ...
 warning(warnState.state, 'MATLAB:log:logOfZero');
 K = exp(halfSigmaD_i*halfSigmaD_i - simKern.decay*diffT + lnPart1);
 
-K = 0.5*sqrt(simKern.variance)*sqrt(rbfKern.variance)*K*sqrt(pi)*sigma;
+K = 0.5*sqrt(simKern.variance)*K*sqrt(pi)*sigma;
