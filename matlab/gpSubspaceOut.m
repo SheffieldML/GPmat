@@ -1,6 +1,8 @@
 function y = gpSubspaceOut(model,x)
 
 % GPSUBSPACEOUT
+%
+% COPYRIGHT : Carl Henrik Ek, 2008
 
 % GP 
   
