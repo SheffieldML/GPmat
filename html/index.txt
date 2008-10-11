@@ -13,6 +13,10 @@
 RELEASEINFORMATION
 
 
+<h2>Release Notes</h2>
+
+<h3>Current Release</h3>
+
 Changes to allow compatibility with SGPLVM and NCCA toolboxes.
 
 
@@ -234,6 +238,7 @@ process dynamics to fully recreate the data set. There results are given in thei
 <td>Scaled NN</td><td align="right">22.2</td><td align="right">20.5</td>
 </tr>
 </table>
+</center>
 <p>Finally we show a plot of reconstructions of two of the angles in the data.
 
 <p><center><img src="demCmu35gplvmLegReconstruct1_8.png" width="50%"><img src="demCmu35gplvmLegReconstruct1_9.png" width="50%"></center>

@@ -1,1 +1,0 @@
-function Y = fgplvmPointOptimiseUnobserved(model,X,void,display,iters)

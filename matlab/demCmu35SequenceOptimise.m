@@ -1,4 +1,4 @@
-% DEMCMU35ANIMATE Animate reconstructed right leg and body.
+% DEMCMU35SEQUENCEOPTIMISE 
 
 % FGPLVM
 

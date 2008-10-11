@@ -1,4 +1,4 @@
-% DEMSTICK1 Model the stick man using an RBF kernel.
+% DEMSTICKFGPLVM1 Model the stick man using an RBF kernel.
 
 % FGPLVM
 
