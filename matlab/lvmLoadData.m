@@ -353,6 +353,10 @@ switch dataset
   load([baseDir 'swiss_roll_data']);
   Y = X_data(:, 1:1000)';
 
+ case 'swissRollFull'
+  load([baseDir 'swiss_roll_data']);
+  Y = X_data(:, 1:3000)';
+
   %/~
  case 'fourWalks'
   try 

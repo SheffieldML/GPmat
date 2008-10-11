@@ -1,5 +1,10 @@
 This toolbox stores datasets and gives commands for accessing them.
 
+Version 0.133
+-------------
+
+Added variants of swiss roll data.
+
 Version 0.132
 -------------
 

@@ -11,6 +11,10 @@
 RELEASEINFORMATION
 
 
+Added some variants of the swiss roll &quot;data&guot;.
+
+<h4>Version 0.132</h4>
+
 <p>Added loader for Spellman data and the crabs data from Ripley's book. You will need the Spellman data from <a href="http://genome-www.stanford.edu/cellcycle/data/rawdata/combined.txt">here</a> and the crabs data from <a href="http://www.stats.ox.ac.uk/pub/PRNN/crabs.dat">here</a>.
 
 <h4>Version 0.131</h4>

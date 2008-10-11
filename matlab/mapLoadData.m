@@ -39,7 +39,7 @@ baseDir = datasetsDirectory;
 dirSep = filesep;
 semiSup = false;
 
-if length(dataset)>5 & strcmp(dataset(1:6), 'gunnar')
+if length(dataset)>5 && strcmp(dataset(1:6), 'gunnar')
   % Data set is one of Gunnar Raetsch's
   ind = find(dataset==':');
   dataSetName = dataset(ind(1)+1:ind(2)-1);
@@ -50,7 +50,7 @@ if length(dataset)>5 & strcmp(dataset(1:6), 'gunnar')
   XTest=load([filebase '_test_data_' num2str(dataSetNum) '.asc']);
   yTest=load([filebase '_test_labels_' num2str(dataSetNum) '.asc']);
   return
-elseif length(dataset)>3 & strcmp(dataset(1:4), 'semi')
+elseif length(dataset)>3 && strcmp(dataset(1:4), 'semi')
   % Data set is semi-supervised learning.
   ind = find(dataset==':');
   labProb = str2num(dataset(ind(2)+1:end));
@@ -398,7 +398,7 @@ switch dataset
       pPlus = cumGaussian(-u-a/2);
       p =rand(size(u));
       indMinus = find(p<pMinus);
-      indPlus = find(p>pMinus & p<pMinus+pPlus);
+      indPlus = find(p>pMinus && p<pMinus+pPlus);
       indNone = find(p>pMinus+pPlus);
       y = zeros(N, 1);
       y(indPlus) = 1;
