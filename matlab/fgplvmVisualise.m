@@ -18,6 +18,8 @@ function fgplvmVisualise(model, YLbls, ...
 % SEEALSO : lvmScatterPlot, lvmResultsDynamic
 %
 % COPYRIGHT : Neil D. Lawrence, 2003, 2004, 2005, 2006, 2008
+%
+% MODIFICATIONS : Carl Henrik Ek, 2008
 
 % FGPLVM
 

@@ -16,6 +16,8 @@ function gX = gpTimeDynamicsSequenceLogLikeGradient(model, latentValsRaw, t)
 % SEEALSO : gpDynamicsSequenceLogLikelihood, fgplvmOptimiseSequence, fgplvmSequenceLogLikeGradient
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
+% COPYRIGHT : Carl Henrik Ek, 2008
+%
 
 % FGPLVM
 

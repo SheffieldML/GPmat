@@ -1,5 +1,11 @@
 function out = fgplvmPointSampleLogLikelihood(model,y,N,display)
 
+% FGPLVMPOINTSAMPLELOGLIKELIHOOD
+%
+% COPYRIGHT : Carl Henrik Ek, 2008
+
+% FGPLVM
+
 if(nargin<4)
   display = true;
   if(nargin<3)

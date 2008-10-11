@@ -11,7 +11,7 @@ function ll = gpDynamicsLogLikelihood(model)
 %
 % COPYRIGHT : Neil D. Lawrence and Carl Henrik Ek, 2006
 %
-% MODIFICATIONS : Carl Henrik Ek, 2008
+% COPYRIGHT : Carl Henrik Ek, 2008
 %
 
 % FGPLVM

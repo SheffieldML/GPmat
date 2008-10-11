@@ -15,7 +15,7 @@ function gX = gpDynamicsSequenceLogLikeGradient(model, Xraw)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
-% MODIFICATIONS : Carl Henrik Ek, 2008
+% COPYRIGHT : Carl Henrik Ek, 2008
 
 % FGPLVM
 
