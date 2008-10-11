@@ -17,7 +17,7 @@ RELEASEINFORMATION
 
 <h4>Release 0.133</h4>
 
-<p>This latest release is a bug fix release, to deal with bugs in mocapResultsCppBvh, thanks to Cedric Vanaken for pointing out the problem.
+<p>This release is a bug fix release, to deal with bugs in mocapResultsCppBvh, thanks to Cedric Vanaken for pointing out the problem.
 
 <h4>Release 0.132</h4>
 
@@ -29,7 +29,7 @@ RELEASEINFORMATION
 
 <h4>Release 0.13</h4>
 
-<p>New in this release is the ability to lad data in the acclaim ASF/AMC format. See the example below for details.
+<p>New in this release is the ability to load data in the acclaim ASF/AMC format. See the example below for details.
 
 
 <h2>Examples</h2>
