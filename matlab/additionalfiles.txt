@@ -3,7 +3,7 @@ dir: html
 ~/mlprojects/mltools/html/index.html
 ~/mlprojects/mltools/html/demOilLle1.png
 ~/mlprojects/mltools/html/demOilLle2.png
-~/mlprojects/mltools/html/demOSwissRollLle1.png
-~/mlprojects/mltools/html/demOSwissRollLle2.png
-~/mlprojects/mltools/html/demOSwissRollFullLle1.png
-~/mlprojects/mltools/html/demOSwissRollFullLle2.png
+~/mlprojects/mltools/html/demSwissRollLle1.png
+~/mlprojects/mltools/html/demSwissRollLle2.png
+~/mlprojects/mltools/html/demSwissRollFullLle1.png
+~/mlprojects/mltools/html/demSwissRollFullLle2.png

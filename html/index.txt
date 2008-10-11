@@ -10,7 +10,9 @@ The main objective of this toolbox is to integrate several machine learning meth
 
 RELEASEINFORMATION
 
-Changes to modelOutputGrad.m, modelOut.m, kbrOutputGrad.m, kbrExpandParam.m, modelOptimise.m to allow compatibility with SGPLVM and NCCA toolboxes.
+Changes to modelOutputGrad.m, modelOut.m, kbrOutputGrad.m, kbrExpandParam.m, modelOptimise.m to allow compatibility with SGPLVM and NCCA toolboxes. Added a preliminary coding of LLE. 
+
+Note that to run the LLE code you will need to download the file &quot;eigs_r11.m&quot;
 
 <h4>Version 0.129</h4>
 
@@ -70,4 +72,36 @@ Added rbfOutputGradX and visualisation for spring dampers type.
 
 <p>The first release of the toolbox with various wrappers for NETLAB functions. Also latent variable model visualisation code was moved into this toolbox.
 
-</div></body>
+<h2>Examples</h2>
+
+<h3>LLE</h3>
+
+<h4>The Swiss Roll</h4>
+
+<p>The `swiss roll data' is often used to illustrate dimensionality reduction algorithms despite the fact that it is very unrepresentative of real data sets.
+
+<p>In the first examples we use 1000 data points to represent the swiss roll,  <code>demSwissRollLle1.m</code> and  <code>demSwissRollLle2.m</code>.
+
+<p><center><img src="demSwissRollLle1.png" width="49%"><img src="demSwissRollLle2.png" width="49%"><br>
+<i>Left</i>:  LLE on the swiss roll data using 4 neighbours. <i>Right</i>: LLE on the swiss roll data using 8 neighbours.</center>
+
+<p>In the next examples we use 3000 data points to represent the swiss roll,  <code>demSwissRollFullLle1.m</code> and  <code>demSwissRollFullLle2.m</code>.
+
+
+<p><center><img src="demSwissRollFullLle1.png" width="49%"><img src="demSwissRollFullLle2.png" width="49%"><br>
+<i>Left</i>:  LLE on the full swiss roll data using 4 neighbours. <i>Right</i>: LLE on the full swiss roll data using 8 neighbours.</center>
+
+<h4>Oil Data</h4>
+
+<p>The `oil data' is commonly used as a bench mark for visualisation algorithms. For more details on the data see <a href="http://www.ncrg.aston.ac.uk/GTM/3PhaseData.html">this page</a>.
+
+<p>In these examples we used the 1000 data points from the training data for the oil,  <code>demOilLle1.m</code> and  <code>demOilLle2.m</code>.
+
+
+<p><center><img src="demOilLle1.png" width="49%"><img src="demOilLle2.png" width="49%"><br>
+<i>Left</i>:  LLE on the oil data using 4 neighbours, 9 errors when using classification by nearest neighbour in the latent space. <i>Right</i>: LLE on the oil data using 8 neighbours, 151 errors when using classification by nearest neighbour in the latent space.</center>
+
+
+</div>
+
+</body>
