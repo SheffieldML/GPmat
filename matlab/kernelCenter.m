@@ -7,6 +7,8 @@ function Kc = kernelCenter(K)
 % RETURN Kc : The centered kernel
 %
 % SEEALSO : 
+%
+% COPYRIGHT : Carl Henrik Ek, 2008
 
 % KERN
 
