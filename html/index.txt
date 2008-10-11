@@ -12,12 +12,22 @@
 
 RELEASEINFORMATION
 
-In this version results for the CMU Mocap data set from <a href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Taylor:motion06&printAbstract=1">Taylor et al.</a> of subject 35 running and walking are included, as well as some minor changes to allow hierarchical GP-LVMs to be used.
+
+Changes to allow compatibility with SGPLVM and NCCA toolboxes.
+
+
+<h4>Version 0.152</h4>
+
+<p>Bug fix from fgplvmReadFromFID where the values of model.m weren't being computed correctly.
+
+<h4>Version 0.151</h4>
+
+<p>In this version results for the CMU Mocap data set from <a href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Taylor:motion06&printAbstract=1">Taylor et al.</a> of subject 35 running and walking are included, as well as some minor changes to allow hierarchical GP-LVMs to be used.
 
 
 <h4>Version 0.15</h4>
 
-This version splits the Gaussian process portion into a new GP toolbox, the corresponding version is 0.1. Fixed bug in gpDynamicsExpandParam, gpDynamicsExractParam and gpDynamicsLogLikeGradient where 'fixInducing' option  was not being dealt with.
+<p>This version splits the Gaussian process portion into a new GP toolbox, the corresponding version is 0.1. Fixed bug in gpDynamicsExpandParam, gpDynamicsExractParam and gpDynamicsLogLikeGradient where 'fixInducing' option  was not being dealt with.
 
 <p>Fixed bug in fgplvmCreate.m where the back constraints were set up, but the latent positions were not being set according to the back constraints in the returned model.
 
