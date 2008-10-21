@@ -15,6 +15,7 @@ experimentNo = 1;
 % Set up model
 options = gpOptions('dtc');
 options.numActive = 9;
+options.optimiser = 'conjgrad';
 
 % use the deterministic training conditional.
 q = size(X, 2);

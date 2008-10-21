@@ -14,6 +14,7 @@ experimentNo = 4;
 
 % Set up the model
 options = gpOptions('ftc');
+options.optimiser = 'conjgrad';
 
 % Make use of correct kernel.
 options.kern = kernCreate(X, {'rbf', 'white'});
