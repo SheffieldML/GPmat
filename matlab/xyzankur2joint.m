@@ -4,7 +4,7 @@ function joint = xyzankur2joint(pos)
 %
 % COPYRIGHT : Carl Henrik Ek and Neil Lawrence, 2008
 
-% VISUALISATION
+% MOCAP
 
 
 joint(:,1) = pos(3:3:end);

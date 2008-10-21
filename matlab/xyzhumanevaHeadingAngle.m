@@ -1,5 +1,12 @@
 function alpha = xyzhumanevaHeadingAngle(Z,display)
 
+% XYZHUMANEVAHEADINGANGLE 
+%
+% COPYRIGHT : Carl Henrik Ek and Neil Lawrence, 2008
+
+% MOCAP
+  
+  
 if(nargin<2)
   display = false;
   if(nargin<1)

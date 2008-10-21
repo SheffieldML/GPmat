@@ -4,7 +4,7 @@ function joint = xyzhumaneva2joint(pos,transf)
 %
 % COPYRIGHT : Carl Henrik Ek and Neil Lawrence, 2008
 
-% VISUALISATION
+% MOCAP
 
 
 joint(:,1) = pos(1:3:end);

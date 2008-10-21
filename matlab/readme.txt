@@ -1,5 +1,10 @@
 This toolbox allows MATLAB to read in and write bvh files and read acclaim files. There are also routines for visualising the files in MATLAB.
 
+Version 0.135 Release Notes
+---------------------------
+
+Added visualisation files written by Carl Henrik Ek for the Human Eva data and for Ankur Agarwal's Poser generated silhouette data.
+
 Version 0.134 Release Notes
 ---------------------------
 

@@ -4,7 +4,7 @@ function handle = xyzhumanevaModify(handle,pos)
 %
 % COPYRIGHT : Carl Henrik Ek and Neil Lawrence, 2008
 
-% VISUALISATION
+% MOCAP
 
 
 joint = xyzhumaneva2joint(pos);

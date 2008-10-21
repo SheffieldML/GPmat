@@ -4,7 +4,7 @@ function xyzhumanevaGenerateMovie(Z,filename)
 %
 % COPYRIGHT : Carl Henrik Ek and Neil Lawrence, 2008
 
-% VISUALISATION
+% MOCAP
 
 
 if(nargin<2)

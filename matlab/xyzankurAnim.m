@@ -4,7 +4,7 @@ function xyzankurAnim(X,fid,fps)
 %
 % COPYRIGHT : Carl Henrik Ek and Neil Lawrence, 2008
 
-% VISUALISATION
+% MOCAP
 
 
 if(nargin<3)

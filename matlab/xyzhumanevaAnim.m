@@ -4,7 +4,7 @@ function xyzhumanevaAnim(X,fid,fps,display)
 %
 % COPYRIGHT : Carl Henrik Ek and Neil Lawrence, 2008
 
-% VISUALISATION
+% MOCAP
 
 
 if(nargin<4)

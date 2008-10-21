@@ -4,7 +4,7 @@ function handle = xyzankurModify(handle,pos)
 %
 % COPYRIGHT : Carl Henrik Ek and Neil Lawrence, 2008
 
-% VISUALISATION
+% MOCAP
 
 
 joint = xyzankur2joint(pos);

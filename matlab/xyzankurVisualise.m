@@ -4,7 +4,7 @@ function handle = xyzankurVisualise(pos,fid,v)
 %
 % COPYRIGHT : Carl Henrik Ek and Neil Lawrence, 2008
 
-% VISUALISATION
+% MOCAP
 
 
 if(nargin<2)

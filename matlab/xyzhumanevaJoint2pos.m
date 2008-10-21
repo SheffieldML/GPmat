@@ -4,7 +4,7 @@ function pos = xyzhumanevaJoint2pos(joint)
 %
 % COPYRIGHT : Carl Henrik Ek and Neil Lawrence, 2008
 
-% VISUALISATION
+% MOCAP
 
 
 pos = zeros(1,prod(size(joint)));
