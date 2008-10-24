@@ -522,4 +522,11 @@ else
     g2(5) = sum(sum(S(1)*matGrad.*covGrad));
 end
 g2(4) = 0; % Otherwise is counted twice, temporarly changed by Mauricio Alvarez
+
+
+g1 = real(g1);
+g2 = real(g2);
+
+
+
 return

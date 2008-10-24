@@ -46,8 +46,14 @@ kern.spring = 1;
 kern.damper = 1;
 kern.sensitivity = 1;
 
+% kern.spring = 10*rand;
+% kern.damper = 10*rand;
+% kern.sensitivity = 10*rand;
+
+
 kern.initVal = 1;
 kern.inverseWidth = 1;
+%kern.inverseWidth = 1000;
 kern.variance = 1;
 kern.nParams = 5;
 
