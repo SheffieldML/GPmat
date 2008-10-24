@@ -55,7 +55,8 @@ model = modelOptimise(model, [], [], 1, 3000);
 
 % load PUMA variance
 var595 = importdata('./data/5-95variance.txt');
-varExp = exp(var595.data);
+%varExp = exp(var595.data);
+varExp = exp(var595);
 scaleMat = scale'*ones(1,21);
 varExp(1:5,:) = varExp(1:5,:)./scaleMat;
 varExp(6:10,:) = varExp(6:10,:)./scaleMat;

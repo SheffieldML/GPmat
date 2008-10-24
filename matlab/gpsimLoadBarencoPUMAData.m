@@ -35,14 +35,31 @@ else
         % cel files using the mmgMOS algorithm (Xuejun's code).
 
         % These are the expression levels.
-        [numeric1, txt1] = xlsread('./data/barencoPUMA_exprs.xls');
+%         [numeric1, txt1] = xlsread('./data/barencoPUMA_exprs.xls');
+%         headTxt1 = txt1(1, 2:end);
+%         tagTxt1 = txt1(2:end, 1);
+% 
+%         % These are the standard deviations.
+%         [numeric2, txt2] = xlsread('./data/barencoPUMA_se.xls');
+%         headTxt2 = txt2(1, 2:end);
+%         tagTxt2 = txt2(2:end, 1);
+        
+
+        % Modified Mauricio Alvarez, to work with the .csv files
+        % These are the expression levels.
+        s1 = importdata('./data/barencoPUMA_exprs.csv');
+        numeric1 =  s1.data;
+        txt1 = s1.textdata;
         headTxt1 = txt1(1, 2:end);
         tagTxt1 = txt1(2:end, 1);
 
         % These are the standard deviations.
-        [numeric2, txt2] = xlsread('./data/barencoPUMA_se.xls');
+        s2 = importdata('./data/barencoPUMA_se.csv');
+        numeric2 = s2.data;
+        txt2 = s2.textdata;
         headTxt2 = txt2(1, 2:end);
         tagTxt2 = txt2(2:end, 1);
+
 
         if(any(~strcmp(tagTxt2(:), tagTxt1(:))))
             error('Two files are not in same order');
@@ -69,13 +86,17 @@ else
         gene{5, 1} = '218346_s_at';
         gene{5, 2} = 'p26 sesn1';
 
-        for i = 1:length(gene)
-            match = find([strcmp(gene{i, 1}, tagTxt1(:))]);
-            if length(match)~=1
-                error('Too many or too few matches.');
-            else
-                ind(i) = match(1);
-            end
+%         for i = 1:length(gene)
+%             match = find([strcmp(gene{i, 1}, tagTxt1(:))]);
+%             if length(match)~=1
+%                 error('Too many or too few matches.');
+%             else
+%                 ind(i) = match(1);
+%             end
+%         end
+        % Modified Mauricio Alvarez
+        for j =1:length(gene),
+            ind(j) = strmatch(gene{j,1},tagTxt1, 'exact');
         end
         %order = [1 4 5 6 7 2 3 8 11 12 13 14 9 10 15 18 19 20 21 16 17];
         order = 1:21;
