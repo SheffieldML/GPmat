@@ -24,12 +24,14 @@ else
 end
 spacing = char(spacing);
 fprintf(spacing);
-fprintf('LFM Variance: %2.4f\n', kern.variance)
+fprintf('LFM Latent variance: %2.4f\n', kern.variance)
 fprintf(spacing);
 fprintf('LFM inverse width: %2.4f (length scale %2.4f)\n', ...
         kern.inverseWidth, 1/sqrt(kern.inverseWidth));
 %fprintf(spacing);
 %fprintf('LFM delay: %2.4f\n', kern.delay)
+fprintf(spacing);
+fprintf('LFM sensitivity: %2.4f\n', kern.sensitivity)
 fprintf(spacing);
 fprintf('LFM mass: %2.4f\n', kern.mass)
 fprintf(spacing);
