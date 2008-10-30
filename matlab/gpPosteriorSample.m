@@ -38,11 +38,15 @@ end
 t_star = linspace(lims(1), lims(2), 200)';
 
 kern = kernCreate(t_star, kernType);
+for i=1:length(kern.comp)
+  kern.comp{i}.transforms = [];
+end
+
 if ~isempty(params)
-  feval = str2func([kernType 'KernExpandParam']);
+  feval = str2func([kern.type 'KernExpandParam']);
   kern = feval(kern, params);
 end
-feval = str2func([kernType 'KernExtractParam']);
+feval = str2func([kern.type 'KernExtractParam']);
 [params, names] = feval(kern);
 paramStr = [];
 for i = 1:length(names)
@@ -54,6 +58,7 @@ for i = 1:length(names)
   paramStr = [paramStr Name num2str(params(i))];
   
 end
+paramStr(find(paramStr==46)) = 'p';
 infoStr = ['Samples' num2str(numSamps) 'Seed' num2str(randn('seed'))];
 
 % Covariance of the prior.
@@ -90,9 +95,17 @@ if bw
   app = 'bw';
 end
 
-KernType = kernType;
-KernType(1) = upper(kernType(1));
-if exist('printDiagram', 'var') && printDiagram
+if iscell(kernType)
+  KernType = [];
+  for i = length(kernType):-1:1
+    KernType = [kernType{i} KernType];
+    KernType(1) = upper(KernType(1));
+  end
+else
+  KernType(1) = upper(kernType(1));
+end
+
+if exist('printDiagram', 'var') & printDiagram
   printPlot(['gpPosteriorSample' KernType infoStr paramStr app], ...
             '../tex/diagrams', '../html')
 end
