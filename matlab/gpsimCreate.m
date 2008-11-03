@@ -1,5 +1,5 @@
 function model = gpsimCreate(numGenes, numProteins, times, geneVals, ...
-                             geneVars, options)
+                             geneVars, options, annotation)
 
 % GPSIMCREATE Create a GPSIM model.
 % The GPSIM model is a model for estimating the protein
@@ -23,6 +23,8 @@ function model = gpsimCreate(numGenes, numProteins, times, geneVals, ...
 % ARG geneVars : the varuabces of each gene at the different time points.
 % ARG options : options structure, the default options can be
 % generated using gpsimOptions.
+% ARG annotation : annotation for the data (gene names, etc.) that
+% is stored with the model. (Optional)
 % RETURN model : model structure containing default
 % parameterisation.
 %
@@ -31,6 +33,7 @@ function model = gpsimCreate(numGenes, numProteins, times, geneVals, ...
 % COPYRIGHT : Neil D. Lawrence, 2006, 2007
 %
 % MODIFIED : Pei Gao, 2008
+% MODIFIED : Antti Honkela, 2008
 
 % GPSIM
 
@@ -199,6 +202,10 @@ end
 
 % The basal transcriptions rates must be postitive.
 model.bTransform = optimiDefaultConstraint('positive');
+
+if nargin > 6,
+  model.annotation = annotation;
+end
 
 % This forces kernel compute.
 params = gpsimExtractParam(model);
