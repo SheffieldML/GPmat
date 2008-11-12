@@ -121,7 +121,7 @@ switch dataset
     if strcmp(errid, 'MATLAB:load:couldNotReadFile');
       sampleEvery = 32;
       skel = acclaimReadSkel([baseDir 'mocap' dirSep 'cmu' dirSep '49' dirSep '49.asf']);
-      examples = {'18'};
+      examples = {'18', '19'};
       testExamples = {'20'};
       % Label differently for each sequence
       exlbls = eye(length(examples));
