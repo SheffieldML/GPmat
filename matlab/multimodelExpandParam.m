@@ -15,10 +15,19 @@ function model = multimodelExpandParam(model, params)
 %
 % SEEALSO : multimodelCreate, multimodelExtractParam, modelExpandParam
 %
-% COPYRIGHT : Neil D. Lawrence, 2007
+% COPYRIGHT : Neil D. Lawrence, 2007, 2008
 
 % MLTOOLS
-
-for i = 1:length(model.comp)
-  model.comp{i} = modelExpandParam(model.comp{i}, params);
+  
+  endVal = model.numParams - model.numModels*model.numSep;
+  baseParams = params(1:endVal);
+  passParams(model.sharedIndices) = baseParams;
+  if ~isempty(model.separateIndices)
+    for i = 1:length(model.comp)
+      startVal = endVal + 1
+      endVal = endVal + model.numSep;
+      passParams(model.separateIndices) = params(startVal:endVal);
+      model.comp{i} = modelExpandParam(model.comp{i}, passParams);
+    end
+  end
 end

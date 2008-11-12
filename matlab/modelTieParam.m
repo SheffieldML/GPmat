@@ -15,31 +15,41 @@ function model = modelTieParam(model, paramsList)
 %
 % SEEALSO : modelExtractParam, modeExpandParam, modelLogLikeGradients
 % 
-% COPYRIGHT : Neil D. Lawrence, 2003, 2006
+% COPYRIGHT : Neil D. Lawrence, 2003, 2006, 2008
 
 % MLTOOLS
 
-colToDelete = [];
-for i = 1:length(paramsList)
-
-  paramIndices=sort(paramsList{i});
-  if any(paramIndices(1) == colToDelete)
-    error('Parameter is already being tied')
-  end
-  for j = 2:length(paramIndices)
-
-    model.paramGroups(paramIndices(j), paramIndices(1)) = 1;
-    if any(paramIndices(j) == colToDelete)
-      error('Parameter has already been tied')
+  if ~isfield(model, 'paramGroups')
+    if isfield(model, 'nParams')
+      model.paramGroups = speye(model.nParams);
+    elseif isfield(model, 'numParams')
+      model.paramGroups = speye(model.numParams);
+    else
+      error('Model does not list number of parameters.');
     end
-    colToDelete = [colToDelete paramIndices(j)];
   end
-end
-
-model.paramGroups(:, colToDelete) = [];
-if isfield(model, 'nParams')
-  % Update to the new number of parameters.
-  model.nParams = size(model.paramGroups, 2);
-elseif isfield(model, 'numParams')
-  model.numParams = size(model.paramGroups, 2);
+  colToDelete = [];
+  for i = 1:length(paramsList)
+    
+    paramIndices=sort(paramsList{i});
+    if any(paramIndices(1) == colToDelete)
+      error('Parameter is already being tied')
+    end
+    for j = 2:length(paramIndices)
+      
+      model.paramGroups(paramIndices(j), paramIndices(1)) = 1;
+      if any(paramIndices(j) == colToDelete)
+        error('Parameter has already been tied')
+      end
+      colToDelete = [colToDelete paramIndices(j)];
+    end
+  end
+  
+  model.paramGroups(:, colToDelete) = [];
+  if isfield(model, 'nParams')
+    % Update to the new number of parameters.
+    model.nParams = size(model.paramGroups, 2);
+  elseif isfield(model, 'numParams')
+    model.numParams = size(model.paramGroups, 2);
+  end
 end

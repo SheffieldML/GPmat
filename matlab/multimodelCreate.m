@@ -28,6 +28,9 @@ model.type = 'multimodel';
 model.compType = options.type;
 model.inputDim = inputDim;
 model.outputDim = outputDim;
+% Indices of parameters to be trained separately for each model.
+model.separateIndices = options.separate;
+model.numSep = length(model.separateIndices);
 for i = 1:model.numModels
   varargput = cell(1, length(varargin)-1);
   for j = 1:length(varargput)
@@ -41,3 +44,7 @@ if isfield(model.comp{i}, 'numParams');
 else
   model.numParams = length(modelExtractParam(model.comp{1}));
 end
+model.sharedIndices = 1:model.numParams;
+model.sharedIndices(model.separateIndices) = [];
+
+model.numParams = model.numParams + (model.numModels-1)*model.numSep;
