@@ -1,0 +1,19 @@
+% The single input motif (SIM) kernel is specifically designed for
+% working with gene networks where there is assumed to be a single
+% transcription factor controlling several genes. If each gene is
+% related to the transcription factor through the following
+% differential equation,
+%
+% dx(t)/dt = B + C f(t-delta) - D x(t),
+%
+% where D is a decay term, C is a response term, delta is a time delay
+% and B is an initial level. Then if f(t) is assumed to come from a
+% Gaussian process with an RBF covariance function x(t) is a Gaussian
+% process with a covariance function provided by the single input
+% motif kernel.
+%
+% The kernel is designed to interoperate with the multiple output
+% block kernel so that f(t) can be inferred given several different
+% instantiations of x(t) (associated with different genes).
+%
+% The parameters (B, C, delta and D) are constrained positive. 

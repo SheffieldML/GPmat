@@ -1,0 +1,7 @@
+% This kernel allows you to take any other kernel in the tool box and
+% translate with respect to the input space. With stationary kernels this is
+% obviously pointless, but for non-stationary kernels (such as the LINEAR
+% kernel or the MLP kernel) it moves the non-stationarities around the input
+% space which is potentially useful.
+%
+% SEEALSO : cmpndKernCreate

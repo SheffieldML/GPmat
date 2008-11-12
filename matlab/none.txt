@@ -1,0 +1,4 @@
+% This kernel is a dummy kernel which has no parameters and returns
+% zeros. It is used in multi output GP latent function setups, where
+% for independent output kernels there is no associated latent
+% function kernel.

@@ -1,0 +1,8 @@
+% The white noise kernel arises from assuming independent Gaussian
+% noise for each point in the function. The variance of the noise is
+% given by the kern.variance parameter.
+% 
+% This kernel is not intended to be used independently, it is provided
+% so that it may be combined with other kernels in a compound kernel.
+%
+% SEEALSO : cmpndKernParamInit

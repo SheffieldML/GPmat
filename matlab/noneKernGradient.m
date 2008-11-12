@@ -1,9 +1,9 @@
-function g = whitefixedKernGradient(kern, x, varargin)
+function g = noneKernGradient(kern, x, x2, covGrad)
 
-% WHITEFIXEDKERNGRADIENT Gradient of WHITEFIXED kernel's parameters.
+% NONEKERNGRADIENT Gradient of NONE kernel's parameters.
 % FORMAT
 % DESC computes the gradient of functions with respect to the
-% fixed parameter white noise
+% dummy kernel function
 % kernel's parameters. As well as the kernel structure and the
 % input positions, the user provides a matrix PARTIAL which gives
 % the partial derivatives of the function with respect to the
@@ -37,9 +37,9 @@ function g = whitefixedKernGradient(kern, x, varargin)
 % RETURN g : gradients of the function of interest with respect to
 % the kernel parameters.
 %
-% SEEALSO whitefixedKernParamInit, kernGradient, whitefixedKernDiagGradient, kernGradX
+% SEEALSO noneKernParamInit, kernGradient, noneKernDiagGradient, kernGradX
 %
-% COPYRIGHT : Nathaniel J. King, 2006
+% COPYRIGHT : Neil D. Lawrence, 2008
 
 % KERN
 

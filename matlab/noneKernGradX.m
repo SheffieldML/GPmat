@@ -1,8 +1,8 @@
-function gX = whitefixedKernGradX(kern, X, X2)
+function gX = noneKernGradX(kern, x, x2)
 
-% WHITEFIXEDKERNGRADX Gradient of WHITEFIXED kernel with respect to a point x.
+% NONEKERNGRADX Gradient of NONE kernel with respect to a point x.
 % FORMAT
-% DESC computes the gradient of the fixed parameter white noise
+% DESC computes the gradient of the dummy kernel function
 % kernel with respect to the input positions. 
 % ARG kern : kernel structure for which gradients are being
 % computed.
@@ -13,7 +13,7 @@ function gX = whitefixedKernGradX(kern, X, X2)
 % dimensions in X.
 %
 % FORMAT
-% DESC computes the gradident of the fixed parameter white noise
+% DESC computes the gradident of the dummy kernel function
 % kernel with respect to the input positions where both the row
 % positions and column positions are provided separately.
 % ARG kern : kernel structure for which gradients are being
@@ -26,9 +26,9 @@ function gX = whitefixedKernGradX(kern, X, X2)
 % points in X2 and numInputs is the number of input
 % dimensions in X.
 %
-% SEEALSO whitefixedKernParamInit, kernGradX, whitefixedKernDiagGradX
+% SEEALSO noneKernParamInit, kernGradX, noneKernDiagGradX
 %
-% COPYRIGHT : Nathaniel J. King, 2006
+% COPYRIGHT : Neil D. Lawrence, 2008
 
 % KERN
 

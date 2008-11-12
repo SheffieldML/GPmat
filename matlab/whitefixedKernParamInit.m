@@ -26,7 +26,6 @@ function kern = whitefixedKernParamInit(kern)
 
 % KERN
 
-
 kern.variance = exp(-2);
 kern.nParams = 0;
 

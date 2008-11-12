@@ -1,8 +1,8 @@
-function whitefixedKernDisplay(kern, spacing)
+function noneKernDisplay(kern, spacing)
 
-% WHITEFIXEDKERNDISPLAY Display parameters of the WHITEFIXED kernel.
+% NONEKERNDISPLAY Display parameters of the NONE kernel.
 % FORMAT
-% DESC displays the parameters of the fixed parameter white noise
+% DESC displays the parameters of the dummy kernel function
 % kernel and the kernel type to the console.
 % ARG kern : the kernel to display.
 %
@@ -11,11 +11,12 @@ function whitefixedKernDisplay(kern, spacing)
 % ARG kern : the kernel to display.
 % ARG spacing : how many spaces to indent the display of the kernel by.
 %
-% SEEALSO : whitefixedKernParamInit, modelDisplay, kernDisplay
+% SEEALSO : noneKernParamInit, modelDisplay, kernDisplay
 %
-% COPYRIGHT : Nathaniel J. King, 2006
+% COPYRIGHT : Neil D. Lawrence, 2008
 
 % KERN
+
 
 if nargin > 1
   spacing = repmat(32, 1, spacing);
@@ -24,4 +25,4 @@ else
 end
 spacing = char(spacing);
 fprintf(spacing);
-fprintf('White Fixed Noise Variance: %2.4f\n', kern.variance)
+fprintf('Dummy placeholder kernel (returns zeros).\n')
