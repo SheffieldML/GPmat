@@ -9,7 +9,7 @@ xTest = linspace(-1.5, 1.5, 200)';
 figure
 fill([xTest; xTest(end:-1:1)], ...
      [mu; mu(end:-1:1)] ...
-     + 2*[sqrt(varSigma); -sqrt(varSigma)], ...
+     + 2*[sqrt(varSigma); -sqrt(varSigma(end:-1:1))], ...
      fillColor,'EdgeColor',fillColor)
 hold on;
 plot(X, y, 'k.');
@@ -31,20 +31,4 @@ zeroAxes(gca, [], 10, 'arial')
 if exist('printDiagram') && printDiagram
   fileName = ['dem' capName num2str(experimentNo)];
   printPlot(fileName, '../tex/diagrams', '../html');
-%/~
-  %   print('-depsc', ['../tex/diagrams/' fileName])
-%   set(a, 'linewidth', 1);
-
-%   pos = get(gcf, 'paperposition')
-%   origpos = pos;
-%   pos(3) = pos(3)/2;
-%   pos(4) = pos(4)/2;
-%   set(gcf, 'paperposition', pos);
-% %  fontsize = get(gca, 'fontsize');
-% %  set(gca, 'fontsize', fontsize/2);
-%   lineWidth = get(gca, 'lineWidth');
-%   set(gca, 'lineWidth', lineWidth*2);
-%   print('-dpng', ['../html/' fileName])
-%   set(gcf, 'paperposition', origpos)
-%~/
 end

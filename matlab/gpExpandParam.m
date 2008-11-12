@@ -73,6 +73,3 @@ end
 if isfield(model, 'alpha')
   model = gpComputeAlpha(model);
 end
-
-
-

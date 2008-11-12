@@ -80,7 +80,7 @@ switch model.approx
     end
   end
  case {'dtc', 'fitc', 'pitc'}
-  paramPart = [kernParams scaleParams meanFuncParams];
+  paramPart = [kernParams meanFuncParams scaleParams];
   if returnNames
     names = {kernParamNames{:}, meanFuncParamNames{:}, ...
              scaleParamNames{:}};
