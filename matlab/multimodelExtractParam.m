@@ -21,6 +21,8 @@ function [passParams, passNames] = multimodelExtractParam(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007, 2008
 %
+% MODIFICATIONS: Mauricio Alvarez, 2008
+%
 % MLTOOLS
 
   passParams = zeros(1, model.numParams);
@@ -33,7 +35,10 @@ function [passParams, passNames] = multimodelExtractParam(model)
   endVal = model.numParams - model.numSep;
   passParams(1:endVal) = receiveParams(model.sharedIndices);
   if nargout > 1
-    passNames{1:endVal} = receiveNames{model.sharedIndices};
+    % MAURICIO : I think this is wrong. But I didn't change because I'm not
+    % sure
+    % passNames{1:endVal} = receiveNames{model.sharedIndices};
+    passNames(1:endVal) = receiveNames(model.sharedIndices);
   end
   if ~isempty(model.separateIndices)
     startVal = endVal + 1;

@@ -16,6 +16,7 @@ function g = modelLogLikeGradients(model)
 
 fhandle = str2func([model.type 'LogLikeGradients']);
 g = fhandle(model);
+
 if isfield(model, 'paramGroups')
-  g = g*kern.paramGroups;
+  g = g*model.paramGroups;
 end
