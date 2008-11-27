@@ -512,6 +512,14 @@ switch dataset
   XTest = data(indTe, 1:end-1);
   yTest = data(indTe, end);
  %~/
+ 
+  case 'lfmOde'      
+      data = load([baseDir 'datasetODE31_30_5']);
+      X = data.Xtrain{1};
+      y = cell2mat(data.Ytrain');
+      XTest = data.Xtest{1};
+      yTest = cell2mat(data.Ytest'); 
+      
  otherwise
   error('Unknown data set requested.')
 
