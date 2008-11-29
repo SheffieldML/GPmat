@@ -6,7 +6,10 @@
 
 <h1>MATLAB Motion Capture Toolbox</h1>
 
-The MATLAB motion capture toolbox allows loading and playing of BVH files in MATLAB. 
+<p>The MATLAB motion capture toolbox allows loading and playing of BVH and acclaim files in MATLAB. 
+
+
+<p>Warning this toolbox seems to be affected by a possible bug in MATLAB 7.4, see <a href="../matlabBug.html">here</a> for details. 
 
 
 RELEASEINFORMATION
