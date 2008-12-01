@@ -28,6 +28,9 @@ options.optimiser = optimiDefaultOptimiser;
 % Set to true to learn output scales.
 options.learnScales = false;
 
+% Set to true to scale outputs to variance 1.
+options.scale2var1 = false;
+
 % Set to true to optimise beta.
 switch approx
  case 'ftc'
