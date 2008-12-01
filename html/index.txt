@@ -116,7 +116,7 @@ In all the examples we give there will be 100 points in the active set. We first
 
 First we will demonstrate the dynamics functionality of the toolbox. We raw x-y-z values from a motion capture data set, the <code>Figure Run 1</code> example available <a href="http://accad.osu.edu/research/mocap/mocap_data.htm">from Ohio State University</a>. To run without dynamics use the script:
 <p><code>
-&gt;&gt; demOil1
+&gt;&gt; demStick1
 </code>
 
 <p>The results are given on the left of the figure below.
@@ -169,7 +169,7 @@ Another ongoing piece of work with Jeff Bilmes and Jon Malkin involves embedding
 
 <h3>Larger Human Motion Data Sets</h3>
 
-<p>For <a href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Lawrence:larger07&printAbstract=1">an AISTATS paper</a> we recreated an experiment from <a href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Taylor:motion06&printAbstract=1">Taylor <em>et al.</em>'s NIPS paper</a>. They created a data set from a motion capture data in the <a href="http://mocap.cs.cmu.edu">CMU data base</a> of running and walking. The data set can now be recreated using the <a href="http://www.cs.man.ac.uk/~neill/datasets/">DATASETS toolbox</a>. We repeated missing data experiments by Taylor et al.. The model learning for these experiments can be recreated with:
+<p>For <a href="/neill-bin/publications/bibpage.cgi?keyName=Lawrence:larger07&printAbstract=1">an AISTATS paper</a> we recreated an experiment from <a href="/neill-bin/publications/bibpage.cgi?keyName=Taylor:motion06&printAbstract=1">Taylor <em>et al.</em>'s NIPS paper</a>. They created a data set from a motion capture data in the <a href="http://mocap.cs.cmu.edu">CMU data base</a> of running and walking. The data set can now be recreated using the <a href="/~neill/datasets/">DATASETS toolbox</a>. We repeated missing data experiments by Taylor et al.. The model learning for these experiments can be recreated with:
 
 <p><code>
 &gt;&gt; demCmu35gplvm1
@@ -242,5 +242,5 @@ process dynamics to fully recreate the data set. There results are given in thei
 <p>Finally we show a plot of reconstructions of two of the angles in the data.
 
 <p><center><img src="demCmu35gplvmLegReconstruct1_8.png" width="50%"><img src="demCmu35gplvmLegReconstruct1_9.png" width="50%"></center>
-Prediction for first two angles of the right hip joint (see plots in <a href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Taylor:motion06&printAbstract=1">Taylor <i>et al.</i></a> for comparison). Dotted line is nearest neighour in scaled space, dashed line is GP-LVM with 4-D latent space.</center>
+Prediction for first two angles of the right hip joint (see plots in <a href="/neill-bin/publications/bibpage.cgi?keyName=Taylor:motion06&printAbstract=1">Taylor <i>et al.</i></a> for comparison). Dotted line is nearest neighour in scaled space, dashed line is GP-LVM with 4-D latent space.</center>
 </div></body>
