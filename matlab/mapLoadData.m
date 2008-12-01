@@ -61,12 +61,25 @@ end
   
 switch dataset
   
+ case 'silhouette'
+  % Ankur Agarwal and Bill Trigg's silhoutte data.
+  load([baseDir dirSep 'mocap' dirSep 'ankur' dirSep 'ankurDataPoseSilhouette']);
+  inMean = mean(Y);
+  inScales = sqrt(var(Y));
+  X = Y - repmat(inMean, size(Y, 1), 1);
+  X = X./repmat(inScales, size(Y, 1), 1);
+  
+  XTest = Y_test - repmat(inMean, size(Y_test, 1), 1);
+  XTest = XTest./repmat(inScales, size(Y_test, 1), 1);
+  y = Z;
+  yTest = Z_test;
+ 
  case 'cedar69'
   % Data for ICML 2001 paper on noisy KFD.
   digOne = 6;
   digTwo = 9;
 
-  directory = [baseDir '\cedar.cd\matlab\16x16\'];
+  directory = [baseDir dirSep 'cedar.cd' dirSep 'matlab' dirSep '16x16' dirSep];
   load([directory 'digit' num2str(digOne)]);
   X = digitData;
   numDataOne = size(digitData, 1);
