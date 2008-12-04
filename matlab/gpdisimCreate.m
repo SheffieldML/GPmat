@@ -1,5 +1,5 @@
 function model = gpdisimCreate(numGenes, numProteins, times, geneVals, ...
-			       geneVars, options)
+			       geneVars, options, annotation)
 
 % GPDISIMCREATE Create a GPDISIM model.
 % The GPSIM model is a model for estimating the protein
@@ -23,6 +23,8 @@ function model = gpdisimCreate(numGenes, numProteins, times, geneVals, ...
 % ARG geneVars : the varuabces of each gene at the different time points.
 % ARG options : options structure, the default options can be
 % generated using gpsimOptions.
+% ARG annotation : annotation for the data (gene names, etc.) that
+% is stored with the model. (Optional)
 % RETURN model : model structure containing default
 % parameterisation.
 %
@@ -52,6 +54,7 @@ kernType1{1} = 'multi';
 kernType2{1} = 'multi';
 tieWidth = [1]; % These are the indices of the inverse widths which
                 % need to be constrained to be equal.
+tieRBFVariance = [2];
 kernType1{2} = 'rbf';
 for i = 1:numGenes
   kernType1{i+2} = 'disim';
@@ -59,14 +62,16 @@ for i = 1:numGenes
     tieDelta = [3];
     tieWidth = [tieWidth, 4];
     tieSigma = [5];
+    tieRBFVariance = [tieRBFVariance, 8];
   end
   if i>1
-    tieDelta = [tieDelta tieDelta(end)+5];
-    tieWidth = [tieWidth tieWidth(end)+5];
-    tieSigma = [tieSigma tieSigma(end)+5];
+    tieDelta = [tieDelta tieDelta(end)+6];
+    tieWidth = [tieWidth tieWidth(end)+6];
+    tieSigma = [tieSigma tieSigma(end)+6];
+    tieRBFVariance = [tieRBFVariance tieRBFVariance(end)+6];
   end
 end
-tieParam = {tieDelta, tieWidth, tieSigma};
+tieParam = {tieDelta, tieWidth, tieSigma, tieRBFVariance};
 
 model.y = geneVals(:);
 model.yvar = geneVars(:);
@@ -127,6 +132,10 @@ end
 
 % The basal transcriptions rates must be postitive.
 model.bTransform = optimiDefaultConstraint('positive');
+
+if nargin > 6,
+  model.annotation = annotation;
+end
 
 % This forces kernel compute.
 params = gpdisimExtractParam(model);
