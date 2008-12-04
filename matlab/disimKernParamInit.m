@@ -51,9 +51,10 @@ kern.inverseWidth = 1;
 kern.di_variance = 1;
 kern.decay = 1;
 kern.variance = 1;
-kern.nParams = 5;
+kern.rbf_variance = 1;
+kern.nParams = 6;
 
-kern.transforms.index = [1 2 3 4 5];
+kern.transforms.index = [1 2 3 4 5 6];
 kern.transforms.type = optimiDefaultConstraint('positive');
 
 kern.isStationary = false;

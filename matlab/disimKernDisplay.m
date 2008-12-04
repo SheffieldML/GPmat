@@ -36,4 +36,6 @@ fprintf('SIM inverse width: %2.4f (length scale %2.4f)\n', ...
         kern.inverseWidth, 1/sqrt(kern.inverseWidth));
 fprintf(spacing);
 fprintf('SIM decay: %2.4f\n', kern.decay)
+fprintf(spacing);
+fprintf('RBF variance: %2.4f\n', kern.rbf_variance)
 

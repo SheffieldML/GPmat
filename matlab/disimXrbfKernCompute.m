@@ -39,6 +39,10 @@ end
 if disimKern.inverseWidth ~= rbfKern.inverseWidth
   error('Kernels cannot be cross combined if they have different inverse widths.')
 end
+if disimKern.rbf_variance ~= rbfKern.variance
+  error('Kernels cannot be cross combined if they have different RBF variances.');
+end
+
 dim1 = size(t1, 1);
 dim2 = size(t2, 1);
 t1 = t1;
@@ -61,5 +65,5 @@ lnPart2 = lnDiffErfs(halfLD_i + t2Mat/l, halfLD_i - invLDiffT);
 K = exp(lnCommon + halfLDelta^2 - delta * diffT + lnPart1) ...
     + exp(lnCommon + halfLD_i^2 - D_i * diffT + lnPart2);
 
-K = 0.5*sqrt(disimKern.variance)*sqrt(disimKern.di_variance)*sqrt(rbfKern.variance)*K*sqrt(pi)*l;
+K = 0.5*sqrt(disimKern.variance)*sqrt(disimKern.di_variance)*rbfKern.variance*K*sqrt(pi)*l;
 K = real(K);

@@ -45,6 +45,9 @@ end
 if disimKern1.di_variance ~= disimKern2.di_variance
   error('Kernels cannot be cross combined if they have different driving input variances.');
 end
+if disimKern1.rbf_variance ~= disimKern2.rbf_variance
+  error('Kernels cannot be cross combined if they have different RBF variances.');
+end
 
 l = sqrt(2/disimKern1.inverseWidth);
 h1 = disimComputeH(t1, t2, disimKern1.di_decay, disimKern1.decay, disimKern2.decay, l);
@@ -53,4 +56,4 @@ hp1 = disimComputeHPrime(t1, t2, disimKern1.di_decay, disimKern1.decay, disimKer
 hp2 = disimComputeHPrime(t2, t1, disimKern1.di_decay, disimKern2.decay, disimKern1.decay, l);
 K = h1 + h2' + hp1 + hp2';
 K = 0.5*K*sqrt(pi)*l;
-K = disimKern1.di_variance*sqrt(disimKern1.variance)*sqrt(disimKern2.variance)*K;
+K = disimKern1.rbf_variance*disimKern1.di_variance*sqrt(disimKern1.variance)*sqrt(disimKern2.variance)*K;

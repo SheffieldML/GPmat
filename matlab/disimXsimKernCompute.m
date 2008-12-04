@@ -45,6 +45,10 @@ end
 if disimKern.di_variance ~= simKern.variance
   error('Kernels cannot be cross combined if they have different driving input variances.');
 end
+if disimKern.rbf_variance ~= 1
+  warning('KERN:simRBFVariance', ...
+	  'Warning: copying non-unit RBF variance from DISIM to SIM kernel')
+end
 
 dim1 = size(t1, 1);
 dim2 = size(t2, 1);
@@ -90,5 +94,5 @@ K = exp(lnCommon1 + lnFact1 + lnPart1) ...
     +exp(lnCommon2           + lnPart5) ...
     +exp(lnCommon2 + lnFact6 + lnPart6);
 K = 0.5*K*sqrt(pi)*l;
-K = disimKern.di_variance*sqrt(disimKern.variance)*K;
+K = disimKern.rbf_variance*disimKern.di_variance*sqrt(disimKern.variance)*K;
 K = real(K);

@@ -51,6 +51,9 @@ end
 if disimKern.inverseWidth ~= rbfKern.inverseWidth
   error('Kernels cannot be cross combined if they have different inverse widths.')
 end
+if disimKern.rbf_variance ~= rbfKern.variance
+  error('Kernels cannot be cross combined if they have different RBF variances.');
+end
 
 k = disimXrbfKernCompute(disimKern, rbfKern, arg{:});
 dim1 = size(t1, 1);
@@ -62,7 +65,7 @@ l = sqrt(2/disimKern.inverseWidth);
 l2 = l*l;
 C_0 = sqrt(disimKern.di_variance);
 C_i = sqrt(disimKern.variance);
-C_j = sqrt(rbfKern.variance);
+C_j = rbfKern.variance;
 D_i = disimKern.decay;
 delta = disimKern.di_decay;
 
@@ -111,7 +114,7 @@ dk_dl = sum(sum(dK_dl.*covGrad));
 
 dk_dC_i = sum(sum(k.*covGrad))/C_i;
 dk_dC_0 = sum(sum(k.*covGrad))/C_0;
-dk_dRbfVariance = 0.5*sum(sum(k.*covGrad))/rbfKern.variance;
+dk_dRbfVariance = sum(sum(k.*covGrad))/rbfKern.variance;
 
 dk_dinvWidth = -0.5*sqrt(2)/(disimKern.inverseWidth* ...
                              sqrt(disimKern.inverseWidth))*dk_dl;
@@ -121,7 +124,7 @@ dk_dDIVariance = dk_dC_0*0.5/C_0;
 
 % only pass the gradient with respect to the inverse width to one
 % of the gradient vectors ... otherwise it is counted twice.
-g1 = real([dk_ddelta dk_dinvWidth dk_dDIVariance dk_dD dk_dDisimVariance]);
+g1 = real([dk_ddelta dk_dinvWidth dk_dDIVariance dk_dD dk_dDisimVariance 0]);
 g2 = real([0 dk_dRbfVariance]);
 
 

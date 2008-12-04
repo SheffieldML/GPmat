@@ -41,5 +41,5 @@ else
   k = h + h2' + hp + hp2';
 end
 k = 0.5*k*sqrt(pi)*l;
-k = kern.di_variance*kern.variance*k;
+k = kern.rbf_variance*kern.di_variance*kern.variance*k;
 k = real(k);

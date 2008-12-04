@@ -63,9 +63,17 @@ lnFact1b = log(delta - D_j);
 
 lnFact2a = (D_j + D_k) * t1Mat;
 
-h = exp(lnCommon + lnFact1a1 - lnFact1b + lnPart1) ...
-    - exp(lnCommon + lnFact1a2 - lnFact1b + lnPart1) ...
-    + exp(lnCommon + lnFact2a + lnPart2);
+%if any(any(abs(lnCommon) > 5)),
+if abs(D_j - delta) < .1,
+  h = exp(lnCommon + lnPart1) .* ...
+      (1 + (D_j+D_k)*(1-exp((D_j-delta)*t1Mat))/(delta-D_j)) ...
+      + exp(lnCommon + lnFact2a + lnPart2);
+  % exp(lnFact1a1 - lnFact1b) - exp(lnFact1a2 - lnFact1b)
+else
+  h = exp(lnCommon + lnFact1a1 - lnFact1b + lnPart1) ...
+      - exp(lnCommon + lnFact1a2 - lnFact1b + lnPart1) ...
+      + exp(lnCommon + lnFact2a + lnPart2);
+end
 
 h = real(h);
 

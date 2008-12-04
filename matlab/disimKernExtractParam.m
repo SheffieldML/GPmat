@@ -26,13 +26,13 @@ function [params, names] = disimKernExtractParam(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
-% COPYRIGHT : Antti Honkela, 2007
+% COPYRIGHT : Antti Honkela, 2007-2008
 %
 % KERN
 
 params = [kern.di_decay kern.inverseWidth kern.di_variance, ...
-	  kern.decay, kern.variance];
+	  kern.decay, kern.variance, kern.rbf_variance];
 if nargout > 1
   names = {'di_decay', 'inverse width', 'di_variance', ...
-	   'decay', 'variance'};
+	   'decay', 'variance', 'rbf_variance'};
 end

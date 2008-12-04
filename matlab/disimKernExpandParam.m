@@ -17,7 +17,7 @@ function kern = disimKernExpandParam(kern, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
-% COPYRIGHT : Antti Honkela, 2007
+% COPYRIGHT : Antti Honkela, 2007-2008
 
 % KERN
 
@@ -26,3 +26,4 @@ kern.inverseWidth = params(2);
 kern.di_variance = params(3);
 kern.decay = params(4);
 kern.variance = params(5);
+kern.rbf_variance = params(6);
