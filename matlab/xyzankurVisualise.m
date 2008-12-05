@@ -1,4 +1,4 @@
-function handle = xyzankurVisualise(pos, v)
+function handle = xyzankurVisualise(pos, fid, v)
 
 % XYZANKURVISUALISE Draw the Agarwal & Triggs figure return the graphics handle.
 % FORMAT
@@ -19,6 +19,8 @@ function handle = xyzankurVisualise(pos, v)
 if(nargin<2)
   fid = 1;
 end
+
+figure(fid);
 
 % Convert positions for plotting.
 joint = xyzankur2joint(pos);
