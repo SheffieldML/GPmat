@@ -1,4 +1,4 @@
-function v = lnDiffErfs(x1, x2),
+function [v, signs] = lnDiffErfs(x1, x2),
 
 % LNDIFFERFS Helper function for computing the log of difference
 %   of two erfs.
@@ -6,9 +6,16 @@ function v = lnDiffErfs(x1, x2),
 % DESC computes the log of the difference of two erfs in a numerically stable manner.
 % ARG x1 : argument of the positive erf
 % ARG x2 : argument of the negative erf
-% RETURN v : log(erf(x1) - erf(x2))
+% RETURN v : log(abs(erf(x1) - erf(x2)))
+% RETURN s : sign(erf(x1) - erf(x2))
 %
-% COPYRIGHT : Antti Honkela, 2007
+% FORMAT
+% DESC computes the log of the difference of two erfs in a numerically stable manner.
+% ARG x1 : argument of the positive erf
+% ARG x2 : argument of the negative erf
+% RETURN v : log(erf(x1) - erf(x2))     (Can be complex)
+%
+% COPYRIGHT : Antti Honkela, 2007-2008
 %
 % SEEALSO : gradLnDiffErfs
 
@@ -27,32 +34,30 @@ if numel(x2) == 1,
   x2 = x2 * ones(size(x1));
 end
 
+signs = sign(x1 - x2);
+I = signs == -1;
+swap = x1(I);
+x1(I) = x2(I);
+x2(I) = swap;
+
 % Case 1: arguments of different signs, no problems with loss of accuracy
 I1 = sign(x1) ~= sign(x2);
 % Case 2: both arguments are positive
-% 2a: x1 > x2
-I2a = (x1 > 0) & (x1 > x2) & ~I1;
-% 2b: x1 <= x2
-I2b = (x1 > 0) & ~I1 & ~I2a;
+I2 = (x1 > 0) & (x1 > x2) & ~I1;
 % Case 3: both arguments are negative
-% 3a: x1 < x2
-I3a = ~I1 & ~I2a & ~I2b & (x1 < x2);
-% 3b: x1 >= x2
-I3b = ~I1 & ~I2a & ~I2b & ~I3a;
+I3 = ~I1 & ~I2;
 
 warnState = warning('query', 'MATLAB:log:logOfZero');
 warning('off', 'MATLAB:log:logOfZero');
 v(I1) = log( erf(x1(I1)) - erf(x2(I1)) );
-v(I2a) = log(erfcx(  x2(I2a)) ...
-	     - erfcx(x1(I2a)) .* exp(x2(I2a).^2 - x1(I2a).^2)) ...
-	 - x2(I2a).^2;
-v(I2b) = log(erfcx(  x2(I2b)) .* exp(x1(I2b).^2 - x2(I2b).^2) ...
-	     - erfcx(x1(I2b))) ...
-	 - x1(I2b).^2;
-v(I3a) = log(erfcx(  -x1(I3a)) .* exp(x2(I3a).^2 - x1(I3a).^2) ...
-	     - erfcx(-x2(I3a))) ...
-	 - x2(I3a).^2;
-v(I3b) = log(erfcx(  -x1(I3b)) ...
-	     - erfcx(-x2(I3b)) .* exp(x1(I3b).^2 - x2(I3b).^2)) ...
-	 - x1(I3b).^2;
+v(I2) = log(erfcx(  x2(I2)) ...
+	    - erfcx(x1(I2)) .* exp(x2(I2).^2 - x1(I2).^2)) ...
+	- x2(I2).^2;
+v(I3) = log(erfcx(  -x1(I3)) ...
+	    - erfcx(-x2(I3)) .* exp(x1(I3).^2 - x2(I3).^2)) ...
+	- x1(I3).^2;
 warning(warnState.state, 'MATLAB:log:logOfZero');
+
+if nargout < 2,
+  v(I) = v(I) + pi*1i;
+end
