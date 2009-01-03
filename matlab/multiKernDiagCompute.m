@@ -14,6 +14,8 @@ function k = multiKernDiagCompute(kern, x)
 %
 % COPYRIGHT : Pei Gao, 2007
 
+% MODIFICATIONS : Mauricio Alvarez, 2008
+
 % KERN
 
 if iscell(x)
@@ -25,11 +27,13 @@ if iscell(x)
   startVal = 1;
   endVal = length(x{1});
   for i = 1:length(kern.comp)
-    k(startVal:endVal) = kernDiagCompute(kern.comp{i}, x{i});
-    startVal = endVal + 1;
-    if i+1 <= length(kern.comp)
-      endVal = endVal + length(x{i+1});
-    end
+      if ~isempty(x{i})
+          k(startVal:endVal) = kernDiagCompute(kern.comp{i}, x{i});
+      end
+      startVal = endVal + 1;
+      if i+1 <= length(kern.comp)
+          endVal = endVal + length(x{i+1});
+      end
   end
 else
   k = zeros(size(x, 1)*kern.numBlocks, 1);
