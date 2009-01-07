@@ -21,7 +21,7 @@ function [m, beta] = noiseUpdateSites(noise, g, nu, mu, varSigma, y);
 % NOISE
 
 if noise.updateSites
-  % The noise model has it's own code for site updates.
+  % The noise model has its own code for site updates.
   fhandle = str2func([noise.type 'NoiseSites']);
   [m, beta] = fhandle(noise, g, nu,  mu, varSigma, y);
 else
