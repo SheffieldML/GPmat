@@ -1,5 +1,10 @@
 This toolbox stores datasets and gives commands for accessing them.
 
+Version 0.134
+-------------
+
+Added movielens data loaders.
+
 Version 0.133
 -------------
 

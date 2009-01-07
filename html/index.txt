@@ -11,6 +11,10 @@
 RELEASEINFORMATION
 
 
+Added loaders for the movielens data.
+
+<h4>Version 0.133</h4>
+
 Added some variants of the swiss roll &quot;data&guot;.
 
 <h4>Version 0.132</h4>

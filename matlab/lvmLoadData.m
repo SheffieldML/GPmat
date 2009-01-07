@@ -85,7 +85,9 @@ function [Y, lbls, Ytest, lblstest] = lvmLoadData(dataset, seedVal)
       Ytest(uTest(i, 2), uTest(i, 1)) = uTest(i, 3);
     end
     Ytest(find(Ytest)) = (Ytest(find(Ytest))-meanY);
-    
+    stdY = sqrt(var(Y(find(Y))));
+    Y = Y/stdY;
+    Ytest = Ytest/stdY;
     
    case 'crabs'
     fid = fopen([baseDir 'crabs.dat']);
