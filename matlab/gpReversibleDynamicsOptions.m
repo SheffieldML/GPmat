@@ -18,7 +18,7 @@ options.kern.comp{1}.comp{2}.biasVariance = eps;
 switch approx
   case 'ftc'
    options.kern.comp{2}.variance = 1e-6;
- case {'fitc', 'pitc', 'dtc'}
+ case {'fitc', 'pitc', 'dtc', 'dtcvar'}
   options.kern.comp{2}.variance = 0.5e-6;
   options.beta = 2e6;
 end

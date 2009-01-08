@@ -10,7 +10,7 @@ function model = fgplvmExpandParam(model, params)
 % ARG params : parameter vector containing the parameters to put in
 % the FGPLVM structure.
 % 
-% COPYRIGHT : Neil D. Lawrence, 2005, 2006
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2009
 % 
 % SEEALSO : fgplvmCreate, fgplvmExtractParam, modelExpandParam
 
@@ -31,7 +31,7 @@ endVal = endVal + model.kern.nParams;
 switch model.approx
  case 'ftc'
   endVal = endVal;
- case {'dtc', 'fitc', 'pitc'}
+ case {'dtc', 'dtcvar', 'fitc', 'pitc'}
   if model.fixInducing
     % account for beta attached to the end.
     endVal = endVal + 1; 

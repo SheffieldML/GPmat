@@ -8,7 +8,7 @@ function modelRet = fgplvmTest
 %
 % SEEALSO : modelTest
 %
-% COPYRIGHT : Neil D. Lawrence, 2005, 2006
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2009
 
 
 % FGPLVM
@@ -33,7 +33,7 @@ learnScales = true; % test learning of output scales.
 Yorig = randn(N, d);
 indMissing = find(rand(N, d)>0.7);
 %indMissing = [9 19 29];
-approxType = {'ftc', 'dtc', 'fitc', 'pitc'};
+approxType = {'ftc', 'dtc', 'dtcvar', 'fitc', 'pitc'};
 counter = 0;
 for back = false
 %for back = [false true]

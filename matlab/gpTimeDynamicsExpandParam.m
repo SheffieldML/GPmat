@@ -15,7 +15,7 @@ function model = gpTimeDynamicsExpandParam(model, params)
 % 
 % SEEALSO : gpExpandParam, gpTimeDynamicsCreate, gpTimeDynamicsExtractParam, modelExtractParam, gpUpdateKernels
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
+% COPYRIGHT : Neil D. Lawrence, 2006, 2009
 
 % FGPLVM
 
@@ -41,7 +41,7 @@ elseif model.learnScales
    case 'ftc'
     endVal = length(origParam);
     startVal = endVal-model.d+1;
-   case {'dtc', 'fitc', 'pitc'}
+   case {'dtc', 'dtcvar', 'fitc', 'pitc'}
     endVal = length(origParam)-1;
     startVal = endVal-model.d+1;
   end

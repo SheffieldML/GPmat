@@ -11,8 +11,10 @@ function gX = gpDynamicsLatentGradients(model);
 %
 % SEEALSO : gpDynamicsCreate, gpDynamicsLogLikelihood
 %
-% COPYRIGHT : Neil D. Lawrence and Cark Ek, 2006
-
+% COPYRIGHT : Neil D. Lawrence, 2006, 2009
+%
+% MODIFICATIONS : Carl Henrik Ek, 2006
+  
 % FGPLVM
 
   
@@ -28,7 +30,7 @@ if ~strcmp(model.approx, 'ftc') & model.fixInducing
   gDynX(model.inducingIndices, :) = gDynX(model.inducingIndices, :) + gX_u;
 else
   switch model.approx
-   case {'dtc', 'fitc', 'pitc'}
+   case {'dtc', 'dtcvar', 'fitc', 'pitc'}
     if isfield(model, 'inducingPrior') & ~isempty(model.inducingPrior)
       gX_u = gX_u + priorGradient(model.inducingPrior, model.X_u);
     end
@@ -41,7 +43,7 @@ end
 % switch model.approx
 %  case 'ftc'
 %   [void, void, gDynX] = gpLogLikeGradients(model);
-%  case {'dtc', 'fitc', 'pitc'}
+%  case {'dtc', 'dtcvar', 'fitc', 'pitc'}
 %   % Need to pass active set too if not using 'ftc'.
 %   [void, void, gDynX] = gpLogLikeGradients(model);
 % end
@@ -69,7 +71,7 @@ switch model.approx
     end
   end
  
- case 'dtc'
+ case {'dtc', 'dtcvar'}
   % Deterministic training conditional.
   AinvK_uf = pdinv((1/model.beta)*model.K_uu  ...
                    + model.K_uf*model.K_uf') ...

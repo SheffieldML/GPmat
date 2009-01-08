@@ -8,7 +8,7 @@ function ll = fgplvmLogLikelihood(model)
 % being computed in the 'y' component of the structure.
 % RETURN ll : the log likelihood of the data given the model.
 %
-% COPYRIGHT : Neil D. Lawrence, 2005, 2006
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2009
 %
 % SEEALSO : gpLogLikelihood, fgplvmCreate
 %
@@ -29,7 +29,7 @@ elseif isfield(model, 'prior') &&  ~isempty(model.prior)
 end
 
 switch model.approx
-  case {'dtc', 'fitc', 'pitc'}
+  case {'dtc', 'dtcvar', 'fitc', 'pitc'}
    if isfield(model, 'inducingPrior') && ~isempty(model.inducingPrior)
      for i = 1:model.k
        ll = ll + priorLogProb(model.inducingPrior, model.X_u(i, :));    

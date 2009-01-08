@@ -20,7 +20,7 @@ function [g, gParam] = fgplvmLogLikeGradients(model)
 % constraint's parameters).
 % RETURN gParam : gradients of the parameters of the GP-LVM model.
 %
-% COPYRIGHT : Neil D. Lawrence, 2005, 2006
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2009
 %
 % SEEALSO : fgplvmLogLikelihood, fgplvmCreate, modelLogLikeGradients
 
@@ -44,7 +44,7 @@ elseif isfield(model, 'prior') &&  ~isempty(model.prior)
 end
 
 switch model.approx
- case {'dtc', 'fitc', 'pitc'}
+ case {'dtc', 'dtcvar', 'fitc', 'pitc'}
   if isfield(model, 'inducingPrior') && ~isempty(model.inducingPrior)
     gX_u = gX_u + priorGradient(model.inducingPrior, model.X_u);
   end

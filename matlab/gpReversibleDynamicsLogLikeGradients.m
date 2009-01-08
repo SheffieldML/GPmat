@@ -20,7 +20,7 @@ if ~model.learn
     switch model.approx
      case 'ftc'
       g =  [g(end-model.d + 1:end)];
-     case {'dtc', 'fitc', 'pitc'}
+     case {'dtc', 'dtcvar', 'fitc', 'pitc'}
       g =  [g(1:model.k*model.q) g(end-model.d:end-1)];
     end
   end

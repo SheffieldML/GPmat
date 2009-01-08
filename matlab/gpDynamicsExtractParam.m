@@ -17,7 +17,7 @@ function [param, names] = gpDynamicsExtractParam(model, dim)
 %
 % SEEALSO : gpExtractParam, gpDynamicsCreate, gpDynamicsExpandParam, modelExtractParam
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
+% COPYRIGHT : Neil D. Lawrence, 2006, 2009
 %
 % MODIFICATIONS : Carl Henrik Ek, 2007
 
@@ -56,7 +56,7 @@ if ~model.learn
       if returnNames
         names = names(end-model.d + 1:end);
       end
-     case {'dtc', 'fitc', 'pitc'}
+     case {'dtc', 'dtcvar', 'fitc', 'pitc'}
       if isfield(model, 'fixInducing') & model.fixInducing
         param = param(end-model.d:end-1);
         if returnNames

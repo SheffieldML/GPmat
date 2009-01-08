@@ -12,7 +12,7 @@ switch model.approx
  case 'ftc'
   [void, void, gDynX] = gpLogLikeGradients(...
       model);
- case {'dtc', 'fitc', 'pitc'}
+ case {'dtc', 'dtcvar', 'fitc', 'pitc'}
   % Need to pass active set too if not using 'ftc'.
   [void, void, gDynX] = gpLogLikeGradients(...
       model);
@@ -27,7 +27,7 @@ switch model.approx
     gX(2:end-1, i) = gX(2:end-1, i) ...
         + 1/model.scale(i)*model.invK_uu*model.m(:, i);
   end
- case 'dtc'
+ case {'dtc', 'dtcvar'}
   AinvK_uf = pdinv((1/model.beta)*model.K_uu  ...
                    + model.K_uf*model.K_uf') ...
       *model.K_uf;
