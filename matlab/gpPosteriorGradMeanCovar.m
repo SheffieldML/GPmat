@@ -34,7 +34,7 @@ function [gmu, gsigmavar, factors] = gpPosteriorGradMeanCovar(model, X);
 %
 % SEEALSO : gpCreate, gpPosteriorMeanVar
 %
-% COPYRIGHT : Neil D. Lawrence, 2005, 2006
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2009
 
 % GP
 
@@ -47,7 +47,7 @@ switch model.approx
  case 'ftc'
   gX = kernGradX(model.kern, X, model.X);
   kX_star = kernCompute(model.kern, X, model.X)';
- case {'dtc', 'fitc', 'pitc'}
+ case {'dtc', 'dtcvar', 'fitc', 'pitc'}
   gX = kernGradX(model.kern, X, model.X_u);
   kX_star = kernCompute(model.kern, X, model.X_u)';
  otherwise
@@ -62,7 +62,7 @@ if ~model.isMissingData
     switch model.approx
      case 'ftc'
       KinvgK = model.invK_uu*squeeze(gX(:, i, :));
-     case {'dtc', 'fitc', 'pitc'}
+     case {'dtc', 'dtcvar', 'fitc', 'pitc'}
       KinvgK = (model.invK_uu - (1/model.beta)*model.Ainv)*squeeze(gX(:, i, :));
      otherwise
       error('Unrecognised approximation type');

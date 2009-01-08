@@ -7,7 +7,7 @@ function model = gpReadFromFID(FID, varargin)
 % ARG FID : the file ID from where the data is loaded.
 % RETURN model : the model loaded in from the file.
 %
-% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2008
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2008, 2009
 %
 % SEEALSO : gpReadFromFile
 
@@ -51,6 +51,8 @@ switch sparseApprox
   approxType = 'fitc';
  case 3
   approxType = 'pitc';
+ case 4
+  approxType = 'dtcvar';
 end
 options = gpOptions(approxType);
 options.numActive = numActive;

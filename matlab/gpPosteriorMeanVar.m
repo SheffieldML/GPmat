@@ -12,7 +12,7 @@ function [mu, varsigma] = gpPosteriorMeanVar(model, X);
 %
 % SEEALSO : gpCreate, gpPosteriorMeanCovar, gpPosteriorGradMeanVar
 %
-% COPYRIGHT : Neil D. Lawrence, 2005, 2006
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2009
 
 % GP
 
@@ -25,7 +25,7 @@ maxMemory = 1000000;
 switch model.approx
  case 'ftc'
   chunkSize = ceil(maxMemory/model.N);
- case {'dtc', 'fitc', 'pitc'}
+ case {'dtc', 'dtcvar', 'fitc', 'pitc'}
   chunkSize = ceil(maxMemory/model.k);
 end
 
@@ -47,7 +47,7 @@ while startVal <= size(X, 1)
   switch model.approx
    case 'ftc'
     KX_star = kernCompute(model.kern, model.X, X(indices, :));  
-   case {'dtc', 'fitc', 'pitc'}
+   case {'dtc', 'dtcvar', 'fitc', 'pitc'}
     KX_star = kernCompute(model.kern, model.X_u, X(indices, :));  
   end
 
@@ -70,7 +70,7 @@ while startVal <= size(X, 1)
       switch model.approx
        case 'ftc'
         Kinvk = model.invK_uu*KX_star;
-       case {'dtc', 'fitc', 'pitc'}
+       case {'dtc', 'dtcvar', 'fitc', 'pitc'}
         Kinvk = (model.invK_uu - (1/model.beta)*model.Ainv)*KX_star;
       end
       varsig = diagK - sum(KX_star.*Kinvk, 1)';

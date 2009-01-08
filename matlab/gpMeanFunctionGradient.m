@@ -11,7 +11,7 @@ function g = gpMeanFunctionGradient(model)
 %
 % SEEALSO : gpCreate, gpScaleBiasGradient, gpLogLikeGradients, gpLogLikelihood
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
+% COPYRIGHT : Neil D. Lawrence, 2006, 2009
 
 % GP
 
@@ -29,7 +29,7 @@ if isfield(model, 'meanFunction') & ~isempty(model.meanFunction)
   switch model.approx
    case 'ftc'
     gmu = model.invK_uu*model.m;
-   case 'dtc'
+   case {'dtc', 'dtcvar'}
     gmu = (model.m - model.K_uf'*model.Ainv*(model.K_uf*model.m))*model.beta;
    case 'fitc'
     Dinvm = model.Dinv*model.m;

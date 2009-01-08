@@ -18,7 +18,7 @@ function model = gpUpdateKernels(model, X, X_u)
 %
 % SEEALSO : gpExpandParam, gpCreate
 %
-% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2007
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2007, 2009
 
 % GP
 
@@ -55,7 +55,7 @@ switch model.approx
       model.logDetK_uu(i) = logdet(model.K_uu(ind, ind), U);
     end
   end
- case {'dtc', 'fitc', 'pitc'}
+ case {'dtc', 'dtcvar', 'fitc', 'pitc'}
   model.K_uu = kernCompute(model.kern, X_u);
   
   if ~isfield(model.kern, 'whiteVariance') | model.kern.whiteVariance == 0
@@ -66,6 +66,26 @@ switch model.approx
   model.K_uf = kernCompute(model.kern, X_u, X);
   [model.invK_uu, model.sqrtK_uu] = pdinv(model.K_uu);
   model.logDetK_uu = logdet(model.K_uu, model.sqrtK_uu);
+
+end
+
+switch model.approx
+ case {'dtcvar', 'fitc'}
+  model.diagK = kernDiagCompute(model.kern, X);
+ case {'pitc'}
+  if ~isfield(model, 'isSpherical') | model.isSpherical
+    for i = 1:length(model.blockEnd)
+      ind = gpBlockIndices(model, i);
+      model.K{i} = kernCompute(model.kern, X(ind, :));
+    end
+  else
+    for j = 1:model.d
+      for i = 1:length(model.blockEnd)
+        ind = gpDataIndices(model, j, i);
+        model.K{i, j} = kernCompute(model.kern, X(ind, :));
+      end
+    end
+  end
 
 end
 

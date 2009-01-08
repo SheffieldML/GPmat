@@ -60,7 +60,7 @@ function [gParam, gX_u, gX, g_beta] = gpLogLikeGradients(model, X, M, X_u)
 %
 % SEEALSO : gpLogLikelihood, modelLogLikeGradients, fgplvmLogLikeGradients
 %
-% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2007
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2007, 2009
 %
 % MODIFICATIONS : Carl Henrik Ek, 2008
 
@@ -148,7 +148,7 @@ switch model.approx
     end
   end
    
- case {'dtc', 'fitc', 'pitc'}
+ case {'dtc', 'dtcvar', 'fitc', 'pitc'}
   % Sparse approximations.
   [gK_u, gK_uf, gK_star, g_beta] = gpCovGrads(model, M);
   
@@ -211,9 +211,9 @@ switch model.approx
   % Full training conditional. Nothing required here.
  case 'dtc'
   % Deterministic training conditional.  
-   
- case 'fitc'
+ case {'fitc', 'dtcvar'}
   % Fully independent training conditional.
+  % Variational sparse approximation.
   
   if nargout > 2
     % deal with diagonal term's effect on X gradients..

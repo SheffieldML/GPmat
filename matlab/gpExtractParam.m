@@ -16,7 +16,7 @@ function [params, names] = gpExtractParam(model)
 %
 % SEEALSO : gpCreate, gpExpandParam, modelExtractParam
 %
-% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2007
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2007, 2009
 
 % GP
 
@@ -79,7 +79,7 @@ switch model.approx
       names = {names{:}, betaParamNames{:}};
     end
   end
- case {'dtc', 'fitc', 'pitc'}
+ case {'dtc', 'dtcvar', 'fitc', 'pitc'}
   paramPart = [kernParams meanFuncParams scaleParams];
   if returnNames
     names = {kernParamNames{:}, meanFuncParamNames{:}, ...

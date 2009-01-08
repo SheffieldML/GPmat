@@ -15,7 +15,7 @@ function model = gpReconstruct(kern, noise, gpInfo, X, y)
 % 
 % SEEALSO : gpDeconstruct, gpCreate
 %
-% COPYRIGHT : Neil D. Lawrence, 2007
+% COPYRIGHT : Neil D. Lawrence, 2007, 2009
 
 % GP
 
@@ -23,7 +23,7 @@ options = gpOptions(gpInfo.approx);
 options.kern = kern;
 switch gpInfo.approx
  case 'ftc'
- case {'dtc', 'fitc', 'pitc'}
+ case {'dtc', 'dtcvar', 'fitc', 'pitc'}
   options.numActive = size(gpInfo.X_u, 1);
 end
 model = gpCreate(size(X, 2), size(y, 2), X, y, options);
@@ -33,7 +33,7 @@ model.m = gpComputeM(model);
 model.learnScales = gpInfo.learnScales;
 switch model.approx
  case 'ftc'
- case {'dtc', 'fitc', 'pitc'}
+ case {'dtc', 'dtcvar', 'fitc', 'pitc'}
   model.beta = gpInfo.beta;
   model.fixInducing = gpInfo.fixInducing;
   if gpInfo.fixInducing

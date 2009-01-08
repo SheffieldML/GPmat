@@ -15,7 +15,7 @@ function model = gpExpandParam(model, params)
 % 
 % SEEALSO : gpCreate, gpExtractParam, modelExtractParam, gpUpdateKernels
 %
-% COPYRIGHT : Neil D. Lawrence, 2005, 2006
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2009
 
 % GP
 
@@ -63,7 +63,7 @@ model.nParams = endVal;
 switch model.approx
  case 'ftc'
   model = gpUpdateKernels(model, model.X, model.X_u);
- case {'dtc', 'fitc', 'pitc'}
+ case {'dtc', 'dtcvar', 'fitc', 'pitc'}
   model = gpUpdateKernels(model, model.X, model.X_u);
  otherwise
   error('Unknown approximation type.')

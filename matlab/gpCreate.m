@@ -13,7 +13,7 @@ function model = gpCreate(q, d, X, y, options);
 %
 % SEEALSO : gpOptions, modelCreate
 %
-% COPYRIGHT : Neil D. Lawrence, 2005, 2006
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2009
 %
 % MODIFICATIONS : Cark Henrik Ek, 2007
 
@@ -141,7 +141,7 @@ switch options.approx
       error('options.beta cannot be empty if it is being optimised.');
     end
   end
- case {'dtc', 'fitc', 'pitc'}
+ case {'dtc', 'dtcvar', 'fitc', 'pitc'}
   % Sub-sample inducing variables.
   model.k = options.numActive;
   model.fixInducing = options.fixInducing;

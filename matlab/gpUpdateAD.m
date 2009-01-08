@@ -13,7 +13,7 @@ function model = gpUpdateAD(model, X)
 %
 % SEEALSO : gpUpdateKernels, gpExpandParam
 %
-% COPYRIGHT : Neil D. Lawrence 2006
+% COPYRIGHT : Neil D. Lawrence 2006, 2009
 
 % GP
 
@@ -37,7 +37,7 @@ switch model.approx
     end
   end
   
- case 'dtc'
+ case {'dtc', 'dtcvar'}
   if ~isfield(model, 'isSpherical') | model.isSpherical
     % Compute A = invBetaK_uu + K_uf*K_uf'
     K_uf2 = model.K_uf*model.K_uf';
@@ -52,6 +52,10 @@ switch model.approx
       model.innerProducts(1, i) = ...
           model.beta*(model.m(:, i)'*model.m(:, i) ...
                       - E'*model.Ainv*E);
+    end
+    if strcmp(model.approx, 'dtcvar')
+      model.diagD = model.beta*(model.diagK ...
+        - sum(model.K_uf.*(model.invK_uu*model.K_uf), 1)');
     end
   else
     if ~model.isMissingData
@@ -73,10 +77,12 @@ switch model.approx
           model.beta*(model.m(ind, i)'*model.m(ind, i) ...
                       - E'*model.Ainv{i}*E);
     end
+    if strcmp(model.approx, 'dtcvar')
+      error('Non spherical implementation for dtcvar not yet done.')
+    end
   end
   
  case 'fitc'
-  model.diagK = kernDiagCompute(model.kern, X);
   model.L = jitChol(model.K_uu)';
 
   if ~isfield(model, 'isSpherical') | model.isSpherical
@@ -148,7 +154,6 @@ switch model.approx
     K_ufDinvm = zeros(model.k, model.d);
     for i = 1:length(model.blockEnd)
       ind = gpBlockIndices(model, i);
-      model.K{i} = kernCompute(model.kern, X(ind, :));
       model.D{i} = eye(length(ind)) + model.beta*model.K{i} - ...
           model.beta*model.K_uf(:, ind)'*model.invK_uu*model.K_uf(:, ind);
       [model.Dinv{i}, U] = pdinv(model.D{i});
@@ -180,7 +185,6 @@ switch model.approx
       K_ufDinvm = zeros(model.k, model.d);
       for i = 1:length(model.blockEnd)
         ind = gpDataIndices(model, j, i);
-        model.K{i, j} = kernCompute(model.kern, X(ind, :));
         model.D{i, j} = eye(length(ind)) + model.beta*model.K{i, j} - ...
             model.beta*model.K_uf(:, ind)'*model.invK_uu*model.K_uf(:, ind);
         [model.Dinv{i, j}, U] = pdinv(model.D{i, j});

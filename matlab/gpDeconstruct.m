@@ -13,7 +13,7 @@ function [kern, noise, gpInfo] = gpDeconstruct(model)
 %
 % SEEALSO : gpReconstruct
 %
-% COPYRIGHT : Neil D. Lawrence, 2007
+% COPYRIGHT : Neil D. Lawrence, 2007, 2009
 
 % GP
 
@@ -27,7 +27,7 @@ gpInfo.learnScales = model.learnScales;
 gpInfo.approx = model.approx;
 switch model.approx
  case 'ftc'
- case {'dtc', 'fitc', 'pitc'}
+ case {'dtc', 'dtcvar', 'fitc', 'pitc'}
   gpInfo.beta = model.beta;
   gpInfo.betaTransform = model.betaTransform;
   gpInfo.fixInducing = model.fixInducing;
