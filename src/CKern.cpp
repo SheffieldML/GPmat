@@ -744,6 +744,153 @@ double CWhiteKern::getGradParam(unsigned int index, const CMatrix& X, const CMat
   return trace(covGrad);
 }
 
+// the white noise kernel.
+CWhitefixedKern::CWhitefixedKern()
+{
+  _init();
+}
+CWhitefixedKern::CWhitefixedKern(unsigned int inDim)
+{
+  _init();
+  setInputDim(inDim);
+}
+CWhitefixedKern::CWhitefixedKern(const CMatrix& X)
+{
+  _init();
+  setInputDim(X.getCols());
+}  
+CWhitefixedKern::CWhitefixedKern(const CWhitefixedKern& kern)
+{
+  _init();
+  setInputDim(kern.getInputDim());
+  variance = kern.variance;
+}
+// Class destructor
+CWhitefixedKern::~CWhitefixedKern()
+{
+}
+ostream& CWhitefixedKern::display(ostream& os) const
+{
+  os << getName() << " kernel:" << endl;
+  os << "variance: " << variance << endl;
+  return os;
+}
+
+void CWhitefixedKern::writeParamsToStream(ostream& out) const
+{
+  writeToStream(out, "baseType", getBaseType());
+  writeToStream(out, "type", getType());
+  writeToStream(out, "inputDim", getInputDim());
+  writeToStream(out, "numParams", getNumParams());
+  writeToStream(out, "degree", variance);
+}
+void CWhitefixedKern::readParamsFromStream(istream& in)
+{
+  string tbaseType = getBaseTypeStream(in);
+  if(tbaseType != getBaseType())
+    throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
+  string ttype = getTypeStream(in);
+  if(ttype != getType())
+    throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
+  setInputDim(readIntFromStream(in, "inputDim"));
+  unsigned int numParams=readIntFromStream(in, "numParams");
+  setVariance(readDoubleFromStream(in, "variance"));
+}
+
+double CWhitefixedKern::getVariance() const
+{
+  return variance;
+}
+void CWhitefixedKern::_init()
+{
+  nParams = 0;
+  setType("whitefixed");
+  setName("fixed white noise");
+  setStationary(true);
+}
+void CWhitefixedKern::setInitParam()
+{
+  variance = exp(-2.0);  
+}
+
+inline double CWhitefixedKern::diagComputeElement(const CMatrix& X, unsigned int index) const
+{
+  return variance;
+}
+void CWhitefixedKern::diagCompute(CMatrix& d, const CMatrix& X) const
+{
+  DIMENSIONMATCH(d.getCols()==1);
+  DIMENSIONMATCH(X.rowsMatch(d));
+  d.setVals(variance);
+}
+void CWhitefixedKern::setParam(double val, unsigned int paramNo)
+{
+  throw ndlexceptions::Error("Requested parameter doesn't exist.");
+}
+// Parameters are kernel parameters
+double CWhitefixedKern::getParam(unsigned int paramNo) const
+{
+  throw ndlexceptions::Error("Requested parameter doesn't exist.");
+}
+void CWhitefixedKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, const CMatrix& X2,  bool addG) const
+{
+  DIMENSIONMATCH(gX.getRows() == X2.getRows());
+  BOUNDCHECK(row < X.getRows());
+  DIMENSIONMATCH(X.getCols()==X2.getCols());
+  if(!addG)
+  {
+    gX.zeros();
+  }
+}
+void CWhitefixedKern::getDiagGradX(CMatrix& gX, const CMatrix& X, bool addG) const
+{
+  DIMENSIONMATCH(gX.dimensionsMatch(X));
+  if(!addG)
+    gX.zeros();
+}
+double CWhitefixedKern::getWhite() const
+{
+  return variance;
+}
+
+inline double CWhitefixedKern::computeElement(const CMatrix& X1, unsigned int index1,
+					 const CMatrix& X2, unsigned int index2) const
+{
+  return 0.0;
+}
+
+void CWhitefixedKern::compute(CMatrix& K, const CMatrix& X) const
+{
+  DIMENSIONMATCH(K.rowsMatch(X));
+  MATRIXPROPERTIES(K.isSquare());
+  K.zeros();
+  for(unsigned int i=0; i<K.getRows(); i++)
+    K.setVal(variance, i, i);
+  K.setSymmetric(true);
+}
+
+void CWhitefixedKern::compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const
+{
+  DIMENSIONMATCH(K.rowsMatch(X));
+  DIMENSIONMATCH(K.getCols()==X2.getRows());
+  K.zeros();
+}
+void CWhitefixedKern::compute(CMatrix& K, const CMatrix& X, const CMatrix& X2, unsigned int row) const
+{
+  DIMENSIONMATCH(K.rowsMatch(X));
+  DIMENSIONMATCH(K.getCols()==1);
+  K.zeros();
+}
+double CWhitefixedKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
+{
+  throw ndlexceptions::Error("Requested parameter doesn't exist.");
+
+}
+double CWhitefixedKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& covGrad) const
+{
+  throw ndlexceptions::Error("Requested parameter doesn't exist.");
+}
+
 // the bias kernel.
 CBiasKern::CBiasKern()
 {
@@ -3859,6 +4006,8 @@ CKern* readKernFromStream(istream& in)
   string type = CStreamInterface::getTypeStream(in);
   if(type=="white")
     pkern = new CWhiteKern();
+  if(type=="whitefixed")
+    pkern = new CWhitefixedKern();
   else if(type=="bias")
     pkern = new CBiasKern();
 

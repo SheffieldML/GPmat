@@ -303,7 +303,7 @@ class CKern : public CMatInterface, public CStreamInterface, public CTransformab
   // Get the log probabilities associated with the priors.
   void getPriorLogProb(CMatrix& L) const;
   // Display the kernel on an ostream.
-  ostream& display(ostream& os) const;
+  virtual ostream& display(ostream& os) const;
   
 #ifdef _NDLMATLAB
   // Create a kernel from an mxArray* object
@@ -568,6 +568,47 @@ class CWhiteKern: public CKern {
   void compute(CMatrix& K, const CMatrix& X, const CMatrix& X2, unsigned int row) const;
   double getGradParam(unsigned int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
   double getGradParam(unsigned int index, const CMatrix& X, const CMatrix& cvGrd) const;
+
+
+ private:
+  void _init();
+  double variance;
+};
+// Whitefixed Noise Kernel.
+class CWhitefixedKern: public CKern {
+ public:
+  CWhitefixedKern();
+  CWhitefixedKern(unsigned int inDim);
+  CWhitefixedKern(const CMatrix& X);
+  ~CWhitefixedKern();
+  CWhitefixedKern(const CWhitefixedKern&);
+  CWhitefixedKern* clone() const
+  {
+    return new CWhitefixedKern(*this);
+  }
+  double getVariance() const;
+  void setVariance(double val)
+  {
+    variance = val;
+  }
+  void setInitParam();
+  double diagComputeElement(const CMatrix& X, unsigned int index) const;
+  void diagCompute(CMatrix& d, const CMatrix& X) const;
+  void setParam(double val, unsigned int paramNum);
+  double getParam(unsigned int paramNum) const;
+  void getGradX(CMatrix& g, const CMatrix& X, unsigned int pointNo, const CMatrix& X2, bool addG=false) const;
+  void getDiagGradX(CMatrix& g, const CMatrix& X, bool addG=false) const;
+  double getWhite() const;
+  double computeElement(const CMatrix& X1, unsigned int index1, 
+			const CMatrix& X2, unsigned int index2) const;
+  void compute(CMatrix& K, const CMatrix& X) const;
+  void compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const;
+  void compute(CMatrix& K, const CMatrix& X, const CMatrix& X2, unsigned int row) const;
+  double getGradParam(unsigned int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
+  double getGradParam(unsigned int index, const CMatrix& X, const CMatrix& cvGrd) const;
+  void writeParamsToStream(ostream& out) const;
+  void readParamsFromStream(istream& in);
+  ostream& display(ostream& os) const;
 
 
  private:
