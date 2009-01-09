@@ -83,7 +83,7 @@ if exist(funcStr)==2
     image(x1, x2, C);
   end
   
-  [c, h] = contourf(X1, X2, log10(reshape(1./varsigma(:, 1), size(X1))), 128); 
+  %[c, h] = contourf(X1, X2, log10(reshape(1./varsigma(:, 1), size(X1))), 128); 
   % shading flat
   colormap gray;
   %colorbar
