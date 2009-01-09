@@ -38,6 +38,7 @@ CGp::CGp(unsigned int q, unsigned int d, CMatrix* pXin, CMatrix* pyin, CKern* pk
   case FTC:
     break;
   case DTC:
+  case DTCVAR:
   case FITC:
   case PITC:
     // positive constraint on beta
@@ -78,6 +79,7 @@ CGp::CGp(CKern* pkernel, CNoise* pnois,
   case FTC:
     break;
   case DTC:
+  case DTCVAR:
   case FITC:
   case PITC:
     // positive constraint on beta
@@ -140,7 +142,6 @@ void CGp::initSparseStoreage()
     {
       gX_u.resize(numActive, getInputDim());
     }
-     
     E.resize(numActive, getOutputDim());
     EET.resize(numActive, numActive);
     AinvEET.resize(numActive, numActive);
@@ -149,7 +150,6 @@ void CGp::initSparseStoreage()
     AinvK_uf.resize(numActive, getNumData());
     EMT.resize(numActive, getNumData());
     AinvEMT.resize(numActive, getNumData());
-     
     A.resize(numActive, numActive);
     K_uu.resize(numActive, numActive);
     invK_uu.resize(numActive, numActive);
@@ -214,6 +214,12 @@ void CGp::initStoreage()
   case FTC:
     break;
   case DTC:
+    break;
+  case DTCVAR:
+    gLambda.resize(getNumData(), 1);
+    diagK.resize(getNumData(), 1);
+    invK_uuK_uf.resize(numActive, getNumData());
+    V.resize(numActive, getNumData());  
     break;
   case FITC:
     // Temporary variables for FITC approximation.
@@ -300,7 +306,7 @@ unsigned int CGp::getOptNumParams() const
       throw ndlexceptions::NotImplementedError("Back constraints not yet implemented.");
     }
   }
-  // for FITC, DTC and PITC
+  // for FITC, DTC, DTCVAR and PITC
   if(isSparseApproximation()) 
   {
     if(!isInducingFixed()) 
@@ -339,7 +345,7 @@ void CGp::getOptParams(CMatrix& param) const
       throw ndlexceptions::NotImplementedError("Back constraints not yet implemented.");
     }
   }
-  // for FITC, DTC and PITC
+  // for FITC, DTC, DTCVAR and PITC
   if(isSparseApproximation()) 
   {
     if(!isInducingFixed()) 
@@ -481,6 +487,7 @@ void CGp::updateAlpha() const
       }
       break;
     case DTC:
+    case DTCVAR:
       if(isSpherical())
       {
 	Alpha.gemm(K_uf, m, 1.0, 0.0, "n", "n");
@@ -704,6 +711,7 @@ void CGp::_updateK() const
     K.setSymmetric(true);
     break;
   case DTC:
+  case DTCVAR:
   case FITC:
   case PITC:
     for(unsigned int i=0; i<numActive; i++) 
@@ -730,6 +738,7 @@ void CGp::_updateK() const
   case DTC:
     break;
   case FITC:
+  case DTCVAR:
     for(unsigned int i=0; i< getNumData(); i++) 
     {
       diagK.setVal(pkern->diagComputeElement(*pX, i), i);
@@ -753,10 +762,11 @@ void CGp::updateAD() const {
       // TODO update the inner products here.
       break;
     case DTC:
+    case DTCVAR:
       if (isSpherical()) 
       {
         A.deepCopy(K_uu);
-        A.gemm(K_uf, K_uf, 1.0, 1/betaVal, "n", "t");
+        A.gemm(K_uf, K_uf, 1.0, 1.0/betaVal, "n", "t");
         A.setSymmetric(true);
         LcholA.deepCopy(A);
 	// this is an upper cholesky
@@ -766,19 +776,34 @@ void CGp::updateAD() const {
         Ainv.pdinv(LcholA);
 	// Now stored as a lower cholesky.
         LcholA.trans();
+	if(getApproximationType()==DTCVAR)
+	{
+// 	  V.deepCopy(K_uf);
+// 	  V.trsm(LcholK, 1.0, "l", "l", "n", "n");
+// 	  V.trsm(LcholK, 1.0, "l", "l", "t", "n");
+// 	  V.dotMultiply(K_uf);
+	  V.gemm(invK_uu, K_uf, 1.0, 0.0, "n", "n");
+	  V.dotMultiply(K_uf);
+
+	  diagD.deepCopy(diagK);
+	  diagD.sumCol(V, -1.0, 1.0);
+	  diagD.scale(getBetaVal());
+	}	
       }
       else 
       {
-        throw ndlexceptions::NotImplementedError("Non-spherical implementations not yet in place for DTC");
+        throw ndlexceptions::NotImplementedError("Non-spherical implementations not yet in place for DTC or DTCVAR");
       }
       // TODO generate the inner products here
       break;
     case FITC:  
       if (isSpherical()) 
       {
-	V.deepCopy(K_uf);
-	V.trsm(LcholK, 1.0, "l", "l", "n", "n");
-	V.trsm(LcholK, 1.0, "l", "l", "t", "n");
+// 	V.deepCopy(K_uf);
+// 	V.trsm(LcholK, 1.0, "l", "l", "n", "n");
+// 	V.trsm(LcholK, 1.0, "l", "l", "t", "n");
+// 	V.dotMultiply(K_uf);
+	V.gemm(invK_uu, K_uf, 1.0, 0.0, "n", "n");
 	V.dotMultiply(K_uf);
 	diagD.deepCopy(diagK);
 	diagD.negate();
@@ -855,6 +880,7 @@ void CGp::_updateInvK(unsigned int dim) const
     LcholK.trans();
     break;
   case DTC:
+  case DTCVAR:
   case FITC:
   case PITC:
     LcholK.deepCopy(K_uu);
@@ -862,6 +888,7 @@ void CGp::_updateInvK(unsigned int dim) const
     logDetK_uu = logDet(LcholK);
     invK_uu.setSymmetric(true);
     invK_uu.pdinv(LcholK);
+    // make it lower
     LcholK.trans();
     break;
   }
@@ -895,6 +922,7 @@ double CGp::logLikelihood() const
     }
     break;
   case DTC:    
+  case DTCVAR:
     if(isSpherical()) 
     {
       CMatrix e(numActive, 1);
@@ -908,6 +936,8 @@ double CGp::logLikelihood() const
 	invAe.symvColCol(0, Ainv, e, 0, 1.0, 0.0, "l");
 	L -= getBetaVal()*(invAe.dotColCol(0, e, 0)-m.dotColCol(j, m, j));
       }	  
+      if(getApproximationType()==DTCVAR)
+	L += (double)getOutputDim()*diagD.sum();
     }
     else 
     {
@@ -964,6 +994,7 @@ double CGp::logLikelihood() const
   }
   L*=-0.5;
   L+=pkern->priorLogProb();
+  L-=(double)getOutputDim()*(double)getNumData()*ndlutil::HALFLOGTWOPI;
   return L;
 }
 // compute the gradients wrt parameters and latent variables.
@@ -1094,11 +1125,10 @@ void CGp::updateG() const
 	}
       }
     }
-    
-  
     break;
     
   case DTC:
+  case DTCVAR:
   case FITC:
   case PITC:
     gpCovGrads();
@@ -1109,6 +1139,7 @@ void CGp::updateG() const
     //     pX->toFile("X", "Save of X");
     //     py->toFile("y", "Save of y");
     pkern->getGradTransParams(tempG, X_u, gK_uu, true);
+    // should we regularize here? I.e. should the true at the end be false?
     pkern->getGradTransParams(tempG2, X_u, *pX, gK_uf, true);
     for(unsigned int i=0; i<numKernParams; i++) 
     {
@@ -1140,7 +1171,7 @@ void CGp::updateG() const
       if(isOptimiseX())
       {
 	// for FITC and PITC need extra terms (see matlab code). This
-	// is sufficient for DTC.
+	// is sufficient for DTC and DTCVAR.
 	for(unsigned int i=0; i<getNumData(); i++)
 	{
 	  pkern->getGradX(gKX_uf2, *pX, i, X_u);
@@ -1151,7 +1182,6 @@ void CGp::updateG() const
 	}
       }
     }
-
     break;
   }
   switch(getApproximationType()) 
@@ -1161,15 +1191,26 @@ void CGp::updateG() const
   case DTC:
     break;
   case FITC:
+  case DTCVAR:
     // deal with diagonal term's affect on kernel parameters.
-    pkern->getDiagGradTransParams(tempG, *pX, gLambda, true);
+    // false here stops gradients of priors being added ...
+    pkern->getDiagGradTransParams(tempG, *pX, gLambda, false);
     for(unsigned int i=0; i<numKernParams; i++) 
     {
       g_param.addVal(tempG.getVal(i), i);
     }	
     if(isOptimiseX())
-      throw ndlexceptions::NotImplementedError("Optimisation of X not yet implemnted for FITC sparse approximations");
-
+    {
+      // using gKX_uf here as it is correct storeage size, really computing gKXdiag though!!
+      pkern->getDiagGradX(gKX_uf, *pX);
+      for(unsigned int i=0; i<getNumData(); i++)
+      {
+	for(unsigned int j=0; j<getInputDim(); j++)
+	{
+	  gXorW.addVal(gLambda.getVal(i)*gKX_uf.getVal(i, j), i, j);
+	}
+      }
+    }
     break;
   case PITC:
     if(isOptimiseX())
@@ -1200,6 +1241,7 @@ void CGp::gpCovGrads() const
     break;
     
   case DTC:
+  case DTCVAR:
     if(isSpherical())
     {
       E.gemm(K_uf, m, 1.0, 0.0, "n", "n");
@@ -1216,21 +1258,28 @@ void CGp::gpCovGrads() const
       gK_uu.axpy(Ainv,-1.0/getBetaVal());
       gK_uu.scale((double)getOutputDim());
       gK_uu.axpy(AinvEETAinv, -1.0);
-      gK_uu.scale(0.5);
       gK_uu.setSymmetric(true);
-
+      if(getApproximationType()==DTCVAR)
+      {
+	invK_uuK_uf.gemm(invK_uu, K_uf, 1.0, 0.0, "n", "n");
+	gK_uu.syrk(invK_uuK_uf, -getBetaVal()*(double)getOutputDim(), 1.0, "l", "n");
+      }
+      gK_uu.scale(0.5);
       AinvK_uf.symm(Ainv, K_uf, 1.0, 0.0, "l", "l");
-
+      
       EMT.gemm(E, m, 1.0, 0.0, "n", "t");
-
+      
       AinvEMT.symm(Ainv, EMT, 1.0, 0.0, "l", "l");
-
+      
       gK_uf.gemm(AinvEET, AinvK_uf, 1.0, 0.0, "n", "n");
       gK_uf.axpy(AinvEMT, -1.0);
       gK_uf.scale(getBetaVal());
       gK_uf.negate();
       gK_uf.axpy(AinvK_uf, -(double)getOutputDim());
-
+      if(getApproximationType()==DTCVAR)
+      {
+	gK_uf.axpy(invK_uuK_uf, getBetaVal()*(double)getOutputDim());
+      }
       double gbetaVal = ((double)(getNumData()-numActive)/getBetaVal()); 
       double temp = 0.0;
       for(unsigned int i=0; i < Ainv.getRows(); i++)
@@ -1245,12 +1294,20 @@ void CGp::gpCovGrads() const
       for(unsigned int j=0; j<getOutputDim(); j++)
 	gbetaVal -= m.dotColCol(j, m, j);
       gbetaVal += AinvEET.trace();
+      if(getApproximationType()==DTCVAR)
+      {
+	gbetaVal -= (double)getOutputDim()*diagD.sum()/getBetaVal();
+      }
       gbetaVal *= 0.5;
       gBeta.setVal(gbetaVal, 0);
+      if(getApproximationType()==DTCVAR)
+      {
+	gLambda.setVals(-0.5*(double)getOutputDim()*getBetaVal());
+      }
     }
     else 
     {
-      throw ndlexceptions::Error("Non-spherical implementations not yet in place for DTC");
+      throw ndlexceptions::Error("Non-spherical implementations not yet in place for DTC and DTCVAR");
     }
     break;
 
@@ -1307,19 +1364,19 @@ void CGp::gpCovGrads() const
       // invK_uu.toFile("invK_uu", "invK_uu");
       // K_uu.toFile("K_uu", "K_uu");
       gK_uu.deepCopy(invK_uu);
-      gK_uu.toFile("gK_uu1", "gK_uu=invK_uu");
+      //gK_uu.toFile("gK_uu1", "gK_uu=invK_uu");
       
-      Ainv.toFile("Ainv", "Ainv");
+      //Ainv.toFile("Ainv", "Ainv");
       gK_uu.axpy(Ainv, -1.0/getBetaVal());
-      gK_uu.toFile("gK_uu2", "gK_uu=invK_uu-Ainv/beta");
+      //gK_uu.toFile("gK_uu2", "gK_uu=invK_uu-Ainv/beta");
       gK_uu.scale((double)getOutputDim());
-      gK_uu.toFile("gK_uu3", "gK_uu=d*(invK_uu-Ainv/beta)");
+      //gK_uu.toFile("gK_uu3", "gK_uu=d*(invK_uu-Ainv/beta)");
       gK_uu.axpy(AinvEETAinv, -1.0);
-      gK_uu.toFile("gK_uu4", "gK_uu=d*(invK_uu-Ainv/beta)-AinvEETAinv");
+      //gK_uu.toFile("gK_uu4", "gK_uu=d*(invK_uu-Ainv/beta)-AinvEETAinv");
       invK_uuK_ufDinv.toFile("invK_uuK_ufDinv", "Whatever");
       invK_uuK_ufDinvQ.toFile("invK_uuK_ufDinvQ", "Whatever");
       gK_uu.gemm(invK_uuK_ufDinvQ, invK_uuK_ufDinv, getBetaVal(), 1.0, "n", "t");
-      gK_uu.toFile("gK_uu5", "gK_uu=d*(invK_uu-Ainv/beta)-AinvEETAinv+beta*invK_uuK_ufDinv*QDinvK_ufinvK_uu");
+      //gK_uu.toFile("gK_uu5", "gK_uu=d*(invK_uu-Ainv/beta)-AinvEETAinv+beta*invK_uuK_ufDinv*QDinvK_ufinvK_uu");
       gK_uu.scale(0.5);	 
       gK_uu.setSymmetric(true);
  
@@ -1338,7 +1395,7 @@ void CGp::gpCovGrads() const
       gLambda.scale(0.5*getBetaVal());
       gLambda.dotDivide(diagD);
       gBeta.setVal(-gLambda.sum()/(getBetaVal()*getBetaVal()), 0, 0);
-      gBeta.toFile("gBeta2", "Other gBeta");
+      //gBeta.toFile("gBeta2", "Other gBeta");
 
     }
     else 

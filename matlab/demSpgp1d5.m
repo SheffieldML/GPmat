@@ -14,15 +14,16 @@ experimentNo = 5;
 
 % Set up model
 options = gpOptions('dtcvar');
+options.kern = {'rbf', 'bias'}
 options.numActive = 9;
-options.optimiser = 'conjgrad';
+options.optimiser = 'scg';
 
 % use the deterministic training conditional.
 q = size(X, 2);
 d = size(y, 2);
 
 model = gpCreate(q, d, X, y, options);
-model.X_u = randn(9, 1)*0.25 - 0.75;
+model.X_u = randn(options.numActive, 1)*0.1;
 params = gpExtractParam(model);
 model = gpExpandParam(model, params);
 

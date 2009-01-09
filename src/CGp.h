@@ -14,7 +14,8 @@ public:
     FTC, 
     DTC, 
     FITC, 
-    PITC
+    PITC,
+    DTCVAR
   };
 
   CGp();
@@ -182,6 +183,8 @@ public:
       return "ftc";
     case DTC:
       return "dtc";
+    case DTCVAR:
+      return "dtcvar";
     case FITC:
       return "fitc";
     case PITC:
@@ -195,6 +198,8 @@ public:
       setApproximationType(FTC);
     else if(val=="dtc")
       setApproximationType(DTC);
+    else if(val=="dtcvar")
+      setApproximationType(DTCVAR);
     else if(val=="fitc")
       setApproximationType(FITC);
     else if(val=="pitc")
@@ -208,6 +213,8 @@ public:
     if(approximationType == FTC)
       setSparseApproximation(false);
     else if(approximationType == DTC)
+      setSparseApproximation(true);
+    else if(approximationType == DTCVAR)
       setSparseApproximation(true);
     else if(approximationType == FITC)
       setSparseApproximation(true);
@@ -323,7 +330,7 @@ public:
   mutable CMatrix Alpha; // SVM style 'alphas'.
   
 
-  // Temporary variables for DTC.
+  // Temporary variables for sparse approximations.
   mutable CMatrix Am;  
   mutable CMatrix Lm;  
   mutable CMatrix invLmV;  
@@ -416,7 +423,7 @@ private:
   CTransform* betaTransform;
 
   unsigned int numActive;
-  int approximationType; /// FTC, DTC, FITC, PITC
+  int approximationType; /// FTC, DTC, FITC, PITC, DTCVAR
   int numCovStruct;
 
   bool outputScaleLearnt;

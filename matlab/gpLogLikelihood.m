@@ -41,7 +41,7 @@ switch model.approx
                   - (sum(sum(model.Ainv.*EET)) ...
                      -sum(sum(model.m.*model.m)))*model.beta);
       if strcmp(model.approx, 'dtcvar')
-        ll = ll - 0.5*sum(model.diagD);
+        ll = ll - model.d*0.5*sum(model.diagD);
       end
     else
       error('Not implemented variable length beta yet.');
@@ -183,3 +183,4 @@ end
 if model.learnScales
   ll = ll - sum(log(model.scale));
 end
+ll = ll - model.d*model.N/2*log(2*pi);
