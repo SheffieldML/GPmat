@@ -1,13 +1,15 @@
 #include "CGp.h"
-
 CGp::CGp() 
 {
   _init();
 }
 
-CGp::CGp(unsigned int q, unsigned int d, CMatrix* pXin, CMatrix* pyin, CKern* pkernel, CNoise* pnois, int approxType, unsigned int actSetSize, int verbos)
-:
-  CMapModel(), CProbabilisticOptimisable(), pkern(pkernel), pnoise(pnois), pX(pXin), py(pyin)
+CGp::CGp(unsigned int q, unsigned int d, 
+	 CMatrix* pXin, CMatrix* pyin, 
+	 CKern* pkernel, CNoise* pnois, 
+	 int approxType, 
+	 unsigned int actSetSize, int verbos)
+  : CMapModel(), CProbabilisticOptimisable(), pkern(pkernel), pnoise(pnois), pX(pXin), py(pyin)
 {
   DIMENSIONMATCH(pXin->getCols()==q);
   DIMENSIONMATCH(pyin->getCols()==d);
@@ -168,11 +170,6 @@ void CGp::initSparseStoreage()
     K.resize(getNumData(), getNumData());
     invK.resize(getNumData(), getNumData());
     LcholK.resize(getNumData(), getNumData());    
-    // gX.clear();
-    //for(unsigned int i=0; i<getNumData(); i++) {
-    //  gX.push_back(new CMatrix(getNumData(), getInputDim()));
-    //}
-    //gDiagX.resize(getNumData(), getInputDim());
     covGrad.resize(getNumData(), getNumData());  
     Alpha.resize(getNumData(), getOutputDim());
   }
@@ -262,6 +259,8 @@ void CGp::updateM() const
 }
 void CGp::initVals() 
 {
+  setSpherical(true); // not implemented non-spherical stuff yet.
+  maxTries = 10; // number of cholesky decompositions to be attempted (adding jitter each time)
   // TODO: this isn't being properly used ...
   for(unsigned int i=0; i<getNumData(); i++) 
   {
@@ -768,9 +767,36 @@ void CGp::updateAD() const {
         A.deepCopy(K_uu);
         A.gemm(K_uf, K_uf, 1.0, 1.0/betaVal, "n", "t");
         A.setSymmetric(true);
-        LcholA.deepCopy(A);
+	double jitter = 1e-6*A.trace()/(double)A.getRows();
 	// this is an upper cholesky
-        LcholA.chol();
+	bool success = false;
+	unsigned int tries = 0;
+	while(!success && tries<maxTries)
+	{
+	  try{
+	    LcholA.deepCopy(A);
+	    LcholA.chol();
+	    success = true;
+	  }
+	  catch(ndlexceptions::MatrixNonPosDef& e)
+	  {
+	    if(getVerbosity()>0)
+	      cout << "Warning: matrix A non positive definite in updateAD(), adding jitter: " << jitter << "." << endl; 
+	    A.addDiag(jitter);
+	    jitter*=10;
+	    tries++;
+	  }
+	  catch(...)
+	  {
+	    throw;
+	  }
+	}
+	if(tries>=maxTries)
+	{
+	  if(getVerbosity()>0)
+	    cout << "Adding jitter failed after " << tries << " tries." << endl;
+	  throw ndlexceptions::MatrixNonPosDef();
+	}
 	logDetA = logDet(LcholA);
 	Ainv.setSymmetric(true);
         Ainv.pdinv(LcholA);
@@ -778,10 +804,6 @@ void CGp::updateAD() const {
         LcholA.trans();
 	if(getApproximationType()==DTCVAR)
 	{
-// 	  V.deepCopy(K_uf);
-// 	  V.trsm(LcholK, 1.0, "l", "l", "n", "n");
-// 	  V.trsm(LcholK, 1.0, "l", "l", "t", "n");
-// 	  V.dotMultiply(K_uf);
 	  V.gemm(invK_uu, K_uf, 1.0, 0.0, "n", "n");
 	  V.dotMultiply(K_uf);
 
@@ -1132,12 +1154,6 @@ void CGp::updateG() const
   case FITC:
   case PITC:
     gpCovGrads();
-    //     gK_uu.toFile("gKuu", "Save of gKuu");
-    //     gK_uf.toFile("gKuf", "Save of gKuf");
-    //     gLambda.toFile("gLambda", "Save of gLambda");
-    //     gBeta.toFile("gBeta", "Save of gBeta");
-    //     pX->toFile("X", "Save of X");
-    //     py->toFile("y", "Save of y");
     pkern->getGradTransParams(tempG, X_u, gK_uu, true);
     // should we regularize here? I.e. should the true at the end be false?
     pkern->getGradTransParams(tempG2, X_u, *pX, gK_uf, true);
@@ -1167,7 +1183,6 @@ void CGp::updateG() const
           gX_u.addVal(gKX_uf.dotColRow(j, gK_uf, i), i, j); 
         }
       }
-      //gX_u.toFile("gX_u", "Gradient wrt X_u");
       if(isOptimiseX())
       {
 	// for FITC and PITC need extra terms (see matlab code). This
@@ -1355,33 +1370,20 @@ void CGp::gpCovGrads() const
       diagQ.axpy(diagD, -(double)getOutputDim());
       diagQ.axpy(diagMMT, getBetaVal());
       diagQ.axpy(diagK_ufAinvEMT, -2.0*getBetaVal());
-      diagQ.toFile("diagQ", "diagQ result");
       invK_uuK_ufDinvQ.deepCopy(invK_uuK_ufDinv);
       for(unsigned int i=0; i<getNumData(); i++)
       {
 	invK_uuK_ufDinvQ.scaleCol(i, diagQ.getVal(i));
       }
-      // invK_uu.toFile("invK_uu", "invK_uu");
-      // K_uu.toFile("K_uu", "K_uu");
       gK_uu.deepCopy(invK_uu);
-      //gK_uu.toFile("gK_uu1", "gK_uu=invK_uu");
       
-      //Ainv.toFile("Ainv", "Ainv");
       gK_uu.axpy(Ainv, -1.0/getBetaVal());
-      //gK_uu.toFile("gK_uu2", "gK_uu=invK_uu-Ainv/beta");
       gK_uu.scale((double)getOutputDim());
-      //gK_uu.toFile("gK_uu3", "gK_uu=d*(invK_uu-Ainv/beta)");
       gK_uu.axpy(AinvEETAinv, -1.0);
-      //gK_uu.toFile("gK_uu4", "gK_uu=d*(invK_uu-Ainv/beta)-AinvEETAinv");
-      invK_uuK_ufDinv.toFile("invK_uuK_ufDinv", "Whatever");
-      invK_uuK_ufDinvQ.toFile("invK_uuK_ufDinvQ", "Whatever");
       gK_uu.gemm(invK_uuK_ufDinvQ, invK_uuK_ufDinv, getBetaVal(), 1.0, "n", "t");
-      //gK_uu.toFile("gK_uu5", "gK_uu=d*(invK_uu-Ainv/beta)-AinvEETAinv+beta*invK_uuK_ufDinv*QDinvK_ufinvK_uu");
       gK_uu.scale(0.5);	 
       gK_uu.setSymmetric(true);
  
-      gK_uu.toFile("gK_uu6", "gK_uu=.5*(d*(invK_uu-Ainv/beta)-AinvEETAinv+beta*invK_uuK_ufDinv*QDinvK_ufinvK_uu)");
-      
       gK_uf.deepCopy(invK_uuK_ufDinvQ);
       gK_uf.symm(Ainv, K_uf, -(double)getOutputDim(), -getBetaVal(), "l", "l");
       gK_uf.symm(AinvEETAinv, K_uf, -getBetaVal(), 1.0, "l", "l");
@@ -1395,7 +1397,6 @@ void CGp::gpCovGrads() const
       gLambda.scale(0.5*getBetaVal());
       gLambda.dotDivide(diagD);
       gBeta.setVal(-gLambda.sum()/(getBetaVal()*getBetaVal()), 0, 0);
-      //gBeta.toFile("gBeta2", "Other gBeta");
 
     }
     else 

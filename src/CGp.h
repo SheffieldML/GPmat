@@ -318,15 +318,19 @@ public:
   }
  
   CMapModel* backConstraintModel; // for mapping constraints on latent variables.
-  CMatrix* pX;
   CMatrix X_u; // for inducing variables if needed.
+
+  CMatrix* pX;
   CMatrix* py;  // target data.
-  
+
+  // if debugging, make lots of these variables available for checking in python.
+#ifndef DBG  
+ private:
+#endif
   bool optimiseX;
   bool backConstrained;
 
   mutable CMatrix m;  // scaled and biased Y
-
   mutable CMatrix Alpha; // SVM style 'alphas'.
   
 
@@ -366,7 +370,8 @@ public:
   CKern* pkern;
   CNoise* pnoise;
   
-protected:
+  unsigned int maxTries;
+
   mutable vector<int> inducingIndices;
   mutable CMatrix gDiagX;
   mutable CMatrix gK_uf;
@@ -409,8 +414,10 @@ protected:
   mutable CMatrix gX_u;
   mutable CMatrix gXorW;
   CMapModel* pbackModel;
-
-private:
+  // if debugging, still make the remainder available.
+#ifdef DBG
+ private:
+#endif
   void _init();
   void _updateK() const; // update K with the inverse of the kernel plus beta terms computed from the active points.
   void _updateInvK(unsigned int dim=0) const;
