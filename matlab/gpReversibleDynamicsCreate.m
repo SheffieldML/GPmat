@@ -1,6 +1,20 @@
 function model = gpReversibleDynamicsCreate(q, d, latentVals, options)
 
-% GPREVERSIBLEDYNAMICSCREATE Create the dynamics model. 
+% GPREVERSIBLEDYNAMICSCREATE Create a reversible dynamics model. 
+% FORMAT
+% DESC creates a Gaussian process model for dealing with reversible dynamics
+% in the latent space of a GP-LVM.
+% ARG q : the latent space dimension.
+% ARG q : the latent space dimension.
+% ARG X : the latent variables.
+% ARG options : options structure as defined by gpOptions.m.
+% RETURN model : model structure containing the Gaussian process.
+%
+% SEEALSO : gpCreate, gpReversibleDynamicsOptions,
+% gpReversibleDynamicsLatentGradients, gpReversibleDynamicsSetLatentValues,
+% gpReversibleDynamicsLogLikelihood
+%
+% COPYRIGHT : Neil D. Lawrence, 2005
 
 % FGPLVM
 
