@@ -38,7 +38,6 @@ CGp::CGp(unsigned int q, unsigned int d,
   switch(approxType) 
   {
   case FTC:
-    break;
   case DTC:
   case DTCVAR:
   case FITC:
@@ -79,7 +78,6 @@ CGp::CGp(CKern* pkernel, CNoise* pnois,
   switch(approxType) 
   {
   case FTC:
-    break;
   case DTC:
   case DTCVAR:
   case FITC:
@@ -96,6 +94,7 @@ void CGp::_init()
   setType("gp");
   setName("Gaussian process");
   setOutputScaleLearnt(false);
+  setOutputBiasLearnt(false);
   jitter = 1e-6;
   inducingFixed=false;
   spherical=true;
@@ -467,10 +466,7 @@ void CGp::updateAlpha() const
   { 
     updateM();
     updateK();
-    if(isSparseApproximation())
-    {
-      updateAD();  
-    }
+    updateAD();  
     switch(getApproximationType())
     {
     case FTC:
@@ -573,12 +569,12 @@ void CGp::_posteriorMean(CMatrix& mu, const CMatrix& kX) const
 void CGp::_posteriorVar(CMatrix& varSigma, CMatrix& kX, const CMatrix& Xin) const
 {
   updateK();
+  updateAD();
   DIMENSIONMATCH(varSigma.getRows()==kX.getCols());
   DIMENSIONMATCH(varSigma.getCols()==getOutputDim());
   // WARNING: destroys kX through in place operations.
   if(isSparseApproximation())
   {
-    updateAD();
     CMatrix store(kX.getRows(), kX.getCols());
     EET.deepCopy(invK_uu);
     EET.axpy(Ainv, -1.0/getBetaVal());
@@ -683,10 +679,7 @@ void CGp::updateK() const
   {
     _updateK();
     _updateInvK();
-    if(isSparseApproximation())
-    {
-      updateAD();
-    }
+    setADupToDate(false);
     setKupToDate(true);
   }
 }
@@ -715,7 +708,7 @@ void CGp::_updateK() const
   case PITC:
     for(unsigned int i=0; i<numActive; i++) 
     {
-      K_uu.setVal(pkern->diagComputeElement(X_u, i)+jitter, i, i);
+      K_uu.setVal(pkern->diagComputeElement(X_u, i), i, i);
       for(unsigned int j=0; j<i; j++) 
       {
 	kVal=pkern->computeElement(X_u, i, X_u, j);
@@ -767,36 +760,11 @@ void CGp::updateAD() const {
         A.deepCopy(K_uu);
         A.gemm(K_uf, K_uf, 1.0, 1.0/betaVal, "n", "t");
         A.setSymmetric(true);
-	double jitter = 1e-6*A.trace()/(double)A.getRows();
-	// this is an upper cholesky
-	bool success = false;
-	unsigned int tries = 0;
-	while(!success && tries<maxTries)
-	{
-	  try{
-	    LcholA.deepCopy(A);
-	    LcholA.chol();
-	    success = true;
-	  }
-	  catch(ndlexceptions::MatrixNonPosDef& e)
-	  {
-	    if(getVerbosity()>0)
-	      cout << "Warning: matrix A non positive definite in updateAD(), adding jitter: " << jitter << "." << endl; 
-	    A.addDiag(jitter);
-	    jitter*=10;
-	    tries++;
-	  }
-	  catch(...)
-	  {
-	    throw;
-	  }
-	}
-	if(tries>=maxTries)
-	{
-	  if(getVerbosity()>0)
-	    cout << "Adding jitter failed after " << tries << " tries." << endl;
-	  throw ndlexceptions::MatrixNonPosDef();
-	}
+	double jit = LcholA.jitChol(A);
+	if(jit>1e-2)
+	  if(getVerbosity()>2)
+	    cout << "Warning: jitter of " << jit << " added to A in updateAD()." << endl;
+
 	logDetA = logDet(LcholA);
 	Ainv.setSymmetric(true);
         Ainv.pdinv(LcholA);
@@ -846,9 +814,12 @@ void CGp::updateAD() const {
 	A.deepCopy(K_uu);
 	A.gemm(K_uf, V, 1.0, 1.0/getBetaVal(), "n", "t");
 	A.setSymmetric(true);
-	LcholA.deepCopy(A);
 	// This is initially an upper Cholesky.
-	LcholA.chol();
+	double jit = LcholA.jitChol(A);
+	if(jit>1e-2)
+	  if(getVerbosity()>2)
+	    cout << "Warning: jitter of " << jit << " added to A in updateAD()." << endl;
+
 	logDetA = logDet(LcholA);
 	Ainv.setSymmetric(true);
 	Ainv.pdinv(LcholA);
@@ -862,8 +833,13 @@ void CGp::updateAD() const {
 	Am.diag(1/getBetaVal());
 	Am.gemm(V, V, 1.0, 1.0, "n", "t");
 	Am.setSymmetric(true);
-	Lm.deepCopy(Am);
-	Lm.chol("L");
+
+	jit = Lm.jitChol(Am); // this will initially be upper triangular.
+	if(jit>1e-2)
+	  if(getVerbosity()>2)
+	    cout << "Warning: jitter of " << jit << " added to Am in updateAD()." << endl;
+	Lm.trans(); // now it is lower
+
 	invLmV.deepCopy(V);
 	invLmV.trsm(Lm, 1.0, "l", "l", "n", "n");
 	bet.gemm(invLmV, scaledM, 1.0, 0.0, "n", "n");
@@ -890,12 +866,14 @@ void CGp::updateAD() const {
 // update invK with the inverse of the kernel plus beta terms computed from the active points.
 void CGp::_updateInvK(unsigned int dim) const
 {
+  double jit = 0.0;
   switch(getApproximationType()) {
   case FTC:
-    LcholK.deepCopy(K);
-    //for(unsigned int i=0; i<getNumData(); i++)
-    //  invK.setVal(invK.getVal(i, i) + 1/getBetaVal(i, dim), i, i);
-    LcholK.chol(); // this will initially be upper triangular.
+    jit = LcholK.jitChol(K); // this will initially be upper triangular.
+    if(jit>1e-2)
+      if(getVerbosity()>2)
+	cout << "Warning: jitter of " << jit << " added to K in _updateInvK()." << endl;
+
     logDetK = logDet(LcholK);
     invK.setSymmetric(true);
     invK.pdinv(LcholK);
@@ -905,8 +883,12 @@ void CGp::_updateInvK(unsigned int dim) const
   case DTCVAR:
   case FITC:
   case PITC:
-    LcholK.deepCopy(K_uu);
-    LcholK.chol();
+    jit = LcholK.jitChol(K_uu); // this will initially be upper triangular.
+    if(jit>1e-2)
+      if(getVerbosity()>2)
+	cout << "Warning: jitter of " << jit << " added to K_uu in _updateInvK()." << endl;
+
+
     logDetK_uu = logDet(LcholK);
     invK_uu.setSymmetric(true);
     invK_uu.pdinv(LcholK);
@@ -921,6 +903,7 @@ void CGp::_updateInvK(unsigned int dim) const
 double CGp::logLikelihood() const
 {
   updateK();
+  updateAD();
   double L=0.0;
   switch(getApproximationType()) 
   {
@@ -1092,6 +1075,7 @@ void CGp::updateG() const
   unsigned int numParams = numKernParams;
   
   updateK();
+  updateAD();
   CMatrix tempG(1, numKernParams);
   CMatrix tempG2(1, numKernParams);
   CMatrix tmpV(getOutputDim(), 1);
@@ -1437,6 +1421,7 @@ CGp::CGp(CMatrix* pinData,
   setVerbosity(verbos);
   readMatlabFile(gpInfoFile, gpInfoVariable);
   updateK();
+  updateAD();
 }
 mxArray* CGp::toMxArray() const
 {

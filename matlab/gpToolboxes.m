@@ -2,10 +2,10 @@
 
 importLatest('netlab');
 importTool('mocap');
-importLatest('ndlutil');
+importTool('ndlutil');
 importLatest('prior');
 importTool('mltools');
 importLatest('optimi');
 importTool('datasets');
 importLatest('kern');
-importLatest('noise'); % Only needed for C++ load ins.
+importTool('noise'); % Only needed for C++ load ins.

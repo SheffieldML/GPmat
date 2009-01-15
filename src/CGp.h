@@ -88,19 +88,43 @@ public:
   void readParamsFromStream(istream& in);
   void writeParamsToStream(ostream& out) const;
 
-  inline unsigned int getNumActive() const {
+  inline unsigned int getNumActive() const 
+  {
     return numActive;
   }
-  void setNumActive(unsigned int val) {
+  void setNumActive(unsigned int val) 
+  {
     numActive = val;
   }
   
-  void setInputVals(CMatrix& Xvals) {
+  void setTargetVals(CMatrix& yvals) 
+  {
+    DIMENSIONMATCH(yvals.getCols()==getOutputDim());
+    DIMENSIONMATCH(yvals.getRows()==getNumData());
+    py=&yvals;
+    pnoise->setTarget(py);
+  }
+  void setTargetVals(CMatrix* pyvals) 
+  {
+    DIMENSIONMATCH(pyvals->getCols()==getOutputDim());
+    DIMENSIONMATCH(pyvals->getRows()==getNumData());
+    py=pyvals;
+    pnoise->setTarget(py);
+  }
+  void setInputVals(CMatrix& Xvals) 
+  {
     DIMENSIONMATCH(Xvals.getCols()==getInputDim());
     DIMENSIONMATCH(Xvals.getRows()==getNumData());
-    pX->deepCopy(Xvals);
+    pX=&Xvals;
   }
-  void setInducingVals(CMatrix& Xvals) {
+  void setInputVals(CMatrix* pXvals) 
+  {
+    DIMENSIONMATCH(pXvals->getCols()==getInputDim());
+    DIMENSIONMATCH(pXvals->getRows()==getNumData());
+    pX=pXvals;
+  }
+  void setInducingVals(CMatrix& Xvals) 
+  {
     SANITYCHECK(isSparseApproximation());
     DIMENSIONMATCH(Xvals.getCols()==getInputDim());
     DIMENSIONMATCH(Xvals.getRows()==numActive);
@@ -166,13 +190,16 @@ public:
     BOUNDCHECK(i<beta.getRows());
     BOUNDCHECK(j<beta.getCols());
     beta.setVal(val, i, j);
+    setADupToDate(false);
   }
   void setBetaVals(double val) {
     beta.setVals(val);
+    setADupToDate(false);
   }
   void setBeta(const CMatrix& bet) {
     DIMENSIONMATCH(bet.dimensionsMatch(beta));
     beta.deepCopy(bet);
+    setADupToDate(false);
   }
   int getApproximationType() const {
     return approximationType;
