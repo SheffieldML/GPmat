@@ -23,6 +23,10 @@ else
     kern.degree = readIntFromFID(FID, 'degree');
   end
   
+  if strcmp(kern.type, 'white') 
+    kern.variance = readIntFromFID(FID, 'variance');
+  end
+  
   params = modelReadFromFID(FID);
   fhandle = str2func([kern.type 'KernExpandParam']);
   kern = fhandle(kern, params);

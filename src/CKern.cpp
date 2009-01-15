@@ -782,7 +782,7 @@ void CWhitefixedKern::writeParamsToStream(ostream& out) const
   writeToStream(out, "type", getType());
   writeToStream(out, "inputDim", getInputDim());
   writeToStream(out, "numParams", getNumParams());
-  writeToStream(out, "degree", variance);
+  writeToStream(out, "variance", variance);
 }
 void CWhitefixedKern::readParamsFromStream(istream& in)
 {
