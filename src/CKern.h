@@ -25,11 +25,12 @@ const string KERNVERSION="0.1";
 
 class CKern : public CMatInterface, public CStreamInterface, public CTransformable, public CRegularisable {
  public:
-  CKern() {}
-  CKern(const CMatrix& X){}
+  CKern() : updateXused(false) {}
+  CKern(const CMatrix& X) : updateXused(false) {}
+  CKern(unsigned int inDim) : updateXused(false) {}
+  CKern(const CKern& kern) : updateXused(false) {}
   
-  virtual ~CKern(){}
-  CKern(const CKern& kern){}
+  virtual ~CKern()  {}
   virtual CKern* clone() const=0;
   // set initial parameters.
   virtual void setInitParam()=0;
@@ -206,8 +207,17 @@ class CKern : public CMatInterface, public CStreamInterface, public CTransformab
   // Called to indicate the value of X has changed and kernel should do any
   // precomputation it needs to do per value of X.
   virtual void updateX(const CMatrix& X) {}
+
+  virtual bool isUpdateXused() const
+  {
+    return updateXused;
+  }
+  virtual bool setUpdateXused(bool val) 
+  {
+    updateXused = val;
+  }
   // For compound kernels when a new kernel is added.
-  virtual unsigned int addKern(CKern* kern)
+  virtual unsigned int addKern(const CKern* kern)
   {
     cerr << "You cannot add a kernel to this kernel." << endl;
     return 0;
@@ -329,6 +339,7 @@ class CKern : public CMatInterface, public CStreamInterface, public CTransformab
   string type;
   vector<string> paramNames;
  private:
+  bool updateXused;
   unsigned int inputDim;
   bool stationary;
 };
@@ -336,6 +347,10 @@ class CKern : public CMatInterface, public CStreamInterface, public CTransformab
 // CArdKern is the base class for any kernel that uses multiple input parameters.
 class CArdKern : public CKern {
  public:
+  CArdKern() : CKern() {}
+  CArdKern(const CMatrix& X) : CKern(X) {}
+  CArdKern(unsigned int inDim) : CKern(inDim) {}
+  CArdKern(const CKern& kern) : CKern(kern) {}
 #ifdef _NDLMATLAB
   virtual void addParamToMxArray(mxArray* matlabArray) const;
   // Gets the parameters from the mxArray.
@@ -350,14 +365,14 @@ class CArdKern : public CKern {
 class CComponentKern : public CKern 
 {
  public:
-  CComponentKern() {}
-  CComponentKern(const CComponentKern& kern) : components(kern.components)
+  CComponentKern() : CKern() {}
+  CComponentKern(unsigned int inDim) : CKern(inDim) {}
+  CComponentKern(const CMatrix& X) : CKern(X) {}
+  CComponentKern(const CComponentKern& kern) : CKern(kern), components(kern.components) {}
+  virtual unsigned int addKern(const CKern* kern)
   {
-  }
-  virtual unsigned int addKern(CKern* kern)
-  {
-    components.push_back(kern);
-    int oldNParams = nParams;
+    components.push_back(kern->clone());
+    unsigned int oldNParams = nParams;
     nParams+=kern->getNumParams();
     for(size_t i=0; i<kern->getNumTransforms(); i++)
       addTransform(kern->getTransform(i), kern->getTransformIndex(i)+oldNParams);      
@@ -531,7 +546,7 @@ class CTensorKern: public CComponentKern {
   void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise=true) const;
   double getGradParam(unsigned int index, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd) const;
   double getGradParam(unsigned int index, const CMatrix& X, const CMatrix& cvGrd) const;
-  unsigned int addKern(CKern* kern);
+  unsigned int addKern(const CKern* kern);
 private:
   void _init();
 };
@@ -707,7 +722,6 @@ class CRbfKern: public CKern {
   
  private:
   void _init();
-  bool updateXused;
   double variance;
   double inverseWidth;
   mutable CMatrix Xdists;
@@ -749,7 +763,6 @@ class CRatQuadKern: public CKern {
   
  private:
   void _init();
-  bool updateXused;
   double variance;
   double alpha;
   double lengthScale;
@@ -792,7 +805,6 @@ class CMatern32Kern: public CKern {
   
  private:
   void _init();
-  bool updateXused;
   double variance;
   double lengthScale;
   mutable CMatrix Xdists;
@@ -834,7 +846,6 @@ class CMatern52Kern: public CKern {
   
  private:
   void _init();
-  bool updateXused;
   double variance;
   double lengthScale;
   mutable CMatrix Xdists;

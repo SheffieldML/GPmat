@@ -125,35 +125,32 @@ void CComponentKern::writeParamsToStream(ostream& out) const
 
 
 // The Compound kernel.
-CCmpndKern::CCmpndKern()
+CCmpndKern::CCmpndKern() : CComponentKern()
 {
   _init();
 }
-CCmpndKern::CCmpndKern(unsigned int inDim)
+CCmpndKern::CCmpndKern(unsigned int inDim) : CComponentKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CCmpndKern::CCmpndKern(const CMatrix& X) 
+CCmpndKern::CCmpndKern(const CMatrix& X) : CComponentKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
 CCmpndKern::CCmpndKern(const CCmpndKern& kern) : CComponentKern(kern)
 {
-  // TODO Need to sort out copy constructor --- what should be done with the pointers? If we clone them, they won't be deleted unless it is done explicitly.
-
   _init();
   setInputDim(kern.getInputDim());
   for(size_t i=0; i<components.size(); i++)
     addKern(components[i]->clone()); 
-  //  components(kern.components);// = kern.components;
 }
 // Class destructor
 CCmpndKern::~CCmpndKern()
 {
-  //  for(size_t i=0; i<components.size(); i++)
-  //  delete components[i];
+  for(size_t i=0; i<components.size(); i++)
+    delete components[i];
 }
 void CCmpndKern::_init()
 {
@@ -331,16 +328,16 @@ double CCmpndKern::getGradParam(unsigned int index, const CMatrix& X, const CMat
 }
 
 // The Tensor kernel.
-CTensorKern::CTensorKern()
+CTensorKern::CTensorKern() : CComponentKern()
 {
   _init();
 }
-CTensorKern::CTensorKern(unsigned int inDim)
+CTensorKern::CTensorKern(unsigned int inDim) : CComponentKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CTensorKern::CTensorKern(const CMatrix& X) 
+CTensorKern::CTensorKern(const CMatrix& X) : CComponentKern(X)
 {
   _init();
   setInputDim(X.getCols());
@@ -348,16 +345,14 @@ CTensorKern::CTensorKern(const CMatrix& X)
 CTensorKern::CTensorKern(const CTensorKern& kern) : CComponentKern(kern)
 {
 
-  // TODO Need to sort out copy constructor --- what should be done with the pointers? If we clone them, they won't be deleted unless it is done explicitly.
   _init();
   setInputDim(kern.getInputDim());
   for(size_t i=0; i<components.size(); i++)
   {
     addKern(components[i]->clone()); 
-    //addKern(components[i]); 
   }
 }
-CTensorKern::CTensorKern(const CTensorKern& kern, unsigned int comp) 
+CTensorKern::CTensorKern(const CTensorKern& kern, unsigned int comp) : CComponentKern(kern)
 {
   _init();
   BOUNDCHECK(comp<kern.components.size());
@@ -367,19 +362,18 @@ CTensorKern::CTensorKern(const CTensorKern& kern, unsigned int comp)
   nParams -= kern.components[comp]->getNumParams();
   for(size_t i=0; i<comp; i++)
   {
-    addKern(kern.components[i]);
+    addKern(kern.components[i]->clone());
   }
   for(size_t i=comp+1; i<kern.components.size(); i++)
   {
-    addKern(kern.components[i]);
+    addKern(kern.components[i]->clone());
   }
 }
 // Class destructor
 CTensorKern::~CTensorKern()
 {
-  // Shouldn't delete as they could have been generated elsewhere.
-  //   for(size_t i=0; i<components.size(); i++)
-  //  delete components[i];
+  for(size_t i=0; i<components.size(); i++)
+    delete components[i];
 
 }
 void CTensorKern::_init()
@@ -392,7 +386,7 @@ void CTensorKern::_init()
 void CTensorKern::setInitParam()
 {
 }
-unsigned int CTensorKern::addKern(CKern* kern)
+unsigned int CTensorKern::addKern(const CKern* kern)
 {
   if(kern->getWhite())
   {
@@ -607,21 +601,21 @@ double CTensorKern::getGradParam(unsigned int index, const CMatrix& X, const CMa
   return -1;
 }
 // the white noise kernel.
-CWhiteKern::CWhiteKern()
+CWhiteKern::CWhiteKern() : CKern()
 {
   _init();
 }
-CWhiteKern::CWhiteKern(unsigned int inDim)
+CWhiteKern::CWhiteKern(unsigned int inDim) : CKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CWhiteKern::CWhiteKern(const CMatrix& X)
+CWhiteKern::CWhiteKern(const CMatrix& X) : CKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
-CWhiteKern::CWhiteKern(const CWhiteKern& kern)
+CWhiteKern::CWhiteKern(const CWhiteKern& kern) : CKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -745,21 +739,21 @@ double CWhiteKern::getGradParam(unsigned int index, const CMatrix& X, const CMat
 }
 
 // the white noise kernel.
-CWhitefixedKern::CWhitefixedKern()
+CWhitefixedKern::CWhitefixedKern() : CKern()
 {
   _init();
 }
-CWhitefixedKern::CWhitefixedKern(unsigned int inDim)
+CWhitefixedKern::CWhitefixedKern(unsigned int inDim) : CKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CWhitefixedKern::CWhitefixedKern(const CMatrix& X)
+CWhitefixedKern::CWhitefixedKern(const CMatrix& X) : CKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
-CWhitefixedKern::CWhitefixedKern(const CWhitefixedKern& kern)
+CWhitefixedKern::CWhitefixedKern(const CWhitefixedKern& kern) : CKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -892,21 +886,21 @@ double CWhitefixedKern::getGradParam(unsigned int index, const CMatrix& X, const
 }
 
 // the bias kernel.
-CBiasKern::CBiasKern()
+CBiasKern::CBiasKern() : CKern()
 {
   _init();
 }
-CBiasKern::CBiasKern(unsigned int inDim)
+CBiasKern::CBiasKern(unsigned int inDim) : CKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CBiasKern::CBiasKern(const CMatrix& X)
+CBiasKern::CBiasKern(const CMatrix& X) : CKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
-CBiasKern::CBiasKern(const CBiasKern& kern)
+CBiasKern::CBiasKern(const CBiasKern& kern) : CKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -1029,21 +1023,21 @@ double CBiasKern::getGradParam(unsigned int index, const CMatrix& X, const CMatr
   return covGrad.sum();
 }
 // the RBF kernel.
-CRbfKern::CRbfKern() : updateXused(false)
+CRbfKern::CRbfKern() : CKern()
 {
   _init();
 }
-CRbfKern::CRbfKern(unsigned int inDim) : updateXused(false)
+CRbfKern::CRbfKern(unsigned int inDim) : CKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CRbfKern::CRbfKern(const CMatrix& X) : updateXused(false)
+CRbfKern::CRbfKern(const CMatrix& X) : CKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
-CRbfKern::CRbfKern(const CRbfKern& kern)
+CRbfKern::CRbfKern(const CRbfKern& kern) : CKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -1159,7 +1153,7 @@ double CRbfKern::computeElement(const CMatrix& X1, unsigned int index1,
 
 void CRbfKern::updateX(const CMatrix& X)
 {
-  updateXused = true;
+  setUpdateXused(true);
   Xdists.resize(X.getRows(),X.getRows());
   double halfInverseWidth=0.5*inverseWidth;
   unsigned int nrows = X.getRows();
@@ -1223,7 +1217,7 @@ void CRbfKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGra
     {
       double k = 0;
       double dist2 = 0;
-      if(updateXused) // WVB's mod for precomputing parts of the kernel.
+      if(isUpdateXused()) // WVB's mod for precomputing parts of the kernel.
       {
 	dist2 = Xdists.getVal(i,j);
 	k = Xdists.getVal(j,i);
@@ -1260,21 +1254,21 @@ double CRbfKern::getGradParam(unsigned int index, const CMatrix& X, const CMatri
 }
 
 // the Rational Quadratic kernel.
-CRatQuadKern::CRatQuadKern() : updateXused(false)
+CRatQuadKern::CRatQuadKern() : CKern()
 {
   _init();
 }
-CRatQuadKern::CRatQuadKern(unsigned int inDim) : updateXused(false)
+CRatQuadKern::CRatQuadKern(unsigned int inDim) : CKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CRatQuadKern::CRatQuadKern(const CMatrix& X) : updateXused(false)
+CRatQuadKern::CRatQuadKern(const CMatrix& X) : CKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
-CRatQuadKern::CRatQuadKern(const CRatQuadKern& kern)
+CRatQuadKern::CRatQuadKern(const CRatQuadKern& kern) : CKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -1400,7 +1394,7 @@ double CRatQuadKern::computeElement(const CMatrix& X1, unsigned int index1,
 
 void CRatQuadKern::updateX(const CMatrix& X)
 {
-  updateXused = true;
+  setUpdateXused(true);
   Xdists.resize(X.getRows(),X.getRows());
   double wi2=0.5/(lengthScale*lengthScale*alpha);
   unsigned int nrows = X.getRows();
@@ -1468,7 +1462,7 @@ void CRatQuadKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& co
     double dist2 = 0.0;
     for(unsigned int i=0; i<j; i++)
     {
-      if(updateXused) // WVB's mod for precomputing parts of the kernel.
+      if(isUpdateXused()) // WVB's mod for precomputing parts of the kernel.
       {
 	dist2 = Xdists.getVal(i,j);
 	baseVal = (1+dist2*wi2);
@@ -1511,21 +1505,21 @@ double CRatQuadKern::getGradParam(unsigned int index, const CMatrix& X, const CM
 
 
 // the Matern 3/2 kernel.
-CMatern32Kern::CMatern32Kern() : updateXused(false)
+CMatern32Kern::CMatern32Kern() : CKern()
 {
   _init();
 }
-CMatern32Kern::CMatern32Kern(unsigned int inDim) : updateXused(false)
+CMatern32Kern::CMatern32Kern(unsigned int inDim) : CKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CMatern32Kern::CMatern32Kern(const CMatrix& X) : updateXused(false)
+CMatern32Kern::CMatern32Kern(const CMatrix& X) : CKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
-CMatern32Kern::CMatern32Kern(const CMatern32Kern& kern)
+CMatern32Kern::CMatern32Kern(const CMatern32Kern& kern) : CKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -1649,7 +1643,7 @@ double CMatern32Kern::computeElement(const CMatrix& X1, unsigned int index1,
 
 void CMatern32Kern::updateX(const CMatrix& X)
 {
-  updateXused = true;
+  setUpdateXused(true);
   Xdists.resize(X.getRows(),X.getRows());
   double wi2=3.0/(lengthScale*lengthScale);
   unsigned int nrows = X.getRows();
@@ -1715,7 +1709,7 @@ void CMatern32Kern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& c
   {
     for(unsigned int i=0; i<j; i++)
     {
-      if(updateXused) // WVB's mod for precomputing parts of the kernel.
+      if(isUpdateXused()) // WVB's mod for precomputing parts of the kernel.
       {
 	n2 = Xdists.getVal(i,j);
 	sqrtwi2n2 = Xdists.getVal(j,i);
@@ -1758,21 +1752,21 @@ double CMatern32Kern::getGradParam(unsigned int index, const CMatrix& X, const C
 }
 
 // the Matern 5/2 kernel.
-CMatern52Kern::CMatern52Kern() : updateXused(false)
+CMatern52Kern::CMatern52Kern() : CKern()
 {
   _init();
 }
-CMatern52Kern::CMatern52Kern(unsigned int inDim) : updateXused(false)
+CMatern52Kern::CMatern52Kern(unsigned int inDim) : CKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CMatern52Kern::CMatern52Kern(const CMatrix& X) : updateXused(false)
+CMatern52Kern::CMatern52Kern(const CMatrix& X) : CKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
-CMatern52Kern::CMatern52Kern(const CMatern52Kern& kern)
+CMatern52Kern::CMatern52Kern(const CMatern52Kern& kern) : CKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -1903,7 +1897,7 @@ double CMatern52Kern::computeElement(const CMatrix& X1, unsigned int index1,
 
 void CMatern52Kern::updateX(const CMatrix& X)
 {
-  updateXused = true;
+  setUpdateXused(true);
   Xdists.resize(X.getRows(),X.getRows());
   double wi2=5.0/(lengthScale*lengthScale);
   unsigned int nrows = X.getRows();
@@ -1977,7 +1971,7 @@ void CMatern52Kern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& c
   {
     for(unsigned int i=0; i<j; i++)
     {
-      if(updateXused) // WVB's mod for precomputing parts of the kernel.
+      if(isUpdateXused()) // WVB's mod for precomputing parts of the kernel.
       {
 	n2 = Xdists.getVal(i,j);
 	n2wi2 = n2*wi2;
@@ -2023,21 +2017,21 @@ double CMatern52Kern::getGradParam(unsigned int index, const CMatrix& X, const C
 
 
 // the Linear kernel.
-CLinKern::CLinKern()
+CLinKern::CLinKern() : CKern()
 {
   _init();
 }
-CLinKern::CLinKern(unsigned int inDim)
+CLinKern::CLinKern(unsigned int inDim) : CKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CLinKern::CLinKern(const CMatrix& X)
+CLinKern::CLinKern(const CMatrix& X) : CKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
-CLinKern::CLinKern(const CLinKern& kern)
+CLinKern::CLinKern(const CLinKern& kern) : CKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -2189,21 +2183,21 @@ double CLinKern::getGradParam(unsigned int index, const CMatrix& X, const CMatri
 }
   
 
-CMlpKern::CMlpKern()
+CMlpKern::CMlpKern() : CKern()
 {
   _init();
 }
-CMlpKern::CMlpKern(unsigned int inDim)
+CMlpKern::CMlpKern(unsigned int inDim) : CKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CMlpKern::CMlpKern(const CMatrix& X)
+CMlpKern::CMlpKern(const CMatrix& X) : CKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
-CMlpKern::CMlpKern(const CMlpKern& kern)
+CMlpKern::CMlpKern(const CMlpKern& kern) : CKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -2444,21 +2438,21 @@ double CMlpKern::getGradParam(unsigned int index, const CMatrix& X, const CMatri
   
 }
 
-CPolyKern::CPolyKern()
+CPolyKern::CPolyKern() : CKern()
 {
   _init();
 }
-CPolyKern::CPolyKern(unsigned int inDim)
+CPolyKern::CPolyKern(unsigned int inDim) : CKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CPolyKern::CPolyKern(const CMatrix& X)
+CPolyKern::CPolyKern(const CMatrix& X) : CKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
-CPolyKern::CPolyKern(const CPolyKern& kern)
+CPolyKern::CPolyKern(const CPolyKern& kern) : CKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -2724,21 +2718,21 @@ void CPolyKern::extractParamFromMxArray(const mxArray* matlabArray)
 #endif
 
 // the Linear ARD kernel.
-CLinardKern::CLinardKern()
+CLinardKern::CLinardKern() : CArdKern()
 {
   _init();
 }
-CLinardKern::CLinardKern(unsigned int inDim)
+CLinardKern::CLinardKern(unsigned int inDim) : CArdKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CLinardKern::CLinardKern(const CMatrix& X)
+CLinardKern::CLinardKern(const CMatrix& X) : CArdKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
-CLinardKern::CLinardKern(const CLinardKern& kern)
+CLinardKern::CLinardKern(const CLinardKern& kern) : CArdKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -2961,21 +2955,21 @@ double CLinardKern::getGradParam(unsigned int index, const CMatrix& X, const CMa
   
 }
 // the RBF ARD kernel.
-CRbfardKern::CRbfardKern()
+CRbfardKern::CRbfardKern() : CArdKern()
 {
   _init();
 }
-CRbfardKern::CRbfardKern(unsigned int inDim)
+CRbfardKern::CRbfardKern(unsigned int inDim) : CArdKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CRbfardKern::CRbfardKern(const CMatrix& X)
+CRbfardKern::CRbfardKern(const CMatrix& X) : CArdKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
-CRbfardKern::CRbfardKern(const CRbfardKern& kern)
+CRbfardKern::CRbfardKern(const CRbfardKern& kern) : CArdKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -3223,20 +3217,20 @@ double CRbfardKern::getGradParam(unsigned int index, const CMatrix& X, const CMa
 }
 
 // the MLP ARD kernel.
-CMlpardKern::CMlpardKern()
+CMlpardKern::CMlpardKern() : CArdKern()
 {
 }
-CMlpardKern::CMlpardKern(unsigned int inDim)
+CMlpardKern::CMlpardKern(unsigned int inDim) : CArdKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CMlpardKern::CMlpardKern(const CMatrix& X)
+CMlpardKern::CMlpardKern(const CMatrix& X) : CArdKern(X) 
 {
   _init();
   setInputDim(X.getCols());
 }  
-CMlpardKern::CMlpardKern(const CMlpardKern& kern)
+CMlpardKern::CMlpardKern(const CMlpardKern& kern) : CArdKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -3618,22 +3612,22 @@ double CMlpardKern::getGradParam(unsigned int index, const CMatrix& X, const CMa
 }
 
 // the POLY ARD kernel.
-CPolyardKern::CPolyardKern()
+CPolyardKern::CPolyardKern() : CArdKern()
 {
   _init();
 }
-CPolyardKern::CPolyardKern(unsigned int inDim)
+CPolyardKern::CPolyardKern(unsigned int inDim) : CArdKern(inDim)
 {
   _init();
   setInputDim(inDim);
   
 }
-CPolyardKern::CPolyardKern(const CMatrix& X)
+CPolyardKern::CPolyardKern(const CMatrix& X) : CArdKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
-CPolyardKern::CPolyardKern(const CPolyardKern& kern)
+CPolyardKern::CPolyardKern(const CPolyardKern& kern) : CArdKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
