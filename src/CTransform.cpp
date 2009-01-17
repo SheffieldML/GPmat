@@ -17,12 +17,14 @@ CTransform* CTransform::getNewTransformPointer(const string transformType)
     return new CSigmoidTransform();
   else if(transformType=="exp")
     return new CExpTransform();
+  else if(transformType=="linear")
+    return new CLinearTransform();
   else
     throw ndlexceptions::Error("Transform type " + transformType + " is currently unknown.");
 }
 CExpTransform::CExpTransform()
 {
-  transform = 1;
+  transform = true;
   setType("exp");
 }
   

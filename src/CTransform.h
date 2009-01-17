@@ -19,6 +19,8 @@ class CTransform
     transform = 0;
   }
   virtual ~CTransform() {}
+  CTransform(const CTransform& rhs) : type(rhs.type) {}
+  virtual CTransform* clone() const=0;
   virtual double atox(double x) const=0;
   virtual double xtoa(double x) const=0;
   virtual double gradfact(double x) const=0;
@@ -51,6 +53,8 @@ class CExpTransform : public CTransform
 {
  public:
   CExpTransform();
+ CExpTransform(const CExpTransform& rhs) : CTransform(rhs), transform(rhs.transform) {}
+  CTransform* clone() const {return new CExpTransform(*this);}
   double atox(double a) const;
   double xtoa(double x) const;
   double gradfact(double x) const;
@@ -64,6 +68,8 @@ class CNegLogLogitTransform : public CTransform
 {
  public:
   CNegLogLogitTransform();
+ CNegLogLogitTransform(const CNegLogLogitTransform& rhs) : CTransform(rhs), transform(rhs.transform) {}
+  CTransform* clone() const {return new CNegLogLogitTransform(*this);}
   double atox(double a) const;
   double xtoa(double x) const;
   double gradfact(double x) const;
@@ -82,6 +88,8 @@ class CLinearTransform : public CTransform
     m = 1.0;
     c = 0.0;
   }
+ CLinearTransform(const CLinearTransform& rhs) : CTransform(rhs), transform(rhs.transform), m(rhs.m), c(rhs.c) {}
+  CTransform* clone() const {return new CLinearTransform(*this);}
   
   double atox(double a) const
   {
@@ -123,6 +131,8 @@ class CSigmoidTransform : public CTransform
 {
  public:
   CSigmoidTransform();  
+ CSigmoidTransform(const CSigmoidTransform& rhs) : CTransform(rhs), transform(rhs.transform) {}
+  CTransform* clone() const {return new CSigmoidTransform(*this);}
   double atox(double a) const;
   double xtoa(double x) const;
   double gradfact(double x) const;
@@ -153,11 +163,11 @@ class CParamTransforms : public CMatInterface, public CStreamInterface
   mxArray* toMxArray() const;
   void fromMxArray(const mxArray* transformArray);
 #endif
-  void addTransform(CTransform* trans, unsigned int index) 
+  void addTransform(const CTransform* trans, unsigned int index) 
   {
     
     transIndex.push_back(index);
-    transforms.push_back(trans);
+    transforms.push_back(trans->clone());
   }
 
   void clearTransforms() 
@@ -293,7 +303,7 @@ class CTransformable
   {
     return transArray.getNumTransforms();
   }
-  inline CTransform* getTransform(unsigned int ind) const 
+  inline const CTransform* getTransform(unsigned int ind) const 
   {
     
     BOUNDCHECK(ind<getNumTransforms());
@@ -311,16 +321,18 @@ class CTransformable
   {
     return transArray.transforms[ind]->gradfact(val);
   }
-  void addTransform(CTransform* trans, unsigned int index) 
+  void addTransform(const CTransform* trans, unsigned int index) 
   {
     
     BOUNDCHECK(index<getNumParams());
     transArray.transIndex.push_back(index);
-    transArray.transforms.push_back(trans);
+    transArray.transforms.push_back(trans->clone());
   }
   
   void clearTransforms() 
   {
+    for(size_t i = 0; i<transArray.transforms.size(); i++)
+      delete transArray.transforms[i];
     transArray.transIndex.clear();
     transArray.transforms.clear();
   }
