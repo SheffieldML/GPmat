@@ -216,15 +216,19 @@ class CTransformable
   // these are default implementations.
   virtual void getParams(CMatrix& params) const 
   {
-    DIMENSIONMATCH(params.getRows()==1);
-    DIMENSIONMATCH(params.getCols()==getNumParams());
+    if(params.getRows()!=1)
+      throw ndlexceptions::RuntimeError("getParams(): Dimension match check failed, numbers of rows should be 1, currently it is " + ndlstrutil::itoa(params.getRows()));
+    if(params.getCols()!=getNumParams())
+      throw ndlexceptions::RuntimeError("getParams(): Dimension match check failed, numbers of columns should be " + ndlstrutil::itoa(getNumParams()) + ", currently it is " + ndlstrutil::itoa(params.getRows()));
     for(unsigned int i=0; i<params.getCols(); i++)
       params.setVal(getParam(i), i);
   }
   virtual void setParams(const CMatrix& params) 
   {
-    DIMENSIONMATCH(params.getRows()==1);
-    DIMENSIONMATCH(params.getCols()==getNumParams());
+    if(params.getRows()!=1)
+      throw ndlexceptions::RuntimeError("setParams(): Dimension match check failed, numbers of rows should be 1, currently it is " + ndlstrutil::itoa(params.getRows()));
+    if(params.getCols()!=getNumParams())
+      throw ndlexceptions::RuntimeError("setParams(): Dimension match check failed, numbers of columns should be " + ndlstrutil::itoa(getNumParams()) + ", currently it is " + ndlstrutil::itoa(params.getRows()));
     for(unsigned int i=0; i<params.getCols(); i++)
       setParam(params.getVal(i), i);
   }
@@ -246,12 +250,13 @@ class CTransformable
   }
   virtual void getTransParams(CMatrix& transParam) const 
   {
-    DIMENSIONMATCH(transParam.getRows()==1);
-    DIMENSIONMATCH(transParam.getCols()==getNumParams());
+    if(transParam.getRows()!=1)
+      throw ndlexceptions::RuntimeError("getTransParams(): Dimension match check failed, numbers of rows should be 1, currently it is " + ndlstrutil::itoa(transParam.getRows()));
+    if(transParam.getCols()!=getNumParams())
+      throw ndlexceptions::RuntimeError("getTransParams(): Dimension match check failed, numbers of columns should be " + ndlstrutil::itoa(getNumParams()) + ", currently it is " + ndlstrutil::itoa(transParam.getRows()));
     getParams(transParam);
     double val;
-    for(unsigned int i=0; i<transArray.transIndex.size(); i++) 
-    {
+    for(unsigned int i=0; i<transArray.transIndex.size(); i++) {
       val=transParam.getVal(transArray.transIndex[i]);
       transParam.setVal(transArray.transforms[i]->xtoa(val), transArray.transIndex[i]);
     }  
@@ -261,8 +266,8 @@ class CTransformable
     BOUNDCHECK(paramNo<getNumParams());
     // this casting is required under solaris for some reason
     vector<unsigned int>::iterator pos=find(transArray.transIndex.begin(), 
-				   transArray.transIndex.end(), 
-				   paramNo);
+					    transArray.transIndex.end(), 
+					    paramNo);
     if(pos==transArray.transIndex.end())
       setParam(val, paramNo);
     else {
@@ -272,8 +277,10 @@ class CTransformable
   }
   virtual void setTransParams(const CMatrix& transParam) 
   {
-    DIMENSIONMATCH(transParam.getRows()==1);
-    DIMENSIONMATCH(transParam.getCols()==getNumParams());
+    if(transParam.getRows()!=1)
+      throw ndlexceptions::RuntimeError("setTransParams(): Dimension match check failed, numbers of rows should be 1, currently it is " + ndlstrutil::itoa(transParam.getRows()));
+    if(transParam.getCols()!=getNumParams())
+      throw ndlexceptions::RuntimeError("setTransParams(): Dimension match check failed, numbers of columns should be " + ndlstrutil::itoa(getNumParams()) + ", currently it is " + ndlstrutil::itoa(transParam.getRows()));
     CMatrix param(transParam);
     double val = 0.0;
     for(unsigned int i=0; i<transArray.transIndex.size(); i++) 
@@ -285,8 +292,10 @@ class CTransformable
   }
   virtual void getGradTransParams(CMatrix& g) const 
   {
-    DIMENSIONMATCH(g.getRows()==1);
-    DIMENSIONMATCH(g.getCols()==getNumParams());
+    if(g.getRows()!=1)
+      throw ndlexceptions::RuntimeError("getGradTransParams(): Dimension match check failed, numbers of rows should be 1, currently it is " + ndlstrutil::itoa(g.getRows()));
+    if(g.getCols()!=getNumParams())
+      throw ndlexceptions::RuntimeError("getGradTransParams(): Dimension match check failed, numbers of columns should be " + ndlstrutil::itoa(getNumParams()) + ", currently it is " + ndlstrutil::itoa(g.getRows()));
     getGradParams(g);
     double val;
     double param;
