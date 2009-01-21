@@ -1,4 +1,4 @@
-function lfmWhiteKernDisplay(kern, spacing)
+function lfmwhiteKernDisplay(kern, spacing)
 
 % LFMWHITEKERNDISPLAY Display parameters of the LFM-WHITE kernel.
 % FORMAT
@@ -11,7 +11,7 @@ function lfmWhiteKernDisplay(kern, spacing)
 % ARG kern : the kernel to display.
 % ARG spacing : how many spaces to indent the display of the kernel by.
 %
-% SEEALSO : lfmWhiteKernParamInit, modelDisplay, kernDisplay
+% SEEALSO : lfmwhiteKernParamInit, modelDisplay, kernDisplay
 %
 % COPYRIGHT : David Luengo, 2009
 

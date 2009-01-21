@@ -1,4 +1,4 @@
-function  h = lfmWhiteComputeH(gamma1, gamma2, t1, t2, isStationary1, isStationary2)
+function  h = lfmwhiteComputeH(gamma1, gamma2, t1, t2, isStationary1, isStationary2)
 
 % LFMWHITECOMPUTEH Helper function for computing part of the LFM-WHITE
 % kernel.
@@ -16,7 +16,7 @@ function  h = lfmWhiteComputeH(gamma1, gamma2, t1, t2, isStationary1, isStationa
 %
 % COPYRIGHT : David Luengo, 2009
 %
-% SEEALSO : lfmWhiteKernParamInit, lfmWhiteXlfmWhiteKernCompute
+% SEEALSO : lfmwhiteKernParamInit, lfmwhiteXlfmwhiteKernCompute
 
 % KERN
 

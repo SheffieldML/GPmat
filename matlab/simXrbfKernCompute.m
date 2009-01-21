@@ -44,7 +44,7 @@ end
 % enforced here as well.
 if rbfKern.variance ~= 1
   warning(['RBF kernel variance = ' num2str(rbfKern.variance) ...
-      '. SIM kernel can only be cross combined with an RBF kernel with variance 1.')
+      '. SIM kernel can only be cross combined with an RBF kernel with variance 1.'])
 end
 
 dim1 = size(t1, 1);

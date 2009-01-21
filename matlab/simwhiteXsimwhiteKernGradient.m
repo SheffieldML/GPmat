@@ -1,4 +1,4 @@
-function [g1, g2] = simWhiteXsimWhiteKernGradient(simKern1, simKern2, t1, varargin)
+function [g1, g2] = simwhiteXsimwhiteKernGradient(simKern1, simKern2, t1, varargin)
 
 % SIMWHITEXSIMWHITEKERNGRADIENT Compute a cross gradient between two
 % SIM-WHITE kernels.
@@ -13,9 +13,9 @@ function [g1, g2] = simWhiteXsimWhiteKernGradient(simKern1, simKern2, t1, vararg
 % ARG covGrad : gradient of the objective function with respect to
 % the elements of the cross kernel matrix.
 % RETURN g1 : gradient of the parameters of the first kernel, for
-% ordering see simWhiteKernExtractParam.
+% ordering see simwhiteKernExtractParam.
 % RETURN g2 : gradient of the parameters of the second kernel, for
-% ordering see simWhiteKernExtractParam.
+% ordering see simwhiteKernExtractParam.
 %
 % FORMAT
 % DESC computes cross kernel terms between two SIM-WHITE kernels for
@@ -29,12 +29,12 @@ function [g1, g2] = simWhiteXsimWhiteKernGradient(simKern1, simKern2, t1, vararg
 % ARG covGrad : gradient of the objective function with respect to
 % the elements of the cross kernel matrix.
 % RETURN g1 : gradient of the parameters of the first kernel, for
-% ordering see simWhiteKernExtractParam.
+% ordering see simwhiteKernExtractParam.
 % RETURN g2 : gradient of the parameters of the second kernel, for
-% ordering see simWhiteKernExtractParam.
+% ordering see simwhiteKernExtractParam.
 %
-% SEEALSO : multiKernParamInit, multiKernCompute, simWhiteKernParamInit,
-% simWhiteKernExtractParam
+% SEEALSO : multiKernParamInit, multiKernCompute, simwhiteKernParamInit,
+% simwhiteKernExtractParam
 %
 % COPYRIGHT : David Luengo, 2009
 

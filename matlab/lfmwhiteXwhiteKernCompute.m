@@ -1,4 +1,4 @@
-function K = lfmWhiteXwhiteKernCompute(lfmKern, whiteKern, t1, t2)
+function K = lfmwhiteXwhiteKernCompute(lfmKern, whiteKern, t1, t2)
 
 % LFMWHITEXWHITEKERNCOMPUTE Compute a cross kernel between the LFM-WHITE
 % and WHITE kernels.
@@ -23,7 +23,7 @@ function K = lfmWhiteXwhiteKernCompute(lfmKern, whiteKern, t1, t2)
 % ARG t2 : column inputs for which kernel is to be computed.
 % RETURN K : block of values from kernel matrix.
 %
-% SEEALSO : multiKernParamInit, multiKernCompute, lfmWhiteKernParamInit,
+% SEEALSO : multiKernParamInit, multiKernCompute, lfmwhiteKernParamInit,
 % whiteKernParamInit
 %
 % COPYRIGHT : David Luengo, 2009

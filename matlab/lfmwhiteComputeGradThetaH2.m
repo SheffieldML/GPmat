@@ -1,4 +1,4 @@
-function  gradH = lfmWhiteComputeGradThetaH2(gamma1, gamma2, t1, t2, ...
+function  gradH = lfmwhiteComputeGradThetaH2(gamma1, gamma2, t1, t2, ...
     gradTheta, isStationary1, isStationary2)
 
 % LFMWHITECOMPUTEH2 Helper function for computing part of the gradient of
@@ -20,8 +20,8 @@ function  gradH = lfmWhiteComputeGradThetaH2(gamma1, gamma2, t1, t2, ...
 %
 % COPYRIGHT : David Luengo, 2009
 %
-% SEEALSO : lfmWhiteKernParamInit, lfmWhiteXlfmWhiteKernGradient,
-% lfmWhiteComputeH, lfmWhiteComputeGradThetaH1
+% SEEALSO : lfmwhiteKernParamInit, lfmwhiteXlfmwhiteKernGradient,
+% lfmwhiteComputeH, lfmwhiteComputeGradThetaH1
 
 % KERN
 
@@ -42,7 +42,7 @@ T2 = repmat(t2.', size(t1, 1), 1);
 deltaT = T1 - T2;
 indT = deltaT >= 0;
 psi = gamma1 * (1-indT) + gamma2 * indT;
-gradH = -(lfmWhiteComputeH(gamma1, gamma2, t1, t2, isStationary1, isStationary2) ...
+gradH = -(lfmwhiteComputeH(gamma1, gamma2, t1, t2, isStationary1, isStationary2) ...
     + abs(deltaT) .* exp(-psi .* abs(deltaT)) .* indT);
 if ((isStationary1 == false) | (isStationary2 == false))
     gradH = gradH + T1 .* exp(-(gamma2 * T1 * double(isStationary2 == false) ...

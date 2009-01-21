@@ -1,4 +1,4 @@
-function g = simWhiteKernGradient(kern, t1, varargin)
+function g = simwhiteKernGradient(kern, t1, varargin)
 
 % SIMWHITEKERNGRADIENT Gradient of SIM-WHITE kernel's parameters.
 % FORMAT
@@ -37,7 +37,7 @@ function g = simWhiteKernGradient(kern, t1, varargin)
 % RETURN g : gradients of the function of interest with respect to
 % the kernel parameters.
 %
-% SEEALSO simWhiteKernParamInit, kernGradient, simWhiteKernDiagGradient, kernGradX
+% SEEALSO simwhiteKernParamInit, kernGradient, simwhiteKernDiagGradient, kernGradX
 %
 % COPYRIGHT : David Luengo, 2009
 
@@ -50,6 +50,6 @@ else
   t2 = varargin{1};
 end
 
-[g1, g2] = simWhiteXsimWhiteKernGradient(kern, kern, t1, t2, varargin{end});
+[g1, g2] = simwhiteXsimwhiteKernGradient(kern, kern, t1, t2, varargin{end});
 
 g = real(g1 + g2);

@@ -1,4 +1,4 @@
-function k = lfmWhiteKernDiagCompute(kern, t)
+function k = lfmwhiteKernDiagCompute(kern, t)
 
 % LFMWHITEKERNDIAGCOMPUTE Compute diagonal of LFM-WHITE kernel.
 % FORMAT
@@ -9,8 +9,8 @@ function k = lfmWhiteKernDiagCompute(kern, t)
 % RETURN k : a vector of the same size as t containing the diagonal of the
 % kernel matrix computed at the given points.
 %
-% SEEALSO : lfmWhiteKernParamInit, kernDiagCompute, kernCreate,
-% lfmWhiteKernCompute
+% SEEALSO : lfmwhiteKernParamInit, kernDiagCompute, kernCreate,
+% lfmwhiteKernCompute
 %
 % COPYRIGHT : David Luengo, 2009
 

@@ -1,4 +1,4 @@
-function g = lfmWhiteKernGradient(kern, t1, varargin)
+function g = lfmwhiteKernGradient(kern, t1, varargin)
 
 % LFMWHITEKERNGRADIENT Gradient of LFM-WHITE kernel's parameters.
 % FORMAT
@@ -37,8 +37,8 @@ function g = lfmWhiteKernGradient(kern, t1, varargin)
 % RETURN g : gradients of the function of interest with respect to
 % the kernel parameters.
 %
-% SEEALSO lfmWhiteKernParamInit, kernGradient, lfmWhiteKernDiagGradient,
-% kernGradX, lfmWhiteXlfmWhiteKernGradient
+% SEEALSO lfmwhiteKernParamInit, kernGradient, lfmwhiteKernDiagGradient,
+% kernGradX, lfmwhiteXlfmwhiteKernGradient
 %
 % COPYRIGHT : David Luengo, 2009
 
@@ -51,6 +51,6 @@ else
   t2 = varargin{1};
 end
 
-[g1, g2] = lfmWhiteXlfmWhiteKernGradient(kern, kern, t1, t2, varargin{end});
+[g1, g2] = lfmwhiteXlfmwhiteKernGradient(kern, kern, t1, t2, varargin{end});
 
 g = real(g1 + g2);

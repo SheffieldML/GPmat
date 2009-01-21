@@ -1,4 +1,4 @@
-function [params, names] = simWhiteKernExtractParam(kern)
+function [params, names] = simwhiteKernExtractParam(kern)
 
 % SIMWHITEKERNEXTRACTPARAM Extract parameters from the SIM-WHITE kernel
 % structure.
@@ -24,7 +24,7 @@ function [params, names] = simWhiteKernExtractParam(kern)
 % RETURN names : cell array of strings containing names for each
 % parameter.
 %
-% SEEALSO simWhiteKernParamInit, simWhiteKernExpandParam, kernExtractParam,
+% SEEALSO simwhiteKernParamInit, simwhiteKernExpandParam, kernExtractParam,
 % scg, conjgrad
 %
 % COPYRIGHT : David Luengo, 2009

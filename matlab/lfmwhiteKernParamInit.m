@@ -1,4 +1,4 @@
-function kern = lfmWhiteKernParamInit(kern)
+function kern = lfmwhiteKernParamInit(kern)
 
 % LFMWHITEKERNPARAMINIT LFM-WHITE kernel parameter initialisation.
 % FORMAT
@@ -38,5 +38,5 @@ maxSerial = double(intmax('uint64'));
 kern.serialNumber = uint64(1+rand(1)*maxSerial);
 
 % Force any precomputation contained in lfmKernExpandParam
-params = lfmWhiteKernExtractParam(kern);
-kern = lfmWhiteKernExpandParam(kern, params);
+params = lfmwhiteKernExtractParam(kern);
+kern = lfmwhiteKernExpandParam(kern, params);

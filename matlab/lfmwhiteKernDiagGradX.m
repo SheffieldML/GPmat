@@ -1,4 +1,4 @@
-function gT = lfmWhiteKernDiagGradX(kern, t)
+function gT = lfmwhiteKernDiagGradX(kern, t)
 
 % LFMWHITEKERNDIAGGRADX Gradient of LFM-WHITE kernel's diagonal w.r.t. t.
 % FORMAT
@@ -10,7 +10,7 @@ function gT = lfmWhiteKernDiagGradX(kern, t)
 % RETURN gT : the gradients of the diagonal with respect to each element
 % of t. The returned matrix has the same dimensions as t.
 %
-% SEEALSO : lfmWhiteKernParamInit, kernDiagGradX, lfmWhiteKernGradX
+% SEEALSO : lfmwhiteKernParamInit, kernDiagGradX, lfmwhiteKernGradX
 %
 % COPYRIGHT : David Luengo, 2009
 

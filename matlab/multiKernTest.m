@@ -50,8 +50,19 @@ if iscell(kernType) & ~strcmp(kernType{1}, 'multi')
 end
   
 % Generate some x positions.
-x = linspace(-1, 1, numData)'; %randn(numData, numIn);
-x2 = randn(numData/2, numIn);
+if ~isempty(cell2mat(strfind(kernType(2:end), 'ou'))) ...
+        | ~isempty(cell2mat(strfind(kernType(2:end), 'sim'))) ...
+        | ~isempty(cell2mat(strfind(kernType(2:end), 'lfm'))) ...
+        | ~isempty(cell2mat(strfind(kernType(2:end), 'simwhite'))) ...
+        | ~isempty(cell2mat(strfind(kernType(2:end), 'lfmwhite'))) ...
+        | ~isempty(cell2mat(strfind(kernType(2:end), 'simou'))) ...
+        | ~isempty(cell2mat(strfind(kernType(2:end), 'lfmou')))
+    x = linspace(0, 2, numData)'; %randn(numData, numIn);
+    x2 = abs(randn(numData/2, numIn));
+else
+    x = linspace(-1, 1, numData)'; %randn(numData, numIn);
+    x2 = randn(numData/2, numIn);
+end
 if isstruct(kernType)
   kern = kernType;
 else

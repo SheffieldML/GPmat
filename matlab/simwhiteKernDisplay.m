@@ -1,4 +1,4 @@
-function simWhiteKernDisplay(kern, spacing)
+function simwhiteKernDisplay(kern, spacing)
 
 % SIMWHITEKERNDISPLAY Display parameters of the SIM-WHITE kernel.
 % FORMAT
@@ -11,7 +11,7 @@ function simWhiteKernDisplay(kern, spacing)
 % ARG kern : the kernel to display.
 % ARG spacing : how many spaces to indent the display of the kernel by.
 %
-% SEEALSO : simWhiteKernParamInit, modelDisplay, kernDisplay
+% SEEALSO : simwhiteKernParamInit, modelDisplay, kernDisplay
 %
 % COPYRIGHT : David Luengo, 2009
 

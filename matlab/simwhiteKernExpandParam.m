@@ -1,4 +1,4 @@
-function kern = simWhiteKernExpandParam(kern, params)
+function kern = simwhiteKernExpandParam(kern, params)
 
 % SIMWHITEKERNEXPANDPARAM Create kernel structure from SIM-WHITE kernel's
 % parameters.
@@ -14,7 +14,7 @@ function kern = simWhiteKernExpandParam(kern, params)
 % RETURN kern : kernel structure with the given parameters in the
 % relevant locations.
 %
-% SEEALSO : simWhiteKernParamInit, simWhiteKernExtractParam, kernExpandParam
+% SEEALSO : simwhiteKernParamInit, simwhiteKernExtractParam, kernExpandParam
 %
 % COPYRIGHT : David Luengo, 2009
 

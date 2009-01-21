@@ -1,4 +1,4 @@
-function [params, names] = lfmWhiteKernExtractParam(kern)
+function [params, names] = lfmwhiteKernExtractParam(kern)
 
 % LFMWHITEKERNEXTRACTPARAM Extract parameters from the LFM-WHITE kernel
 % structure.
@@ -24,7 +24,7 @@ function [params, names] = lfmWhiteKernExtractParam(kern)
 % RETURN names : cell array of strings containing names for each
 % parameter.
 %
-% SEEALSO lfmWhiteKernParamInit, lfmWhiteKernExpandParam, kernExtractParam,
+% SEEALSO lfmwhiteKernParamInit, lfmwhiteKernExpandParam, kernExtractParam,
 % scg, conjgrad
 %
 % COPYRIGHT : David Luengo, 2009

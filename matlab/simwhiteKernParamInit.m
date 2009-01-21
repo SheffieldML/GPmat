@@ -1,4 +1,4 @@
-function kern = simWhiteKernParamInit(kern)
+function kern = simwhiteKernParamInit(kern)
 
 % SIMWHITEKERNPARAMINIT SIM-WHITE kernel parameter initialisation.
 % FORMAT

@@ -1,4 +1,4 @@
-function [g1, g2] = simWhiteXwhiteKernGradient(simKern, whiteKern, t1, varargin)
+function [g1, g2] = simwhiteXwhiteKernGradient(simKern, whiteKern, t1, varargin)
 
 % SIMWHITEXWHITEKERNGRADIENT Compute gradient between the SIM-WHITE and WHITE kernels.
 % FORMAT
@@ -34,7 +34,7 @@ function [g1, g2] = simWhiteXwhiteKernGradient(simKern, whiteKern, t1, varargin)
 % RETURN g2 : gradient of objective function with respect to kernel
 % parameters of WHITE kernel.
 %
-% SEEALSO : multiKernParamInit, multiKernCompute, simWhiteKernParamInit,
+% SEEALSO : multiKernParamInit, multiKernCompute, simwhiteKernParamInit,
 % whiteKernParamInit
 %
 % COPYRIGHT : David Luengo, 2009
@@ -63,7 +63,7 @@ g2 = 0; % The only parameter of the WHITE kernel (its variance) is already
 T1 = repmat(t1, 1, size(t2, 1));
 T2 = repmat(t2.', size(t1, 1), 1);
 
-K = simWhiteXwhiteKernCompute(simKern, whiteKern, t1, t2);
+K = simwhiteXwhiteKernCompute(simKern, whiteKern, t1, t2);
 
 % Gradient w.r.t. D_q
 g1(1) = sum(sum((T2-T1) .* K .* covGrad));

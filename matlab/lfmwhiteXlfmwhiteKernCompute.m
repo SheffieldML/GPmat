@@ -1,4 +1,4 @@
-function K = lfmWhiteXlfmWhiteKernCompute(lfmKern1, lfmKern2, t1, t2)
+function K = lfmwhiteXlfmwhiteKernCompute(lfmKern1, lfmKern2, t1, t2)
 
 % LFMWHITEXLFMWHITEKERNCOMPUTE Compute a cross kernel between two LFM-WHITE
 % kernels.
@@ -23,7 +23,7 @@ function K = lfmWhiteXlfmWhiteKernCompute(lfmKern1, lfmKern2, t1, t2)
 % ARG t2 : column inputs for which kernel is to be computed.
 % RETURN K : block of values from kernel matrix.
 %
-% SEEALSO : multiKernParamInit, multiKernCompute, lfmWhiteKernParamInit
+% SEEALSO : multiKernParamInit, multiKernCompute, lfmwhiteKernParamInit
 %
 % COPYRIGHT : David Luengo, 2009
 
@@ -48,7 +48,7 @@ gamma2Tilde = lfmKern2.alpha - j*lfmKern2.omega;
 
 c = lfmKern1.variance * lfmKern1.sensitivity * lfmKern2.sensitivity ...
     /(4 * lfmKern1.mass * lfmKern2.mass * lfmKern1.omega * lfmKern2.omega);
-K = c * (lfmWhiteComputeH(gamma2, gamma1Tilde, t1, t2, isStationary1, isStationary2) ...
-    + lfmWhiteComputeH(gamma2Tilde, gamma1, t1, t2, isStationary1, isStationary2) ...
-    - lfmWhiteComputeH(gamma2Tilde, gamma1Tilde, t1, t2, isStationary1, isStationary2) ...
-    - lfmWhiteComputeH(gamma2, gamma1, t1, t2, isStationary1, isStationary2));
+K = c * (lfmwhiteComputeH(gamma2, gamma1Tilde, t1, t2, isStationary1, isStationary2) ...
+    + lfmwhiteComputeH(gamma2Tilde, gamma1, t1, t2, isStationary1, isStationary2) ...
+    - lfmwhiteComputeH(gamma2Tilde, gamma1Tilde, t1, t2, isStationary1, isStationary2) ...
+    - lfmwhiteComputeH(gamma2, gamma1, t1, t2, isStationary1, isStationary2));

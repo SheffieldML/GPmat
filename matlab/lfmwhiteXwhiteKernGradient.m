@@ -1,4 +1,4 @@
-function [g1, g2] = lfmWhiteXwhiteKernGradient(lfmKern, whiteKern, t1, varargin)
+function [g1, g2] = lfmwhiteXwhiteKernGradient(lfmKern, whiteKern, t1, varargin)
 
 % LFMWHITEXWHITEKERNGRADIENT Compute gradient between the LFM-WHITE and
 % WHITE kernels.
@@ -35,7 +35,7 @@ function [g1, g2] = lfmWhiteXwhiteKernGradient(lfmKern, whiteKern, t1, varargin)
 % RETURN g2 : gradient of objective function with respect to kernel
 % parameters of WHITE kernel.
 %
-% SEEALSO : multiKernParamInit, multiKernCompute, lfmWhiteKernParamInit,
+% SEEALSO : multiKernParamInit, multiKernCompute, lfmwhiteKernParamInit,
 % whiteKernParamInit
 %
 % COPYRIGHT : David Luengo, 2009

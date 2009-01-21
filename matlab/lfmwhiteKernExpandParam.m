@@ -1,4 +1,4 @@
-function kern = lfmWhiteKernExpandParam(kern, params)
+function kern = lfmwhiteKernExpandParam(kern, params)
 
 % LFMWHITEKERNEXPANDPARAM Create kernel structure from LFM-WHITE kernel's
 % parameters.
@@ -14,7 +14,7 @@ function kern = lfmWhiteKernExpandParam(kern, params)
 % RETURN kern : kernel structure with the given parameters in the
 % relevant locations.
 %
-% SEEALSO : lfmWhiteKernParamInit, lfmWhiteKernExtractParam, kernExpandParam
+% SEEALSO : lfmwhiteKernParamInit, lfmwhiteKernExtractParam, kernExpandParam
 %
 % COPYRIGHT : David Luengo, 2009
 

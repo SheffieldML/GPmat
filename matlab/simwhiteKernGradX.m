@@ -1,8 +1,8 @@
-function gT = lfmWhiteKernGradX(kern, t1, t2)
+function gT = simwhiteKernGradX(kern, t1, t2)
 
-% LFMWHITEKERNGRADX Gradient of LFM-WHITE kernel with respect to a point t.
+% SIMWHITEKERNGRADX Gradient of SIM-WHITE kernel with respect to a point t.
 % FORMAT
-% DESC computes the gradient of the LFM-White (Latent Force Model - White)
+% DESC computes the gradient of the SIM-White (Single Input Motif - White)
 % kernel with respect to the input positions. 
 % ARG kern : kernel structure for which gradients are being computed.
 % ARG t1 : locations against which gradients are being computed.
@@ -12,7 +12,7 @@ function gT = lfmWhiteKernGradX(kern, t1, t2)
 % dimensions in t1 (currently always one).
 %
 % FORMAT
-% DESC computes the gradident of the LFM-White (Latent Force Model - White)
+% DESC computes the gradident of the SIM-White (Single Input Motif - White)
 % kernel with respect to the input positions where both the row
 % positions and column positions are provided separately.
 % ARG kern : kernel structure for which gradients are being
@@ -25,11 +25,11 @@ function gT = lfmWhiteKernGradX(kern, t1, t2)
 % points in t2 and numInputs is the number of input dimensions in t1
 % (currently always one).
 %
-% SEEALSO lfmWhiteKernParamInit, kernGradX, lfmWhiteKernDiagGradX
+% SEEALSO simwhiteKernParamInit, kernGradX, simwhiteKernDiagGradX
 %
 % COPYRIGHT : David Luengo, 2009
 
 % KERN
 
 
-error('lfmWhiteKernGradX not yet implemented.')
+error('simwhiteKernGradX not yet implemented.')

@@ -1,4 +1,4 @@
-function gT = simWhiteKernDiagGradX(kern, t)
+function gT = simwhiteKernDiagGradX(kern, t)
 
 % SIMWHITEKERNDIAGGRADX Gradient of SIM-WHITE kernel's diagonal w.r.t. t.
 % FORMAT
@@ -10,7 +10,7 @@ function gT = simWhiteKernDiagGradX(kern, t)
 % RETURN gT : the gradients of the diagonal with respect to each element
 % of t. The returned matrix has the same dimensions as t.
 %
-% SEEALSO : simWhiteKernParamInit, kernDiagGradX, simWhitekernGradX
+% SEEALSO : simwhiteKernParamInit, kernDiagGradX, simwhitekernGradX
 %
 % COPYRIGHT : David Luengo, 2009
 

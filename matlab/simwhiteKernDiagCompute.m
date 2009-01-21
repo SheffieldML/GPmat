@@ -1,4 +1,4 @@
-function k = simWhiteKernDiagCompute(kern, t)
+function k = simwhiteKernDiagCompute(kern, t)
 
 % SIMWHITEKERNDIAGCOMPUTE Compute diagonal of SIM-WHITE kernel.
 % FORMAT
@@ -9,7 +9,7 @@ function k = simWhiteKernDiagCompute(kern, t)
 % RETURN k : a vector of the same size as t containing the diagonal of the
 % kernel matrix computed at the given points.
 %
-% SEEALSO : simWhiteKernParamInit, kernDiagCompute, kernCreate, simWhiteKernCompute
+% SEEALSO : simwhiteKernParamInit, kernDiagCompute, kernCreate, simwhiteKernCompute
 %
 % COPYRIGHT : David Luengo, 2009
 

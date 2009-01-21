@@ -1,4 +1,4 @@
-function K = simWhiteXsimWhiteKernCompute(simKern1, simKern2, t1, t2)
+function K = simwhiteXsimwhiteKernCompute(simKern1, simKern2, t1, t2)
 
 % SIMWHITEXSIMWHITEKERNCOMPUTE Compute a cross kernel between two SIM-WHITE
 % kernels.
@@ -23,7 +23,7 @@ function K = simWhiteXsimWhiteKernCompute(simKern1, simKern2, t1, t2)
 % ARG t2 : column inputs for which kernel is to be computed.
 % RETURN K : block of values from kernel matrix.
 %
-% SEEALSO : multiKernParamInit, multiKernCompute, simWhiteKernParamInit
+% SEEALSO : multiKernParamInit, multiKernCompute, simwhiteKernParamInit
 %
 % COPYRIGHT : David Luengo, 2009
 
