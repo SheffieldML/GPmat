@@ -1,24 +1,25 @@
 function kern = lfmKernParamInit(kern)
 
-% LFMKERNPARAMINIT LFM kernel parameter initialisation.
-% The latent force model (LFM) kernel is the result of a second order
-% differential equation where there is assumed to be a force driving the
-% system which is drawn from a Gaussian process with an RBF kernel,
-% i.e. we have the following differential equation,
+% LFMKERNPARAMINIT LFM kernel parameter initialisation. The latent force
+% model (LFM) kernel is the result of a second order differential equation
+% where there is assumed to be a force driving the system which is drawn
+% from a Gaussian process with an RBF kernel, i.e. we have the following
+% differential equation,
 %
-% S f(t-delta) = m x''(t) + cx'(t) + kx(t),
+% B + S f(t-delta) = m x''(t) + cx'(t) + kx(t),
 %
 % where m is a mass, c is a damping coefficient, k is a spring constant,
-% S is a scalar sensitivity and delta is a time delay
-% and B is an initial level. 
+% S is a scalar sensitivity, B is the initial level and delta is a time
+% delay.
 %  
-% If f(t) is assumed to come from a
-% Gaussian process with an RBF covariance function x(t) is a Gaussian
-% process with a covariance function provided by the single latent force
-% model kernel.
+% If f(t) is assumed to come from a Gaussian process with an RBF covariance
+% function x(t) is a Gaussian process with a covariance function provided by
+% the single latent force model kernel. Further details about the structure
+% of the kernel can be found in: M. Alvarez, D. Luengo and N. D. Lawrence,
+% "Latent Force Models", Proc. AISTATS 2009.
 %
-% The kernel is designed to interoperate with the multiple output
-% block kernel so that f(t) can be inferred given several different
+% The kernel is designed to interoperate with the multiple output block
+% kernel so that f(t) can be inferred given several different
 % instantiations of x(t).
 %
 % The parameters (m, c, delta and k) are constrained positive.
@@ -32,6 +33,8 @@ function kern = lfmKernParamInit(kern)
 % SEEALSO : kernCreate, kernParamInit, lfmKernCompute
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
+%
+% MODIFICATIONS : David Luengo, 2008, 2009
 
 % KERN
 
@@ -46,14 +49,8 @@ kern.spring = 1;
 kern.damper = 1;
 kern.sensitivity = 1;
 
-% kern.spring = 10*rand;
-% kern.damper = 10*rand;
-% kern.sensitivity = 10*rand;
-
-
 kern.initVal = 1;
 kern.inverseWidth = 1;
-%kern.inverseWidth = 1000;
 kern.variance = 1;
 kern.nParams = 5;
 
@@ -62,6 +59,7 @@ kern.transforms.type = optimiDefaultConstraint('positive');
 
 kern.isStationary = false;
 
+% Serial number used to distinguish LFM kernels
 maxSerial = double(intmax('uint64'));
 kern.serialNumber = uint64(1+rand(1)*maxSerial);
 

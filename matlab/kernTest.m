@@ -25,6 +25,8 @@ function kernRet = kernTest(kernType, numIn, tieParamNames);
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2007
 %
 % COPYRIGHT : Antti Honkela, 2007
+%
+% MODIFICATIONS : David Luengo, 2009
 
 % KERN
 
@@ -36,12 +38,32 @@ if nargin < 3
 end
 numData = 20;
 
-% Generate some x positions.
-x = randn(numData, numIn);
-x2 = randn(numData/2, numIn);
 if isstruct(kernType)
   kern = kernType;
+  kernType = kern.type;
+  if strcmp(kernType, 'ou') | strcmp(kernType, 'sim') ...
+          | strcmp(kernType, 'lfm') | strcmp(kernType, 'simWhite') ...
+          | strcmp(kernType, 'lfmWhite')
+    x = abs(randn(numData, numIn));
+    x2 = abs(randn(numData/2, numIn));
+  else
+    x = randn(numData, numIn);
+    x2 = randn(numData/2, numIn);
+  end
+  [params, paramnames] = kernExtractParam(kern);
+  paramExpand = eye(length(params));
+  paramPack = paramExpand;
+  toRemove = [];
 else
+  if strcmp(kernType, 'ou') | strcmp(kernType, 'sim') ...
+          | strcmp(kernType, 'lfm') | strcmp(kernType, 'simWhite') ...
+          | strcmp(kernType, 'lfmWhite')
+    x = abs(randn(numData, numIn));
+    x2 = abs(randn(numData/2, numIn));
+  else
+    x = randn(numData, numIn);
+    x2 = randn(numData/2, numIn);
+  end
   kern = kernCreate(x, kernType);
   if exist([kern.type 'KernSetIndex'])==2 
     for i = 1:length(kern.comp)
@@ -232,6 +254,7 @@ if param2MaxDiff > 2*epsilon
     fprintf([space names{i} ':\t%4.6g\t%4.6g\t%4.6g\n'], ...
             g(i), gL2Diff(i), gL2Diff(i) - g(i));
   end
+  pause(0);
 end
 
 

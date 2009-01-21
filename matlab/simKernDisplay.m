@@ -14,6 +14,8 @@ function simKernDisplay(kern, spacing)
 % SEEALSO : simKernParamInit, modelDisplay, kernDisplay
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
+%
+% MODIFICATIONS : David Luengo, 2009
 
 % KERN
 
@@ -24,12 +26,13 @@ else
 end
 spacing = char(spacing);
 fprintf(spacing);
-fprintf('SIM Variance: %2.4f\n', kern.variance)
+fprintf('SIM decay: %2.4f\n', kern.decay)
 fprintf(spacing);
 fprintf('SIM inverse width: %2.4f (length scale %2.4f)\n', ...
         kern.inverseWidth, 1/sqrt(kern.inverseWidth));
+fprintf(spacing);
+fprintf('SIM Variance: %2.4f\n', kern.variance)
+%fprintf(spacing);
+%fprintf('SIM Sensitivity: %2.4f\n', kern.sensitivity)
 %fprintf(spacing);
 %fprintf('SIM delay: %2.4f\n', kern.delay)
-fprintf(spacing);
-fprintf('SIM decay: %2.4f\n', kern.decay)
-

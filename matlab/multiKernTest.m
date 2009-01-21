@@ -22,16 +22,20 @@ function kernRet = multiKernTest(kernType, tieParams);
 % whose first entry is 'multi', for example
 % {'multi', 'rbf', 'sim', 'sim'}.
 % ARG tieParams : some parameters must be the same for the multiple
-% output kernel to make sense. For example, in the RBF and SIM
-% case, the inverse widths of the kernels must be the same. If the
-% kernel type is {'multi', 'rbf', 'sim', 'sim'} then this can be
-% forced by specifying TIEPARAMS as {[1 4 7]}. See MODELTIEPARAM
-% for more details on the form of this argument.
+% output kernel to make sense. For example, in the RBF and SIM case
+% or in the RBF and LFM case, the inverse widths of the kernels must
+% be the same. If the kernel type is {'multi', 'rbf', 'sim', 'sim'}
+% then this can be forced by specifying TIEPARAMS as {[1 4 7]}, and
+% when the kernel type is {'multi', 'rbf', 'lfm', 'lfm'} then it is
+% forced by specifying TIEPARAMS as {[1 6 11]}. See MODELTIEPARAM for
+% more details on the form of this argument.
 % RETURN kern : the kernel that was generated for the tests.
 % 
 % SEEALSO : multiKernParamInit, modelTieParam
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
+%
+% MODIFICATIONS : David Luengo, 2009
 
 % KERN
 
@@ -59,6 +63,18 @@ else
   params = kernExtractParam(kern);
   params = randn(size(params))./sqrt(randn(size(params)).^2);
   kern = kernExpandParam(kern, params);
+  % Impose further restrictions on the parameters checking wheter there is
+  % a SIM kernel present. In this case, the variances of all the RBF kernels
+  % that appear in the structure are set to one.
+  [params, names] = kernExtractParam(kern);
+  if ~isempty(cell2mat(strfind(kernType(2:end), 'sim')))
+      ind2 = strfind(kernType(2:end), 'rbf');
+      for i = 1:length(ind2)
+          if ~isempty(cell2mat(ind2(i)))
+             kern.comp{i}.variance = 1;
+          end
+      end
+  end
 end
  
 % covGrad = randn(numData*kern.numBlocks);

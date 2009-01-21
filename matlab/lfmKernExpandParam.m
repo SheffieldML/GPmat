@@ -17,7 +17,7 @@ function kern = lfmKernExpandParam(kern, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 %
-% MODIFICATIONS : David Luengo, 2008
+% MODIFICATIONS : David Luengo, 2008, 2009
 
 % KERN
 
@@ -31,6 +31,5 @@ kern.alpha = kern.damper./(2*kern.mass);
 kern.omega = sqrt(kern.spring./kern.mass-kern.alpha.^2);
 kern.gamma = kern.alpha + j*kern.omega;
 
-%kern.zeta = kern.damper/(2*sqrt(kern.mass*kern.spring)); %value in V0.010
-kern.zeta = kern.damper./(2*sqrt(kern.spring));
+kern.zeta = kern.damper./(2*sqrt(kern.mass*kern.spring));
 kern.omega_0 = sqrt(kern.spring./kern.mass);
