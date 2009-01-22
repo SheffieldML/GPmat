@@ -32,13 +32,13 @@ function [params, names] = ggKernExtractParam(kern)
 params = [kern.precision_u' kern.precision_y' kern.sigma2_u kern.sigma2_y kern.translation'];
 
 if nargout > 1
-    unames = cell(kern.inputDimension,1);
-    ynames = cell(kern.inputDimension,1);
-    mu_names = cell(kern.inputDimension,1);
+    unames = cell(1,kern.inputDimension);
+    ynames = cell(1,kern.inputDimension);
+    mu_names = cell(1,kern.inputDimension);
     for i=1:kern.inputDimension,
-        unames{i}=['CovU' '(' num2str(i) ', ' num2str(i) ')'];
-        ynames{i}=['CovY' '(' num2str(i) ', ' num2str(i) ')'];
-        mu_names{i}=['mu' '(' num2str(i) ')'];
-    end
-    names = {unames(:)' ynames(:)' 'varianceU' 'varianceY' mu_names(:)'};
+        unames{i}=['inverse width latent (' num2str(i) ',' num2str(i) ')'];
+        ynames{i}=['inverse width output (' num2str(i) ',' num2str(i) ')'];
+        mu_names{i}=['mean (' num2str(i) ')'];
+    end    
+    names = {unames{:}, ynames{:}, 'variance latent', 'variance output' , mu_names{:}};
 end

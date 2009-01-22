@@ -32,10 +32,10 @@ function [params, names] = gaussianKernExtractParam(kern)
 params = kern.precision_u';
 params(end+1) = kern.sigma2_u;
 if nargout > 1
-    unames = cell(size(kern.precision_u),1);
+    unames = cell(size(kern.precision_u,1),1);
     for i=1:size(kern.precision_u,1),
-        unames{i}=['PrecU(' num2str(i) ', ' num2str(i) ')'];
+        unames{i}=['inverse width latent (' num2str(i) ',' num2str(i) ')'];
     end
     names = unames(:)';
-    names = {names 'variance'};
+    names = {names{:}, 'variance latent'};
 end

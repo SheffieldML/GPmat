@@ -1,4 +1,4 @@
-function gXu = ggXgaussianKernGradX(ggKern, gaussianKern, X, X2, covGrad)
+function gX = ggXgaussianKernGradX(ggKern, gaussianKern, X, X2)
 
 % GGXGAUSSIANKERNGRADX Compute gradient between the GG and GAUSSIAN
 % kernels wrt the input locations
@@ -20,14 +20,12 @@ function gXu = ggXgaussianKernGradX(ggKern, gaussianKern, X, X2, covGrad)
   
 % KERN
 
-if nargin < 4,
-    covGrad = X2;
+if nargin < 3,    
     X2 = X;
 else
     U = X;
     X = X2;
     X2 = U;
-    covGrad = covGrad';
 end
 
 [K, Linv] = ggXgaussianKernCompute(ggKern, gaussianKern, X2, X);
@@ -41,13 +39,13 @@ for i = 1:size(X, 1);
   gX(:, :, i) = gaussianKernGradXpoint(K(:,i), PinvX(i, :), PinvX2);
 end
 
-gXu = zeros(size(X));
-
-for i = 1:size(X,1),
-    for j=1:size(X,2),
-      gXu(i,j) = covGrad(i,:)*gX(:,j,i);
-    end
-end
+% gXu = zeros(size(X));
+% 
+% for i = 1:size(X,1),
+%     for j=1:size(X,2),
+%       gXu(i,j) = covGrad(i,:)*gX(:,j,i);
+%     end
+% end
 
 function gX = gaussianKernGradXpoint(gaussianPart, x, X2)
 

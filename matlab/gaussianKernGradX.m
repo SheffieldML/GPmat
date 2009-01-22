@@ -1,4 +1,4 @@
-function gXu = gaussianKernGradX(kern,X, X2, covGrad)
+function gX = gaussianKernGradX(kern,X, X2)
 
 % GAUSSIANKERNGRADX Gradient of gaussian kernel with respect to input locations.
 % FORMAT
@@ -19,8 +19,8 @@ function gXu = gaussianKernGradX(kern,X, X2, covGrad)
 
 % KERN
 
-if nargin < 4,
-    covGrad = X2;
+if nargin < 3,
+    %covGrad = X2;
     X2 = X;
 end
 
@@ -34,7 +34,7 @@ for i = 1:size(X, 1);
   gX(:, :, i) = gaussianKernGradXpoint(K(i,:)', PX(i, :), PX2);
 end
 
-gXu = zeros(size(X));
+%gXu = zeros(size(X));
 
 if nargin <4,
     gX = gX*2;
@@ -44,11 +44,11 @@ if nargin <4,
     end
 end
 
-for i = 1:size(X,1),
-    for j=1:size(X,2),
-      gXu(i,j) = covGrad(i,:)*gX(:,j,i);
-    end
-end
+% for i = 1:size(X,1),
+%     for j=1:size(X,2),
+%       gXu(i,j) = covGrad(i,:)*gX(:,j,i);
+%     end
+% end
 
 function gX = gaussianKernGradXpoint(gaussianPart, x, X2)
 
