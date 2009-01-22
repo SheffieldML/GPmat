@@ -690,6 +690,8 @@ void CGp::_updateK() const
   switch(getApproximationType()) 
   {
   case FTC:
+    // TODO: These computes should be done with pkern->compute, which 
+    // could be made multi-threaded.
     for(unsigned int i=0; i<getNumData(); i++) 
     {
       K.setVal(pkern->diagComputeElement(*pX, i), i, i);
@@ -706,6 +708,8 @@ void CGp::_updateK() const
   case DTCVAR:
   case FITC:
   case PITC:
+    // TODO: These computes should be done with pkern->compute, which 
+    // could be made multi-threaded.
     for(unsigned int i=0; i<numActive; i++) 
     {
       K_uu.setVal(pkern->diagComputeElement(X_u, i), i, i);
