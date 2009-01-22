@@ -42,7 +42,7 @@ class CKern : public CMatInterface, public CStreamInterface, public CTransformab
     DIMENSIONMATCH(X.rowsMatch(d));
     DIMENSIONMATCH(d.getCols()==1);
     for(unsigned int i=0; i<X.getRows(); i++)
-	    d.setVal(diagComputeElement(X, i), i);
+      d.setVal(diagComputeElement(X, i), i);
   }
   // Compute the diagonal at particular indices.
   virtual void diagCompute(CMatrix& d, const CMatrix& X, const vector<unsigned int> indices) const
@@ -50,7 +50,7 @@ class CKern : public CMatInterface, public CStreamInterface, public CTransformab
     DIMENSIONMATCH(d.getRows()==indices.size());
     DIMENSIONMATCH(d.getCols()==1);
     for(unsigned int i=0; i<indices.size(); i++)
-	    d.setVal(diagComputeElement(X, indices[i]), i);
+      d.setVal(diagComputeElement(X, indices[i]), i);
   }
  
   // Set the parameters of the kernel.
@@ -157,11 +157,11 @@ class CKern : public CMatInterface, public CStreamInterface, public CTransformab
   }
   // Dummy function to allow CTransformable to be used.
   virtual void getGradParams(CMatrix& g) const
-    {
-      // This is a dummy function
-      cerr << "getGradParams should not be used in CKern" << endl;
-      exit(1);
-    }
+  {
+    // This is a dummy function
+    cerr << "getGradParams should not be used in CKern" << endl;
+    exit(1);
+  }
   // Compute the gradient of the kernel matrix with respect to parameters given an additional gradient matrix.
   virtual void getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise=true) const
   {
