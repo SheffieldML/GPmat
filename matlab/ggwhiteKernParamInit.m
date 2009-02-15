@@ -32,7 +32,7 @@ function kern = ggwhiteKernParamInit(kern)
 
 % KERN
 
-kern.precisionG = 100*ones(kern.inputDimension,1);
+kern.precisionG = ones(kern.inputDimension,1);
 kern.sigma2Noise = 1;
 kern.variance = 1;
 
