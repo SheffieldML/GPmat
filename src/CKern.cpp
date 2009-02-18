@@ -116,7 +116,7 @@ void CComponentKern::writeParamsToStream(ostream& out) const
   writeToStream(out, "type", getType());
   writeToStream(out, "inputDim", getInputDim());
   writeToStream(out, "numParams", getNumParams());
-  writeToStream(out, "numKerns", components.size());
+  writeToStream(out, "numKerns", (unsigned int)components.size());
   for(unsigned int i=0; i<components.size(); i++)
   {
     components[i]->toStream(out);
