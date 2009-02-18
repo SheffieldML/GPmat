@@ -203,6 +203,7 @@ namespace ndlexceptions
   FileFormatError() : FileError() {}
   FileFormatError(std::string fileName, ndlexceptions::StreamFormatError& err) : FileError(err.getMessage() + " in " + fileName) {}
   FileFormatError(std::string fileName, ndlexceptions::MatlabInterfaceReadError& err) : FileError(err.getMessage() + " in " + fileName) {}
+  FileFormatError(std::string fileName) : FileError("File format error in  " + fileName) {}
     virtual ~FileFormatError() throw() {}
     virtual const char* what() const throw()
     {
