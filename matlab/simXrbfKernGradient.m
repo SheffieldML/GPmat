@@ -34,7 +34,7 @@ function [g1, g2] = simXrbfKernGradient(simKern, rbfKern, t1, t2, covGrad)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
-% MODIFICATIONS : Antti Honkela, 2008
+% MODIFICATIONS : Antti Honkela, 2008-2009
 
 % KERN
 
@@ -61,8 +61,8 @@ end
 k = simXrbfKernCompute(simKern, rbfKern, arg{:});
 dim1 = size(t1, 1);
 dim2 = size(t2, 1);
-t1Mat = repmat(t1, [1 dim2]);
-t2Mat = repmat(t2', [dim1 1]);
+t1Mat = t1(:, ones(1, dim2));
+t2Mat = t2(:, ones(1, dim1))';
 diffT = (t1Mat - t2Mat);
 sigma = sqrt(2/simKern.inverseWidth);
 sigma2 = sigma*sigma;

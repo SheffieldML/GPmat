@@ -34,7 +34,7 @@ function [g1, g2] = disimXrbfKernGradient(disimKern, rbfKern, t1, t2, covGrad)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
-% COPYRIGHT : Antti Honkela, 2007
+% COPYRIGHT : Antti Honkela, 2007-2009
 
 % KERN
 
@@ -55,11 +55,10 @@ if disimKern.rbf_variance ~= rbfKern.variance
   error('Kernels cannot be cross combined if they have different RBF variances.');
 end
 
-k = disimXrbfKernCompute(disimKern, rbfKern, arg{:});
 dim1 = size(t1, 1);
 dim2 = size(t2, 1);
-t1Mat = repmat(t1, [1 dim2]);
-t2Mat = repmat(t2', [dim1 1]);
+t1Mat = t1(:, ones(1, dim2));
+t2Mat = t2(:, ones(1, dim1))';
 diffT = (t1Mat - t2Mat);
 l = sqrt(2/disimKern.inverseWidth);
 l2 = l*l;
@@ -76,11 +75,19 @@ halfLDelta = 0.5*l*delta;
 prefact = C_0 * C_i * C_j * sqrt(pi)/2 * l;
 
 lnCommon = - log(delta - D_i);
-lnPart1 = lnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l);
-lnPart2 = lnDiffErfs(halfLD_i + t2Mat/l, halfLD_i - invLDiffT);
+[lnPart1, sign1] = lnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l);
+[lnPart2, sign2] = lnDiffErfs(halfLD_i + t2Mat/l, halfLD_i - invLDiffT);
 
 lnFact1 = halfLDelta^2 - delta * diffT;
 lnFact2 = halfLD_i^2 - D_i * diffT;
+
+
+k = sign1 .* exp(lnCommon + lnFact1 + lnPart1) ...
+    + sign2 .* exp(lnCommon + lnFact2 + lnPart2);
+
+k = 0.5*sqrt(disimKern.variance)*sqrt(disimKern.di_variance)*rbfKern.variance*k*sqrt(pi)*l;
+
+
 
 [dlnPart1, m1] = gradLnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l, ...
 				l/2, l/2);
@@ -89,13 +96,13 @@ lnFact2 = halfLD_i^2 - D_i * diffT;
 
 dK_dD = k .* (1./(delta-D_i)) ...
 	+ prefact ...
-	.* ((l*halfLD_i - diffT) .* exp(lnCommon + lnFact2 + lnPart2) ...
+	.* ((l*halfLD_i - diffT) .* sign2 .* exp(lnCommon + lnFact2 + lnPart2) ...
 	    + dlnPart2 .* exp(lnCommon + lnFact2 - m2));
 dk_dD = sum(sum(dK_dD.*covGrad));
 
 dK_ddelta = k .* (-1./(delta-D_i)) ...
     + prefact ...
-    .* ((l*halfLDelta - diffT) .* exp(lnCommon + lnFact1 + lnPart1) ...
+    .* ((l*halfLDelta - diffT) .* sign1 .* exp(lnCommon + lnFact1 + lnPart1) ...
 	+ dlnPart1 .* exp(lnCommon + lnFact1 - m1));
 dk_ddelta = sum(sum(dK_ddelta.*covGrad));
 
@@ -106,8 +113,8 @@ dk_ddelta = sum(sum(dK_ddelta.*covGrad));
 
 dK_dl = k/l ...
 	+ prefact ... 
-	.* (delta*halfLDelta .* exp(lnCommon + lnFact1 + lnPart1) ...
-	    + D_i*halfLD_i .* exp(lnCommon + lnFact2 + lnPart2) ...
+	.* (delta*halfLDelta .* sign1 .* exp(lnCommon + lnFact1 + lnPart1) ...
+	    + D_i*halfLD_i .* sign2 .* exp(lnCommon + lnFact2 + lnPart2) ...
 	    + dlnPart1 .* exp(lnCommon + lnFact1 - m1) ...
 	    + dlnPart2 .* exp(lnCommon + lnFact2 - m2));
 dk_dl = sum(sum(dK_dl.*covGrad));

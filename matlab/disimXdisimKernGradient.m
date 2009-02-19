@@ -36,7 +36,7 @@ function [g1, g2] = disimXdisimKernGradient(disimKern1, disimKern2, t1, t2, covG
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
-% COPYRIGHT : Antti Honkela, 2007
+% COPYRIGHT : Antti Honkela, 2007-2009
 
 % KERN
 
@@ -47,7 +47,7 @@ if nargin < 5
 else
   arg{2}=t2;
 end
-if size(t1, 2) > 1 | size(t2, 2) > 1
+if size(t1, 2) > 1 || size(t2, 2) > 1
   error('Input can only have one column');
 end
 if disimKern1.inverseWidth ~= disimKern2.inverseWidth
@@ -67,10 +67,25 @@ end
 
 l = sqrt(2/disimKern1.inverseWidth);
 [h1, dh1_ddelta, dh1_dD1, dh1_dD2, dh1_dl] = disimComputeH(t1, t2, disimKern1.di_decay, disimKern1.decay, disimKern2.decay, l);
-[h2, dh2_ddelta, dh2_dD2, dh2_dD1, dh2_dl] = disimComputeH(t2, t1, disimKern1.di_decay, disimKern2.decay, disimKern1.decay, l);
-
 [hp1, dhp1_ddelta, dhp1_dD1, dhp1_dD2, dhp1_dl] = disimComputeHPrime(t1, t2, disimKern1.di_decay, disimKern1.decay, disimKern2.decay, l);
-[hp2, dhp2_ddelta, dhp2_dD2, dhp2_dD1, dhp2_dl] = disimComputeHPrime(t2, t1, disimKern1.di_decay, disimKern2.decay, disimKern1.decay, l);
+
+% Avoid making the expensive call twice with the same arguments
+if (all(t1 == t2) && (disimKern1.decay == disimKern2.decay)),
+  h2 = h1;
+  dh2_ddelta = dh1_ddelta;
+  dh2_dD2 = dh1_dD1;
+  dh2_dD1 = dh1_dD2;
+  dh2_dl = dh1_dl;
+
+  hp2 = hp1;
+  dhp2_ddelta = dhp1_ddelta;
+  dhp2_dD2 = dhp1_dD1;
+  dhp2_dD1 = dhp1_dD2;
+  dhp2_dl = dhp1_dl;
+else,
+  [h2, dh2_ddelta, dh2_dD2, dh2_dD1, dh2_dl] = disimComputeH(t2, t1, disimKern1.di_decay, disimKern2.decay, disimKern1.decay, l);
+  [hp2, dhp2_ddelta, dhp2_dD2, dhp2_dD1, dhp2_dl] = disimComputeHPrime(t2, t1, disimKern1.di_decay, disimKern2.decay, disimKern1.decay, l);
+end
 
 dK_ddelta = dh1_ddelta + dh2_ddelta' + dhp1_ddelta + dhp2_ddelta';
 dK_dD1 = dh1_dD1 + dh2_dD1' + dhp1_dD1 + dhp2_dD1';

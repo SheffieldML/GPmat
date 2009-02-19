@@ -26,7 +26,7 @@ function K = disimXrbfKernCompute(disimKern, rbfKern, t1, t2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
-% COPYRIGHT : Antti Honkela, 2007
+% COPYRIGHT : Antti Honkela, 2007-2009
 
 % KERN
 
@@ -45,9 +45,8 @@ end
 
 dim1 = size(t1, 1);
 dim2 = size(t2, 1);
-t1 = t1;
-t1Mat = repmat(t1, [1 dim2]);
-t2Mat = repmat(t2', [dim1 1]);
+t1Mat = t1(:, ones(1, dim2));
+t2Mat = t2(:, ones(1, dim1))';
 diffT = (t1Mat - t2Mat);
 l = sqrt(2/disimKern.inverseWidth);
 
@@ -59,11 +58,11 @@ halfLD_i = 0.5*l*D_i;
 halfLDelta = 0.5*l*delta;
 
 lnCommon = - log(delta - D_i);
-lnPart1 = lnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l);
-lnPart2 = lnDiffErfs(halfLD_i + t2Mat/l, halfLD_i - invLDiffT);
+[lnPart1, sign1] = lnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l);
+[lnPart2, sign2] = lnDiffErfs(halfLD_i + t2Mat/l, halfLD_i - invLDiffT);
 
-K = exp(lnCommon + halfLDelta^2 - delta * diffT + lnPart1) ...
-    + exp(lnCommon + halfLD_i^2 - D_i * diffT + lnPart2);
+K = sign1 .* exp(lnCommon + halfLDelta^2 - delta * diffT + lnPart1) ...
+    + sign2 .* exp(lnCommon + halfLD_i^2 - D_i * diffT + lnPart2);
 
 K = 0.5*sqrt(disimKern.variance)*sqrt(disimKern.di_variance)*rbfKern.variance*K*sqrt(pi)*l;
 K = real(K);
