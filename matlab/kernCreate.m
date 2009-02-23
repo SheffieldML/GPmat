@@ -20,8 +20,8 @@ function kern = kernCreate(X, kernelType)
 % FORMAT
 % DESC creates a kernel matrix structure given the dimensions of
 % the design matrix and the kernel type.
-% ARG dim : dimensions of the design matrix (in the form number of
-% data points by number of features).
+% ARG dim : input dimension of the design matrix (i.e. number of features
+% in the design matrix). 
 % ARG type : Type of kernel to be created, as described above.
 % RETURN kern : The kernel structure.
 %
@@ -29,14 +29,22 @@ function kern = kernCreate(X, kernelType)
 
 % KERN
   
-if iscell(X) 
+if iscell(X)  
   for i = 1:length(X)
     dim(i) = size(X{i}, 2);
-    if dim(i) == 1 & size(X{i}, 1) == 1;   % ???
-      dim(i) = X{i};
-    end
+    %/~
+    % If it's a cell, then we assume it is *not* containing the dimension of
+    % the data.  --- Neil 23/2/2009
+    %    if dim(i) == 1 & size(X{i}, 1) == 1;   % ???
+    %       dim(i) = X{i};
+    %     end
+    %~/
   end
 else
+  % This is a bit of a hack to allow the creation of a kernel without
+  % providing an input data matrix (which is sometimes useful). If the X
+  % structure is a 1x1 it is assumed that it is the dimension of the
+  % input data.
   dim = size(X, 2);
   if dim == 1 & size(X, 1) == 1;
     dim = X;
