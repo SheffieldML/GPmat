@@ -56,7 +56,17 @@ end
 
 sigma = sqrt(2/simKern1.inverseWidth);
 [h1, dh1_dD1, dh1_dD2, dh1_dsigma] = simComputeH(t1, t2, simKern1.decay, simKern2.decay, simKern1.delay, simKern2.delay, sigma);
-[h2, dh2_dD2, dh2_dD1, dh2_dsigma] = simComputeH(t2, t1, simKern2.decay, simKern1.decay, simKern2.delay, simKern1.delay, sigma);
+
+% Avoid making the expensive call twice unless really necessary
+if ((length(t1) == length(t2)) && all(t1 == t2) && ...
+    (simKern1.decay == simKern2.decay) && (simKern1.delay == simKern2.delay)),
+  h2 = h1;
+  dh2_dD2 = dh1_dD1;
+  dh2_dD1 = dh1_dD2;
+  dh2_dsigma = dh1_dsigma;
+else
+  [h2, dh2_dD2, dh2_dD1, dh2_dsigma] = simComputeH(t2, t1, simKern2.decay, simKern1.decay, simKern2.delay, simKern1.delay, sigma);
+end
 dK_dD1 = dh1_dD1 + dh2_dD1';
 dK_dD2 = dh1_dD2 + dh2_dD2';
 dK_dsigma = dh1_dsigma + dh2_dsigma';

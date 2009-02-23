@@ -70,7 +70,8 @@ l = sqrt(2/disimKern1.inverseWidth);
 [hp1, dhp1_ddelta, dhp1_dD1, dhp1_dD2, dhp1_dl] = disimComputeHPrime(t1, t2, disimKern1.di_decay, disimKern1.decay, disimKern2.decay, l);
 
 % Avoid making the expensive call twice with the same arguments
-if (all(t1 == t2) && (disimKern1.decay == disimKern2.decay)),
+if ((length(t1) == length(t2)) && all(t1 == t2) && ...
+    (disimKern1.decay == disimKern2.decay)),
   h2 = h1;
   dh2_ddelta = dh1_ddelta;
   dh2_dD2 = dh1_dD1;

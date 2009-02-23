@@ -24,7 +24,9 @@ startVal = 1;
 endVal = 0;
 for i = 1:length(kern.comp)
   endVal = endVal + kern.comp{i}.nParams;
-  kern.comp{i} = kernExpandParam(kern.comp{i}, params(1, startVal:endVal));
+  if ~isfield(kern, 'fixedBlocks') || ~kern.fixedBlocks(i),
+    kern.comp{i} = kernExpandParam(kern.comp{i}, params(1, startVal:endVal));
+  end
   startVal = endVal + 1;
 end
 
