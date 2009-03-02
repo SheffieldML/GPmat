@@ -61,25 +61,12 @@ end
   
 switch dataset
   
- case 'silhouette'
-  % Ankur Agarwal and Bill Trigg's silhoutte data.
-  load([baseDir dirSep 'mocap' dirSep 'ankur' dirSep 'ankurDataPoseSilhouette']);
-  inMean = mean(Y);
-  inScales = sqrt(var(Y));
-  X = Y - repmat(inMean, size(Y, 1), 1);
-  X = X./repmat(inScales, size(Y, 1), 1);
-  
-  XTest = Y_test - repmat(inMean, size(Y_test, 1), 1);
-  XTest = XTest./repmat(inScales, size(Y_test, 1), 1);
-  y = Z;
-  yTest = Z_test;
- 
  case 'cedar69'
   % Data for ICML 2001 paper on noisy KFD.
   digOne = 6;
   digTwo = 9;
 
-  directory = [baseDir dirSep 'cedar.cd' dirSep 'matlab' dirSep '16x16' dirSep];
+  directory = [baseDir '\cedar.cd\matlab\16x16\'];
   load([directory 'digit' num2str(digOne)]);
   X = digitData;
   numDataOne = size(digitData, 1);
@@ -526,13 +513,55 @@ switch dataset
   yTest = data(indTe, end);
  %~/
  
-  case 'lfmOde'      
-      data = load([baseDir 'datasetODE31_30_5']);
+    case 'lfmOde'      
+      data = load([baseDir 'datasetODE31_150_5Ind0']);
       X = data.Xtrain{1};
       y = cell2mat(data.Ytrain');
       XTest = data.Xtest{1};
       yTest = cell2mat(data.Ytest'); 
       
+    case 'lfmOdeInd'      
+      data = load([baseDir 'datasetODE31_100_5Ind1']);
+      X = data.Xtrain{1};
+      y = cell2mat(data.Ytrain');
+      XTest = data.Xtest{1};
+      yTest = cell2mat(data.Ytest'); 
+        
+    case 'ggToy'
+        data = load([baseDir 'sample141']);
+        X = data.X';
+        y = data.Y';
+        XTest = data.Xtest';
+        yTest = data.Ytest';
+    
+    case 'juraDataCd'    
+        data = load([baseDir 'data_jura_Cd']);
+        X = data.Xtrain;
+        y = data.Ytrain;
+        XTest = data.Xtest;
+        yTest = data.Ytest;
+    
+    case 'juraDataCo'    
+        data = load([baseDir 'data_jura_Co']);
+        X = data.Xtrain;
+        y = data.Ytrain;
+        XTest = data.Xtest;
+        yTest = data.Ytest;
+        
+    case 'juraDataCu'    
+        data = load([baseDir 'data_jura_Cu']);
+        X = data.Xtrain;
+        y = data.Ytrain;
+        XTest = data.Xtest;
+        yTest = data.Ytest;
+        
+    case 'juraDataPb'    
+        data = load([baseDir 'data_jura_Pb']);
+        X = data.Xtrain;
+        y = data.Ytrain;
+        XTest = data.Xtest;
+        yTest = data.Ytest;    
+              
  otherwise
   error('Unknown data set requested.')
 
