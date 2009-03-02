@@ -21,18 +21,18 @@ function k = multiKernDiagCompute(kern, x)
 if iscell(x)
   dim = 0;
   for i = 1:length(x)
-    dim = dim + length(x{i});
+    dim = dim + size(x{i},1);
   end
   k = zeros(dim, 1);
   startVal = 1;
-  endVal = length(x{1});
+  endVal = size(x{1},1);
   for i = 1:length(kern.comp)
       if ~isempty(x{i})
           k(startVal:endVal) = kernDiagCompute(kern.comp{i}, x{i});
       end
       startVal = endVal + 1;
       if i+1 <= length(kern.comp)
-          endVal = endVal + length(x{i+1});
+          endVal = endVal + size(x{i+1},1);
       end
   end
 else

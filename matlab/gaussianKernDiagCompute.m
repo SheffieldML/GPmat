@@ -16,4 +16,4 @@ function k = gaussianKernDiagCompute(kern, x)
   
 % KERN
   
-k = kern.sigma2_u*ones(length(x),1);
+k = kern.sigma2_u*ones(size(x,1),1);
