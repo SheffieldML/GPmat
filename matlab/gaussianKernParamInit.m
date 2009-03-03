@@ -21,6 +21,9 @@ function kern = gaussianKernParamInit(kern)
 
 % KERN
   
+if kern.inputDimension == 0
+   kern.inputDimension = 1; 
+end
 kern.sigma2_u = 1;
 kern.precision_u = 100*ones(kern.inputDimension,1);
 kern.nParams = kern.inputDimension + 1;
