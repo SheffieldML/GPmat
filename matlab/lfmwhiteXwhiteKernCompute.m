@@ -45,5 +45,5 @@ T1 = repmat(t1, 1, size(t2, 1));
 T2 = repmat(t2.', size(t1, 1), 1);
 deltaT = T1-T2;
 c = lfmKern.variance * lfmKern.sensitivity / (lfmKern.mass * lfmKern.omega);
-K = c * exp(-lfmKern.alpha*deltaT) .* sin(lfmKern.omega*deltaT) ...
-    .* (T1>=T2);
+K = real(c * exp(-lfmKern.alpha*deltaT) .* sin(lfmKern.omega*deltaT) ...
+    .* (T1>=T2));

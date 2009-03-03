@@ -100,3 +100,6 @@ g1(4) = sum(sum(K1 .* covGrad)) / variance;
 
 % Gradient w.r.t. S_{qr}
 g1(5) = sum(sum(K1 .* covGrad)) / sensitivity;
+
+% Ensuring that g1 is real
+g1 = real(g1);

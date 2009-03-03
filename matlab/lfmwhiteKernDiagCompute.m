@@ -29,4 +29,4 @@ if (kern.isStationary == false)
         + (kern.gamma * exp(-2*gamma2*t) + gamma2 * exp(-2*kern.gamma*t)) ...
         / (2*((kern.alpha^2)+(kern.omega^2)));
 end
-k = c*k;
+k = c*real(k);

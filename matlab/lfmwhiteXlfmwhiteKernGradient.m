@@ -167,3 +167,7 @@ g2(4) = 0; % Otherwise it is counted twice
 % Gradient w.r.t. S_{pr} and S_{qr}
 g1(5) = sum(sum(K .* covGrad)) / sensitivity1;
 g2(5) = sum(sum(K .* covGrad)) / sensitivity2;
+
+% Ensuring that the gradients are real
+g1 = real(g1);
+g2 = real(g2);

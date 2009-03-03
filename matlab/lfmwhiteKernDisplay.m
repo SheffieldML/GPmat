@@ -26,9 +26,9 @@ end
 spacing = char(spacing);
 fprintf(spacing);
 if kern.isStationary
-    fprintf('Stationary version of the kernel');
+    fprintf('Stationary version of the kernel\n');
 else
-    fprintf('Non-stationary version of the kernel');
+    fprintf('Non-stationary version of the kernel\n');
 end
 fprintf(spacing);
 fprintf('LFM-White mass: %2.4f\n', kern.mass);
