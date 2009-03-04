@@ -1,4 +1,4 @@
-function g = wienerKernGradient(kern, x, x2, covGrad)
+function g = wienerKernGradient(kern, x, varargin)
 
 % WIENERKERNGRADIENT Gradient of WIENER kernel's parameters.
 % FORMAT
@@ -44,8 +44,8 @@ function g = wienerKernGradient(kern, x, x2, covGrad)
 % KERN
 
 if nargin < 4
-  linPart = linKernCompute(kern, x);
+  linPart = wienerKernCompute(kern, x);
 else
-  linPart = linKernCompute(kern, x, varargin{1});
+  linPart = wienerKernCompute(kern, x, varargin{1});
 end
 g(1) = sum(sum(varargin{end}.*linPart))/kern.variance;

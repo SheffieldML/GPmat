@@ -22,12 +22,16 @@ function K = wienerKernCompute(kern, x, x2)
 
 % KERN
 
-  if any(x<0) | any(x2<0)
+  if any(x<0)
     error('WIENER kernel only valid for time greater than zero')
   end
   if nargin < 3
     K = repmat(x, 1, size(x, 1));
     K = kern.variance*min(K, K');
   else
+    if any(x2<0)
+      error('WIENER kernel only valid for time greater than zero')
+    end
+      
     K = kern.variance*min(repmat(x, 1, size(x2, 1)), repmat(x2', size(x, 1), 1));
   end
