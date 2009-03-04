@@ -1,12 +1,12 @@
 function  gradH = lfmwhiteComputeGradThetaH1(gamma1, gamma2, t1, t2, ...
     gradTheta, isStationary1, isStationary2)
 
-% LFMWHITECOMPUTEH Helper function for computing part of the gradient of
+% LFMWHITECOMPUTEGRADTHETAH1 computes a portion of the LFM-WHITE kernel's gradient w.r.t. theta.
+% FORMAT
+% DESC Helper function for computing part of the gradient of
 % the LFM-WHITE kernel w.r.t. to a generic parameter theta (mass, spring or
 % damper). Used for obtaining the gradients w.r.t. parameters related to
 % the first argument (gamma1).
-% FORMAT
-% DESC computes a portion of the LFM-WHITE kernel's gradient w.r.t. theta.
 % ARG gamma1 : Gamma value for first system.
 % ARG gamma2 : Gamma value for second system.
 % ARG t1 : first time input (number of time points x 1).
