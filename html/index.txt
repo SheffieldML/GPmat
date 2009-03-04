@@ -11,11 +11,15 @@
 RELEASEINFORMATION
 
 
-Added loaders for the movielens data.
+<p>Added loader for Swiss Jura data and toy data for multiple output GPs.
+
+<h4>Version 0.134</h4>
+
+<p>Added loader for the movielens data.
 
 <h4>Version 0.133</h4>
 
-Added some variants of the swiss roll &quot;data&guot;.
+<p>Added some variants of the swiss roll &quot;data&quot;.
 
 <h4>Version 0.132</h4>
 
