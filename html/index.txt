@@ -6,13 +6,17 @@
 
 <h1>Matlab MLTOOLS Toolbox</h1>
 
-The main objective of this toolbox is to integrate several machine learning methods with in a consistent framework which is coded in a compatible way with the methods available in the other toolboxes on this site. Whilst the other toolboxes typically reflect research projects, this toolbox reflects other researchers work or known algorithms. The code either provides 'wrappers' for other researchers code or independent implementations. Examples of code that is wrapped include LLE, Isomap, MVU, NETLAB.
+<p>The main objective of this toolbox is to integrate several machine learning methods with in a consistent framework which is coded in a compatible way with the methods available in the other toolboxes on this site. Whilst the other toolboxes typically reflect research projects, this toolbox reflects other researchers work or known algorithms. The code either provides 'wrappers' for other researchers code or independent implementations. Examples of code that is wrapped include LLE, Isomap, MVU, NETLAB.
 
 RELEASEINFORMATION
 
-Changes to modelOutputGrad.m, modelOut.m, kbrOutputGrad.m, kbrExpandParam.m, modelOptimise.m to allow compatibility with SGPLVM and NCCA toolboxes. Added a preliminary coding of LLE. 
+<p>Added paramNameRegularExpressionLookup.m to regular expression match a parameter name in a model and return the associated indices. paramNameReverseLookup.m does the same thing but for the specific parameter name. Also added multimodel type, which allows for multi-task style learning of existing models. Added linear mapping type of model. 
 
-Note that to run the LLE code you will need to download the file &quot;eigs_r11.m&quot;
+<h4>Version 0.1291</h4>
+
+<p>Changes to modelOutputGrad.m, modelOut.m, kbrOutputGrad.m, kbrExpandParam.m, modelOptimise.m to allow compatibility with SGPLVM and NCCA toolboxes. Added a preliminary coding of LLE. 
+
+<p>Note that to run the LLE code you will need to download the file &quot;eigs_r11.m&quot;
 
 <h4>Version 0.129</h4>
 
