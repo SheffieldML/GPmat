@@ -11,10 +11,12 @@ function model = fgplvmExpandParam(model, params)
 % the FGPLVM structure.
 % 
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2009
+% MODIFICATION: Carl Henrik Ek, 2009
 % 
 % SEEALSO : fgplvmCreate, fgplvmExtractParam, modelExpandParam
 
 % FGPLVM
+
 
 startVal = 1;
 if isfield(model, 'back') & ~isempty(model.back)
@@ -63,3 +65,9 @@ if isfield(model, 'dynamics') & ~isempty(model.dynamics)
   model.dynamics = modelExpandParam(model.dynamics, params(startVal:endVal));
 end
 
+% Constraints
+if(isfield(model,'constraints')&&~isempty(model.constraints))
+  for(i = 1:1:model.constraints.numConstraints)
+    model.constraints.comp{i} = constraintExpandParam(model.constraints.comp{i},model.X);
+  end
+end

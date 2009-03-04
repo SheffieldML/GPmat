@@ -21,13 +21,19 @@ function [g, gParam] = fgplvmLogLikeGradients(model)
 % RETURN gParam : gradients of the parameters of the GP-LVM model.
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2009
-%
+% MODIFICATION : Carl Henrik Ek, 2009
 % SEEALSO : fgplvmLogLikelihood, fgplvmCreate, modelLogLikeGradients
 
 % FGPLVM
 
 
 [gParam, gX_u, gX] = gpLogLikeGradients(model);
+
+if(isfield(model,'constraints')&&~isempty(model.constraints))
+  for(i = 1:1:model.constraints.numConstraints)
+    gX = gX + constraintLogLikeGradients(model.constraints.comp{i});
+  end
+end
 
 gDynParam = [];
 % Check if Dynamics kernel is being used.

@@ -72,6 +72,9 @@ if isfield(options, 'back') & ~isempty(options.back)
 else
   model.back = [];
 end
+
+model.constraints = {};
+
 model.dynamics = [];
 
 initParams = fgplvmExtractParam(model);

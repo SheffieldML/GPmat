@@ -12,7 +12,7 @@ function ll = fgplvmLogLikelihood(model)
 %
 % SEEALSO : gpLogLikelihood, fgplvmCreate
 %
-% MODIFICATIONS : Carl Henrik Ek, 2008
+% MODIFICATIONS : Carl Henrik Ek, 2008, 2009
 %
 % FGPLVM
 
@@ -39,4 +39,9 @@ switch model.approx
   % do nothing
 end
 
+if(isfield(model,'constraints')&&~isempty(model.constraints))
+  for(i = 1:1:model.constraints.numConstraints)
+    ll = ll - constraintLogLikelihood(model.constraints.comp{i},model.X);
+  end
+end
 
