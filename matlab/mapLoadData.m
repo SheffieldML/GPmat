@@ -23,7 +23,8 @@ function [X, y, XTest, yTest] = mapLoadData(dataset, seedVal)
 % SEEALSO : lvmLoadData, datasetsDirectory
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
-
+%
+% MODIFICATIONS : Mauricio A. Alvarez, 2009
 
 % DATASETS
 
@@ -606,11 +607,11 @@ switch dataset
         try
            load([baseDir 'juraDataCd.mat']);
         catch           
-           fidP = fopen('prediction.dat','r');
+           fidP = fopen([baseDir 'prediction.dat'],'r');
            if fidP ==-1
                error('The file prediction.dat does not exist in this directory');
            end
-           fidV = fopen('validation.dat','r');
+           fidV = fopen([baseDir 'validation.dat'],'r');
            if fidV ==-1
                error('The file validation.dat does not exist in this directory');
            end
@@ -662,11 +663,11 @@ switch dataset
         try
             load([baseDir 'juraDataCu.mat']);
         catch
-            fidP = fopen('prediction.dat','r');
+            fidP = fopen([baseDir 'prediction.dat'],'r');
             if fidP ==-1
                 error('The file prediction.dat does not exist in this directory');
             end
-            fidV = fopen('validation.dat','r');
+            fidV = fopen([baseDir 'validation.dat'],'r');
             if fidV ==-1
                 error('The file validation.dat does not exist in this directory');
             end

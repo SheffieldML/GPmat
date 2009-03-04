@@ -1,5 +1,10 @@
 This toolbox stores datasets and gives commands for accessing them.
 
+Version 0.135
+-------------
+
+Added loader for Swiss Jura data and toy data for multiple output GPs.
+
 Version 0.134
 -------------
 
