@@ -11,6 +11,8 @@ function g = multimodelLogLikeGradients(model)
 % SEEALSO multimodelCreate, multimodelLogLikelihood, modelLogLikeGradients 
 %
 % COPYRIGHT : Neil D. Lawrence, 2007, 2008
+%
+% MODIFICATIONS : Mauricio Alvarez, 2009
 
 % MLTOOLS
 
@@ -23,7 +25,8 @@ function g = multimodelLogLikeGradients(model)
     if ~isempty(model.separateIndices)
       startVal = endVal + 1;
       endVal = endVal + model.numSep;
-      g(startVal:endVal) = g(model.separateIndices);
+      %g(startVal:endVal) = g(model.separateIndices);
+      g(startVal:endVal) = gModel(model.separateIndices);      
     end
   end
 end
