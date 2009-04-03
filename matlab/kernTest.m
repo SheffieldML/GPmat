@@ -184,7 +184,7 @@ try
       LminusDiag(i, j) = full(trace(K));
     end
     x = origX;
-    gx(i, :) = 2*sum(kernGradX(kern, x(i, :), x), 1);
+    gx(i, :) = 2*sum(kernGradX(kern, x(i, :), x), 3);
     gxDiag(i, :) = kernDiagGradX(kern, x(i, :));
   end
 

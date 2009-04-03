@@ -86,11 +86,15 @@ gradThetaOmega = [(damper^2-2*mass*spring)/(2*(mass^2)*sqrt(4*mass*spring-damper
 gradThetaGamma = gradThetaAlpha + j*gradThetaOmega;
 gradThetaGammaTilde = gradThetaAlpha - j*gradThetaOmega;
 
-% Computation of the kernel and auxiliary functions and constants
+% Computation of the normalised kernel (i.e. variance = 1 and sensitivity = 1)
+% and auxiliary functions and constants
 
+lfmKern.variance = 1;
+lfmKern.sensitivity = 1;
+rbfKern.variance = 1;
 K = lfmwhiteXrbfwhiteKernCompute(lfmKern, rbfKern, t1, t2);
 
-c = sensitivity * variance / (j*4*mass*omega);
+c = 1 / (j*4*mass*omega);
 
 varphiT1T2 = gamma * deltaT .* indT + 0.5 * invWidth * (deltaT.^2) .* (1-indT);
 zT1T2 = sqrt(0.5*invWidth) * (-deltaT .* (1-indT) + gamma / invWidth);
@@ -124,7 +128,7 @@ for i = 1:3
             .* (gradThetaGammaTilde(i) * T1 .* wofzhui(j*z0T2Tilde) ...
             + sqrt(2/invWidth) * gradThetaGammaTilde(i) * (1/sqrt(pi)-z0T2Tilde.*wofzHui(j*z0T2Tilde)));
     end
-    g1(i) = sum(sum((-(gradThetaMass(i)/mass + gradThetaOmega(i)/omega) ...
+    g1(i) = sensitivity * variance * sum(sum((-(gradThetaMass(i)/mass + gradThetaOmega(i)/omega) ...
         * K + c * (gradThetaPsiTilde - gradThetaPsi)) .* covGrad));
 end
 
@@ -149,14 +153,14 @@ if (isStationary == false)
         .* (gradInvWidthVarphi0T2 .* wofzhui(j*z0T2Tilde) ...
         + 2 * (1/sqrt(pi)-z0T2Tilde.*wofzHui(j*z0T2Tilde)) .* gradInvWidthZ0T2Tilde);
 end
-g2(1) = sum(sum((c * (gradInvWidthPsiTilde - gradInvWidthPsi)) .* covGrad));
+g2(1) = sensitivity * variance * sum(sum((c * (gradInvWidthPsiTilde - gradInvWidthPsi)) .* covGrad));
 
 % Gradient w.r.t. sigma_r^2
-g1(4) = sum(sum(K .* covGrad)) / variance;
+g1(4) = sensitivity * sum(sum(K .* covGrad));
 g2(2) = 0; % Otherwise it is counted twice
 
 % Gradient w.r.t. sensitivity (only lfmKern)
-g1(5) = sum(sum(K .* covGrad)) / sensitivity;
+g1(5) = variance * sum(sum(K .* covGrad));
 
 % Ensure that the gradients are real
 g1 = real(g1);

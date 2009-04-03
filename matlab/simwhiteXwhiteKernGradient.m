@@ -63,13 +63,20 @@ g2 = 0; % The only parameter of the WHITE kernel (its variance) is already
 T1 = repmat(t1, 1, size(t2, 1));
 T2 = repmat(t2.', size(t1, 1), 1);
 
+sensitivity = simKern.sensitivity;
+variance = simKern.variance;
+
+% Computing a normalised (i.e. variance = 1 and sensitivity = 1) kernel
+simKern.variance = 1;
+simKern.sensitivity = 1;
+whiteKern.variance = 1;
 K = simwhiteXwhiteKernCompute(simKern, whiteKern, t1, t2);
 
 % Gradient w.r.t. D_q
-g1(1) = sum(sum((T2-T1) .* K .* covGrad));
+g1(1) = variance * sensitivity * sum(sum((T2-T1) .* K .* covGrad));
 
 % Gradient w.r.t. sigma_r^2
-g1(2) = sum(sum(K .* covGrad)) / simKern.variance;
+g1(2) = sensitivity * sum(sum(K .* covGrad));
 
 % Gradient w.r.t. S_{qr}
-g1(3) = sum(sum(K .* covGrad)) / simKern.sensitivity;
+g1(3) = variance * sum(sum(K .* covGrad));

@@ -73,7 +73,7 @@ T1 = repmat(t1, 1, size(t2, 1));
 T2 = repmat(t2.', size(t1, 1), 1);
 deltaT = T1-T2;
 indT = (T1 >= T2);
-c = variance * sensitivity / (mass * omega);
+c = 1 / (mass * omega);
 K0 = c * exp(-alpha*deltaT) .* indT;
 K1 = K0 .* sin(omega*deltaT);
 K2 = K0 .* cos(omega*deltaT);
@@ -84,22 +84,25 @@ c2 = sqrt(4*mass*spring-damper^2);
 gradOmega = [(damper^2-2*mass*spring)/(2*c2*mass^2) -damper/(2*c2*mass) 1/c2];
 
 % Gradient w.r.t. m_q
-g1(1) = sum(sum((gradOmega(1) * (T1-T2) .* K2 - gradAlpha(1) * (T1-T2) .* K1 ...
+g1(1) = variance * sensitivity * sum(sum((gradOmega(1) * (T1-T2) .* K2 ...
+    - gradAlpha(1) * (T1-T2) .* K1 ...
     - (gradMass(1)/mass + gradOmega(1)/omega) * K1) .* covGrad));
 
 % Gradient w.r.t. D_q
-g1(2) = sum(sum((gradOmega(3) * (T1-T2) .* K2 - gradAlpha(3) * (T1-T2) .* K1 ...
+g1(2) = variance * sensitivity * sum(sum((gradOmega(3) * (T1-T2) .* K2 ...
+    - gradAlpha(3) * (T1-T2) .* K1 ...
     - (gradMass(3)/mass + gradOmega(3)/omega) * K1) .* covGrad));
 
 % Gradient w.r.t. C_q
-g1(3) = sum(sum((gradOmega(2) * (T1-T2) .* K2 - gradAlpha(2) * (T1-T2) .* K1 ...
+g1(3) = variance * sensitivity * sum(sum((gradOmega(2) * (T1-T2) .* K2 ...
+    - gradAlpha(2) * (T1-T2) .* K1 ...
     - (gradMass(2)/mass + gradOmega(2)/omega) * K1) .* covGrad));
 
 % Gradient w.r.t. sigma_r^2
-g1(4) = sum(sum(K1 .* covGrad)) / variance;
+g1(4) = sensitivity * sum(sum(K1 .* covGrad));
 
 % Gradient w.r.t. S_{qr}
-g1(5) = sum(sum(K1 .* covGrad)) / sensitivity;
+g1(5) = variance * sum(sum(K1 .* covGrad));
 
 % Ensuring that g1 is real
 g1 = real(g1);

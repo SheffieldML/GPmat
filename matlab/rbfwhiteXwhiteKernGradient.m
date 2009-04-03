@@ -64,11 +64,13 @@ g2 = 0; % The only parameter of the WHITE kernel (its variance) is already
 T1 = repmat(t1, 1, size(t2, 1));
 T2 = repmat(t2.', size(t1, 1), 1);
 deltaT = T1 - T2;
-indT = (T1 >= T2);
-K = rbfwhiteXwhiteKernCompute(rbfKern, whiteKern, t1, t2);
+
+% Computation of the normalised (i.e. variance = 1) kernel
+c = sqrt(rbfKern.inverseWidth / (2 * pi));
+K = c * exp(-0.5 * rbfKern.inverseWidth * (deltaT.*deltaT)) .* (deltaT >= 0);
 
 % Gradient w.r.t. the inverse width
-g1(1) = 0.5 * sum(sum((1/rbfKern.inverseWidth - deltaT.*deltaT) .* K .* covGrad));
+g1(1) = 0.5 * rbfKern.variance * sum(sum((1/rbfKern.inverseWidth - deltaT.*deltaT) .* K .* covGrad));
 
 % Gradient w.r.t. sigma_r^2
-g1(2) = sum(sum(K .* covGrad)) / rbfKern.variance;
+g1(2) = sum(sum(K .* covGrad));
