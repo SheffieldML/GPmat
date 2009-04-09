@@ -14,8 +14,13 @@ function [model, lbls] = lvmLoadResult(modelType, dataSet, number)
   
 % MLTOOLS
 
+
+
 [Y, lbls] = lvmLoadData(dataSet);
 
 dataSet(1) = upper(dataSet(1));
-modelType(1) = upper(modelType(1));
+if ~isempty(modelType)
+    modelType(1) = upper(modelType(1));
+end
+
 load(['dem' dataSet modelType num2str(number)])

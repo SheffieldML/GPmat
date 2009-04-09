@@ -57,7 +57,7 @@ function [passParams, passNames] = multimodelExtractParam(model)
       if nargout > 1
         [receiveParams, receiveNames] = modelExtractParam(model.comp{i});
       else
-        params = modelExtractParam(model.comp{i});
+        receiveParams = modelExtractParam(model.comp{i});
       end
       passParams(startVal:endVal) = receiveParams(model.separateIndices);
       if nargout > 1

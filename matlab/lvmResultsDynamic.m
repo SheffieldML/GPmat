@@ -15,7 +15,7 @@ function lvmResultsDynamic(modelType, dataSet, number, dataType, varargin)
 % COPYRIGHT : Neil D. Lawrence, 2008
   
 % MLTOOLS
-  
+
 [model, lbls] = lvmLoadResult(modelType, dataSet, number);
 
 % Visualise the results

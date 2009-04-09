@@ -48,3 +48,8 @@ model.sharedIndices = 1:model.numParams;
 model.sharedIndices(model.separateIndices) = [];
 
 model.numParams = model.numParams + (model.numModels-1)*model.numSep;
+
+if isfield(options, 'optimiser') && ~isempty(options.optimiser)
+    model.optimiser = options.optimiser;    
+end
+
