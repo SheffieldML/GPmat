@@ -2,10 +2,15 @@
 
 % GPSIM
 
-bw = false;
+set(0,'DefaultLineLineWidth',2);
+set(0,'DefaultTextFontSize',20);
+set(0,'DefaultAxesFontSize',20);
+set(0,'DefaultAxesLineWidth',1.5);
 
-rand('seed', 1e4);
-randn('seed', 1e5);
+bw = true;
+colordef white
+rand('seed', 1e6);
+randn('seed', 1e6);
 % protein function is of the form \sum_i \alpha_i
 % \exp(-(t-\mu_i)/sigma_i^2)
 alpha = [1.5 1.5 .5 .5];
@@ -64,9 +69,12 @@ options.fix(11).value = expTransform(B(3), 'xtoa');
 model = gpsimCreate(numGenes, 1, datat, dataY, zeros(size(dataY)), options);
 startInd = 1;
 endInd = 0;
+model.timesCell{2} = [8 16]';
+model.timesCell{3} = [6 12]';
+model.timesCell{4} = [12 14]';
 for i = 2:numGenes+1
   endInd = endInd + numObs;
-  model.timesCell{i} = rand(numObs, 1)*16;
+  %model.timesCell{i} = rand(numObs, 1)*16;
   temp = gpsimArtificialGenes(model.timesCell{i}, alpha, mu, sigma, ...
                              B, S, D);
   model.y(startInd:endInd)=temp(:, i-1)+ randn(numObs, 1)*noiseLevel;
@@ -139,6 +147,7 @@ end
 figure(3)
 clf
 hold on
+fillColor = [0.7 0.7 0.7];
 for i = 2:size(ypred, 2)
   fill([predt{1}; predt{1}(end:-1:1)], ...
        [ypred(:, i); ypred(end:-1:1, i)] ...
@@ -161,7 +170,6 @@ figure(4)
 clf
 hold on
 
-stdVals = sqrt(varF);
 fillColor = [0.7 0.7 0.7];
 fill([predt{1}; predt{1}(end:-1:1)], ...
      [ypred(:, 1); ypred(end:-1:1, 1)] ...
@@ -193,7 +201,7 @@ end
 for i = 1:4
   figure(i);
   set(gca, 'ylim', [-1 7]);
-  zeroAxes(gca);
+  %zeroAxes(gca);
   if bw
     print('-deps', ['../tex/diagrams/demToyProblem3bw_' num2str(i) ...
                     '.eps']);
