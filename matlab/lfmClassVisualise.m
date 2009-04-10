@@ -5,40 +5,57 @@ function lfmClassVisualise( call )
 % MLTOOLS
 
 global visualiseInfo
-
+maxN = 30;
 
 switch call
-    case 'click'       
-        if ~visualiseInfo.clicked  
-        else
-        xVector = visualiseInfo.timer.series';
-        f{1} = visualiseInfo.f1.series';
-        f{2} = visualiseInfo.f2.series';
-        Y = modelOut(visualiseInfo.model, xVector, f);
-        channels = repmat(visualiseInfo.varargin{1}, length(visualiseInfo.f2.series), 1);
-        channelsLabels = [41:47 49:50];
-        for k = 1: length(channelsLabels)
-            channels(:, channelsLabels(k)) = Y(:,k);            
-        end
-        for j = 1:size(channels, 1)
-            pause(visualiseInfo.varargin{3})
-            visualiseInfo.visualiseModify(visualiseInfo.visHandle, channels(j, :), ... 
-                    visualiseInfo.varargin{2});
-        end
-        visualiseInfo.timer.series = 0;
-        visualiseInfo.f1.series = 0;
-        visualiseInfo.f2.series = 0;
-        set(visualiseInfo.f1.handle,'Xdata', visualiseInfo.timer.series, 'Ydata', visualiseInfo.f1.series);
-        set(visualiseInfo.f2.handle,'Xdata', visualiseInfo.timer.series, 'Ydata', visualiseInfo.f2.series);     
-        end                
-        visualiseInfo.clicked = ~visualiseInfo.clicked;       
+ case 'click'       
+  if ~visualiseInfo.clicked  
+    visualiseInfo.clicked = ~visualiseInfo.clicked;       
+    tic;
+    visualiseInfo.lastToc = 0;
+    visualiseInfo.timer.series = [];
+    visualiseInfo.f1.series = [];
+    visualiseInfo.f2.series = [];
+  else
+    visualiseInfo.clicked = ~visualiseInfo.clicked;       
+    N = length(visualiseInfo.timer.series);
+    if N >maxN
+      ind = round(linspace(1, N, maxN));
+    else
+      ind = 1:N
+    end
+    disp(ind)
+     xVector = visualiseInfo.timer.series(ind)';
+     f{1} = visualiseInfo.f1.series(ind)';
+     f{2} = visualiseInfo.f2.series(ind)';
+     Y = modelOut(visualiseInfo.model, xVector, f);
+     channels = repmat(visualiseInfo.varargin{1}, length(ind), 1);
+     channelsLabels = [41:47 49:50];
+     for k = 1: length(channelsLabels)
+       channels(:, channelsLabels(k)) = Y(:,k);            
+     end
+     for j = 1:size(channels, 1)
+       if j>1
+       pause(xVector(j) -xVector(j-1))
+       end
+       visualiseInfo.visualiseModify(visualiseInfo.visHandle, channels(j, :), ... 
+                                     visualiseInfo.varargin{2});
+     end
+     visualiseInfo.timer.series = 0;
+     visualiseInfo.f1.series = 0;
+     visualiseInfo.f2.series = 0;
+     set(visualiseInfo.f1.handle,'Xdata', visualiseInfo.timer.series, 'Ydata', visualiseInfo.f1.series);
+     set(visualiseInfo.f2.handle,'Xdata', visualiseInfo.timer.series, 'Ydata', visualiseInfo.f2.series);     
+    end                
     case 'move'
         if visualiseInfo.clicked
-            [x, y]  = localCheckPointPosition(visualiseInfo);
+          timeNow = toc;
+          if ~isfield(visualiseInfo, 'lastToc') || timeNow > visualiseInfo.lastToc + 1/24
+            visualiseInfo.lastToc = timeNow;
+          [x, y]  = localCheckPointPosition(visualiseInfo);
             if ~isempty(x)              
                 set(visualiseInfo.latentHandle, 'xdata', x, 'ydata', y);                               
-                visualiseInfo.timer.series = [visualiseInfo.timer.series ...
-                    visualiseInfo.timer.series(end) + visualiseInfo.timer.stepTime];
+                visualiseInfo.timer.series = [visualiseInfo.timer.series timeNow];
                 visualiseInfo.f1.series = [visualiseInfo.f1.series x];           
                 visualiseInfo.f2.series = [visualiseInfo.f2.series y];           
                 set(visualiseInfo.f1.handle,'Xdata', visualiseInfo.timer.series, 'Ydata', visualiseInfo.f1.series);               
@@ -46,7 +63,7 @@ switch call
                 %sprintf('%f\n',length(visualiseInfo.f1.series))                
             end            
         end
-        
+        end
     otherwise
 
     %

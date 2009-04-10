@@ -17,7 +17,6 @@ function lfmVisualise(model, visualiseFunction, visualiseModify, varargin)
 % MLTOOLS
 
 global visualiseInfo
-
 kernType = model.kernType(1:3);
 if ~strcmpi(kernType, 'lfm')
     error('This function is only implemented for "LFM" kernels');
@@ -31,14 +30,13 @@ figure(1)
 set(gcf,'Position',[5 229 445 395]);
 clf
 % Create a black panel as background
-f1 = linspace(0, 3, 200);
-f2 = linspace(0, 3, 200);
+f1 = linspace(-3, 3, 200);
+f2 = linspace(-3, 3, 200);
 ax = axes('position', [0.05 0.05 0.9 0.9]);
+grid on
 hold on
 sizeBack = 200;
 mapBack = repmat([0.9 0.9 0.9], sizeBack*sizeBack , 1);
-image(f1, f2, ones(sizeBack));
-colormap(mapBack);
 hold off
 f1Lim = [min(f1) max(f1)];
 f2Lim = [min(f2) max(f2)];
@@ -79,14 +77,14 @@ clf
 subplot(2,1,1);
 visualiseInfo.f1.handle = plot(0,1.5, 'LineWidth', 2);
 title('f_1(t)','FontSize', 15, 'FontName', 'arial')
-set(gca, 'yLim', [0 3]);
+set(gca, 'yLim', [-3 3]);
 set(gca, 'fontname', 'arial');
 set(gca, 'fontsize', 15);
 visualiseInfo.f1.series = 0;
 subplot(2,1,2);
 visualiseInfo.f2.handle = plot(0,1.5,'LineWidth', 2);
 title('f_2(t)','FontSize', 15, 'FontName', 'arial')
-set(gca, 'yLim', [0 3]);
+set(gca, 'yLim', [-3 3]);
 set(gca, 'fontname', 'arial');
 set(gca, 'fontsize', 15);
 visualiseInfo.f2.series = 0;
