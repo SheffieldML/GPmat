@@ -34,7 +34,7 @@ function [g1, g2] = simXrbfKernGradient(simKern, rbfKern, t1, t2, covGrad)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
-% MODIFICATIONS : Antti Honkela, 2008-2009
+% MODIFICATIONS : Antti Honkela, 2008, 2009
 
 % KERN
 

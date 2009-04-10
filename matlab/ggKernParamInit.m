@@ -2,26 +2,25 @@ function kern = ggKernParamInit(kern)
 
 % GGKERNPARAMINIT GG kernel parameter initialisation.
 % FORMAT
-% The gaussian gaussian (gg) kernel corresponds to the covariance matrix of 
-%   an output process y(x), which is generated through a convolution between a latent 
-%   process with gaussian covariance matrix u(s) and a gaussian kernel K(x-s):
+% The Gaussian Gaussian (gg) kernel corresponds to the covariance matrix of
+% an output process y(x), which is generated through a convolution between a
+% latent process with Gaussian covariance matrix u(s) and a Gaussian kernel
+% K(x-s):
 %	
 %	y_n(x) =  sum_k int K_{nk}(x-s)u_k(s)ds
 %	
-%	where K_{nk}(x-s) is a gaussian kernel with precision matrix precision_y, and u_k(s)
-%	is an inducing function  represented as a gaussian process with
-%	inverse covariance precision_u. 
-%   With this assumptions, y_n(x) is also a Gaussian process with
-%   covariance provided by the gaussian gaussian kernel.
+% where K_{nk}(x-s) is a Gaussian kernel with precision matrix precision_y,
+% and u_k(s) is an inducing function represented as a Gaussian process with
+% inverse covariance precision_u.  With this assumptions, y_n(x) is also a
+% Gaussian process with covariance provided by the Gaussian Gaussian kernel.
 %	
-%	The kernel is designed to interoperate with the multiple output
-%	block kernel so that u_k(s) can be inferred given several different
-%	instantiations of y_n(x).
+% The kernel is designed to interoperate with the multiple output block
+% kernel so that u_k(s) can be inferred given several different
+% instantiations of y_n(x).
 %	
-%	Both precision_y and precision_u are considered as diagonal.
-% DESC initialises the gaussian gaussian 
-%	kernel structure with some default parameters.
-% 
+% Both precision_y and precision_u are considered as diagonal.
+%
+% DESC initialises the Gaussian Gaussian kernel structure with some default parameters.
 % RETURN kern : the kernel structure with the default parameters placed in.
 % ARG kern : the kernel structure which requires initialisation.
 %	

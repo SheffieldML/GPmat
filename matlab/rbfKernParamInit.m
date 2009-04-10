@@ -32,11 +32,10 @@ function kern = rbfKernParamInit(kern)
 
 kern.inverseWidth = 1;
 kern.variance = 1;
-% kern.inverseWidth = 10*rand;
-% kern.variance = 10*rand;
 kern.nParams = 2;
 
 % Constrains parameters positive for optimisation.
 kern.transforms.index = [1 2];
 kern.transforms.type = optimiDefaultConstraint('positive');
 kern.isStationary = true;
+kern.isNormalised = false;
