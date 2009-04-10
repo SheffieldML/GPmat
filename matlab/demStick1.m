@@ -29,7 +29,7 @@ model = fgplvmOptimise(model, display, iters);
 % Save the results.
 capName = dataSetName;;
 capName(1) = upper(capName(1));
-save(['dem' capName num2str(experimentNo) '.mat'], 'model');
+save(['dem' capName 'Fgplvm' num2str(experimentNo) '.mat'], 'model');
 
 if exist('printDiagram') & printDiagram
   fgplvmPrintPlot(model, lbls, capName, experimentNo);
@@ -38,5 +38,5 @@ end
 % load connectivity matrix
 [void, connect] = mocapLoadTextData('run1');
 % Load the results and display dynamically.
-lvmResultsDynamic(dataSetName, experimentNo, 'stick', connect)
+lvmResultsDynamic('fgplvm', dataSetName, experimentNo, 'stick', connect)
 
