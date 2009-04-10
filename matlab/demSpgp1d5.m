@@ -14,7 +14,7 @@ experimentNo = 5;
 
 % Set up model
 options = gpOptions('dtcvar');
-options.kern = {'rbf', 'bias'}
+options.kern = {'rbf', 'bias', 'white'}
 options.numActive = 9;
 options.optimiser = 'scg';
 
@@ -23,6 +23,7 @@ q = size(X, 2);
 d = size(y, 2);
 
 model = gpCreate(q, d, X, y, options);
+model.kern.comp{3}.setVariance(1e-4);
 model.X_u = randn(options.numActive, 1)*0.1;
 params = gpExtractParam(model);
 model = gpExpandParam(model, params);
