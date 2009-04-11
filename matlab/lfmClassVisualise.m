@@ -22,23 +22,27 @@ switch call
     if N >maxN
       ind = round(linspace(1, N, maxN));
     else
-      ind = 1:N
+      ind = 1:N;
     end
     disp(ind)
      xVector = visualiseInfo.timer.series(ind)';
      f{1} = visualiseInfo.f1.series(ind)';
      f{2} = visualiseInfo.f2.series(ind)';
      Y = modelOut(visualiseInfo.model, xVector, f);
-     channels = repmat(visualiseInfo.varargin{1}, length(ind), 1);
-     channelsLabels = [41:47 49:50];
-     for k = 1: length(channelsLabels)
-       channels(:, channelsLabels(k)) = Y(:,k);            
+     if strcmp(visualiseInfo.model.approx, 'ftc')
+         channels = repmat(visualiseInfo.varargin{1}, length(ind), 1);
+         channelsLabels = [41:47 49:50];
+         for k = 1: length(channelsLabels)
+             channels(:, channelsLabels(k)) = Y(:,k);
+         end
+     else
+         channels = Y;
      end
      for j = 1:size(channels, 1)
        if j>1
        pause(xVector(j) -xVector(j-1))
        end
-       visualiseInfo.visualiseModify(visualiseInfo.visHandle, channels(j, :), ... 
+       visualiseInfo.visualiseModify(visualiseInfo.visHandle, channels(j, :) , ... 
                                      visualiseInfo.varargin{2});
      end
      visualiseInfo.timer.series = 0;

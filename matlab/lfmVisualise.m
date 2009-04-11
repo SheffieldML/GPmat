@@ -22,16 +22,16 @@ if ~strcmpi(kernType, 'lfm')
     error('This function is only implemented for "LFM" kernels');
 else
     if length(varargin)~=3,
-        error('Include the skeleton, the initial position and the time per frame')
+       error('Include the skeleton, the initial position and the time per frame')
     end     
 end
-
+range = 3;
 figure(1)
 set(gcf,'Position',[5 229 445 395]);
 clf
 % Create a black panel as background
-f1 = linspace(-3, 3, 200);
-f2 = linspace(-3, 3, 200);
+f1 = linspace(-range, range, 200);
+f2 = linspace(-range, range, 200);
 ax = axes('position', [0.05 0.05 0.9 0.9]);
 grid on
 hold on
@@ -49,7 +49,7 @@ set(ax, 'fontsize', 15);
 set(ax, 'TickLength', [0 0]);
 %
 visualiseInfo.plotAxes = ax; 
-visualiseInfo.latentHandle = line(1.5, 1.5, 'markersize', 20, 'color', ...
+visualiseInfo.latentHandle = line(0.5*range, 0.5*range, 'markersize', 20, 'color', ...
                                  [0 0 0], 'marker', '.', 'visible', ...
                                  'on', 'erasemode', 'xor');
 visualiseInfo.clicked = 0;
@@ -77,14 +77,14 @@ clf
 subplot(2,1,1);
 visualiseInfo.f1.handle = plot(0,1.5, 'LineWidth', 2);
 title('f_1(t)','FontSize', 15, 'FontName', 'arial')
-set(gca, 'yLim', [-3 3]);
+set(gca, 'yLim', [-range range]);
 set(gca, 'fontname', 'arial');
 set(gca, 'fontsize', 15);
 visualiseInfo.f1.series = 0;
 subplot(2,1,2);
 visualiseInfo.f2.handle = plot(0,1.5,'LineWidth', 2);
 title('f_2(t)','FontSize', 15, 'FontName', 'arial')
-set(gca, 'yLim', [-3 3]);
+set(gca, 'yLim', [-range range]);
 set(gca, 'fontname', 'arial');
 set(gca, 'fontsize', 15);
 visualiseInfo.f2.series = 0;
@@ -94,11 +94,15 @@ set(gcf,'Position',[866 229 445 395]);
 clf
 
 visualiseInfo.visualiseFunction = str2func(visualiseFunction);
-visHandle = visualiseInfo.visualiseFunction(varargin{:});
-set(gca, 'xlim', [-8  18], ...
-         'ylim', [-2 15], ...
-         'zlim', [0 35]);
+visHandle = visualiseInfo.visualiseFunction(varargin{1:2});
+%set(gca, 'xlim', [-8  18], ...
+%         'ylim', [-2 15], ...
+%         'zlim', [0 35]);
+set(gca, 'xlim', [-15 15], ...
+         'ylim', [-10 10], ...
+         'zlim', [-12 20]);
 
+     
 % Pass the data to visualiseInfo
 visualiseInfo.model = model;
 visualiseInfo.varargin = varargin;
