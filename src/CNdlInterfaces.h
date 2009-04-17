@@ -122,7 +122,11 @@ public:
     else
       out << "0" << endl;
   }
-  static void writeToStream(ostream& out, const std::string fieldName, const string val)
+  static void writeToStream(ostream& out, const std::string fieldName, const std::string val)
+  {
+      out << fieldName << "=" << val << endl;
+  }
+  static void writeToStream(ostream& out, const std::string fieldName, const char* val)
   {
       out << fieldName << "=" << val << endl;
   }
