@@ -9,15 +9,18 @@
 
 <h1>Matlab Prior Toolbox</h1>
 
-This page describes the drawing toolbox for MATLAB available for <a href="http://www.cs.man.ac.uk/neill-bin/software/downloadForm.cgi?toolbox=prior">download here</a>. 
+This page describes the prior toolbox for MATLAB available for <a href="http://www.cs.man.ac.uk/neill-bin/software/downloadForm.cgi?toolbox=prior">download here</a>. 
 
-<h3>Dependencies</h3>
+RELEASEINFORMATION
 
-The kern toolbox depends on the <a href="http://www.cs.man.ac.uk/~neill/ndlutil/downloadFiles/"><code>ndlutil</code> toolbox</a> and the <a href="http://www.cs.man.ac.uk/~neill/optimi/downloadFiles/"><code>optimi</code> toolbox</a>. You can use your user name and password for accessing these toolboxes.
 
-<h3>Release Information</h3>
+<h2>Release Notes</h2>
 
-<p>Current release is 0.13. 
+<h3>Current Release</h3>
+
+Changes to the code for reading in priors written by C++ code.
+
+<h4>Release 0.13</h4>
 
 <p>This toolbox allows computation of several different prior distributions and their gradients. You can add distributions to the toolbox by creating versions of the relevant files. Once added, they can be tested using the <code>priorTest</code>. For example you can test the Gaussian prior
 
