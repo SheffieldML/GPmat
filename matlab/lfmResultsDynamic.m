@@ -1,6 +1,6 @@
 function lfmResultsDynamic(dataSet, number, dataType, varargin)
 
-% LVMRESULTSDYNAMIC Load a results file and visualise them.
+% LFMRESULTSDYNAMIC Load a results file and visualise them.
 % FORMAT
 % DESC loads results of a latent variable model and visualises them.
 % ARG dataSet : the name of the data set to load.
