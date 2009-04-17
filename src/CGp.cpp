@@ -1,5 +1,6 @@
 #include "CGp.h"
 CGp::CGp() 
+  : CMapModel(), CProbabilisticOptimisable()
 {
   _init();
 }
