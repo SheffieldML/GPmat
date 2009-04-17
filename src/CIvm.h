@@ -4,7 +4,7 @@
 using namespace std;
 
 const double NULOW=1e-16;
-const string IVMVERSION="0.1";
+const string IVMVERSION="0.2";
 
 class CIvm : public CMapModel, public CProbabilisticOptimisable, public CStreamInterface, public CMatInterface
 {
