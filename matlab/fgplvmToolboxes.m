@@ -8,4 +8,4 @@ importLatest('mltools');
 importLatest('kern');
 importLatest('ndlutil');
 importLatest('mocap');
-importTool('gp');
+importLatest('gp');

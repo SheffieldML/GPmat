@@ -13,13 +13,14 @@
 RELEASEINFORMATION
 
 
-<h2>Release Notes</h2>
+Minor changes to fix reading of GPLVM files from latest C++ code.
 
-<h3>Current Release</h3>
+<h4>Version 0.16</h4>
 
 Incorporate varational approximation from Michalis in the code. 
 
 <h4>Version 0.153</h4>
+
 Changes to allow compatibility with SGPLVM and NCCA toolboxes.
 
 
