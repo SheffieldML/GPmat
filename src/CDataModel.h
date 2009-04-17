@@ -17,9 +17,20 @@ class CDataModel
 {
  public:
   // Initialise the model.
-  CDataModel() {}
+  CDataModel() 
+  {
+    _init();
+  }
   virtual ~CDataModel() {}
-  CDataModel(unsigned int nData) : numData(nData) {}
+  CDataModel(unsigned int nData) : numData(nData) 
+  {    
+    _init();
+  }
+  void _init() 
+  {
+    setBaseType("datamodel");
+  }
+
   inline string getType() const
   {
     return type;

@@ -11,12 +11,12 @@ function [model, lbls] = modelReadFromFID(FID, varargin)
 % SEEALSO : modelReadFromFile
 
 % MLTOOLS
-
-version = readVersionFromFID(FID);
-if version < 0.2
-  error('Incorrect file version.')
-end
-
-modelType = readStringFromFID(FID, 'baseType');
-feval = str2func([modelType 'ReadFromFID']);
-model = feval(FID, varargin{:});
+  
+  version = readVersionFromFID(FID);
+  if version < 0.2
+    error('Incorrect file version.')
+  end
+  
+  modelType = readStringFromFID(FID, 'baseType');
+  feval = str2func([modelType 'ReadFromFID']);
+  model = feval(FID, varargin{:});
