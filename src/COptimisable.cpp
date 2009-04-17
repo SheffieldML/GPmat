@@ -45,10 +45,10 @@ void COptimisable::checkGradients()
 
 void COptimisable::gdOptimise()
 {
-      if(getVerbosity()>2)
-	{
-	  cout << "Gradient Descent Optimisation." << endl;
-	}
+  if(getVerbosity()>2)
+  {
+    cout << "Gradient Descent Optimisation." << endl;
+  }
   int nParams = getOptNumParams();
   double objectiveVal = 0.0;
   double oldObjective = 0.0;
