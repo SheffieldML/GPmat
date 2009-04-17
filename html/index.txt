@@ -8,10 +8,15 @@
 
 RELEASEINFORMATION
 
+<h3>Version 0.221</h3>
+
+Fixed code for reading in kernels from C++ files.
+
+<h3>Version 0.22</h3>
 
 Added Wiener kernel and various kernels for multi output kernels
 including white noise being propagated through the first and second
-order differential equation. Fixed code for reading in kernels from C++ files.
+order differential equation. 
 
 <h3>Version 0.21</h3>
 

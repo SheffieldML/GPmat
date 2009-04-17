@@ -1,10 +1,15 @@
+Version 0.221
+-------------
+
+Minor changes for reading in kernels
+written by C++ code into files.
+
 Version 0.22
 ------------
 
 Added Wiener kernel and various kernels for multi output kernels
 including white noise being propagated through the first and second
-order differential equation. Minor changes for reading in kernels
-written by C++ code into files.
+order differential equation. 
 
 
 Version 0.21
