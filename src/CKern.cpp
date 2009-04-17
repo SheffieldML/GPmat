@@ -92,12 +92,12 @@ bool CKern::equals(const CKern& kern, double tol) const
 // The Component kernel
 void CComponentKern::readParamsFromStream(istream& in) 
 {
-  string tbaseType = getBaseTypeStream(in);
-  if(tbaseType != getBaseType())
-    throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
-  string ttype = getTypeStream(in);
-  if(ttype != getType())
-    throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
+//   string tbaseType = getBaseTypeStream(in);
+//   if(tbaseType != getBaseType())
+//     throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
+//   string ttype = getTypeStream(in);
+//   if(ttype != getType())
+//     throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
   setInputDim(readIntFromStream(in, "inputDim"));
   unsigned int nPar = readIntFromStream(in, "numParams");
   unsigned int numKerns = readIntFromStream(in, "numKerns");
@@ -780,12 +780,12 @@ void CWhitefixedKern::writeParamsToStream(ostream& out) const
 }
 void CWhitefixedKern::readParamsFromStream(istream& in)
 {
-  string tbaseType = getBaseTypeStream(in);
-  if(tbaseType != getBaseType())
-    throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
-  string ttype = getTypeStream(in);
-  if(ttype != getType())
-    throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
+//   string tbaseType = getBaseTypeStream(in);
+//   if(tbaseType != getBaseType())
+//     throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
+//   string ttype = getTypeStream(in);
+//   if(ttype != getType())
+//     throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
   setInputDim(readIntFromStream(in, "inputDim"));
   unsigned int numParams=readIntFromStream(in, "numParams");
   setVariance(readDoubleFromStream(in, "variance"));
@@ -2484,12 +2484,12 @@ void CPolyKern::writeParamsToStream(ostream& out) const
 }
 void CPolyKern::readParamsFromStream(istream& in)
 {
-  string tbaseType = getBaseTypeStream(in);
-  if(tbaseType != getBaseType())
-    throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
-  string ttype = getTypeStream(in);
-  if(ttype != getType())
-    throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
+//   string tbaseType = getBaseTypeStream(in);
+//   if(tbaseType != getBaseType())
+//     throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
+//   string ttype = getTypeStream(in);
+//   if(ttype != getType())
+//     throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
   setInputDim(readIntFromStream(in, "inputDim"));
   unsigned int numParams=readIntFromStream(in, "numParams");
   setDegree(readDoubleFromStream(in, "degree"));
@@ -3662,12 +3662,12 @@ void CPolyardKern::writeParamsToStream(ostream& out) const
 }
 void CPolyardKern::readParamsFromStream(istream& in)
 {
-  string tbaseType = getBaseTypeStream(in);
-  if(tbaseType != getBaseType())
-    throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
-  string ttype = getTypeStream(in);
-  if(ttype != getType())
-    throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
+//   string tbaseType = getBaseTypeStream(in);
+//   if(tbaseType != getBaseType())
+//     throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
+//   string ttype = getTypeStream(in);
+//   if(ttype != getType())
+//     throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
   setInputDim(readIntFromStream(in, "inputDim"));
   unsigned int numParams=readIntFromStream(in, "numParams");
   setDegree(readDoubleFromStream(in, "degree"));
@@ -4000,7 +4000,7 @@ CKern* readKernFromStream(istream& in)
   string type = CStreamInterface::getTypeStream(in);
   if(type=="white")
     pkern = new CWhiteKern();
-  if(type=="whitefixed")
+  else if(type=="whitefixed")
     pkern = new CWhitefixedKern();
   else if(type=="bias")
     pkern = new CBiasKern();
@@ -4057,12 +4057,12 @@ CKern* readKernFromStream(istream& in)
 }
 void CKern::readParamsFromStream(istream& in)
 {
-  string tbaseType = getBaseTypeStream(in);
-  if(tbaseType != getBaseType())
-    throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
-  string ttype = getTypeStream(in);
-  if(ttype != getType())
-    throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
+//   string tbaseType = getBaseTypeStream(in);
+//   if(tbaseType != getBaseType())
+//     throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
+//   string ttype = getTypeStream(in);
+//   if(ttype != getType())
+//     throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
   setInputDim(readIntFromStream(in, "inputDim"));
   unsigned int nPars = readIntFromStream(in, "numParams");
   CMatrix par(1, nPars);
