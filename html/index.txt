@@ -11,10 +11,6 @@ Software (GP).
 
 RELEASEINFORMATION
 
-<h2>Release Notes</h2>
-
-<h3>Current Release</h3>
-
 <p>Examples transfered from oxford toolbox, variational approximation from Titsias added as an option with 'dtcvar'.
 
 <h3>Version 0.131</h3>

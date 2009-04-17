@@ -1,11 +1,11 @@
 % GPTOOLBOXES Load in the relevant toolboxes for GP.
 
 importLatest('netlab');
-importTool('mocap');
-importTool('ndlutil');
+importLatest('mocap');
+importLatest('ndlutil');
 importLatest('prior');
-importTool('mltools');
+importLatest('mltools');
 importLatest('optimi');
-importTool('datasets');
+importLatest('datasets');
 importLatest('kern');
-importTool('noise'); % Only needed for C++ load ins.
+importLatest('noise'); % Only needed for C++ load ins.
