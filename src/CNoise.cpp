@@ -284,13 +284,13 @@ void CNoise::writeParamsToStream(ostream& out) const
 }
 void CNoise::readParamsFromStream(istream& in)
 {
-  //setNumData(readIntFromStream(in, "numData"));
-  string tbaseType = getBaseTypeStream(in);
-  if(tbaseType != getBaseType())
-    throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
-  string ttype = getTypeStream(in);
-  if(ttype != getType())
-    throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
+//   //setNumData(readIntFromStream(in, "numData"));
+//   string tbaseType = getBaseTypeStream(in);
+//   if(tbaseType != getBaseType())
+//     throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
+//   string ttype = getTypeStream(in);
+//   if(ttype != getType())
+//     throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
   setOutputDim(readIntFromStream(in, "outputDim"));
   unsigned int numPar = readIntFromStream(in, "numParams");
   CMatrix par(1, numPar);
@@ -1387,12 +1387,12 @@ void CNcnmNoise::writeParamsToStream(ostream& out) const
 
 void CNcnmNoise::readParamsFromStream(istream& in)
 {
-  string tbaseType = getBaseTypeStream(in);
-  if(tbaseType != getBaseType())
-    throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
-  string ttype = getTypeStream(in);
-  if(ttype != getType())
-    throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
+//   string tbaseType = getBaseTypeStream(in);
+//   if(tbaseType != getBaseType())
+//     throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
+//   string ttype = getTypeStream(in);
+//   if(ttype != getType())
+//     throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
   setNumData(readIntFromStream(in, "numData"));
   setOutputDim(readIntFromStream(in, "outputDim"));
   int numPar = readIntFromStream(in, "numParams");
@@ -1781,12 +1781,12 @@ void COrderedNoise::writeParamsToStream(ostream& out) const
 
 void COrderedNoise::readParamsFromStream(istream& in)
 {
-  string tbaseType = getBaseTypeStream(in);
-  if(tbaseType != getBaseType())
-    throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
-  string ttype = getTypeStream(in);
-  if(ttype != getType())
-    throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
+//   string tbaseType = getBaseTypeStream(in);
+//   if(tbaseType != getBaseType())
+//     throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
+//   string ttype = getTypeStream(in);
+//   if(ttype != getType())
+//     throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
   setNumData(readIntFromStream(in, "numData"));
   setOutputDim(readIntFromStream(in, "outputDim"));
   unsigned int numPar = readIntFromStream(in, "numParams");
