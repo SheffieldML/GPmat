@@ -10,6 +10,10 @@
 
 RELEASEINFORMATION
 
+Minor changes to toolbox to fix reading in of C++ code.
+
+<h4>Version 0.13</h4>
+
 <p>Added paramNameRegularExpressionLookup.m to regular expression match a parameter name in a model and return the associated indices. paramNameReverseLookup.m does the same thing but for the specific parameter name. Also added multimodel type, which allows for multi-task style learning of existing models. Added linear mapping type of model. 
 
 <h4>Version 0.1291</h4>
