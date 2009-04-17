@@ -1,4 +1,4 @@
-function prior = priorReadFromFID(FID)
+function prior = priorReadFromFID(FID, version)
 
 % PRIORREADFROMFID Read a prior from a C++ written FID.
 % FORMAT
@@ -12,9 +12,11 @@ function prior = priorReadFromFID(FID)
 % SEEALSO : modelReadFromFID, priorCreate, priorReadParamsFromFID
 
 % PRIOR
-
+if nargin < 2
+  version = [];
+end
 type = readStringFromFID(FID, 'type');
 prior = priorCreate(type);
-prior = priorReadParamsFromFID(prior, FID);
+prior = priorReadParamsFromFID(prior, FID, version);
 
 
