@@ -1,6 +1,6 @@
 function prior = priorWriteParamsToFID(prior, FID)
 
-% PRIORWRITEPARAMSFROMFID Write prior params from C++ written FID.
+% PRIORWRITEPARAMSTOFID Write prior params from C++ written FID.
 % FORMAT
 % DESC writes prior parameters from a file written by C++.
 % ARG prior : the prior to put the parameters in.

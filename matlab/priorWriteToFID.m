@@ -1,6 +1,6 @@
 function priorWriteToFID(FID, prior)
 
-% PRIORWRITEFROMFID Write a prior to a C++ stream.
+% PRIORWRITETOFID Write a prior to a C++ stream.
 % FORMAT
 % DESC writes to a file stream a prior.
 % ARG FID : the file ID from where the data is loaded.
