@@ -25,15 +25,14 @@ else
        error('Include the skeleton, the initial position and the time per frame')
     end     
 end
-range = 3;
+range = 1.1*max(max(abs([varargin{3}{1} varargin{3}{2}])));
 figure(1)
-set(gcf,'Position',[5 229 445 395]);
+set(gcf,'Position',[5 332 445 395]);
 clf
 % Create a black panel as background
 f1 = linspace(-range, range, 200);
 f2 = linspace(-range, range, 200);
-ax = axes('position', [0.05 0.05 0.9 0.9]);
-grid on
+ax = axes('position', [0.1 0.1 0.8 0.8]);
 hold on
 sizeBack = 200;
 mapBack = repmat([0.9 0.9 0.9], sizeBack*sizeBack , 1);
@@ -47,9 +46,11 @@ ylabel('f_2(t)')
 set(ax, 'fontname', 'arial');
 set(ax, 'fontsize', 15);
 set(ax, 'TickLength', [0 0]);
+plot(varargin{3}{1}, varargin{3}{2}, 'xb', 'markersize', 10, 'LineWidth', 2)
+grid on
 %
 visualiseInfo.plotAxes = ax; 
-visualiseInfo.latentHandle = line(0.5*range, 0.5*range, 'markersize', 20, 'color', ...
+visualiseInfo.latentHandle = line(varargin{3}{1}(1), varargin{3}{2}(1), 'markersize', 20, 'color', ...
                                  [0 0 0], 'marker', '.', 'visible', ...
                                  'on', 'erasemode', 'xor');
 visualiseInfo.clicked = 0;
@@ -72,7 +73,7 @@ visualiseInfo.timer.series = 0;
 visualiseInfo.timer.stepTime = 0.03;
 
 figure(2)
-set(gcf,'Position',[418 229 445 395]);
+set(gcf,'Position',[418 332 445 395]);
 clf
 subplot(2,1,1);
 visualiseInfo.f1.handle = plot(0,1.5, 'LineWidth', 2);
@@ -90,7 +91,7 @@ set(gca, 'fontsize', 15);
 visualiseInfo.f2.series = 0;
 
 figure(3)
-set(gcf,'Position',[866 229 445 395]);
+set(gcf,'Position',[866 332 445 395]);
 clf
 
 visualiseInfo.visualiseFunction = str2func(visualiseFunction);
@@ -99,8 +100,8 @@ visHandle = visualiseInfo.visualiseFunction(varargin{1:2});
 %         'ylim', [-2 15], ...
 %         'zlim', [0 35]);
 set(gca, 'xlim', [-15 15], ...
-         'ylim', [-10 10], ...
-         'zlim', [-12 20]);
+         'ylim', [-20 20], ...
+         'zlim', [0 32]);
 
      
 % Pass the data to visualiseInfo
@@ -109,5 +110,15 @@ visualiseInfo.varargin = varargin;
 visualiseInfo.visualiseModify = str2func(visualiseModify);
 visualiseInfo.visHandle = visHandle;
 
+% figure(4)
+% clf
+% set(gcf,'Position',[418 30 445 395]);
+% visualiseInfo.fPos = plot(0,1.5,'LineWidth', 2);
+% %set(gca, 'xLim', [-2*range 2*range]);
+% %set(gca, 'yLim', [-2*range 2*range]);
+% xlabel('f_1(t)')
+% ylabel('f_2(t)')
+% set(gca, 'fontname', 'arial');
+% set(gca, 'fontsize', 15);
 
                               

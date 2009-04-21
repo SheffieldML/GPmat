@@ -24,7 +24,7 @@ switch call
     else
       ind = 1:N;
     end
-    disp(ind)
+     %disp(ind)
      xVector = visualiseInfo.timer.series(ind)';
      f{1} = visualiseInfo.f1.series(ind)';
      f{2} = visualiseInfo.f2.series(ind)';
@@ -36,11 +36,11 @@ switch call
              channels(:, channelsLabels(k)) = Y(:,k);
          end
      else
-         channels = Y;
+         channels = Y;         
      end
      for j = 1:size(channels, 1)
        if j>1
-       pause(xVector(j) -xVector(j-1))
+       pause(xVector(j) -xVector(j-1));
        end
        visualiseInfo.visualiseModify(visualiseInfo.visHandle, channels(j, :) , ... 
                                      visualiseInfo.varargin{2});
@@ -50,6 +50,7 @@ switch call
      visualiseInfo.f2.series = 0;
      set(visualiseInfo.f1.handle,'Xdata', visualiseInfo.timer.series, 'Ydata', visualiseInfo.f1.series);
      set(visualiseInfo.f2.handle,'Xdata', visualiseInfo.timer.series, 'Ydata', visualiseInfo.f2.series);     
+     
     end                
     case 'move'
         if visualiseInfo.clicked
