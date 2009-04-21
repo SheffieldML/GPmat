@@ -28,7 +28,10 @@ switch call
      xVector = visualiseInfo.timer.series(ind)';
      f{1} = visualiseInfo.f1.series(ind)';
      f{2} = visualiseInfo.f2.series(ind)';
-     Y = modelOut(visualiseInfo.model, xVector, f);
+     %xVector = linspace(0,3,30)';
+     %f{1} = visualiseInfo.varargin{4}{1};
+     %f{2} = visualiseInfo.varargin{4}{2};     
+     Y = modelOut(visualiseInfo.model, xVector, f, visualiseInfo.varargin{1});
      if strcmp(visualiseInfo.model.approx, 'ftc')
          channels = repmat(visualiseInfo.varargin{1}, length(ind), 1);
          channelsLabels = [41:47 49:50];
@@ -48,8 +51,8 @@ switch call
      visualiseInfo.timer.series = 0;
      visualiseInfo.f1.series = 0;
      visualiseInfo.f2.series = 0;
-     set(visualiseInfo.f1.handle,'Xdata', visualiseInfo.timer.series, 'Ydata', visualiseInfo.f1.series);
-     set(visualiseInfo.f2.handle,'Xdata', visualiseInfo.timer.series, 'Ydata', visualiseInfo.f2.series);     
+     %set(visualiseInfo.f1.handle,'Xdata', visualiseInfo.timer.series, 'Ydata', visualiseInfo.f1.series);
+     %set(visualiseInfo.f2.handle,'Xdata', visualiseInfo.timer.series, 'Ydata', visualiseInfo.f2.series);     
      
     end                
     case 'move'
@@ -63,8 +66,8 @@ switch call
                 visualiseInfo.timer.series = [visualiseInfo.timer.series timeNow];
                 visualiseInfo.f1.series = [visualiseInfo.f1.series x];           
                 visualiseInfo.f2.series = [visualiseInfo.f2.series y];           
-                set(visualiseInfo.f1.handle,'Xdata', visualiseInfo.timer.series, 'Ydata', visualiseInfo.f1.series);               
-                set(visualiseInfo.f2.handle,'Xdata', visualiseInfo.timer.series, 'Ydata', visualiseInfo.f2.series);               
+                %set(visualiseInfo.f1.handle,'Xdata', visualiseInfo.timer.series, 'Ydata', visualiseInfo.f1.series);               
+                %set(visualiseInfo.f2.handle,'Xdata', visualiseInfo.timer.series, 'Ydata', visualiseInfo.f2.series);               
                 %sprintf('%f\n',length(visualiseInfo.f1.series))                
             end            
         end
