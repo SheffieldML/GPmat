@@ -1,4 +1,4 @@
-function k = whiteKernCompute(kern, x, x2)
+function [k, sk] = whiteKernCompute(kern, x, x2)
 
 
 % WHITEKERNCOMPUTE Compute the WHITE kernel given the parameters and X.
@@ -19,12 +19,13 @@ function k = whiteKernCompute(kern, x, x2)
 %
 % SEEALSO : whiteKernParamInit, kernCompute, kernCreate, whiteKernDiagCompute
 %
-% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006, 2009
 
 % KERN
 
 if nargin < 3
-  k = kern.variance*speye(size(x, 1));
+  sk = speye(size(x, 1));
+  k = kern.variance*sk;
 else
   k = spalloc(size(x, 1), size(x2, 1), 0);
 end

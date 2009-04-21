@@ -1,4 +1,4 @@
-function [k, n2] = ratquadKernCompute(kern, x, x2)
+function [k, sk, n2] = ratquadKernCompute(kern, x, x2)
 
 % RATQUADKERNCOMPUTE Compute the RATQUAD kernel given the parameters and X.
 % FORMAT
@@ -18,7 +18,7 @@ function [k, n2] = ratquadKernCompute(kern, x, x2)
 %
 % SEEALSO : ratquadKernParamInit, kernCompute, kernCreate, ratquadKernDiagCompute
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
+% COPYRIGHT : Neil D. Lawrence, 2006, 2009
 
 % KERN
 
@@ -28,4 +28,5 @@ if nargin < 3
 else
   n2 = dist2(x, x2);
 end
-k = kern.variance*(1+n2*wi2).^-kern.alpha;
+sk = (1+n2*wi2).^-kern.alpha;
+k = kern.variance*sk;

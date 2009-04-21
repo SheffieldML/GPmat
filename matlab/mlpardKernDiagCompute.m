@@ -20,4 +20,4 @@ scales = sparse(diag(sqrt(kern.inputScales)));
 x = x*scales;
 numer = sum(x.*x, 2)*kern.weightVariance + kern.biasVariance;
 denom = numer+1;
-k = kern.variance*asin(numer./denom);
+k = kern.variance*2/pi*asin(numer./denom);

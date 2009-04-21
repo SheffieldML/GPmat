@@ -44,8 +44,8 @@ function g = wienerKernGradient(kern, x, varargin)
 % KERN
 
 if nargin < 4
-  linPart = wienerKernCompute(kern, x);
+  [K, sk] = wienerKernCompute(kern, x);
 else
-  linPart = wienerKernCompute(kern, x, varargin{1});
+  [K, sk] = wienerKernCompute(kern, x, varargin{1});
 end
-g(1) = sum(sum(varargin{end}.*linPart))/kern.variance;
+g(1) = sum(sum(varargin{end}.*sk));

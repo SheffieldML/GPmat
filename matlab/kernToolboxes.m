@@ -1,7 +1,7 @@
 % KERNTOOLBOXES Load in the relevant toolboxes for kern.
 
 importLatest('optimi');
-importLatest('ndlutil');
+importTool('ndlutil');
 importLatest('netlab');
 importLatest('erfcxz')
 importLatest('erfz')

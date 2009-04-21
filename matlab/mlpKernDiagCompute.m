@@ -18,4 +18,4 @@ function k = mlpKernDiagCompute(kern, x)
 
 numer = sum(x.*x, 2)*kern.weightVariance + kern.biasVariance;
 denom = numer+1;
-k = kern.variance*asin(numer./denom);
+k = 2/pi*kern.variance*asin(numer./denom);

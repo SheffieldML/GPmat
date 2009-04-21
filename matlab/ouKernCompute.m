@@ -1,4 +1,4 @@
-function K = ouKernCompute(kern, t1, t2)
+function [K, sk] = ouKernCompute(kern, t1, t2)
 
 % OUKERNCOMPUTE Compute the Ornstein-Uhlenbeck (OU) kernel arising from the
 % stochastic differential equation
@@ -39,9 +39,10 @@ end
 
 T1 = repmat(t1, 1, size(t2, 1));
 T2 = repmat(t2.', size(t1, 1), 1);
-c = 0.5*kern.variance/kern.decay;
+c = 0.5/kern.decay;
 K = exp(-kern.decay*abs(T1-T2));
 if (kern.isStationary == false)
     K = K - exp(-kern.decay*(T1+T2));
 end
-K = c*K;
+sk = c*K;
+K = sk*kern.variance;

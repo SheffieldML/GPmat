@@ -1,4 +1,4 @@
-function k = linardKernCompute(kern, x, x2)
+function [k, sk] = linardKernCompute(kern, x, x2)
 
 
 % LINARDKERNCOMPUTE Compute the LINARD kernel given the parameters and X.
@@ -19,7 +19,7 @@ function k = linardKernCompute(kern, x, x2)
 %
 % SEEALSO : linardKernParamInit, kernCompute, kernCreate, linardKernDiagCompute
 %
-% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006, 2009
 
 % KERN
 
@@ -28,8 +28,9 @@ scales = sparse(diag(sqrt(kern.inputScales)));
 x = x*scales;
     
 if nargin < 3
-  k = x*x'*kern.variance;
+  sk = x*x';
 else
   x2 = x2*scales;
-  k = x*x2'*kern.variance;
+  sk = x*x2';
 end
+k = sk*kern.variance;

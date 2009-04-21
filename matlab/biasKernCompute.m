@@ -1,4 +1,4 @@
-function k = biasKernCompute(kern, x, x2)
+function [k, sk] = biasKernCompute(kern, x, x2)
 
 
 % BIASKERNCOMPUTE Compute the BIAS kernel given the parameters and X.
@@ -25,7 +25,11 @@ function k = biasKernCompute(kern, x, x2)
 
 
 if nargin< 3
-  k = repmat(kern.variance, size(x, 1), size(x, 1));
+  dims = [size(x, 1), size(x, 1)];
 else
-  k = repmat(kern.variance, size(x, 1), size(x2, 1));
+  dims = [size(x, 1), size(x2, 1)];
+end
+k = repmat(kern.variance, dims);
+if nargout > 1
+  sk = ones(dims);
 end

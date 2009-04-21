@@ -1,3 +1,8 @@
+Version 0.222
+-------------
+
+Removed division by kernel variance in kernels for computing the variance of the kernel. It causes numerical problems when the variance is small. Also changed mlp kernels so that the default variance distant from the origin is 1 instead of pi/2. 
+
 Version 0.221
 -------------
 

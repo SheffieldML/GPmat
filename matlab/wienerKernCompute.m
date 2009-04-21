@@ -1,4 +1,4 @@
-function K = wienerKernCompute(kern, x, x2)
+function [K, sk] = wienerKernCompute(kern, x, x2)
 
 % WIENERKERNCOMPUTE Compute the WIENER kernel given the parameters and X.
 % FORMAT
@@ -27,11 +27,12 @@ function K = wienerKernCompute(kern, x, x2)
   end
   if nargin < 3
     K = repmat(x, 1, size(x, 1));
-    K = kern.variance*min(K, K');
+    sk = min(K, K');
   else
     if any(x2<0)
       error('WIENER kernel only valid for time greater than zero')
     end
-      
-    K = kern.variance*min(repmat(x, 1, size(x2, 1)), repmat(x2', size(x, 1), 1));
+    sk = min(repmat(x, 1, size(x2, 1)), repmat(x2', size(x, 1), 1));
   end
+  K = kern.variance*sk;
+end

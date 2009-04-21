@@ -39,14 +39,14 @@ function g = linKernGradient(kern, x, varargin)
 %
 % SEEALSO linKernParamInit, kernGradient, linKernDiagGradient, kernGradX
 %
-% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006, 2009
 
 % KERN
 
 
 if nargin < 4
-  linPart = linKernCompute(kern, x);
+  [k, sk] = linKernCompute(kern, x);
 else
-  linPart = linKernCompute(kern, x, varargin{1});
+  [k, sk] = linKernCompute(kern, x, varargin{1});
 end
-g(1) = sum(sum(varargin{end}.*linPart))/kern.variance;
+g(1) = sum(sum(varargin{end}.*sk));

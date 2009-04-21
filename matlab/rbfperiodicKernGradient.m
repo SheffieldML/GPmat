@@ -39,7 +39,7 @@ function g = rbfperiodicKernGradient(kern, x, varargin)
 %
 % SEEALSO rbfperiodicKernParamInit, kernGradient, rbfperiodicKernDiagGradient, kernGradX
 %
-% COPYRIGHT : Neil D. Lawrence, 2007
+% COPYRIGHT : Neil D. Lawrence, 2007, 2009
 
 % KERN
 
@@ -47,12 +47,12 @@ function g = rbfperiodicKernGradient(kern, x, varargin)
 % The last argument is covGrad
 
 if nargin < 4
-  [k, expArg] = rbfperiodicKernCompute(kern, x);
+  [k, sk, expArg] = rbfperiodicKernCompute(kern, x);
 else
-  [k, expArg] = rbfperiodicKernCompute(kern, x, varargin{1});
+  [k, sk, expArg] = rbfperiodicKernCompute(kern, x, varargin{1});
 end
 g(1) = - 2*sum(sum(varargin{end}.*k.*expArg));
-g(2) =  sum(sum(varargin{end}.*k))/kern.variance;
+g(2) =  sum(sum(varargin{end}.*sk));
 %/~
 if any(isnan(g))
   warning('g is NaN')

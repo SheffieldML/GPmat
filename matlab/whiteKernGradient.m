@@ -45,7 +45,7 @@ function g = whiteKernGradient(kern, x, varargin)
 
 
 if nargin < 4
-  g = trace(varargin{end});
+  g(1, 1) = trace(varargin{end});
 else
   g = 0;
 end

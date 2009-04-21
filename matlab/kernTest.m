@@ -184,7 +184,7 @@ try
       LminusDiag(i, j) = full(trace(K));
     end
     x = origX;
-    gx(i, :) = 2*sum(kernGradX(kern, x(i, :), x), 3);
+    gx(i, :) = 2*sum(kernGradX(kern, x(i, :), x), 1);
     gxDiag(i, :) = kernDiagGradX(kern, x(i, :));
   end
 
@@ -209,6 +209,7 @@ try
   end
 catch
   fprintf('kernGradX has an error.\n')
+  warning(lasterr)
   xMaxDiff = 0;
   xDiagMaxDiff = 0;
 end

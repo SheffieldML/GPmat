@@ -39,19 +39,20 @@ function g = rbfKernGradient(kern, x, varargin)
 %
 % SEEALSO rbfKernParamInit, kernGradient, rbfKernDiagGradient, kernGradX
 %
-% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006, 2009
 
 % KERN
 
 
 % The last argument is covGrad
 if nargin < 4
-  [k, dist2xx] = rbfKernCompute(kern, x);
+  [k, sk, dist2xx] = rbfKernCompute(kern, x);
 else
-  [k, dist2xx] = rbfKernCompute(kern, x, varargin{1});
+  [k, sk, dist2xx] = rbfKernCompute(kern, x, varargin{1});
 end
-g(1) = - .5*sum(sum(varargin{end}.*k.*dist2xx));
-g(2) =  sum(sum(varargin{end}.*k))/kern.variance;
+% if gK is cell then return cell of gs
+g(1, 1) = - .5*sum(sum(varargin{end}.*k.*dist2xx));
+g(1, 2) =  sum(sum(varargin{end}.*sk));
 %/~
 if any(isnan(g))
   warning('g is NaN')

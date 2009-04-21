@@ -39,7 +39,7 @@ function g = matern52KernGradient(kern, x, varargin)
 %
 % SEEALSO matern52KernParamInit, kernGradient, matern52KernDiagGradient, kernGradX
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
+% COPYRIGHT : Neil D. Lawrence, 2006, 2009
 
 % KERN
 
@@ -54,9 +54,10 @@ warning('off', 'MATLAB:divideByZero');
 wi2 = (5/(kern.lengthScale*kern.lengthScale));
 n2wi2 = n2*wi2;
 sqrtn2wi2 = sqrt(n2wi2);
-K = kern.variance*(1+sqrtn2wi2+n2wi2/3).*exp(-sqrtn2wi2);
+sk = (1+sqrtn2wi2+n2wi2/3).*exp(-sqrtn2wi2);
+K = kern.variance*sk;
 ratio = n2./sqrtn2wi2;
 ratio(find(isnan(ratio)))=1;
 g(1) = sum(sum(varargin{end}.*(wi2/kern.lengthScale*ratio.*(K-kern.variance.*exp(-sqrtn2wi2))-2*wi2/kern.lengthScale*kern.variance/3*n2.*exp(-sqrtn2wi2))));
 warning(warnState.state, 'MATLAB:divideByZero');
-g(2) =  sum(sum(varargin{end}.*K))/kern.variance;
+g(2) =  sum(sum(varargin{end}.*sk));
