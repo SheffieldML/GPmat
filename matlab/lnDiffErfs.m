@@ -15,7 +15,7 @@ function [v, signs] = lnDiffErfs(x1, x2),
 % ARG x2 : argument of the negative erf
 % RETURN v : log(erf(x1) - erf(x2))     (Can be complex)
 %
-% COPYRIGHT : Antti Honkela, 2007-2008
+% COPYRIGHT : Antti Honkela, 2007, 2008
 %
 % SEEALSO : gradLnDiffErfs
 

@@ -8,7 +8,7 @@
 
 RELEASEINFORMATION
 
-Updates by Antti to lnDiffErf.
+Updates by Antti to lnDiffErf. Added readBinaryDoubles and printPlot.
 
 <h4>Version 0.16</h4>
 

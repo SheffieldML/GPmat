@@ -3,7 +3,7 @@ This toolbox implements some generic functions used by other toolboxes. Original
 Version 0.161
 -------------
 
-Antti updated lnDiffErfs.
+Antti updated lnDiffErfs. Added readBinaryDoubles and printPlot.
 
 Version 0.16
 ------------
