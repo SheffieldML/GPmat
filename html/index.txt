@@ -8,6 +8,10 @@
 
 RELEASEINFORMATION
 
+Updates by Antti to lnDiffErf.
+
+<h4>Version 0.16</h4>
+
 Release for ICML tutorial. Added cumGamma and gammaPdf. Also added isoctave and several matlab helper files for reading from file IDs.
 
 <h4>Version 0.159</h4>
