@@ -42,9 +42,20 @@ else
   symbol = getSymbols(size(YLbls,2));
 end
 
+x1Min = min(model.X(:, 1));
+x1Max = max(model.X(:, 1));
+x1Span = x1Max - x1Min;
+x1Min = x1Min - 0.05*x1Span;
+x1Max = x1Max + 0.05*x1Span;
+x1 = linspace(x1Min, x1Max, 150);
 
-x1 = linspace(min(model.X(:, 1))*1.1, max(model.X(:, 1))*1.1, 150);
-x2 = linspace(min(model.X(:, 2))*1.1, max(model.X(:, 2))*1.1, 150);
+x2Min = min(model.X(:, 2));
+x2Max = max(model.X(:, 2));
+x2Span = x2Max - x2Min;
+x2Min = x2Min - 0.05*x2Span;
+x2Max = x2Max + 0.05*x2Span;
+x2 = linspace(x2Min, x2Max, 150);
+
 funcStr = [model.type 'PosteriorMeanVar'];
 if exist(funcStr)==2
   [X1, X2] = meshgrid(x1, x2);

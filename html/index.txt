@@ -10,6 +10,11 @@
 
 RELEASEINFORMATION
 
+
+Minor change to lvmScatterPlot to fix bug caused when minimum values were positive.
+
+<h4>Version 0.131</h4>
+
 Minor changes to toolbox to fix reading in of C++ code.
 
 <h4>Version 0.13</h4>
