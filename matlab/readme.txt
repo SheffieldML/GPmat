@@ -1,5 +1,12 @@
 This toolbox stores datasets and gives commands for accessing them.
 
+
+
+Version 0.136
+-------------
+
+Added loader for  Agarwal and Triggs silhouette data back in, slight modifications of robot wireless datasets.
+
 Version 0.135
 -------------
 

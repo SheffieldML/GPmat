@@ -132,18 +132,17 @@ function [Y, lbls, Ytest, lblstest] = lvmLoadData(dataset, seedVal)
     Y = [y1 y2 y3 y4 y5 y6 y7 y8 y9 y10 y11 y12 y13 y14 y15 y16 y17 y18 y19 y20 y21 y22 y23 y24]';
     
    case 'robotWireless'
-    Y = parseWirelessData([baseDir 'uw-floor.txt']);
-    Y = Y(1:215, :);
-    
-   case 'robotWirelessTest'
-    Y = parseWirelessData([baseDir 'uw-floor.txt']);
-    Y = Y(216:end, :);
+    Ydat = parseWirelessData([baseDir 'uw-floor.txt']);
+    lbls = 'connect';
+    Y = Ydat(1:215, :);    
+    Ytest = Ydat(216:end, :);
 
    case 'robotTwoLoops'
     Y = csvread([baseDir 'TwoLoops.slam'], 1, 0);
     Y = Y(1:floor(end/2), 4:end);
     Y(find(Y==-100))=-NaN;
     Y = (Y + 85)/15;
+    lbls = 'connect';
     
    case 'robotTraces'
     Y = csvread([baseDir 'Trace-3rdFloor-01.uwar.slam'], 1, 0); 
@@ -151,6 +150,7 @@ function [Y, lbls, Ytest, lblstest] = lvmLoadData(dataset, seedVal)
     Y(:, [3 4 38]) = []; % Remove columns of missing data.
     Y(find(Y==-100))=NaN;
     Y = (Y + 85)/15;
+    lbls = 'connect';
 
    case 'robotTracesTest'
     Y = csvread([baseDir 'Trace-3rdFloor-01.uwar.slam'], 1, 0); 
@@ -158,6 +158,7 @@ function [Y, lbls, Ytest, lblstest] = lvmLoadData(dataset, seedVal)
     Y(:, [3 4 38]) = []; % Remove columns of missing data.
     Y(find(Y==-100))=NaN;
     Y = (Y + 85)/15;
+    lbls = 'connect';
 
    case 'osr'
     t = linspace(-pi, pi, 256);
@@ -560,10 +561,10 @@ function [Y, lbls, Ytest, lblstest] = lvmLoadData(dataset, seedVal)
    case 'robotAtrium'
     Y = parseWirelessData([baseDir 'uw-atrium.txt']);
     Y = Y(1:281, :);
-    
-   case 'robotAtriumTest'
-    Y = parseWirelessData([baseDir 'uw-atrium.txt']);
-    Y = Y(282:end, :);
+    lbls = 'connect'
+   
+    Ytest = parseWirelessData([baseDir 'uw-atrium.txt']);
+    Ytest = Ytest(282:end, :);
 
     
    case 'accWalkSitJog'
