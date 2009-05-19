@@ -2,7 +2,7 @@
 
 importLatest('netlab');
 importLatest('optimi');
-importTool('ndlutil');
+importLatest('ndlutil');
 importLatest('mltools');
 importLatest('kern');
 importLatest('minimize');
