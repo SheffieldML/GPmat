@@ -54,7 +54,7 @@ model = modelOptimise(model, [], [], 1, 3000);
 % basal rate and sensitivity parameters are all shared).
 
 % load PUMA variance
-var595 = importdata('./data/5-95variance.txt');
+var595 = importdata(['.' filesep 'data' filesep '5-95variance.txt']);
 %varExp = exp(var595.data);
 varExp = exp(var595);
 scaleMat = scale'*ones(1,21);
@@ -230,7 +230,7 @@ for j = 1:length(model.comp)
   set(gca, 'fontname', 'arial', 'fontsize', 24, 'xlim', xlim)
   if saveFigures==1
     fileName = ['demBarenco1_profile' num2str(j)];
-    print('-deps', ['./results/' fileName]);
+    print('-deps', ['.' filesep 'results' filesep fileName]);
     pos = get(gcf, 'paperposition');
     origpos = pos;
     pos(3) = pos(3)/2;
@@ -238,7 +238,7 @@ for j = 1:length(model.comp)
     set(gcf, 'paperposition', pos);
     lineWidth = get(gca, 'lineWidth');
     set(gca, 'lineWidth', lineWidth);
-    print('-dpng', ['./results/' fileName])
+    print('-dpng', ['.' filesep 'results' filesep fileName])
     set(gca, 'lineWidth', lineWidth);
     set(gcf, 'paperposition', origpos);
   end
@@ -278,7 +278,7 @@ for j = 1:length(model.comp)
   
     if saveFigures==1
       fileName = ['demBarenco1_ExprsProfile_Rep' num2str(j) '_Gene' num2str(index)];
-      print('-deps', ['./results/' fileName]);
+      print('-deps', ['.' filesep 'results' filesep fileName]);
       pos = get(gcf, 'paperposition');
       origpos = pos;
       pos(3) = pos(3);
@@ -286,7 +286,7 @@ for j = 1:length(model.comp)
       set(gcf, 'paperposition', pos);
       lineWidth = get(gca, 'lineWidth');
       set(gca, 'lineWidth', lineWidth*2);
-      print('-dpng', ['./results/' fileName]);
+      print('-dpng', ['.' filesep 'results' filesep fileName]);
       set(gca, 'lineWidth', lineWidth);
       set(gcf, 'paperposition', origpos);
     end
@@ -302,7 +302,7 @@ bar([modelB(order); B]', 0.6); colormap([0 0 0; 1 1 1]);
 set(gca, 'xticklabel', {'DDB2', 'hPA26', 'TNFRSF20b', 'p21', 'BIK'})
 if saveFigures==1
   fileName = ['demBarenco1_basal'];
-  print('-deps', ['./results/' fileName]);
+  print('-deps', ['.' filesep 'results' filesep fileName]);
   pos = get(gcf, 'paperposition');
   origpos = pos;
   pos(3) = pos(3)/2;
@@ -310,7 +310,7 @@ if saveFigures==1
   set(gcf, 'paperposition', pos);
   lineWidth = get(gca, 'lineWidth');
   set(gca, 'lineWidth', lineWidth*2);
-  print('-dpng', ['./results/' fileName])
+  print('-dpng', ['.' filesep 'results' filesep fileName])
   set(gcf, 'paperposition', origpos)
   set(gca, 'lineWidth', lineWidth);
 end
@@ -322,7 +322,7 @@ set(gca, 'xticklabel', {'DDB2', 'hPA26', 'TNFRSF20b', 'p21', ...
                     'BIK'})
 if saveFigures==1
   fileName = ['demBarenco1_sensitivity'];
-  print('-deps', ['./results/' fileName]);
+  print('-deps', ['.' filesep 'results' filesep fileName]);
   pos = get(gcf, 'paperposition');
   origpos = pos;
   pos(3) = pos(3)/2;
@@ -330,7 +330,7 @@ if saveFigures==1
   set(gcf, 'paperposition', pos);
   lineWidth = get(gca, 'lineWidth');
   set(gca, 'lineWidth', lineWidth*2);
-  print('-dpng', ['./results/' fileName])
+  print('-dpng', ['.' filesep 'results' filesep fileName])
   set(gcf, 'paperposition', origpos)
   set(gca, 'lineWidth', lineWidth);
 end
@@ -342,7 +342,7 @@ set(gca, 'xticklabel', {'DDB2', 'hPA26', 'TNFRSF20b', 'p21', ...
                     'BIK'})
 if saveFigures==1
   fileName = ['demBarenco1_decay'];
-  print('-deps', ['./results/' fileName]);
+  print('-deps', ['.' filesep 'results' filesep fileName]);
   pos = get(gcf, 'paperposition');
   origpos = pos;
   pos(3) = pos(3)/2;
@@ -350,7 +350,7 @@ if saveFigures==1
   set(gcf, 'paperposition', pos);
   lineWidth = get(gca, 'lineWidth');
   set(gca, 'lineWidth', lineWidth*2);
-  print('-dpng', ['./results/' fileName])
+  print('-dpng', ['.' filesep 'results' filesep fileName])
   set(gcf, 'paperposition', origpos)
   set(gca, 'lineWidth', lineWidth);
 end
