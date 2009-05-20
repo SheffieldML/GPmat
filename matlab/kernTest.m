@@ -24,7 +24,7 @@ function kernRet = kernTest(kernType, numIn, tieParamNames);
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2007
 %
-% COPYRIGHT : Antti Honkela, 2007
+% MODIFICATIONS : Antti Honkela, 2007
 %
 % MODIFICATIONS : David Luengo, 2009
 
@@ -41,38 +41,12 @@ numData = 20;
 if isstruct(kernType)
   kern = kernType;
   kernType = kern.type;
-  % For convolutional kernels starting at t=0 it does not make sense to use
-  % negative inputs...
-  if strcmp(kernType, 'ou') | strcmp(kernType, 'sim') ...
-          | strcmp(kernType, 'lfm') | strcmp(kernType, 'simwhite') ...
-          | strcmp(kernType, 'lfmwhite') | strcmp(kernType, 'simou') ...
-          | strcmp(kernType, 'lfmou') | strcmp(kernType, 'rbfwhite') ...
-          | strcmp(kernType, 'rbfou') | strcmp(kernType, 'wiener')
-    x = abs(randn(numData, numIn));
-    x2 = abs(randn(numData/2, numIn));
-  else
-    x = randn(numData, numIn);
-    x2 = randn(numData/2, numIn);
-  end
   [params, paramnames] = kernExtractParam(kern);
   paramExpand = eye(length(params));
   paramPack = paramExpand;
   toRemove = [];
 else
-  % For convolutional kernels starting at t=0 it does not make sense to use
-  % negative inputs...
-  if strcmp(kernType, 'ou') | strcmp(kernType, 'sim') ...
-          | strcmp(kernType, 'lfm') | strcmp(kernType, 'simwhite') ...
-          | strcmp(kernType, 'lfmwhite') | strcmp(kernType, 'simou') ...
-          | strcmp(kernType, 'lfmou') | strcmp(kernType, 'rbfwhite') ...
-          | strcmp(kernType, 'rbfou')  | strcmp(kernType, 'wiener')
-    x = abs(randn(numData, numIn));
-    x2 = abs(randn(numData/2, numIn));
-  else
-    x = randn(numData, numIn);
-    x2 = randn(numData/2, numIn);
-  end
-  kern = kernCreate(x, kernType);
+  kern = kernCreate(numIn, kernType);
   if exist([kern.type 'KernSetIndex'])==2 
     for i = 1:length(kern.comp)
       if rand(1)>0.5
@@ -82,7 +56,16 @@ else
       end
     end
   end
-  
+  if isfield(kern, 'positiveTime') && kern.positiveTime 
+    % For convolutional kernels starting at t=0 it does not make sense to use
+    % negative inputs...
+    x = abs(randn(numData, numIn));
+    x2 = abs(randn(numData/2, numIn));
+  else
+    x = randn(numData, numIn);
+    x2 = randn(numData/2, numIn);
+  end
+
   % Set the parameters randomly.
   [params, paramnames] = kernExtractParam(kern);
   if iscell(tieParamNames),

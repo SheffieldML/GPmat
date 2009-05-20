@@ -1,6 +1,5 @@
 function g = whiteKernDiagGradient(kern, x, covDiag)
 
-
 % WHITEKERNDIAGGRADIENT Compute the gradient of the WHITE kernel's diagonal wrt parameters.
 % FORMAT
 % DESC computes the gradient of functions of the diagonal of the

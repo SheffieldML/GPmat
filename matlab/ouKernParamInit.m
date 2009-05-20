@@ -31,7 +31,10 @@ function kern = ouKernParamInit(kern)
 % SEEALSO : kernCreate, kernParamInit
 %
 % COPYRIGHT : David Luengo, 2009
+%
+% COPYRIGHT : Neil D. Lawrence, 2009
 
+  
 % KERN
 
 
@@ -47,3 +50,4 @@ kern.average = 0;
 kern.transforms.index = [1 2];
 kern.transforms.type = optimiDefaultConstraint('positive');
 kern.isStationary = false;
+kern.positiveTime = true;

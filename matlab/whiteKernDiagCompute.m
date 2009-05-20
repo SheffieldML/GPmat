@@ -1,6 +1,5 @@
 function k = whiteKernDiagCompute(kern, x)
 
-
 % WHITEKERNDIAGCOMPUTE Compute diagonal of WHITE kernel.
 % FORMAT
 % DESC computes the diagonal of the kernel matrix for the white noise kernel given a design matrix of inputs.

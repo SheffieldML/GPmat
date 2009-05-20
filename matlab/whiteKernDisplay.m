@@ -1,6 +1,6 @@
 function whiteKernDisplay(kern, spacing)
 
-% WHITEKERNDISPLAY Display parameters of the WHITEkernel.
+% WHITEKERNDISPLAY Display parameters of the WHITE kernel.
 % FORMAT
 % DESC displays the parameters of the white noise
 % kernel and the kernel type to the console.

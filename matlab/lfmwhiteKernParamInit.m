@@ -10,7 +10,10 @@ function kern = lfmwhiteKernParamInit(kern)
 % SEEALSO : kernCreate, kernParamInit
 %
 % COPYRIGHT : David Luengo, 2009
+%
+% COPYRIGHT : Neil D. Lawrence, 2009
 
+  
 % KERN
 
 
@@ -40,3 +43,4 @@ kern.serialNumber = uint64(1+rand(1)*maxSerial);
 % Force any precomputation contained in lfmKernExpandParam
 params = lfmwhiteKernExtractParam(kern);
 kern = lfmwhiteKernExpandParam(kern, params);
+kern.positiveTime = true;

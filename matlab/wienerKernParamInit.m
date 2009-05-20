@@ -31,3 +31,4 @@ kern.transforms.index = 1;
 kern.transforms.type = optimiDefaultConstraint('positive');
 
 kern.isStationary = false;
+kern.positiveTime = true;

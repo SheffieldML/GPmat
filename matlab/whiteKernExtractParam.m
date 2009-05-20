@@ -1,6 +1,5 @@
 function [params, names] = whiteKernExtractParam(kern)
 
-
 % WHITEKERNEXTRACTPARAM Extract parameters from the WHITE kernel structure.
 % FORMAT
 % DESC Extract parameters from the white noise kernel structure into a
@@ -28,7 +27,6 @@ function [params, names] = whiteKernExtractParam(kern)
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 %
 % KERN
-
 
 params = kern.variance;
 if nargout > 1

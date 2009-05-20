@@ -58,6 +58,7 @@ kern.transforms.index = [1 2 3 4];
 kern.transforms.type = optimiDefaultConstraint('positive');
 
 kern.isStationary = false;
+kern.positiveTime = true;
 
 % Serial number used to distinguish LFM kernels
 maxSerial = double(intmax('uint64'));

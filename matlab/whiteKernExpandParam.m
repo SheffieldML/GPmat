@@ -1,6 +1,5 @@
 function kern = whiteKernExpandParam(kern, params)
 
-
 % WHITEKERNEXPANDPARAM Create kernel structure from WHITE kernel's parameters.
 % FORMAT
 % DESC returns a white noise kernel structure filled with the

@@ -18,12 +18,14 @@ function kern = rbfwhiteKernParamInit(kern)
 % SEEALSO : kernCreate, kernParamInit
 %
 % COPYRIGHT : David Luengo, 2009
+%
+% COPYRIGHT : Neil D. Lawrence, 2009
 
 % KERN
 
-
+% Neil: this is odd as this kernel should be valid for any input.
 if kern.inputDimension > 1
-  error('LFM-WHITE kernel only valid for one-D input.')
+  error('RBF-WHITE kernel only valid for one-D input.')
 end
 
 kern.nParams = 2;
@@ -34,3 +36,4 @@ kern.variance = 1;
 kern.transforms.index = [1 2];
 kern.transforms.type = optimiDefaultConstraint('positive');
 kern.isStationary = false;
+kern.positiveTime = true;
