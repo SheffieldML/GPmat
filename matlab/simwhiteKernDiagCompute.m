@@ -1,6 +1,6 @@
-function k = simwhiteKernDiagCompute(kern, t)
+function K = simwhiteKernDiagCompute(kern, t)
 
-% SIMWHITEKERNDIAGCOMPUTE Compute diagonal of SIM-WHITE kernel.
+% SIMWHITEKERNDIAGCOMPUTE Compute the diagonal of the SIM-WHITE kernel.
 % FORMAT
 % DESC computes the diagonal of the kernel matrix for the SIM-White (Single
 % Input Motif - White) kernel given a column vector of inputs.
@@ -21,8 +21,8 @@ if size(t, 2) > 1
 end
 
 c = kern.variance * (kern.sensitivity^2) / (2*kern.decay);
-k = ones(size(t));
+K = ones(size(t));
 if (kern.isStationary == false)
-    k = k - exp(-2*kern.decay*t);
+    K = K - exp(-2*kern.decay*t);
 end
-k = c*k;
+K = c*K;

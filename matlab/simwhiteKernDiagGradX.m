@@ -20,5 +20,5 @@ function gT = simwhiteKernDiagGradX(kern, t)
 if (kern.isStationary == true)
     gT = zeros(size(t));
 else
-    gT = kern.variance * (kern.sensitivity^2) * exp(-2*kern.decay*X);
+    gT = kern.variance * (kern.sensitivity^2) * exp(-2*kern.decay*t);
 end

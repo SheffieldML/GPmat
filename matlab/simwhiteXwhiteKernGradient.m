@@ -56,24 +56,22 @@ if simKern.variance ~= whiteKern.variance
   error('Kernels cannot be cross combined if they have different variances.')
 end
 
+% Parameters of the kernels required in the computations
+sensitivity = simKern.sensitivity;
+variance = simKern.variance;
+
+% Initialisation of vectors and matrices
 g1 = zeros(1,3);
 g2 = 0; % The only parameter of the WHITE kernel (its variance) is already
         % accounted for in g1
 
-T1 = repmat(t1, 1, size(t2, 1));
-T2 = repmat(t2.', size(t1, 1), 1);
-
-sensitivity = simKern.sensitivity;
-variance = simKern.variance;
+deltaT = repmat(t1, 1, size(t2, 1)) - repmat(t2.', size(t1, 1), 1);
 
 % Computing a normalised (i.e. variance = 1 and sensitivity = 1) kernel
-simKern.variance = 1;
-simKern.sensitivity = 1;
-whiteKern.variance = 1;
-K = simwhiteXwhiteKernCompute(simKern, whiteKern, t1, t2);
+K = exp(-simKern.decay*abs(deltaT)) .* (deltaT >= 0);
 
 % Gradient w.r.t. D_q
-g1(1) = variance * sensitivity * sum(sum((T2-T1) .* K .* covGrad));
+g1(1) = - variance * sensitivity * sum(sum(deltaT .* K .* covGrad));
 
 % Gradient w.r.t. sigma_r^2
 g1(2) = sensitivity * sum(sum(K .* covGrad));

@@ -33,12 +33,16 @@ function gT = rbfinfwhiteKernGradX(kern, t1, t2)
 % KERN
 
 
+if nargin < 3
+  t2 = t1;
+end
 if size(t1, 2) > 1 | size(t2, 2) > 1
   error('Input can only have one column');
 end
 
 gT = zeros(size(t1, 1), 1, size(t2, 1));
 
+% Parameters of the kernel required in the computation
 variance = kern.variance;
 invWidth = kern.inverseWidth;
 

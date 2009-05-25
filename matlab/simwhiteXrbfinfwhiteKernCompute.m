@@ -49,9 +49,39 @@ T2 = repmat(t2.', size(t1, 1), 1);
 deltaT = T1-T2;
 indT = double(deltaT >= 0);
 
-c = 0.5 * variance * sensitivity * exp(0.5*(decay^2)/invWidth-decay*deltaT);
-K = 1 + erf(sqrt(0.5*invWidth)*(deltaT-decay/invWidth));
+% % Old version of the code
+% 
+% c = (0.5 * variance * sensitivity) * exp(0.5*(decay^2)/invWidth - decay*deltaT);
+% K = 1 + erf(sqrt(0.5*invWidth)*(deltaT-decay/invWidth));
+% if (isStationary == false)
+%     K = K - 1 + erf(sqrt(0.5*invWidth)*(T2+decay/invWidth));
+% end
+% K = c .* K;
+% 
+% ind = find(isnan(K));
+% if ~isempty(ind)
+%     K(ind) = 0.0;
+% end
+
+% New version (more stable numerically)
+
 if (isStationary == false)
-    K = K + erf(sqrt(0.5*invWidth)*(T2+decay/invWidth)) - 1;
+    K = (0.5 * variance * sensitivity) ...
+        * exp(0.5*(decay^2)/invWidth - decay*deltaT ...
+            + lnDiffErfs(sqrt(0.5*invWidth)*(deltaT-decay/invWidth), ...
+                -sqrt(0.5*invWidth)*(T2+decay/invWidth)));
+else
+    K = (0.5 * variance * sensitivity) ...
+        * exp(0.5*(decay^2)/invWidth - decay*deltaT ...
+            + lnDiffErfs(sqrt(0.5*invWidth)*(deltaT-decay/invWidth), -inf));
 end
-K = c .* K;
+
+ind = find(isnan(K));
+if ~isempty(ind)
+    keyboard;
+end
+
+ind = find(K == inf);
+if ~isempty(ind)
+    keyboard;
+end

@@ -24,7 +24,7 @@ function K = rbfinfwhiteXrbfinfwhiteKernCompute(rbfKern1, rbfKern2, t1, t2)
 % ARG t2 : column inputs for which kernel is to be computed.
 % RETURN K : block of values from kernel matrix.
 %
-% SEEALSO : multiKernParamInit, multiKernCompute, rbf2whiteKernParamInit
+% SEEALSO : multiKernParamInit, multiKernCompute, rbfinfwhiteKernParamInit
 %
 % COPYRIGHT : David Luengo, 2009
 

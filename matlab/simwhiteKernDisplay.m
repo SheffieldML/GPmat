@@ -31,10 +31,10 @@ else
     fprintf('Non-stationary version of the kernel\n');
 end
 fprintf(spacing);
-fprintf('SIM decay: %2.4f\n', kern.decay);
+fprintf('SIM-WHITE decay: %2.4f\n', kern.decay);
 fprintf(spacing);
-fprintf('SIM-White variance: %2.4f\n', kern.variance);
+fprintf('SIM-WHITE variance: %2.4f\n', kern.variance);
 fprintf(spacing);
-fprintf('SIM-White sensitivity: %2.4f\n', kern.sensitivity);
+fprintf('SIM-WHITE sensitivity: %2.4f\n', kern.sensitivity);
 %fprintf(spacing);
-%fprintf('SIM delay: %2.4f\n', kern.delay)
+%fprintf('SIM-WHITE delay: %2.4f\n', kern.delay)

@@ -1,9 +1,10 @@
 function K = simwhiteKernCompute(kern, t1, t2)
 
 % SIMWHITEKERNCOMPUTE Compute the SIM-WHITE kernel given the parameters, t1
-% and t2.
+% and t2. This kernel is the result of using a white noise latenf function
+% to force the SIM kernel.
 % FORMAT
-% DESC computes the kernel parameters for the SIM-White (Single Input Motif
+% DESC computes the kernel matrix for the SIM-White (Single Input Motif
 % - White) kernel given inputs associated with rows and columns.
 % ARG kern : the kernel structure for which the kernel matrix is computed.
 % ARG t1 : the input column vector associated with the rows of the kernel.

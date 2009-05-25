@@ -32,4 +32,31 @@ function gT = simwhiteKernGradX(kern, t1, t2)
 % KERN
 
 
-error('simwhiteKernGradX not yet implemented.')
+if nargin < 3
+  t2 = t1;
+end
+if size(t1, 2) > 1 | size(t2, 2) > 1
+  error('Input can only have one column');
+end
+
+% Initialisation of the gradient matrix
+gT = zeros(size(t1, 1), 1, size(t2, 1));
+
+% Parameters of the kernel required in the computation
+variance = kern.variance;
+decay = kern.decay;
+sensitivity = kern.sensitivity;
+isStationary = kern.isStationary;
+
+c = 0.5 * variance * (sensitivity^2);
+if (isStationary == false)
+    for i = size(t1, 1)
+        gT(i, 1, :) =  - sign(t1(i)-t2) .* exp(-decay*abs(t1(i)-t2)) ...
+                + exp(-decay*(t1(i)+t2));
+    end
+else
+    for i = size(t1, 1)
+        gT(i, 1, :) =  - sign(t1(i)-t2) .* exp(-decay*abs(t1(i)-t2));
+    end
+end
+gT = c * gT;

@@ -1,14 +1,21 @@
 function kern = rbfinfwhiteKernParamInit(kern)
 
-% RBFINFWHITEKERNPARAMINIT RBF-WHITE kernel (with integration limits between
-% minus infinity and infinity) parameter initialisation. The RBF-WHITE is a
-% convolutional kernel defined from the convolution of a white input noise
-% process with a smoothing kernel given by an RBF.
+% RBFINFWHITEKERNPARAMINIT The RBF-WHITE-INF kernel is a convolutional
+% kernel obtained as the result of convolving a white noise input process
+% with an RBF smoothing kernel with range between minus and plus infinity.
 %
-% The parameters are sigma2, the process variance (kern.variance),
-% and gamma, the inverse width (kern.inverseWidth). The inverse
-% width controls how wide the basis functions are, the larger
-% gamma, the smaller the basis functions are.
+% Although it be used independently, it is mostly intended to be combined
+% with other kernels in a compound kernel. For example, this is the kernel
+% used as variational smoothing kernel for the DTC sparse GP approach.
+%
+% The parameters are sigma2, the process variance (kern.variance), and
+% gamma, the inverse width (kern.inverseWidth). The inverse width controls
+% how wide the basis functions are, the larger gamma, the smaller the basis
+% functions are.
+%
+% It is very similar to the RBF-WHITE kernel.
+%
+% SEEALSO : cmpndKernParamInit, rbfwhiteKernParamInit
 %
 % FORMAT
 % DESC initialises the RBF-WHITE kernel structure with some default

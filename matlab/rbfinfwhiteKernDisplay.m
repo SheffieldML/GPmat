@@ -25,7 +25,7 @@ else
 end
 spacing = char(spacing);
 fprintf(spacing);
-fprintf('RBF inverse width: %2.4f (length scale %2.4f)\n', ...
+fprintf('RBF-INF-WHITE inverse width: %2.4f (length scale %2.4f)\n', ...
         kern.inverseWidth, 1/sqrt(kern.inverseWidth));
 fprintf(spacing);
-fprintf('RBF variance: %2.4f\n', kern.variance)
+fprintf('RBF-INF-WHITE variance: %2.4f\n', kern.variance)

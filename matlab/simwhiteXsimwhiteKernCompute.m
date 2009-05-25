@@ -39,15 +39,23 @@ if simKern1.variance ~= simKern2.variance
   error('Kernels cannot be cross combined if they have different variances.')
 end
 
-c = simKern1.variance*simKern1.sensitivity*simKern2.sensitivity ...
-    /(simKern1.decay+simKern2.decay);
+% Parameters of the kernels required in the computation
+variance = simKern1.variance;
+sensitivity1 = simKern1.sensitivity;
+sensitivity2 = simKern2.sensitivity;
+decay1 = simKern1.decay;
+decay2 = simKern2.decay;
+
+isStationary = (simKern1.isStationary == true) & (simKern2.isStationary == true);
+
+% Auxiliary constants and matrices
+c = variance1 * sensitivity1 * sensitivity2 / (decay1 + decay2);
 T1 = repmat(t1, 1, size(t2, 1));
 T2 = repmat(t2.', size(t1, 1), 1);
-ind = (T1 < T2); % (T1 <= T2)?
-Dv = simKern2.decay.*ind + simKern1.decay.*(~ind);
-K = exp(-Dv.*abs(T1-T2));
-if ((simKern1.isStationary == false) | (simKern2.isStationary == false))
-    K = K - exp(-(simKern1.decay * T1 * double(simKern1.isStationary == false) ...
-        + simKern2.decay * T2 * double(simKern2.isStationary == false)));
+ind = (T1 < T2);
+Dv = decay2 .* ind + decay1 .* (~ind);
+K = exp(-Dv .* abs(T1-T2));
+if (isStationary == false)
+    K = K - exp(-(decay1 * T1 + decay2 * T2));
 end
 K = c*K;

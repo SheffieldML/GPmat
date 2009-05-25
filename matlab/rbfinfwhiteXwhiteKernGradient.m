@@ -70,10 +70,11 @@ T1 = repmat(t1, 1, size(t2, 1));
 T2 = repmat(t2.', size(t1, 1), 1);
 deltaT = T1 - T2;
 
+K = exp(-0.5*invWidth*(deltaT.^2));
+
 % Gradient w.r.t. the inverse width
 g1(1) = (0.5*variance/sqrt(2*pi)) ...
-    * sum(sum((1/sqrt(invWidth)-sqrt(invWidth)*(deltaT.^2)) ...
-        .* exp(-0.5*invWidth*(deltaT.^2)).* covGrad));
+    * sum(sum((1/sqrt(invWidth)-sqrt(invWidth)*(deltaT.^2)) .* K .* covGrad));
 
 % Gradient w.r.t. sigma_r^2
-g1(2) = sqrt(invWidth/(2*pi)) * sum(sum(exp(-0.5*invWidth*(deltaT.^2)) .* covGrad));
+g1(2) = sqrt(invWidth/(2*pi)) * sum(sum(K .* covGrad));

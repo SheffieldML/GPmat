@@ -44,4 +44,4 @@ end
 T1 = repmat(t1, 1, size(t2, 1));
 T2 = repmat(t2.', size(t1, 1), 1);
 c = simKern.variance * simKern.sensitivity;
-K = c * exp(-simKern.decay.*abs(T1-T2)) .* (T1>=T2); % (T1 > T2)?
+K = c * exp(-simKern.decay*abs(T1-T2)) .* (T1>=T2);

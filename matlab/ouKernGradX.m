@@ -34,4 +34,24 @@ function gT = ouKernGradX(kern, t1, t2)
 
 % KERN
 
-error('ouKernGradX not yet implemented.')
+if nargin < 3
+  t2 = t1;
+end
+if size(t1, 2) > 1 | size(t2, 2) > 1
+  error('Input can only have one column');
+end
+
+gT = zeros(size(t1, 1), 1, size(t2, 1));
+
+c = - 0.5 * kern.variance;
+decay = kern.decay;
+isStationary = kern.isStationary;
+for i = size(t1, 1)
+    % Gradient when t1 < t2 (i.e. \Delta_t < 0)
+    s = sign(t1(i)-t2);
+    gTemp = s .* exp(-decay*abs(t1(i)-t2));
+    if (isStationary == false)
+        gTemp =  gTemp - exp(-decay*(t1(i)+t2));
+    end
+    gT(i, 1, :) = c * gTemp;
+end
