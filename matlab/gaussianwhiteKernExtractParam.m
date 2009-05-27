@@ -38,5 +38,5 @@ if nargout > 1
         unames{i}=['inverse width latent (' num2str(i) ',' num2str(i) ')'];
     end
     names = unames(:)';
-    names = {names{:}, 'variance latent'};
+    names = {names{:}, 'variance'};
 end

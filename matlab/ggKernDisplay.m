@@ -23,13 +23,17 @@ else
   spacing = [];
 end
 spacing = char(spacing);
-fprintf(spacing);
-fprintf('Latent inverse width: %2.4f (length scale %2.4f)\n', ...
-        kern.precision_u, 1/sqrt(kern.precision_u));
-fprintf(spacing);
-fprintf('Gg inverse width: %2.4f (length scale %2.4f)\n', ...
-        kern.precision_y, 1/sqrt(kern.precision_y));
-fprintf(spacing);
+for k=1:kern.inputDimension,
+    fprintf(spacing);
+    fprintf('Latent inverse width: %2.4f (length scale %2.4f)\n', ...
+            kern.precision_u(k), 1/sqrt(kern.precision_u(k)));
+end
+for k=1:kern.inputDimension,
+    fprintf(spacing);
+    fprintf('Gg inverse width: %2.4f (length scale %2.4f)\n', ...
+            kern.precision_y(k), 1/sqrt(kern.precision_y(k)));    
+end
+fprintf(spacing);    
 fprintf('Latent variance: %2.4f\n', kern.sigma2_u)
 fprintf(spacing);
 fprintf('Gg Sigma2_y: %2.4f\n', kern.sigma2_y)

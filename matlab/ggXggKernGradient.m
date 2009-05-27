@@ -45,8 +45,9 @@ if nargin < 5
     x2 = x;
 end
 
+[K, Linv, Ankinv, Amkinv, Bkinv, kBase, factorKern1y, ...
+    factorKern2y, factorKern1u ] = ggXggKernCompute(ggKern1, ggKern2, x, x2);
 
-[K, Linv, Ankinv, Amkinv, Bkinv] = ggXggKernCompute(ggKern1, ggKern2, x, x2);
 Pinv = Linv.^2;
 mu_n = ggKern1.translation;
 mu_m = ggKern2.translation;
@@ -71,9 +72,9 @@ for i=1:ggKern1.inputDimension
     gradMuN(i) = sum(sum(covGrad.*K.*(Pinv(i)*((X - X2)))));
 end
 
-grad_sigma2_u = sum(sum(covGrad.*K))/ggKern1.sigma2_u;
-grad_sigma2_y1 = sum(sum(covGrad.*K))/ggKern1.sigma2_y;
-grad_sigma2_y2 = sum(sum(covGrad.*K))/ggKern2.sigma2_y;
+grad_sigma2_u =  factorKern1u*sum(sum(covGrad.*kBase));
+grad_sigma2_y1 = factorKern1y*sum(sum(covGrad.*kBase));
+grad_sigma2_y2 = factorKern2y*sum(sum(covGrad.*kBase));
 
 if nargin<5,
     gradMuM = gradMuN;

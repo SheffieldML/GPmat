@@ -1,4 +1,5 @@
-function [K, Linv, Ankinv, Amkinv, Bkinv] = ggXggKernCompute(ggKern1, ggKern2, x, x2)
+function [K, Linv, Ankinv, Amkinv, Bkinv, kBase, factorKern1y, ...
+    factorKern2y, factorKern1u ] = ggXggKernCompute(ggKern1, ggKern2, x, x2)
 % GGXGGKERNCOMPUTE Compute a cross kernel between two GG kernels.
 % FORMAT
 % DESC computes cross kernel
@@ -43,6 +44,12 @@ Linv = sqrt(1./P);
 Linvx = (x- repmat(mu_n',size(x,1),1))*diag(Linv);
 Linvx2 = (x2- repmat(mu_m',size(x2,1),1))*diag(Linv);
 n2 = dist2(Linvx, Linvx2);
+kBase = exp(-0.5*n2);
 K = ggKern1.sigma2_y*ggKern2.sigma2_y*ggKern1.sigma2_u*sqrt((detBkinv)/ldet)...
-    *exp(-0.5*n2);
+    *kBase;
 
+if nargout > 1
+    factorKern1y = ggKern2.sigma2_y*ggKern1.sigma2_u*sqrt((detBkinv)/ldet);
+    factorKern2y = ggKern1.sigma2_y*ggKern1.sigma2_u*sqrt((detBkinv)/ldet);
+    factorKern1u = ggKern1.sigma2_y*ggKern2.sigma2_y*sqrt((detBkinv)/ldet);
+end

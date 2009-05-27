@@ -45,14 +45,19 @@ function g = gaussianKernGradient(kern, x, varargin)
 % KERN
   
 if nargin < 4
-    k  = gaussianKernCompute(kern, x);
     x2 = x;
     covPar = varargin{1};
 else
-    k = gaussian2KernCompute(kern, x, varargin{1});
     x2 = varargin{1};
     covPar = varargin{2};
 end
+
+L = sqrt(kern.precision_u);
+Lx = x*diag(L);
+Lx2 = x2*diag(L);
+n2 = dist2(Lx, Lx2);
+kBase = exp(-0.5*n2);
+k = kern.sigma2_u*kBase;
 
 matGrad = zeros(kern.inputDimension,1); 
 
@@ -62,7 +67,7 @@ for i = 1:kern.inputDimension,
     matGrad(i) = -sum(sum(0.5*covPar.*k.*(X - X2).*(X - X2)));
 end
 
-g = [matGrad' sum(sum(covPar.*k))];
+g = [matGrad' sum(sum(covPar.*kBase))];
 
 
 

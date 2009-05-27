@@ -43,6 +43,12 @@ function g = ggwhiteKernGradient(kern, x, varargin)
 
 % KERN
 
-[g1, g2] = ggwhiteXggwhiteKernGradient(kern, kern, x, varargin{end});
+if length(varargin)<2
+  x2 = x;
+else
+  x2 = varargin{1};
+end
+
+[g1, g2] = ggwhiteXggwhiteKernGradient(kern, kern, x, x2, varargin{end});
 
 g = g1 + g2;

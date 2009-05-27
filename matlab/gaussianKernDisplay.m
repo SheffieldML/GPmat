@@ -23,8 +23,10 @@ else
   spacing = [];
 end
 spacing = char(spacing);
+for k=1:kern.inputDimension,
 fprintf(spacing);
 fprintf('Gaussian inverse width: %2.4f (length scale %2.4f)\n', ...
-        kern.precision_u, 1/sqrt(kern.precision_u));
+        kern.precision_u(k), 1/sqrt(kern.precision_u(k)));
+end
 fprintf(spacing);
 fprintf('Gaussian variance: %2.4f\n', kern.sigma2_u)

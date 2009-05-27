@@ -43,14 +43,12 @@ function g = ggKernGradient(kern, x, varargin)
 
 % KERN
 
+if length(varargin)<2
+  x2 = x;
+else
+  x2 = varargin{1};
+end
 
-
-% if length(varargin)<2
-%   x2 = x;
-% else
-%   x2 = varargin{1};
-% end
-
-[g1, g2] = ggXggKernGradient(kern, kern, x, varargin{end});
+[g1, g2] = ggXggKernGradient(kern, kern, x, x2, varargin{end});
 
 g = g1 + g2;

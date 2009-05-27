@@ -36,5 +36,5 @@ if nargout > 1
     for i=1:kern.inputDimension,        
         ynames{i}=['inverse width output (' num2str(i) ',' num2str(i) ')'];
     end    
-    names = {ynames{:}, 'variance latent', 'variance output'};
+    names = {ynames{:}, 'variance', 'sensitivity'};
 end

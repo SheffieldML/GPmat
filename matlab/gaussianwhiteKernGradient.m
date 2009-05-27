@@ -45,13 +45,30 @@ function g = gaussianwhiteKernGradient(kern, x, varargin)
 % KERN
   
 if nargin < 4
-    [k, Pinv]  = gaussianwhiteKernCompute(kern, x);
     x2 = x;
     covPar = varargin{1};
 else
-    [k, Pinv] = gaussianwhiteKernCompute(kern, x, varargin{1});
     x2 = varargin{1};
     covPar = varargin{2};
+end
+
+sqrtP = sqrt(kern.precisionT/2);
+Pinv = 2./kern.precisionT;
+Px = x*sparseDiag(sqrtP);
+
+factor = kern.sigma2Noise/((2*pi)^(kern.inputDimension/2)*sqrt(prod(Pinv))); 
+
+factorVar =1/((2*pi)^(kern.inputDimension/2)*sqrt(prod(Pinv))); 
+
+if nargin < 3  
+  n2 = dist2(Px, Px);
+  kBase = exp(-0.5*n2);
+  k = factor*exp(-0.5*n2);
+else
+  Px2 = x2*sparseDiag(sqrtP);
+  n2 = dist2(Px, Px2);
+  kBase = exp(-0.5*n2);
+  k = factor*exp(-0.5*n2);
 end
 
 matGrad = zeros(kern.inputDimension,1);
@@ -62,7 +79,7 @@ for i = 1:kern.inputDimension,
     matGrad(i) = sum(sum(0.25*covPar.*k.*(Pinv(i) - (X - X2).*(X - X2))));
 end
 
-g = [matGrad' sum(sum(covPar.*k))];
+g = [matGrad' factorVar*sum(sum(covPar.*kBase))];
 
 
 
