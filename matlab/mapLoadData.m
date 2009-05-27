@@ -616,7 +616,106 @@ switch dataset
     end
     XTest = x(indx(ntrainx+1:end),:)';
     save([baseDir 'toyMultigp1D.mat'], 'X', 'y', 'XTest', 'yTest')
-  end       
+  end
+    case 'ggToyCombined'
+        try
+            load([baseDir 'toyMultigp1DCombined.mat']);
+        catch
+            noise = 0.5;
+            nout =5;
+            nin = 2;
+            media = zeros(1,5);
+            prec = [50 50 300 200 30];
+            sigma2_y = [1 1 5 5 2];
+            sens_y_noise = [2 2 2.5 10 1];
+            prec_u = 100;
+            sigma2_u = 1;
+            N = 500;
+            N2 = 100;
+            x = linspace(-1,1,N)';
+            x2 = linspace(-1,1,N2)';
+            Kyy = cell(nout);
+            ggKern1.inputDimension = size(x,2);
+            ggKern1.precision_u = prec_u;
+            ggKern1.sigma2_u = sigma2_u;
+            ggKern1Noise.inputDimension =size(x,2);
+            ggKern1Noise.sigma2Noise = noise;
+            ggKern2.inputDimension = size(x,2);
+            ggKern2Noise.inputDimension = size(x,2);
+            for i = 1:nout,
+                ggKern1.precision_y = prec(i);
+                ggKern1.sigma2_y = sigma2_y(i);
+                ggKern1.translation = media(i) ;
+                ggKern1Noise.precisionG = prec(i);
+                ggKern1Noise.variance = sens_y_noise(i);
+                for j = 1:nout,
+                    ggKern2.precision_y = prec(j);
+                    ggKern2.sigma2_y = sigma2_y(j);
+                    ggKern2.translation = media(j);
+                    ggKern2Noise.precisionG = prec(j);
+                    ggKern2Noise.variance = sens_y_noise(j);
+                    Kyy{i,j} = ggXggKernCompute(ggKern1, ggKern2, x) + ggwhiteXggwhiteKernCompute(ggKern1Noise, ...
+                        ggKern2Noise, x);
+                end
+            end
+            Kyu = cell(nout, 2);
+            ggKern.inputDimension = size(x,2);
+            gaussianKern.precision_u = prec_u;
+            gaussianKern.sigma2_u = sigma2_u;
+            ggKernNoise.inputDimension = size(x,2);
+            for i = 1:nout,
+                ggKern.precision_y = prec(i);
+                ggKern.translation = media(i) ;
+                ggKern.sigma2_y = sigma2_y(i);
+                Kyu{i,1} = ggXgaussianKernCompute(ggKern, gaussianKern, x, x2);
+            end
+            for i = 1:nout,
+                ggKernNoise.precisionT = 2*prec(i);
+                ggKernNoise.sigma2Noise = noise;
+                Kyu{i,2} = sens_y_noise(i)*gaussianwhiteKernCompute(ggKernNoise, x, x2);
+            end
+            Kuu = cell(2,1);
+            gaussianKern.precision_u = prec_u;
+            gaussianKern.sigma2_u = sigma2_u;
+            Kuu{1} = gaussianKernCompute(gaussianKern, x2);
+            Kuu{2} = noise*eye(length(x2));
+            startVal = 1;
+            endVal = 0;
+            KuuMat = zeros(2*length(x2));
+            for k = 1:nin,
+                endVal = endVal + length(x2);
+                KuuMat(startVal:endVal,startVal:endVal) = Kuu{k};
+                startVal = endVal + 1;
+            end
+            K = [KuuMat cell2mat(Kyu)';cell2mat(Kyu) cell2mat(Kyy)];
+            yu = gsamp(zeros(size(K,1),1), K, 1);
+            u = yu(1:2*size(x2,1));
+            y = yu(2*size(x2,1)+1:end);
+            U = reshape(u,size(x2,1),nin);
+            Y = reshape(y,size(x,1),nout);
+            for k=1:nout,
+                Y(:,k) = Y(:,k) + 0.1*sqrt(var(Y(:,k)))*randn(size(Y(:,k),1),1);
+            end
+            ntrainx =200;
+            maxl = length(x);
+            X = cell(1,nout+nin);
+            y = cell(1,nout+nin);
+            yTest = cell(1,nout);
+            indx = randperm(maxl);
+            pindx = sort(indx(1:ntrainx));
+            for k =1:nout,
+                X{k} = x(pindx,:);
+                y{k} = Y(pindx,k);
+                yTest{k} = Y(indx(ntrainx+1:end),k);
+            end
+            XTest = x(indx(ntrainx+1:end),:)';
+            % Append the latent functions
+            y{nout+1} = U(:,1);
+            y{nout+2} = U(:,2);
+            X{nout+1} = x2;
+            X{nout+2} = x2;
+            save([baseDir 'toyMultigp1DCombined.mat'], 'X', 'y', 'XTest', 'yTest')
+        end
  case 'juraDataCd'
   try
     load([baseDir 'juraDataCd.mat']);
