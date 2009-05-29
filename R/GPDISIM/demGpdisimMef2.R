@@ -1,8 +1,5 @@
 rm(list = ls(all=TRUE))
 
-# extra library needed for error function computation
-library(NORMT3)
-
 options(error = recover)
 
 source("gpdisimLoadData.R")

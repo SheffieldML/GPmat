@@ -1,6 +1,3 @@
-# extra library needed for error function computation
-library(NORMT3)
-
 expTransform <- function (x, transform="atox") {
 
   eps <- 2.2204e-16
@@ -141,36 +138,10 @@ dist2 <- function (x, x2) {
 }
 
 
-
-erff <- function (x) {
-    if ( is.real(x) ) {
-        result <- Re(erf(x))
-    } else {
-        result <- erf(x)
-    }
-    return (result)
-}
-
-
-erfcf <- function (x) {
-    if ( is.real(x) ) {
-        result <- Re(erfc(x))
-    } else {
-        result <- erfc(x)
-    }
-    return (result)
-}
-
-
-
-erfcx <- function (x) {
-
-  x2 <- x*x
-  thsh <- 709
-  x2 <- apply(as.matrix(x2), c(1,2), min, thsh)	
-  
-  return ( exp(x2)*erfcf(x) )
-}
+erff <- function(x) 2 * pnorm(x * sqrt(2)) - 1
+erfcf <- function(x) 2 * pnorm(x * sqrt(2), lower = FALSE)
+logerfc <- function(x) log(2) + pnorm(x * sqrt(2), lower = FALSE, log=TRUE)
+erfcx <- function(x) exp(x^2 + logerfc(x))
 
 
 
