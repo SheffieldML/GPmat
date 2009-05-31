@@ -1,4 +1,4 @@
-function kernRet = multiKernTest(kernType, tieParams);
+function kernRet = multiKernTest(kernType, tieParams, flags);
 
 % MULTIKERNTEST Run some tests on the multiple output block kernel.
 % FORMAT
@@ -29,6 +29,13 @@ function kernRet = multiKernTest(kernType, tieParams);
 % when the kernel type is {'multi', 'rbf', 'lfm', 'lfm'} then it is
 % forced by specifying TIEPARAMS as {[1 6 11]}. See MODELTIEPARAM for
 % more details on the form of this argument.
+% ARG flags : vector with a series of binary flags indicating the type of
+% the kernel used. Currently there are only two flags indicating: (1) the
+% normalisation of the kernel; (2) its stationarity. Note that for some
+% kernels these flags may be pointless (e.g. there is not a normalised
+% version of the white kernel and it is always stationary). In these cases
+% the kernel computation should simply ignore the flags. By default they
+% are set to false.
 % RETURN kern : the kernel that was generated for the tests.
 % 
 % SEEALSO : multiKernParamInit, modelTieParam
@@ -39,6 +46,9 @@ function kernRet = multiKernTest(kernType, tieParams);
 
 % KERN
 
+if nargin < 2
+    tieParams = {};
+end
 numData = 20;
 numIn = 1;
 
@@ -49,47 +59,75 @@ if iscell(kernType) & ~strcmp(kernType{1}, 'multi')
   error('Input kern type to multi kern test should have first entry ''multi''.')
 end
   
-% Generate some x positions.
-if ~isempty(cell2mat(strfind(kernType(2:end), 'ou'))) ...
-        | ~isempty(cell2mat(strfind(kernType(2:end), 'sim'))) ...
-        | ~isempty(cell2mat(strfind(kernType(2:end), 'lfm'))) ...
-        | ~isempty(cell2mat(strfind(kernType(2:end), 'simwhite'))) ...
-        | ~isempty(cell2mat(strfind(kernType(2:end), 'lfmwhite'))) ...
-        | ~isempty(cell2mat(strfind(kernType(2:end), 'simou'))) ...
-        | ~isempty(cell2mat(strfind(kernType(2:end), 'lfmou'))) ...
-        | ~isempty(cell2mat(strfind(kernType(2:end), 'rbfwhite'))) ...
-        | ~isempty(cell2mat(strfind(kernType(2:end), 'rbfou')))
-    x = linspace(0, 2, numData)'; %randn(numData, numIn);
-    x2 = abs(randn(numData/2, numIn));
-else
-    x = linspace(-1, 1, numData)'; %randn(numData, numIn);
-    x2 = randn(numData/2, numIn);
-end
 if isstruct(kernType)
   kern = kernType;
+  nKernels = size(kern.comp, 2);
+  kernType = cell(1, 1 + nKernels);
+  kernType{1, 1} = kern.type;
+  for i=1:nKernels
+      kernType{1, i+1} = kern.comp{i}.type;
+  end
+  % Generate some x positions.
+  if ~isempty(cell2mat(strfind(kernType(2:end), 'ou'))) ...
+      | ~isempty(cell2mat(strfind(kernType(2:end), 'sim'))) ...
+      | ~isempty(cell2mat(strfind(kernType(2:end), 'lfm'))) ...
+      | ~isempty(cell2mat(strfind(kernType(2:end), 'simwhite'))) ...
+      | ~isempty(cell2mat(strfind(kernType(2:end), 'lfmwhite'))) ...
+      | ~isempty(cell2mat(strfind(kernType(2:end), 'simou'))) ...
+      | ~isempty(cell2mat(strfind(kernType(2:end), 'lfmou'))) ...
+      | ~isempty(cell2mat(strfind(kernType(2:end), 'rbfwhite'))) ...
+      | ~isempty(cell2mat(strfind(kernType(2:end), 'rbfou')))
+        x = linspace(0, 2, numData)'; %randn(numData, numIn);
+        x2 = abs(randn(numData/2, numIn));
+  else
+        x = linspace(-1, 1, numData)'; %randn(numData, numIn);
+        x2 = randn(numData/2, numIn);
+  end
 else
+  % Generate some x positions.
+  if ~isempty(cell2mat(strfind(kernType(2:end), 'ou'))) ...
+      | ~isempty(cell2mat(strfind(kernType(2:end), 'sim'))) ...
+      | ~isempty(cell2mat(strfind(kernType(2:end), 'lfm'))) ...
+      | ~isempty(cell2mat(strfind(kernType(2:end), 'simwhite'))) ...
+      | ~isempty(cell2mat(strfind(kernType(2:end), 'lfmwhite'))) ...
+      | ~isempty(cell2mat(strfind(kernType(2:end), 'simou'))) ...
+      | ~isempty(cell2mat(strfind(kernType(2:end), 'lfmou'))) ...
+      | ~isempty(cell2mat(strfind(kernType(2:end), 'rbfwhite'))) ...
+      | ~isempty(cell2mat(strfind(kernType(2:end), 'rbfou')))
+        x = linspace(0, 2, numData)'; %randn(numData, numIn);
+        x2 = abs(randn(numData/2, numIn));
+  else
+        x = linspace(-1, 1, numData)'; %randn(numData, numIn);
+        x2 = randn(numData/2, numIn);
+  end
+  % Kernel creation and parameter tying.
   kern = kernCreate(x, kernType);
   if nargin>1
     kern = modelTieParam(kern, tieParams);
   end
   % Set the parameters randomly.
-  params = kernExtractParam(kern);
+  [params, names] = kernExtractParam(kern);
   params = randn(size(params))./sqrt(randn(size(params)).^2);
-  kern = kernExpandParam(kern, params);
   % Impose further restrictions on the parameters checking wheter there is
   % a SIM kernel present. In this case, the variances of all the RBF kernels
   % that appear in the structure are set to one.
-  [params, names] = kernExtractParam(kern);
-  if ~isempty(cell2mat(strfind(kernType(2:end), 'sim')))
-      ind2 = strfind(kernType(2:end), 'rbf');
-      for i = 1:length(ind2)
-          if ~isempty(cell2mat(ind2(i)))
-             kern.comp{i}.variance = 1;
-          end
-      end
-  end
+  pattern = ['rbf [0-9]+ variance'];
+  ind1 = find(~cellfun(@isempty, regexp(names, pattern)));
+  params(ind1) = log(1);
+  kern = kernExpandParam(kern, params);
 end
- 
+
+% Impose the normalisation and stationarity restrictions selected by the
+% user (if any).
+if nargin == 3
+    isNormalised = flags(1);
+    isStationary = flags(2);
+    for i = 1:kern.numBlocks
+        kern.comp{i}.isNormalised = isNormalised;
+        kern.comp{i}.isStationary = isStationary;
+    end
+end
+
 % covGrad = randn(numData*kern.numBlocks);
 % covGrad = covGrad*covGrad';
 covGrad = ones(numData*kern.numBlocks);
@@ -97,13 +135,15 @@ epsilon = 1e-6;
 params = kernExtractParam(kern);
 origParams = params;
 for i = 1:length(params);
-  params = origParams;
-  params(i) = origParams(i) + epsilon;
-  kern = kernExpandParam(kern, params);
-  Lplus(i) = full(sum(sum(kernCompute(kern, x).*covGrad)));
-  params(i) = origParams(i) - epsilon;
-  kern = kernExpandParam(kern, params);
-  Lminus(i) = full(sum(sum(kernCompute(kern, x).*covGrad)));
+%     if isempty(find(ind1 == i))
+        params = origParams;
+        params(i) = origParams(i) + epsilon;
+        kern = kernExpandParam(kern, params);
+        Lplus(i) = full(sum(sum(kernCompute(kern, x).*covGrad)));
+        params(i) = origParams(i) - epsilon;
+        kern = kernExpandParam(kern, params);
+        Lminus(i) = full(sum(sum(kernCompute(kern, x).*covGrad)));
+%     end
 end
 params = origParams;
 kern = kernExpandParam(kern, params);
@@ -185,13 +225,15 @@ epsilon = 1e-6;
 Lplus = zeros(size(params));
 Lminus = zeros(size(params));
 for i = 1:length(params);
-  params = origParams;
-  params(i) = origParams(i) + epsilon;
-  kern = kernExpandParam(kern, params);
-  Lplus(i) = full(sum(sum(covGrad.*kernCompute(kern, x, x2))));
-  params(i) = origParams(i) - epsilon;
-  kern = kernExpandParam(kern, params);
-  Lminus(i) = full(sum(sum(covGrad.*kernCompute(kern, x, x2))));
+%     if isempty(find(ind1 == i))
+      params = origParams;
+      params(i) = origParams(i) + epsilon;
+      kern = kernExpandParam(kern, params);
+      Lplus(i) = full(sum(sum(covGrad.*kernCompute(kern, x, x2))));
+      params(i) = origParams(i) - epsilon;
+      kern = kernExpandParam(kern, params);
+      Lminus(i) = full(sum(sum(covGrad.*kernCompute(kern, x, x2))));
+%     end
 end
 params = origParams;
 kern = kernExpandParam(kern, params);

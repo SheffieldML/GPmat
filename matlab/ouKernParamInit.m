@@ -22,6 +22,11 @@ function kern = ouKernParamInit(kern)
 % part can be ignored simply setting kern.isStationary = true (by default
 % kern.isStationary = false).
 %
+% There is also a multidimensional version of this kernel which includes
+% only the stationary part.
+%
+% SEEALSO: dexpKernParamInit
+%
 % FORMAT
 % DESC initialises the Ornstein-Uhlenbeck (OU) kernel structure with some
 % default parameters.

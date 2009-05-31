@@ -7,9 +7,9 @@
 
 
 C      Check for proper number of arguments. 
-      IF (NRHS .NE. 3) THEN
-         CALL MEXERRMSGTXT('Four inputs required.')
-      ENDIF
+C      IF (NRHS .NE. 3) THEN
+C         CALL MEXERRMSGTXT('Four inputs required.')
+C      ENDIF
 
 C	  Check that input #1 is a scalar.
       M = MXGETM(PRHS(1))
