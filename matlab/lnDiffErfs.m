@@ -17,6 +17,8 @@ function [v, signs] = lnDiffErfs(x1, x2),
 %
 % COPYRIGHT : Antti Honkela, 2007, 2008
 %
+% MODIFICATIONS : David Luengo, 2009
+%
 % SEEALSO : gradLnDiffErfs
 
 % NDLUTIL
@@ -42,10 +44,12 @@ x2(I) = swap;
 
 % Case 1: arguments of different signs, no problems with loss of accuracy
 I1 = sign(x1) ~= sign(x2);
-% Case 2: both arguments are positive
+% Case 2: 1st argument positive and larger than 2nd
 I2 = (x1 > 0) & (x1 > x2) & ~I1;
-% Case 3: both arguments are negative
-I3 = ~I1 & ~I2;
+% Case 3: x1 = x2
+I3 = x1 == x2;
+% Case 3: 1st argument negative or x2 > x1
+I4 = ~I1 & ~I2 & ~I3;
 
 warnState = warning('query', 'MATLAB:log:logOfZero');
 warning('off', 'MATLAB:log:logOfZero');
@@ -53,9 +57,10 @@ v(I1) = log( erf(x1(I1)) - erf(x2(I1)) );
 v(I2) = log(erfcx(  x2(I2)) ...
 	    - erfcx(x1(I2)) .* exp(x2(I2).^2 - x1(I2).^2)) ...
 	- x2(I2).^2;
-v(I3) = log(erfcx(  -x1(I3)) ...
-	    - erfcx(-x2(I3)) .* exp(x1(I3).^2 - x2(I3).^2)) ...
-	- x1(I3).^2;
+v(I3) = -inf;
+v(I4) = log(erfcx(  -x1(I4)) ...
+	    - erfcx(-x2(I4)) .* exp(x1(I4).^2 - x2(I4).^2)) ...
+	- x1(I4).^2;
 warning(warnState.state, 'MATLAB:log:logOfZero');
 
 if nargout < 2,
