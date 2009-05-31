@@ -48,4 +48,5 @@ kern.transforms.index = [1 2 3];
 kern.transforms.type = optimiDefaultConstraint('positive');
 
 kern.isStationary = false;
+kern.isNormalised = false;
 kern.positiveTime = true;

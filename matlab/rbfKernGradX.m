@@ -18,6 +18,8 @@ function gX = rbfKernGradX(kern, X, X2)
 % SEEALSO : rbfKernParamInit, kernGradX, rbfKernDiagGradX
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
+%
+% MODIFICATIONS : Mauricio Alvarez, 2009, David Luengo, 2009
 
 % KERN
 
@@ -33,8 +35,11 @@ function gX = rbfKernGradXpoint(kern, x, X2)
 
 gX = zeros(size(X2));
 n2 = dist2(X2, x);
-wi2 = (.5 .* kern.inverseWidth);
+wi2 = (0.5 * kern.inverseWidth);
 rbfPart = kern.variance*exp(-n2*wi2);
 for i = 1:size(x, 2)
   gX(:, i) = kern.inverseWidth*(X2(:, i) - x(i)).*rbfPart;
+end
+if isfield(kern, 'isNormalised') && (kern.isNormalised == true)
+    gX = gX * sqrt(kern.inverseWidth/(2*pi));
 end

@@ -13,6 +13,8 @@ function k = simKernDiagCompute(kern, t)
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
 % MODIFICATIONS : Antti Honkela, 2008
+%
+% MODIFICATIONS : David Luengo, 2009
 
 % KERN
 
@@ -24,12 +26,17 @@ sigma = sqrt(2/kern.inverseWidth);
 t = t - kern.delay;
 halfSigmaD = 0.5*sigma*kern.decay;
 
-lnPart1 = lnDiffErfs(halfSigmaD + t/sigma, halfSigmaD);
-lnPart2 = lnDiffErfs(halfSigmaD, halfSigmaD - t/sigma);
+if (kern.isStationary == false)
+    lnPart1 = lnDiffErfs(halfSigmaD + t/sigma, halfSigmaD);
+    lnPart2 = lnDiffErfs(halfSigmaD, halfSigmaD - t/sigma);
+    h = exp(halfSigmaD*halfSigmaD + lnPart1)...
+        - exp(halfSigmaD*halfSigmaD-(2*kern.decay*t) + lnPart2);
+else
+    lnPart1 = lnDiffErfs(inf, halfSigmaD);
+    h = exp(halfSigmaD*halfSigmaD + lnPart1) * ones(size(t));
+end
 
-h = exp(halfSigmaD*halfSigmaD + lnPart1)...
-    - exp(halfSigmaD*halfSigmaD-(2*kern.decay*t) + lnPart2);
-
-k = 2*h;
-k = 0.5*k*sqrt(pi)*sigma;
-k = kern.variance*k/(2*kern.decay);
+k = kern.variance*h/(2*kern.decay);
+if ~isfield(kern, 'isNormalised') || (kern.isNormalised == false)
+    k = sqrt(pi)*sigma*k;
+end

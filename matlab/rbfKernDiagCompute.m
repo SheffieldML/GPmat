@@ -11,7 +11,13 @@ function k = rbfKernDiagCompute(kern, x)
 % SEEALSO : rbfKernParamInit, kernDiagCompute, kernCreate, rbfKernCompute
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
+%
+% MODIFICATIONS : Mauricio Alvarez, 2009, David Luengo, 2009
 
 % KERN
 
-k = repmat(kern.variance, size(x, 1), 1);
+if isfield(kern, 'isNormalised') && (kern.isNormalised == true)
+    k = repmat(kern.variance * sqrt(kern.inverseWidth/(2*pi)), size(x, 1), 1);
+else
+    k = repmat(kern.variance, size(x, 1), 1);
+end

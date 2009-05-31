@@ -1,4 +1,4 @@
-function kernRet = kernTest(kernType, numIn, tieParamNames);
+function kernRet = kernTest(kernType, numIn, tieParamNames, flags);
 
 % KERNTEST Run some tests on the specified kernel.
 % FORMAT
@@ -9,6 +9,13 @@ function kernRet = kernTest(kernType, numIn, tieParamNames);
 % ARG numIn : the number of input dimensions (default is 4).
 % ARG tieParamNames : cell array of regular expressions for parameter
 % names that should be tied (default is none).
+% ARG flags : vector with a series of binary flags indicating the type of
+% the kernel used. Currently there are only two flags indicating: (1) the
+% normalisation of the kernel; (2) its stationarity. Note that for some
+% kernels these flags may be pointless (e.g. there is not a normalised
+% version of the white kernel and it is always stationary). In these cases
+% the kernel computation should simply ignore the flags. By default they
+% are set to false.
 % RETURN kern : the kernel that was generated for the tests.
 % 
 % FORMAT
@@ -18,6 +25,13 @@ function kernRet = kernTest(kernType, numIn, tieParamNames);
 % ARG numIn : the number of input dimensions (default is 4).
 % ARG tieParamNames : cell array of regular expressions for parameter
 % names that should be tied (default is none).
+% ARG flags : vector with a series of binary flags indicating the type of
+% the kernel used. Currently there are only two flags indicating: (1) the
+% normalisation of the kernel; (2) its stationarity. Note that for some
+% kernels these flags may be pointless (e.g. there is not a normalised
+% version of the white kernel and it is always stationary). In these cases
+% the kernel computation should simply ignore the flags. By default they
+% are set to false.
 % RETURN kern : the kernel as it was used in the tests.
 % 
 % SEEALSO : kernCreate
@@ -35,6 +49,13 @@ if nargin < 2
 end
 if nargin < 3
   tieParamNames = {};
+end
+if nargin < 4
+    isNormalised = false;
+    isStationary = false;
+else
+    isNormalised = flags(1);
+    isStationary = flags(2);
 end
 numData = 20;
 
@@ -99,6 +120,14 @@ else
   params = params * paramPack';
   params = randn(size(params))./sqrt(randn(size(params)).^2);
   kern = kernExpandParam(kern, params * paramExpand');
+end
+% Setting the normalisation and stationarity of the kernel according to the
+% flags.
+if isfield(kern, 'isNormalised')
+    kern.isNormalised = isNormalised;
+end
+if isfield(kern, 'isStationary')
+    kern.isStationary = isStationary;
 end
 
 % Test for positive definiteness

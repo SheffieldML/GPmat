@@ -40,6 +40,8 @@ function g = rbfKernGradient(kern, x, varargin)
 % SEEALSO rbfKernParamInit, kernGradient, rbfKernDiagGradient, kernGradX
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006, 2009
+%
+% MODIFICATIONS : Mauricio Alvarez, 2009, David Luengo, 2009
 
 % KERN
 
@@ -51,8 +53,14 @@ else
   [k, sk, dist2xx] = rbfKernCompute(kern, x, varargin{1});
 end
 % if gK is cell then return cell of gs
-g(1, 1) = - .5*sum(sum(varargin{end}.*k.*dist2xx));
-g(1, 2) =  sum(sum(varargin{end}.*sk));
+if isfield(kern, 'isNormalised') && (kern.isNormalised == true)
+    g(1, 1) = (0.5*kern.variance/sqrt(2*pi)) * sum(sum(varargin{end} .* sk ...
+        .* (1/sqrt(kern.inverseWidth)-sqrt(kern.inverseWidth)*dist2xx)));
+    g(1, 2) = sqrt(kern.inverseWidth/(2*pi)) * sum(sum(varargin{end}.*sk));
+else
+    g(1, 1) = - 0.5 * sum(sum(varargin{end}.*k.*dist2xx));
+    g(1, 2) = sum(sum(varargin{end}.*sk));
+end
 %/~
 if any(isnan(g))
   warning('g is NaN')
