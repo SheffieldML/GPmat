@@ -49,7 +49,7 @@ decay2 = simKern2.decay;
 isStationary = (simKern1.isStationary == true) & (simKern2.isStationary == true);
 
 % Auxiliary constants and matrices
-c = variance1 * sensitivity1 * sensitivity2 / (decay1 + decay2);
+c = variance * sensitivity1 * sensitivity2 / (decay1 + decay2);
 T1 = repmat(t1, 1, size(t2, 1));
 T2 = repmat(t2.', size(t1, 1), 1);
 ind = (T1 < T2);
