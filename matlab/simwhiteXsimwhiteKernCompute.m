@@ -40,7 +40,7 @@ if simKern1.variance ~= simKern2.variance
 end
 
 % Parameters of the kernels required in the computation
-variance = simKern1.variance;
+variance1 = simKern1.variance;
 sensitivity1 = simKern1.sensitivity;
 sensitivity2 = simKern2.sensitivity;
 decay1 = simKern1.decay;

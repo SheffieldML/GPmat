@@ -32,4 +32,8 @@ function gX = noneKernGradX(kern, x, x2)
 
 % KERN
 
-gX = zeros(size(X2, 1), size(X2, 2), size(X, 1));
+if nargin < 3,
+    %covGrad = X2;
+    x2 = x;
+end
+gX = zeros(size(x2, 1), size(x2, 2), size(x, 1));
