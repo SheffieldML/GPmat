@@ -619,15 +619,15 @@ switch dataset
   end
     case 'ggToyCombined'
         try
-            load([baseDir 'toyMultigp1DCombined.mat']);
+            load([baseDir 'ggToyCombined.mat']);
         catch
-            noise = 0.5;
+            noise = 1;
             nout =5;
             nin = 2;
             media = zeros(1,5);
-            prec = [50 50 300 200 30];
+            prec = [50 10 300 100 30];
             sigma2_y = [1 1 5 5 2];
-            sens_y_noise = [2 2 2.5 10 1];
+            sens_y_noise = [1 2 2.5 10 1];
             prec_u = 100;
             sigma2_u = 1;
             N = 500;
@@ -714,8 +714,121 @@ switch dataset
             y{nout+2} = U(:,2);
             X{nout+1} = x2;
             X{nout+2} = x2;
-            save([baseDir 'toyMultigp1DCombined.mat'], 'X', 'y', 'XTest', 'yTest')
+            save([baseDir 'ggToyCombined.mat'], 'X', 'y', 'XTest', 'yTest')
         end
+    case 'ggToyCombinedMissing'
+        try
+            load([baseDir 'ggToyCombinedMissing.mat']);
+        catch
+            [X, y, XTest, yTest] = mapLoadData('ggToyCombined');
+            nout = 5;         
+            missingData = cell(nout,1);
+            missingData{1} = 37:90;
+            %missingData{3} = 108:148;
+            missingData{5} = 147:184;
+            for k =1:nout,
+                X{k}(missingData{k},:)= [];
+                y{k}(missingData{k}) = [];               
+            end
+            save([baseDir 'ggToyCombinedMissing.mat'], 'X', 'y', 'XTest', 'yTest')
+        end
+    case 'simToyCombined'
+        try
+            load([baseDir 'simToyMultigp1DCombined.mat']);
+        catch
+            noise = 1;
+            nout =5;
+            nin = 2;
+            decay = [0.3 0.8 1.2 0.1 1.5];
+            variance = [0.5 1 2.8 1.5 2];
+            sensitivity = [1 2 2.5 3 0.5];
+            inverseWidth = 100;
+            N = 500;
+            N2 = 100;
+            x = linspace(-1,1,N)';
+            x2 = linspace(-1,1,N2)';
+            Kyy = cell(nout);
+            simKern1.inputDimension = size(x,2);
+            simKern1 = simKernParamInit(simKern1);
+            simKern1.inverseWidth = inverseWidth;
+            simwhiteKern1.inputDimension =size(x,2);
+            simwhiteKern1 = simwhiteKernParamInit(simwhiteKern1);
+            simwhiteKern1.variance = noise;
+            simKern2.inputDimension = size(x,2);
+            simKern2 = simKernParamInit(simKern2);
+            simKern2.inverseWidth = inverseWidth;
+            simwhiteKern2.inputDimension = size(x,2);
+            simwhiteKern2 = simwhiteKernParamInit(simwhiteKern2);
+            simwhiteKern2.variance = noise;
+            for i = 1:nout,
+                simKern1.variance = variance(i);
+                simKern1.decay = decay(i);
+                simwhiteKern1.decay = decay(i);
+                simwhiteKern1.sensitivity = sensitivity(i);
+                for j = 1:nout,
+                    simKern2.variance = variance(j);
+                    simKern2.decay = decay(j);                    
+                    simwhiteKern2.decay = decay(j);
+                    simwhiteKern2.sensitivity = sensitivity(j);
+                    Kyy{i,j} = simXsimKernCompute(simKern1, simKern2, x) + ...
+                        simwhiteXsimwhiteKernCompute(simwhiteKern1, simwhiteKern2, x);
+                end
+            end
+            Kyu = cell(nout, 2);
+            rbfKern.inputDimension = size(x,2);
+            rbfKern = rbfKernParamInit(rbfKern);
+            rbfKern.inverseWidth = inverseWidth;
+            for i = 1:nout,
+                simKern1.variance = variance(i);
+                simKern1.decay = decay(i);                
+                Kyu{i,1} = simXrbfKernCompute(simKern1, rbfKern, x, x2);
+            end
+            for i = 1:nout,
+                simwhiteKern1.decay = decay(i);
+                simwhiteKern1.sensitivity = sensitivity(i);
+                Kyu{i,2} = simwhiteXwhiteKernCompute(simwhiteKern1, x, x2);
+            end
+            Kuu = cell(2,1);
+            Kuu{1} = rbfKernCompute(rbfKern, x2);
+            Kuu{2} = noise*eye(length(x2));
+            startVal = 1;
+            endVal = 0;
+            KuuMat = zeros(2*length(x2));
+            for k = 1:nin,
+                endVal = endVal + length(x2);
+                KuuMat(startVal:endVal,startVal:endVal) = Kuu{k};
+                startVal = endVal + 1;
+            end
+            K = [KuuMat cell2mat(Kyu)';cell2mat(Kyu) cell2mat(Kyy)];
+            yu = gsamp(zeros(size(K,1),1), K, 1);
+            u = yu(1:2*size(x2,1));
+            y = yu(2*size(x2,1)+1:end);
+            U = reshape(u,size(x2,1),nin);
+            Y = reshape(y,size(x,1),nout);
+            for k=1:nout,
+                Y(:,k) = Y(:,k) + 0.1*sqrt(var(Y(:,k)))*randn(size(Y(:,k),1),1);
+            end
+            ntrainx =200;
+            maxl = length(x);
+            X = cell(1,nout+nin);
+            y = cell(1,nout+nin);
+            yTest = cell(1,nout);
+            indx = randperm(maxl);
+            pindx = sort(indx(1:ntrainx));
+            for k =1:nout,
+                X{k} = x(pindx,:);
+                y{k} = Y(pindx,k);
+                yTest{k} = Y(indx(ntrainx+1:end),k);
+            end
+            XTest = x(indx(ntrainx+1:end),:)';
+            % Append the latent functions
+            y{nout+1} = U(:,1);
+            y{nout+2} = U(:,2);
+            X{nout+1} = x2;
+            X{nout+2} = x2;
+            save([baseDir 'simToyCombined.mat'], 'X', 'y', 'XTest', 'yTest')
+        end        
+        
  case 'juraDataCd'
   try
     load([baseDir 'juraDataCd.mat']);
