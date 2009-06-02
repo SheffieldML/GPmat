@@ -310,7 +310,9 @@ mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     
     if (v1 * v2 < 0)
       *out++ = log(erf(v1) - erf(v2));
-    else if (v2 > 0)
+    else if (v1 == v2)
+      *out++ = -mxGetInf();
+    else if (v1 > 0)
       *out++ = log(calerf(v2, 2) - calerf(v1, 2) * exp(v2*v2 - v1*v1)) - v2*v2;
     else
       *out++ = log(calerf(-v1, 2) - calerf(-v2, 2) * exp(v1*v1 - v2*v2)) - v1*v1;
