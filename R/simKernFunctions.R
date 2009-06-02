@@ -36,31 +36,9 @@ simXrbfKernCompute <- function (simKern, rbfKern, t1, t2=t1) {
   invSigmaDiffT <- 1/sigma*diffT
   halfSigmaDi <- 0.5*sigma*simKern$decay
 
-  lnPart1 <- matrix(0, dim1, dim2)
+  lnPart <- lnDiffErfs(halfSigmaDi + t2Mat/sigma, halfSigmaDi - invSigmaDiffT)
 
-  x1 <- Re(halfSigmaDi - invSigmaDiffT)
-  x2 <- Re(halfSigmaDi + t2Mat/sigma)
-
-  ## case 1: different signs
-  stat1 <- sign(x1)!=sign(x2)
-  I1 <- grep(TRUE, stat1)
-  ## case 2:
-  stat2 <- (x1>0) & !stat1
-  I2 <- grep(TRUE, stat2)
-  ## case 3:
-  stat3 <- !stat1 & !stat2
-  I3 <- grep(TRUE, stat3)
-
-  options(warn=-1)
-  if ( length(I1) > 0 )
-    lnPart1[I1] <- expTransform(erfcf(x1[I1]) - erfcf(x2[I1]), "xtoa")
-  if ( length(I2) > 0 )
-    lnPart1[I2] <- expTransform(erfcx(x1[I2]) - exp(x1[I2]^2 - x2[I2]^2)*erfcx(x2[I2]), "xtoa") - x1[I2]^2
-  if ( length(I3) > 0 )
-    lnPart1[I3] <- expTransform(-exp(x2[I3]^2 - x1[I3]^2)*erfcx(-x1[I3]), "xtoa") + x2[I3]^2
-  options(warn=0)
-
-  K <- exp(halfSigmaDi*halfSigmaDi - simKern$decay*diffT + lnPart1)
+  K <- lnPart[[2]] * exp(halfSigmaDi*halfSigmaDi - simKern$decay*diffT + lnPart[[1]])
 
   K <- 0.5*sqrt(simKern$variance)*sqrt(rbfKern$variance)*K*sqrt(pi)*sigma
 
@@ -153,20 +131,25 @@ simComputeH <-  function (t1, t2, Di, Dj, deltai, deltaj, sigma, option=1) {
   halfSigmaDi <- 0.5*sigma*Di
   h <- matrix(0, dim1, dim2)
 
-  lnPart1 <- lnDiffErfs(halfSigmaDi + t2Mat/sigma, halfSigmaDi - invSigmaDiffT)
-  lnPart2 <- lnDiffErfs(halfSigmaDi, halfSigmaDi - t1Mat/sigma)
+  lnPart1_full <- lnDiffErfs(halfSigmaDi + t2Mat/sigma, halfSigmaDi - invSigmaDiffT)
+  lnPart2_full <- lnDiffErfs(halfSigmaDi, halfSigmaDi - t1Mat/sigma)
 
-  h <- exp(halfSigmaDi*halfSigmaDi-Di*diffT+lnPart1-log(Di+Dj)) - exp(halfSigmaDi*halfSigmaDi-Di*t1Mat-Dj*t2Mat+lnPart2-log(Di + Dj))
+  lnPart1 <- lnPart1_full[[1]]
+  signs1 <- lnPart1_full[[2]]
+  lnPart2 <- lnPart2_full[[1]]
+  signs2 <- lnPart2_full[[2]]
+
+  h <- signs1 * exp(halfSigmaDi*halfSigmaDi-Di*diffT+lnPart1-log(Di+Dj)) - signs2 * exp(halfSigmaDi*halfSigmaDi-Di*t1Mat-Dj*t2Mat+lnPart2-log(Di + Dj))
 
   sigma2 <- sigma*sigma
 
   if ( option == 1 ) {
     return (h)
   } else {
-    dhdDi <- (0.5*Di*sigma2*(Di+Dj)-1)*h + (-diffT*exp(halfSigmaDi*halfSigmaDi-Di*diffT+lnPart1) + t1Mat*exp(halfSigmaDi*halfSigmaDi-Di*t1Mat-Dj*t2Mat+lnPart2)) + sigma/sqrt(pi)*(-exp(-diffT*diffT/sigma2)+exp(-t2Mat*t2Mat/sigma2-Di*t1Mat)+exp(-t1Mat*t1Mat/sigma2-Dj*t2Mat)-exp(-(Di*t1Mat+Dj*t2Mat)))
+    dhdDi <- (0.5*Di*sigma2*(Di+Dj)-1)*h + (-diffT*signs1*exp(halfSigmaDi*halfSigmaDi-Di*diffT+lnPart1) + t1Mat*signs2*exp(halfSigmaDi*halfSigmaDi-Di*t1Mat-Dj*t2Mat+lnPart2)) + sigma/sqrt(pi)*(-exp(-diffT*diffT/sigma2)+exp(-t2Mat*t2Mat/sigma2-Di*t1Mat)+exp(-t1Mat*t1Mat/sigma2-Dj*t2Mat)-exp(-(Di*t1Mat+Dj*t2Mat)))
     dhdDi <- Re(dhdDi/(Di+Dj))
 
-    dhdDj <- t2Mat*exp(halfSigmaDi*halfSigmaDi-(Di*t1Mat+Dj*t2Mat)+lnPart2)-h
+    dhdDj <- t2Mat*signs2*exp(halfSigmaDi*halfSigmaDi-(Di*t1Mat+Dj*t2Mat)+lnPart2)-h
     dhdDj <- Re(dhdDj/(Di+Dj))
 
     dhdsigma <- 0.5*Di*Di*sigma*h + 2/(sqrt(pi)*(Di+Dj))*((-diffT/sigma2-Di/2)*exp(-diffT*diffT/sigma2) + (-t2Mat/sigma2+Di/2)*exp(-t2Mat*t2Mat/sigma2-Di*t1Mat) - (-t1Mat/sigma2-Di/2)*exp(-t1Mat*t1Mat/sigma2-Dj*t2Mat) - Di/2*exp(-(Di*t1Mat+Dj*t2Mat)))
@@ -308,10 +291,15 @@ simKernDiagCompute <- function (kern, t) {
   t <- t - kern$delay
   halfSigmaD <- 0.5*sigma*kern$decay
 
-  lnPart1 <- lnDiffErfs(halfSigmaD + t/sigma, halfSigmaD)
-  lnPart2 <- lnDiffErfs(halfSigmaD, halfSigmaD - t/sigma)
+  lnPart1_full <- lnDiffErfs(halfSigmaD + t/sigma, halfSigmaD)
+  lnPart2_full <- lnDiffErfs(halfSigmaD, halfSigmaD - t/sigma)
 
-  h <- exp(halfSigmaD*halfSigmaD + lnPart1)- exp(halfSigmaD*halfSigmaD-(2*kern$decay*t) + lnPart2)
+  lnPart1 <- lnPart1_full[[1]]
+  signs1 <- lnPart1_full[[2]]
+  lnPart2 <- lnPart2_full[[1]]
+  signs2 <- lnPart2_full[[2]]
+
+  h <- signs1 * exp(halfSigmaD*halfSigmaD + lnPart1) - signs2 * exp(halfSigmaD*halfSigmaD-(2*kern$decay*t) + lnPart2)
 
   # h <- exp(halfSigmaD*halfSigmaD)*(erff(-halfSigmaD)+erff(t/sigma+halfSigmaD))-exp(halfSigmaD*halfSigmaD-(2*kern$decay*t))*(erff(t/sigma-halfSigmaD)+erff(halfSigmaD))
 

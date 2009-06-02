@@ -60,19 +60,24 @@ disimComputeH <-  function (t1, t2, delta, Dj, Dk, l, option=1) {
   halfLDelta <- 0.5*l*delta
   h <- matrix(0, dim1, dim2)
 
-  lnPart1 <- lnDiffErfs(halfLDelta - t1Mat/l, halfLDelta)
-  lnPart2 <- lnDiffErfs(halfLDelta + t2Mat/l, halfLDelta-invLDiffT)
+  lnPart1_f <- lnDiffErfs(halfLDelta - t1Mat/l, halfLDelta)
+  lnPart2_f <- lnDiffErfs(halfLDelta + t2Mat/l, halfLDelta-invLDiffT)
 
-  lnCommon <- halfLDelta^2-complexLog(2*delta)-Dk*t2Mat-delta*t1Mat-complexLog(Dj-delta)
+  lnPart1 <- lnPart1_f[[1]]
+  signs1 <- lnPart1_f[[2]]
+  lnPart2 <- lnPart2_f[[1]]
+  signs2 <- lnPart2_f[[2]]
 
-  lnFact1a1 <- complexLog(Dk + delta) + (Dk-delta)*t2Mat
-  lnFact1a2 <- complexLog(2*delta)
+  lnCommon <- halfLDelta^2-log(2*delta)-Dk*t2Mat-delta*t1Mat-complexLog(Dj-delta)
+
+  lnFact1a1 <- log(Dk + delta) + (Dk-delta)*t2Mat
+  lnFact1a2 <- log(2*delta)
   lnFact1b <- complexLog(Dk^2 - delta^2)
 
   lnFact2a <- (Dk + delta)*t2Mat
-  lnFact2b <- complexLog(Dk + delta)
+  lnFact2b <- log(Dk + delta)
 
-  h <- exp(lnCommon + lnFact1a1 - lnFact1b + lnPart1) - exp(lnCommon + lnFact1a2 - lnFact1b + lnPart1) + exp(lnCommon + lnFact2a - lnFact2b + lnPart2)
+  h <- signs1 * exp(lnCommon + lnFact1a1 - lnFact1b + lnPart1) - signs1 * exp(lnCommon + lnFact1a2 - lnFact1b + lnPart1) + signs2 * exp(lnCommon + lnFact2a - lnFact2b + lnPart2)
 
   h <- Re(h)
 
@@ -86,7 +91,7 @@ disimComputeH <-  function (t1, t2, delta, Dj, Dk, l, option=1) {
 
     dlnPart1 <- l/sqrt(pi)*(exp(-(halfLDelta - t1Mat/l)^2 + m1) - exp(-halfLDelta^2 + m1))
     dlnPart2 <- l/sqrt(pi)*(exp(-(halfLDelta + t2Mat/l)^2 + m2) - exp(-(halfLDelta - invLDiffT)^2 + m2))
-    dh_ddelta <- (l*halfLDelta - t1Mat + 1/(Dj-delta)-1/delta)*h + exp(lnCommon + lnFact1a1 - lnFact1b - m1)*dlnPart1 - exp(lnCommon + lnFact1a2 - lnFact1b - m1)*dlnPart1 + exp(lnCommon + lnFact2a - lnFact2b - m2)*dlnPart2 + exp(lnCommon + lnPart1 + lnFact1a1 - lnFact1b)*(1/(Dk-delta) - t2Mat) - exp(lnCommon + lnPart1 + complexLog(2*(Dk^2 + delta^2)) -2*lnFact1b) + (t2Mat - 1/(Dk + delta))*exp((Dk + delta)*t2Mat + lnCommon + lnPart2 - complexLog(Dk + delta))
+    dh_ddelta <- (l*halfLDelta - t1Mat + 1/(Dj-delta)-1/delta)*h + exp(lnCommon + lnFact1a1 - lnFact1b - m1)*dlnPart1 - exp(lnCommon + lnFact1a2 - lnFact1b - m1)*dlnPart1 + exp(lnCommon + lnFact2a - lnFact2b - m2)*dlnPart2 + signs1 * exp(lnCommon + lnPart1 + lnFact1a1 - lnFact1b)*(1/(Dk-delta) - t2Mat) - signs1 * exp(lnCommon + lnPart1 + log(2*(Dk^2 + delta^2)) -2*lnFact1b) + (t2Mat - 1/(Dk + delta))*signs2*exp((Dk + delta)*t2Mat + lnCommon + lnPart2 - log(Dk + delta))
     dh_ddelta <- Re(dh_ddelta)
 
     disimH <- list(h=h, dh_ddelta=dh_ddelta)
@@ -97,7 +102,7 @@ disimComputeH <-  function (t1, t2, delta, Dj, Dk, l, option=1) {
       disimH <- list(h=h, dh_ddelta=dh_ddelta, dh_dD_j=dh_dD_j)
 
       if ( option > 3 ) {
-        dh_dD_k <- -t2Mat*h + exp(lnCommon + lnPart1 + lnFact1a1 - lnFact1b) * (t2Mat - 1/(Dk - delta)) - exp(lnCommon + lnPart1) * (-4*delta*Dk / (Dk^2 - delta^2)^2) + (t2Mat - 1/(Dk + delta)) * exp(lnFact2a - lnFact2b + lnCommon + lnPart2)
+        dh_dD_k <- -t2Mat*h + signs1 * exp(lnCommon + lnPart1 + lnFact1a1 - lnFact1b) * (t2Mat - 1/(Dk - delta)) - signs1 * exp(lnCommon + lnPart1) * (-4*delta*Dk / (Dk^2 - delta^2)^2) + (t2Mat - 1/(Dk + delta)) * signs2 * exp(lnFact2a - lnFact2b + lnCommon + lnPart2)
         dh_dD_k <- Re(dh_dD_k)
 
         disimH <- list(h=h, dh_ddelta=dh_ddelta, dh_dD_j=dh_dD_j, dh_dD_k=dh_dD_k)
@@ -130,18 +135,23 @@ disimComputeHPrime <-  function (t1, t2, delta, Dj, Dk, l, option=1) {
   halfLD_k <- 0.5*l*Dk
   h <- matrix(0, dim1, dim2)
 
-  lnPart1 <- lnDiffErfs(halfLD_k - t2Mat/l, halfLD_k)
-  lnPart2 <- lnDiffErfs(halfLD_k + t1Mat/l, halfLD_k+invLDiffT)
+  lnPart1_f <- lnDiffErfs(halfLD_k - t2Mat/l, halfLD_k)
+  lnPart2_f <- lnDiffErfs(halfLD_k + t1Mat/l, halfLD_k+invLDiffT)
 
-  lnCommon <- halfLD_k^2 - Dj*t1Mat - Dk*t2Mat - complexLog(delta^2-Dk^2) - complexLog(Dj+Dk)
+  lnPart1 <- lnPart1_f[[1]]
+  signs1 <- lnPart1_f[[2]]
+  lnPart2 <- lnPart2_f[[1]]
+  signs2 <- lnPart2_f[[2]]
 
-  lnFact1a1 <- complexLog(Dk + delta)
-  lnFact1a2 <- complexLog(Dj + Dk) + (Dj-delta)*t1Mat
+  lnCommon <- halfLD_k^2 - Dj*t1Mat - Dk*t2Mat - complexLog(delta^2-Dk^2) - log(Dj+Dk)
+
+  lnFact1a1 <- log(Dk + delta)
+  lnFact1a2 <- log(Dj + Dk) + (Dj-delta)*t1Mat
   lnFact1b <- complexLog(delta-Dj)
 
   lnFact2a <- (Dj + Dk) * t1Mat
 
-  h <- exp(lnCommon + lnFact1a1 - lnFact1b + lnPart1) - exp(lnCommon + lnFact1a2 - lnFact1b + lnPart1) + exp(lnCommon + lnFact2a + lnPart2)
+  h <- signs1 * exp(lnCommon + lnFact1a1 - lnFact1b + lnPart1) - signs1 * exp(lnCommon + lnFact1a2 - lnFact1b + lnPart1) + signs2 * exp(lnCommon + lnFact2a + lnPart2)
 
   h <- Re(h)
 
@@ -150,12 +160,12 @@ disimComputeHPrime <-  function (t1, t2, delta, Dj, Dk, l, option=1) {
   if ( option == 1 ) {
     return (h)
   } else {
-    dh_ddelta <- -2*delta/(delta^2-Dk^2)*h - exp(lnCommon + lnPart1 + complexLog(Dk + Dj) - 2*lnFact1b) - exp(lnCommon + lnPart1 + lnFact1a2 - lnFact1b)*(-t1Mat - 1/(delta - Dj))
+    dh_ddelta <- -2*delta/(delta^2-Dk^2)*h - signs1 * exp(lnCommon + lnPart1 + log(Dk + Dj) - 2*lnFact1b) - signs1 * exp(lnCommon + lnPart1 + lnFact1a2 - lnFact1b)*(-t1Mat - 1/(delta - Dj))
     dh_ddelta <- Re(dh_ddelta)
     disimH <- list(h=h, dh_ddelta=dh_ddelta)
 
     if ( option > 2 ) {
-      dh_dD_j <- (-t1Mat - 1 /(Dj + Dk))*h + exp(lnCommon + lnFact1a1 - lnFact1b + lnPart1)*(1/(delta - Dj)) - exp(lnCommon + lnFact1a2 - lnFact1b + lnPart1)*(1/(Dj + Dk) + t1Mat + 1/(delta - Dj)) + t1Mat*exp(lnCommon + lnPart2 + lnFact2a)
+      dh_dD_j <- (-t1Mat - 1 /(Dj + Dk))*h + signs1 * exp(lnCommon + lnFact1a1 - lnFact1b + lnPart1)*(1/(delta - Dj)) - signs1 * exp(lnCommon + lnFact1a2 - lnFact1b + lnPart1)*(1/(Dj + Dk) + t1Mat + 1/(delta - Dj)) + t1Mat*signs2*exp(lnCommon + lnPart2 + lnFact2a)
       dh_dD_j <- Re(dh_dD_j)
 
       disimH <- list(h=h, dh_ddelta=dh_ddelta, dh_dD_j=dh_dD_j)
@@ -165,7 +175,7 @@ disimComputeHPrime <-  function (t1, t2, delta, Dj, Dk, l, option=1) {
 
         dlnPart1 <- l/sqrt(pi) * (exp(-(halfLD_k - t2Mat/l)^2 + m1) - exp(-halfLD_k^2 + m1))
         dlnPart2 <- l/sqrt(pi) * (exp(-(halfLD_k + t1Mat/l)^2 + m2) - exp(-(halfLD_k + invLDiffT)^2 + m2))
-        dh_dD_k <- (l*halfLD_k + 2*Dk / (delta^2 - Dk^2) + (-t2Mat - 1/(Dj + Dk)))*h + exp(lnCommon + lnFact1a1 - lnFact1b - m1) * dlnPart1 - exp(lnCommon + lnFact1a2 - lnFact1b - m1) * dlnPart1 + exp(lnCommon + lnFact2a - m2) * dlnPart2 + exp(lnCommon + lnFact1a1 - lnFact1b + lnPart1) * (1/(Dk + delta)) - exp(lnCommon + lnFact1a2 - lnFact1b + lnPart1) *(1/(Dj + Dk)) + exp(lnCommon + lnPart2 + complexLog(t1Mat) + lnFact2a)
+        dh_dD_k <- (l*halfLD_k + 2*Dk / (delta^2 - Dk^2) + (-t2Mat - 1/(Dj + Dk)))*h + exp(lnCommon + lnFact1a1 - lnFact1b - m1) * dlnPart1 - exp(lnCommon + lnFact1a2 - lnFact1b - m1) * dlnPart1 + exp(lnCommon + lnFact2a - m2) * dlnPart2 + signs1 * exp(lnCommon + lnFact1a1 - lnFact1b + lnPart1) * (1/(Dk + delta)) - signs1 * exp(lnCommon + lnFact1a2 - lnFact1b + lnPart1) *(1/(Dj + Dk)) + signs2 * exp(lnCommon + lnPart2 + complexLog(t1Mat) + lnFact2a)
         dh_dD_k <- Re(dh_dD_k)
 
         disimH <- list(h=h, dh_ddelta=dh_ddelta, dh_dD_j=dh_dD_j, dh_dD_k=dh_dD_k)
@@ -265,10 +275,15 @@ disimXrbfKernCompute <- function (disimKern, rbfKern, t1, t2=t1) {
   halfLDelta <- 0.5*l*delta
 
   lnCommon <- - complexLog(delta - Di)
-  lnPart1 <- lnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l)
-  lnPart2 <- lnDiffErfs(halfLD_i + t2Mat/l, halfLD_i - invLDiffT)
+  lnPart1_f <- lnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l)
+  lnPart2_f <- lnDiffErfs(halfLD_i + t2Mat/l, halfLD_i - invLDiffT)
 
-  K <- exp(lnCommon + halfLDelta^2 - delta * diffT + lnPart1) + exp(lnCommon + halfLD_i^2 - Di * diffT + lnPart2)
+  lnPart1 <- lnPart1_f[[1]]
+  signs1 <- lnPart1_f[[2]]
+  lnPart2 <- lnPart2_f[[1]]
+  signs2 <- lnPart2_f[[2]]
+
+  K <- signs1 * exp(lnCommon + halfLDelta^2 - delta * diffT + lnPart1) + signs2 * exp(lnCommon + halfLD_i^2 - Di * diffT + lnPart2)
 
   K <- 0.5*sqrt(disimKern$variance)*sqrt(disimKern$di_variance)*sqrt(rbfKern$variance)*K*sqrt(pi)*l
   K <- Re(K)
@@ -308,28 +323,44 @@ disimXsimKernCompute <- function (disimKern, simKern, t1, t2=t1) {
   halfLD_i <- 0.5*l*Di
   halfLDelta <- 0.5*l*delta
 
-  lnCommon1 <- - complexLog(2*delta) -delta * t2Mat - Di * t1Mat + halfLDelta^2
+  lnCommon1 <- - log(2*delta) -delta * t2Mat - Di * t1Mat + halfLDelta^2
 
-  lnFact1 <- complexLog(2 * delta) - complexLog(delta^2 - Di^2)
-  lnPart1 <- lnDiffErfs(halfLDelta - t2Mat/l, halfLDelta)
+  lnFact1 <- log(2 * delta) - complexLog(delta^2 - Di^2)
+  lnPart1_f <- lnDiffErfs(halfLDelta - t2Mat/l, halfLDelta)
+
+  lnPart1 <- lnPart1_f[[1]]
+  signs1 <- lnPart1_f[[2]]
 
   lnFact2 <- (Di - delta) * t1Mat - complexLog(delta - Di)
-  lnPart2a <- lnDiffErfs(halfLDelta, halfLDelta - t1Mat/l)
-  lnPart2b <- lnDiffErfs(halfLDelta, halfLDelta - t2Mat/l)
+  lnPart2a_f <- lnDiffErfs(halfLDelta, halfLDelta - t1Mat/l)
+  lnPart2b_f <- lnDiffErfs(halfLDelta, halfLDelta - t2Mat/l)
 
-  lnFact3 <- (Di + delta) * t1Mat - complexLog(delta + Di)
-  lnPart3 <- lnDiffErfs(halfLDelta + t1Mat/l, halfLDelta + invLDiffT)
+  lnPart2a <- lnPart2a_f[[1]]
+  signs2a <- lnPart2a_f[[2]]
+  lnPart2b <- lnPart2b_f[[1]]
+  signs2b <- lnPart2b_f[[2]]
+
+  lnFact3 <- (Di + delta) * t1Mat - log(delta + Di)
+  lnPart3_f <- lnDiffErfs(halfLDelta + t1Mat/l, halfLDelta + invLDiffT)
+  lnPart3 <- lnPart3_f[[1]]
+  signs3 <- lnPart3_f[[2]]
 
   lnFact4 <- 2*delta*t2Mat + (Di - delta) * t1Mat - complexLog(delta - Di)
-  lnPart4 <- lnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l)
+  lnPart4_f <- lnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l)
+  lnPart4 <- lnPart4_f[[1]]
+  signs4 <- lnPart4_f[[2]]
 
   lnCommon2 <- - complexLog(delta^2 - Di^2) - delta * t2Mat - Di * t1Mat + halfLD_i^2
-  lnPart5 <- lnDiffErfs(halfLD_i - t1Mat/l, halfLD_i)
+  lnPart5_f <- lnDiffErfs(halfLD_i - t1Mat/l, halfLD_i)
+  lnPart5 <- lnPart5_f[[1]]
+  signs5 <- lnPart5_f[[2]]
 
   lnFact6 <- (Di + delta) * t2Mat
-  lnPart6 <- lnDiffErfs(halfLD_i + t2Mat/l, halfLD_i - invLDiffT)
+  lnPart6_f <- lnDiffErfs(halfLD_i + t2Mat/l, halfLD_i - invLDiffT)
+  lnPart6 <- lnPart6_f[[1]]
+  signs6 <- lnPart6_f[[2]]
 
-  K <- exp(lnCommon1 + lnFact1 + lnPart1) +exp(lnCommon1 + lnFact2 + lnPart2a) +exp(lnCommon1 + lnFact2 + lnPart2b) +exp(lnCommon1 + lnFact3 + lnPart3) +exp(lnCommon1 + lnFact4 + lnPart4) +exp(lnCommon2 + lnPart5) +exp(lnCommon2 + lnFact6 + lnPart6)
+  K <- signs1 * exp(lnCommon1 + lnFact1 + lnPart1) +signs2a*exp(lnCommon1 + lnFact2 + lnPart2a) +signs2b*exp(lnCommon1 + lnFact2 + lnPart2b) +signs3*exp(lnCommon1 + lnFact3 + lnPart3) +signs4*exp(lnCommon1 + lnFact4 + lnPart4) +signs5*exp(lnCommon2 + lnPart5) +signs6*exp(lnCommon2 + lnFact6 + lnPart6)
   K <- 0.5*K*sqrt(pi)*l
   K <- disimKern$di_variance*sqrt(disimKern$variance)*K
   K <- Re(K)
@@ -349,25 +380,34 @@ disimKernDiagCompute <- function (kern, t) {
   halfLD <- 0.5*l*D
   halfLDelta <- 0.5*l*delta
 
-  lnPart1 <- lnDiffErfs(halfLDelta - t/l, halfLDelta)
-  lnPart2 <- lnDiffErfs(halfLDelta + t/l, halfLDelta)
+  lnPart1_f <- lnDiffErfs(halfLDelta - t/l, halfLDelta)
+  lnPart2_f <- lnDiffErfs(halfLDelta + t/l, halfLDelta)
 
-  lnCommon <- halfLDelta ^ 2 -(D+delta)*t - complexLog(2*delta) - complexLog(D-delta)
-  lnFact1a <- (D - delta) * t + complexLog(D + delta) - complexLog(D^2 - delta^2)
-  lnFact1b <- complexLog(2*delta) - complexLog(D^2 - delta^2)
-  lnFact2 <- (D+delta)*t - complexLog(D + delta)
+  lnPart1 <- lnPart1_f[[1]]
+  signs1 <- lnPart1_f[[2]]
+  lnPart2 <- lnPart2_f[[1]]
+  signs2 <- lnPart2_f[[2]]
 
-  h <- exp(lnCommon + lnFact1a + lnPart1) - exp(lnCommon + lnFact1b + lnPart1) + exp(lnCommon + lnFact2 + lnPart2)
+  lnCommon <- halfLDelta ^ 2 -(D+delta)*t - log(2*delta) - complexLog(D-delta)
+  lnFact1a <- (D - delta) * t + log(D + delta) - complexLog(D^2 - delta^2)
+  lnFact1b <- log(2*delta) - complexLog(D^2 - delta^2)
+  lnFact2 <- (D+delta)*t - log(D + delta)
 
-  lnPart1p <- lnDiffErfs(halfLD - t/l, halfLD)
-  lnPart2p <- lnDiffErfs(halfLD + t/l, halfLD)
+  h <- signs1 * exp(lnCommon + lnFact1a + lnPart1) - signs1 * exp(lnCommon + lnFact1b + lnPart1) + signs2 * exp(lnCommon + lnFact2 + lnPart2)
 
-  lnCommonp <- halfLD^2 - 2*D*t - complexLog(2*D) - complexLog(delta^2 - D^2)
-  lnFact1ap <- complexLog(D + delta) - complexLog(delta - D)
-  lnFact1bp <- complexLog(2*D) + (D-delta)*t - complexLog(delta - D)
+  lnPart1p_f <- lnDiffErfs(halfLD - t/l, halfLD)
+  lnPart2p_f <- lnDiffErfs(halfLD + t/l, halfLD)
+  lnPart1p <- lnPart1p_f[[1]]
+  signs1p <- lnPart1p_f[[2]]
+  lnPart2p <- lnPart2p_f[[1]]
+  signs2p <- lnPart2p_f[[2]]
+
+  lnCommonp <- halfLD^2 - 2*D*t - log(2*D) - complexLog(delta^2 - D^2)
+  lnFact1ap <- log(D + delta) - complexLog(delta - D)
+  lnFact1bp <- log(2*D) + (D-delta)*t - complexLog(delta - D)
   lnFact2p <- 2*D*t
 
-  hp <- exp(lnCommonp + lnFact1ap + lnPart1p) - exp(lnCommonp + lnFact1bp + lnPart1p) + exp(lnCommonp + lnFact2p + lnPart2p)
+  hp <- signs1p * exp(lnCommonp + lnFact1ap + lnPart1p) - signs1p * exp(lnCommonp + lnFact1bp + lnPart1p) + signs2p * exp(lnCommonp + lnFact2p + lnPart2p)
 
   k <- 2*Re(h+hp)
   k <- 0.5*k*sqrt(pi)*l
@@ -516,8 +556,12 @@ disimXrbfKernGradient <- function (disimKern, rbfKern, t1, t2, covGrad) {
   prefact <- C_0 * C_i * C_j * sqrt(pi)/2 * l
 
   lnCommon <- - complexLog(delta - D_i)
-  lnPart1 <- lnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l)
-  lnPart2 <- lnDiffErfs(halfLD_i + t2Mat/l, halfLD_i - invLDiffT)
+  lnPart1_f <- lnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l)
+  lnPart2_f <- lnDiffErfs(halfLD_i + t2Mat/l, halfLD_i - invLDiffT)
+  lnPart1 <- lnPart1_f[[1]]
+  signs1 <- lnPart1_f[[2]]
+  lnPart2 <- lnPart2_f[[1]]
+  signs2 <- lnPart2_f[[2]]
 
   lnFact1 <- halfLDelta^2 - delta * diffT
   lnFact2 <- halfLD_i^2 - D_i * diffT
@@ -530,10 +574,10 @@ disimXrbfKernGradient <- function (disimKern, rbfKern, t1, t2, covGrad) {
   dlnPart2 <- gradln2$dlnPart
   m2 <- gradln2$m
 
-  dK_dD <- k * (1/(delta-D_i)) + prefact * ((l*halfLD_i - diffT) * exp(lnCommon + lnFact2 + lnPart2) + dlnPart2 * exp(lnCommon + lnFact2 - m2))
+  dK_dD <- k * (1/(delta-D_i)) + prefact * ((l*halfLD_i - diffT) * signs2 * exp(lnCommon + lnFact2 + lnPart2) + dlnPart2 * exp(lnCommon + lnFact2 - m2))
   dk_dD <- sum(dK_dD*covGrad)
 
-  dK_ddelta <- k * (-1/(delta-D_i)) + prefact * ((l*halfLDelta - diffT) * exp(lnCommon + lnFact1 + lnPart1) + dlnPart1 * exp(lnCommon + lnFact1 - m1))
+  dK_ddelta <- k * (-1/(delta-D_i)) + prefact * ((l*halfLDelta - diffT) * signs1 * exp(lnCommon + lnFact1 + lnPart1) + dlnPart1 * exp(lnCommon + lnFact1 - m1))
   dk_ddelta <- sum(dK_ddelta*covGrad)
 
   gradln1 <- gradLnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l, delta/2 + invLDiffT/l, delta/2 - t2Mat/l2)
@@ -544,7 +588,7 @@ disimXrbfKernGradient <- function (disimKern, rbfKern, t1, t2, covGrad) {
   dlnPart2 <- gradln2$dlnPart
   m2 <- gradln2$m
 
-  dK_dl <- k/l + prefact * (delta*halfLDelta * exp(lnCommon + lnFact1 + lnPart1) + D_i*halfLD_i * exp(lnCommon + lnFact2 + lnPart2) + dlnPart1 * exp(lnCommon + lnFact1 - m1) + dlnPart2 * exp(lnCommon + lnFact2 - m2))
+  dK_dl <- k/l + prefact * (delta*halfLDelta * signs1 * exp(lnCommon + lnFact1 + lnPart1) + D_i*halfLD_i * signs2 * exp(lnCommon + lnFact2 + lnPart2) + dlnPart1 * exp(lnCommon + lnFact1 - m1) + dlnPart2 * exp(lnCommon + lnFact2 - m2))
   dk_dl <- sum(dK_dl*covGrad)
 
   dk_dC_i <- sum(k*covGrad)/C_i
@@ -600,30 +644,46 @@ disimXsimKernGradient <- function (disimKern, simKern, t1, t2, covGrad) {
   halfLDelta <- 0.5*l*delta
   invLDiffT <- 1/l*diffT
 
-  lnCommon1 <- - complexLog(2*delta) -delta * t2Mat - D_i * t1Mat + halfLDelta^2
+  lnCommon1 <- - log(2*delta) -delta * t2Mat - Di * t1Mat + halfLDelta^2
 
-  lnFact1 <- complexLog(2 * delta) - complexLog(delta^2 - D_i^2)
-  lnPart1 <- lnDiffErfs(halfLDelta - t2Mat/l, halfLDelta)
+  lnFact1 <- log(2 * delta) - complexLog(delta^2 - Di^2)
+  lnPart1_f <- lnDiffErfs(halfLDelta - t2Mat/l, halfLDelta)
 
-  lnFact2 <- (D_i - delta) * t1Mat - complexLog(delta - D_i)
-  lnPart2a <- lnDiffErfs(halfLDelta, halfLDelta - t1Mat/l)
-  lnPart2b <- lnDiffErfs(halfLDelta, halfLDelta - t2Mat/l)
+  lnPart1 <- lnPart1_f[[1]]
+  signs1 <- lnPart1_f[[2]]
 
-  lnFact3 <- (D_i + delta) * t1Mat - complexLog(delta + D_i)
-  lnPart3 <- lnDiffErfs(halfLDelta + t1Mat/l, halfLDelta + invLDiffT)
+  lnFact2 <- (Di - delta) * t1Mat - complexLog(delta - Di)
+  lnPart2a_f <- lnDiffErfs(halfLDelta, halfLDelta - t1Mat/l)
+  lnPart2b_f <- lnDiffErfs(halfLDelta, halfLDelta - t2Mat/l)
 
-  lnFact4 <- 2*delta*t2Mat + (D_i - delta) * t1Mat - complexLog(delta - D_i)
-  lnPart4 <- lnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l)
+  lnPart2a <- lnPart2a_f[[1]]
+  signs2a <- lnPart2a_f[[2]]
+  lnPart2b <- lnPart2b_f[[1]]
+  signs2b <- lnPart2b_f[[2]]
 
-  lnCommon2 <- - complexLog(delta^2 - D_i^2) - delta * t2Mat - D_i * t1Mat + halfLD_i^2
-  lnPart5 <- lnDiffErfs(halfLD_i - t1Mat/l, halfLD_i)
+  lnFact3 <- (Di + delta) * t1Mat - log(delta + Di)
+  lnPart3_f <- lnDiffErfs(halfLDelta + t1Mat/l, halfLDelta + invLDiffT)
+  lnPart3 <- lnPart3_f[[1]]
+  signs3 <- lnPart3_f[[2]]
 
-  lnFact6 <- (D_i + delta) * t2Mat
-  lnPart6 <- lnDiffErfs(halfLD_i + t2Mat/l, halfLD_i - invLDiffT)
+  lnFact4 <- 2*delta*t2Mat + (Di - delta) * t1Mat - complexLog(delta - Di)
+  lnPart4_f <- lnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l)
+  lnPart4 <- lnPart4_f[[1]]
+  signs4 <- lnPart4_f[[2]]
 
-  K1 <- exp( lnCommon1 + lnFact1 + lnPart1) +exp(lnCommon1 + lnFact2 + lnPart2a) +exp(lnCommon1 + lnFact2 + lnPart2b) +exp(lnCommon1 + lnFact3 + lnPart3) +exp(lnCommon1 + lnFact4 + lnPart4)
+  lnCommon2 <- - complexLog(delta^2 - Di^2) - delta * t2Mat - Di * t1Mat + halfLD_i^2
+  lnPart5_f <- lnDiffErfs(halfLD_i - t1Mat/l, halfLD_i)
+  lnPart5 <- lnPart5_f[[1]]
+  signs5 <- lnPart5_f[[2]]
 
-  K2 <- exp( lnCommon2 + lnPart5) +exp(lnCommon2 + lnFact6 + lnPart6)
+  lnFact6 <- (Di + delta) * t2Mat
+  lnPart6_f <- lnDiffErfs(halfLD_i + t2Mat/l, halfLD_i - invLDiffT)
+  lnPart6 <- lnPart6_f[[1]]
+  signs6 <- lnPart6_f[[2]]
+
+  K1 <- signs1 * exp( lnCommon1 + lnFact1 + lnPart1) +signs2a*exp(lnCommon1 + lnFact2 + lnPart2a) +signs2b*exp(lnCommon1 + lnFact2 + lnPart2b) +signs3*exp(lnCommon1 + lnFact3 + lnPart3) +signs4*exp(lnCommon1 + lnFact4 + lnPart4)
+
+  K2 <- signs5*exp( lnCommon2 + lnPart5) +signs6*exp(lnCommon2 + lnFact6 + lnPart6)
 
   prefact <- 0.5*sqrt(pi)*l*disimKern$di_variance*sqrt(disimKern$variance)
   K <- prefact*Re(K1+K2)
@@ -656,7 +716,7 @@ disimXsimKernGradient <- function (disimKern, simKern, t1, t2, covGrad) {
   dpart4 <- gradln4$dlnPart
   m4 <- gradln4$m
 
-  dK_ddelta <- prefact * (dcommon1 * K1 + dcommon2 * K2 + dfact1 * exp(lnCommon1 + lnFact1 + lnPart1) + dfact2 * exp(lnCommon1 + lnFact2 + lnPart2a) + dfact2 * exp(lnCommon1 + lnFact2 + lnPart2b) + dfact3 * exp(lnCommon1 + lnFact3 + lnPart3) + dfact4 * exp(lnCommon1 + lnFact4 + lnPart4) + dfact6 * exp(lnCommon2 + lnFact6 + lnPart6) + dpart1 * exp(lnCommon1 + lnFact1 - m1) + dpart2a * exp(lnCommon1 + lnFact2 - m2a) + dpart2b * exp(lnCommon1 + lnFact2 - m2b) + dpart3 * exp(lnCommon1 + lnFact3 - m3) + dpart4 * exp(lnCommon1 + lnFact4 - m4))
+  dK_ddelta <- prefact * (dcommon1 * K1 + dcommon2 * K2 + dfact1 * signs1*exp(lnCommon1 + lnFact1 + lnPart1) + dfact2 * signs2a*exp(lnCommon1 + lnFact2 + lnPart2a) + dfact2 * signs2b*exp(lnCommon1 + lnFact2 + lnPart2b) + dfact3 * signs3*exp(lnCommon1 + lnFact3 + lnPart3) + dfact4 * signs4*exp(lnCommon1 + lnFact4 + lnPart4) + dfact6 * signs6*exp(lnCommon2 + lnFact6 + lnPart6) + dpart1 * exp(lnCommon1 + lnFact1 - m1) + dpart2a * exp(lnCommon1 + lnFact2 - m2a) + dpart2b * exp(lnCommon1 + lnFact2 - m2b) + dpart3 * exp(lnCommon1 + lnFact3 - m3) + dpart4 * exp(lnCommon1 + lnFact4 - m4))
 
   dcommon1 <- delta * halfLDelta
   dcommon2 <- D_i * halfLD_i
@@ -708,7 +768,7 @@ disimXsimKernGradient <- function (disimKern, simKern, t1, t2, covGrad) {
   dpart6 <- gradln6$dlnPart
   m6 <- gradln6$m
 
-  dK_dD = prefact * (dcommon1 * K1 + dcommon2 * K2 + dfact1 * exp(lnCommon1 + lnFact1 + lnPart1) + dfact2 * exp(lnCommon1 + lnFact2 + lnPart2a) + dfact2 * exp(lnCommon1 + lnFact2 + lnPart2b) + dfact3 * exp(lnCommon1 + lnFact3 + lnPart3) + dfact4 * exp(lnCommon1 + lnFact4 + lnPart4) + dfact6 * exp(lnCommon2 + lnFact6 + lnPart6) + dpart5 * exp(lnCommon2 - m5) + dpart6 * exp(lnCommon2 + lnFact6 - m6))
+  dK_dD = prefact * (dcommon1 * K1 + dcommon2 * K2 + dfact1 * signs1*exp(lnCommon1 + lnFact1 + lnPart1) + dfact2 * signs2a*exp(lnCommon1 + lnFact2 + lnPart2a) + dfact2 * signs2b*exp(lnCommon1 + lnFact2 + lnPart2b) + dfact3 * signs3*exp(lnCommon1 + lnFact3 + lnPart3) + dfact4 * signs4*exp(lnCommon1 + lnFact4 + lnPart4) + dfact6 * signs6*exp(lnCommon2 + lnFact6 + lnPart6) + dpart5 * exp(lnCommon2 - m5) + dpart6 * exp(lnCommon2 + lnFact6 - m6))
 
   dk_ddelta <- sum(dK_ddelta*covGrad)
   dk_dl <- sum(dK_dl*covGrad)
@@ -725,11 +785,3 @@ disimXsimKernGradient <- function (disimKern, simKern, t1, t2, covGrad) {
   g <- list(g1=g1, g2=g2)
   return (g)
 }
-
-
-
-
-
-
-
-

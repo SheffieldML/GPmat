@@ -144,8 +144,20 @@ logerfc <- function(x) log(2) + pnorm(x * sqrt(2), lower = FALSE, log=TRUE)
 erfcx <- function(x) exp(x^2 + logerfc(x))
 
 
+miscCDLL <- dyn.load(paste("miscCFunctions", .Platform$dynlib.ext, sep=""))
+ClnDiffErfs <- getNativeSymbolInfo("ClnDiffErfs", miscCDLL)
 
 lnDiffErfs <- function(x1, x2) {
+  x1 <- as.matrix(x1)
+  x2 <- as.matrix(x2)
+  outdim <- pmax(dim(x1), dim(x2))
+  outlen <- max(length(x1), length(x2))
+  v <- .C(ClnDiffErfs, as.double(x1), as.double(x2), as.integer(length(x1)), as.integer(length(x2)), v=double(outlen), s=integer(outlen))
+  return (list(matrix(data=v$v, outdim), matrix(data=v$s, outdim)));
+}
+
+
+lnDiffErfs2 <- function(x1, x2) {
  
   ## return v = log(erff(x1)-erff(x2))
   x1 <- Re(x1)
@@ -161,39 +173,31 @@ lnDiffErfs <- function(x1, x2) {
   if ( length(x2) == 1 )
     x2 <- array(x2, dim=dim1)
 
+  signs = sign(x1 - x2)
+  I = (signs == -1)
+  swap <- x1[I]
+  x1[I] <- x2[I]
+  x2[I] <- swap
+
   ## case 1: different signs
-  stat1 <- sign(x1)!=sign(x2)
-  I1 <- grep(TRUE, stat1)
-  ## case 2: both positive signs
-  ## 2a: x1>x2
-  stat2a <- (x1>0) & (x1>x2) & !stat1
-  I2a <- grep(TRUE, stat2a)
-  ## 2b: x1<=x2
-  stat2b <- (x1>0) & !stat1 & !stat2a
-  I2b <- grep(TRUE, stat2b)
-  ## case 3: both negative signs
-  ## 3a: x1<x2
-  stat3a = !stat1 & !stat2a & !stat2b & (x1 < x2);
-  I3a <- grep(TRUE, stat3a)
-  ## 3b: x1>=x2
-  stat3b = !stat1 & !stat2a & !stat2b & !stat3a;
-  I3b <- grep(TRUE, stat3b)
+  I1 <- (x1 * x2) < 0
+  ## case 2: equal
+  I2 <- x1 == x2
+  ## case 3: both positive
+  I3 <- (x1>0) & !I1 & !I2
+  ## case 4: both negative
+  I4 = !I1 & !I2 & !I3
 
   options(warn=-1)
-  if ( length(I1) )
-    v[I1] <- expTransform(erff(x1[I1]) - erff(x2[I1]), "xtoa")
-  if ( length(I2a) )
-    v[I2a] <- expTransform(erfcx(x2[I2a])-erfcx(x1[I2a])*exp(x2[I2a]^2-x1[I2a]^2), "xtoa")-x2[I2a]^2
-  if ( length(I2b) )
-    v[I2b] <- expTransform(erfcx(x2[I2b])*exp(x1[I2b]^2-x2[I2b]^2)-erfcx(x1[I2b]), "xtoa")-x1[I2b]^2
-  if ( length(I3a) )
-    v[I3a] <- expTransform(erfcx(-x1[I3a])*exp(x2[I3a]^2-x1[I3a]^2)-erfcx(-x2[I3a]), "xtoa")-x2[I3a]^2
-  if ( length(I3b) )
-    v[I3b] <- expTransform(erfcx(-x1[I3b])-erfcx(-x2[I3b])*exp(x1[I3b]^2-x2[I3b]^2), "xtoa")-x1[I3b]^2
+  # The absolute values are to maintain numerical stability, they should only
+  # ever be applied for really small arguments if there are numerical problems
+  v[I1] <- log(erff(x1[I1]) - erff(x2[I1]))
+  v[I2] <- -Inf
+  v[I3] <- log(abs(erfcx(x2[I3])-erfcx(x1[I3])*exp(x2[I3]^2-x1[I3]^2)))-x2[I3]^2
+  v[I4] <- log(abs(erfcx(-x1[I4])-erfcx(-x2[I4])*exp(x1[I4]^2-x2[I4]^2)))-x1[I4]^2
   options(warn=0)
 
-  return(v)
-
+  return(list(v, signs))
 }
 
 

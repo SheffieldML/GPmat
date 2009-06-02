@@ -1,0 +1,2 @@
+To compile the C code, run:
+  R CMD SHLIB miscCFunctions.c

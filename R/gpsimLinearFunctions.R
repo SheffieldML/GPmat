@@ -263,11 +263,11 @@ gpsimUpdateKernels <- function (model) {
   invK <- jitCholInv(model$K)
 
   if ( is.nan(invK[1]) ) { 
-    cat("kern$decay = \n", kern$decay, "\n")
+    cat("kern$decay = \n", model$D, "\n")
     cat("\n")
-    cat("kern$sensitivity = \n", kern$sensitivity, "\n")
+    cat("kern$sensitivity = \n", model$S, "\n")
     cat("\n")
-    cat("kern$flength = \n", kern$flength, "\n")
+    cat("kern$flength = \n", model$kern$comp[1]$flength, "\n")
     cat("\n")
 				
     stop("Singular chol(K) matrix!")
