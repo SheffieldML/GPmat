@@ -81,37 +81,12 @@ sigma = sqrt(2/simKern.inverseWidth);
 invSigmaDiffT = 1/sigma*diffT;
 halfSigmaD_i = 0.5*sigma*simKern.decay;
 
-%lnPart1 = log(erf(invSigmaDiffT - halfSigmaD_i) + erf(t2Mat/sigma + halfSigmaD_i));
-lnPart1 = zeros(size(t1Mat));
-warnState = warning('query', 'MATLAB:log:logOfZero');
-warning('off', 'MATLAB:log:logOfZero');
 if simKern.isStationary == false
-    I1 = sign(real(halfSigmaD_i - invSigmaDiffT)) ...
-        ~= sign(real(halfSigmaD_i + t2Mat/sigma));
-    I2 = (real(halfSigmaD_i - invSigmaDiffT) > 0) & ~I1;
-    I3 = ~I2 & ~I1;
-    lnPart1(I1) = log(  erfc( real(halfSigmaD_i - invSigmaDiffT(I1))) ...
-		   - erfc( real(halfSigmaD_i + t2Mat(I1)/sigma)));
-    %lnPart1(I2) = log(  erfc( real(halfSigmaD_i - invSigmaDiffT(I2))) ...
-    %		 - erfc( real(halfSigmaD_i + t2Mat(I2)/sigma)));
-    %lnPart1(I3) = log(- erfc(-real(halfSigmaD_i - invSigmaDiffT(I3))) ...
-    %		 + erfc(-real(halfSigmaD_i + t2Mat(I3)/sigma)));
-    lnPart1(I2) = log(  erfcx( real(halfSigmaD_i - invSigmaDiffT(I2))) ...
-		   - exp(  real(halfSigmaD_i - invSigmaDiffT(I2)).^2 ...
-			   - real(halfSigmaD_i + t2Mat(I2)/sigma).^2) ...
-		   .* erfcx( real(halfSigmaD_i + t2Mat(I2)/sigma))) ...
-        - real(halfSigmaD_i - invSigmaDiffT(I2)).^2;
-    lnPart1(I3) = log(- exp(real(halfSigmaD_i + t2Mat(I3)/sigma).^2 ...
-		       - real(halfSigmaD_i - invSigmaDiffT(I3)).^2) ...
-            .* erfcx(-real(halfSigmaD_i - invSigmaDiffT(I3))) ...
-                + erfcx(-real(halfSigmaD_i + t2Mat(I3)/sigma))) ...
-        - real(halfSigmaD_i + t2Mat(I3)/sigma).^2;
-    sK = exp(halfSigmaD_i*halfSigmaD_i - simKern.decay*diffT + lnPart1);
+  [lnPart, signs] = lnDiffErfs(halfSigmaD_i + t2Mat/sigma, halfSigmaD_i - invSigmaDiffT);
 else
-    lnPart1 = lnDiffErfs(inf, halfSigmaD_i - invSigmaDiffT);
-    sK = exp(halfSigmaD_i*halfSigmaD_i - simKern.decay*diffT + lnPart1);
+  [lnPart, signs] = lnDiffErfs(inf, halfSigmaD_i - invSigmaDiffT);
 end
-warning(warnState.state, 'MATLAB:log:logOfZero');
+sK = signs .* exp(halfSigmaD_i*halfSigmaD_i - simKern.decay*diffT + lnPart);
 
 sK = 0.5 * sK;
 if ~isSimNormalised
