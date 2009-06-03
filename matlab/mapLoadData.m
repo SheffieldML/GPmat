@@ -912,10 +912,29 @@ switch dataset
         end
     case 'compilerData'
          data = load([baseDir 'data_compiler_org.mat']);
-         X = data.X';
-         y = data.Y';
+         X = cell(1,length(data.X));
+         y = cell(1,length(data.X));
+         for k = 1:length(data.X),
+             X{k} = zscore(data.X{k});
+             y{k} = zscore(data.Y{k});
+         end   
+%          X = data.X';
+%          y= data.Y';
          XTest = [];
          yTest = [];
+         
+    case 'schoolData'
+        data = load([baseDir 'schoolData.mat']);
+        X = cell(1,length(data.X));
+        y = cell(1,length(data.X));
+        for k = 1:length(data.X),
+            X{k} = zscore(data.X{k});
+            y{k} = zscore(data.y{k});
+        end
+        %          X = data.X';
+        %          y= data.Y';
+        XTest = [];
+        yTest = [];
 
     case 'juraDataCd'
   try
