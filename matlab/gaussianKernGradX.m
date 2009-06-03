@@ -34,19 +34,11 @@ for i = 1:size(X, 1);
   gX(:, :, i) = gaussianKernGradXpoint(K(i,:)', PX(i, :), PX2);
 end
 
-%gXu = zeros(size(X));
-
-if nargin <4,
-    gX = gX*2;
-    dgKX = gaussianKernDiagGradX(kern, X);
-    for i = 1:size(X,1)
-        gX(i, :, i) = dgKX(i, :);
-    end
-end
-
-% for i = 1:size(X,1),
-%     for j=1:size(X,2),
-%       gXu(i,j) = covGrad(i,:)*gX(:,j,i);
+% if nargin <4,
+%     gX = gX*2;
+%     dgKX = gaussianKernDiagGradX(kern, X);
+%     for i = 1:size(X,1)
+%         gX(i, :, i) = dgKX(i, :);
 %     end
 % end
 

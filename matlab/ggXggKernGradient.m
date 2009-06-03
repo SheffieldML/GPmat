@@ -48,6 +48,17 @@ end
 [K, Linv, Ankinv, Amkinv, Bkinv, kBase, factorKern1y, ...
     factorKern2y, factorKern1u ] = ggXggKernCompute(ggKern1, ggKern2, x, x2);
 
+cond1 = isfield(ggKern1, 'isNormalised') && ~isempty(ggKern1.isNormalised);
+cond2 = isfield(ggKern2, 'isNormalised') && ~isempty(ggKern2.isNormalised);
+if cond1 == cond2
+    if  ggKern1.isNormalised ~= ggKern2.isNormalised
+        error('Both kernels should be normalised or unnormalised')
+    end
+else
+    error('Both kernels should have flags for normalisation')
+end
+
+
 Pinv = Linv.^2;
 mu_n = ggKern1.translation;
 mu_m = ggKern2.translation;
@@ -63,8 +74,17 @@ for i=1:ggKern1.inputDimension
     X = repmat(x(:,i),1, size(x2,1));
     X2 = repmat(x2(:,i)',size(x,1),1);
     X_X2 = (X - X2).*(X - X2);
+    if cond1
+        if ggKern1.isNormalised
+            preFactor = 0;
+        else
+            preFactor = Bkinv(i);
+        end
+    else
+        preFactor = Bkinv(i);
+    end
     matGradBk(i) = sum(sum(0.5*covGrad.*K.*...
-        (Bkinv(i)*Pinv(i)*Bkinv(i) - Bkinv(i) - Bkinv(i)*Pinv(i)*X_X2*Pinv(i)*Bkinv(i))));
+            (Bkinv(i)*Pinv(i)*Bkinv(i) - preFactor - Bkinv(i)*Pinv(i)*X_X2*Pinv(i)*Bkinv(i))));
     matGradAnk(i) = sum(sum(0.5*covGrad.*K.*...
         (Ankinv(i)*Pinv(i)*Ankinv(i) -  Ankinv(i)*Pinv(i)*X_X2*Pinv(i)*Ankinv(i))));
     matGradAmk(i) = sum(sum(0.5*covGrad.*K.*...

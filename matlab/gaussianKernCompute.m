@@ -18,6 +18,8 @@ function [K, L]  = gaussianKernCompute(kern, x, x2)
 % SEEALSO : gaussianKernParamInit, kernCompute, kernCreate, gaussianKernDiagCompute
 % 
 % COPYRIGHT : Mauricio Alvarez and Neil D. Lawrence, 2008
+%
+% MODIFICATIONS: Mauricio Alvarez, 2009
 
 % KERN
 
@@ -33,7 +35,12 @@ else
   K = kern.sigma2_u*exp(-0.5*n2);
 end
 
-
+if isfield(kern, 'isNormalised') && ~isempty(kern.isNormalised)
+    if kern.isNormalised
+        detL = prod(kern.precision_u);
+        K = sqrt(detL)*K;        
+    end
+end
 
 
 

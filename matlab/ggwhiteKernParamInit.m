@@ -32,10 +32,10 @@ kern.precisionG = ones(kern.inputDimension,1);
 kern.sigma2Noise = 1;  % Also called variance latent or variance of noise
 kern.variance = 1;     % Also called variance output or sensitivity
 
-kern.nParams =kern.inputDimension + 1 ;
+kern.nParams =kern.inputDimension + 2 ;
 
 % The variances must be positive. As well as the sensitivity of the latent
 % function.
-kern.transforms.index = 1:kern.inputDimension+2;
+kern.transforms.index = 1:kern.inputDimension + 1;
 kern.transforms.type = optimiDefaultConstraint('positive');
 kern.isStationary = true;

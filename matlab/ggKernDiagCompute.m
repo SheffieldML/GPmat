@@ -13,6 +13,8 @@ function K = ggKernDiagCompute(kern, x)
 % SEEALSO : ggKernParamInit, kernDiagCompute, kernCreate, ggKernCompute
 %
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
+%
+% MODIFICATIONS : Mauricio A. Alvarez, 2009
 
 % KERN
 
@@ -25,5 +27,20 @@ Bkinv = 1./Bk;
 detBkinv = prod(Bkinv);
 P = 2*Ankinv + Bkinv;
 ldet = prod(P);
-K = repmat(kern.sigma2_y^2*kern.sigma2_u*sqrt((detBkinv)/ldet), ...
+
+if isfield(kern, 'isNormalised') && ~isempty(kern.isNormalised)
+    if kern.isNormalised
+        option = 1;
+    else
+        option = 0;
+    end
+else
+   option = 0; 
+end
+
+if option
+    K = repmat(kern.sigma2_y^2*kern.sigma2_u*sqrt(1/ldet), size(x,1),1);
+else
+    K = repmat(kern.sigma2_y^2*kern.sigma2_u*sqrt((detBkinv)/ldet), ...
     size(x,1),1);
+end

@@ -43,3 +43,4 @@ kern.nParams =2*kern.inputDimension + 2 + kern.inputDimension;
 kern.transforms.index = 1:(2*kern.inputDimension+1);
 kern.transforms.type = optimiDefaultConstraint('positive');
 kern.isStationary = true;
+kern.isNormalised = false;

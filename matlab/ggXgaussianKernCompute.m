@@ -1,4 +1,5 @@
-function [K, Linv, Ankinv, Bkinv] = ggXgaussianKernCompute(ggKern, gaussianKern, x, x2)
+function [K, Linv, Ankinv, Bkinv, kBase, ...
+    factorKern1y, factorKern1u ] = ggXgaussianKernCompute(ggKern, gaussianKern, x, x2)
 
 % GGXGAUSSIANKERNCOMPUTE Compute a cross kernel between the GG and GAUSSIAN kernels.
 % FORMAT
@@ -30,17 +31,45 @@ if nargin < 4
   x2 = x;
 end
 
+cond1 = isfield(ggKern, 'isNormalised') && ~isempty(ggKern.isNormalised);
+cond2 = isfield(gaussianKern, 'isNormalised') && ~isempty(gaussianKern.isNormalised);
+if cond1 == cond2
+    if  ggKern.isNormalised ~= gaussianKern.isNormalised
+        error('Both kernels should be normalised or unnormalised')
+    end
+else
+    error('Both kernels should have flags for normalisation')
+end
+
 Ank = ggKern.precision_y;
 mu_n = ggKern.translation;
 Bk =  gaussianKern.precision_u;
 Ankinv = 1./Ank;
 Bkinv = 1./Bk;
-detBkinv = prod(Bkinv);
 P = Ankinv + Bkinv;
 ldet = prod(P);
 Linv = sqrt(1./P);
 Linvx = (x- repmat(mu_n',size(x,1),1))*diag(Linv);
 Linvx2 = x2*diag(Linv);
 n2 = dist2(Linvx, Linvx2);
-K = ggKern.sigma2_y*gaussianKern.sigma2_u*sqrt((detBkinv)/ldet)...
-    *exp(-0.5*n2);
+
+if cond1
+    if ggKern.isNormalised
+        preFactor = 1;
+    else
+        preFactor = prod(Bkinv);
+    end
+else
+    preFactor = prod(Bkinv);
+end
+
+kBase = exp(-0.5*n2);
+
+K = ggKern.sigma2_y*gaussianKern.sigma2_u*sqrt((preFactor)/ldet)*kBase;
+
+if nargout > 1
+    factorKern1y = ggKern.sigma2_u*sqrt((preFactor)/ldet);
+    factorKern1u = ggKern.sigma2_y*sqrt((preFactor)/ldet);
+end
+
+

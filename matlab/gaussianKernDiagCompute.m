@@ -13,7 +13,16 @@ function k = gaussianKernDiagCompute(kern, x)
 % gaussianKernCompute
 %
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
+%
+% MODIFICATIONS : Mauricio A. Alvarez, 2009
   
 % KERN
   
 k = kern.sigma2_u*ones(size(x,1),1);
+
+if isfield(kern, 'isNormalised') && ~isempty(kern.isNormalised)
+    if kern.isNormalised
+        detL = prod(kern.precision_u);
+        k = sqrt(detL)*k;        
+    end
+end
