@@ -810,7 +810,91 @@ switch dataset
                 y{k}(missingData{k}) = [];               
             end
             save([baseDir 'ggwhiteToyMissing.mat'], 'X', 'y', 'XTest', 'yTest')
-        end    
+        end
+    case 'ggwhiteToyHighDim'
+        try
+            load([baseDir 'ggwhiteToyHighDim.mat']);
+        catch
+            noise = 1;
+            nout =5;
+            nin = 1;           
+            inputDim = 2;
+            prec = [50 10 5 100 30];
+            sens_y_noise = [1 2 2.2 1.5 1];
+            N = 20;
+            N2 = 20;
+            x = linspace(-1,1,N)';
+            x2 = linspace(-1,1,N2)';
+            [Xout1, Xout2 ] = ndgrid(x);
+            [Xlf1, Xlf2 ] = ndgrid(x2);
+            Xout = [Xout1(:) Xout2(:)]; 
+            Xlf = [Xlf1(:)  Xlf2(:)];            
+            Kyy = cell(nout);
+            ggKern1Noise.inputDimension = inputDim;
+            ggKern1Noise.sigma2Noise = noise;
+            ggKern2Noise.inputDimension = inputDim;
+            for i = 1:nout,
+                ggKern1Noise.precisionG = prec(i)*ones(inputDim,1);
+                ggKern1Noise.variance = sens_y_noise(i);
+                for j = 1:nout,
+                    ggKern2Noise.precisionG = prec(j)*ones(inputDim,1);
+                    ggKern2Noise.variance = sens_y_noise(j);
+                    Kyy{i,j} = ggwhiteXggwhiteKernCompute(ggKern1Noise, ggKern2Noise, Xout);
+                end
+            end
+            Kyu = cell(nout, nin);
+            ggKernNoise.inputDimension = inputDim;
+            ggKernNoise.variance = noise;
+            for i = 1:nout,                
+                ggKern1Noise.variance = sens_y_noise(i);
+                ggKern1Noise.precisionG = prec(i)*ones(inputDim,1);                
+                Kyu{i,1} = ggwhiteXwhiteKernCompute(ggKern1Noise, ggKernNoise, Xout, Xlf);
+            end
+            Kuu = cell(nin,1);            
+            Kuu{1} = noise*eye(size(Xlf,1));
+            K = [cell2mat(Kuu) cell2mat(Kyu)';cell2mat(Kyu) cell2mat(Kyy)];
+            yu = gsamp(zeros(size(K,1),1), K, 1);
+            u = yu(1:size(Xlf,1));
+            y = yu(size(Xlf,1)+1:end);
+            U = reshape(u,size(Xlf,1),nin);
+            Y = reshape(y,size(Xout,1),nout);
+            for k=1:nout,
+                Y(:,k) = Y(:,k) + 0.1*sqrt(var(Y(:,k)))*randn(size(Y(:,k),1),1);
+            end
+            ntrainx =200;
+            maxl = size(Xout,1);
+            X = cell(1,nout+nin);
+            y = cell(1,nout+nin);
+            yTest = cell(1,nout);
+            indx = randperm(maxl);
+            pindx = sort(indx(1:ntrainx));
+            for k =1:nout,
+                X{k} = Xout(pindx,:);
+                y{k} = Y(pindx,k);
+                yTest{k} = Y(indx(ntrainx+1:end),k);
+            end
+            XTest = Xout(indx(ntrainx+1:end),:)';
+            % Append the latent functions
+            y{nout+1} = U(:,1);
+            X{nout+1} = Xlf;            
+            save([baseDir 'ggwhiteToyHighDim.mat'], 'X', 'y', 'XTest', 'yTest')
+        end
+        
+    case 'ggwhiteToyMissingHighDim'
+        try
+            load([baseDir 'ggwhiteToyMissingHighDim.mat']);
+        catch
+            [X, y, XTest, yTest] = mapLoadData('ggwhiteToyHighDim');
+            nout = 5;         
+            missingData = cell(nout,1);
+            missingData{1} = 46:108;
+            missingData{4} = 147:184;            
+            for k =1:nout,
+                X{k}(missingData{k},:)= [];
+                y{k}(missingData{k}) = [];               
+            end
+            save([baseDir 'ggwhiteToyMissingHighDim.mat'], 'X', 'y', 'XTest', 'yTest')
+        end        
     case 'simToyCombined'
         try
             load([baseDir 'simToyCombined.mat']);
@@ -910,16 +994,69 @@ switch dataset
             X{nout+2} = x2;
             save([baseDir 'simToyCombined.mat'], 'X', 'y', 'XTest', 'yTest')
         end
+    case 'ggwhiteToyHighDimBatch'
+        try
+            load([baseDir 'ggwhiteToyHighDimBatch.mat']);
+        catch
+            kernName = 'ggwhite';            
+            inverseWidth = [50 10 5   100 30 200 400 20 1 40];
+            sensitivity =  [1  2  2.2 1.5 1  3   4   2  1    10];            
+            noisePerOutput = 1e-2;
+            nlf = 1;
+            nout = 1;
+            d = nlf + nout;
+            inputDim = 5;
+            % Sample the inputs              
+            X1 = gsamp(zeros(inputDim,1), eye(inputDim), 200);
+%            X1 = linspace(-1,1, 200)';
+            kernType{1} = multigpKernComposer(kernName, d, nlf, 'ftc', 1);
+            kernType{2} = multigpKernComposer('white',  d, nlf, 'ftc', 1);
+            kern = kernCreate(X1,  {'cmpnd', kernType{:}});
+            kern.comp{1}.comp{1}.variance = 1;
+            for k = 1:nout,
+                kern.comp{1}.comp{1+k}.precisionG = inverseWidth(k)*ones(inputDim,1);
+                kern.comp{1}.comp{1+k}.variance = sensitivity(k);
+                kern.comp{2}.comp{1+k}.variance = noisePerOutput;
+            end
+            K = kernCompute(kern, X1);
+            yu = gsamp(zeros(size(K,1),1), K, 1);
+            u = yu(1:size(X1,1));
+            y = yu(size(X1,1)+1:end);            
+            Kout = K(1+size(X1,1):end,1+size(X1,1):end);            
+            [invKout, U, jitter] = pdinv(Kout);
+            if any(jitter>1e-4)
+                fprintf('Warning: Added jitter of %2.4f\n', jitter)
+            end
+            logDetKout = logdet(Kout, U);
+            dim = size(y, 2);
+            ll = -dim*log(2*pi) -logDetKout - y*invKout*y';
+            ll = ll*0.5;
+            U = reshape(u,size(X1,1),nlf);
+            Y = reshape(y,size(X1,1),nout);           
+            X = cell(1, nout);
+            y = cell(1, nout);            
+            for k =1:nout,
+                X{k} = X1;
+                y{k} = Y(:,k);
+            end
+            % Append the latent functions
+            y{nout+1} = U(:,1);
+            X{nout+1} = X1;
+            XTest = [];
+            yTest = [];
+            save([baseDir 'ggwhiteToyHighDimBatch.mat'], 'X', 'y', 'XTest', 'yTest')
+        end
+                            
     case 'compilerData'
          data = load([baseDir 'data_compiler_org.mat']);
          X = cell(1,length(data.X));
          y = cell(1,length(data.X));
-         for k = 1:length(data.X),
-             X{k} = zscore(data.X{k});
-             y{k} = zscore(data.Y{k});
-         end   
-%          X = data.X';
-%          y= data.Y';
+%          for k = 1:length(data.X),
+%              X{k} = zscore(data.X{k});
+%              y{k} = zscore(data.Y{k});
+%          end   
+         X = data.X';
+         y= data.Y';
          XTest = [];
          yTest = [];
          
@@ -927,12 +1064,12 @@ switch dataset
         data = load([baseDir 'schoolData.mat']);
         X = cell(1,length(data.X));
         y = cell(1,length(data.X));
-        for k = 1:length(data.X),
-            X{k} = zscore(data.X{k});
-            y{k} = zscore(data.y{k});
-        end
-        %          X = data.X';
-        %          y= data.Y';
+%         for k = 1:length(data.X),
+%             X{k} = zscore(data.X{k});
+%             y{k} = zscore(data.y{k});
+%         end
+        X = data.X';
+        y= data.y';
         XTest = [];
         yTest = [];
 
