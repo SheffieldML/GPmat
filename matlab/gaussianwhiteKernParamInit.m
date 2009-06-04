@@ -25,7 +25,8 @@ function kern = gaussianwhiteKernParamInit(kern)
 % KERN
   
 kern.sigma2Noise = 1;
-kern.precisionT = 100*ones(kern.inputDimension,1);
+kern.precisionT = ones(kern.inputDimension,1);
+%kern.precisionT = 100*rand(kern.inputDimension,1);
 kern.nParams = kern.inputDimension + 1;
 % Constrains parameters positive for optimisation.
 % The variances of P need to be positive and we constrain the sensitivity

@@ -28,7 +28,7 @@ function kern = ggwhiteKernParamInit(kern)
 
 % KERN
 
-kern.precisionG = ones(kern.inputDimension,1);
+kern.precisionG = 100*ones(kern.inputDimension,1);
 kern.sigma2Noise = 1;  % Also called variance latent or variance of noise
 kern.variance = 1;     % Also called variance output or sensitivity
 
