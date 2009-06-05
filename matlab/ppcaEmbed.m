@@ -1,4 +1,4 @@
-function [X, sigma2] = ppcaEmbed(Y, dims)
+function [X, sigma2, W] = ppcaEmbed(Y, dims)
 
 % PPCAEMBED Embed data set with probabilistic PCA.
 % FORMAT
@@ -7,8 +7,8 @@ function [X, sigma2] = ppcaEmbed(Y, dims)
 % ARG Y : the data set which you want the latent positions for.
 % ARG dims : the dimensionality of the latent space.
 % RETURN X : the latent positions.
-% RETURN sigma2 : the variance not explained by the latent
-% positions.
+% RETURN sigma2 : the variance not explained by the latent positions.
+% RETURN W : the matrix required to invert the transformation, Y=X*W'.
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
