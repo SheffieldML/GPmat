@@ -6,7 +6,7 @@ source("gpdisimLoadData.R")
 source("gpdisimLinearFunctions.R")
 source("disimKernFunctions.R")
 
-gpsimLoc <- "H:/pei/R/R"
+gpsimLoc <- ".."
 pwd <- getwd()
 setwd(gpsimLoc)
 source("gpsimLinearFunctions.R")
@@ -67,6 +67,9 @@ for ( i in seq(length=Nrep) ) {
 param <- param/Nrep
 
 optimResult <- SCGoptim(param, fn=cgpdisimObjective, grad=cgpdisimGradient, optOptions, model)
+MLParams <- optimResult$xmin
+#optimResult <- optim(param, fn=cgpdisimObjective, gr=cgpdisimGradient, model, method="BFGS", control=list(trace=10,REPORT=1,parscale=rep(1e-1, length(param))))
+#MLParams <- optimResult$par
 
 fileName <- paste(expType, expNo, ".Rdata", sep="")
 save(model, expType, expNo, genes, scale, file=fileName)
@@ -79,7 +82,7 @@ save(model, expType, expNo, genes, scale, file=fileName)
 # model <- modelOptimise(model, optOptions)
 
 for ( i in seq(length=Nrep) ) {
-  model$comp[[i]] <- gpdisimExpandParam(model$comp[[i]], optimResult$xmin)
+  model$comp[[i]] <- gpdisimExpandParam(model$comp[[i]], MLParams)
   model$comp[[i]] <- gpdisimUpdateProcesses(model$comp[[i]])
 }
 

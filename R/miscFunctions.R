@@ -203,7 +203,7 @@ lnDiffErfs2 <- function(x1, x2) {
 
 
 gradLnDiffErfs <- function(x1, x2, fact1, fact2) {
-  m <- apply(as.matrix(x1)^2, c(1,2), min, as.matrix(x2)^2)
+  m <- pmin(as.matrix(x1)^2, as.matrix(x2)^2)
   dlnPart <- 2/sqrt(pi) * (exp(-x1^2 + m) * fact1 - exp(-x2^2 + m) * fact2)
 
   g <- list(dlnPart=dlnPart, m=m)

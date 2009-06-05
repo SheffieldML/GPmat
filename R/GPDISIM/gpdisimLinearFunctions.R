@@ -1,4 +1,4 @@
-gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options) {
+gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL) {
 
   if ( any(dim(y)!=dim(yvar)) )
     stop("The gene variances have a different size matrix to the gene values.")
@@ -16,6 +16,7 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options) {
   kernType1 <- list(type="multi", comp=array())
   kernType2 <- list(type="multi", comp=array())
   tieWidth <- 1
+  tieRBFVariance <- 2
   kernType1$comp[1] <- "rbf"
   for ( i in 1:Ngenes ) {
     kernType1$comp[i+1] <- "disim"
@@ -23,14 +24,16 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options) {
       tieDelta = 3
       tieWidth = c(tieWidth, 4)
       tieSigma = 5
+      tieRBFVariance = c(tieRBFVariance, 8)
     } else {
-      tieDelta = c(tieDelta, tieDelta[length(tieDelta)]+5)
-      tieWidth = c(tieWidth, tieWidth[length(tieWidth)]+5)
-      tieSigma = c(tieSigma, tieSigma[length(tieSigma)]+5)
+      tieDelta = c(tieDelta, tieDelta[length(tieDelta)]+6)
+      tieWidth = c(tieWidth, tieWidth[length(tieWidth)]+6)
+      tieSigma = c(tieSigma, tieSigma[length(tieSigma)]+6)
+      tieRBFVariance = c(tieRBFVariance, tieRBFVariance[length(tieRBFVariance)]+6)
     }
   }
 
-  tieParam <- list(tieDelta=tieDelta, tieWidth=tieWidth, tieSigma=tieSigma)
+  tieParam <- list(tieDelta=tieDelta, tieWidth=tieWidth, tieSigma=tieSigma, tieRBFVariance=tieRBFVariance)
 
   model$kern <- kernCreate(times, kernType1)
   model$kern <- modelTieParam(model$kern, tieParam)
@@ -64,6 +67,10 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options) {
     model$bTransform <- options$bTransform
   } else {
     model$bTransform <- "positive"
+  }
+
+  if ( !is.null(annotation) ) {
+    model$annotation <- annotation
   }
 
   params <- gpdisimExtractParam(model)

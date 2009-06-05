@@ -8,9 +8,10 @@ disimKernParamInit <- function (kern) {
   kern$di_variance <- 1
   kern$decay <- 1
   kern$variance <- 1
-  kern$nParams <- 5
+  kern$rbf_variance <- 1
+  kern$nParams <- 6
 
-  kern$transforms <- list(index=c(1,2,3,4,5), type="positive")
+  kern$transforms <- list(index=c(1,2,3,4,5,6), type="positive")
 
   kern$isStationary=FALSE
 
@@ -37,7 +38,7 @@ disimKernCompute <- function (kern, t, t2=t) {
     k <- h + t(h2) + hp + t(hp2)
   }
   k <- 0.5*k*sqrt(pi)*l
-  k <- kern$di_variance*kern$variance*k
+  k <- kern$rbf_variance*kern$di_variance*kern$variance*k
   k <- Re(k)
 
   return (k)
@@ -77,7 +78,10 @@ disimComputeH <-  function (t1, t2, delta, Dj, Dk, l, option=1) {
   lnFact2a <- (Dk + delta)*t2Mat
   lnFact2b <- log(Dk + delta)
 
-  h <- signs1 * exp(lnCommon + lnFact1a1 - lnFact1b + lnPart1) - signs1 * exp(lnCommon + lnFact1a2 - lnFact1b + lnPart1) + signs2 * exp(lnCommon + lnFact2a - lnFact2b + lnPart2)
+  if (abs(Dk - delta) < .1)
+    h <- signs1 * exp(lnCommon + lnPart1) * ((exp((Dk-delta)*t2Mat) - 1) / (Dk - delta) + 1/(Dk+delta)) + signs2 * exp(lnCommon + lnFact2a - lnFact2b + lnPart2)
+  else
+    h <- signs1 * exp(lnCommon + lnFact1a1 - lnFact1b + lnPart1) - signs1 * exp(lnCommon + lnFact1a2 - lnFact1b + lnPart1) + signs2 * exp(lnCommon + lnFact2a - lnFact2b + lnPart2)
 
   h <- Re(h)
 
@@ -86,8 +90,8 @@ disimComputeH <-  function (t1, t2, delta, Dj, Dk, l, option=1) {
   if ( option == 1 ) {
     return (h)
   } else {
-    m1 <- apply((halfLDelta - t1Mat/l)^2, c(1,2), min, halfLDelta^2)
-    m2 <- apply((halfLDelta + t2Mat/l)^2, c(1,2), min, (halfLDelta - invLDiffT)^2)
+    m1 <- pmin((halfLDelta - t1Mat/l)^2, halfLDelta^2)
+    m2 <- pmin((halfLDelta + t2Mat/l)^2, (halfLDelta - invLDiffT)^2)
 
     dlnPart1 <- l/sqrt(pi)*(exp(-(halfLDelta - t1Mat/l)^2 + m1) - exp(-halfLDelta^2 + m1))
     dlnPart2 <- l/sqrt(pi)*(exp(-(halfLDelta + t2Mat/l)^2 + m2) - exp(-(halfLDelta - invLDiffT)^2 + m2))
@@ -151,7 +155,10 @@ disimComputeHPrime <-  function (t1, t2, delta, Dj, Dk, l, option=1) {
 
   lnFact2a <- (Dj + Dk) * t1Mat
 
-  h <- signs1 * exp(lnCommon + lnFact1a1 - lnFact1b + lnPart1) - signs1 * exp(lnCommon + lnFact1a2 - lnFact1b + lnPart1) + signs2 * exp(lnCommon + lnFact2a + lnPart2)
+  if (abs(Dj - delta) < .1)
+    h <- signs1 * exp(lnCommon + lnPart1) * (1 + (Dj+Dk)*(1-exp((Dj-delta)*t1Mat))/(delta-Dj)) + signs2 * exp(lnCommon + lnFact2a + lnPart2)
+  else
+    h <- signs1 * exp(lnCommon + lnFact1a1 - lnFact1b + lnPart1) - signs1 * exp(lnCommon + lnFact1a2 - lnFact1b + lnPart1) + signs2 * exp(lnCommon + lnFact2a + lnPart2)
 
   h <- Re(h)
 
@@ -170,8 +177,8 @@ disimComputeHPrime <-  function (t1, t2, delta, Dj, Dk, l, option=1) {
 
       disimH <- list(h=h, dh_ddelta=dh_ddelta, dh_dD_j=dh_dD_j)
       if ( option > 3 ) {
-        m1 <- apply((halfLD_k - t2Mat/l)^2, c(1,2), min, halfLD_k^2)
-        m2 <- apply((halfLD_k + t1Mat/l)^2, c(1,2), min, (halfLD_k - invLDiffT)^2)
+        m1 <- pmin((halfLD_k - t2Mat/l)^2, halfLD_k^2)
+        m2 <- pmin((halfLD_k + t1Mat/l)^2, (halfLD_k + invLDiffT)^2)
 
         dlnPart1 <- l/sqrt(pi) * (exp(-(halfLD_k - t2Mat/l)^2 + m1) - exp(-halfLD_k^2 + m1))
         dlnPart2 <- l/sqrt(pi) * (exp(-(halfLD_k + t1Mat/l)^2 + m2) - exp(-(halfLD_k + invLDiffT)^2 + m2))
@@ -197,10 +204,10 @@ disimComputeHPrime <-  function (t1, t2, delta, Dj, Dk, l, option=1) {
 disimKernExtractParam <- function (kern, option=1) {
 
   if ( option == 1 ) {
-    params <- c(kern$di_decay, kern$inverseWidth, kern$di_variance, kern$decay, kern$variance)
+    params <- c(kern$di_decay, kern$inverseWidth, kern$di_variance, kern$decay, kern$variance, kern$rbf_variance)
 
   } else {
-    params <- list(values=c(kern$di_decay, kern$inverseWidth, kern$di_variance, kern$decay, kern$variance), names=c("di_decay", "inverseWidth", "di_variance", "decay", "variance"))
+    params <- list(values=c(kern$di_decay, kern$inverseWidth, kern$di_variance, kern$decay, kern$variance), names=c("di_decay", "inverseWidth", "di_variance", "decay", "variance", "rbf_variance"))
   }
 
   return (params)
@@ -217,6 +224,7 @@ disimKernExpandParam <- function (kern, params) {
   kern$di_variance <- params[3]
   kern$decay <- params[4]
   kern$variance <- params[5]
+  kern$rbf_variance <- params[6]
 
   return (kern)
 }
@@ -236,6 +244,9 @@ disimXdisimKernCompute <- function (disimKern1, disimKern2, t1, t2=t1) {
   if ( disimKern1$di_variance != disimKern2$di_variance)
     stop("Kernels cannot be cross combined if they have different driving input variances.")
 
+  if ( disimKern1$rbf_variance != disimKern2$rbf_variance)
+    stop("Kernels cannot be cross combined if they have different RBF variances.")
+
   l <- sqrt(2/disimKern1$inverseWidth)
   h1 <- disimComputeH(t1, t2, disimKern1$di_decay, disimKern1$decay, disimKern2$decay, l)
   h2 <- disimComputeH(t2, t1, disimKern1$di_decay, disimKern2$decay, disimKern1$decay, l)
@@ -243,7 +254,7 @@ disimXdisimKernCompute <- function (disimKern1, disimKern2, t1, t2=t1) {
   hp2 <- disimComputeHPrime(t2, t1, disimKern1$di_decay, disimKern2$decay, disimKern1$decay, l)
   K <- h1 + t(h2) + hp1 + t(hp2)
   K <- 0.5*K*sqrt(pi)*l
-  K <- disimKern1$di_variance*sqrt(disimKern1$variance)*sqrt(disimKern2$variance)*K
+  K <- disimKern1$rbf_variance*disimKern1$di_variance*sqrt(disimKern1$variance)*sqrt(disimKern2$variance)*K
 
   return (K)
 }
@@ -257,6 +268,9 @@ disimXrbfKernCompute <- function (disimKern, rbfKern, t1, t2=t1) {
 
   if ( disimKern$inverseWidth != rbfKern$inverseWidth )
     stop("Kernels cannot be cross combined if they have different inverse widths.")
+
+  if ( disimKern$rbf_variance != rbfKern$variance )
+    stop("Kernels cannot be cross combined if they have different RBF variances.")
 
   dim1 <- dim(as.matrix(t1))[1]
   dim2 <- dim(as.matrix(t2))[1]
@@ -285,7 +299,7 @@ disimXrbfKernCompute <- function (disimKern, rbfKern, t1, t2=t1) {
 
   K <- signs1 * exp(lnCommon + halfLDelta^2 - delta * diffT + lnPart1) + signs2 * exp(lnCommon + halfLD_i^2 - Di * diffT + lnPart2)
 
-  K <- 0.5*sqrt(disimKern$variance)*sqrt(disimKern$di_variance)*sqrt(rbfKern$variance)*K*sqrt(pi)*l
+  K <- 0.5*sqrt(disimKern$variance)*sqrt(disimKern$di_variance)*rbfKern$variance*K*sqrt(pi)*l
   K <- Re(K)
 
   return (K)
@@ -306,6 +320,9 @@ disimXsimKernCompute <- function (disimKern, simKern, t1, t2=t1) {
 
   if ( disimKern$di_variance != simKern$variance)
     stop("Kernels cannot be cross combined if they have different driving input variances.")
+
+#  if ( disimKern$rbf_variance != simKern$rbf_variance)
+#    stop("Kernels cannot be cross combined if they have different RBF variances.")
 
   dim1 <- dim(as.matrix(t1))[1]
   dim2 <- dim(as.matrix(t2))[1]
@@ -362,7 +379,7 @@ disimXsimKernCompute <- function (disimKern, simKern, t1, t2=t1) {
 
   K <- signs1 * exp(lnCommon1 + lnFact1 + lnPart1) +signs2a*exp(lnCommon1 + lnFact2 + lnPart2a) +signs2b*exp(lnCommon1 + lnFact2 + lnPart2b) +signs3*exp(lnCommon1 + lnFact3 + lnPart3) +signs4*exp(lnCommon1 + lnFact4 + lnPart4) +signs5*exp(lnCommon2 + lnPart5) +signs6*exp(lnCommon2 + lnFact6 + lnPart6)
   K <- 0.5*K*sqrt(pi)*l
-  K <- disimKern$di_variance*sqrt(disimKern$variance)*K
+  K <- disimKern$rbf_variance*disimKern$di_variance*sqrt(disimKern$variance)*K
   K <- Re(K)
 
   return (K)
@@ -389,11 +406,15 @@ disimKernDiagCompute <- function (kern, t) {
   signs2 <- lnPart2_f[[2]]
 
   lnCommon <- halfLDelta ^ 2 -(D+delta)*t - log(2*delta) - complexLog(D-delta)
-  lnFact1a <- (D - delta) * t + log(D + delta) - complexLog(D^2 - delta^2)
-  lnFact1b <- log(2*delta) - complexLog(D^2 - delta^2)
   lnFact2 <- (D+delta)*t - log(D + delta)
 
-  h <- signs1 * exp(lnCommon + lnFact1a + lnPart1) - signs1 * exp(lnCommon + lnFact1b + lnPart1) + signs2 * exp(lnCommon + lnFact2 + lnPart2)
+  if (abs(D - delta) < .1)
+    h <- signs1 * exp(lnCommon + lnPart1) * ((exp((D-delta)*t) - 1) / (D - delta) + 1/(D+delta)) + signs2 * exp(lnCommon + lnFact2 + lnPart2)
+  else {
+    lnFact1a <- (D - delta) * t + log(D + delta) - complexLog(D^2 - delta^2)
+    lnFact1b <- log(2*delta) - complexLog(D^2 - delta^2)
+    h <- signs1 * exp(lnCommon + lnFact1a + lnPart1) - signs1 * exp(lnCommon + lnFact1b + lnPart1) + signs2 * exp(lnCommon + lnFact2 + lnPart2)
+  }
 
   lnPart1p_f <- lnDiffErfs(halfLD - t/l, halfLD)
   lnPart2p_f <- lnDiffErfs(halfLD + t/l, halfLD)
@@ -402,16 +423,22 @@ disimKernDiagCompute <- function (kern, t) {
   lnPart2p <- lnPart2p_f[[1]]
   signs2p <- lnPart2p_f[[2]]
 
-  lnCommonp <- halfLD^2 - 2*D*t - log(2*D) - complexLog(delta^2 - D^2)
-  lnFact1ap <- log(D + delta) - complexLog(delta - D)
-  lnFact1bp <- log(2*D) + (D-delta)*t - complexLog(delta - D)
-  lnFact2p <- 2*D*t
+  lnCommonp <- halfLD^2 - 2*D*t - complexLog(delta^2 - D^2)
+  lnFact2p <- 2*D*t - log(2*D)
 
-  hp <- signs1p * exp(lnCommonp + lnFact1ap + lnPart1p) - signs1p * exp(lnCommonp + lnFact1bp + lnPart1p) + signs2p * exp(lnCommonp + lnFact2p + lnPart2p)
+  if (abs(D - delta) < .1) {
+    hp <- signs1p * exp(lnCommonp + lnPart1p) * ((exp((D-delta)*t) - 1) / (D - delta) + 1/(2*D)) + signs2p * exp(lnCommonp + lnFact2p + lnPart2p)
+  }
+  else {
+    lnFact1ap <- log(D + delta) - complexLog(delta - D) - log(2*D)
+    lnFact1bp <- (D-delta)*t - complexLog(delta - D)
+
+    hp <- signs1p * exp(lnCommonp + lnFact1ap + lnPart1p) - signs1p * exp(lnCommonp + lnFact1bp + lnPart1p) + signs2p * exp(lnCommonp + lnFact2p + lnPart2p)
+  }
 
   k <- 2*Re(h+hp)
   k <- 0.5*k*sqrt(pi)*l
-  k <- kern$di_variance*kern$variance*k
+  k <- kern$rbf_variance*kern$di_variance*kern$variance*k
 
   return (k)
 }
@@ -447,6 +474,12 @@ disimXdisimKernGradient <- function (disimKern1, disimKern2, t1, t2, covGrad) {
 
   if ( disimKern1$di_decay != disimKern2$di_decay)
     stop("Kernels cannot be cross combined if they have different driving input decays.")
+
+  if ( disimKern1$di_variance != disimKern2$di_variance )
+    stop("Kernels cannot be cross combined if they have different driving input variances.")
+
+  if ( disimKern1$rbf_variance != disimKern2$rbf_variance )
+    stop("Kernels cannot be cross combined if they have different RBF variances.")
 
   option <- 5
   l <- sqrt(2/disimKern1$inverseWidth)
@@ -487,29 +520,32 @@ disimXdisimKernGradient <- function (disimKern1, disimKern2, t1, t2, covGrad) {
   C0 <- disimKern1$di_variance
   C1 <- sqrt(disimKern1$variance)
   C2 <- sqrt(disimKern2$variance)
+  C3 <- disimKern1$rbf_variance
   K <- h1 + t(h2) + hp1 + t(hp2)
   K <- 0.5*K*sqrt(pi)
-  var2 <- C0*C1*C2
+  var2 <- C0*C1*C2*C3
 
   dk_ddelta <- sum(covGrad*dK_ddelta)*0.5*sqrt(pi)*l*var2
   dk_dD1 <- sum(covGrad*dK_dD1)*0.5*sqrt(pi)*l*var2
   dk_dD2 <- sum(covGrad*dK_dD2)*0.5*sqrt(pi)*l*var2
   dk_dl <- sum(covGrad*(dK_dl*0.5*sqrt(pi)*l + K))*var2
   K <- l*K
-  dk_dC0 <- C1*C2*sum(covGrad*K)
-  dk_dC1 <- C0*C2*sum(covGrad*K)
-  dk_dC2 <- C0*C1*sum(covGrad*K)
+  dk_dC0 <- C1*C2*C3*sum(covGrad*K)
+  dk_dC1 <- C0*C2*C3*sum(covGrad*K)
+  dk_dC2 <- C0*C1*C3*sum(covGrad*K)
+  dk_dC3 <- C0*C1*C2*sum(covGrad*K)
 
   dk_dDIVariance <- dk_dC0
   dk_dDisim1Variance <- dk_dC1*0.5/C1
   dk_dDisim2Variance <- dk_dC2*0.5/C2
+  dk_dRBFVariance <- dk_dC3
 
   dk_dinvWidth <- -0.5*sqrt(2)/(disimKern1$inverseWidth*sqrt(disimKern1$inverseWidth))*dk_dl
 
   K <- var2*K
 
-  g1 <- c(dk_ddelta, dk_dinvWidth, dk_dDIVariance, dk_dD1, dk_dDisim1Variance)
-  g2 <- c(0, 0, 0, dk_dD2, dk_dDisim2Variance)
+  g1 <- c(dk_ddelta, dk_dinvWidth, dk_dDIVariance, dk_dD1, dk_dDisim1Variance, dk_dRBFVariance)
+  g2 <- c(0, 0, 0, dk_dD2, dk_dDisim2Variance, 0)
 
   g <- list(g1=g1, g2=g2)
   return (g)
@@ -529,6 +565,9 @@ disimXrbfKernGradient <- function (disimKern, rbfKern, t1, t2, covGrad) {
   if ( disimKern$inverseWidth != rbfKern$inverseWidth )
     stop("Kernels cannot be cross combined if they have different inverse widths.")
 
+  if ( disimKern$rbf_variance != rbfKern$variance )
+    stop("Kernels cannot be cross combined if they have different RBF variances.")
+
   if ( nargs()<5 ) {
     k <- disimXrbfKernCompute(disimKern, rbfKern, t1)
   } else {
@@ -545,7 +584,7 @@ disimXrbfKernGradient <- function (disimKern, rbfKern, t1, t2, covGrad) {
   l2 <- l*l
   C_0 <- sqrt(disimKern$di_variance)
   C_i <- sqrt(disimKern$variance)
-  C_j <- sqrt(rbfKern$variance)
+  C_j <- rbfKern$variance
   D_i <- disimKern$decay
   delta <-  disimKern$di_decay
 
@@ -584,7 +623,7 @@ disimXrbfKernGradient <- function (disimKern, rbfKern, t1, t2, covGrad) {
   dlnPart1 <- gradln1$dlnPart
   m1 <- gradln1$m
 
-  gradln2 <-gradLnDiffErfs(halfLD_i + t2Mat/l, halfLD_i - invLDiffT, D_i/2 - t2Mat/l2, D_i/2 + invLDiffT/l);
+  gradln2 <-gradLnDiffErfs(halfLD_i + t2Mat/l, halfLD_i - invLDiffT, D_i/2 - t2Mat/l2, D_i/2 + invLDiffT/l)
   dlnPart2 <- gradln2$dlnPart
   m2 <- gradln2$m
 
@@ -593,13 +632,13 @@ disimXrbfKernGradient <- function (disimKern, rbfKern, t1, t2, covGrad) {
 
   dk_dC_i <- sum(k*covGrad)/C_i
   dk_dC_0 <- sum(k*covGrad)/C_0
-  dk_dRbfVariance <- 0.5*sum(k*covGrad)/rbfKern$variance
+  dk_dRbfVariance <- sum(k*covGrad)/rbfKern$variance
 
   dk_dinvWidth <- -0.5*sqrt(2)/(disimKern$inverseWidth*sqrt(disimKern$inverseWidth))*dk_dl
   dk_dDisimVariance <- dk_dC_i*0.5/C_i
   dk_dDIVariance <- dk_dC_0*0.5/C_0
 
-  g1 <- Re(c(dk_ddelta, dk_dinvWidth, dk_dDIVariance, dk_dD, dk_dDisimVariance))
+  g1 <- Re(c(dk_ddelta, dk_dinvWidth, dk_dDIVariance, dk_dD, dk_dDisimVariance, 0))
   g2 <- Re(c(0, dk_dRbfVariance))
 
   g <- list(g1=g1, g2=g2)
@@ -626,6 +665,9 @@ disimXsimKernGradient <- function (disimKern, simKern, t1, t2, covGrad) {
 
   if ( disimKern$di_variance != simKern$variance)
     stop("Kernels cannot be cross combined if they have different driving input variances.")
+
+#  if ( disimKern$rbf_variance != simKern$rbf_variance)
+#    stop("Kernels cannot be cross combined if they have different RBF variances.")
 
   dim1 <- dim(as.matrix(t1))[1]
   dim2 <- dim(as.matrix(t2))[1]
@@ -685,7 +727,7 @@ disimXsimKernGradient <- function (disimKern, simKern, t1, t2, covGrad) {
 
   K2 <- signs5*exp( lnCommon2 + lnPart5) +signs6*exp(lnCommon2 + lnFact6 + lnPart6)
 
-  prefact <- 0.5*sqrt(pi)*l*disimKern$di_variance*sqrt(disimKern$variance)
+  prefact <- 0.5*sqrt(pi)*l*disimKern$rbf_variance*disimKern$di_variance*sqrt(disimKern$variance)
   K <- prefact*Re(K1+K2)
 
   dcommon1 <- - 1/delta - t2Mat + l*halfLDelta
@@ -774,12 +816,13 @@ disimXsimKernGradient <- function (disimKern, simKern, t1, t2, covGrad) {
   dk_dl <- sum(dK_dl*covGrad)
   dk_dD <- sum(dK_dD*covGrad)
 
+  dk_dRBFVariance <- sum(K*covGrad)/disimKern$rbf_variance
   dk_dDIVariance <- sum(K*covGrad)/disimKern$di_variance
   dk_dSimVariance <- .5 * sum(K*covGrad)/disimKern$variance
 
   dk_dinvWidth <- -0.5*sqrt(2)/(disimKern$inverseWidth* sqrt(disimKern$inverseWidth))*dk_dl
 
-  g1 <- Re(c(dk_ddelta, dk_dinvWidth, dk_dDIVariance, dk_dD, dk_dSimVariance))
+  g1 <- Re(c(dk_ddelta, dk_dinvWidth, dk_dDIVariance, dk_dD, dk_dSimVariance, dk_dRBFVariance))
   g2 <- c(0, 0, 0)
 
   g <- list(g1=g1, g2=g2)
