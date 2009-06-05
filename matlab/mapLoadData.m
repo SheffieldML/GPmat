@@ -995,19 +995,19 @@ switch dataset
             save([baseDir 'simToyCombined.mat'], 'X', 'y', 'XTest', 'yTest')
         end
     case 'ggwhiteToyHighDimBatch'
-        try
-            load([baseDir 'ggwhiteToyHighDimBatch.mat']);
-        catch
+%         try
+%             load([baseDir 'ggwhiteToyHighDimBatch.mat']);
+%         catch
             kernName = 'ggwhite';            
-            inverseWidth = [50 10 5   100 30 200 400 20 1 40];
+            inverseWidth = [10 5 5 100 30 200 400 20 1 40];
             sensitivity =  [1  2  2.2 1.5 1  3   4   2  1    10];            
             noisePerOutput = 1e-2;
             nlf = 1;
-            nout = 1;
+            nout = 5;
             d = nlf + nout;
-            inputDim = 5;
+            inputDim = 3;
             % Sample the inputs              
-            X1 = gsamp(zeros(inputDim,1), eye(inputDim), 200);
+            X1 = gsamp(zeros(inputDim,1), eye(inputDim), 100);
 %            X1 = linspace(-1,1, 200)';
             kernType{1} = multigpKernComposer(kernName, d, nlf, 'ftc', 1);
             kernType{2} = multigpKernComposer('white',  d, nlf, 'ftc', 1);
@@ -1030,7 +1030,7 @@ switch dataset
             logDetKout = logdet(Kout, U);
             dim = size(y, 2);
             ll = -dim*log(2*pi) -logDetKout - y*invKout*y';
-            ll = ll*0.5;
+            ll = ll*0.5
             U = reshape(u,size(X1,1),nlf);
             Y = reshape(y,size(X1,1),nout);           
             X = cell(1, nout);
@@ -1045,7 +1045,7 @@ switch dataset
             XTest = [];
             yTest = [];
             save([baseDir 'ggwhiteToyHighDimBatch.mat'], 'X', 'y', 'XTest', 'yTest')
-        end
+        %end
                             
     case 'compilerData'
          data = load([baseDir 'data_compiler_org.mat']);
