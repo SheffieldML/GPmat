@@ -43,7 +43,7 @@ x1(I) = x2(I);
 x2(I) = swap;
 
 % Case 1: arguments of different signs, no problems with loss of accuracy
-I1 = (x1*x2)<0;
+I1 = (x1.*x2)<0;
 % Case 2: x1 = x2
 I2 = x1 == x2;
 % Case 3: Both arguments are non-negative
