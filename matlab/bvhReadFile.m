@@ -16,7 +16,8 @@ function [skel, channels, frameLength] = bvhReadFile(fileName)
 % MOCAP
 
 % a regular expression for floats
-numPat = '(-?[0-9]*\.?[0-9]*)';
+%  numPat = '(-?[0-9]*\.?[0-9]*)';
+numPat = '(-?[0-9]*\.?[0-9]*[eE]?-?[0-9]*)'; 
 % a regular expression for positive ints
 intPat = '([0-9]+)';
 
