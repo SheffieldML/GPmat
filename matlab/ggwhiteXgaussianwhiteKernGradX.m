@@ -17,7 +17,9 @@ function gX = ggwhiteXgaussianwhiteKernGradX(ggwhiteKern, gaussianwhiteKern, X, 
 % SEEALSO : gaussianwhiteKernParamInit, kernGradX, gaussianwhiteKernDiagGradX
 %
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
-  
+%
+% MODIFICATIONS : Mauricio A. Alvarez, 2009.
+
 % KERN
 
 if nargin < 3,    
@@ -28,30 +30,29 @@ else
     X2 = U;
 end
 
-[K, Pinv] = ggwhiteXgaussianwhiteKernCompute(ggwhiteKern, gaussianwhiteKern, X2, X);
-P = 1./Pinv;
-PX = X*diag(P);
-PX2 = X2*diag(P);
+[K, P] = ggwhiteXgaussianwhiteKernCompute(ggwhiteKern, gaussianwhiteKern, X2, X);
 
+if ggwhiteKern.isArd
+    PX = X*diag(P);
+    PX2 = X2*diag(P);
+end
 gX = zeros(size(X2, 1), size(X2, 2), size(X, 1));
 for i = 1:size(X, 1);
-  gX(:, :, i) = gaussianKernGradXpoint(K(:,i), PX(i, :), PX2);
+    if ggwhiteKern.isArd
+        gX(:, :, i) = gaussianKernGradXpoint(PX(i, :), PX2, K(:,i));
+    else
+        partialDer = K(:,i).*P(:,i);
+        gX(:, :, i) = gaussianKernGradXpoint( X(i, :), X2, partialDer);
+    end
 end
 
-% gXu = zeros(size(X));
-% 
-% for i = 1:size(X,1),
-%     for j=1:size(X,2),
-%       gXu(i,j) = covGrad(i,:)*gX(:,j,i);
-%     end
-% end
-
-function gX = gaussianKernGradXpoint(gaussianPart, x, X2)
+function gX = gaussianKernGradXpoint(x, x2, partialDer)
 
 % GAUSSIANKERNGRADXPOINT Gradient with respect to one point of x.
 
-gX = zeros(size(X2));
+gX = zeros(size(x2));
 for i = 1:size(x, 2)
-  gX(:, i) = (X2(:, i) - x(i)).*gaussianPart;
+  gX(:, i) = (x2(:, i) - x(i)).*partialDer;
 end
+
 

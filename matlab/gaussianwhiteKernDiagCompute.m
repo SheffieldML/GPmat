@@ -13,10 +13,23 @@ function k = gaussianwhiteKernDiagCompute(kern, x)
 % gaussianwhiteKernCompute
 %
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
+%
+% MODIFICATIONS : Mauricio A. Alvarez, 2009.
   
 % KERN
-  
-Pinv = 2./kern.precisionT;
-factor = kern.sigma2Noise/((2*pi)^(kern.inputDimension/2)*sqrt(prod(Pinv))); 
 
-k = factor*ones(size(x,1),1);
+if kern.isArd
+    Pinv = 2./kern.precisionT;
+    factor = kern.sigma2Noise/((2*pi)^(kern.inputDimension/2)*sqrt(prod(Pinv)));
+    k = factor*ones(size(x,1),1);
+else
+    if kern.nIndFunct~=size(x,1)
+        error(['The number of inducing points times the number of inducing' ...
+            'functions must be equal the total number of inducing points']);
+    end
+    precCols = kern.precisionT'/2;
+    precColsInv = 1./precCols;
+    Pinv =  precColsInv;
+    detPinv = Pinv.^kern.inputDimension;
+    k = kern.sigma2Noise./((2*pi)^(kern.inputDimension/2)*sqrt(detPinv));
+end

@@ -1,5 +1,5 @@
-function [K, Pinv, Lrinv, Lqrinv] = ggwhiteXgaussianwhiteKernCompute(ggwhiteKern, ...
-    gaussianwhiteKern, x, x2)
+function [K, P, Pinv, Lrinv, Lqrinv, Kbase, factorVar1, factorNoise, n2] = ...
+    ggwhiteXgaussianwhiteKernCompute(ggwhiteKern, gaussianwhiteKern, x, x2)
 
 % GGWHITEXGAUSSIANWHITEKERNCOMPUTE Compute a cross kernel between the GG white and GAUSSIAN white kernels.
 % FORMAT
@@ -25,24 +25,72 @@ function [K, Pinv, Lrinv, Lqrinv] = ggwhiteXgaussianwhiteKernCompute(ggwhiteKern
 %
 %
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
+%
+% MODIFICATIONS : Mauricio A. Alvarez, 2009.
 
 % KERN
   
+if ggwhiteKern.isArd ~= gaussianwhiteKern.isArd
+    error(['For current implementation of the code, both output kernel' ...
+        ' and inducing kernel should be ARD or not']);
+end
+
 if nargin < 4
   x2 = x;
 end
 
-Lqr = ggwhiteKern.precisionG;
-Lr  = gaussianwhiteKern.precisionT; 
-Lqrinv = 1./Lqr;
-Lrinv = 1./Lr;
-Pinv = Lqrinv + Lrinv;
-P = 1./Pinv;
-detPinv = prod(Pinv);
-sqrtP = sqrt(P);
-sqrtPx = x*sparseDiag(sqrtP);
-sqrtPx2 = x2*sparseDiag(sqrtP);
-n2 = dist2(sqrtPx, sqrtPx2);
-factor = ggwhiteKern.variance*gaussianwhiteKern.sigma2Noise...
-    /((2*pi)^(ggwhiteKern.inputDimension/2)*sqrt(detPinv)); 
-K = factor*exp(-0.5*n2);
+if ggwhiteKern.isArd
+    Lqr = ggwhiteKern.precisionG;
+    Lr  = gaussianwhiteKern.precisionT;
+    Lqrinv = 1./Lqr;
+    Lrinv = 1./Lr;
+    Pinv = Lqrinv + Lrinv;
+    P = 1./Pinv;
+    detPinv = prod(Pinv);
+    sqrtP = sqrt(P);
+    sqrtPx = x*sparseDiag(sqrtP);
+    sqrtPx2 = x2*sparseDiag(sqrtP);
+    n2 = dist2(sqrtPx, sqrtPx2);
+    factor = ggwhiteKern.variance*gaussianwhiteKern.sigma2Noise...
+        /((2*pi)^(ggwhiteKern.inputDimension/2)*sqrt(detPinv));
+    Kbase = exp(-0.5*n2);
+else
+    n2 = dist2(x, x2);
+    Lqr = ggwhiteKern.precisionG;
+    if gaussianwhiteKern.nIndFunct~=size(x2,1)
+        error(['The number of inducing functions must be equal the' ...
+            'number of inducing points']);
+    end
+    Lr = repmat(gaussianwhiteKern.precisionT, size(x,1), 1);
+    %/~MAURICIO : This code is necessary if we are doing kernTest of this multioutput Kernel     
+    %     if nargin < 4
+    %         if gaussianwhiteKern.nIndFunct~=size(x2,1)
+    %             error(['The number of inducing functions must be equal the' ...
+    %                 'number of inducing points']);
+    %         end
+    %         Lr = repmat(gaussianwhiteKern.precisionT, size(x,1), 1);
+    %     else
+    %         if size(x,1) >= size(x2,1)
+    %             Lr = repmat(gaussianwhiteKern.precisionT', 1, size(x2,1));
+    %         else
+    %             Lr = repmat(gaussianwhiteKern.precisionT, size(x,1), 1);
+    %         end
+    %     end ~/
+    Lqrinv = 1/Lqr;
+    Lrinv = 1./Lr;
+    Pinv = Lqrinv + Lrinv;
+    P = 1./Pinv;
+    detPinv = Pinv.^ggwhiteKern.inputDimension;
+    factor = (gaussianwhiteKern.sigma2Noise*...
+        ggwhiteKern.variance)./((2*pi)^(ggwhiteKern.inputDimension/2)*sqrt(detPinv));
+    Kbase = exp(-0.5.*P.*n2);
+
+end
+K = factor.*Kbase;
+if nargout > 4
+    factorVar1 = gaussianwhiteKern.sigma2Noise...
+        ./((2*pi)^(ggwhiteKern.inputDimension/2)*sqrt(detPinv));
+    factorNoise = ggwhiteKern.variance...
+        ./((2*pi)^(ggwhiteKern.inputDimension/2)*sqrt(detPinv));
+end
+    

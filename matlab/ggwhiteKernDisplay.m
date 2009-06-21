@@ -14,6 +14,8 @@ function ggwhiteKernDisplay(kern, spacing)
 % SEEALSO : ggwhiteKernParamInit, modelDisplay, kernDisplay
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006, 2008
+%
+% MODIFICATIONS : Mauricio A Alvarez, 2009 
 
 % KERN
 
@@ -24,10 +26,16 @@ else
 end
 spacing = char(spacing);
 fprintf(spacing);
-for k=1:kern.inputDimension,
-    fprintf('Gg white inverse width, dimension %2.4f: %2.4f (length scale %2.4f)\n', ...
-        k, kern.precisionG(k), 1/sqrt(kern.precisionG(k)));
-    fprintf(spacing);
+if kern.isArd
+    for k=1:kern.inputDimension,
+        fprintf('Gg white inverse width, dimension %2.4f: %2.4f (length scale %2.4f)\n', ...
+            k, kern.precisionG(k), 1/sqrt(kern.precisionG(k)));
+        fprintf(spacing);
+    end
+else
+fprintf('Gg white inverse width: %2.4f (length scale %2.4f)\n', ...
+    kern.precisionG, 1/sqrt(kern.precisionG));
+fprintf(spacing);
 end
 fprintf('Output variance: %2.4f\n', kern.variance)
 fprintf(spacing);

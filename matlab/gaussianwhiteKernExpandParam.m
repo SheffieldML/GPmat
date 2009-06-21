@@ -15,8 +15,14 @@ function kern = gaussianwhiteKernExpandParam(kern, params)
 % SEEALSO : gaussianwhiteKernParamInit, gaussianwhiteKernExtractParam, kernExpandParam
 %
 % COPYRIGHT : Mauricio Alvarez and Neil D. Lawrence, 2008
+%
+% MODIFICATIONS : Mauricio A. Alvarez, 2009
 
 % KERN
-  
+
+if kern.isArd
+    kern.precisionT =  params(1:end-1)';
+else
+    kern.precisionT =  params(1:end-1);
+end
 kern.sigma2Noise = params(end);
-kern.precisionT =  params(1:end-1)';

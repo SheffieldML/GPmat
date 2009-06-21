@@ -1,4 +1,5 @@
-function [K, Pinv, Lqrinv, Lsrinv] = ggwhiteXggwhiteKernCompute(ggwhiteKern1, ...
+function [K, Pinv, Lqrinv, Lsrinv, Kbase, factorNoise, ...
+    factorVar1, factorVar2, dist] = ggwhiteXggwhiteKernCompute(ggwhiteKern1, ...
     ggwhiteKern2, x, x2)
 % GGWHITEXGGWHITEKERNCOMPUTE Compute a cross kernel between two GG white kernels.
 % FORMAT
@@ -23,26 +24,42 @@ function [K, Pinv, Lqrinv, Lsrinv] = ggwhiteXggwhiteKernCompute(ggwhiteKern1, ..
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
-% MODIFIED : Mauricio A. Alvarez, 2008
+% MODIFIED : Mauricio A. Alvarez, 2008, 2009
 
 % KERN
 
 if nargin < 4
   x2 = x;
 end
-
+if ggwhiteKern1.isArd && ~ggwhiteKern2.isArd
+  error('Both GG white kernels should be ARD o not') 
+end
 Lqr = ggwhiteKern1.precisionG;
 Lsr = ggwhiteKern2.precisionG;
 Lqrinv = 1./Lqr;
 Lsrinv = 1./Lsr;
 Pinv = Lqrinv + Lsrinv;
 P = 1./Pinv;
-detPinv = prod(Pinv);
-sqrtP = sqrt(P);
-sqrtPx = x*sparseDiag(sqrtP);
-sqrtPx2 = x2*sparseDiag(sqrtP);
-n2 = dist2(sqrtPx, sqrtPx2);
-factor = ggwhiteKern1.variance*ggwhiteKern2.variance*ggwhiteKern1.sigma2Noise...
-    /((2*pi)^(ggwhiteKern1.inputDimension/2)*sqrt(detPinv)); 
-K = factor*exp(-0.5*n2);
+if ggwhiteKern1.isArd
+    detPinv = prod(Pinv);
+    sqrtP = sqrt(P);
+    sqrtPx = x*sparseDiag(sqrtP);
+    sqrtPx2 = x2*sparseDiag(sqrtP);
+    n2 = dist2(sqrtPx, sqrtPx2);
+    dist = [];
+else
+    detPinv = Pinv^ggwhiteKern1.inputDimension;
+    dist = dist2(x, x2);
+    n2 = P*dist;
+end
+factor = (ggwhiteKern1.sigma2Noise*ggwhiteKern1.variance*ggwhiteKern2.variance)...
+    /((2*pi)^(ggwhiteKern1.inputDimension/2)*sqrt(detPinv));
+Kbase = exp(-0.5*n2);
+K = factor*Kbase;
+if nargout >2
+    factorNoise = (ggwhiteKern1.variance*ggwhiteKern2.variance)/((2*pi)^(ggwhiteKern1.inputDimension/2)*sqrt(detPinv));
+    factorVar1 = (ggwhiteKern1.sigma2Noise*ggwhiteKern2.variance)/((2*pi)^(ggwhiteKern1.inputDimension/2)*sqrt(detPinv));
+    factorVar2 = (ggwhiteKern1.variance*ggwhiteKern1.sigma2Noise)/((2*pi)^(ggwhiteKern1.inputDimension/2)*sqrt(detPinv));
+end
+
 

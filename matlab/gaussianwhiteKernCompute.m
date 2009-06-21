@@ -20,30 +20,49 @@ function [K, Pinv]  = gaussianwhiteKernCompute(kern, x, x2)
 % SEEALSO : gaussianwhiteKernParamInit, kernCompute, kernCreate, gaussianwhiteKernDiagCompute
 % 
 % COPYRIGHT : Mauricio Alvarez and Neil D. Lawrence, 2008
+%
+% MODIFICATIONS : Mauricio A. Alvarez, 2009.
 
 % KERN
 
-sqrtP = sqrt(kern.precisionT/2);
-Pinv = 2./kern.precisionT;
-Px = x*sparseDiag(sqrtP);
-
-if nargin < 3  
-  n2 = dist2(Px, Px);
-  factor = kern.sigma2Noise/((2*pi)^(kern.inputDimension/2)*sqrt(prod(Pinv))); 
-  K = factor*exp(-0.5*n2);
+if kern.isArd
+    sqrtP = sqrt(kern.precisionT/2);
+    Pinv = 2./kern.precisionT;
+    Px = x*sparseDiag(sqrtP);
+    if nargin < 3
+        n2 = dist2(Px, Px);
+        factor = kern.sigma2Noise/((2*pi)^(kern.inputDimension/2)*sqrt(prod(Pinv)));
+        K = factor*exp(-0.5*n2);
+    else
+        Px2 = x2*sparseDiag(sqrtP);
+        n2 = dist2(Px, Px2);
+        factor = kern.sigma2Noise/((2*pi)^(kern.inputDimension/2)*sqrt(prod(Pinv)));
+        K = factor*exp(-0.5*n2);
+    end
 else
-  Px2 = x2*sparseDiag(sqrtP);
-  n2 = dist2(Px, Px2);
-  factor = kern.sigma2Noise/((2*pi)^(kern.inputDimension/2)*sqrt(prod(Pinv))); 
-  K = factor*exp(-0.5*n2);
+    if kern.nIndFunct~=size(x,1)
+        error(['The number of inducing functions must be equal the' ...
+            'number of inducing points']);
+    end
+    if nargin < 3
+        x2 = x;
+    end
+    n2 = dist2(x, x2);
+    if nargin < 3,
+        precCols = repmat(kern.precisionT', 1, size(x,1));
+        precRows = repmat(kern.precisionT , size(x,1), 1);
+        precColsInv = 1./precCols;
+        precRowsInv = 1./precRows;
+        Pinv = precColsInv + precRowsInv;
+        P = 1./Pinv;
+        detPinv = Pinv.^kern.inputDimension;
+    else
+        precCols = kern.precisionT'/2;
+        precColsInv = 1./precCols;
+        Pinv =  precColsInv;
+        P = repmat(1./Pinv, 1, size(x2,1));
+        detPinv = repmat(Pinv.^kern.inputDimension, 1, size(x2,1));
+    end
+    factor = kern.sigma2Noise./((2*pi)^(kern.inputDimension/2)*sqrt(detPinv));
+    K = factor.*exp(-0.5.*P.*n2);
 end
-
-
-
-
-
-
-
-
-
-

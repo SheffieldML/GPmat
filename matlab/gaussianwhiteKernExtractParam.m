@@ -27,16 +27,33 @@ function [params, names] = gaussianwhiteKernExtractParam(kern)
 % kernExtractParam, scg, conjgrad
 %
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
+%
+% MODIFICATIONS : Mauricio A. Alvarez, 2009.
 
 % KERN
 
-params = kern.precisionT';
+if kern.isArd
+    params = kern.precisionT';
+else
+    params = kern.precisionT;
+end
 params(end+1) = kern.sigma2Noise;
 if nargout > 1
-    unames = cell(size(kern.precisionT,1),1);
-    for i=1:size(kern.precisionT,1),
-        unames{i}=['inverse width latent (' num2str(i) ',' num2str(i) ')'];
+    if kern.isArd
+        unames = cell(size(kern.precisionT,1),1);
+        for i=1:size(kern.precisionT,1),
+            unames{i}=['VIK inverse width latent (' num2str(i) ',' num2str(i) ')'];
+        end
+        names = unames(:)';
+        names = {names{:}, 'variance'};
+    else
+        unames = cell(numel(kern.precisionT),1);
+        cont = 0;
+        for j=1:size(kern.precisionT,2),
+            cont = cont + 1;
+            unames{cont}=['VIK ' num2str(j) ' inverse width latent'];
+        end
+        names = unames(:)';
+        names = {names{:}, 'variance'};
     end
-    names = unames(:)';
-    names = {names{:}, 'variance'};
 end

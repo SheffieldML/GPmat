@@ -16,6 +16,8 @@ function kern = ggwhiteKernExpandParam(kern, params)
 % SEEALSO : ggwhiteKernParamINit, ggwhiteKernExtractParam, kernExpandParam
 %
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
+%
+% MODIFICATIONS : Mauricio A Alvarez, 2009
 
 % KERN
 

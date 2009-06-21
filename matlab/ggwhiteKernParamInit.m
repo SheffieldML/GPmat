@@ -25,17 +25,26 @@ function kern = ggwhiteKernParamInit(kern)
 % SEEALSO : kernCreate, kernParamInit, ggwhiteKernCompute
 %
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
+%
+% MODIFICATIONS : Mauricio A Alvarez, 2009
 
 % KERN
 
-kern.precisionG = 100*ones(kern.inputDimension,1);
-kern.sigma2Noise = 1;  % Also called variance latent or variance of noise
-kern.variance = 1;     % Also called variance output or sensitivity
-
-kern.nParams =kern.inputDimension + 2 ;
-
+kern.isArd = false;
+if kern.isArd
+    kern.precisionG = 100*ones(kern.inputDimension,1);
+    kern.sigma2Noise = 1;  % Also called variance latent or variance of noise
+    kern.variance = 1;     % Also called variance output or sensitivity
+    kern.nParams =kern.inputDimension + 2 ;
+    kern.transforms.index = 1:kern.inputDimension + 1;
+else
+    kern.precisionG  =  1;
+    kern.sigma2Noise =  1;  % Also called variance latent or variance of noise
+    kern.variance    =  1;     % Also called variance output or sensitivity
+    kern.nParams     =  3;
+    kern.transforms.index = [1 2];
+end
 % The variances must be positive. As well as the sensitivity of the latent
 % function.
-kern.transforms.index = 1:kern.inputDimension + 1;
 kern.transforms.type = optimiDefaultConstraint('positive');
 kern.isStationary = true;

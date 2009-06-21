@@ -26,15 +26,21 @@ function [params, names] = ggwhiteKernExtractParam(kern)
 % conjgrad
 % 
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
+%
+% MODIFICATIONS : Mauricio A Alvarez, 2009
 
 % KERN
 
 params = [kern.precisionG' kern.sigma2Noise kern.variance];
 
 if nargout > 1
-    ynames = cell(1,kern.inputDimension);
-    for i=1:kern.inputDimension,        
-        ynames{i}=['inverse width output (' num2str(i) ',' num2str(i) ')'];
+    if kern.isArd
+        ynames = cell(1,kern.inputDimension);
+        for i=1:kern.inputDimension,
+            ynames{i}=['inverse width output (' num2str(i) ',' num2str(i) ')'];
+        end
+        names = {ynames{:}, 'variance', 'sensitivity'};
+    else
+        names = {'inverse width output' , 'variance', 'sensitivity'};
     end    
-    names = {ynames{:}, 'variance', 'sensitivity'};
 end

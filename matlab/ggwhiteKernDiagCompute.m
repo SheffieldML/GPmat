@@ -13,10 +13,17 @@ function k = ggwhiteKernDiagCompute(kern, x)
 % SEEALSO : ggwhiteKernParamInit, kernDiagCompute, kernCreate, ggwhiteKernCompute
 %
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
+%
+% MODIFICATIONS : Mauricio A. Alvarez, 2009.
 
 % KERN
 
 Pinv = 2./kern.precisionG;
-factor = kern.sigma2Noise*kern.variance^2/((2*pi)^(kern.inputDimension/2)*sqrt(prod(Pinv))); 
 
+if kern.isArd
+   detPinv = prod(Pinv);
+else
+   detPinv = Pinv^kern.inputDimension; 
+end
+factor = kern.sigma2Noise*kern.variance^2/((2*pi)^(kern.inputDimension/2)*sqrt(detPinv)); 
 k = factor*ones(size(x,1),1);

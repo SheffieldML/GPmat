@@ -37,32 +37,39 @@ function [g1, g2] = ggwhiteXggwhiteKernGradient(ggwhiteKern1, ggwhiteKern2, ...
 % ggwhiteKernExtractParam
 %
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
-  
+%
+% MODIFICATIONS : Mauricio A. Alvarez, 2009.
+
 % KERN
+
 if nargin < 5
     covGrad = x2;
     x2 = x;
 end
-[K, Pinv, Lqrinv, Lsrinv] = ggwhiteXggwhiteKernCompute(ggwhiteKern1, ggwhiteKern2, x, x2);
+
+[K, Pinv, Lqrinv, Lsrinv, Kbase, factorNoise, factorVar1, factorVar2, dist] = ...
+    ggwhiteXggwhiteKernCompute(ggwhiteKern1, ggwhiteKern2, x, x2);
 P = 1./Pinv;
-matGradLqr = zeros(ggwhiteKern1.inputDimension,1);
-matGradLsr = zeros(ggwhiteKern1.inputDimension,1);
 
-for i=1:ggwhiteKern1.inputDimension
-    X = repmat(x(:,i),1, size(x2,1));
-    X2 = repmat(x2(:,i)',size(x,1),1);
-    X_X2 = (X - X2).*(X - X2);    
-    matGradLqr(i) = sum(sum(0.5*covGrad.*K.*...
-        (Lqrinv(i)*P(i)*Lqrinv(i) - Lqrinv(i)*P(i)*X_X2*P(i)*Lqrinv(i))));
-    matGradLsr(i) = sum(sum(0.5*covGrad.*K.*...
-        (Lsrinv(i)*P(i)*Lsrinv(i) - Lsrinv(i)*P(i)*X_X2*P(i)*Lsrinv(i))));
+if ggwhiteKern1.isArd
+    matGradLqr = zeros(ggwhiteKern1.inputDimension,1);
+    matGradLsr = zeros(ggwhiteKern1.inputDimension,1);
+    for i=1:ggwhiteKern1.inputDimension
+        X = repmat(x(:,i),1, size(x2,1));
+        X2 = repmat(x2(:,i)',size(x,1),1);
+        X_X2 = (X - X2).*(X - X2);
+        matGradLqr(i) = sum(sum(0.5*covGrad.*K.*...
+            (Lqrinv(i)*P(i)*Lqrinv(i) - Lqrinv(i)*P(i)*X_X2*P(i)*Lqrinv(i))));
+        matGradLsr(i) = sum(sum(0.5*covGrad.*K.*...
+            (Lsrinv(i)*P(i)*Lsrinv(i) - Lsrinv(i)*P(i)*X_X2*P(i)*Lsrinv(i))));
+    end
+else    
+    matGradLqr = ((P*Lqrinv)^2)*sum(sum(0.5*covGrad.*K.*(ggwhiteKern1.inputDimension*Pinv - dist)));
+    matGradLsr = ((P*Lsrinv)^2)*sum(sum(0.5*covGrad.*K.*(ggwhiteKern1.inputDimension*Pinv - dist)));
 end
-
-grad_sigma2Noise = sum(sum(covGrad.*K))/ggwhiteKern1.sigma2Noise;
-grad_variance1 = sum(sum(covGrad.*K))/ggwhiteKern1.variance;
-grad_variance2 = sum(sum(covGrad.*K))/ggwhiteKern2.variance;
-    
-
+grad_sigma2Noise = factorNoise*sum(sum(covGrad.*Kbase));
+grad_variance1 = factorVar1*sum(sum(covGrad.*Kbase));
+grad_variance2 = factorVar2*sum(sum(covGrad.*Kbase));
 % only pass the gradient with respect to the inverse width to one
 % of the gradient vectors ... otherwise it is counted twice.
 g1 = [matGradLqr(:)' grad_sigma2Noise grad_variance1];
