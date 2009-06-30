@@ -49,9 +49,18 @@ if nargout > 1
     else
         unames = cell(numel(kern.precisionT),1);
         cont = 0;
-        for j=1:size(kern.precisionT,2),
-            cont = cont + 1;
-            unames{cont}=['VIK ' num2str(j) ' inverse width latent'];
+        if exist([kern.type 'Names.txt'], 'file')
+            fidNames = fopen([kern.type 'Names.txt'],'r');
+            for j=1:size(kern.precisionT,2),
+                cont = cont + 1;
+                unames{cont} = fgetl(fidNames);
+            end
+            fclose(fidNames);
+        else
+            for j=1:size(kern.precisionT,2),
+                cont = cont + 1;
+                unames{cont}=['VIK ' num2str(j) ' inverse width latent'];
+            end
         end
         names = unames(:)';
         names = {names{:}, 'variance'};
