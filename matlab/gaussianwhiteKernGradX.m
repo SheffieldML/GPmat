@@ -42,8 +42,10 @@ else
     precRowsInv = 1./precRows;
     Pinv = precColsInv + precRowsInv;
     P = 1./Pinv;
-    detPinv = Pinv.^kern.inputDimension;
-    factor = 1./((2*pi)^(kern.inputDimension/2)*sqrt(detPinv));
+    precColInvNum =  repmat((kern.precisionT.^(-kern.inputDimension/4))', 1, size(X,1));
+    precRowsInvNum=  repmat(kern.precisionT.^(-kern.inputDimension/4) , size(X,1), 1);
+    factorDen = Pinv.^(kern.inputDimension/2);
+    factor = 2^(kern.inputDimension/2)*(precColInvNum.*precRowsInvNum)./factorDen;
     K = kern.sigma2Noise*factor.*exp(-0.5*P.*dist2(X, X2));
     gX = zeros(size(X2, 1), size(X2, 2), size(X, 1));
     for i = 1:size(X, 1);
@@ -51,6 +53,7 @@ else
         gX(:, :, i) = gaussianwhiteKernGradXpoint( X(i, :), X2, partialDer);
     end
 end
+
 gX = gX*2;
 dgKX = gaussianwhiteKernDiagGradX(kern, X);
 for i = 1:size(X,1)

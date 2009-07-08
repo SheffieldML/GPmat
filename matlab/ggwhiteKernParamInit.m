@@ -30,18 +30,18 @@ function kern = ggwhiteKernParamInit(kern)
 
 % KERN
 
-kern.isArd = false;
+kern.isArd = true;
 if kern.isArd
-    kern.precisionG = 100*ones(kern.inputDimension,1);
+    kern.precisionG = ones(kern.inputDimension,1);
     kern.sigma2Noise = 1;  % Also called variance latent or variance of noise
     kern.variance = 1;     % Also called variance output or sensitivity
-    kern.nParams =kern.inputDimension + 2 ;
+    kern.nParams =kern.inputDimension + 2 ;    
     kern.transforms.index = 1:kern.inputDimension + 1;
 else
     kern.precisionG  =  1;
     kern.sigma2Noise =  1;  % Also called variance latent or variance of noise
     kern.variance    =  1;     % Also called variance output or sensitivity
-    kern.nParams     =  3;
+    kern.nParams     =  3;        
     kern.transforms.index = [1 2];
 end
 % The variances must be positive. As well as the sensitivity of the latent

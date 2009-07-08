@@ -18,12 +18,4 @@ function k = ggwhiteKernDiagCompute(kern, x)
 
 % KERN
 
-Pinv = 2./kern.precisionG;
-
-if kern.isArd
-   detPinv = prod(Pinv);
-else
-   detPinv = Pinv^kern.inputDimension; 
-end
-factor = kern.sigma2Noise*kern.variance^2/((2*pi)^(kern.inputDimension/2)*sqrt(detPinv)); 
-k = factor*ones(size(x,1),1);
+k = kern.sigma2Noise*kern.variance^2*ones(size(x,1),1);

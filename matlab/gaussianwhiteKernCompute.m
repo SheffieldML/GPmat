@@ -30,21 +30,18 @@ if kern.isArd
     Pinv = 2./kern.precisionT;
     Px = x*sparseDiag(sqrtP);
     if nargin < 3
-        n2 = dist2(Px, Px);
-        factor = kern.sigma2Noise/((2*pi)^(kern.inputDimension/2)*sqrt(prod(Pinv)));
-        K = factor*exp(-0.5*n2);
+        n2 = dist2(Px, Px);        
     else
         Px2 = x2*sparseDiag(sqrtP);
-        n2 = dist2(Px, Px2);
-        factor = kern.sigma2Noise/((2*pi)^(kern.inputDimension/2)*sqrt(prod(Pinv)));
-        K = factor*exp(-0.5*n2);
+        n2 = dist2(Px, Px2);        
     end
-else
-    if kern.nIndFunct~=size(x,1)
-        error(['The number of inducing functions must be equal the' ...
-            'number of inducing points']);
-    end
+    K = kern.sigma2Noise*exp(-0.5*n2);
+else    
     if nargin < 3
+        if kern.nIndFunct~=size(x,1)
+            error(['The number of inducing functions must be equal the' ...
+                'number of inducing points']);
+        end
         x2 = x;
     end
     n2 = dist2(x, x2);
@@ -55,14 +52,18 @@ else
         precRowsInv = 1./precRows;
         Pinv = precColsInv + precRowsInv;
         P = 1./Pinv;
-        detPinv = Pinv.^kern.inputDimension;
+        precColInvNum =  repmat((kern.precisionT.^(-kern.inputDimension/4))', 1, size(x,1));
+        precRowsInvNum=  repmat(kern.precisionT.^(-kern.inputDimension/4) , size(x,1), 1);
+        factorDen = Pinv.^(kern.inputDimension/2); 
+        factor = 2^(kern.inputDimension/2)*(precColInvNum.*precRowsInvNum)./factorDen;
+        K = kern.sigma2Noise.*factor.*exp(-0.5.*P.*n2);
     else
         precCols = kern.precisionT'/2;
         precColsInv = 1./precCols;
         Pinv =  precColsInv;
-        P = repmat(1./Pinv, 1, size(x2,1));
-        detPinv = repmat(Pinv.^kern.inputDimension, 1, size(x2,1));
+        P = repmat(1./Pinv', size(x,1), 1);    
+        %P = repmat(1./Pinv, 1, size(x2,1));
+        K = kern.sigma2Noise*exp(-0.5.*P.*n2);        
     end
-    factor = kern.sigma2Noise./((2*pi)^(kern.inputDimension/2)*sqrt(detPinv));
-    K = factor.*exp(-0.5.*P.*n2);
+    
 end

@@ -32,8 +32,8 @@ function kern = ggKernParamInit(kern)
 
 kern.sigma2_u = 1;
 kern.sigma2_y = 1;
-kern.precision_u = 100*ones(kern.inputDimension,1);
-kern.precision_y = 100*ones(kern.inputDimension,1);
+kern.precision_u = ones(kern.inputDimension,1);
+kern.precision_y = ones(kern.inputDimension,1);
 kern.translation = ones(kern.inputDimension,1); 
 
 kern.nParams =2*kern.inputDimension + 2 + kern.inputDimension;

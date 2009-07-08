@@ -58,22 +58,26 @@ if ggwhiteKern.isArd
         X2 = repmat(x2(:,i)',size(x,1),1);
         X_X2 = (X - X2).*(X - X2);
         matGradLr(i) = sum(sum(0.5*covGrad.*K.*...
-            (Lrinv(i)*P(i)*Lrinv(i) - Lrinv(i)*P(i)*X_X2*P(i)*Lrinv(i))));
+            (-0.5*Lrinv(i) + Lrinv(i)*P(i)*Lrinv(i) - Lrinv(i)*P(i)*X_X2*P(i)*Lrinv(i))));
         matGradLqr(i) = sum(sum(0.5*covGrad.*K.*...
-            (Lqrinv(i)*P(i)*Lqrinv(i) - Lqrinv(i)*P(i)*X_X2*P(i)*Lqrinv(i))));
+            (-0.5*Lqrinv(i) + Lqrinv(i)*P(i)*Lqrinv(i) - Lqrinv(i)*P(i)*X_X2*P(i)*Lqrinv(i))));
     end
     grad_sigma2Noise = factorNoise*sum(sum(covGrad.*Kbase));
     grad_variance    = factorVar1*sum(sum(covGrad.*Kbase));
-else        
-    temp = 0.5*covGrad.*K.*(ggwhiteKern.inputDimension*Pinv - dist);
-    matGradLr = sum(((P.*Lrinv).^2).*temp, 1)';
+else
+%     precCols = repmat(kern.precisionT', 1, size(x,1));
+%     precColsInv = 1./precCols;
+    temp1 = ((P.*Lrinv).^2).*(ggwhiteKern.inputDimension*Pinv - dist);
+    matGradLr = sum(0.5*covGrad.*K.*(-0.5*ggwhiteKern.inputDimension*Lrinv +temp1), 1)';
     %/~ MAURICIO : This is only important if we do kernTest for this kernel
-    %     if size(x,1) >= size(x2,1)
-    %         matGradLr = sum(((P.*Lrinv).^2).*temp, 2)';
-    %     else
-    %         matGradLr = sum(((P.*Lrinv).^2).*temp, 1)';
-    %     end ~/
-    matGradLqr = (Lqrinv^2)*sum(sum((P.^2).*temp, 2));
+    %    if size(x,1) >= size(x2,1)
+    %        matGradLr = sum(0.5*covGrad.*K.*(-0.5*ggwhiteKern.inputDimension*Lrinv +temp1), 2)';           
+    %    else
+    %        matGradLr = sum(0.5*covGrad.*K.*(-0.5*ggwhiteKern.inputDimension*Lrinv +temp1), 1)';
+    %    end
+    %~/
+    temp2 = (Lqrinv^2)*(P.^2).*(ggwhiteKern.inputDimension*Pinv - dist);
+    matGradLqr = sum(sum(0.5*covGrad.*K.*(-0.5*ggwhiteKern.inputDimension*Lqrinv +temp2), 2));
     grad_sigma2Noise = sum(sum(factorNoise.*covGrad.*Kbase));
     grad_variance    = sum(sum(factorVar1.*covGrad.*Kbase));
 end

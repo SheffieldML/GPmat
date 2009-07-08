@@ -20,7 +20,7 @@ function k = ggwhiteKernCompute(kern, x, x2)
 %	
 % SEEALSO : ggwhiteKernParamInit, kernCompute, kernCreate, ggwhiteKernDiagCompute
 %
-% COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
+% COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008, 2009
 
 % KERN
 
@@ -29,4 +29,19 @@ if nargin < 3
   x2 = x;
 end
 
-k = ggwhiteXggwhiteKernCompute(kern, kern, x, x2);
+Lqr = kern.precisionG;
+P = Lqr/2;
+
+if kern.isArd
+    sqrtP = sqrt(P);
+    sqrtPx = x*sparseDiag(sqrtP);
+    sqrtPx2 = x2*sparseDiag(sqrtP);
+    n2 = dist2(sqrtPx, sqrtPx2);    
+else
+    dist = dist2(x, x2);
+    n2 = P*dist;
+end
+factor = kern.sigma2Noise*kern.variance^2;    
+Kbase = exp(-0.5*n2);
+k = factor*Kbase;
+

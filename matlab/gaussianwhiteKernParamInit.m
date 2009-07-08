@@ -28,21 +28,20 @@ function kern = gaussianwhiteKernParamInit(kern, nInd)
 % KERN
 
 % If isArd is true, it assumes the number of inducing functions is one. If
-% isArd is false, it assumes the number of inducing functions is given by nInd 
+% isArd is false, it assumes the number of inducing functions is given by nIndFunct 
 
-kern.isArd = false;
+kern.isArd = true;
 if nargin < 2
-    kern.nIndFunct = 10;              % Number of inducing functions.
+    kern.nIndFunct = 20;              % Number of inducing functions.
 else
     kern.nIndFunct = nInd;           % Number of inducing functions.
 end
 kern.sigma2Noise = 1;
 if kern.isArd
     kern.precisionT = ones(kern.inputDimension,1);
-    %kern.precisionT = 100*rand(kern.inputDimension,1);
     kern.nParams = kern.inputDimension + 1;
 else
-    kern.precisionT = ones(1,kern.nIndFunct);  % Number of rows should equal 1 if not ARD
+    kern.precisionT = 1e-2*ones(1,kern.nIndFunct);  % Number of rows should equal 1 if not ARD
     kern.nParams = kern.nIndFunct + 1;    
 end
 kern.transforms.index =1:kern.nParams;
