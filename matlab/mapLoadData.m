@@ -1030,7 +1030,7 @@ switch dataset
             logDetKout = logdet(Kout, U);
             dim = size(y, 2);
             ll = -dim*log(2*pi) -logDetKout - y*invKout*y';
-            ll = ll*0.5
+            ll = ll*0.5;
             U = reshape(u,size(X1,1),nlf);
             Y = reshape(y,size(X1,1),nout);           
             X = cell(1, nout);
@@ -1061,17 +1061,105 @@ switch dataset
          yTest = [];
          
     case 'schoolData'
-        data = load([baseDir 'schoolData.mat']);
-        X = cell(1,length(data.X));
-        y = cell(1,length(data.X));
-%         for k = 1:length(data.X),
-%             X{k} = zscore(data.X{k});
-%             y{k} = zscore(data.y{k});
-%         end
-        X = data.X';
-        y= data.y';
-        XTest = [];
-        yTest = [];
+        try
+            load([baseDir 'schoolData.mat']);
+        catch
+            nout = 139;
+            file = [baseDir 'ILEA567.DAT'];
+            fid = fopen(file,'r');
+            indicator = feof(fid);
+            cont = 0;            
+            nStudents = 15362;
+            % Student-dependent features
+            yearExam = zeros(nStudents, 3); % 3 features (dummy variables)
+            gender = zeros(nStudents, 1); % 1 features (dummy variables)
+            Vrband = zeros(nStudents, 4); % 4 features (dummy variables)
+            ethnicGroup = zeros(nStudents, 11); % 11 features (dummy variables)
+            % School-dependent features
+            perEligibleStudents = zeros(nStudents, 1); % 1 feature
+            VR1band = zeros(nStudents, 1); % 1 feature
+            schoolGender = zeros(nStudents, 3); % 3 features (dummy variables)
+            schoolDenomination = zeros(nStudents, 3); % 3 features (dummy variables)
+            % Task
+            task = zeros(nStudents, 1); %
+            % Exam score
+            examScore = zeros(nStudents, 1);
+            while ~indicator
+                cont = cont + 1;
+                rawData = fgetl(fid);
+                % STUDENT-Dependent Feature
+                % Year of exam
+                index = str2double(rawData(1));
+                yearExam(cont, index) = 1;
+                % Gender
+                value = str2double(rawData(11));
+                gender(cont, 1) = value;
+                % VR band of student
+                index = str2double(rawData(12));
+                Vrband(cont, index + 1) = 1;
+                % Ethnic group
+                index = str2double(rawData(13:14));
+                ethnicGroup(cont, index) = 1;
+                % SCHOOL-Dependent Features
+                % Percent. Students eligible for free school meals
+                value = str2double(rawData(7:8));
+                perEligibleStudents(cont, 1) = value;
+                % Percent. Students in school in VR band 1
+                value = str2double(rawData(9:10));
+                VR1band(cont, 1) = value;
+                % School gender
+                index = str2double(rawData(15));
+                schoolGender(cont, index) = 1;
+                % School denomination
+                index = str2double(rawData(16));
+                schoolDenomination(cont, index) = 1;
+                % TASK index
+                value = str2double(rawData(2:4));
+                task(cont, 1) = value;
+                % EXAM scores == OUTPUTS
+                value = str2double(rawData(5:6));
+                examScore(cont, 1) = value;
+                indicator = feof(fid);
+            end
+            % Organize the tasks and the inputs per task
+            features = [yearExam gender Vrband ethnicGroup ...
+                perEligibleStudents VR1band schoolGender schoolDenomination];
+            fclose(fid);
+            %%/~MAURICIO : this is just to test if normalization at the
+            % beginning of everything helps
+            %features = zscore(features);
+            %examScore = zscore(examScore); %~/
+            XTemp = cell(nout,1);
+            yTemp = cell(nout,1);
+            for j=1:nout,
+                XTemp{j} = features(task == j, :);
+                yTemp{j} = examScore(task == j, :);
+            end
+            X = cell(1,nout);
+            y = cell(1,nout);
+            for j=1:nout,
+                X{j} = XTemp{j};
+                y{j} = yTemp{j};
+            end
+            % %/~MAURICIO: This bit finds unique features as in Bonilla et
+            % al paper. Just to test what is best.
+            % cont = 0;
+            % for j=1:nout,
+            %     [uniqueX, I, J] = unique(XTemp{j},'rows');
+            %     [sorted, indexJ] = sort(J);
+            %     for k=1: size(uniqueX,1),
+            %         indexToAvg = find(sorted == k);
+            %         X{j}(k,:) = XTemp{j}(indexJ(indexToAvg(1)), :);
+            %         y{j}(k,:) = mean(yTemp{j}(indexJ(indexToAvg), 1));
+            % %        y{j}(k,:) = mean(yTemp{j}(indexJ(indexToAvg), 1))/(size(indexToAvg,1));
+            %     end
+            %     cont = cont + size(uniqueX, 1);
+            % end
+            % sprintf('%f', cont) %~/                        
+            XTest = [];
+            yTest = [];
+            save([baseDir 'schoolData.mat'],'X','y','XTest', 'yTest');
+        end
 
     case 'juraDataCd'
   try
