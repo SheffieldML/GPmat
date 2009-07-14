@@ -1,5 +1,5 @@
-function [K, Linv, Ankinv, Bkinv, kBase, ...
-    factorKern1y, factorKern1u ] = ggXgaussianKernCompute(ggKern, gaussianKern, x, x2)
+function [K, Kbase, Pqrinv, Prinv, P, fSigma2Noise, fSens1, n2] = ...
+    ggXgaussianKernCompute(ggKern, gaussianKern, x, x2)
 
 % GGXGAUSSIANKERNCOMPUTE Compute a cross kernel between the GG and GAUSSIAN kernels.
 % FORMAT
@@ -24,6 +24,8 @@ function [K, Linv, Ankinv, Bkinv, kBase, ...
 %
 %
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
+%
+% MODIFICATIONS : Mauricio A. Alvarez, 2009
 
 % KERN
   
@@ -31,45 +33,38 @@ if nargin < 4
   x2 = x;
 end
 
-cond1 = isfield(ggKern, 'isNormalised') && ~isempty(ggKern.isNormalised);
-cond2 = isfield(gaussianKern, 'isNormalised') && ~isempty(gaussianKern.isNormalised);
-if cond1 == cond2
-    if  ggKern.isNormalised ~= gaussianKern.isNormalised
-        error('Both kernels should be normalised or unnormalised')
-    end
+Pqr = ggKern.precisionG;
+Pr  = gaussianKern.precisionU;
+Pqrinv = 1./Pqr;
+Prinv = 1./Pr;
+Pinv = Pqrinv + Prinv;
+P = 1./Pinv;
+
+if ggKern.isArd
+    sqrtP = sparseDiag(sqrt(P));
+    sqrtPx = x*sqrtP;
+    sqrtPx2 = x2*sqrtP;
+    n2 = dist2(sqrtPx, sqrtPx2);
+    fNumPqr = prod(2*Pqrinv + Prinv)^(1/4);
+    fNumPr = prod(Pr)^(-1/4);
+    fDen = prod(Pinv)^(1/2);
+    factor = ggKern.sigma2Latent*ggKern.sensitivity*fNumPqr*fNumPr/fDen;
+    %factor = gaussianKern.sigma2Latent*ggKern.sensitivity*fNumPqr*fNumPr/fDen;
+    Kbase = exp(-0.5*n2);    
 else
-    error('Both kernels should have flags for normalisation')
+    n2 = dist2(x, x2);
+    fNumPqr = (2*Pqrinv + Prinv)^(ggKern.inputDimension/4);
+    fNumPr = (Pr)^(-ggKern.inputDimension/4);
+    fDen =  Pinv^(ggKern.inputDimension/2);
+    factor = gaussianKern.sigma2Latent*ggKern.sensitivity*fNumPqr*fNumPr/fDen;
+    Kbase = exp(-0.5*P*n2);    
 end
 
-Ank = ggKern.precision_y;
-mu_n = ggKern.translation;
-Bk =  gaussianKern.precision_u;
-Ankinv = 1./Ank;
-Bkinv = 1./Bk;
-P = Ankinv + Bkinv;
-ldet = prod(P);
-Linv = sqrt(1./P);
-Linvx = (x- repmat(mu_n',size(x,1),1))*diag(Linv);
-Linvx2 = x2*diag(Linv);
-n2 = dist2(Linvx, Linvx2);
-
-if cond1
-    if ggKern.isNormalised
-        preFactor = 1;
-    else
-        preFactor = prod(Bkinv);
-    end
-else
-    preFactor = prod(Bkinv);
-end
-
-kBase = exp(-0.5*n2);
-
-K = ggKern.sigma2_y*gaussianKern.sigma2_u*sqrt((preFactor)/ldet)*kBase;
+K = factor*Kbase;
 
 if nargout > 1
-    factorKern1y = ggKern.sigma2_u*sqrt((preFactor)/ldet);
-    factorKern1u = ggKern.sigma2_y*sqrt((preFactor)/ldet);
+    %fSens1 = gaussianKern.sigma2Latent*fNumPqr*fNumPr/fDen;    
+    fSens1 = ggKern.sigma2Latent*fNumPqr*fNumPr/fDen;    
+    fSigma2Noise = ggKern.sensitivity*fNumPqr*fNumPr/fDen;
 end
-
 

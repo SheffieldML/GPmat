@@ -33,36 +33,33 @@ function [params, names] = gaussianwhiteKernExtractParam(kern)
 % KERN
 
 if kern.isArd
-    params = kern.precisionT';
+    if kern.nIndFunct == 1,
+        params = kern.precisionT';
+    else
+        params = kern.precisionT(:)';
+    end
 else
     params = kern.precisionT;
 end
 params(end+1) = kern.sigma2Noise;
+unames = cell(numel(kern.precisionT),1);
 if nargout > 1
-    if kern.isArd
-        unames = cell(size(kern.precisionT,1),1);
-        for i=1:size(kern.precisionT,1),
-            unames{i}=['VIK inverse width latent (' num2str(i) ',' num2str(i) ')'];
+    cont = 0;
+    if exist([kern.type 'Names.txt'], 'file')
+        fidNames = fopen([kern.type 'Names.txt'],'r');
+        for j=1:size(kern.precisionT,2),
+            cont = cont + 1;
+            unames{cont} = fgetl(fidNames);
         end
-        names = unames(:)';
-        names = {names{:}, 'variance'};
-    else
-        unames = cell(numel(kern.precisionT),1);
-        cont = 0;
-        if exist([kern.type 'Names.txt'], 'file')
-            fidNames = fopen([kern.type 'Names.txt'],'r');
-            for j=1:size(kern.precisionT,2),
+        fclose(fidNames);
+    else        
+        for i=1:size(kern.precisionT,2)
+            for j=1:size(kern.precisionT,1)
                 cont = cont + 1;
-                unames{cont} = fgetl(fidNames);
+                unames{cont}=['VIK ' num2str(i) ' inverse width ' num2str(j)];                
             end
-            fclose(fidNames);
-        else
-            for j=1:size(kern.precisionT,2),
-                cont = cont + 1;
-                unames{cont}=['VIK ' num2str(j) ' inverse width latent'];
-            end
-        end
-        names = unames(:)';
-        names = {names{:}, 'variance'};
+        end                            
     end
+    names = unames(:)';
+    names = {names{:}, 'variance'};
 end

@@ -27,15 +27,14 @@ end
 spacing = char(spacing);
 fprintf(spacing);
 if kern.isArd
-    for k =1:kern.inputDimension
-        fprintf('Gaussian white inverse width input dimension %2f: %2.4f (length scale %2.4f)\n', ...
-            k, kern.precisionT(k), 1/sqrt(kern.precisionT(k)));
-        fprintf(spacing);
-    end
+    limit = kern.inputDimension;
 else
-    for j =1:kern.nIndFunct
-        fprintf('Inducing kernel %2d Gaussian white inverse width : %2.4f (length scale %2.4f)\n', ...
-            j, kern.precisionT(1, j), 1/sqrt(kern.precisionT(1,j)));
+    limit = 1;
+end
+for j =1:kern.nIndFunct
+    for k =1:limit,
+        fprintf('VIK %5d inverse width %5d: %2.4f (length scale %2.4f)\n', ...
+            j, k, kern.precisionT(k,j), 1/sqrt(kern.precisionT(k,j)));
         fprintf(spacing);
     end
 end

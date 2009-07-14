@@ -18,11 +18,4 @@ function k = gaussianKernDiagCompute(kern, x)
   
 % KERN
   
-k = kern.sigma2_u*ones(size(x,1),1);
-
-if isfield(kern, 'isNormalised') && ~isempty(kern.isNormalised)
-    if kern.isNormalised
-        detL = prod(kern.precision_u);
-        k = sqrt(detL)*k;        
-    end
-end
+k = kern.sigma2Latent*ones(size(x,1),1);

@@ -27,20 +27,25 @@ function kern = ggKernParamInit(kern)
 % SEEALSO : kernCreate, kernParamInit, ggKernCompute
 %
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
+%
+% MODIFICATIONS : Mauricio A. Alvarez, 2009
 
 % KERN
 
-kern.sigma2_u = 1;
-kern.sigma2_y = 1;
-kern.precision_u = ones(kern.inputDimension,1);
-kern.precision_y = ones(kern.inputDimension,1);
-kern.translation = ones(kern.inputDimension,1); 
-
-kern.nParams =2*kern.inputDimension + 2 + kern.inputDimension;
-
+kern.isArd = true;
+if kern.isArd
+    kern.precisionU = ones(kern.inputDimension,1);
+    kern.precisionG = ones(kern.inputDimension,1);
+    kern.nParams =2*kern.inputDimension + 2;
+else
+    kern.precisionU = 1;
+    kern.precisionG = 1;
+    kern.nParams = 4;
+end
+kern.sigma2Latent = 1;
+kern.sensitivity  = 1;
 % The variances must be positive. As well as the sensitivity of the latent
 % function.
-kern.transforms.index = 1:(2*kern.inputDimension+1);
+kern.transforms.index = 1:(kern.nParams-1);
 kern.transforms.type = optimiDefaultConstraint('positive');
 kern.isStationary = true;
-kern.isNormalised = false;

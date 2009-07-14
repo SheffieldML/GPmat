@@ -16,31 +16,39 @@ function gX = gaussianKernGradX(kern,X, X2)
 % SEEALSO : gaussianKernParamInit, kernGradX, gaussianKernDiagGradX
 %
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
+%
+% MODIFICATIONS : Mauricio A. Alvarez, 2009
 
 % KERN
 
 if nargin < 3,
-    %covGrad = X2;
     X2 = X;
 end
 
-[K, L]  = gaussianKernCompute(kern, X, X2);
-P = L.^2;
-PX = X*diag(P);
-PX2 = X2*diag(P);
+K = gaussianKernCompute(kern, X, X2);
+
+P = kern.precisionU;
+
+if kern.isArd
+    PX = X*diag(P);
+    PX2 = X2*diag(P);
+else
+    PX = P*X;
+    PX2 = P*X2;
+end
 
 gX = zeros(size(X2, 1), size(X2, 2), size(X, 1));
 for i = 1:size(X, 1);
   gX(:, :, i) = gaussianKernGradXpoint(K(i,:)', PX(i, :), PX2);
 end
 
-% if nargin <4,
-%     gX = gX*2;
-%     dgKX = gaussianKernDiagGradX(kern, X);
-%     for i = 1:size(X,1)
-%         gX(i, :, i) = dgKX(i, :);
-%     end
-% end
+if nargin <4,
+    gX = gX*2;
+    dgKX = gaussianKernDiagGradX(kern, X);
+    for i = 1:size(X,1)
+        gX(i, :, i) = dgKX(i, :);
+    end
+end
 
 function gX = gaussianKernGradXpoint(gaussianPart, x, X2)
 

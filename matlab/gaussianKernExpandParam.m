@@ -14,8 +14,10 @@ function kern = gaussianKernExpandParam(kern, params)
 % SEEALSO : gaussianKernParamInit, gaussianKernExtractParam, kernExpandParam
 %
 % COPYRIGHT : Mauricio Alvarez and Neil D. Lawrence, 2008
+%
+% MODIFICATIONS : Mauricio A. Alvarez, 2009
 
 % KERN
   
-kern.sigma2_u = params(end);
-kern.precision_u =  params(1:end-1)';
+kern.sigma2Latent = params(end);
+kern.precisionU =  params(1:end-1)';

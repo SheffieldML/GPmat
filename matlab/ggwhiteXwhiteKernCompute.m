@@ -30,21 +30,13 @@ if nargin < 4
   x2 = x;
 end
 
-if ggwhiteKern.isArd
-    P = ggwhiteKern.precisionG;
-    Pinv = 1./P;
-    detPinv = prod(Pinv);
-    sqrtP = sqrt(P);
-    sqrtPx = x*sparseDiag(sqrtP);
-    sqrtPx2 = x2*sparseDiag(sqrtP);
-    n2 = dist2(sqrtPx, sqrtPx2);
-
-    factor = ggwhiteKern.variance*whiteKern.variance...
-        /((2*pi)^(ggwhiteKern.inputDimension/2)*sqrt(detPinv));
-
-    K = factor*exp(-0.5*n2);
-else
-    
-    
-    
-end
+P = ggwhiteKern.precisionG;
+Pinv = 1./P;
+detPinv = prod(Pinv);
+sqrtP = sqrt(P);
+sqrtPx = x*sparseDiag(sqrtP);
+sqrtPx2 = x2*sparseDiag(sqrtP);
+n2 = dist2(sqrtPx, sqrtPx2);
+factor = ggwhiteKern.variance*whiteKern.variance...
+    /((pi*detPinv)^(ggwhiteKern.inputDimension/4));
+K = factor*exp(-0.5*n2);

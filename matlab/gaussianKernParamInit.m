@@ -1,4 +1,4 @@
-function kern = gaussianKernParamInit(kern)
+function kern = gaussianKernParamInit(kern, isArd)
 
 % GAUSSIANKERNPARAMINIT Gaussian kernel parameter initialisation.
 % The gaussian kernel used here follows the shape of a gaussian
@@ -18,19 +18,31 @@ function kern = gaussianKernParamInit(kern)
 % SEEALSO : kernCreate, kernParamInit
 %
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
+%
+% MODIFICATIONS : Mauricio A. Alvarez, 2009
 
 % KERN
   
 if kern.inputDimension == 0
    kern.inputDimension = 1; 
 end
-kern.sigma2_u = 1;
-kern.precision_u = 100*ones(kern.inputDimension,1);
-kern.nParams = kern.inputDimension + 1;
+switch nargin
+    case 1
+        kern.isArd = true;        
+    case 2
+        kern.isArd = isArd;
+end
+kern.sigma2Latent = 1;
+if kern.isArd
+    kern.precisionU   = ones(kern.inputDimension,1);
+    kern.nParams = kern.inputDimension + 1;
+else
+    kern.precisionU   = 1;
+    kern.nParams = 2;
+end
 % Constrains parameters positive for optimisation.
 % The variances of P need to be positive and we constrain the sensitivity
 % to be positive as well
 kern.transforms.index =1:kern.nParams;
 kern.transforms.type = optimiDefaultConstraint('positive');
 kern.isStationary = true;
-kern.isNormalised = false;

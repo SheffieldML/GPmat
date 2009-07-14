@@ -25,32 +25,41 @@ function gX = gaussianwhiteKernGradX(kern,X, X2)
 if nargin < 3,
     X2 = X;
 end
-
 if kern.isArd
-    K  = gaussianwhiteKernCompute(kern, X, X2);
-    P = kern.precisionT/2;
-    PX = X*sparseDiag(P);
-    PX2 = X2*sparseDiag(P);
-    gX = zeros(size(X2, 1), size(X2, 2), size(X, 1));
-    for i = 1:size(X, 1);
-        gX(:, :, i) = gaussianwhiteKernGradXpoint(PX(i, :), PX2, K(i,:)');
+    if kern.nIndFunct == 1
+        [K, P]  = gaussianwhiteKernCompute(kern, X, X2);
+        PX = X*sparseDiag(P);
+        PX2 = X2*sparseDiag(P);
+        gX = zeros(size(X2, 1), size(X2, 2), size(X, 1));
+        for i = 1:size(X, 1);
+            gX(:, :, i) = gaussianwhiteKernGradXpoint(PX(i, :), PX2, K(i,:)');
+        end
+    else
+        [K, P] = gaussianwhiteKernCompute(kern, X);
+        gX = zeros(size(X2, 1), size(X2, 2), size(X, 1));
+        for j = 1:size(X,2)
+            for i = 1:size(X, 1);
+                partialDer = (K(i,:).*P(i,:,j))';
+                gX(:, j, i) = gaussianwhiteKernGradXpoint( X(i, j), X2(:,j), partialDer);
+            end
+        end        
     end
 else
-    precCols = repmat(kern.precisionT', 1, size(X,1));
-    precRows = repmat(kern.precisionT , size(X2,1), 1);
-    precColsInv = 1./precCols;
-    precRowsInv = 1./precRows;
-    Pinv = precColsInv + precRowsInv;
-    P = 1./Pinv;
-    precColInvNum =  repmat((kern.precisionT.^(-kern.inputDimension/4))', 1, size(X,1));
-    precRowsInvNum=  repmat(kern.precisionT.^(-kern.inputDimension/4) , size(X,1), 1);
-    factorDen = Pinv.^(kern.inputDimension/2);
-    factor = 2^(kern.inputDimension/2)*(precColInvNum.*precRowsInvNum)./factorDen;
-    K = kern.sigma2Noise*factor.*exp(-0.5*P.*dist2(X, X2));
-    gX = zeros(size(X2, 1), size(X2, 2), size(X, 1));
-    for i = 1:size(X, 1);
-        partialDer = (K(i,:).*P(i,:))';
-        gX(:, :, i) = gaussianwhiteKernGradXpoint( X(i, :), X2, partialDer);
+    if kern.nIndFunct == 1
+        [K, P]  = gaussianwhiteKernCompute(kern, X, X2);
+        PX = P*X;
+        PX2 = P*X2;
+        gX = zeros(size(X2, 1), size(X2, 2), size(X, 1));
+        for i = 1:size(X, 1);
+            gX(:, :, i) = gaussianwhiteKernGradXpoint(PX(i, :), PX2, K(i,:)');
+        end
+    else
+        [K, P] = gaussianwhiteKernCompute(kern, X);        
+        gX = zeros(size(X2, 1), size(X2, 2), size(X, 1));
+        for i = 1:size(X, 1);
+            partialDer = (K(i,:).*P(i,:))';
+            gX(:, :, i) = gaussianwhiteKernGradXpoint( X(i, :), X2, partialDer);
+        end
     end
 end
 

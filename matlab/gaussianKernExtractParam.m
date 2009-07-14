@@ -26,16 +26,26 @@ function [params, names] = gaussianKernExtractParam(kern)
 % kernExtractParam, scg, conjgrad
 %
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
+%
+% MODIFICATIONS : Mauricio A. Alvarez, 2009
 
 % KERN
 
-params = kern.precision_u';
-params(end+1) = kern.sigma2_u;
+params = kern.precisionU';
+params(end+1) = kern.sigma2Latent;
 if nargout > 1
-    unames = cell(size(kern.precision_u,1),1);
-    for i=1:size(kern.precision_u,1),
-        unames{i}=['inverse width latent (' num2str(i) ',' num2str(i) ')'];
+    unames = cell(size(kern.precisionU,1),1);
+    if exist([kern.type 'Names.txt'], 'file')
+        fidNames = fopen([kern.type 'Names.txt'],'r');
+        for i=1:size(kern.precisionU,1),           
+            unames{i} = fgetl(fidNames);
+        end
+        fclose(fidNames);
+    else
+        for i=1:size(kern.precisionU,1),
+            unames{i}=['inverse width latent ' num2str(i)];
+        end
+        names = unames(:)';
+        names = {names{:}, 'variance latent'};
     end
-    names = unames(:)';
-    names = {names{:}, 'variance latent'};
 end

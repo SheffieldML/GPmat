@@ -12,8 +12,10 @@ function k = noneKernDiagCompute(kern, x)
 % SEEALSO : noneKernParamInit, kernDiagCompute, kernCreate, noneKernCompute
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
+%
+% MODIFICATIONS : Mauricio A. Alvarez, 2009
 
 % KERN
 
   
-k = zeros(size(x));
+k = zeros(size(x,1),1);

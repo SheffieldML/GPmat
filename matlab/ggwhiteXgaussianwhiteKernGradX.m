@@ -32,17 +32,35 @@ end
 
 [K, P] = ggwhiteXgaussianwhiteKernCompute(ggwhiteKern, gaussianwhiteKern, X2, X);
 
-if ggwhiteKern.isArd
-    PX = X*diag(P);
-    PX2 = X2*diag(P);
+if gaussianwhiteKern.nIndFunct == 1,    
+    if ggwhiteKern.isArd
+        PX = X*diag(P);
+        PX2 = X2*diag(P);
+    else
+        PX = P*X;
+        PX2 = P*X2;
+    end
 end
+
 gX = zeros(size(X2, 1), size(X2, 2), size(X, 1));
+
 for i = 1:size(X, 1);
     if ggwhiteKern.isArd
-        gX(:, :, i) = gaussianKernGradXpoint(PX(i, :), PX2, K(:,i));
+        if gaussianwhiteKern.nIndFunct == 1,
+            gX(:, :, i) = gaussianKernGradXpoint(PX(i, :), PX2, K(:,i));
+        else
+            for j = 1:size(X,2)
+                partialDer = K(:,i).*P(:,i,j);
+                gX(:, j, i) = gaussianKernGradXpoint( X(i, j), X2(:,j), partialDer);
+            end
+        end
     else
-        partialDer = K(:,i).*P(:,i);
-        gX(:, :, i) = gaussianKernGradXpoint( X(i, :), X2, partialDer);
+        if gaussianwhiteKern.nIndFunct == 1,
+            gX(:, :, i) = gaussianKernGradXpoint(PX(i, :), PX2, K(:,i));
+        else
+            partialDer = K(:,i).*P(:,i);
+            gX(:, :, i) = gaussianKernGradXpoint( X(i, :), X2, partialDer);
+        end
     end
 end
 

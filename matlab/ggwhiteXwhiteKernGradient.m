@@ -47,13 +47,13 @@ sqrtPx2 = x2*sparseDiag(sqrtP);
 n2 = dist2(sqrtPx, sqrtPx2);
 
 factor = ggwhiteKern.variance*whiteKern.variance...
-    /((2*pi)^(ggwhiteKern.inputDimension/2)*sqrt(detPinv)); 
+    /((pi*detPinv)^(ggwhiteKern.inputDimension/4));
 
 factorSens = whiteKern.variance...
-    /((2*pi)^(ggwhiteKern.inputDimension/2)*sqrt(detPinv)); 
+    /((pi*detPinv)^(ggwhiteKern.inputDimension/4));
 
 factorVar = ggwhiteKern.variance...
-    /((2*pi)^(ggwhiteKern.inputDimension/2)*sqrt(detPinv)); 
+    /((pi*detPinv)^(ggwhiteKern.inputDimension/4));
 
 Kbase = exp(-0.5*n2);
 
@@ -66,6 +66,10 @@ for i = 1:ggwhiteKern.inputDimension,
     X = repmat(x(:,i),1, size(x2,1));
     X2 = repmat(x2(:,i)',size(x,1),1);
     matGrad(i) = sum(sum(0.5*covPar.*k.*(Pinv(i) - (X - X2).*(X - X2))));
+end
+
+if ~ggwhiteKern.isArd
+    matGrad = sum(matGrad);
 end
 
 g1 = [matGrad' 0 factorSens*sum(sum(covPar.*Kbase))];

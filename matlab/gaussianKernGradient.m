@@ -41,6 +41,8 @@ function g = gaussianKernGradient(kern, x, varargin)
 % gaussianKernDiagGradient, kernGradX
 %  
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
+%
+% MODIFICATIONS : Mauricio A. Alvarez, 2009.
 
 % KERN
   
@@ -52,44 +54,20 @@ else
     covPar = varargin{2};
 end
 
-L = sqrt(kern.precision_u);
-Lx = x*diag(L);
-Lx2 = x2*diag(L);
-n2 = dist2(Lx, Lx2);
-
-
-if isfield(kern, 'isNormalised') && ~isempty(kern.isNormalised)
-    if kern.isNormalised
-        option = 1;
-    else
-        option = 0;
-    end
-else
-   option = 0; 
-end
-
-if option
-    kBase = sqrt(prod(kern.precision_u))*exp(-0.5*n2);
-    k = kern.sigma2_u*kBase;
-    matGrad = zeros(kern.inputDimension,1);
-
-    for i = 1:kern.inputDimension,
-        X = repmat(x(:,i),1, size(x2,1));
-        X2 = repmat(x2(:,i)',size(x,1),1);
-        matGrad(i) = sum(sum(0.5*covPar.*k.*(1/(kern.precision_u(i)) - (X - X2).*(X - X2))));
-    end
-else
-    kBase = exp(-0.5*n2);
-    k = kern.sigma2_u*kBase;
+if kern.isArd
+    [K, Kbase] = gaussianKernCompute(kern, x, x2);
     matGrad = zeros(kern.inputDimension,1);
     for i = 1:kern.inputDimension,
         X = repmat(x(:,i),1, size(x2,1));
         X2 = repmat(x2(:,i)',size(x,1),1);
-        matGrad(i) = -sum(sum(0.5*covPar.*k.*(X - X2).*(X - X2)));
+        matGrad(i) = -sum(sum(0.5*covPar.*K.*(X - X2).*(X - X2)));
     end
-end
+else
+    [K, Kbase, n2] = gaussianKernCompute(kern, x, x2);   
+    matGrad = - 0.5*sum(sum(covPar.*K.*n2,2));
 
-g = [matGrad' sum(sum(covPar.*kBase))];
+end
+g = [matGrad(:)' sum(sum(covPar.*Kbase))];
 
 
 

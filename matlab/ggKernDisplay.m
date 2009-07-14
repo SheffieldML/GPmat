@@ -23,17 +23,17 @@ else
   spacing = [];
 end
 spacing = char(spacing);
-for k=1:kern.inputDimension,
+for k=1:size(kern.precisionU,1),
     fprintf(spacing);
-    fprintf('Latent inverse width: %2.4f (length scale %2.4f)\n', ...
-            kern.precision_u(k), 1/sqrt(kern.precision_u(k)));
+    fprintf('GAUSSIAN inverse width %5d: %2.4f (length scale %2.4f)\n', ...
+            k, kern.precisionU(k), 1/sqrt(kern.precisionU(k)));
 end
-for k=1:kern.inputDimension,
+for k=1:size(kern.precisionG,1),
     fprintf(spacing);
-    fprintf('Gg inverse width: %2.4f (length scale %2.4f)\n', ...
-            kern.precision_y(k), 1/sqrt(kern.precision_y(k)));    
+    fprintf('GG inverse width %5d: %2.4f (length scale %2.4f)\n', ...
+            k, kern.precisionG(k), 1/sqrt(kern.precisionG(k)));    
 end
 fprintf(spacing);    
-fprintf('Latent variance: %2.4f\n', kern.sigma2_u)
+fprintf('GAUSSIAN variance: %2.4f\n', kern.sigma2Latent)
 fprintf(spacing);
-fprintf('Gg Sigma2_y: %2.4f\n', kern.sigma2_y)
+fprintf('GG sensitivity: %2.4f\n', kern.sensitivity)

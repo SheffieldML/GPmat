@@ -45,67 +45,50 @@ if nargin < 5
     x2 = x;
 end
 
-[K, Linv, Ankinv, Amkinv, Bkinv, kBase, factorKern1y, ...
-    factorKern2y, factorKern1u ] = ggXggKernCompute(ggKern1, ggKern2, x, x2);
+matGradPr  = zeros(size(ggKern1.precisionU));
+matGradPqr = zeros(size(ggKern1.precisionG));
+matGradPsr = zeros(size(ggKern2.precisionG));
 
-cond1 = isfield(ggKern1, 'isNormalised') && ~isempty(ggKern1.isNormalised);
-cond2 = isfield(ggKern2, 'isNormalised') && ~isempty(ggKern2.isNormalised);
-if cond1 == cond2
-    if  ggKern1.isNormalised ~= ggKern2.isNormalised
-        error('Both kernels should be normalised or unnormalised')
+if ggKern1.isArd
+    [K, Kbase, Pqrinv, Psrinv, Prinv, P, fSigma2Noise, fSens1, fSens2] = ...
+        ggXggKernCompute(ggKern1, ggKern2, x, x2);    
+    preFactorPqr = 1./(2*Pqrinv + Prinv); 
+    preFactorPsr = 1./(2*Psrinv + Prinv);
+    preFactorPr  = (1./(2*Pqrinv + Prinv)) + (1./(2*Psrinv + Prinv));
+    for i=1:ggKern1.inputDimension
+        X = repmat(x(:,i),1, size(x2,1));
+        X2 = repmat(x2(:,i)',size(x,1),1);
+        X_X2 = (X - X2).*(X - X2);
+        matGradPr(i) = sum(sum(0.5*covGrad.*K.*...
+            (Prinv(i)*(P(i) - 0.5*preFactorPr(i)- P(i)*X_X2*P(i))*Prinv(i))));
+        matGradPqr(i) = sum(sum(0.5*covGrad.*K.*...
+            (Pqrinv(i)*(P(i) - preFactorPqr(i)- P(i)*X_X2*P(i))*Pqrinv(i))));
+        matGradPsr(i) = sum(sum(0.5*covGrad.*K.*...
+            (Psrinv(i)*(P(i) - preFactorPsr(i)- P(i)*X_X2*P(i))*Psrinv(i))));
     end
 else
-    error('Both kernels should have flags for normalisation')
+    [K, Kbase, Pqrinv, Psrinv, Prinv, P, fSigma2Noise, fSens1, fSens2, dist] = ...
+        ggXggKernCompute(ggKern1, ggKern2, x, x2);
+    dim = ggKern1.inputDimension;
+    preFactorPqr = 1/(2*Pqrinv + Prinv);
+    preFactorPsr = 1/(2*Psrinv + Prinv);
+    preFactorPr  = (1/(2*Pqrinv + Prinv)) + (1/(2*Psrinv + Prinv));
+    matGradPr = sum(sum(0.5*covGrad.*K.*...
+        (Prinv*(dim*P - 0.5*dim*preFactorPr- P*dist*P)*Prinv)));   
+    matGradPqr = sum(sum(0.5*covGrad.*K.*...
+        (Pqrinv*(P - dim*preFactorPqr- P*dist*P)*Pqrinv)));
+    matGradPsr = sum(sum(0.5*covGrad.*K.*...
+        (Psrinv*(P - dim*preFactorPsr- P*dist*P)*Psrinv)));
 end
 
+gradSigma2Latent =  fSigma2Noise*sum(sum(covGrad.*Kbase));
+gradSens1 = fSens1*sum(sum(covGrad.*Kbase));
+gradSens2 = fSens2*sum(sum(covGrad.*Kbase));
 
-Pinv = Linv.^2;
-mu_n = ggKern1.translation;
-mu_m = ggKern2.translation;
-x = x - repmat(mu_n',size(x,1),1); % Remove the mean first
-x2 = x2 - repmat(mu_m',size(x2,1),1); % Remove the mean first
-
-matGradBk = zeros(ggKern1.inputDimension,1);
-matGradAnk = zeros(ggKern1.inputDimension,1);
-matGradAmk = zeros(ggKern1.inputDimension,1);
-gradMuN = zeros(ggKern1.inputDimension,1);
-
-for i=1:ggKern1.inputDimension
-    X = repmat(x(:,i),1, size(x2,1));
-    X2 = repmat(x2(:,i)',size(x,1),1);
-    X_X2 = (X - X2).*(X - X2);
-    if cond1
-        if ggKern1.isNormalised
-            preFactor = 0;
-        else
-            preFactor = Bkinv(i);
-        end
-    else
-        preFactor = Bkinv(i);
-    end
-    matGradBk(i) = sum(sum(0.5*covGrad.*K.*...
-            (Bkinv(i)*Pinv(i)*Bkinv(i) - preFactor - Bkinv(i)*Pinv(i)*X_X2*Pinv(i)*Bkinv(i))));
-    matGradAnk(i) = sum(sum(0.5*covGrad.*K.*...
-        (Ankinv(i)*Pinv(i)*Ankinv(i) -  Ankinv(i)*Pinv(i)*X_X2*Pinv(i)*Ankinv(i))));
-    matGradAmk(i) = sum(sum(0.5*covGrad.*K.*...
-        (Amkinv(i)*Pinv(i)*Amkinv(i)  - Amkinv(i)*Pinv(i)*X_X2*Pinv(i)*Amkinv(i))));
-    gradMuN(i) = sum(sum(covGrad.*K.*(Pinv(i)*((X - X2)))));
-end
-
-grad_sigma2_u =  factorKern1u*sum(sum(covGrad.*kBase));
-grad_sigma2_y1 = factorKern1y*sum(sum(covGrad.*kBase));
-grad_sigma2_y2 = factorKern2y*sum(sum(covGrad.*kBase));
-
-if nargin<5,
-    gradMuM = gradMuN;
-else
-    gradMuM = -gradMuN;
-end
-    
 
 % only pass the gradient with respect to the inverse width to one
 % of the gradient vectors ... otherwise it is counted twice.
-g1 = [matGradBk(:)'  matGradAnk(:)' grad_sigma2_u grad_sigma2_y1 gradMuN'];
-g2 = [zeros(1,length(matGradBk)) matGradAmk(:)' 0 grad_sigma2_y2 gradMuM'];
+g1 = [matGradPr(:)'              matGradPqr(:)' gradSigma2Latent gradSens1];
+g2 = [zeros(1,size(matGradPr,1)) matGradPsr(:)' 0                gradSens2];
 
 

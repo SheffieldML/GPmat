@@ -30,7 +30,7 @@ function kern = ggwhiteKernParamInit(kern)
 
 % KERN
 
-kern.isArd = true;
+kern.isArd = false;
 if kern.isArd
     kern.precisionG = ones(kern.inputDimension,1);
     kern.sigma2Noise = 1;  % Also called variance latent or variance of noise

@@ -17,7 +17,9 @@ function gX = ggXgaussianKernGradX(ggKern, gaussianKern, X, X2)
 % SEEALSO : gaussianKernParamInit, kernGradX, gaussianKernDiagGradX
 %
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
-  
+%
+% MODIFICATIONS : Mauricio A. Alvarez, 2009.
+
 % KERN
 
 if nargin < 3,    
@@ -28,24 +30,23 @@ else
     X2 = U;
 end
 
-[K, Linv] = ggXgaussianKernCompute(ggKern, gaussianKern, X2, X);
-Pinv = Linv.^2;
-X2 = (X2- repmat(ggKern.translation',size(X2,1),1));
-PinvX = X*diag(Pinv);
-PinvX2 = X2*diag(Pinv);
+
+[K, Kbase, Pqrinv, Prinv, P] = ggXgaussianKernCompute(ggKern, ....
+    gaussianKern, X2, X);
+
+if ggKern.isArd
+    PX = X*diag(P);
+    PX2 = X2*diag(P);
+else
+    PX = P*X;
+    PX2 = P*X2;
+end
 
 gX = zeros(size(X2, 1), size(X2, 2), size(X, 1));
 for i = 1:size(X, 1);
-  gX(:, :, i) = gaussianKernGradXpoint(K(:,i), PinvX(i, :), PinvX2);
+  gX(:, :, i) = gaussianKernGradXpoint(K(:,i), PX(i, :), PX2);
 end
 
-% gXu = zeros(size(X));
-% 
-% for i = 1:size(X,1),
-%     for j=1:size(X,2),
-%       gXu(i,j) = covGrad(i,:)*gX(:,j,i);
-%     end
-% end
 
 function gX = gaussianKernGradXpoint(gaussianPart, x, X2)
 

@@ -1,4 +1,4 @@
-function [K, L]  = gaussianKernCompute(kern, x, x2)
+function [K, Kbase, n2]  = gaussianKernCompute(kern, x, x2)
 
 % GAUSSIANKERNCOMPUTE Compute the Gaussian kernel given the parameters and X.
 % FORMAT
@@ -23,24 +23,25 @@ function [K, L]  = gaussianKernCompute(kern, x, x2)
 
 % KERN
 
-L = sqrt(kern.precision_u);
-Lx = x*diag(L);
-
-if nargin < 3  
-  n2 = dist2(Lx, Lx);
-  K = kern.sigma2_u*exp(-0.5*n2);
-else
-  Lx2 = x2*diag(L);
-  n2 = dist2(Lx, Lx2);
-  K = kern.sigma2_u*exp(-0.5*n2);
-end
-
-if isfield(kern, 'isNormalised') && ~isempty(kern.isNormalised)
-    if kern.isNormalised
-        detL = prod(kern.precision_u);
-        K = sqrt(detL)*K;        
+if kern.isArd
+    sqrtP = sqrt(kern.precisionU);
+    sqrtPx = x*sparseDiag(sqrtP);
+    if nargin < 3
+        n2 = dist2(sqrtPx, sqrtPx);        
+    else
+        sqrtPx2 = x2*sparseDiag(sqrtP);
+        n2 = dist2(sqrtPx, sqrtPx2);        
     end
+    Kbase = exp(-0.5*n2);    
+else
+    if nargin < 3
+        n2 = dist2(x, x);        
+    else        
+        n2 = dist2(x, x2);        
+    end
+    Kbase = exp(-0.5*kern.precisionU*n2);    
 end
+K = kern.sigma2Latent*Kbase;    
 
 
 

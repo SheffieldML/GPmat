@@ -55,63 +55,54 @@ else
 end
 
 if kern.isArd
-    sqrtP = sqrt(kern.precisionT/2);
-    Px = x*sparseDiag(sqrtP);   
-    if nargin < 4
-        n2 = dist2(Px, Px);
-    else
-        Px2 = x2*sparseDiag(sqrtP);
-        n2 = dist2(Px, Px2);
-    end
-    kBase = exp(-0.5*n2);
-    k = kern.sigma2Noise*kBase;
-    matGrad = zeros(kern.inputDimension,1);
-    for i = 1:kern.inputDimension,
-        X = repmat(x(:,i),1, size(x2,1));
-        X2 = repmat(x2(:,i)',size(x,1),1);
-        matGrad(i) = sum(sum(0.25*covPar.*k.*(- (X - X2).*(X - X2))));
-    end
-    g = [matGrad' sum(sum(covPar.*kBase))];
-else
-    dist = dist2(x, x2);
-    if nargin < 4
-        if kern.nIndFunct~=size(x,1)
-            error(['The number of inducing functions must be equal the' ...
-                'number of inducing points']);
+    if kern.nIndFunct == 1
+        [k, P, kBase] = gaussianwhiteKernCompute(kern, x, x2);
+        matGrad = zeros(kern.inputDimension,1);
+        for i = 1:kern.inputDimension,
+            X = repmat(x(:,i),1, size(x2,1));
+            X2 = repmat(x2(:,i)',size(x,1),1);
+            matGrad(i) = sum(sum(0.25*covPar.*k.*(- (X - X2).*(X - X2))));
         end
-        precCols = repmat(kern.precisionT', 1, size(x,1));
-        precRows = repmat(kern.precisionT , size(x,1), 1);
-        precColsInv = 1./precCols;
-        precRowsInv = 1./precRows;
-        Pinv = precColsInv + precRowsInv;
-        P = 1./Pinv;
-        precColInvNum =  repmat((kern.precisionT.^(-kern.inputDimension/4))', 1, size(x,1));
-        precRowsInvNum=  repmat(kern.precisionT.^(-kern.inputDimension/4) , size(x,1), 1);
-        factorDen = Pinv.^(kern.inputDimension/2); 
-        factor = 2^(kern.inputDimension/2)*(precColInvNum.*precRowsInvNum)./factorDen;
-        n2  = P.*dist;
-        kBase = exp(-0.5*n2);
-        k = kern.sigma2Noise*factor.*kBase;
-        gradSigma2Noise = sum(sum(factor.*covPar.*kBase));
+        gradSigma2Noise = sum(sum(covPar.*kBase));       
     else
-        precCols = kern.precisionT'/2;
-        precColsInv = 1./precCols;
-        Pinv =  precColsInv;
-     %   P = repmat(1./Pinv', size(x,1), 1);    
-        P = repmat(1./Pinv, 1, size(x2,1));
-        n2  = P.*dist;
-        kBase = exp(-0.5*n2);
-        k = kern.sigma2Noise*kBase;
-        gradSigma2Noise = sum(sum(covPar.*kBase));
-    end   
-    if nargin<4
-        temp = ((P.*precColsInv).^2).*(kern.inputDimension*Pinv - dist);
-        matGrad = 2*sum(0.5*covPar.*k.*(-0.5*kern.inputDimension*precColsInv+temp), 2)';
-    else
-        matGrad = 0.25*sum(covPar.*k.*( - dist),2)';
+        matGrad = zeros(kern.inputDimension, kern.nIndFunct);
+        if nargin < 4,
+            [K, P, Kbase, dist, Factor, precColsInv, Pinv] = ...
+                gaussianwhiteKernCompute(kern, x);
+             gradSigma2Noise = sum(sum(Factor.*covPar.*Kbase)); 
+        else
+            [K, P, Kbase, dist]  = gaussianwhiteKernCompute(kern, x, x2);
+            gradSigma2Noise = sum(sum(covPar.*Kbase));
+        end        
+        for i=1:kern.inputDimension,
+            if nargin<4
+                temp = ((P(:,:,i).*precColsInv(:,:,i)).^2).*(Pinv(:,:,i) - dist(:,:,i));
+                matGrad(i,:) = 2*sum(0.5*covPar.*K.*(-0.5*precColsInv(:,:,i)+temp), 2)';
+            else
+                matGrad(i,:) = 0.25*sum(covPar.*K.*( - dist(:,:,i)),2)';
+            end            
+        end
     end
-    g = [matGrad gradSigma2Noise];
+else
+    if kern.nIndFunct == 1
+        if nargin<4
+            x2 = x;
+        end
+        [K, P, Kbase, n2] = gaussianwhiteKernCompute(kern, x, x2);
+        matGrad = 0.25*sum(sum(covPar.*K.*( - n2),2));
+        gradSigma2Noise = sum(sum(covPar.*Kbase));
+    else        
+        if nargin<4
+            [K, P, Kbase, dist, Factor, precColsInv, Pinv] = ...
+                gaussianwhiteKernCompute(kern, x);
+            temp = ((P.*precColsInv).^2).*(kern.inputDimension*Pinv - dist);
+            matGrad = 2*sum(0.5*covPar.*K.*(-0.5*kern.inputDimension*precColsInv+temp), 2)';
+            gradSigma2Noise = sum(sum(Factor.*covPar.*Kbase));
+        else
+            [K, P, Kbase, dist]  = gaussianwhiteKernCompute(kern, x, x2);
+            matGrad = 0.25*sum(covPar.*K.*( - dist),2)';
+            gradSigma2Noise = sum(sum(covPar.*Kbase));
+        end
+    end
 end
-
-
-
+g = [matGrad(:)' gradSigma2Noise];

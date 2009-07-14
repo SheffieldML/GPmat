@@ -49,6 +49,26 @@ else
   x2 = varargin{1};
 end
 
-[g1, g2] = ggXggKernGradient(kern, kern, x, x2, varargin{end});
+covGrad = varargin{end};
 
-g = g1 + g2;
+if kern.isArd
+    [K, Kbase, Prinv, Pqrinv, P] = ggKernCompute(kern, x, x2);
+    matGradPqr = zeros(kern.inputDimension,1);
+    matGradPr  = zeros(kern.inputDimension,1);
+    for i=1:kern.inputDimension
+        X = repmat(x(:,i),1, size(x2,1));
+        X2 = repmat(x2(:,i)',size(x,1),1);
+        X_X2 = (X - X2).*(X - X2);
+        matGradPqr(i) = -sum(sum(covGrad.*K.*(Pqrinv(i)*P(i)*X_X2*P(i)*Pqrinv(i))));
+        matGradPr(i) = -0.5*sum(sum(covGrad.*K.*(Prinv(i)*P(i)*X_X2*P(i)*Prinv(i))));
+    end
+else
+    [K, Kbase, Prinv, Pqrinv, P, dist] = ggKernCompute(kern, x, x2);
+    matGradPqr = -sum(sum(covGrad.*K.*((Pqrinv*P)^2*dist)));
+    matGradPr  = -0.5*sum(sum(covGrad.*K.*((Prinv*P)^2*dist)));
+end
+
+gradSigma2Latent =  kern.sensitivity^2*sum(sum(covGrad.*Kbase));
+gradSensitivity  = 2*kern.sensitivity*kern.sigma2Latent*sum(sum(covGrad.*Kbase)); 
+
+g = [matGradPr(:)' matGradPqr(:)' gradSigma2Latent gradSensitivity];

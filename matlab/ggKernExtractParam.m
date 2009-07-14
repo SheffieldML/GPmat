@@ -26,19 +26,29 @@ function [params, names] = ggKernExtractParam(kern)
 % conjgrad
 % 
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
+%
+% MODIFICATIONS : Mauricio A. Alvarez, 2009
 
 % KERN
 
-params = [kern.precision_u' kern.precision_y' kern.sigma2_u kern.sigma2_y kern.translation'];
+params = [kern.precisionU(:)' kern.precisionG(:)' ...
+    kern.sigma2Latent kern.sensitivity];
 
-if nargout > 1
-    unames = cell(1,kern.inputDimension);
-    ynames = cell(1,kern.inputDimension);
-    mu_names = cell(1,kern.inputDimension);
-    for i=1:kern.inputDimension,
-        unames{i}=['inverse width latent (' num2str(i) ',' num2str(i) ')'];
-        ynames{i}=['inverse width output (' num2str(i) ',' num2str(i) ')'];
-        mu_names{i}=['mean (' num2str(i) ')'];
-    end    
-    names = {unames{:}, ynames{:}, 'variance latent', 'variance output' , mu_names{:}};
+if nargout > 1    
+    unames = cell(1,size(kern.precisionU,1));
+    ynames = cell(1,size(kern.precisionG,1));
+    if exist([kern.type 'Names.txt'], 'file')
+        fidNames = fopen([kern.type 'Names.txt'],'r');
+        for i=1:size(kern.precisionU,1),
+            unames{i} = fgetl(fidNames);
+            ynames{i} = fgetl(fidNames);
+        end
+        fclose(fidNames);
+    else
+        for i=1:size(kern.precisionU,1),
+            unames{i}=['inverse width latent ' num2str(i)];
+            ynames{i}=['inverse width output ' num2str(i)];
+        end
+    end
+    names = {unames{:}, ynames{:}, 'variance latent', 'sensitivity'};
 end

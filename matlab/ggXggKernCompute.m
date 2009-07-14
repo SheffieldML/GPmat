@@ -1,5 +1,5 @@
-function [K, Linv, Ankinv, Amkinv, Bkinv, kBase, factorKern1y, ...
-    factorKern2y, factorKern1u ] = ggXggKernCompute(ggKern1, ggKern2, x, x2)
+function [K, Kbase, Pqrinv, Psrinv, Prinv, P, fSigma2Noise, fSens1, ...
+    fSens2, n2] = ggXggKernCompute(ggKern1, ggKern2, x, x2)
 % GGXGGKERNCOMPUTE Compute a cross kernel between two GG kernels.
 % FORMAT
 % DESC computes cross kernel
@@ -29,49 +29,41 @@ function [K, Linv, Ankinv, Amkinv, Bkinv, kBase, factorKern1y, ...
 if nargin < 4
   x2 = x;
 end
-Ank = ggKern1.precision_y;
-Amk = ggKern2.precision_y;
-Bk = ggKern1.precision_u;
-mu_n = ggKern1.translation;
-mu_m = ggKern2.translation;
-Ankinv = 1./Ank;
-Amkinv = 1./Amk;
-Bkinv = 1./Bk;
-P = Ankinv + Amkinv + Bkinv;
-ldet = prod(P);
-Linv = sqrt(1./P);
-Linvx = (x- repmat(mu_n',size(x,1),1))*diag(Linv);
-Linvx2 = (x2- repmat(mu_m',size(x2,1),1))*diag(Linv);
-n2 = dist2(Linvx, Linvx2);
-kBase = exp(-0.5*n2);
 
-cond1 = isfield(ggKern1, 'isNormalised') && ~isempty(ggKern1.isNormalised);
-cond2 = isfield(ggKern2, 'isNormalised') && ~isempty(ggKern2.isNormalised);
-if cond1 == cond2
-    if  ggKern1.isNormalised ~= ggKern2.isNormalised
-        error('Both kernels should be normalised or unnormalised')
-    end
+Pqr = ggKern1.precisionG;
+Psr = ggKern2.precisionG;
+Pr  = ggKern1.precisionU;
+Pqrinv = 1./Pqr;
+Psrinv = 1./Psr;
+Prinv = 1./Pr;
+Pinv = Pqrinv + Psrinv + Prinv;
+P = 1./Pinv;
+
+if ggKern1.isArd
+    sqrtP = sparseDiag(sqrt(P));
+    sqrtPx = x*sqrtP;
+    sqrtPx2 = x2*sqrtP;
+    n2 = dist2(sqrtPx, sqrtPx2);
+    fNumPqr = prod(2*Pqrinv + Prinv)^(1/4);
+    fNumPsr = prod(2*Psrinv + Prinv)^(1/4);
+    fDen = prod(Pinv)^(1/2);
+    factor = ggKern1.sigma2Latent*ggKern1.sensitivity*...
+        ggKern2.sensitivity*fNumPqr*fNumPsr/fDen;
+    Kbase = exp(-0.5*n2);    
 else
-    error('Both kernels should have flags for normalisation')
+    n2 = dist2(x, x2);
+    fNumPqr = (2*Pqrinv + Prinv)^(ggKern1.inputDimension/4);
+    fNumPsr = (2*Psrinv + Prinv)^(ggKern2.inputDimension/4);
+    fDen = prod(Pinv)^(ggKern1.inputDimension/2);
+    factor = ggKern1.sigma2Latent*ggKern1.sensitivity*...
+        ggKern2.sensitivity*fNumPqr*fNumPsr/fDen;
+    Kbase = exp(-0.5*P*n2);    
 end
 
-if cond1
-    if ggKern1.isNormalised
-        preFactor = 1;
-    else
-        detBkinv = prod(Bkinv);
-        preFactor = detBkinv;
-    end
-else
-   detBkinv = prod(Bkinv);
-   preFactor = detBkinv; 
-end
-
-K = ggKern1.sigma2_y*ggKern2.sigma2_y*ggKern1.sigma2_u*sqrt((preFactor)/ldet)...
-    *kBase;
+K = factor*Kbase;
 
 if nargout > 1
-    factorKern1y = ggKern2.sigma2_y*ggKern1.sigma2_u*sqrt((preFactor)/ldet);
-    factorKern2y = ggKern1.sigma2_y*ggKern1.sigma2_u*sqrt((preFactor)/ldet);
-    factorKern1u = ggKern1.sigma2_y*ggKern2.sigma2_y*sqrt((preFactor)/ldet);
+    fSens1 = ggKern1.sigma2Latent*ggKern2.sensitivity*fNumPqr*fNumPsr/fDen;
+    fSens2 = ggKern1.sigma2Latent*ggKern1.sensitivity*fNumPqr*fNumPsr/fDen;
+    fSigma2Noise = ggKern1.sensitivity*ggKern2.sensitivity*fNumPqr*fNumPsr/fDen;
 end

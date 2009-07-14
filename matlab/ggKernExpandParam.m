@@ -16,18 +16,13 @@ function kern = ggKernExpandParam(kern, params)
 % SEEALSO : ggKernParamINit, ggKernExtractParam, kernExpandParam
 %
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
+%
+% MODIFICATIONS : Mauricio A. Alvarez, 2009
 
 % KERN
 
-
-covG = params(1:end-2-kern.inputDimension);
-
-startOne = 1;
-endOne =kern.inputDimension;
-kern.precision_u = covG(:,startOne:endOne)';
-startOne = startOne + kern.inputDimension;
-endOne = endOne + kern.inputDimension;
-kern.precision_y = covG(:,startOne:endOne)';
-kern.sigma2_u = params(end-kern.inputDimension-1);
-kern.sigma2_y = params(end-kern.inputDimension);
-kern.translation = params(end-kern.inputDimension+1:end)';
+sizeP = size(kern.precisionU,1);
+kern.precisionU = params(1:sizeP)';
+kern.precisionG = params(sizeP+1:2*sizeP)';
+kern.sigma2Latent = params(end-1);
+kern.sensitivity = params(end);
