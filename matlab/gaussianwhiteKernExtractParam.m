@@ -42,12 +42,12 @@ else
     params = kern.precisionT;
 end
 params(end+1) = kern.sigma2Noise;
-unames = cell(numel(kern.precisionT),1);
+unames = cell(1,numel(kern.precisionT));
 if nargout > 1
     cont = 0;
     if exist([kern.type 'Names.txt'], 'file')
         fidNames = fopen([kern.type 'Names.txt'],'r');
-        for j=1:size(kern.precisionT,2),
+        for j=1:size(kern.precisionT,1),
             cont = cont + 1;
             unames{cont} = fgetl(fidNames);
         end
@@ -56,10 +56,10 @@ if nargout > 1
         for i=1:size(kern.precisionT,2)
             for j=1:size(kern.precisionT,1)
                 cont = cont + 1;
-                unames{cont}=['VIK ' num2str(i) ' inverse width ' num2str(j)];                
+                unames{cont}=['VIK ' num2str(i) ', inverse width ' num2str(j) '.'];                
             end
         end                            
     end
-    names = unames(:)';
-    names = {names{:}, 'variance'};
+    names = unames(:);
+    names = {names{:}, 'variance latent'};
 end

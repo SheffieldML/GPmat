@@ -28,7 +28,7 @@ if kern.inputDimension == 0
 end
 switch nargin
     case 1
-        kern.isArd = true;        
+        kern.isArd = false;        
     case 2
         kern.isArd = isArd;
 end

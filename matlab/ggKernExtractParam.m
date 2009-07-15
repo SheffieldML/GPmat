@@ -46,8 +46,8 @@ if nargout > 1
         fclose(fidNames);
     else
         for i=1:size(kern.precisionU,1),
-            unames{i}=['inverse width latent ' num2str(i)];
-            ynames{i}=['inverse width output ' num2str(i)];
+            unames{i}=['inverse width latent ' num2str(i) '.'];
+            ynames{i}=['inverse width output ' num2str(i) '.'];
         end
     end
     names = {unames{:}, ynames{:}, 'variance latent', 'sensitivity'};

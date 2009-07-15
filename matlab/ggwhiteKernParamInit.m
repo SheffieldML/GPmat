@@ -1,4 +1,4 @@
-function kern = ggwhiteKernParamInit(kern)
+function kern = ggwhiteKernParamInit(kern, isArd)
 
 % GGWHITEKERNPARAMINIT GG WHITE kernel parameter initialisation.
 % FORMAT
@@ -30,7 +30,13 @@ function kern = ggwhiteKernParamInit(kern)
 
 % KERN
 
-kern.isArd = false;
+switch nargin
+    case 1
+        kern.isArd = false;        
+    case 2
+        kern.isArd = isArd;
+end
+
 if kern.isArd
     kern.precisionG = ones(kern.inputDimension,1);
     kern.sigma2Noise = 1;  % Also called variance latent or variance of noise

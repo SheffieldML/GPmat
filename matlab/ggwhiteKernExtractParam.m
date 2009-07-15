@@ -37,10 +37,10 @@ if nargout > 1
     if kern.isArd
         ynames = cell(1,kern.inputDimension);
         for i=1:kern.inputDimension,
-            ynames{i}=['inverse width output (' num2str(i) ',' num2str(i) ')'];
+            ynames{i}=['inverse width output ' num2str(i) '.'];
         end
-        names = {ynames{:}, 'variance', 'sensitivity'};
+        names = {ynames{:}, 'variance latent', 'sensitivity'};
     else
-        names = {'inverse width output' , 'variance', 'sensitivity'};
+        names = {'inverse width output 1.' , 'variance latent', 'sensitivity'};
     end    
 end

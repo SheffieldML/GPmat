@@ -1,4 +1,4 @@
-function kern = ggKernParamInit(kern)
+function kern = ggKernParamInit(kern, isArd)
 
 % GGKERNPARAMINIT GG kernel parameter initialisation.
 % FORMAT
@@ -32,7 +32,13 @@ function kern = ggKernParamInit(kern)
 
 % KERN
 
-kern.isArd = true;
+switch nargin
+    case 1
+        kern.isArd = false;
+    case 2
+        kern.isArd = isArd;
+end
+
 if kern.isArd
     kern.precisionU = ones(kern.inputDimension,1);
     kern.precisionG = ones(kern.inputDimension,1);

@@ -31,7 +31,7 @@ function kern = gaussianwhiteKernParamInit(kern, isArd, nInd)
 % By default it assumes the kernel is ARD and only have one inducing kernel
 switch nargin
     case 1
-        kern.isArd = true;
+        kern.isArd = false;
         kern.nIndFunct = 1;
     case 2
         kern.isArd = isArd;
