@@ -1137,27 +1137,31 @@ switch dataset
             end
             X = cell(1,nout);
             y = cell(1,nout);
-            for j=1:nout,
-                X{j} = XTemp{j};
-                y{j} = yTemp{j};
-            end
-            % %/~MAURICIO: This bit finds unique features as in Bonilla et
+            XTest = cell(1,nout);
+            yTest = cell(1,nout);
+%            nRepeat = cell(1,nout);
+%             for j=1:nout,
+%                 X{j} = XTemp{j};
+%                 y{j} = yTemp{j};
+%             end
+            % This bit finds unique features as in Bonilla et
             % al paper. Just to test what is best.
-            % cont = 0;
-            % for j=1:nout,
-            %     [uniqueX, I, J] = unique(XTemp{j},'rows');
-            %     [sorted, indexJ] = sort(J);
-            %     for k=1: size(uniqueX,1),
-            %         indexToAvg = find(sorted == k);
-            %         X{j}(k,:) = XTemp{j}(indexJ(indexToAvg(1)), :);
-            %         y{j}(k,:) = mean(yTemp{j}(indexJ(indexToAvg), 1));
-            % %        y{j}(k,:) = mean(yTemp{j}(indexJ(indexToAvg), 1))/(size(indexToAvg,1));
-            %     end
-            %     cont = cont + size(uniqueX, 1);
-            % end
-            % sprintf('%f', cont) %~/                        
-            XTest = [];
-            yTest = [];
+            cont = 0;
+            q = size(features,2);
+            for j=1:nout,
+                [uniqueX, I, J] = unique(XTemp{j},'rows');
+                [sorted, indexJ] = sort(J);
+                for k=1: size(uniqueX,1),
+                    indexToAvg = find(sorted == k);
+                    X{j}(k,1:q) = XTemp{j}(indexJ(indexToAvg(1)), :);
+                    XTest{j}{k,1} = repmat(XTemp{j}(indexJ(indexToAvg(1)), :), length(indexToAvg),1);
+                    X{j}(k,q+1) = length(indexToAvg);
+                    y{j}(k,:) = mean(yTemp{j}(indexJ(indexToAvg), 1));
+                    yTest{j}{k,1} = yTemp{j}(indexJ(indexToAvg), 1);
+%                    nRepeat{j}(k,1) = length(indexToAvg);
+                end
+                cont = cont + size(uniqueX, 1);
+            end            
             save([baseDir 'schoolData.mat'],'X','y','XTest', 'yTest');
         end
 
