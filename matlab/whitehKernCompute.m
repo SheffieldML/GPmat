@@ -24,7 +24,7 @@ function [k, sk] = whitehKernCompute(kern, x, x2)
 
 if nargin < 3
   % /~ MAURICIO : This is intended for the school Data    
-  sk = sparseDiag(1./x);  
+  sk = sparseDiag(1./x(:,end));  
   k = kern.variance*sk;
   % ~/
 else
