@@ -33,7 +33,7 @@ else
 end
 for j =1:kern.nIndFunct
     for k =1:limit,
-        fprintf('VIK %5d inverse width %5d: %2.4f (length scale %2.4f)\n', ...
+        fprintf('VIK %d inverse width %d : %2.4f (length scale %2.4f)\n', ...
             j, k, kern.precisionT(k,j), 1/sqrt(kern.precisionT(k,j)));
         fprintf(spacing);
     end
