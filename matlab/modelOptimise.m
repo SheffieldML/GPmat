@@ -46,7 +46,7 @@ else
 
   options = optOptions;
   options(14) = iters;
-  options(9) = 1;
+  options(9) = 0;
   options(1) = display;
   
   
