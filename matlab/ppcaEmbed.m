@@ -17,15 +17,30 @@ function [X, sigma2, W] = ppcaEmbed(Y, dims)
 % MLTOOLS
 
 if ~any(any(isnan(Y)))
-  [v, u] = pca(Y);
-  v(find(v<0))=0;
-  Ymean = mean(Y);
-  Ycentre = zeros(size(Y));
-  for i = 1:size(Y, 2);
-    Ycentre(:, i) = Y(:, i) - Ymean(i);
+  if size(Y, 1)<size(Y, 2)
+    Ymean = mean(Y);
+    Ycentre = zeros(size(Y));
+    for i = 1:size(Y, 1)
+      Ycentre(i, :) = Y(i, :) -Ymean;
+    end
+    innerY = Ycentre*Ycentre';
+    [v, u] = eigdec(innerY, dims); 
+    v(find(v<0))=0;
+    X = u(:, 1:dims);
+    sigma2 = (trace(innerY) - sum(v))/(size(Y, 2)-dims);
+    W = X'*Ycentre;
+
+  else
+    [v, u] = pca(Y);
+    v(find(v<0))=0;
+    Ymean = mean(Y);
+    Ycentre = zeros(size(Y));
+    for i = 1:size(Y, 2);
+      Ycentre(:, i) = Y(:, i) - Ymean(i);
+    end
+    X = Ycentre*u(:, 1:dims)*diag(1./sqrt(v(1:dims)));
+    sigma2 = mean(v(dims+1:end));
   end
-  X = Ycentre*u(:, 1:dims)*diag(1./sqrt(v(1:dims)));
-  sigma2 = mean(v(dims+1:end));
 else
   % Hacky implementation of Probabilistic PCA for when there is missing data.
   iters = 100;

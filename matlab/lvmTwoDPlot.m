@@ -1,4 +1,4 @@
-function returnVal = lvmTwoDPlot(X, lbl, symbol)
+function [returnVal, txtReturnVal] = lvmTwoDPlot(X, lbl, symbol)
 
 % LVMTWODPLOT Helper function for plotting the labels in 2-D.
 % FORMAT
@@ -22,6 +22,14 @@ else
   connect = false;
 end
 
+if iscell(lbl)
+  lblStr = lbl{2};
+  lbl = lbl{1};
+  labelsString = true;
+else
+  labelsString = false;
+end
+
 if nargin < 3
   if isempty(lbl)
     symbol = getSymbols(1);
@@ -31,6 +39,7 @@ if nargin < 3
 end
 axisHand = gca;
 returnVal = [];
+textReturnVal = [];
 nextPlot = get(axisHand, 'nextplot');
 for i = 1:size(X, 1)
   if i == 2
@@ -43,6 +52,9 @@ for i = 1:size(X, 1)
   end
   try 
     returnVal = [returnVal; plot(X(i, 1), X(i, 2), symbol{labelNo})];
+    if labelsString
+      textReturnVal = [textReturnVal; text(X(i, 1), X(i, 2), lblStr{i})];
+    end
     if connect
       if i>1
         line([X(i-1, 1) X(i, 1)], [X(i-1, 2) X(i, 2)]);

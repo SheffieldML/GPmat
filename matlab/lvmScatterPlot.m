@@ -39,7 +39,11 @@ end
 if isempty(YLbls)
   symbol = [];
 else
-  symbol = getSymbols(size(YLbls,2));
+  if iscell(YLbls)
+    symbol = getSymbols(size(YLbls{1},2));
+  else
+    symbol = getSymbols(size(YLbls,2));
+  end
 end
 
 x1Min = min(model.X(:, 1));
@@ -56,18 +60,21 @@ x2Min = x2Min - 0.05*x2Span;
 x2Max = x2Max + 0.05*x2Span;
 x2 = linspace(x2Min, x2Max, 150);
 
-funcStr = [model.type 'PosteriorMeanVar'];
-if exist(funcStr)==2
+try
   [X1, X2] = meshgrid(x1, x2);
   XTest = [X1(:), X2(:)];
-  fhandle = str2func(funcStr);
-  if str2num(version('-release'))>13
-    [mu, varsigma] = fhandle(model, XTest);
-  else 
-    [mu, varsigma] = feval(fhandle, model, XTest);
+  varsigma = modelPosteriorVar(model, XTest);
+  posteriorVarDefined = true;
+catch 
+  [lastMsg, lastId] = lasterr;
+  if strcmp(lastId, 'MATLAB:UndefinedFunction')
+    posteriorVarDefined = false;
+  else
+    rethrow(lasterror);
   end
-  
-  d = size(mu, 2);
+end
+if posteriorVarDefined
+  d = model.d;
   if size(varsigma, 2) == 1
     dataMaxProb = -0.5*d*log(varsigma);
   else
@@ -99,6 +106,7 @@ if exist(funcStr)==2
   colormap gray;
   %colorbar
 end
+
 data = lvmTwoDPlot(model.X, YLbls, symbol);
 switch model.type
  case 'dnet'
