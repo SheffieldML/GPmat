@@ -118,6 +118,7 @@ function [Y, lbls, Ytest, lblstest] = lvmLoadData(dataset, seedVal)
         end
       end
     end
+    fclose(fid);
     data = data(:, 2:end);
     Y = data./repmat(sum(data, 2), 1, size(data, 2));
     
@@ -342,7 +343,158 @@ function [Y, lbls, Ytest, lblstest] = lvmLoadData(dataset, seedVal)
     end                                                
     lblstest = [];
 
-    
+   case {'grid_vowels', ...         
+         'grid_consonants', ...
+         'grid_approximants', ...
+         'grid_uplosives', ...
+         'grid_vplosives', ...
+         'grid_plosives', ...
+         'grid_nasals', ...
+         'grid_ufricatives', ...
+         'grid_vfricatives', ...
+         'grid_fricatives', ...
+         'grid_affricatives', ...
+         'grid_silence', ...
+         'grid_other', ...
+         'grid_all'}
+    try 
+      load([baseDir dataset '.mat']);
+    catch
+      
+      fullList = {'iy2', 'iy4', 'iy5', 'iy6', ...     % Vowels (iy, ih, eh, ey, ae, aa, aw, ah, ao, ow, uw, ax, ia)
+                'ih1', 'ih3', 'ih5', ...
+                'eh1', 'eh2', 'eh4', 'eh5', 'eh6', ...
+                'ey1', 'ey4', 'ey5', ...
+                'ae3', ...
+                'aa4', ...
+                'aw6', ...
+                'ay2', 'ay3', 'ay4', 'ay5', ...
+                'ah5', ...
+                'ao5', ...
+                'ow4', 'ow5', ...
+                'uw2', 'uw4', 'uw5', 'uw6', ...
+                'ax4', 'ax6', ...
+                'ia5', ...
+                'w2', 'w3', 'w4', 'w5', ... % approximants -- kind of between a vowel and consonant (w, y, r, l)
+                'y4', ...
+                'r2', 'r5', ...
+                'l1', 'l2', 'l4', 'l6', ... 
+                'b1', 'b2', 'b3', 'b4', ... % Consonants  - plosives, voiced (b, d, g)
+                'd2', 'd4', ...
+                'g2', 'g6', ...
+                'p1', 'p4', 'p6', ... % Consonants - plosives, unvoiced (p, t, k)
+                't1', 't2', 't3', 't4', 't5',...
+                'k4', 'k5', ...
+                'm4', ... % Consonants - nasals (m, n)
+                'n1', 'n2', 'n3', 'n4', 'n5', 'n6', ...
+                'f4', 'f5', ... % Consonants - fricatives, unvoiced (f, s, th, sh)
+                's1', 's4', 's5', 's6', ...
+                'th5', ...
+                'v4', 'v5', ... % Consonant - fricatives, voiced (v, z, dh, zh)
+                'z4', 'z5', 'z6', ...
+                'dh3', ...
+                ...%(but consonsant can also be grouped strong/weak:   strong = s, sh, z, zh;  weak=f,v,th,dh)
+                'ch4', ...  % Consonant - affricative  (basically a blend between a plosive and a fricative) (ch  =  t + sh, jh = d + zh)
+                'jh4', ...
+                'sil', ... %silence
+                'sp'}; % ask Jon
+
+      vowelInd = 1:33;
+      consonantInd = 34:84;
+      approximantInd = 34:44;
+      vplosivesInd = 45:52;
+      uplosivesInd = 53:62;
+      nasalsInd = 63:69;
+      ufricativesInd = 70:76;
+      vfricativesInd = 77:82;
+      affricativesInd = 83:84;
+      silenceInd = 85;
+      otherInd = 86;
+      constanants = {};
+      all = {};
+      switch dataset(6:end)
+       case 'vowels'
+        phoneList = fullList(vowelInd);
+       case 'consonants'
+        phoneList = fullList(consonantInd);
+       case 'approximants'
+        phoneList = fullList(approximantInd);
+       case 'uplosives'
+        phoneList = fullList(uplosivesInd);
+       case 'vplosives'
+        phoneList = fullList(vplosivesInd);
+       case 'plosives'
+        phoneList = fullList([uplosivesInd vplosivesInd]);
+       case 'nasals'
+        phoneList = fullList(nasalsInd);
+       case 'ufricatives'
+        phoneList = fullList(ufricativesInd);
+       case 'vfricatives'
+        phoneList = fullList(vfricativesInd);
+       case 'fricatives'
+        phoneList = fullList([ufricativesInd vfricativesInd]);
+       case 'affricatives'
+        phoneList = fullList(affricativesInd);
+       case 'silence'
+        phoneList = fullList(silenceInd);
+       case 'other'
+        phoneList = fullList(otherInd);
+       case 'all'
+        phoneList = fullList;
+      end
+      
+      motherDir = '/local/data/datasets/synthesis/models/';
+      fileLoc = '/ver3/cmp/monophoneC.mmf';
+      numId = 34;
+      i = 1;
+      idStr = ['id' num2str(i)];
+      fileName = [motherDir idStr fileLoc];
+      [meanValCell, varValCell] = htkLoadMmf(phoneList, fileName);
+      meanVals = [meanValCell{:, :}];
+      varVals = [varValCell{:, :}];
+      meanVals = zeros(numId, size(meanVals, 2));
+      varVals = zeros(numId, size(varVals, 2));
+      
+      for i = 1:numId
+        idStr = ['id' num2str(i)];
+        fileName = [motherDir idStr fileLoc];
+        [meanValCell, varValCell] = htkLoadMmf(phoneList, fileName);
+        meanVals(i, :) = [meanValCell{:, :}];
+        varVals(i, :) = [varValCell{:, :}];
+      end
+      meanVals = meanVals./sqrt(varVals);
+      varVals = 0.5*log(varVals);
+      meanMean = mean(meanVals);
+      meanLogStd = mean(varVals);
+      for i = 1:numId 
+        meanVals(i, :) = meanVals(i, :) - meanMean;
+        varVals(i, :) = varVals(i, :) - meanLogStd;
+      end
+      varMeanVals = var(meanVals(:));
+      varVarVals = var(varVals(:));
+      Y = [meanVals/sqrt(varMeanVals) varVals/sqrt(varVarVals)];
+      lbls = [1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, ...
+              0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0]';
+      lbls = [lbls ~lbls];
+      save([baseDir dataset '.mat'], 'Y', 'lbls', 'meanMean', 'meanLogStd', 'varMeanVals', 'varVarVals');
+    end
+    if size(lbls, 2) == 1
+      lbls = [lbls ~lbls];
+      save([baseDir dataset '.mat'], 'Y', 'lbls', 'meanMean', 'meanLogStd', 'varMeanVals', 'varVarVals');
+    end
+    retLbls = cell(2,1);
+    retLbls{1} = lbls;
+    retLbls{2} = {'JB', 'MPC', 'Stuart Cunningham', 'Sue Harding', ...
+                'Male ugrad', 'Stuart Wriggley', 'Gillian', 'Mike Stannett', ...
+            'John Karn', 'Male ugrad', 'Anna', 'Male ugrad', ...
+            'Male ugrad', 'Male ugrad', 'Female', 'Female ugrad', ...
+            'Male ugrad', 'Female ugrad',  'Male ugrad', 'Female ugrad', ...
+            'Female ugrad', 'Female ugrad', 'Female ugrad', 'Female ugrad', ...
+            'Female ugrad', 'James Carmichael', 'Rob Mill', 'Matt Gibson', ...
+            'Sarah Simpson', 'Vinny Wan', 'Lucy', 'NDL', ...
+            'Female ugrad', 'Female ugrad'};
+    lbls = retLbls;
+
    case 'cmu35WalkJog'
     try 
       load([baseDir 'cmu35WalkJog.mat']);
