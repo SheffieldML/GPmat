@@ -20,4 +20,4 @@ function kern = whitehKernExpandParam(kern, params)
 % KERN
 
 
-kern.variance = params(1);
+kern = kern;

@@ -25,4 +25,4 @@ else
 end
 spacing = char(spacing);
 fprintf(spacing);
-fprintf('White Noise Variance: %2.4f\n', kern.variance)
+fprintf('Heteroskedastic added noise.\n')

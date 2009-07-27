@@ -43,8 +43,4 @@ function g = whitehKernGradient(kern, x, varargin)
 
 % KERN
 
-if nargin < 4
-  g(1, 1) = sum(diag(varargin{end}).*(1./x(:,end)));
-else
-  g = 0;
-end
+g = []; 
