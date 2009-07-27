@@ -1028,10 +1028,12 @@ switch dataset
                     indexToAvg = find(sorted == k);
                     X{j}(k,1:q) = XTemp{j}(indexJ(indexToAvg(1)), :);
                     XTest{j}{k,1} = repmat(XTemp{j}(indexJ(indexToAvg(1)), :), length(indexToAvg),1);
-                    X{j}(k,q+1) = length(indexToAvg);
+%                    X{j}(k,q+1) = length(indexToAvg);
+                    X{j}(k,q+1) = var(yTemp{j}(indexJ(indexToAvg)));
                     y{j}(k,:) = mean(yTemp{j}(indexJ(indexToAvg), 1));
                     yTest{j}{k,1} = yTemp{j}(indexJ(indexToAvg), 1);
                     %                    nRepeat{j}(k,1) = length(indexToAvg);
+                    
                 end
                 cont = cont + size(uniqueX, 1);
             end
