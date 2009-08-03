@@ -1,6 +1,6 @@
 GPscoreListFixedTargets <- function(preprocData, targets = "100001_at", searchedGenes = "100001_at", search = FALSE) {
 
-  source("../GPDISIM/gpdisimLinearFunctions.R")
+  source("GPDISIM_files/GPDISIM/gpdisimLinearFunctions.R")
   source("logLikelihood.R")
   source("GPrank.R")
   source("searchProcessedData.R")
