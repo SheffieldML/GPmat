@@ -8,7 +8,7 @@ GPrank <- function(preprocData, searchedGenes = "100001_at", search = FALSE, ran
 
   options(error = recover)
 
-  gpsimLoc <- "GPsimFiles"
+  gpsimLoc <- "."
   pwd <- getwd()
   setwd(gpsimLoc)
 

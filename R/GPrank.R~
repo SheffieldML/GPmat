@@ -8,7 +8,7 @@ GPrank <- function(preprocData, searchedGenes = "100001_at", search = FALSE, ran
 
   options(error = recover)
 
-  gpsimLoc <- "GPSIM_files"
+  gpsimLoc <- "GPsimFiles"
   pwd <- getwd()
   setwd(gpsimLoc)
 
@@ -95,10 +95,10 @@ GPrank <- function(preprocData, searchedGenes = "100001_at", search = FALSE, ran
 
   param <- param/Nrep
 
-  #optimResult <- SCGoptim(param, fn=cgpdisimObjective, grad=cgpdisimGradient, optOptions, model)
-  #MLParams <- optimResult$xmin
-  optimResult <- optim(param, fn=cgpdisimObjective, gr=cgpdisimGradient, model, method="BFGS", control=list(maxit=500,trace=10,REPORT=1,parscale=rep(3e-2, length(param))))
-  MLParams <- optimResult$par
+  optimResult <- SCGoptim(param, fn=cgpdisimObjective, grad=cgpdisimGradient, optOptions, model)
+  MLParams <- optimResult$xmin
+  #optimResult <- optim(param, fn=cgpdisimObjective, gr=cgpdisimGradient, model, method="BFGS", control=list(maxit=500,trace=10,REPORT=1,parscale=rep(3e-2, length(param))))
+  #MLParams <- optimResult$par
 
   #fileName <- paste(expType, expNo, ".Rdata", sep="")
   #save(model, expType, expNo, genes, scale, file=fileName)
