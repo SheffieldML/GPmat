@@ -21,6 +21,6 @@ function g = whitehKernDiagGradient(kern, x, covDiag)
 
 % KERN
 
-g = [];
+g(1) = sum(covDiag.*(1./x));
 
 

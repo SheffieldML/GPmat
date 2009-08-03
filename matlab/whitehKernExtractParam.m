@@ -28,6 +28,8 @@ function [params, names] = whitehKernExtractParam(kern)
 %
 % KERN
 
-params = [];
-names = {};
+params = kern.variance;
+if nargout > 1
+  names = {'variance'};
+end
 

@@ -23,8 +23,9 @@ function [k, sk] = whitehKernCompute(kern, x, x2)
 % KERN
 
 if nargin < 3
-  % /~ MAURICIO : This is intended for the school Data      
-  k = sparseDiag(x(:,end));  
+  % /~ MAURICIO : This is intended for the school Data    
+  sk = sparseDiag(1./x(:,end));  
+  k = kern.variance*sk;
   % ~/
 else
   k = spalloc(size(x, 1), size(x2, 1), 0);
