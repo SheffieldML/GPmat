@@ -1012,8 +1012,8 @@ switch dataset
             fclose(fid);
             %%/~MAURICIO : this is just to test if normalization at the
             % beginning of everything helps
-            features = zscore(features);
-            examScore = zscore(examScore); %~/
+%             features = zscore(features);
+%             examScore = zscore(examScore); %~/
             XTemp = cell(nout,1);
             yTemp = cell(nout,1);
             for j=1:nout,
