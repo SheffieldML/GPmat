@@ -1,4 +1,0 @@
-all: $(SHLIB)
-
-miscCFunctions.o: miscCFunctions.c
-	$(CC) $(CCFFLAGS) -g -c -o miscCFunctions.o miscCFunctions.c
