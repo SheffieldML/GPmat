@@ -8,10 +8,7 @@ GPrank <- function(preprocData, searchedGenes = "100001_at", search = FALSE, ran
 
   options(error = recover)
 
-  #expType <- "demGpdisimMef2"
-  #expNo <- 1
-
-  # The variable search determines whether the specified genes are searched.
+  # The variable search determines whether the specified genes are searched from the preprocessed data.
   if (search) {
     newData <- searchProcessedData(preprocData, searchedGenes)
     y <- newData$y
@@ -40,7 +37,7 @@ GPrank <- function(preprocData, searchedGenes = "100001_at", search = FALSE, ran
   Ngenes <- length(genes) - 1
   Ntf <- 1
 
-  # initialise the model
+  # initializing the model
   model <- list(type="cgpdisim")
   for ( i in seq(length=Nrep) ) {
     #repNames <- names(model$comp)
@@ -72,6 +69,9 @@ GPrank <- function(preprocData, searchedGenes = "100001_at", search = FALSE, ran
 
   param <- param/Nrep
 
+  cat (c("\n Optimizing gene ", searchedGenes[1]))
+
+  # optimizing the model
   optimResult <- SCGoptim(param, fn=cgpdisimObjective, grad=cgpdisimGradient, optOptions, model)
   MLParams <- optimResult$xmin
   #optimResult <- optim(param, fn=cgpdisimObjective, gr=cgpdisimGradient, model, method="BFGS", control=list(maxit=500,trace=10,REPORT=1,parscale=rep(3e-2, length(param))))

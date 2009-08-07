@@ -51,9 +51,48 @@ GPscoreListFixedTargets <- function(preprocData, targets = "100001_at", searched
     # taking the TF
     GPrankSearchedGenes[1] <- otherGenes[i]
 
-    data <- GPrank(preprocData, GPrankSearchedGenes, search = TRUE)
-    logLikelihoods[i] <- logLikelihood(data$model)
-    rankedData[[i]] <- data
+    error1 <- TRUE
+    error2 <- TRUE
+
+    tryCatch({
+      data <- GPrank(preprocData, GPrankSearchedGenes, search = TRUE)
+      error1 <- FALSE
+      #if (generateError) {
+      #  stop("Stopped due to an error.\n")
+      #}
+    }, error = function(ex) {
+      cat("Stopped due to an error.\n")
+    })
+
+    if (error1) {
+      success <- FALSE
+      i <- 0
+      while (!success && i<10) {
+        tryCatch({
+	  cat("Trying again with different parameters.\n")
+  	  data <- GPrank(preprocData, GPrankSearchedGenes, search = TRUE, randomize = TRUE)
+          success <- TRUE
+          error2 <- FALSE
+        }, error = function(ex) {
+          cat("Stopped due to an error.\n")
+        })
+        i <- i + 1
+      }
+    }
+
+    else {
+      error2 <- FALSE
+    }
+
+    if (error2) {
+      logLikelihoods[i] <- -Inf
+      rankedData[[i]] <- NA
+    }
+
+    else {
+      logLikelihoods[i] <- logLikelihood(data$model)
+      rankedData[[i]] <- data
+    }
   }
 
   # Sort the log likelihoods.
