@@ -80,7 +80,7 @@ end
 grad_sigma2Noise = kern.variance^2*sum(sum(covGrad.*Kbase));
 grad_variance =  2*kern.variance*kern.sigma2Noise*sum(sum(covGrad.*Kbase));
 
-g = [matGradLqr(:)' 0 grad_variance];
-%g = [matGradLqr(:)' grad_sigma2Noise grad_variance];
+%g = [matGradLqr(:)' 0 grad_variance];
+g = [matGradLqr(:)' grad_sigma2Noise grad_variance];
 
 

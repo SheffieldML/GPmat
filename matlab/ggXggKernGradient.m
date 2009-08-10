@@ -76,9 +76,9 @@ else
     matGradPr = sum(sum(0.5*covGrad.*K.*...
         (Prinv*(dim*P - 0.5*dim*preFactorPr- P*dist*P)*Prinv)));   
     matGradPqr = sum(sum(0.5*covGrad.*K.*...
-        (Pqrinv*(P - dim*preFactorPqr- P*dist*P)*Pqrinv)));
+        (Pqrinv*(dim*P - dim*preFactorPqr- P*dist*P)*Pqrinv)));
     matGradPsr = sum(sum(0.5*covGrad.*K.*...
-        (Psrinv*(P - dim*preFactorPsr- P*dist*P)*Psrinv)));
+        (Psrinv*(dim*P - dim*preFactorPsr- P*dist*P)*Psrinv)));
 end
 
 gradSigma2Latent =  fSigma2Noise*sum(sum(covGrad.*Kbase));
