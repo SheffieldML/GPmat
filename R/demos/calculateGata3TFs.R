@@ -1,5 +1,7 @@
+library(mgu74av2.db)
 library("gpsim", lib.loc = "~/R/Rlibs")
 load("~/R/GPanalysis/GPsimAnalysis1.2/GPsimAnalysis1.2Package/R/preprocData.RData")
-regulators <- readRegulators("possibleRegulatorsOfGata3.txt")
+#regulators <- readRegulators("possibleRegulatorsOfGata3.txt")
+regulators <- readPMIDRegulators("tfcat_mouse_tf_pmids.txt")
 scoreList <- GPscoreListFixedTargets(preprocData, targets = "100924_at", searchedGenes = c("100924_at", regulators), search = TRUE)
 save(scoreList, file = "~/R/GPanalysis/GPsimAnalysis1.2/GPsimAnalysis1.2Package/R/Gata3TFs.RData")
