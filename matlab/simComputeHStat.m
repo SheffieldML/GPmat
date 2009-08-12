@@ -1,6 +1,6 @@
 function [h, dh_dD_i, dh_dD_j, dh_dsigma] = simComputeHStat(t1, t2, D_i, D_j, delta_i, delta_j, sigma)
 
-% SIMCOMPUTEH Helper function for computing part of the stationary version
+% SIMCOMPUTEHSTAT Helper function for computing part of the stationary version
 % of the SIM kernel.
 % FORMAT
 % DESC computes a portion of the stationary version of the SIM kernel.
@@ -23,6 +23,10 @@ function [h, dh_dD_i, dh_dD_j, dh_dsigma] = simComputeHStat(t1, t2, D_i, D_j, de
 % RETURN grad_D_decay2 : gradient of H with respect to DECAY1.
 % RETURN grad_L : gradient of H with respect to length scale of
 % latent process.
+%
+% COPYRIGHT : Neil D. Lawrence, 2006
+%
+% MODIFICATIONS : Antti Honkela, 2007, 2008
 %
 % COPYRIGHT : David Luengo, 2009
 %

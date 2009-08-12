@@ -15,7 +15,6 @@ function k = whitehKernDiagCompute(kern, x)
 % KERN
 
 % /~MAURICIO : Intended for the School Data only
-
+% ~/
 k = kern.variance./x;
 
-% ~/

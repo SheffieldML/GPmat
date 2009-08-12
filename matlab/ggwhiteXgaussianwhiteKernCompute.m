@@ -91,7 +91,8 @@ if ggwhiteKern.isArd
             %                else
             %                    Lr = repmat(gaussianwhiteKern.precisionT(i,:), size(x,1), 1);
             %                end
-            %             end %~/
+            %             end 
+            %~/
             Lqrinv(i) = 1/Lqr;
             Lrinv(:,:,i) = 1./Lr;
             Pinv(:,:,i) = Lqrinv(i) + Lrinv(:,:,i);
@@ -155,7 +156,8 @@ else
         %    else
         %        Lr = repmat(gaussianwhiteKern.precisionT, size(x,1), 1);
         %    end
-        %end ~/
+        %end 
+        %~/
         Lqrinv = 1/Lqr;
         Lrinv = 1./Lr;
         Pinv = Lqrinv + Lrinv;

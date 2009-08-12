@@ -8,6 +8,16 @@
 
 RELEASEINFORMATION
 
+
+Minor fix of "ard" kernel which somehow had a kernel computation bit placed in the parameter initialization --- cut and past mistake at some point..
+
+
+
+<h3>Version 0.222</h3>
+
+Minor fix of "ard" kernel which somehow had a kernel computation bit placed in the parameter initialization --- cut and past mistake at some point..
+
+
 <h3>Version 0.221</h3>
 
 Fixed code for reading in kernels from C++ files.

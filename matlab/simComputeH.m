@@ -25,7 +25,7 @@ function [h, dh_dD_i, dh_dD_j, dh_dsigma] = simComputeH(t1, t2, D_i, D_j, delta_
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
-% MODIFICATIONS : Antti Honkela, 2007-2008
+% MODIFICATIONS : Antti Honkela, 2007, 2008
 %
 % SEEALSO : simKernParamInit, lnDiffErfs
 
