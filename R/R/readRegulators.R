@@ -52,7 +52,7 @@ readProbeRegulators <- function(fileName) {
   regulators <- array(dim = amountOfRegulators)
 
   for (i in 1:amountOfRegulators) {
-    currentRegulator <- as.character(regulatorTable[i, 1])
+    regulators[i] <- as.character(regulatorTable[i, 1])
   }
 
   return(regulators)
@@ -70,6 +70,21 @@ removeDuplicates <- function(regulators) {
 	  regulators[j] <- NA
         }
       }
+    }
+  }
+
+  # removing the NAs
+
+  # new array of regulators
+  regulators2 <- array()
+
+  # counter of the genes in regulator2
+  j <- 1
+
+  for (i in 1:length(regulators)) {
+    if (!is.na(regulators[i])) {
+      regulators2[j] <- regulators[i]
+      j <- j + 1
     }
   }
 

@@ -25,7 +25,7 @@ writeGenes <- function(genes, fileName) {
 
   text <- ""
   for (i in 1:length(genes)) {
-    text <- c(text, genes[i], "\n")
+    text <- c(text, genes[i])
   }
   write(text, file = fileName)
 }
