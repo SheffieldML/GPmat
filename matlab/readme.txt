@@ -1,3 +1,8 @@
+Version 0.223
+-------------
+
+Minor fix of "ard" kernel which somehow had a kernel computation bit placed in the parameter initialization --- cut and past mistake at some point..
+
 Version 0.222
 -------------
 
