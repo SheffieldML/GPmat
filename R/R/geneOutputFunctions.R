@@ -1,4 +1,4 @@
-printGenes <- function(scoreList) {
+printScoreListGenes <- function(scoreList) {
 
   for (i in 1:length(scoreList$data)) {
     genes <- scoreList$data[i][[1]]$genes
@@ -9,7 +9,7 @@ printGenes <- function(scoreList) {
   }
 }
 
-writeGenes <- function(scoreList, fileName) {
+writeScoreListGenes <- function(scoreList, fileName) {
 
   text <- ""
   for (i in 1:length(scoreList$data)) {
@@ -17,6 +17,15 @@ writeGenes <- function(scoreList, fileName) {
     LL <- scoreList$LLs[i]
     newText <- c(genes, LL, "\n")
     text <- c(text, newText)
+  }
+  write(text, file = fileName)
+}
+
+writeGenes <- function(genes, fileName) {
+
+  text <- ""
+  for (i in 1:length(genes)) {
+    text <- c(text, genes[i], "\n")
   }
   write(text, file = fileName)
 }

@@ -17,6 +17,7 @@ readRegulators <- function(fileName) {
   return(regulators)
 }
 
+
 readPMIDRegulators <- function(fileName) {
 
   regulatorTable <- read.table(fileName)
@@ -37,6 +38,38 @@ readPMIDRegulators <- function(fileName) {
     for (j in 1:length(currentProbes)) {
       regulators[k] <- currentProbes[j]
       k <- k + 1
+    }
+  }
+
+  return(regulators)
+}
+
+
+readProbeRegulators <- function(fileName) {
+
+  regulatorTable <- read.table(fileName)
+  amountOfRegulators <- dim(regulatorTable)[1]
+  regulators <- array(dim = amountOfRegulators)
+
+  for (i in 1:amountOfRegulators) {
+    currentRegulator <- as.character(regulatorTable[i, 1])
+  }
+
+  return(regulators)
+}
+
+
+removeDuplicates <- function(regulators) {
+
+  for (i in 1:(length(regulators)-1)) {
+    currentGene <- regulators[i]
+
+    if (!is.na(currentGene)) {
+      for (j in (i+1):length(regulators)) {
+        if (!is.na(regulators[j]) && !is.na(charmatch(currentGene, regulators[j]))) {
+	  regulators[j] <- NA
+        }
+      }
     }
   }
 
