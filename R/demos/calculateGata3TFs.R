@@ -5,4 +5,4 @@ load("~/R/GPanalysis/GPsimAnalysis1.2/GPsimAnalysis1.2Package/R/preprocData.RDat
 #regulators <- readPMIDRegulators("tfcat_mouse_tf_pmids.txt")
 regulators <- readProbeRegulators("~/R/GPanalysis/GPanalysis1.2/probeRegulators.txt")
 scoreList <- GPscoreListFixedTargets(preprocData, targets = "100924_at", searchedGenes = c("100924_at", regulators), search = TRUE)
-save(scoreList, file = "~/R/GPanalysis/GPsimAnalysis1.2/GPsimAnalysis1.2Package/R/Gata3TFs.RData")
+save(scoreList, file = "~/R/GPanalysis/GPanalysis1.2/GPsimAnalysis1.2Package/R/Gata3TFs.RData")
