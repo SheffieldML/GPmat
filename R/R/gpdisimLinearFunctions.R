@@ -330,10 +330,11 @@ gpdisimUpdateProcesses <- function (model) {
   for ( i in seq(2, length=(model$kern$numBlocks-1)) )
     K <- cbind(K,t(disimXsimKernCompute(model$kern$comp[[i]], proteinKern, model$t, predt)))
 
-  ymean <- t(matrix(model$y[1,], model$numGenes+1, numData))
+  ymean <- t(matrix(c(0, model$mu), model$numGenes+1, numData))
 
   predF <- K %*% model$invK %*% c(model$y-ymean)
-  varF <- kernDiagCompute(proteinKern, predt) - apply(t(K)*(model$invK %*% t(K)), 2, sum)
+  #varF <- kernDiagCompute(proteinKern, predt) - apply(t(K)*(model$invK %*% t(K)), 2, sum)
+  varF <- model$kern$comp[[1]]$variance * kernDiagCompute(proteinKern, predt) - apply(t(K)*(model$invK %*% t(K)), 2, sum)
 
   Kxx <- multiKernCompute(model$kern, predt, model$t)
   meanPredX <- t(matrix(c(0, model$B/model$D), model$numGenes+1, length(predt)))

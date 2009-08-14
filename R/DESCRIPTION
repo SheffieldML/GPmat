@@ -4,7 +4,7 @@ Date: 2009-08-06
 Title: GPSIM
 Author: Pei Gao <pg349@medschl.cam.ac.uk>, Antti Honkela <antti.honkela@tkk.fi>
 Maintainer: Antti Honkela <antti.honkela@tkk.fi>
-Depends: R (>= 2.5.0)
+Depends: R (>= 2.5.0), gplots
 Description: GP Single Input Motif modelling in R
 License: GPL (>= 2)
 URL: http://www.cs.man.ac.uk/~neill/gpsim/
