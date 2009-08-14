@@ -5,10 +5,10 @@ GPplot <- function(data, savepath = '', doParams = FALSE, selectGenes = data$gen
   LINEWIDTH <- 1;
   MARKERSIZE <- 10;
 
-  is_gpdisim_model <- (model$type == 'cgpdisim')
-  
   model <- data$model
 
+  is_gpdisim_model <- (model$type == 'cgpdisim')
+  
   if (is_gpdisim_model) {
     numGenes <- model$comp[[1]]$numGenes + 1
   }
