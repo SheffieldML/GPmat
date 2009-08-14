@@ -1,4 +1,5 @@
-GPplot <- function(data, savepath = '', doParams = FALSE, selectGenes = data$genes) {
+GPplot <- function(data, savepath = '', doParams = FALSE,
+                   selectGenes = data$genes, nameMapping = NULL) {
   require(gplots)
   
   FONTSIZE <- 10;
@@ -46,10 +47,16 @@ GPplot <- function(data, savepath = '', doParams = FALSE, selectGenes = data$gen
              max(c(model$comp[[i]]$ypred[,j]+2*sqrt(model$comp[[i]]$ypredVar[,j]),
                    model$comp[[i]]$y[,j]+2*sqrt(model$comp[[i]]$yvar[,j])))),
            type="l", lwd=3, xlab="Time",ylab="")
-      if ( j==1 && is_gpdisim_model ) {
-        title(paste(genes[j], "mRNA (input)"))
+      if ( is.null(nameMapping) ) {
+        genename <- genes[j]
       } else {
-        title(paste(genes[j], "mRNA"))
+        genename <- nameMapping[genes[j]][[1]]
+      }
+      
+      if ( j==1 && is_gpdisim_model ) {
+        title(paste(genename, "mRNA (input)"))
+      } else {
+        title(paste(genename, "mRNA"))
       }
       plotCI(model$comp[[i]]$t, model$comp[[i]]$y[,j],
              uiw=2*sqrt(model$comp[[i]]$yvar[,j]), lwd=3, col=3, add=TRUE)
