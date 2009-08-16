@@ -933,28 +933,216 @@ switch dataset
         XTest = [];
         yTest = [];
 
-    case 'schoolData'
+    case 'schoolData1'
+        % This characterization of the School Data is due to Bakker and
+        % Keskes
         try
-            load([baseDir 'schoolData.mat']);
+            load([baseDir 'schoolData1.mat']);
         catch
             nout = 139;
             file = [baseDir 'ILEA567.DAT'];
             fid = fopen(file,'r');            
             cont = 0;
-            nStudents = 15362;
-            %nStudents = 10;
+            nStudents = 15362;           
+            % Student-dependent features
+            yearExam = zeros(nStudents, 3);          %3 features (dummy variables)
+            gender = zeros(nStudents, 1);              %1 features (dummy variables)
+            Vrband = zeros(nStudents, 1);              % 1 features (dummy variables) 
+            ethnicGroup = zeros(nStudents, 11);   % 11 features (dummy variables)
+            % School-dependent features
+            perEligibleStudents = zeros(nStudents, 1); % 1 feature
+            VR1band = zeros(nStudents, 1); % 1 feature
+            schoolGender = zeros(nStudents, 1); % 1 features
+            schoolDenomination = zeros(nStudents, 3); % 3 features (dummy variables)
+            % Task
+            task = zeros(nStudents, 1); %
+            % Exam score
+            examScore = zeros(nStudents, 1);
+            for k =1:nStudents
+                cont = cont + 1;
+                rawData = fgetl(fid);
+                % STUDENT-Dependent Feature
+                % Year of exam
+                index = str2double(rawData(1));
+                yearExam(cont, index) = 1;
+                % Gender
+                value = str2double(rawData(11));
+                gender(cont, 1) = value;
+                % VR band of student
+                index = str2double(rawData(12));               
+                Vrband(cont, 1) = index;
+                % Ethnic group
+                index = str2double(rawData(13:14));
+                ethnicGroup(cont, index) = 1;               
+                % SCHOOL-Dependent Features
+                % Percent. Students eligible for free school meals
+                value = str2double(rawData(7:8));
+                perEligibleStudents(cont, 1) = value;
+                % Percent. Students in school in VR band 1
+                value = str2double(rawData(9:10));
+                VR1band(cont, 1) = value;
+                % School gender
+                index = str2double(rawData(15));               
+                if index == 1;
+                    schoolGender(cont, 1) = 0;
+                else
+                    schoolGender(cont, 1) = 1;
+                end               
+                % School denomination
+                index = str2double(rawData(16));
+                schoolDenomination(cont, index) = 1;
+                % TASK index
+                value = str2double(rawData(2:4));
+                task(cont, 1) = value;
+                % EXAM scores == OUTPUTS
+                value = str2double(rawData(5:6));
+                examScore(cont, 1) = value;
+                indicator = feof(fid);
+                if indicator
+                    break;
+                end                
+            end
+            % Organize the tasks and the inputs per task
+            features = [yearExam gender Vrband ethnicGroup ...
+                perEligibleStudents VR1band schoolGender schoolDenomination];           
+            fclose(fid);            
+            features =  features(:, 1:16);
+            % Normalization as in Bakker and Heskes et al
+            features = zscore(features);
+            examScore = zscore(examScore);
+            X = cell(1,nout);
+            y = cell(1,nout);
+            XTest = cell(1,nout);
+            yTest = cell(1,nout);
+            for j=1:nout,
+%                 XT = features(task == j, :);
+%                 XT(:, 1:16) = zscore(XT(:, 1:16));
+%                 X{j}  = XT;
+%                 y{j}= zscore(examScore(task == j, :));
+                    X{j}  = features(task == j, :);
+                    y{j}= examScore(task == j, :);
+            end                       
+            save([baseDir 'schoolData1.mat'],'X','y','XTest', 'yTest');
+        end
+        
+    case 'schoolData2'
+        % This characterization of the School data is due to Bonilla et al
+        try
+            load([baseDir 'schoolData2.mat']);
+        catch
+            nout = 139;
+            file = [baseDir 'ILEA567.DAT'];
+            fid = fopen(file,'r');            
+            cont = 0;
+            nStudents = 15362;           
             % Student-dependent features
             yearExam = zeros(nStudents, 3); % 3 features (dummy variables)
-            gender = zeros(nStudents, 1); % 1 features (dummy variables)
-            %Vrband = zeros(nStudents, 4); % 4 features (dummy variables) (Michelli)
-            Vrband = zeros(nStudents, 1); % 1 features (Heskes)
+            gender = zeros(nStudents, 2); % 1 features (dummy variables)
+            Vrband = zeros(nStudents, 4); % 4 features (dummy variables) (Michelli)            
             ethnicGroup = zeros(nStudents, 11); % 11 features (dummy variables)
             % School-dependent features
             perEligibleStudents = zeros(nStudents, 1); % 1 feature
             VR1band = zeros(nStudents, 1); % 1 feature
-            %schoolGender = zeros(nStudents, 3); % 3 features (dummy
-            %variables) (Michelli)
-            schoolGender = zeros(nStudents, 1); % 1 features
+            schoolGender = zeros(nStudents, 3); % 3 features (dummy)
+            schoolDenomination = zeros(nStudents, 3); % 3 features (dummy variables)
+            % Task
+            task = zeros(nStudents, 1); %
+            % Exam score
+            examScore = zeros(nStudents, 1);
+            for k =1:nStudents
+                cont = cont + 1;
+                rawData = fgetl(fid);
+                % STUDENT-Dependent Feature
+                % Year of exam
+                index = str2double(rawData(1));
+                yearExam(cont, index) = 1;
+                % Gender
+                value = str2double(rawData(11));
+                gender(cont, 1+ value) = 1;
+                % VR band of student
+                index = str2double(rawData(12));
+                Vrband(cont, index + 1) = 1;                
+                % Ethnic group
+                index = str2double(rawData(13:14));
+                ethnicGroup(cont, index) = 1;               
+                % SCHOOL-Dependent Features
+                % Percent. Students eligible for free school meals
+                value = str2double(rawData(7:8));
+                perEligibleStudents(cont, 1) = value;
+                % Percent. Students in school in VR band 1
+                value = str2double(rawData(9:10));
+                VR1band(cont, 1) = value;
+                % School gender
+                index = str2double(rawData(15));
+                schoolGender(cont, index) = 1;
+                % School denomination
+                index = str2double(rawData(16));
+                schoolDenomination(cont, index) = 1;
+                % TASK index
+                value = str2double(rawData(2:4));
+                task(cont, 1) = value;
+                % EXAM scores == OUTPUTS
+                value = str2double(rawData(5:6));
+                examScore(cont, 1) = value;
+                indicator = feof(fid);
+                if indicator
+                    break;
+                end                
+            end
+            % Organize the tasks and the inputs per task
+            features = [yearExam gender Vrband ethnicGroup ...
+                perEligibleStudents VR1band schoolGender schoolDenomination];           
+            fclose(fid);
+            features = features(:,1:20); % Only student dependent features           
+            features = zscore(features); % Normaliza the features            
+            XTemp = cell(nout,1);
+            yTemp = cell(nout,1);
+            for j=1:nout,
+                XTemp{j} = features(task == j, :);
+                yTemp{j} = examScore(task == j, :);
+            end
+            X = cell(1,nout);
+            y = cell(1,nout);
+            XTest = cell(1,nout);
+            yTest = cell(1,nout);
+            % This bit finds unique features as in Bonilla et
+            % al paper. Just to test what is best.
+            cont = 0;
+            q = size(features,2);
+            for j=1:nout,
+                [uniqueX, I, J] = unique(XTemp{j},'rows');
+                [sorted, indexJ] = sort(J);
+                for k=1: size(uniqueX,1),
+                    indexToAvg = find(sorted == k);
+                    X{j}(k,1:q) = XTemp{j}(indexJ(indexToAvg(1)), :);
+                    % We append the number of vectors per output point.
+                    X{j}(k,q+1) = length(indexToAvg);
+                    y{j}(k,:) = mean(yTemp{j}(indexJ(indexToAvg), 1));
+                end
+                cont = cont + size(uniqueX, 1);
+            end
+            save([baseDir 'schoolData2.mat'],'X','y','XTest', 'yTest');
+        end
+        
+ case 'schoolData3'
+        % This characterization of the School data is due to Michelli et al
+        try
+            load([baseDir 'schoolData3.mat']);
+        catch
+            nout = 139;
+            file = [baseDir 'ILEA567.DAT'];
+            fid = fopen(file,'r');            
+            cont = 0;
+            nStudents = 15362;           
+            % Student-dependent features
+            yearExam = zeros(nStudents, 3); % 3 features (dummy variables)
+            gender = zeros(nStudents, 1); % 1 features (dummy variables)
+            Vrband = zeros(nStudents, 4); % 4 features (dummy variables) (Michelli)            
+            ethnicGroup = zeros(nStudents, 11); % 11 features (dummy variables)
+            % School-dependent features
+            perEligibleStudents = zeros(nStudents, 1); % 1 feature
+            VR1band = zeros(nStudents, 1); % 1 feature
+            schoolGender = zeros(nStudents, 3); % 3 features (dummy)
             schoolDenomination = zeros(nStudents, 3); % 3 features (dummy variables)
             % Task
             task = zeros(nStudents, 1); %
@@ -984,14 +1172,8 @@ switch dataset
                 % Percent. Students in school in VR band 1
                 value = str2double(rawData(9:10));
                 VR1band(cont, 1) = value;
-                % School gender
-                index = str2double(rawData(15));
-                if index == 0;
-                    schoolGender(cont, 1) = 0;
-                else
-                    schoolGender(cont, 1) = 1;
-                end
-                %schoolGender(cont, index) = 1;
+                % School gender                
+                schoolGender(cont, index) = 1;
                 % School denomination
                 index = str2double(rawData(16));
                 schoolDenomination(cont, index) = 1;
@@ -1008,64 +1190,21 @@ switch dataset
             end
             % Organize the tasks and the inputs per task
             features = [yearExam gender Vrband ethnicGroup ...
-                perEligibleStudents VR1band schoolGender schoolDenomination];
+                perEligibleStudents VR1band schoolGender schoolDenomination];           
             fclose(fid);
-            %%/~MAURICIO : this is just to test if normalization at the
-            % beginning of everything helps
-%             features = zscore(features);
-%             examScore = zscore(examScore); %~/
-            XTemp = cell(nout,1);
-            yTemp = cell(nout,1);
-            for j=1:nout,
-                XTemp{j} = features(task == j, :);
-                yTemp{j} = examScore(task == j, :);
-            end
+            % Normalization of the features.
+            features = zscore(features);
             X = cell(1,nout);
             y = cell(1,nout);
             XTest = cell(1,nout);
-            yTest = cell(1,nout);
-            %            nRepeat = cell(1,nout);
-%             for j=1:nout,
-%                 X{j} = zscore(XTemp{j});
-%                 y{j} = zscore(yTemp{j});
-%             end
+            yTest = cell(1,nout);            
             for j=1:nout,
-                X{j} = XTemp{j};
-                y{j} = yTemp{j};
-            end
-            % This bit finds unique features as in Bonilla et
-            % al paper. Just to test what is best.
-%             cont = 0;
-%             cont2 = 0;
-%             q = size(features,2);
-%             variances =zeros(10,1);
-%             nElem =zeros(10,1);
-%             for j=1:nout,
-%                 [uniqueX, I, J] = unique(XTemp{j},'rows');
-%                 [sorted, indexJ] = sort(J);
-%                 for k=1: size(uniqueX,1),
-%                     indexToAvg = find(sorted == k);
-%                     X{j}(k,1:q) = XTemp{j}(indexJ(indexToAvg(1)), :);
-%                     X{j}(k,q+1) = length(indexToAvg);
-%                     y{j}(k,:) = mean(yTemp{j}(indexJ(indexToAvg), 1));
-%                     XTest{j}{k,1} = repmat(XTemp{j}(indexJ(indexToAvg(1)), :), length(indexToAvg),1);
-%                     yTest{j}{k,1} = yTemp{j}(indexJ(indexToAvg), 1);
-%                     %X{j}(k,q+1) = var(yTemp{j}(indexJ(indexToAvg)));
-%                     %nRepeat{j}(k,1) = length(indexToAvg);
-%                     cont2 = cont2 + 1;
-%                     variances(cont2) = var(yTemp{j}(indexJ(indexToAvg), 1));
-%                     nElem(cont2) = length(indexToAvg);
-%                 end
-%                 cont = cont + size(uniqueX, 1);
-%             end
-            % Bonilla et al also substracted the mean per task as a preprocessing
-            % step. So we do here.
-%             for j=1:nout,
-%                 y{j} = y{j} - mean(y{j});
-%             end                        
-            save([baseDir 'schoolData.mat'],'X','y','XTest', 'yTest');
+                X{j} = features(task == j, :);
+                y{j} = examScore(task == j, :);
+            end            
+            save([baseDir 'schoolData3.mat'],'X','y','XTest', 'yTest');
         end
-
+        
     case 'juraDataCd'
         try
             load([baseDir 'juraDataCd.mat']);
