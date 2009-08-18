@@ -1321,21 +1321,27 @@ switch dataset
         X = data.data{1}.Xtrain;
         y = [cell2mat(data.data{1}.Ytrain); cell2mat(data.data{2}.Ytrain); cell2mat(data.data{3}.Ytrain)];
         XTest = X;
-        yTest = y;
+        %yTest = y;
+        % We use the variance
+        yTest = [cell2mat(data.data{1}.Yvar); cell2mat(data.data{2}.Yvar); cell2mat(data.data{3}.Yvar)];
 
     case 'demp53_50genes'
         data = load([baseDir 'dataBarencoOption_0_Genes_50']);
         X = data.data{1}.Xtrain;
         y = [cell2mat(data.data{1}.Ytrain); cell2mat(data.data{2}.Ytrain); cell2mat(data.data{3}.Ytrain)];
         XTest = X;
-        yTest = y;
+       % yTest = y;
+       % We use the variance
+        yTest = [cell2mat(data.data{1}.Yvar); cell2mat(data.data{2}.Yvar); cell2mat(data.data{3}.Yvar)];
 
     case 'demp53_20genes'
         data = load([baseDir 'dataBarencoOption_0_Genes_20']);
         X = data.data{1}.Xtrain;
         y = [cell2mat(data.data{1}.Ytrain); cell2mat(data.data{2}.Ytrain); cell2mat(data.data{3}.Ytrain)];
         XTest = X;
-        yTest = y;
+        %yTest = y;
+        % We use the variance
+        yTest = [cell2mat(data.data{1}.Yvar); cell2mat(data.data{2}.Yvar); cell2mat(data.data{3}.Yvar)];
         %~/
     otherwise
         error('Unknown data set requested.')
