@@ -20,34 +20,67 @@ function model = multimodelCreate(inputDim, outputDim, varargin)
 % SEEALSO : multimodelOptions, multimodelParamInit, modelCreate
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
+%
+% MODIFICATIONS : Mauricio A. Alvarez, 2009
 
 % MLTOOLS
+
 options = varargin{end};
 model.numModels = options.numModels;
 model.type = 'multimodel';
 model.compType = options.type;
 model.inputDim = inputDim;
 model.outputDim = outputDim;
-% Indices of parameters to be trained separately for each model.
-model.separateIndices = options.separate;
-model.numSep = length(model.separateIndices);
-for i = 1:model.numModels
-  varargput = cell(1, length(varargin)-1);
-  for j = 1:length(varargput)
-    varargput{j} = varargin{j}{i};
-  end
-  model.comp{i} = modelCreate(model.compType, inputDim, outputDim, ...
-                              varargput{:}, options.compOptions);
-end
-if isfield(model.comp{i}, 'numParams');
-  model.numParams = model.comp{1}.numParams;
-else
-  model.numParams = length(modelExtractParam(model.comp{1}));
-end
-model.sharedIndices = 1:model.numParams;
-model.sharedIndices(model.separateIndices) = [];
 
-model.numParams = model.numParams + (model.numModels-1)*model.numSep;
+if numel(outputDim) == 1
+    % Indices of parameters to be trained separately for each model.
+    model.separateIndices = options.separate;
+    model.numSep = length(model.separateIndices);
+    for i = 1:model.numModels
+        varargput = cell(1, length(varargin)-1);
+        for j = 1:length(varargput)
+            varargput{j} = varargin{j}{i};
+        end
+        % MAURICIO : temporarily changed to allow different options for each model
+        if ~iscell(options.compOptions)
+            model.comp{i} = modelCreate(model.compType, inputDim, outputDim, ...
+                varargput{:}, options.compOptions);
+        else
+            model.comp{i} = modelCreate(model.compType, inputDim, outputDim, ...
+                varargput{:}, options.compOptions{i});
+        end
+    end
+    if isfield(model.comp{i}, 'numParams');
+        model.numParams = model.comp{1}.numParams;
+    else
+        model.numParams = length(modelExtractParam(model.comp{1}));
+    end
+    model.sharedIndices = 1:model.numParams;
+    model.sharedIndices(model.separateIndices) = [];    
+    model.numParams = model.numParams + (model.numModels-1)*model.numSep;    
+else    
+    model.separateIndices = options.separate;
+    model.numSep = length(model.separateIndices);  
+    for i = 1:model.numModels
+        varargput = cell(1, length(varargin)-1);
+        for j = 1:length(varargput)
+            varargput{j} = varargin{j}{i};
+        end
+        fprintf('Creating model number: %d\n', i)
+        model.comp{i} = modelCreate(model.compType, inputDim, outputDim(i), ...
+            varargput{:}, options.compOptions{i}); 
+        
+    end
+    if isfield(model.comp{1}, 'nParams');
+        model.numParams = 0;
+        for i =1:model.numModels,
+            model.numParams = model.numParams + model.comp{i}.nParams;
+        end
+    else
+        model.numParams = length(modelExtractParam(model.comp{1}));
+    end
+    model.numParams = model.numParams + (model.numModels-1)*model.numSep;    
+end
 
 if isfield(options, 'optimiser') && ~isempty(options.optimiser)
     model.optimiser = options.optimiser;    

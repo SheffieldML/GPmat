@@ -32,40 +32,67 @@ function [passParams, passNames] = multimodelExtractParam(model)
   else
     receiveParams = modelExtractParam(model.comp{1});
   end
-  %endVal = model.numParams - model.numSep;
-  endVal = model.numParams - model.numSep*model.numModels;
-  passParams(1:endVal) = receiveParams(model.sharedIndices);
-  if nargout > 1
-    % MAURICIO : I think this is wrong. But I didn't change because I'm not
-    % sure
-    % passNames{1:endVal} = receiveNames{model.sharedIndices};
-    passNames(1:endVal) = receiveNames(model.sharedIndices);
-  end
-  if ~isempty(model.separateIndices)
-    startVal = endVal + 1;
-    endVal = endVal + model.numSep;
-    passParams(startVal:endVal) = receiveParams(model.separateIndices);
-    if nargout > 1
-      passNames(startVal:endVal) = receiveNames(model.separateIndices);
-      for j=startVal:endVal
-          passNames{j} = [model.type ' 1 '  passNames{j}];
-      end
-    end
-    for i = 2:length(model.comp)
-      startVal = endVal+1;
-      endVal = endVal + model.numSep;
+  
+  if numel(model.outputDim) == 1      
+      %endVal = model.numParams - model.numSep;
+      endVal = model.numParams - model.numSep*model.numModels;
+      passParams(1:endVal) = receiveParams(model.sharedIndices);
       if nargout > 1
-        [receiveParams, receiveNames] = modelExtractParam(model.comp{i});
-      else
-        receiveParams = modelExtractParam(model.comp{i});
+          % MAURICIO : I think this is wrong. But I didn't change because I'm not
+          % sure
+          % passNames{1:endVal} = receiveNames{model.sharedIndices};
+          passNames(1:endVal) = receiveNames(model.sharedIndices);
       end
-      passParams(startVal:endVal) = receiveParams(model.separateIndices);
+      if ~isempty(model.separateIndices)
+          startVal = endVal + 1;
+          endVal = endVal + model.numSep;
+          passParams(startVal:endVal) = receiveParams(model.separateIndices);
+          if nargout > 1
+              passNames(startVal:endVal) = receiveNames(model.separateIndices);
+              for j=startVal:endVal
+                  passNames{j} = [model.type ' 1 '  passNames{j}];
+              end
+          end
+          for i = 2:length(model.comp)
+              startVal = endVal+1;
+              endVal = endVal + model.numSep;
+              if nargout > 1
+                  [receiveParams, receiveNames] = modelExtractParam(model.comp{i});
+              else
+                  receiveParams = modelExtractParam(model.comp{i});
+              end
+              passParams(startVal:endVal) = receiveParams(model.separateIndices);
+              if nargout > 1
+                  passNames(startVal:endVal) = receiveNames(model.separateIndices);
+                  for j=startVal:endVal
+                      passNames{j} = [model.type ' ' num2str(i) ' '  passNames{j}];
+                  end
+              end
+          end
+      end
+  else
+      endVal = model.comp{1}.nParams;
+      passParams(1:endVal) = receiveParams;
       if nargout > 1
-        passNames(startVal:endVal) = receiveNames(model.separateIndices);
-        for j=startVal:endVal
-            passNames{j} = [model.type ' ' num2str(i) ' '  passNames{j}];
-        end
+          passNames(1:endVal) = receiveNames;
+          for j=1:endVal
+              passNames{j} = [model.type ' 1 '  passNames{j}];
+          end
       end
-    end
+      for i = 2:length(model.comp)
+          startVal = endVal+1;
+          endVal = endVal + model.comp{i}.nParams;
+          if nargout > 1
+              [receiveParams, receiveNames] = modelExtractParam(model.comp{i});
+          else
+              receiveParams = modelExtractParam(model.comp{i});
+          end
+          passParams(startVal:endVal) = receiveParams;
+          if nargout > 1
+              passNames(startVal:endVal) = receiveNames;
+              for j=startVal:endVal
+                  passNames{j} = [model.type ' ' num2str(i) ' '  passNames{j}];
+              end
+          end
+      end
   end
-end
