@@ -1343,6 +1343,23 @@ switch dataset
         % We use the variance
         yTest = [cell2mat(data.data{1}.Yvar); cell2mat(data.data{2}.Yvar); cell2mat(data.data{3}.Yvar)];
         %~/
+     
+    case 'yeastSpellman'
+        load([baseDir 'yeastSpellman']);
+        yTest = X; % Connectivity matrix
+        X = (1:size(data,2))';
+        y = data;
+        %
+        XTest = [];
+    
+    case 'yeastSpellmanRed'
+        load([baseDir 'yeastSpellmanRed']);
+        yTest = X; % Connectivity matrix
+        X = (1:size(data,2))';
+        y = data;
+        %
+        XTest = [];  
+        
     otherwise
         error('Unknown data set requested.')
 
