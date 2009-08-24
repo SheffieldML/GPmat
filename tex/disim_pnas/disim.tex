@@ -1,0 +1,234 @@
+%% PNAStwoS.tex
+%% Sample file to use for PNAS articles prepared in LaTeX
+%% For two column PNAS articles
+%% Version: Apr 15, 2008 
+ 
+
+%% BASIC CLASS FILE
+\documentclass{pnastwo}
+
+%% ADDITIONAL OPTIONAL STYLE FILES
+\usepackage[dvips]{graphicx}
+%\usepackage{pnastwoF}
+\usepackage{amssymb,amsfonts,amsmath}
+\usepackage{bm}
+
+
+%% OPTIONAL MACRO DEFINITIONS
+\def\s{\sigma}
+
+
+%%%%%%%%%%%%
+%% For PNAS Only:
+\url{www.pnas.org/cgi/doi/10.1073/pnas.0709640104}
+\copyrightyear{2008}
+\issuedate{Issue Date}
+\volume{Volume}
+\issuenumber{Issue Number}
+%\setcounter{page}{2687} %Set page number here if desired
+%%%%%%%%%%%%
+
+\begin{document}
+
+\title{Model-based transcription factor target
+  identification without perturbations}
+
+\author{Antti Honkela\affil{1}{Department of Information and Computer
+    Science, Helsinki University of Technology, Finland}, Neil
+  Lawrence\affil{2}{School of Computer Science, University of
+    Manchester, UK}, Charles Girardot\affil{3}{Genome Biology unit,
+    European Molecular Biology Laboratory, Heidelberg, Germany} Eileen
+  E. Furlong\affil{3}{} \and Magnus Rattray\affil{2}{}}
+
+\contributor{Submitted to Proceedings of the National Academy of Sciences
+of the United States of America}
+
+\maketitle
+
+\begin{article}
+\begin{abstract}
+
+\end{abstract}
+
+\keywords{transcriptional regulation | gene expression | systems biology | Gaussian process inference}
+
+\abbreviations{TF transcription factor; ChIP Chromatin Imunnoprecipitation;}
+
+\dropcap{T}ranscription factors are key nodes in the gene regulatory
+networks that determine the function and fate of
+cells. An important first step in uncovering a gene regulatory network
+is the identification of target genes regulated by a specific
+transcription factor (TF). A
+common approach to this problem is to experimentally locate physical binding
+of TF proteins to DNA sequence {\em in vivo} using a genome-wide
+chromatin imunnoprecipitation (ChIP) experiment. However, in such an
+experiment it is likely that many observed binding events do not
+correspond to actual gene regulation and bound enhancers may be
+distant from the promoter region of the gene that they control. Therefore, the task of identifying transcriptional
+targets usually requires the integration of ChIP binding predictions
+with evidence from expression data to help associate binding events
+with target gene regulation. If there is access to expression data from a mutant in which the TF has
+been knocked out or over-expressed, then differential expression of genes between wild-type
+and mutant is indicative of a potential regulatory
+interaction. The relationship of spatial expression for the
+TF and putative target can also provide support for a hypothesised
+regulatory link, where available. 
+
+A problem with the above approach is that the creation of mutant
+strains is challenging or impossible for many TFs of interest. Even
+when viable mutants are available then they may provide very limited information due to the
+confounding of signal from indirect regulatory feedback. For these reasons it
+is useful to seek other sources of evidence to complement ChIP binding
+predictions. In this contribution we demonstrate how a dynamical model of wild-type transcriptional
+regulation can be used for genome-wide scoring of putative target genes. All that is required to apply
+our method is wild-type time series data collected over a period
+where TF activity is changing. Our approach allows for complementary
+evidence from expression data to be integrated with ChIP binding data
+for a specific TF without carrying out TF perturbations. 
+
+To score putative targets we use the data likelihood under a simple
+cascaded differential equation model of transcriptional regulation. The regulation model
+we apply is ``open'' in the sense that we do not explicitly model regulation of the TF
+itself. To deal with this technical issue we use a recently developed
+non-parametric probabilistic inference methodology to
+effectively deal with open differential equation
+systems~\cite{Gao2008}. We model the TF concentration as a function
+drawn from a Gaussian process prior distribution~\cite{Rasmussen2006}. This functional prior can either be placed
+on the TF mRNA, for TFs primarily under transcritptional regulation,
+or the TF protein, for TFs activated post-translation. In the
+application considered here the TFs are transcriptionally regulated
+and we take the former approach. We use Bayesian marginalisation (also
+known as Bayesian model averaging) to
+integrate out this functional degree of freedom. This greatly reduces the
+number of parameters required to model the data, making a
+likelihood-based approach feasible even for relatively small
+datasets. 
+
+There are many existing approaches to inferring gene regulatory networks from
+time-series expression data, including dynamic Bayesian networks,
+information theoretic approaches and differential equation approaches
+(reviewed in \cite{Bansal2007a}). These methods typically require many
+more data from a greater diversity of experimental conditions than are
+available from the short unperturbed wild-type time series that we
+consider. However, our goal is more limited in scope since
+we are primarily interested in providing additional support for hypothesised
+targets of a specific TF. Again, most approaches to this problem are
+designed for data containing large numbers of diverse conditions, as
+exemplified by DREAM 2 target identification
+challenge~\cite{Stolovitzky2007} (challenge 1). Others
+have addressed this target identification problem using time-series
+data with a regulation model~\cite{Barenco2006a,Gatta2008}. However,
+these approaches either require a known target set for training~\cite{Barenco2006a} or
+they require measured TF protein data~\cite{Gatta2008}. As well as
+these differences in the assumed prior knowledge and data available,
+it is also difficult to validate other approaches on the same data used in these
+studies as they only carried out validation of positive targets
+that they identified, rather than using unbiased genome-wide
+experimental validation. 
+
+We validate our proposed method by comparing the model-based target
+ranking with published ChIP-chip data for two TFs controlling early
+mesoderm development in Drosophila. Our method is shown to be comparable
+to, or outperform, the use of knockout mutant data which are available
+for these TFs. We demonstrate that a model-based approach is significantly
+better than a simpler approach using correlation with TF
+expression. We further show how integrating complementary wild-type spatial
+{\em in situ} expression data can greatly improve target ranking accuracy. 
+
+\section{Gaussian process inference for a linear activation model}
+
+A Gaussian process is a probability distribution over
+functions $f$ which take the value $f(t)$ at some particular time
+$t$. Analogous to the Gaussian distribution, which is fully characterised by a mean and variance, the Gaussian process is
+characterised by a mean function $\mathrm{E}[f(t)]$ and a covariance
+function $k(t,t')=\mathrm{E}[f(t)f(t')]-\mathrm{E}[f(t)]\mathrm{E}[f(t')]$
+where the expectation is over function evaluations at times $t$ and
+$t'$. 
+
+For the prior distribution of TF mRNA concentration profile $f$ we use a zero-mean squared exponential covariance
+$k(t,t')=a\exp(-(t-t')^2/l)$. Samples from a Gaussian process with this choice
+of covariance are smooth, infinitely differentiable, stationary functions. Although single-cell mRNA counts may be low
+and vary in a highly stochastic manner, here we consider microarray data which
+corresponds to a population average and is therefore more
+appropriately modelled using a smooth process. The parameters $a$ and
+$l$ describe the typical amplitide and time-scale of samples from
+the prior. 
+
+To simplify the inference we model translation and transcriptional
+activation as simple linear processes using ordinary differential
+equations,
+\begin{eqnarray*}
+\frac{\mathrm{d}p(t)}{\mathrm{d}t} & = & f(t) - \delta
+  p(t) \ , \\
+\frac{\mathrm{d}m(t)}{\mathrm{d}t} & = & B+Sp(t)-Dm(t) \ ,
+\end{eqnarray*}
+where $p(t)$ is the TF protein and $m(t)$ is the target mRNA
+concentration at time $t$. The parametere $B$, $S$ and $D$ are the
+baseline transcription rate, sensitivity and decay rate respectively
+for the target mRNA (as described in \cite{Barenco2006a}). This linear system of differential equations can be
+explicitly solved and we find that the functions $p$ and $m$ are
+linear operators of $f$. The functions $m$ and $f$ therefore
+describe a two-dimensional Gaussian process prior $p(m,f|\theta)$
+for which the covariance function can be calculated explicitly in terms of the
+six model parameters $\theta=[B,S,D,\delta,a,l]$ (see
+Supplementary Material). 
+
+A microarray time course experiment provides us with a set of $r$
+replicate data vectors $\bm y_i$ containing the noise-corrupted TF and target mRNA
+measurements at $n$ times,
+$\bm y_i=[\hat{m_i}(t_1),\hat{m_i}(t_2),\ldots,\hat{m_i}(t_n),\hat{f_i}(t_1),\ldots,\hat{f_i}(t_n)]^\mathrm{T}$. Note
+that as this is a continuous-time modelling framework, there is no
+requirement that times are equally spaced. We use a Gaussian noise model
+$p(\bm y_i|m_i,f_i)=\prod_{ij}{\cal
+  N}(\hat{m_i}(t_j)|m_i(t_j),\sigma^m_{ij}){\cal
+  N}(\hat{f_i}(t_j)|f_i(t_j),\sigma^f_{ij})$ where the gene and condition
+specific measurement variance parameters are obtained from a probe-level anaysis of the microarray data~\cite{Liu2005,Pearson2009} (see
+Materials and Methods). The log-likelihood for the model parameters
+$\theta=[B,S,D,\delta,a,l]$ can then be calculated using standard Gaussian process regression
+techniques to integrate out the functions $m_i$ and $f_i$~\cite{Rasmussen2006},
+\begin{eqnarray*}
+L(\theta) & = & \sum_{i=1}^r \log \!\int \!\mathrm{d}m_i\mathrm{d}f_i\,
+p(D_i|m_i,f_i)p(m_i,f_i|\theta)  \\
+& = & \sum_{i=1}^r \left[-\frac{1}{2}\bm y_i^\mathrm{T} K_i^{-1} \bm y_i -
+\frac{1}{2}\log|K_i|\right] -nr\log 2\pi
+\end{eqnarray*}
+where $K_i$ is the covariance matrix for the
+noise-corrupted data $\bm y_i$ under the Gaussian process prior (see Supplemetary
+Material). This allows us to compute the set of model parameters $\theta$ by maximum
+likelihood using gradient-based optimisation. 
+
+Rather than using the TF mRNA data, one can alternatively use the idea pioneered
+in~\cite{Barenco2006a} and model the TF protein as an unobserved
+latent variable. This approach can naturally be carried out using a
+similar Gaussian process framework as shown in~\cite{Gao2008}. However, that procedure requires a set of known
+targets for training the model whereas the approach described above
+can be applied without any prior knowledge of targets. We therefore
+prefer the above cascade model in the case that TFs are under
+transcriptional control. 
+
+\section{Results}
+
+\section{Discussion}
+
+\begin{materials}
+
+\end{materials}
+
+\begin{acknowledgments}
+M.R. and N.D.L acknowledge support from EPSRC Grant No EP/F005687/1 "Gaussian Processes for Systems Identification with Applications in Systems Biology". 
+\end{acknowledgments}
+
+\bibliographystyle{plain}
+\bibliography{disim}
+
+%\begin{thebibliography}{10}
+%\bibliography{puma_package}
+%\end{thebibliography}
+\end{article}
+
+% Figures
+
+
+\end{document}
+
+
