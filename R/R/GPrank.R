@@ -29,7 +29,7 @@ GPrank <- function(preprocData, searchedGenes = "100001_at", search = FALSE, ran
 
   options <- list(includeNoise=0, optimiser="CG")
 
-  options$fix$index <- c(4, 6)
+  options$fix$index <- 4
   options$fix$value <- expTransform(c(1, 1), "xtoa")
 
   if(addPriors) options$addPriors = TRUE
@@ -41,8 +41,7 @@ GPrank <- function(preprocData, searchedGenes = "100001_at", search = FALSE, ran
   model <- list(type="cgpdisim")
   for ( i in seq(length=Nrep) ) {
     #repNames <- names(model$comp)
-    model$comp[[i]] <- gpdisimCreateFixed(Ngenes, Ntf, times, y[[i]], yvar[[i]], options)
-    #model$comp[[i]] <- gpdisimCreate(Ngenes, Ntf, times, y[[i]], yvar[[i]], options)
+    model$comp[[i]] <- gpdisimCreate(Ngenes, Ntf, times, y[[i]], yvar[[i]], options)
     #names(model$comp) <- c(repNames, paste("rep", i, sep=""))
   }
 

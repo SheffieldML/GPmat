@@ -50,10 +50,12 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL)
 
   set.seed(1)
 
+  yArray <- array(y[,2:(Ngenes+1)], dim = c(dim(y)[1], Ngenes))
+
   model$numParams <- Ngenes + model$kern$nParams
   model$numGenes <- Ngenes
-  model$mu <- apply(y[,2:(Ngenes+1)], 2, mean)
-  model$B <- model$D*y[1,2:(Ngenes+1)]
+  model$mu <- apply(yArray, 2, mean)
+  model$B <- model$D*yArray[1, ]
   model$m <- array(model$y, length(model$y))
   model$t <- times
 
