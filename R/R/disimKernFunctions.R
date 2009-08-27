@@ -207,7 +207,7 @@ disimKernExtractParam <- function (kern, option=1) {
     params <- c(kern$di_decay, kern$inverseWidth, kern$di_variance, kern$decay, kern$variance, kern$rbf_variance)
 
   } else {
-    params <- list(values=c(kern$di_decay, kern$inverseWidth, kern$di_variance, kern$decay, kern$variance), names=c("di_decay", "inverseWidth", "di_variance", "decay", "variance", "rbf_variance"))
+    params <- list(values=c(kern$di_decay, kern$inverseWidth, kern$di_variance, kern$decay, kern$variance, kern$rbf_variance), names=c("di_decay", "inverseWidth", "di_variance", "decay", "variance", "rbf_variance"))
   }
 
   return (params)
