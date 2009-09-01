@@ -1,29 +1,24 @@
-GPrank <- function(preprocData, searchedGenes = "100001_at", search = FALSE, randomize = FALSE, addPriors = FALSE) {
+GPrank <- function(preprocData, TF = NULL, targets = NULL, useGPsim = FALSE, randomize = FALSE, addPriors = FALSE, search = FALSE, fixedParams = FALSE, initParams = NULL, fixComps = 1) {
 
   # GPrank forms an optimized model of the desired genes.
   #
   # preprocData: the preprocessed data to be used
-  # searchedGenes: the genes that are searched from the preprocessed data if searching is used
+  # TF: the transcription factor of the model
+  # targets: the target genes of the model
+  # useGPsim: a logical value determining whether GPsim is used; if false, GPdisim is used
   # search: a logical value determining whether the preprocessed data is searched for the data of specific genes
 
   options(error = recover)
 
-  # The variable search determines whether the specified genes are searched from the preprocessed data.
-  if (search) {
-    newData <- searchProcessedData(preprocData, searchedGenes)
-    y <- newData$y
-    yvar <- newData$yvar
-    times <- newData$times
-    genes <- newData$genes
-    scale <- newData$scale
-  }
-  else {
-    y <- preprocData$y
-    yvar <- preprocData$yvar
-    times <- preprocData$times
-    genes <- preprocData$genes
-    scale <- preprocData$scale
-  }
+  # The preprocessed data is searched for the data of the specified genes.
+
+  searchedGenes <- c(TF, targets)
+  newData <- searchProcessedData(preprocData, searchedGenes)
+  y <- newData$y
+  yvar <- newData$yvar
+  times <- newData$times
+  genes <- newData$genes
+  scale <- newData$scale
 
   Nrep <- length(y)
 
@@ -34,15 +29,38 @@ GPrank <- function(preprocData, searchedGenes = "100001_at", search = FALSE, ran
 
   if(addPriors) options$addPriors = TRUE
 
-  Ngenes <- length(genes) - 1
+  if (useGPsim) {
+    Ngenes <- length(genes)
+  }
+  else {
+    Ngenes <- length(genes) - 1
+  }
   Ntf <- 1
+
+  # fixing first output sensitivity to fix the scaling
+  if (fixedParams && !is.null(initParams)) {
+    I <- which(!is.na(initParams))
+    for (k in 1:length(I)) {
+      options$fix$index[k+1] <- I[k]
+      options$fix$value[k+1] <- initParams[I[k]]
+    }
+  }
 
   # initializing the model
   model <- list(type="cgpdisim")
   for ( i in seq(length=Nrep) ) {
     #repNames <- names(model$comp)
-    model$comp[[i]] <- gpdisimCreate(Ngenes, Ntf, times, y[[i]], yvar[[i]], options)
+    if (useGPsim) {
+      model$comp[[i]] <- gpsimCreate(Ngenes, Ntf, times, y[[i]], yvar[[i]], options)
+    }
+    else {
+      model$comp[[i]] <- gpdisimCreate(Ngenes, Ntf, times, y[[i]], yvar[[i]], options)
+    }
+    #model$comp[[i]] <- gpdisimCreateFixed(Ngenes, Ntf, times, y[[i]], yvar[[i]], options)
     #names(model$comp) <- c(repNames, paste("rep", i, sep=""))
+    if (fixedParams) {
+      model$comp[[i]]$kern <- multiKernFixBlocks(model$comp[[i]]$kern, fixComps)
+    }
   }
 
   if (randomize) {
@@ -62,16 +80,30 @@ GPrank <- function(preprocData, searchedGenes = "100001_at", search = FALSE, ran
   paramvec <- list()
   param <- 0
   for ( i in seq(length=Nrep) ) {
-    paramvec[[i]] <- gpdisimExtractParam(model$comp[[i]]) 
+    if (useGPsim) {
+      paramvec[[i]] <- gpsimExtractParam(model$comp[[i]])
+    }
+    else {
+      paramvec[[i]] <- gpdisimExtractParam(model$comp[[i]])
+    } 
     param <- param + paramvec[[i]]    	
   }
 
   param <- param/Nrep
 
-  cat (c("\n Optimizing gene ", searchedGenes[1]))
+  cat (c("\n Optimizing genes", TF, targets, sep=" "))
+
+  if(useGPsim) {
+    fn <- cgpsimObjective
+    grad=cgpsimGradient
+  }
+  else {
+    fn <- cgpdisimObjective
+    grad=cgpdisimGradient
+  }
 
   # optimizing the model
-  optimResult <- SCGoptim(param, fn=cgpdisimObjective, grad=cgpdisimGradient, optOptions, model)
+  optimResult <- SCGoptim(param, fn, grad, optOptions, model)
   MLParams <- optimResult$xmin
   #optimResult <- optim(param, fn=cgpdisimObjective, gr=cgpdisimGradient, model, method="BFGS", control=list(maxit=500,trace=10,REPORT=1,parscale=rep(3e-2, length(param))))
   #MLParams <- optimResult$par
@@ -87,8 +119,14 @@ GPrank <- function(preprocData, searchedGenes = "100001_at", search = FALSE, ran
   # model <- modelOptimise(model, optOptions)
 
   for ( i in seq(length=Nrep) ) {
-    model$comp[[i]] <- gpdisimExpandParam(model$comp[[i]], MLParams)
-    model$comp[[i]] <- gpdisimUpdateProcesses(model$comp[[i]])
+    if (useGPsim) {
+      model$comp[[i]] <- gpsimExpandParam(model$comp[[i]], MLParams)
+      model$comp[[i]] <- gpsimUpdateProcesses(model$comp[[i]])
+    }
+    else {
+      model$comp[[i]] <- gpdisimExpandParam(model$comp[[i]], MLParams)
+      model$comp[[i]] <- gpdisimUpdateProcesses(model$comp[[i]])
+    }
   }
 
   data <- list(model = model, genes = genes)
