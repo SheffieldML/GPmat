@@ -34,6 +34,9 @@ if options.isMissingData & options.isSpherical
 end
 
 model.type = 'gp';
+
+
+
 model.approx = options.approx;
   
 model.learnScales = options.learnScales;
@@ -44,6 +47,15 @@ model.betaTransform =  optimiDefaultConstraint('positive');
 
 model.X = X;
 model.y = y;
+
+
+if options.computeS 
+  model.S = y*y';
+  if ~strcmp(model.approx, 'ftc')
+    error('If compute S is set, approximation type must be ''ftc''')
+  end
+end
+
 
 model.q = size(X, 2);
 model.d = size(y, 2);
@@ -96,8 +108,9 @@ if(isfield(options,'scale2var1'))
   end
 end
 
-
-model.m = gpComputeM(model);
+if ~options.computeS 
+  model.m = gpComputeM(model);
+end
 
 if isstruct(options.kern) 
   model.kern = options.kern;

@@ -17,6 +17,13 @@ function ll = gpLogLikelihood(model)
 switch model.approx
  case 'ftc'
   % No approximation, just do a full computation on K.
+
+  % For very high D, we use the matrix S which is M*M'
+  if isfield(model, 'S')
+    ll = -0.5*(model.d*model.logDetK_uu + sum(sum(model.invK_uu.* ...
+                                                  model.S)));
+    return;
+  end
   ll = 0;
   for i = 1:size(model.m, 2)
     if ~isfield(model, 'isSpherical') | model.isSpherical

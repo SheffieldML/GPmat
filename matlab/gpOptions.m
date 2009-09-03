@@ -66,3 +66,4 @@ switch options.approx
   options.fixIndices = [];
 end
 
+options.computeS = false;
