@@ -34,7 +34,8 @@ else
     error('options.initX not in recognisable form.');
   end
 end
-    
+
+
 model = gpCreate(q, d, X, Y, options);
 
 model.type = 'fgplvm';
