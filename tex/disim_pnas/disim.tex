@@ -98,7 +98,7 @@ effectively deal with open differential equation
 systems~\cite{Gao2008}. We model the TF concentration as a function
 drawn from a Gaussian process prior distribution~\cite{Rasmussen2006}. This functional prior can either be placed
 on the TF mRNA, for TFs primarily under transcritptional regulation,
-or the TF protein, for TFs activated post-translation. In the
+or the TF protein, for TFs activated post-translationally. In the
 application considered here the TFs are transcriptionally regulated
 and we take the former approach. We use Bayesian marginalisation (also
 known as Bayesian model averaging) to
@@ -174,7 +174,7 @@ linear operators of $f$. The functions $m$ and $f$ therefore
 describe a two-dimensional Gaussian process prior $p(m,f|\theta)$
 for which the covariance function can be calculated explicitly in terms of the
 six model parameters $\theta=[B,S,D,\delta,a,l]$ (see
-Supplementary Material). 
+Materials and Methods). 
 
 A microarray time course experiment provides us with a set of $r$
 replicate data vectors $\bm y_i$ containing the noise-corrupted TF and target mRNA
@@ -191,7 +191,7 @@ $\theta=[B,S,D,\delta,a,l]$ can then be calculated using standard Gaussian proce
 techniques to integrate out the functions $m_i$ and $f_i$~\cite{Rasmussen2006},
 \begin{eqnarray*}
 L(\theta) & = & \sum_{i=1}^r \log \!\int \!\mathrm{d}m_i\mathrm{d}f_i\,
-p(D_i|m_i,f_i)p(m_i,f_i|\theta)  \\
+p(\hat{\bm m_i}, \hat{\bm f_i}|m_i,f_i)p(m_i,f_i|\theta)  \\
 & = & \sum_{i=1}^r \left[-\frac{1}{2}\bm y_i^\mathrm{T} K_i^{-1} \bm y_i -
 \frac{1}{2}\log|K_i|\right] -nr\log 2\pi
 \end{eqnarray*}
@@ -201,7 +201,8 @@ Materials and Methods). This allows us to compute the set of model
 parameters $\theta$ by maximum
 likelihood using gradient-based optimisation. 
 
-Rather than using the TF mRNA data, one can alternatively use the idea pioneered
+Rather than using the TF mRNA data as a proxy for TF protein concentration,
+one can alternatively use the idea pioneered
 in~\cite{Barenco2006a} and model the TF protein as an unobserved
 latent variable. This approach can naturally be carried out using a
 similar Gaussian process framework as shown in~\cite{Gao2008}. However, that procedure requires a set of known
@@ -226,8 +227,16 @@ We fitted two sets of Gaussian process models to Drosophila
 developmental microarray time series from~\cite{Tomancak2002} using
 Twist and Mef2 as TFs independently and all other genes as candidate
 targets.  Quiet candidate targets with insufficient support for
-regulation were eliminated as described in Materials and Methods.  Two
-examples of these models for Twist are displayed in
+regulation were eliminated as described in Materials and Methods.
+Because Twist and Mef2 are known to be mainly active in mesoderm and
+muscle development, the candidate genes were further pruned by only
+including those with annotated expression in these tissues in the
+\emph{in situ} data from~\cite{Tomancak2002} for validation.
+This evaluation corresponds to
+the situation in typical cell culture studies, where all active genes
+are known to be localized to the same cells.
+Two
+examples of these models for likely Twist targets are displayed in
 Fig.~\ref{fig:gpdisim_models}.
 
 The remaining candidate targets were ranked by model likelihood.  For
@@ -238,7 +247,33 @@ from~\cite{Sandmann2006a,Sandmann2007a} (``knock-out'').
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[trim=0mm 18mm 0mm 0mm]{dros_global_evaluation}
+  \includegraphics[trim=0mm 15mm 0mm 0mm]{dros_focused_evaluation}
+  \caption{Evaluation results of different rankings as
+    discussed in the text showing the relative frequency of positive
+    predictions among $N$ top-ranking targets.  The dashed line
+    denotes the frequency in full population.  The figure shows the
+    frequency of
+    targets with ChIP-chip binding within 5 kb of the gene.
+    %$p$-values of significant results are denoted by '***': $p <
+    %0.001$, '**': $p < 0.01$, '*': $p < 0.05$.
+    The largest number of targets is smaller for Mef2 because there
+    are only 200 positive examples in this subset of the data.}
+  \label{fig:dros_focused_evaluation}
+\end{figure}
+
+The accuracy of the ranking was first evaluated by looking at the
+fraction of $N$ top-ranking targets with ChIP-chip binding inside the
+gene or within 5000 base pairs of its beginning or end in the data
+from~\cite{Sandmann2006a,Sandmann2007a}.  For Mef2, this frequency is
+only computed for genes in the part of the genome covered by the
+ChIP-chip data.
+These results are illustrated in Fig.~\ref{fig:dros_focused_evaluation}.
+The results show that the proposed method clearly outperforms all the
+tested alternatives.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[trim=0mm 13mm 0mm 0mm]{dros_global_evaluation}
   \caption{Global evaluation results of different rankings as
     discussed in the text showing the relative frequency of positive
     predictions among $N$ top-ranking targets.  The dashed line
@@ -246,49 +281,29 @@ from~\cite{Sandmann2006a,Sandmann2007a} (``knock-out'').
     frequency of predicted targets with in-situ annotations for
     mesoderm and muscle while the second row shows the frequency of
     targets with ChIP-chip binding within 5 kb of the gene.
-    $p$-values of significant results are denoted by '***': $p <
-    0.001$, '**': $p < 0.01$, '*': $p < 0.05$.}
+    %$p$-values of significant results are denoted by '***': $p <
+    %0.001$, '**': $p < 0.01$, '*': $p < 0.05$.
+  }
   \label{fig:dros_global_evaluation}
 \end{figure}
 
-The accuracy of the ranking was first evaluated by looking at the
-fraction of $N$ top-ranking targets with annotated expression in
+The accuracy of the ranking was also evaluated by looking at the
+global fraction of $N$ top-ranking targets regardless of the
+\emph{in situ} annotations
+with annotated expression in
 mesoderm and muscle tissues where the TFs are known to operate in data
 from~\cite{Tomancak2002}.  These results are illustrated on the first
 row of Fig.~\ref{fig:dros_global_evaluation}.  The second row of the
-figure shows similar validation using the fraction of top-ranking
+figure shows similar validation using the fraction of globally top-ranking
 targets with ChIP-chip binding inside the gene or within 5000 base
 pairs of its beginning or end in the data
 from~\cite{Sandmann2006a,Sandmann2007a}.  For Mef2, this frequency is
-only computed for genes in the part of the genome covered by the data.
+again only computed for genes in the part of the genome covered by the data.
 
 The results for $N=10$ are only significantly better than random for
 Twist ChIP-chip, while for $N=50$ and especially $N=250$ the
 improvement is highly significant.  Especially for Twist the results
-are clearly better than any of the tested alternatives.
-
-The full ranking includes many targets with a very good model fit but
-negative validation results.  Many of these are caused by genes with
-very similar expression profile but operating in different parts of
-the embryo.  To avoid this kind of confusion, we repeated the
-ChIP-chip validation but considering only genes with in-situ
-annotations for mesoderm and muscle.  These results are illustrated in
-Fig.~\ref{fig:dros_focused_evaluation}.
-
-\begin{figure}[htb]
-  \centering
-  \includegraphics[trim=0mm 20mm 0mm 0mm]{dros_focused_evaluation}
-  \caption{The counterpart of Fig.~\ref{fig:dros_global_evaluation}
-    but considering only genes known to be expressed in mesoderm and
-    muscle like the TFs.}
-  \label{fig:dros_focused_evaluation}
-\end{figure}
-
-The results show much higher accuracy for the proposed method, which
-clearly outperforms all the tested alternatives.  This evaluation also
-corresponds more closely to the situation in typical cell culture
-studies, where all active genes are known to be localized to same
-cells.
+are even now clearly better than any of the tested alternatives.
 
 We also repeated the experiment with the method of~\cite{Gatta2008}
 but using the TF expression levels as a proxy for the measured protein
@@ -298,6 +313,11 @@ Using measured protein levels would naturally help, but unfortunately
 they are not available in this case.
 
 \section{Discussion}
+
+The linear differential equation model is a simplification, and in
+many cases unrealistic. It is, however, necessary to keep the
+computational load at a level that allows performing the ranking in a
+workstation rather than a supercomputer.
 
 \begin{materials}
   \section{Expression data preprocessing} Drosophila developmental
@@ -353,19 +373,12 @@ they are not available in this case.
     k_{f m_k}(t, t')
     = \sigma S_k a^2 \frac{\sqrt{\pi} l}{2(\delta - D_k)} \\
     \bigg(
-    \exp\left(\left(\frac{\delta l}{2}\right)^2 + \delta \Delta t\right)
-    [\erf(\frac{\delta l}{2} + \frac{t}{l}) - \erf(\frac{\delta l}{2} + \frac{\Delta t}{l})] \\
-    +
     \exp\left(\left(\frac{D_k l}{2}\right)^2 + D_k \Delta t \right)
-    [\erf(\frac{D_k l}{2} + \frac{t}{l}) - \erf(\frac{D_k l}{2} + \frac{\Delta t}{l})]
+    [\erf(\frac{D_k l}{2} + \frac{t}{l}) - \erf(\frac{D_k l}{2} + \frac{\Delta t}{l})] \\
+    -
+    \exp\left(\left(\frac{\delta l}{2}\right)^2 + \delta \Delta t\right)
+    [\erf(\frac{\delta l}{2} + \frac{t}{l}) - \erf(\frac{\delta l}{2} + \frac{\Delta t}{l})]
     \bigg)
-    % \bigg(
-    % \exp\left(\left(\frac{\delta l}{2}\right)^2 + \delta \Delta t\right)
-    % [\erf(\frac{\delta l}{2} + \frac{t}{l}) - \erf(\frac{\delta l}{2} + \frac{\Delta t}{l})] \\
-    % +
-    % \exp\left(\left(\frac{D_k l}{2}\right)^2 + D_k \Delta t \right)
-    % [\erf(\frac{D_k l}{2} + \frac{t}{l}) - \erf(\frac{D_k l}{2} + \frac{\Delta t}{l})]
-    % \bigg)
   \end{multline*}
 
   \section{Filtering quiet genes}
@@ -380,7 +393,7 @@ they are not available in this case.
 \begin{acknowledgments}
 A.H. was supported by a postdoctoral researcher's project of the Academy of Finland.
 M.R. and N.D.L acknowledge support from EPSRC Grant No EP/F005687/1 "Gaussian Processes for Systems Identification with Applications in Systems Biology". 
-This work was also supported in part by the IST Programme of the European Community, under the PASCAL2 Network of Excellence. This publication only reflects the authors' views.
+This work was supported in part by the IST Programme of the European Community, under the PASCAL2 Network of Excellence, IST-2007-216886. This publication only reflects the authors' views.
 \end{acknowledgments}
 
 \bibliographystyle{pnas}
