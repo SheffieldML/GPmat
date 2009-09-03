@@ -190,8 +190,9 @@ Materials and Methods). The log-likelihood for the model parameters
 $\theta=[B,S,D,\delta,a,l]$ can then be calculated using standard Gaussian process regression
 techniques to integrate out the functions $m_i$ and $f_i$~\cite{Rasmussen2006},
 \begin{eqnarray*}
-L(\theta) & = & \sum_{i=1}^r \log \!\int \!\mathrm{d}m_i\mathrm{d}f_i\,
-p(\hat{\bm m_i}, \hat{\bm f_i}|m_i,f_i)p(m_i,f_i|\theta)  \\
+L(\theta) & = & \log p(\{\bm y_i\}|\theta) \\
+& = & \sum_{i=1}^r \log \!\int \!\mathrm{d}m_i\mathrm{d}f_i\,
+p(\bm y_i|m_i,f_i)p(m_i,f_i|\theta)  \\
 & = & \sum_{i=1}^r \left[-\frac{1}{2}\bm y_i^\mathrm{T} K_i^{-1} \bm y_i -
 \frac{1}{2}\log|K_i|\right] -nr\log 2\pi
 \end{eqnarray*}
