@@ -92,7 +92,3 @@ for i = 1:length(ytick)
 		  'horizontalalignment', 'right');
 
 end
-
-
-
-
