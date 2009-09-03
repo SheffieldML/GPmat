@@ -23,10 +23,19 @@ if ~any(any(isnan(Y)))
     for i = 1:size(Y, 1)
       Ycentre(i, :) = Y(i, :) -Ymean;
     end
-    innerY = Ycentre*Ycentre';
+    if size(Ycentre, 2)>30000
+      % Bug in MATLAB 7.0 means you have to do this.
+      innerY = zeros(size(Ycentre, 1));
+      for i = 1:size(Ycentre, 1)
+        innerY(i, :) = Ycentre(i, :)*Ycentre';
+      end
+    else
+      innerY = Ycentre*Ycentre';
+    end
     [v, u] = eigdec(innerY, dims); 
     v(find(v<0))=0;
-    X = u(:, 1:dims);
+    X = u(:, 1:dims)*sqrt(size(Y, 1));
+    v = v/sqrt(size(Y, 1));
     sigma2 = (trace(innerY) - sum(v))/(size(Y, 2)-dims);
     W = X'*Ycentre;
 

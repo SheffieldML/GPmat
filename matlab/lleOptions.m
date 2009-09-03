@@ -1,23 +1,21 @@
-function options = lleOptions(neighbours, latentDim)
+function options = lleOptions(neighbours)
 
-% LLEOPTIONS Options for a density network.
+% LLEOPTIONS Options for a locally linear embedding.
 % FORMAT
 % DESC returns the default options for a locally linear embedding.
+% ARG neighbours : the number of neighbours to use.
 % RETURN options : default options structure for locally linear embedding.
 %
-% SEEALSO : lleCreate, mlpCreate, rbfCreate, kbrCreate
+% SEEALSO : lleCreate, modelCreate
 %
-% COPYRIGHT : Neil D. Lawrence, 2008
+% COPYRIGHT : Neil D. Lawrence, 2008, 2009
 
 % MLTOOLS
 
-if nargin < 2
-  latentDim = 2
   if nargin < 1
     neighbours = 7;
   end
+  options.numNeighbours = neighbours;
+  options.isNormalised = true;
+  options.regulariser = 0.0;
 end
-options.latentDim = latentDim;
-options.numNeighbours = neighbours;
-
-
