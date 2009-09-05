@@ -12,8 +12,9 @@
 
 RELEASEINFORMATION
 
-
-Minor changes to fix reading of GPLVM files from latest C++ code.
+Updates for running a GPLVM when the inner produce matrix is used
+(i.e. dimensionality much greater than data points).  Minor changes to
+fix reading of GPLVM files from latest C++ code.
 
 <h4>Version 0.16</h4>
 
