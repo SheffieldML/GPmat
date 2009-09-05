@@ -10,6 +10,13 @@
 
 RELEASEINFORMATION
 
+Added loaders for speech grid corpus data.
+
+<h4>Version 0.136</h4>
+
+Added loader for  Agarwal and Triggs silhouette data back in, slight modifications of robot wireless datasets.
+
+<h4>Version 0.135</h4>
 
 <p>Added loader for Swiss Jura data and toy data for multiple output GPs.
 
