@@ -10,6 +10,9 @@
 
 RELEASEINFORMATION
 
+Add click visualise functionality for LVM visualization, Laplacian eigenmaps and wrapper for MVU. 
+
+<h4>Version 0.1311</h4>
 
 Minor change to lvmScatterPlot to fix bug caused when minimum values were positive.
 

@@ -19,6 +19,7 @@ function [model, lbls] = lvmLoadResult(modelType, dataSet, number)
 [Y, lbls] = lvmLoadData(dataSet);
 
 dataSet(1) = upper(dataSet(1));
+
 if ~isempty(modelType)
     modelType(1) = upper(modelType(1));
 end

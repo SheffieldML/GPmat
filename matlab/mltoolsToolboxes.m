@@ -9,3 +9,4 @@ importLatest('lmvu');
 importLatest('lle');
 importLatest('jdqr');
 importLatest('isomap');
+importLatest('sedumi');
