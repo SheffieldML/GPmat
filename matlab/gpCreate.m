@@ -49,12 +49,6 @@ model.X = X;
 model.y = y;
 
 
-if options.computeS 
-  model.S = y*y';
-  if ~strcmp(model.approx, 'ftc')
-    error('If compute S is set, approximation type must be ''ftc''')
-  end
-end
 
 
 model.q = size(X, 2);
@@ -105,12 +99,24 @@ if(isfield(options,'scale2var1'))
     if(model.learnScales)
       warning('Both learn scales and scale2var1 set for GP');
     end
+    if(isfield(options, 'scaleVal'))
+      warning('Both scale2var1 and scaleVal set for GP');
+    end
+  end
+end
+if(isfield(options, 'scaleVal'))
+  model.scale = repmat(options.scaleVal, 1, model.d);
+end
+
+model.m = gpComputeM(model);
+
+if options.computeS 
+  model.S = model.m*model.m';
+  if ~strcmp(model.approx, 'ftc')
+    error('If compute S is set, approximation type must be ''ftc''')
   end
 end
 
-if ~options.computeS 
-  model.m = gpComputeM(model);
-end
 
 if isstruct(options.kern) 
   model.kern = options.kern;
