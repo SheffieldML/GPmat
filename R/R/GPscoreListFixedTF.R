@@ -21,11 +21,10 @@ GPscoreListFixedTF <- function(preprocData, TF = NULL, knownTargets = NULL, test
   rankedData <- array(list(NULL), length(testTargets) + 1)
   modelParams <- array(list(NA), length(testTargets) + 1)
 
-  GPrankTargets <- knownTargets
   baseLineParameters <- NULL
 
   if (!is.null(knownTargets)) {
-    baseLineData <- formModel(searchedData, TF, GPrankTargets, useGPsim)
+    baseLineData <- formModel(searchedData, TF, knownTargets, useGPsim)
     logLikelihoods[1] <- baseLineData$ll
     modelParams[[1]] <- baseLineData$params
     rankedData[[1]] <- baseLineData$data
@@ -39,7 +38,7 @@ GPscoreListFixedTF <- function(preprocData, TF = NULL, knownTargets = NULL, test
 
   if (length(testTargets) > 0) {
     for (i in 1:length(testTargets)) {
-      returnData <- formModel(searchedData, TF, GPrankTargets, testTargets[i], useGPsim, fixedParams = TRUE, initParams = baseLineParameters, fixComps = 1:5)
+      returnData <- formModel(searchedData, TF, knownTargets, testTargets[i], useGPsim, fixedParams = TRUE, initParams = baseLineParameters, fixComps = 1:5)
       if (is.null(knownTargets)) {
         logLikelihoods[i] <- returnData$ll
         modelParams[[i]] <- returnData$params
@@ -73,20 +72,18 @@ GPscoreListFixedTF <- function(preprocData, TF = NULL, knownTargets = NULL, test
 }
 
 
-
-
-formModel <- function(preprocData, TF = NULL, GPrankTargets = NULL, testTarget = NULL, useGPsim = FALSE, fixedParams = FALSE, initParams = NULL, fixComps = 1) {
+formModel <- function(preprocData, TF = NULL, knownTargets = NULL, testTarget = NULL, useGPsim = FALSE, fixedParams = FALSE, initParams = NULL, fixComps = 1) {
 
     if (!is.null(testTarget)) {
       # taking a test target gene
-      GPrankTargets[length(GPrankTargets) + 1] <- testTarget
+      knownTargets[length(knownTargets) + 1] <- testTarget
     }
 
     error1 <- TRUE
     error2 <- TRUE
 
     tryCatch({
-      data <- GPrank(preprocData, TF, GPrankTargets, useGPsim, fixedParams = fixedParams, initParams = initParams, fixComps = fixComps)
+      data <- GPrank(preprocData, TF, knownTargets, useGPsim, fixedParams = fixedParams, initParams = initParams, fixComps = fixComps)
       error1 <- FALSE
     }, error = function(ex) {
       cat("Stopped due to an error.\n")
@@ -98,7 +95,7 @@ formModel <- function(preprocData, TF = NULL, GPrankTargets = NULL, testTarget =
       while (!success && i < 10) {
         tryCatch({
 	  cat("Trying again with different parameters.\n")
-  	  data <- GPrank(preprocData, TF, GPrankTargets, useGPsim, randomize = TRUE, fixedParams = fixedParams, initParams = initParams, fixComps = fixComps)
+  	  data <- GPrank(preprocData, TF, knownTargets, useGPsim, randomize = TRUE, fixedParams = fixedParams, initParams = initParams, fixComps = fixComps)
           success <- TRUE
           error2 <- FALSE
         }, error = function(ex) {
