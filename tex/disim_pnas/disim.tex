@@ -183,8 +183,8 @@ $\bm y_i=[\hat{m_i}(t_1),\hat{m_i}(t_2),\ldots,\hat{m_i}(t_n),\hat{f_i}(t_1),\ld
 that as this is a continuous-time modelling framework, there is no
 requirement that times are equally spaced. We use a Gaussian noise model
 $p(\bm y_i|m_i,f_i)=\prod_{j}{\cal
-  N}(\hat{m_i}(t_j)|m_i(t_j),\sigma^m_{ij}){\cal
-  N}(\hat{f_i}(t_j)|f_i(t_j),\sigma^f_{ij})$ where the gene and condition
+  N}(\hat{m_i}(t_j)|m_i(t_j),(\sigma^m_{ij})^2){\cal
+  N}(\hat{f_i}(t_j)|f_i(t_j),(\sigma^f_{ij})^2)$ where the gene and condition
 specific measurement variance parameters are obtained from a probe-level anaysis of the microarray data~\cite{Liu2005,Pearson2009} (see
 Materials and Methods). The log-likelihood for the model parameters
 $\theta=[B,S,D,\delta,a,l]$ can then be calculated using standard Gaussian process regression
@@ -224,94 +224,112 @@ transcriptional control.
   \label{fig:gpdisim_models}
 \end{figure}
 
-We fitted two sets of Gaussian process models to Drosophila
-developmental microarray time series from~\cite{Tomancak2002} using
-Twist and Mef2 as TFs independently and all other genes as candidate
-targets.  Quiet candidate targets with insufficient support for
-regulation were eliminated as described in Materials and Methods.
-Because Twist and Mef2 are known to be mainly active in mesoderm and
-muscle development, the candidate genes were further pruned by only
-including those with annotated expression in these tissues in the
-\emph{in situ} data from~\cite{Tomancak2002} for validation.
-This evaluation corresponds to
-the situation in typical cell culture studies, where all active genes
-are known to be localized to the same cells.
-Two
-examples of these models for likely Twist targets are displayed in
-Fig.~\ref{fig:gpdisim_models}.
+We studied targets of Drosophila transcription factors Twist and Mef2
+using the developmental microarray time series
+from~\cite{Tomancak2002}.  Quiet candidate targets were eliminated by
+considering average z-scores of expression values as described in
+Materials and Methods.
 
-The remaining candidate targets were ranked by model likelihood.  For
-comparison, candidates were also ranked by correlation of the
+We fitted two sets of Gaussian process models using Twist and Mef2 as
+TFs independently and all other genes as candidate targets one at a
+time (``signle-target models'').  The candidate targets were ranked by
+model likelihood.  It is worth noting that even the ``shared''
+parameters can vary between models for different genes as the models
+are fitted completely independently.
+We further fitted another set of models using 5
+top-ranking genes as the training set (``multiple-target models''; see
+Materials and Methods).  Examples of these models for likely Twist
+targets are displayed in Fig.~\ref{fig:gpdisim_models}.
+
+For comparison, candidates were also ranked by correlation of the
 expression profile with the TF expression profile (``correlation'')
-and by $q$-value of differential expression
-from~\cite{Sandmann2006a,Sandmann2007a} (``knock-out'').
-
-\begin{figure}[htb]
-  \centering
-  \includegraphics[trim=0mm 15mm 0mm 0mm]{dros_focused_evaluation}
-  \caption{Evaluation results of different rankings as
-    discussed in the text showing the relative frequency of positive
-    predictions among $N$ top-ranking targets.  The dashed line
-    denotes the frequency in full population.  The figure shows the
-    frequency of
-    targets with ChIP-chip binding within 5 kb of the gene.
-    %$p$-values of significant results are denoted by '***': $p <
-    %0.001$, '**': $p < 0.01$, '*': $p < 0.05$.
-    The largest number of targets is smaller for Mef2 because there
-    are only 200 positive examples in this subset of the data.}
-  \label{fig:dros_focused_evaluation}
-\end{figure}
-
-The accuracy of the ranking was first evaluated by looking at the
-fraction of $N$ top-ranking targets with ChIP-chip binding inside the
-gene or within 5000 base pairs of its beginning or end in the data
-from~\cite{Sandmann2006a,Sandmann2007a}.  For Mef2, this frequency is
-only computed for genes in the part of the genome covered by the
-ChIP-chip data.
-These results are illustrated in Fig.~\ref{fig:dros_focused_evaluation}.
-The results show that the proposed method clearly outperforms all the
-tested alternatives.
+and by $q$-value of differential expression in TF knock-out
+experiments from~\cite{Sandmann2006a,Sandmann2007a} (``knock-out'').
 
 \begin{figure}[htb]
   \centering
   \includegraphics[trim=0mm 13mm 0mm 0mm]{dros_global_evaluation}
   \caption{Global evaluation results of different rankings as
     discussed in the text showing the relative frequency of positive
-    predictions among $N$ top-ranking targets.  The dashed line
+    predictions among $N$ top-ranking targets.
+    The dashed line
     denotes the frequency in full population.  The first row shows the
-    frequency of predicted targets with in-situ annotations for
-    mesoderm and muscle while the second row shows the frequency of
+    frequency of predicted targets with significant differential
+    expression in TF knock-outs
+    while the second row shows the frequency of
     targets with ChIP-chip binding within 5 kb of the gene.
-    %$p$-values of significant results are denoted by '***': $p <
-    %0.001$, '**': $p < 0.01$, '*': $p < 0.05$.
+    $p$-values of results significantly different from random are
+    denoted by '***': $p <
+    0.001$, '**': $p < 0.01$, '*': $p < 0.05$.
+    Comparison to knock-out ranking is obviously omitted for knock-out
+    validation.
   }
   \label{fig:dros_global_evaluation}
 \end{figure}
 
-The accuracy of the ranking was also evaluated by looking at the
-global fraction of $N$ top-ranking targets regardless of the
-\emph{in situ} annotations
-with annotated expression in
-mesoderm and muscle tissues where the TFs are known to operate in data
-from~\cite{Tomancak2002}.  These results are illustrated on the first
-row of Fig.~\ref{fig:dros_global_evaluation}.  The second row of the
-figure shows similar validation using the fraction of globally top-ranking
-targets with ChIP-chip binding inside the gene or within 5000 base
+The accuracy of the ranking was evaluated by looking at the global
+fraction of $N$ top-ranking targets that are significantly
+differentially expressed in knock-outs of the TFs and similar fraction
+of targets with ChIP-chip binding inside the gene or within 5000 base
 pairs of its beginning or end in the data
-from~\cite{Sandmann2006a,Sandmann2007a}.  For Mef2, this frequency is
-again only computed for genes in the part of the genome covered by the data.
+from~\cite{Sandmann2006a,Sandmann2007a}.  For Mef2, this latter
+frequency is only computed for genes in the part of the genome covered
+by the ChIP-chip data.  These results are illustrated in
+Fig.~\ref{fig:dros_global_evaluation}.
 
-The results for $N=10$ are only significantly better than random for
-Twist ChIP-chip, while for $N=50$ and especially $N=250$ the
-improvement is highly significant.  Especially for Twist the results
-are even now clearly better than any of the tested alternatives.
+\begin{figure}[htb]
+  \centering
+  \includegraphics[trim=0mm 15mm 0mm 0mm]{dros_focused_evaluation}
+  \caption{Evaluation results of different rankings based on
+    ChIP-chip data similar to those in
+    Fig.~\ref{fig:dros_global_evaluation} except only for genes
+    with annotate expression in mesoderm and muscle.
+%     as discussed in the text showing the relative frequency of
+%     positive predictions among $N$ top-ranking targets.  The dashed
+%     line denotes the frequency in full population.  The first row
+%     shows the frequency of predicted targets that are significantly
+%     differentially expressed in knock-outs for the TF.  The second row
+%     shows the frequency of targets with ChIP-chip binding within 5 kb
+%     of the gene.  $p$-values results significantly different from
+%     random are denoted by '***': $p < 0.001$, '**': $p < 0.01$, '*':
+%     $p < 0.05$.
+    The largest number of targets is smaller for Mef2
+    because there are only 200 positive examples in this subset of the
+    data.}
+  \label{fig:dros_focused_evaluation}
+\end{figure}
+
+Because Twist and Mef2 are known to be mainly active in mesoderm and
+muscle development, we also looked at accuracy among genes
+with annotated expression in these tissues in the
+\emph{in situ} data from~\cite{Tomancak2002}.
+This evaluation corresponds to
+the situation in typical cell culture studies, where all active genes
+are known to be localized to the same cells.
+These results are illustrated in Fig.~\ref{fig:dros_focused_evaluation}.
+
+% The results for $N=10$ are only significantly better than random for
+% Twist ChIP-chip, while for $N=50$ and especially $N=250$ the
+% improvement is highly significant.  Especially for Twist the results
+% are even now clearly better than any of the tested alternatives.
+
+To assess the significance of the differences, we performed bootstrap
+resampling of the data set.  In 1000-fold resampling where the
+relative performances of different methods were recorded for each
+fold, the Gaussian process methods were superior to the alternatives
+with 95\% significance level in most Twist validation settings and in
+focused ChIP validation for Mef2 within top-20.  (Full results in
+Supplementary Material.)
 
 We also repeated the experiment with the method of~\cite{Gatta2008}
 but using the TF expression levels as a proxy for the measured protein
-levels.  The results of this method are significantly better than
-random only for Mef2 with $N=250$ and in one evaluation with $N=50$.
-Using measured protein levels would naturally help, but unfortunately
-they are not available in this case.
+levels.  The results of this method are in general comparable to
+ranking by correlation; there are no cases where it would be
+significantly better than correlation according to the bootstrap.
+Using measured protein levels as proposed in~\cite{Gatta2008} would
+naturally help, but unfortunately such information is not available in
+this case or in general.  It is worth noting that any measurements of
+protein levels could very easily be incorporated in our models as well.
 
 \section{Discussion}
 
@@ -326,18 +344,27 @@ workstation rather than a supercomputer.
   using mmgMOS from the puma package~\cite{Pearson2009}.  The means of
   the log-scale expression values were equalized across chips.  The
   distributions over log-expression were transformed to means
-  ($\hat{m_i}(t_j), \hat{f_i}(t_j)$) and variances ($\sigma^m_{ij},
-  \sigma^f_{ij}$) of absolute expression by minimizing the squared
+  ($\hat{m_i}(t_j), \hat{f_i}(t_j)$) and variances ($(\sigma^m_{ij})^2,
+  (\sigma^f_{ij})^2$) of absolute expression by minimizing the squared
   deviation of 5\%, 25\%, 50\%, 75\% and 95\% quantiles of a Gaussian
   distribution to corresponding quantiles from mmgMOS.
 
+  \section{Filtering quiet genes}
+  Quiet genes can mess up the ranking because any model can fit them
+  well. Genes with an average z-score 
+  $$ \frac{1}{rn} \sum_{i=1}^r \sum_{j=1}^r \frac{\hat{m_i}(t_j)}{\sigma^m_{ij}} < 1.5 $$
+  were considered quiet and removed from the data set.  The
+  performance of the methods is fairly insensitive to the actual value
+  of the threshold, at least values in the range $[1.2, 1.8]$ seem to
+  provide mostly similar ranking accuracy.
+  
   \section{Covariance of the Gaussian Process}
   Differential
   equations~[\ref{eq:translation_ode}--\ref{eq:transcription_ode}]
   can be solved to obtain
   \begin{align*}
     %\label{eq:gpsim_f_ode_sol}
-    p(t) &= \sigma \exp(-\delta t) \int_0^t f(v) \exp(\delta v) dv\ , \\
+    p(t) &= \exp(-\delta t) \int_0^t f(v) \exp(\delta v) dv\ , \\
     m_j(t) &= \frac{B_j}{D_j} + S_j \exp(-D_j t) \int_0^t p(u)
     \exp(D_j u) du\ .
     %\label{eq:gpsim_f_x_sol}
@@ -347,7 +374,7 @@ workstation rather than a supercomputer.
   \right)$, the covariance of target mRNAs is
   \begin{multline*}
     k_{m_j m_k}(t, t')
-    = \frac{\sqrt{\pi} l a^2 \sigma^2 S_j S_k}{2} \bigg(
+    = \frac{\sqrt{\pi} l a^2 S_j S_k}{2} \bigg(
     h_{kj}(t, t', \delta) + h_{jk}(t', t, \delta) \\
     - h_{kj}(t, t', D_j) - h_{jk}(t', t, D_k)
     \bigg)\ ,
@@ -372,7 +399,7 @@ workstation rather than a supercomputer.
   Denoting $\Delta t := t - t'$, we obtain similarly
   \begin{multline*}
     k_{f m_k}(t, t')
-    = \sigma S_k a^2 \frac{\sqrt{\pi} l}{2(\delta - D_k)} \\
+    = S_k a^2 \frac{\sqrt{\pi} l}{2(\delta - D_k)} \\
     \bigg(
     \exp\left(\left(\frac{D_k l}{2}\right)^2 + D_k \Delta t \right)
     [\erf(\frac{D_k l}{2} + \frac{t}{l}) - \erf(\frac{D_k l}{2} + \frac{\Delta t}{l})] \\
@@ -382,13 +409,18 @@ workstation rather than a supercomputer.
     \bigg)
   \end{multline*}
 
-  \section{Filtering quiet genes}
-  The Gaussian process model gives a high likelihood to many targets
-  with very little activity that fit a constant response.  These genes
-  were eliminated from the ranking by discarding targets with a higher
-  likelihood for a model using only Eq.~(\ref{eq:transcription_ode})
-  with $S=0$ that for the full model.
-  
+  \section{Training set ranking}
+  The training set or multiple-target ranking was formed by fitting
+  joint models to five assumed known targets together with each new
+  candidate independently and ranking by model likelihood.  In our
+  approach, the training set was formed by taking 5 highest-ranking
+  targets from the basic method, but naturally any existing background
+  knowledge of known targets should be utilized.  To speed up the
+  computation, we first fitted a Gaussian process model to the
+  training set genes alone.  All the parameters concerning these genes
+  were then fixed when fitting the larger models to the training set
+  plus each candidate.
+
 \end{materials}
 
 \begin{acknowledgments}
