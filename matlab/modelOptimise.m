@@ -4,7 +4,10 @@ function model = modelOptimise(model, varargin)
 % FORMAT
 % DESC is a wrapper function that optimises a given model.
 % ARG model : the model to be optimised. 
-% ARG P1, P2, P3... : optional additional arguments.
+% ARG X : input value to model.
+% ARG y : target value for model.
+% ARG display : whether or not to display optimization values.
+% ARG iters : number of iterations.
 % RETURN model : the optimised model.
 %
 % SEEALSO : modelObjective, modelGradient

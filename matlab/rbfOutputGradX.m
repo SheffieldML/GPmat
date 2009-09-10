@@ -1,4 +1,4 @@
- function g = rbfOutputGradX(model, X)
+function g = rbfOutputGradX(model, X)
 
 % RBFOUTPUTGRADX Evaluate derivatives of a RBF model's output with respect to inputs.
 % FORMAT

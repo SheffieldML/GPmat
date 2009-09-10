@@ -6,19 +6,19 @@
 
 <h1>Matlab MLTOOLS Toolbox</h1>
 
-<p>The main objective of this toolbox is to integrate several machine learning methods with in a consistent framework which is coded in a compatible way with the methods available in the other toolboxes on this site. Whilst the other toolboxes typically reflect research projects, this toolbox reflects other researchers work or known algorithms. The code either provides 'wrappers' for other researchers code or independent implementations. Examples of code that is wrapped include LLE, Isomap, MVU, NETLAB.
+<p>The main objective of this toolbox is to integrate several machine learning methods with in a consistent framework which is coded in a compatible way with the methods available in the other toolboxes on this site. Whilst the other toolboxes typically reflect research projects, this toolbox reflects other researchers work or known algorithms. The code either provides 'wrappers' for other researchers code or independent implementations. Examples of code that is wrapped include Isomap, MVU and NETLAB.
 
 RELEASEINFORMATION
 
-Add click visualise functionality for LVM visualization, Laplacian eigenmaps and wrapper for MVU. 
+<p>Add click visualise functionality for LVM visualization, Laplacian eigenmaps and wrapper for MVU. 
 
 <h4>Version 0.1311</h4>
 
-Minor change to lvmScatterPlot to fix bug caused when minimum values were positive.
+<p>Minor change to lvmScatterPlot to fix bug caused when minimum values were positive.
 
 <h4>Version 0.131</h4>
 
-Minor changes to toolbox to fix reading in of C++ code.
+<p>Minor changes to toolbox to fix reading in of C++ code.
 
 <h4>Version 0.13</h4>
 
