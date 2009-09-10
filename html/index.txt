@@ -12,17 +12,17 @@
 
 RELEASEINFORMATION
 
-Updates for running a GPLVM when the inner produce matrix is used
+<p>Updates for running a GPLVM when the inner produce matrix is used
 (i.e. dimensionality much greater than data points).  Minor changes to
 fix reading of GPLVM files from latest C++ code.
 
 <h4>Version 0.16</h4>
 
-Incorporate varational approximation from Michalis in the code. 
+<p>Incorporate varational approximation from Michalis in the code. 
 
 <h4>Version 0.153</h4>
 
-Changes to allow compatibility with SGPLVM and NCCA toolboxes.
+<p>Changes to allow compatibility with SGPLVM and NCCA toolboxes.
 
 
 <h4>Version 0.152</h4>
