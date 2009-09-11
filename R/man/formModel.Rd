@@ -25,7 +25,7 @@ returnData <- formModel(preprocData, TF = NULL, knownTargets = NULL, testTarget 
   Returns a list containing three items: the data returned by GPrank (the model and the genes), the parameters of the models and the log-likelihoods of the models.
 }
 \seealso{
-\code{\link{GPrank}, \link{GPrankTargets}}.
+\code{\link{GPrank}, \link{GPrankTargets}, \link{GPrankTFs}}.
 }
 \examples{
 ## missing

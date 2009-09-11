@@ -17,12 +17,12 @@ writeScoreListGenes(scoreList, fileName)
 writeGenes(genes, fileName)
 }
 \arguments{
-  \item{scoreList}{A score list containing the genes and related data. Usually received as output from the function GPscoreListFixedTF.}
+  \item{scoreList}{A score list containing the genes and related data. Usually received as output from the function GPrankTargets or GPrankTFs.}
   \item{fileName}{The name of the text file in which the genes and LLs are written.}
   \item{genes}{An array of genes to be written in a text file.}
 }
 \seealso{
-  \code{\link{GPrankTargets}, \link{readRegulators}}.
+  \code{\link{GPrankTargets}, \link{GPrankTFs}, \link{readRegulators}}.
 }
 \examples{
 ## missing
