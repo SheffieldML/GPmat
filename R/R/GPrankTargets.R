@@ -14,9 +14,6 @@ GPscoreListFixedTF <- function(preprocData, TF = NULL, knownTargets = NULL, test
   # searching for the data of the specified genes
   searchedData <- searchProcessedData(preprocData, genes)
 
-  # creating a model for each combination and counting the log likelihood of
-  # each model
-
   logLikelihoods <- array(dim = length(testTargets) + 1)
   rankedData <- array(list(NULL), length(testTargets) + 1)
   modelParams <- array(list(NA), length(testTargets) + 1)
@@ -70,6 +67,8 @@ GPscoreListFixedTF <- function(preprocData, TF = NULL, knownTargets = NULL, test
 
   return (scoreList)
 }
+
+
 
 
 formModel <- function(preprocData, TF = NULL, knownTargets = NULL, testTarget = NULL, useGPsim = FALSE, fixedParams = FALSE, initParams = NULL, fixComps = 1) {

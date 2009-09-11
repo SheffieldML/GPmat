@@ -22,7 +22,7 @@ writeGenes(genes, fileName)
   \item{genes}{An array of genes to be written in a text file.}
 }
 \seealso{
-  \code{\link{GPscoreListFixedTF}, \link{readRegulators}}.
+  \code{\link{GPrankTargets}, \link{readRegulators}}.
 }
 \examples{
 ## missing

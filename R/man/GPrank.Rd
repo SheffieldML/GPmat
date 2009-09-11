@@ -24,7 +24,7 @@ data <- GPrank(preprocData, TF = NULL, targets = NULL, useGPsim = FALSE, randomi
   Returns the data containing the model itself and the genes used.
 }
 \seealso{
-  \code{\link{gpsimCreate}, \link{GPscoreListFixedTF}}.
+  \code{\link{gpsimCreate}, \link{GPrankTargets}}.
 }
 \examples{
 ## missing

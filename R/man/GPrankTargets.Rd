@@ -1,12 +1,12 @@
-\name{GPscoreListFixedTF}
+\name{GPrankTargets}
 \Rdversion{1.0}
-\alias{GPscoreListFixedTF}
+\alias{GPrankTargets}
 \title{Forming optimized models with a fixed transcription factor}
 \description{
   Forms optimized models with a fixed transcription factor, a set of known target genes and targets to be tested. The transcription factor and the known targets are always included in the models while the tested targets are tested by including them in the models one at a time. The function determines itself whether to use GPsim or GPdisim based on the input arguments. Finally, the formed models are sorted based on the logarithmic value of their marginal likelihood.
 }
 \usage{
-scoreList <- GPscoreListFixedTF(preprocData, TF = NULL, knownTargets = NULL, testTargets = NULL)
+scoreList <- GPrankTargets(preprocData, TF = NULL, knownTargets = NULL, testTargets = NULL)
 }
 \arguments{
   \item{preprocData}{The preprocessed data to be used.}
