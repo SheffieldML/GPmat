@@ -3,7 +3,7 @@
 \alias{GPrank}
 \title{Forming optimized models}
 \description{
-  Forms an optimized model of the desired genes.
+  Forms an optimized model of the desired genes. The function can form a model with GPsim or GPdisim and it's also possible to use initial parameters or fix parameters for future use. The given data can also be searched for the data of specific genes.
 }
 \usage{
 data <- GPrank(preprocData, TF = NULL, targets = NULL, useGPsim = FALSE, randomize = FALSE, addPriors = FALSE, search = FALSE, fixedParams = FALSE, initParams = NULL, fixComps = 1)
@@ -24,7 +24,7 @@ data <- GPrank(preprocData, TF = NULL, targets = NULL, useGPsim = FALSE, randomi
   Returns the data containing the model itself and the genes used.
 }
 \seealso{
-  \code{\link{gpsimCreate}, \link{GPrankTargets}}.
+  \code{\link{gpsimCreate}, \link{GPrankTargets}, \link{GPrankTFs}}.
 }
 \examples{
 ## missing

@@ -1,9 +1,9 @@
 \name{GPrankTargets}
 \Rdversion{1.0}
 \alias{GPrankTargets}
-\title{Forming optimized models with a fixed transcription factor}
+\title{Ranking possible target genes by forming optimized models}
 \description{
-  Forms optimized models with a fixed transcription factor, a set of known target genes and targets to be tested. The transcription factor and the known targets are always included in the models while the tested targets are tested by including them in the models one at a time. The function determines itself whether to use GPsim or GPdisim based on the input arguments. Finally, the formed models are sorted based on the logarithmic value of their marginal likelihood.
+  Ranks possible target genes by forming optimized models with a fixed transcription factor, a set of known target genes and targets to be tested. The transcription factor and the known targets are always included in the models while the tested targets are tested by including them in the models one at a time. The function determines itself whether to use GPsim or GPdisim based on the input arguments. Finally, the formed models are sorted based on the logarithmic value of their marginal likelihood.
 }
 \usage{
 scoreList <- GPrankTargets(preprocData, TF = NULL, knownTargets = NULL, testTargets = NULL)
@@ -21,7 +21,7 @@ scoreList <- GPrankTargets(preprocData, TF = NULL, knownTargets = NULL, testTarg
   Returns a list containing the data, parameters and log-likelihoods of the models. The values have been sorted in the order of the log-likelihoods, starting from the highest.
 }
 \seealso{
-  \code{\link{GPrank}, \link{formModel}}.
+  \code{\link{GPrank}, \link{formModel}, \link{GPrankTFs}}.
 }
 \examples{
 ## missing
