@@ -5,6 +5,8 @@
 fillColor = [0.7 0.7 0.7];
 xTest = linspace(-1.5, 1.5, 200)';
 [mu, varSigma] = gpPosteriorMeanVar(model, xTest);
+%[mu, varSigma] = gpVarPosteriorMeanVar(model, xTest);
+
 
 figure
 fill([xTest; xTest(end:-1:1)], ...
