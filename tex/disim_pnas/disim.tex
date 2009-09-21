@@ -11,6 +11,7 @@
 \usepackage{graphicx}
 \usepackage{pnastwoF}
 \usepackage{amssymb,amsfonts,amsmath}
+\usepackage{subfig}
 \usepackage{bm}
 %\usepackage[comma,sort&compress]{natbib}
 \usepackage{cite}
@@ -97,7 +98,7 @@ non-parametric probabilistic inference methodology to
 effectively deal with open differential equation
 systems~\cite{Gao2008}. We model the TF concentration as a function
 drawn from a Gaussian process prior distribution~\cite{Rasmussen2006}. This functional prior can either be placed
-on the TF mRNA, for TFs primarily under transcritptional regulation,
+on the TF mRNA, for TFs primarily under transcriptional regulation,
 or the TF protein, for TFs activated post-translationally. In the
 application considered here the TFs are transcriptionally regulated
 and we take the former approach. We use Bayesian marginalisation (also
@@ -154,7 +155,7 @@ of covariance are smooth, infinitely differentiable, stationary functions. Altho
 and vary in a highly stochastic manner, here we consider microarray data which
 corresponds to a population average and is therefore more
 appropriately modelled using a smooth process. The parameters $a$ and
-$l$ describe the typical amplitide and time-scale of samples from
+$l$ describe the typical amplitude and time-scale of samples from
 the prior. 
 
 To simplify the inference we model translation and transcriptional
@@ -163,17 +164,20 @@ equations,
 \begin{align}
   \frac{\mathrm{d}p(t)}{\mathrm{d}t} & = f(t) - \delta
   p(t) \ , \label{eq:translation_ode} \\
-  \frac{\mathrm{d}m(t)}{\mathrm{d}t} & = B+Sp(t)-Dm(t) \ , \label{eq:transcription_ode}
+  \frac{\mathrm{d}m_j(t)}{\mathrm{d}t} & = B_j+S_j p(t)-D_j m_j(t) \ , \label{eq:transcription_ode}
 \end{align}
-where $p(t)$ is the TF protein and $m(t)$ is the target mRNA
-concentration at time $t$. The parametere $B$, $S$ and $D$ are the
+where $p(t)$ is the TF protein and $m_j(t)$ is the $j$th target mRNA
+concentration at time $t$. The parameters $B_j$, $S_j$ and $D_j$ are the
 baseline transcription rate, sensitivity and decay rate respectively
-for the target mRNA (as described in \cite{Barenco2006a}). This linear system of differential equations can be
-explicitly solved and we find that the functions $p$ and $m$ are
-linear operators of $f$. The functions $m$ and $f$ therefore
-describe a two-dimensional Gaussian process prior $p(m,f|\theta)$
+for the mRNA of $j$th target (as described in \cite{Barenco2006a}).
+The parameter $\delta$ is the decay rate of the TF protein.
+This linear system of differential equations can be
+explicitly solved and we find that the functions $p$ and $m_j$ are
+linear operators of $f$. The functions $m_j$ and $f$ therefore
+describe a two-dimensional Gaussian process prior $p(m_j,f|\theta)$
 for which the covariance function can be calculated explicitly in terms of the
-six model parameters $\theta=[B,S,D,\delta,a,l]$ (see
+three global and three gene-dependent model parameters
+$\theta=[B_j,S_j,D_j,\delta,a,l]$ (see
 Materials and Methods). 
 
 A microarray time course experiment provides us with a set of $r$
@@ -185,17 +189,19 @@ requirement that times are equally spaced. We use a Gaussian noise model
 $p(\bm y_i|m_i,f_i)=\prod_{j}{\cal
   N}(\hat{m_i}(t_j)|m_i(t_j),(\sigma^m_{ij})^2){\cal
   N}(\hat{f_i}(t_j)|f_i(t_j),(\sigma^f_{ij})^2)$ where the gene and condition
-specific measurement variance parameters are obtained from a probe-level anaysis of the microarray data~\cite{Liu2005,Pearson2009} (see
+specific measurement variance parameters are obtained from a probe-level analysis of the microarray data~\cite{Liu2005,Pearson2009} (see
 Materials and Methods). The log-likelihood for the model parameters
-$\theta=[B,S,D,\delta,a,l]$ can then be calculated using standard Gaussian process regression
+$\theta=[B_j,S_j,D_j,\delta,a,l]$ can then be calculated using standard Gaussian process regression
 techniques to integrate out the functions $m_i$ and $f_i$~\cite{Rasmussen2006},
-\begin{eqnarray*}
-L(\theta) & = & \log p(\{\bm y_i\}|\theta) \\
-& = & \sum_{i=1}^r \log \!\int \!\mathrm{d}m_i\mathrm{d}f_i\,
-p(\bm y_i|m_i,f_i)p(m_i,f_i|\theta)  \\
-& = & \sum_{i=1}^r \left[-\frac{1}{2}\bm y_i^\mathrm{T} K_i^{-1} \bm y_i -
-\frac{1}{2}\log|K_i|\right] -nr\log 2\pi
-\end{eqnarray*}
+\begin{equation*}
+  \begin{split}
+    L(\theta) & = \log p(\{\bm y_i\}|\theta) \\
+    & = \sum_{i=1}^r \log \!\int \!\mathrm{d}m_i\mathrm{d}f_i\,
+    p(\bm y_i|m_i,f_i)p(m_i,f_i|\theta)  \\
+    & = \sum_{i=1}^r \left[-\frac{1}{2}\bm y_i^\mathrm{T} K_i^{-1} \bm y_i -
+      \frac{1}{2}\log|K_i|\right] -nr\log 2\pi
+  \end{split}
+\end{equation*}
 where $K_i$ is the covariance matrix for the
 noise-corrupted data $\bm y_i$ under the Gaussian process prior (see
 Materials and Methods). This allows us to compute the set of model
@@ -212,17 +218,22 @@ can be applied without any prior knowledge of targets. We therefore
 prefer the above cascade model in the case that TFs are under
 transcriptional control. 
 
-\section{Results}
-
-\begin{figure}[htb]
+\begin{figure*}[tb]
   \centering
-  \includegraphics{gpdisim_models_twi}
-  \caption{Two independent example Gaussian process models for likely
-    targets of Twist. Red marks denote observed expression levels with
-    2 s.d.\ error bars while blue functions are inferred from the
-    model.  The dashed lines denote 2 s.d.\ confidence intervals.}
+  \subfloat[][]{\includegraphics{dros_gpdisim_singletarget_models}}
+  \subfloat[][]{\includegraphics{dros_gpdisim_multitarget_model}}
+  \caption{(a) Three independent single-target Gaussian process models
+    for likely targets of Twist. Red marks denote observed expression
+    levels with 2 s.d.\ error bars while blue functions are inferred
+    from the model.  The shaded regions denote 2 s.d.\ confidence
+    intervals. (b) A joint multiple-target Gaussian process model for
+    the same set of target genes as in (a). It should be noted that
+    the multiple-target models used in evaluation have more targets
+    than the one shown here.}
   \label{fig:gpdisim_models}
-\end{figure}
+\end{figure*}
+
+\section{Results}
 
 We studied targets of Drosophila transcription factors Twist and Mef2
 using the developmental microarray time series
@@ -232,7 +243,7 @@ Materials and Methods.
 
 We fitted two sets of Gaussian process models using Twist and Mef2 as
 TFs independently and all other genes as candidate targets one at a
-time (``signle-target models'').  The candidate targets were ranked by
+time (``single-target models'').  The candidate targets were ranked by
 model likelihood.  It is worth noting that even the ``shared''
 parameters can vary between models for different genes as the models
 are fitted completely independently.
@@ -246,18 +257,19 @@ expression profile with the TF expression profile (``correlation'')
 and by $q$-value of differential expression in TF knock-out
 experiments from~\cite{Sandmann2006a,Sandmann2007a} (``knock-out'').
 
-\begin{figure}[htb]
+\begin{figure}[tb]
   \centering
-  \includegraphics[trim=0mm 13mm 0mm 0mm]{dros_global_evaluation}
+  \includegraphics[trim=0mm 18mm 0mm 0mm]{dros_global_evaluation}
   \caption{Global evaluation results of different rankings as
     discussed in the text showing the relative frequency of positive
     predictions among $N$ top-ranking targets.
     The dashed line
-    denotes the frequency in full population.  The first row shows the
-    frequency of predicted targets with significant differential
-    expression in TF knock-outs
+    denotes the frequency in full population.
+    The first row shows the frequency of targets with ChIP-chip
+    binding within 5 kb of the gene
     while the second row shows the frequency of
-    targets with ChIP-chip binding within 5 kb of the gene.
+    predicted targets with significant differential
+    expression in TF knock-outs.
     $p$-values of results significantly different from random are
     denoted by '***': $p <
     0.001$, '**': $p < 0.01$, '*': $p < 0.05$.
@@ -277,9 +289,9 @@ frequency is only computed for genes in the part of the genome covered
 by the ChIP-chip data.  These results are illustrated in
 Fig.~\ref{fig:dros_global_evaluation}.
 
-\begin{figure}[htb]
+\begin{figure}[tb]
   \centering
-  \includegraphics[trim=0mm 15mm 0mm 0mm]{dros_focused_evaluation}
+  \includegraphics[trim=0mm 10mm 0mm 0mm]{dros_focused_evaluation}
   \caption{Evaluation results of different rankings based on
     ChIP-chip data similar to those in
     Fig.~\ref{fig:dros_global_evaluation} except only for genes
@@ -305,7 +317,7 @@ with annotated expression in these tissues in the
 \emph{in situ} data from~\cite{Tomancak2002}.
 This evaluation corresponds to
 the situation in typical cell culture studies, where all active genes
-are known to be localized to the same cells.
+are known to be localised to the same cells.
 These results are illustrated in Fig.~\ref{fig:dros_focused_evaluation}.
 
 % The results for $N=10$ are only significantly better than random for
@@ -345,7 +357,7 @@ workstation rather than a supercomputer.
   the log-scale expression values were equalized across chips.  The
   distributions over log-expression were transformed to means
   ($\hat{m_i}(t_j), \hat{f_i}(t_j)$) and variances ($(\sigma^m_{ij})^2,
-  (\sigma^f_{ij})^2$) of absolute expression by minimizing the squared
+  (\sigma^f_{ij})^2$) of absolute expression by minimising the squared
   deviation of 5\%, 25\%, 50\%, 75\% and 95\% quantiles of a Gaussian
   distribution to corresponding quantiles from mmgMOS.
 
@@ -415,7 +427,7 @@ workstation rather than a supercomputer.
   candidate independently and ranking by model likelihood.  In our
   approach, the training set was formed by taking 5 highest-ranking
   targets from the basic method, but naturally any existing background
-  knowledge of known targets should be utilized.  To speed up the
+  knowledge of known targets should be utilised.  To speed up the
   computation, we first fitted a Gaussian process model to the
   training set genes alone.  All the parameters concerning these genes
   were then fixed when fitting the larger models to the training set
