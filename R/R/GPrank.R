@@ -1,17 +1,5 @@
 GPrank <- function(preprocData, TF = NULL, targets = NULL, useGPsim = FALSE, randomize = FALSE, addPriors = FALSE, search = FALSE, fixedParams = FALSE, initParams = NULL, fixComps = 1) {
 
-  source("gpdisimLinearFunctions.R")
-  source("gpsimLinearFunctions.R")
-  source("searchProcessedData.R")
-
-  # GPrank forms an optimized model of the desired genes.
-  #
-  # preprocData: the preprocessed data to be used
-  # TF: the transcription factor of the model
-  # targets: the target genes of the model
-  # useGPsim: a logical value determining whether GPsim is used; if false, GPdisim is used
-  # search: a logical value determining whether the preprocessed data is searched for the data of specific genes
-
   options(error = recover)
 
   # The preprocessed data is searched for the data of the specified genes.
