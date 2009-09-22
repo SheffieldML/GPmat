@@ -359,3 +359,51 @@ complexLog <- function (x) {
   }
   return ( y )
 }
+
+
+logLikelihood <- function (model) {
+  dataLocation <- model$comp[[1]]
+  dim <- length(dataLocation$y)
+
+  ll <- -dim*log(2*pi) - dataLocation$logDetK - t(dataLocation$m) %*% dataLocation$invK %*% dataLocation$m
+  ll <- 0.5*ll
+
+  ## prior contributions
+  if ( any(grep("bprior",names(model))) ) {
+    ll <- ll + kernPriorLogProb(dataLocation$kern)
+    ll <- ll + priorLogProb(dataLocation$bprior, dataLocation$B)
+  }
+  return (ll)
+}
+
+
+
+distfit <- function(data, dist = "normal") {
+
+  if (dist == "gamma") {
+    cdf <- qgamma 
+  }
+
+  else if (dist == "normal") {
+    cdf <- qnorm
+  }
+
+  else {
+    stop("Unknown distribution.")
+  }
+
+  t <- optim(c(1, 1), fn=distfit_obj, gr=NULL, data, cdf)
+
+  return (t)
+}
+
+
+
+distfit_obj <- function(theta, y, cdf) {
+
+  p <- c(.05, .25, .50, .75, .95)
+  x <- cdf(p, theta[1], theta[2])
+  r <- .5 * sum((x - y)^2)
+
+  return (r)
+}
