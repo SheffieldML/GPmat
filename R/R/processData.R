@@ -71,7 +71,9 @@ processData <- function(data, searchedGenes = "100001_at", search = FALSE) {
   yvar[[1]] <- yFullVar
   times <- array(times[, 1], dim = c(amountOfColumns)) 
 
-  preprocData <- list(y = y, yvar = yvar, times = times, genes = genes, scale = scale)
+  ratioData <- averageToSDRatio(usePreprocData = FALSE, y = y, yvar = yvar, times = times, genes = genes)
+
+  preprocData <- list(y = y, yvar = yvar, times = times, genes = genes, scale = scale, ratioData = ratioData)
 
   return(preprocData)
 }

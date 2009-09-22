@@ -1,15 +1,24 @@
-GPrank <- function(preprocData, TF = NULL, targets = NULL, useGPsim = FALSE, randomize = FALSE, addPriors = FALSE, search = FALSE, fixedParams = FALSE, initParams = NULL, fixComps = 1) {
+GPrank <- function(preprocData, TF = NULL, targets = NULL, useGPsim = FALSE, filterLimit = 0, useMedians = TRUE, randomize = FALSE, addPriors = FALSE, fixedParams = FALSE, initParams = NULL, fixComps = 1) {
 
   options(error = recover)
 
-  # The preprocessed data is searched for the data of the specified genes.
+  genes <- c(TF, targets)
 
-  searchedGenes <- c(TF, targets)
-  newData <- searchProcessedData(preprocData, searchedGenes)
+  # The preprocessed data is searched for the data of the specified genes.
+  newData <- searchProcessedData(preprocData, genes)
   y <- newData$y
   yvar <- newData$yvar
   times <- newData$times
-  genes <- newData$genes
+  scale <- newData$scale
+
+  # Filtering the genes based on the calculated ratios. If the limit is 0, all genes are accepted.
+  genes <- filterGenes(newData$ratioData, filterLimit, useMedians)
+
+  # The data is searched for the data of the filtered genes.
+  newData <- searchProcessedData(newData, genes)
+  y <- newData$y
+  yvar <- newData$yvar
+  times <- newData$times
   scale <- newData$scale
 
   Nrep <- length(y)
@@ -83,7 +92,7 @@ GPrank <- function(preprocData, TF = NULL, targets = NULL, useGPsim = FALSE, ran
 
   param <- param/Nrep
 
-  cat (c("\n Optimizing genes", TF, targets, sep=" "))
+  cat (c("\n Optimizing genes", genes, sep=" "))
 
   if(useGPsim) {
     fn <- cgpsimObjective
@@ -128,7 +137,7 @@ GPrank <- function(preprocData, TF = NULL, targets = NULL, useGPsim = FALSE, ran
 
 
 
-GPrankTargets <- function(preprocData, TF = NULL, knownTargets = NULL, testTargets = NULL, filterLimit = 0, useMedians = TRUE) {
+GPrankTargets <- function(preprocData, TF = NULL, knownTargets = NULL, testTargets = NULL, filterLimit = 1.5, useMedians = TRUE) {
 
   # The variable useGPsim determines whether GPsim is used in creating the 
   # models. If its value is false, GPdisim is used. GPsim is used if no TF
@@ -142,7 +151,7 @@ GPrankTargets <- function(preprocData, TF = NULL, knownTargets = NULL, testTarge
   genes <- c(TF, knownTargets, testTargets)
 
   # Filtering the genes based on the calculated ratios. If the limit is 0, all genes are accepted.
-  genes <- filterGenes(preprocData$ratioData, genes, filterLimit, useMedians)
+  genes <- filterGenes(preprocData$ratioData, filterLimit, useMedians)
 
   # searching for the data of the specified genes
   searchedData <- searchProcessedData(preprocData, genes)
@@ -203,7 +212,7 @@ GPrankTargets <- function(preprocData, TF = NULL, knownTargets = NULL, testTarge
 
 
 
-GPrankTFs <- function(preprocData, TFs = NULL, targets = NULL, filterLimit = 0, useMedians = TRUE) {
+GPrankTFs <- function(preprocData, TFs = NULL, targets = NULL, filterLimit = 1.5, useMedians = TRUE) {
 
   if (is.null(targets)) error("There are no known targets for GPsim.")
 
@@ -212,7 +221,7 @@ GPrankTFs <- function(preprocData, TFs = NULL, targets = NULL, filterLimit = 0, 
   genes = c(TFs, targets)
 
   # Filtering the genes based on the calculated ratios. If the limit is 0, all genes are accepted.
-  genes <- filterGenes(preprocData$ratioData, genes, filterLimit, useMedians)
+  genes <- filterGenes(preprocData$ratioData, filterLimit, useMedians)
 
   # searching for the data of the specified genes
   searchedData <- searchProcessedData(preprocData, genes)
@@ -329,6 +338,7 @@ searchProcessedData <- function(preprocData, searchedGenes) {
   times <- preprocData$times
   genes <- preprocData$genes
   scale <- preprocData$scale
+  ratioData <- preprocData$ratioData
 
   amountOfRows <- length(times)
   Nrep <- length(y)
@@ -353,9 +363,17 @@ searchProcessedData <- function(preprocData, searchedGenes) {
   foundGenes <- array(dim = k)
   foundY <- list()
   foundYvar <- list()
+  foundRatioData <- list()
+  foundRatioData$ratios <- list()
+  foundRatioData$means <- list()
+  foundRatioData$medians <- list()
+
   for (m in 1:Nrep) {
     foundY[[m]] <- array(dim = c(amountOfRows, k))
     foundYvar[[m]] <- array(dim = c(amountOfRows, k))
+    foundRatioData$ratios[[m]] <- array(dim = c(amountOfRows, k))
+    foundRatioData$means[[m]] <- array(dim = c(k))
+    foundRatioData$medians[[m]] <- array(dim = c(k))
   }
 
   #resetting the counter
@@ -373,14 +391,20 @@ searchProcessedData <- function(preprocData, searchedGenes) {
         k <- k + 1
         foundGenes[k] <- searchedGene
 	for (m in 1:Nrep) {
+	  foundRatioData$means[[m]][k] <- ratioData$means[[m]][j]
+	  foundRatioData$medians[[m]][k] <- ratioData$medians[[m]][j]
           for (l in 1: amountOfRows) {
             foundY[[m]][l, k] <- y[[m]][l, j]
             foundYvar[[m]][l, k] <- yvar[[m]][l, j]
+            foundRatioData$ratios[[m]][l, k] <- ratioData$ratios[[m]][l, j]
           }
 	}
       }
     }
   }
-  newData <- list(y = foundY, yvar = foundYvar, genes = foundGenes, times = times, scale = scale)
+
+  foundRatioData$genes <- foundGenes
+
+  newData <- list(y = foundY, yvar = foundYvar, genes = foundGenes, times = times, scale = scale, ratioData = foundRatioData)
   return (newData)
 }
