@@ -65,22 +65,19 @@ is the identification of target genes regulated by a specific
 transcription factor (TF). A
 common approach to this problem is to experimentally locate physical binding
 of TF proteins to DNA sequence {\em in vivo} using a genome-wide
-chromatin immunoprecipitation (ChIP) experiment. However, in such an
-experiment it is likely that many observed binding events do not
-correspond to actual gene regulation and bound enhancers may be
-distant from the promoter region of the gene that they control. Therefore, the task of identifying transcriptional
-targets usually requires the integration of ChIP binding predictions
+chromatin immunoprecipitation (ChIP) experiment~\cite{Ren2000,Iyer2001}. However, recent studies have shown that many observed binding events are neutral and do not regulate transcription, while regulatory binding events often occur at enhancers that are not proximal to the target gene that they control~\cite{Li2008,MacArthur2009}. Therefore, the task of identifying transcriptional
+targets requires the integration of ChIP binding predictions
 with evidence from expression data to help associate binding events
 with target gene regulation. If there is access to expression data from a mutant in which the TF has
 been knocked out or over-expressed, then differential expression of genes between wild-type
 and mutant is indicative of a potential regulatory
-interaction. The relationship of spatial expression for the
+interaction~\cite{Furlong2001}. Available spatial expression data for the
 TF and putative target can also provide support for a hypothesised
-regulatory link, where available. 
+regulatory link. 
 
 A problem with the above approach is that the creation of mutant
 strains is challenging or impossible for many TFs of interest. Even
-when viable mutants are available then they may provide very limited information due to the
+when viable mutants are available then they may provide very limited information because of redundancy or due to the
 confounding of signal from indirect regulatory feedback. For these reasons it
 is useful to seek other sources of evidence to complement ChIP binding
 predictions. In this contribution we demonstrate how a dynamical model of wild-type transcriptional
@@ -105,7 +102,7 @@ and we take the former approach. We use Bayesian marginalisation (also
 known as Bayesian model averaging) to
 integrate out this functional degree of freedom. This greatly reduces the
 number of parameters required to model the data, making a
-likelihood-based approach feasible even for relatively small
+likelihood-based approach feasible even for short time series
 datasets. 
 
 There are many existing approaches to inferring gene regulatory networks from
@@ -114,11 +111,11 @@ information theoretic approaches and differential equation approaches
 (reviewed in \cite{Bansal2007a}). These methods typically require many
 more data from a greater diversity of experimental conditions than are
 available from the short unperturbed wild-type time series that we
-consider. However, our goal is more limited in scope since
+consider. Indeed, most real gene expression time course data are short relative to the simulated data used to assess computational methods for network inference~\cite{Ernst2005}. However, our goal is more limited in scope since
 we are primarily interested in providing additional support for hypothesised
 targets of a specific TF. Again, most approaches to this problem are
 designed for data containing large numbers of diverse conditions, as
-exemplified by DREAM 2 target identification
+exemplified by the DREAM 2 target identification
 challenge~\cite{Stolovitzky2007} (challenge 1). Others
 have addressed this target identification problem using time-series
 data with a regulation model~\cite{Barenco2006a,Gatta2008}. However,
@@ -142,7 +139,7 @@ expression. We further show how integrating complementary wild-type spatial
 \section{Gaussian process inference for a linear activation model}
 
 A Gaussian process is a probability distribution over
-functions $f$ which take the value $f(t)$ at some particular time
+functions $f$ which take the value $f(t)$ at time
 $t$. Analogous to the Gaussian distribution, which is fully characterised by a mean and variance, the Gaussian process is
 characterised by a mean function $\mathrm{E}[f(t)]$ and a covariance
 function $k(t,t')=\mathrm{E}[f(t)f(t')]-\mathrm{E}[f(t)]\mathrm{E}[f(t')]$
@@ -154,7 +151,7 @@ $k(t,t')=a\exp(-(t-t')^2/l)$. Samples from a Gaussian process with this choice
 of covariance are smooth, infinitely differentiable, stationary functions. Although single-cell mRNA counts may be low
 and vary in a highly stochastic manner, here we consider microarray data which
 corresponds to a population average and is therefore more
-appropriately modelled using a smooth process. The parameters $a$ and
+appropriately modeled using a smooth process. The parameters $a$ and
 $l$ describe the typical amplitude and time-scale of samples from
 the prior. 
 
@@ -173,50 +170,47 @@ for the mRNA of $j$th target (as described in \cite{Barenco2006a}).
 The parameter $\delta$ is the decay rate of the TF protein.
 This linear system of differential equations can be
 explicitly solved and we find that the functions $p$ and $m_j$ are
-linear operators of $f$. The functions $m_j$ and $f$ therefore
-describe a two-dimensional Gaussian process prior $p(m_j,f|\theta)$
+linear operators of $f$. Given $k$ target genes the functions $f$ and $\bm m\equiv[m_j]$ therefore
+describe a $k$+1-dimensional Gaussian process prior $p(f,\bm m|\theta)$
 for which the covariance function can be calculated explicitly in terms of the
-three global and three gene-dependent model parameters
-$\theta=[B_j,S_j,D_j,\delta,a,l]$ (see
-Materials and Methods). 
+$3$ global and $3k$ gene-dependent model parameters
+$\theta=[\delta,a,l,\{B_j,S_j,D_j\}]$ (see Materials and Methods). 
 
-A microarray time course experiment provides us with a set of $r$
-replicate data vectors $\bm y_i$ containing the noise-corrupted TF and target mRNA
+A microarray time course experiment provides a data vector $\bm y$ containing the noise-corrupted TF and target mRNA
 measurements at $n$ times,
-$\bm y_i=[\hat{m_i}(t_1),\hat{m_i}(t_2),\ldots,\hat{m_i}(t_n),\hat{f_i}(t_1),\ldots,\hat{f_i}(t_n)]^\mathrm{T}$. Note
-that as this is a continuous-time modelling framework, there is no
-requirement that times are equally spaced. We use a Gaussian noise model
-$p(\bm y_i|m_i,f_i)=\prod_{j}{\cal
-  N}(\hat{m_i}(t_j)|m_i(t_j),(\sigma^m_{ij})^2){\cal
-  N}(\hat{f_i}(t_j)|f_i(t_j),(\sigma^f_{ij})^2)$ where the gene and condition
-specific measurement variance parameters are obtained from a probe-level analysis of the microarray data~\cite{Liu2005,Pearson2009} (see
+$\bm y=[\hat{f}(t_1),\hat{f}(t_2),\ldots,\hat{f}(t_n),\{\hat{m}_j(t_1),\ldots,\hat{m}_j(t_n)\}]^\mathrm{T}$. This is a continuous-time modeling framework so there is no
+requirement that times are equally spaced. We assume Gaussian noise:
+$p(\bm y|f,\bm m)=\prod_i{\cal
+  N}(\hat{f}(t_i)|f(t_i),\sigma_{if}^2)\prod_j{\cal
+  N}(\hat{m_j}(t_i)|m_j(t_i),\sigma_{ijm}^2)$ where the gene and condition
+specific measurement variance parameters $\sigma_{if}^2$ and $\sigma_{ijm}^2$ are obtained from a probe-level analysis of the microarray data~\cite{Liu2005,Pearson2009} (see
 Materials and Methods). The log-likelihood for the model parameters
-$\theta=[B_j,S_j,D_j,\delta,a,l]$ can then be calculated using standard Gaussian process regression
-techniques to integrate out the functions $m_i$ and $f_i$~\cite{Rasmussen2006},
+$\theta$ can then be calculated exactly using standard Gaussian process regression
+techniques to integrate out the functions $m_j$ and $f$~\cite{Rasmussen2006}. For $R$ replicate datasets the log-likelihood is
 \begin{equation*}
   \begin{split}
-    L(\theta) & = \log p(\{\bm y_i\}|\theta) \\
-    & = \sum_{i=1}^r \log \!\int \!\mathrm{d}m_i\mathrm{d}f_i\,
-    p(\bm y_i|m_i,f_i)p(m_i,f_i|\theta)  \\
-    & = \sum_{i=1}^r \left[-\frac{1}{2}\bm y_i^\mathrm{T} K_i^{-1} \bm y_i -
-      \frac{1}{2}\log|K_i|\right] -nr\log 2\pi
+    L(\theta) & = \log p(\bm y_1,\bm y_2,\ldots,\bm y_{R}|\theta) \\
+    & = \sum_{r=1}^{R} \log \!\int 
+    \!\!p(\bm y_r|f,\bm m)p(f,\bm m|\theta) \, \mathrm{d}\!f\mathrm{d}\bm m\\
+    & = \sum_{r=1}^{R} \left[-\frac{1}{2}\bm y_r^\mathrm{T} K_r^{-1} \bm y_r -
+      \frac{1}{2}\log|K_r|\right] -nR\log 2\pi
   \end{split}
 \end{equation*}
-where $K_i$ is the covariance matrix for the
-noise-corrupted data $\bm y_i$ under the Gaussian process prior (see
+where $K_r$ is the covariance matrix for the
+noise-corrupted dataset $\bm y_r$ under the Gaussian process prior (see
 Materials and Methods). This allows us to compute the set of model
 parameters $\theta$ by maximum
 likelihood using gradient-based optimisation. 
 
-Rather than using the TF mRNA data as a proxy for TF protein concentration,
-one can alternatively use the idea pioneered
+Rather than assuming that the TF protein is primarily under transcriptional control, as indicated by Eq.~(\ref{eq:translation_ode}), one can alternatively use the idea pioneered
 in~\cite{Barenco2006a} and model the TF protein as an unobserved
 latent variable. This approach can naturally be carried out using a
 similar Gaussian process framework as shown in~\cite{Gao2008}. However, that procedure requires a set of known
 targets for training the model whereas the approach described above
 can be applied without any prior knowledge of targets. We therefore
-prefer the above cascade model in the case that TFs are under
-transcriptional control. 
+prefer the above cascade model for cases where the level of active TF is under direct transcriptional control. 
+
+
 
 \begin{figure*}[tb]
   \centering
@@ -229,33 +223,28 @@ transcriptional control.
     intervals. (b) A joint multiple-target Gaussian process model for
     the same set of target genes as in (a). It should be noted that
     the multiple-target models used in evaluation have more targets
-    than the one shown here.}
-  \label{fig:gpdisim_models}
+    than the one shown here.\label{fig:gpdisim_models}
+}
+  %\label{fig:gpdisim_models}
 \end{figure*}
 
 \section{Results}
 
-We studied targets of Drosophila transcription factors Twist and Mef2
-using the developmental microarray time series
-from~\cite{Tomancak2002}.  Quiet candidate targets were eliminated by
+We applied our model-based approach to identify targets of the TFs Twist and Mef2 which regulate mesoderm and muscle development in Drosophila~\cite{Sandmann2007a}. We used a microarray dataset containing three replicated time-series of 12 time points collected hourly throughout Drosophila embryogenesis using wild-type embryos~\cite{Tomancak2002}.  Quiet candidate targets were eliminated by
 considering average z-scores of expression values as described in
 Materials and Methods.
 
-We fitted two sets of Gaussian process models using Twist and Mef2 as
-TFs independently and all other genes as candidate targets one at a
-time (``single-target models'').  The candidate targets were ranked by
-model likelihood.  It is worth noting that even the ``shared''
-parameters can vary between models for different genes as the models
-are fitted completely independently.
-We further fitted another set of models using 5
-top-ranking genes as the training set (``multiple-target models''; see
-Materials and Methods).  Examples of these models for likely Twist
-targets are displayed in Fig.~\ref{fig:gpdisim_models}.
+For each TF we fitted two sets of Gaussian process models. In one approach all other genes were considered as individual candidate targets one at a
+time (``single-target models'').  The candidate targets were ranked according to their likelihood under the model.  It is worth noting that even the global
+parameters can vary between models for different genes under this approach as the models
+are fitted completely independently. In an alternative approach we fitted another set of models using the five
+top-ranking genes in the single-target case as the training set (``multiple-target models''; see
+Materials and Methods).  An illustration comparing these alternative modeling approaches is shown in Fig.~\ref{fig:gpdisim_models}. 
 
 For comparison, candidates were also ranked by correlation of the
 expression profile with the TF expression profile (``correlation'')
 and by $q$-value of differential expression in TF knock-out
-experiments from~\cite{Sandmann2006a,Sandmann2007a} (``knock-out'').
+experiments from~\cite{Sandmann2006a,Sandmann2007a} (``knock-out''). 
 
 \begin{figure}[tb]
   \centering
@@ -274,20 +263,19 @@ experiments from~\cite{Sandmann2006a,Sandmann2007a} (``knock-out'').
     denoted by '***': $p <
     0.001$, '**': $p < 0.01$, '*': $p < 0.05$.
     Comparison to knock-out ranking is obviously omitted for knock-out
-    validation.
+    validation. \label{fig:dros_global_evaluation}
   }
-  \label{fig:dros_global_evaluation}
+ % \label{fig:dros_global_evaluation}
 \end{figure}
 
 The accuracy of the ranking was evaluated by looking at the global
 fraction of $N$ top-ranking targets that are significantly
-differentially expressed in knock-outs of the TFs and similar fraction
-of targets with ChIP-chip binding inside the gene or within 5000 base
+differentially expressed in knock-outs of the TFs and the fraction
+of targets with ChIP-chip binding within 5000 base
 pairs of its beginning or end in the data
 from~\cite{Sandmann2006a,Sandmann2007a}.  For Mef2, this latter
 frequency is only computed for genes in the part of the genome covered
-by the ChIP-chip data.  These results are illustrated in
-Fig.~\ref{fig:dros_global_evaluation}.
+by the ChIP-chip data. Both of our model-based approaches are found to be superior to the knock-out results in terms of ChIP binding enrichment and are mostly superior to the correlation results in terms of both ChIP binding enrichment and knock-out differential expression (see Fig.~\ref{fig:dros_global_evaluation}). The model-based ranking results also show a consistently high level of significance. The single-target models perform slightly better than the multiple-target models in most cases.
 
 \begin{figure}[tb]
   \centering
@@ -307,30 +295,28 @@ Fig.~\ref{fig:dros_global_evaluation}.
 %     $p < 0.05$.
     The largest number of targets is smaller for Mef2
     because there are only 200 positive examples in this subset of the
-    data.}
-  \label{fig:dros_focused_evaluation}
+    data.
+\label{fig:dros_focused_evaluation}
+}
+  %\label{fig:dros_focused_evaluation}
 \end{figure}
 
 Because Twist and Mef2 are known to be mainly active in mesoderm and
 muscle development, we also looked at accuracy among genes
-with annotated expression in these tissues in the
-\emph{in situ} data from~\cite{Tomancak2002}.
-This evaluation corresponds to
-the situation in typical cell culture studies, where all active genes
-are known to be localised to the same cells.
-These results are illustrated in Fig.~\ref{fig:dros_focused_evaluation}.
+with annotated expression in these tissues according to the
+\emph{in situ} data from~\cite{Tomancak2002}. These results are illustrated in Fig.~\ref{fig:dros_focused_evaluation}. We observe a larger relative increase in enrichment for ChIP binding events in the top-20 target gene predictions for Twist and Mef2 for this filtered set of genes. Results for Twist also show consistently improved results lower down the ranking for both model-based approaches. For Mef2, results lower down the ranking are comparable to using the correlation approach.
 
 % The results for $N=10$ are only significantly better than random for
 % Twist ChIP-chip, while for $N=50$ and especially $N=250$ the
 % improvement is highly significant.  Especially for Twist the results
 % are even now clearly better than any of the tested alternatives.
 
-To assess the significance of the differences, we performed bootstrap
+To assess the significance of the observed differences between alternative ranking approaches, we performed bootstrap
 resampling of the data set.  In 1000-fold resampling where the
 relative performances of different methods were recorded for each
 fold, the Gaussian process methods were superior to the alternatives
 with 95\% significance level in most Twist validation settings and in
-focused ChIP validation for Mef2 within top-20.  (Full results in
+the focused ChIP validation for the Mef2 top-20 ranked genes.  (Full results in
 Supplementary Material.)
 
 We also repeated the experiment with the method of~\cite{Gatta2008}
@@ -342,6 +328,8 @@ Using measured protein levels as proposed in~\cite{Gatta2008} would
 naturally help, but unfortunately such information is not available in
 this case or in general.  It is worth noting that any measurements of
 protein levels could very easily be incorporated in our models as well.
+
+Finally, since most expression time series are short~\cite{Ernst2005} we assessed whether similar results could be obtained with fewer time points. We sub-sampled the data keeping only 7 time points (2,3,4,5,6,8,10 hours). The results in this case are almost identical (see Supplementary Material) showing that the model-based approach presented here can be applied to typical short wild-type time series data.
 
 \section{Discussion}
 
@@ -356,15 +344,15 @@ workstation rather than a supercomputer.
   using mmgMOS from the puma package~\cite{Pearson2009}.  The means of
   the log-scale expression values were equalized across chips.  The
   distributions over log-expression were transformed to means
-  ($\hat{m_i}(t_j), \hat{f_i}(t_j)$) and variances ($(\sigma^m_{ij})^2,
-  (\sigma^f_{ij})^2$) of absolute expression by minimising the squared
+  ($\hat{m_i}(t_j), \hat{f_i}(t_j)$) and variances ($(\sigma_{ijm})^2,
+  (\sigma_{if})^2$) of absolute expression by minimising the squared
   deviation of 5\%, 25\%, 50\%, 75\% and 95\% quantiles of a Gaussian
-  distribution to corresponding quantiles from mmgMOS.
+  distribution to corresponding quantiles obtained from mmgMOS.
 
   \section{Filtering quiet genes}
-  Quiet genes can mess up the ranking because any model can fit them
-  well. Genes with an average z-score 
-  $$ \frac{1}{rn} \sum_{i=1}^r \sum_{j=1}^r \frac{\hat{m_i}(t_j)}{\sigma^m_{ij}} < 1.5 $$
+  Quiet genes can affect the ranking because any model with low or zero sensitivity can fit them
+  well. Genes $j$ with an average z-score 
+  $$ \frac{1}{Rn} \sum_{r=1}^R \sum_{i=1}^n \frac{\hat{m_{jr}}(t_i)}{\sigma_{ijr}} < 1.5 $$
   were considered quiet and removed from the data set.  The
   performance of the methods is fairly insensitive to the actual value
   of the threshold, at least values in the range $[1.2, 1.8]$ seem to
@@ -382,8 +370,7 @@ workstation rather than a supercomputer.
     %\label{eq:gpsim_f_x_sol}
   \end{align*}
   Using these solutions and assuming a squared exponential covariance
-  for $f(t)$, $k_{ff}(t, t') = a \exp\left( -\frac{(t-t')^2}{l^2}
-  \right)$, the covariance of target mRNAs is
+  for $f(t)$, $k_{ff}(t, t') = a \exp( -(t-t')^2/l^2)$, the covariance of target mRNAs is
   \begin{multline*}
     k_{m_j m_k}(t, t')
     = \frac{\sqrt{\pi} l a^2 S_j S_k}{2} \bigg(
