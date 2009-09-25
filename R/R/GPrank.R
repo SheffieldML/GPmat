@@ -139,30 +139,79 @@ GPrank <- function(preprocData, TF = NULL, targets = NULL, useGPsim = FALSE, fil
 
 GPrankTargets <- function(preprocData, TF = NULL, knownTargets = NULL, testTargets = NULL, filterLimit = 1.5, useMedians = TRUE) {
 
+  genes <- c(TF, knownTargets, testTargets)
+
+  if (length(genes) < 2) stop("There are too few genes in input.")
+
+  # searching for the data of the specified genes
+  searchedData <- searchProcessedData(preprocData, genes)
+
+  # Filtering the genes based on the calculated ratios. If the limit is 0, all genes are accepted.
+  genes <- filterGenes(searchedData$ratioData, filterLimit, useMedians)
+
+  if (length(genes) < 2) stop("Too few genes passed the filtering.")
+
+  # searching for the data of the genes that passed the filtering
+  searchedData <- searchProcessedData(searchedData, genes)
+
+  # testing whether the TF passed filtering
+  if (!is.null(TF)) {
+    if (!genePassedFiltering(TF, genes)) {
+      TF <- NULL
+    }
+  }
+
+  # counter for the next passed gene
+  k <- 1
+
+  passedKnownTargets <- array()
+
+  # testing whether the known targets passed filtering
+  if (!is.null(knownTargets)) {
+    for (i in 1:length(knownTargets)) {
+      currentTarget <- knownTargets[i]
+      if (genePassedFiltering(currentTarget, genes)) {
+        passedKnownTargets[k] <- currentTarget
+        k <- k + 1
+      }
+    }
+    knownTargets <- passedKnownTargets
+  }
+
+  k <- 1
+
+  passedTestTargets <- array()
+
+  # testing whether the test targets passed filtering
+  if (!is.null(testTargets)) {
+    for (i in 1:length(testTargets)) {
+      currentTarget <- testTargets[i]
+      if (genePassedFiltering(currentTarget, genes)) {
+        passedTestTargets[k] <- currentTarget
+        k <- k + 1
+      }
+    }
+    testTargets <- passedTestTargets
+  }
+
+
   # The variable useGPsim determines whether GPsim is used in creating the 
   # models. If its value is false, GPdisim is used. GPsim is used if no TF
   # has been specified.
   useGPsim = is.null(TF)
 
-  if (useGPsim && is.null(knownTargets)) error("There are no known targets for GPsim.")
+  if (useGPsim && is.null(knownTargets)) stop("There are no known targets for GPsim.")
 
   amountOfKnownTargets <- length(knownTargets)
-
-  genes <- c(TF, knownTargets, testTargets)
-
-  # Filtering the genes based on the calculated ratios. If the limit is 0, all genes are accepted.
-  genes <- filterGenes(preprocData$ratioData, filterLimit, useMedians)
-
-  # searching for the data of the specified genes
-  searchedData <- searchProcessedData(preprocData, genes)
 
   logLikelihoods <- array(dim = length(testTargets) + 1)
   rankedData <- array(list(NULL), length(testTargets) + 1)
   modelParams <- array(list(NA), length(testTargets) + 1)
 
   baseLineParameters <- NULL
+  fixedParams <- FALSE
 
-  if (!is.null(knownTargets)) {
+  if (!is.null(knownTargets) && length(knownTargets) > 1) {
     baseLineData <- formModel(searchedData, TF, knownTargets, useGPsim)
     logLikelihoods[1] <- baseLineData$ll
     modelParams[[1]] <- baseLineData$params
@@ -173,11 +222,13 @@ GPrankTargets <- function(preprocData, TF = NULL, knownTargets = NULL, testTarge
     baseLineParameters[1:(2*amountOfKnownTargets+4)] <- parameters[1:(2*amountOfKnownTargets+4)]
     t <- 2 * amountOfKnownTargets + 5
     baseLineParameters[(t+2):(t+1+amountOfKnownTargets)] <- parameters[t:(t+amountOfKnownTargets-1)]
+
+    fixedParams <- TRUE
   }
 
   if (length(testTargets) > 0) {
     for (i in 1:length(testTargets)) {
-      returnData <- formModel(searchedData, TF, knownTargets, testTargets[i], useGPsim, fixedParams = TRUE, initParams = baseLineParameters, fixComps = 1:5)
+      returnData <- formModel(searchedData, TF, knownTargets, testTargets[i], useGPsim, fixedParams, initParams = baseLineParameters, fixComps = 1:5)
       if (is.null(knownTargets)) {
         logLikelihoods[i] <- returnData$ll
         modelParams[[i]] <- returnData$params
@@ -214,42 +265,88 @@ GPrankTargets <- function(preprocData, TF = NULL, knownTargets = NULL, testTarge
 
 GPrankTFs <- function(preprocData, TFs = NULL, targets = NULL, filterLimit = 1.5, useMedians = TRUE) {
 
-  if (is.null(targets)) error("There are no known targets for GPsim.")
+  if (is.null(targets)) stop("There are no targets for GPsim.")
 
   amountOfTargets <- length(targets)
 
   genes = c(TFs, targets)
 
-  # Filtering the genes based on the calculated ratios. If the limit is 0, all genes are accepted.
-  genes <- filterGenes(preprocData$ratioData, filterLimit, useMedians)
-
   # searching for the data of the specified genes
   searchedData <- searchProcessedData(preprocData, genes)
+
+  # Filtering the genes based on the calculated ratios. If the limit is 0, all genes are accepted.
+  genes <- filterGenes(searchedData$ratioData, filterLimit, useMedians)
+
+  if (length(genes) < 2) stop("Too few genes passed the filtering.")
+
+  # searching for the data of the genes that passed the filtering
+  searchedData <- searchProcessedData(searchedData, genes)
+
+  # counter for the next passed gene
+  k <- 1
+
+  passedTFs <- array()
+
+  # testing whether the TFs passed filtering
+  if (!is.null(TFs)) {
+    for (i in 1:length(TFs)) {
+      currentTF <- TFs[i]
+      if (genePassedFiltering(currentTF, genes)) {
+        passedTFs[k] <- currentTF
+        k <- k + 1
+      }
+    }
+    TFs <- passedTFs
+  }
+
+  if (is.null(TFs)) stop("There are no transcription factors for GPsim.")
+
+  k <- 1
+
+  passedTargets <- array()
+
+  # testing whether the targets passed filtering
+  if (!is.null(targets)) {
+    for (i in 1:length(targets)) {
+      currentTarget <- targets[i]
+      if (genePassedFiltering(currentTarget, genes)) {
+        passedTargets[k] <- currentTarget
+        k <- k + 1
+      }
+    }
+    targets <- passedTargets
+  }
+
+  if (is.null(targets)) stop("There are no targets for GPsim.")
 
   logLikelihoods <- array(dim = length(TFs) + 1)
   rankedData <- array(list(NULL), length(TFs) + 1)
   modelParams <- array(list(NA), length(TFs) + 1)
 
   baseLineParameters <- NULL
+  initParams <- FALSE
 
-  baseLineData <- formModel(searchedData, TF = NULL, targets, useGPsim = TRUE)
-  logLikelihoods[1] <- baseLineData$ll
-  modelParams[[1]] <- baseLineData$params
-  rankedData[[1]] <- baseLineData$data
+  if (length(targets) > 1) {
 
-  parameters <- modelExtractParam(baseLineData$data$model)
-  baseLineParameters <- array(dim = c(1, length(parameters) + 3))
-  baseLineParameters[1:(2*amountOfTargets+4)] <- parameters[1:(2*amountOfTargets+4)]
-  t <- 2 * amountOfKnownTargets + 5
-  baseLineParameters[(t+2):(t+1+amountOfTargets)] <- parameters[t:(t+amountOfTargets-1)]
+    baseLineData <- formModel(searchedData, TF = NULL, targets, useGPsim = TRUE)
+    logLikelihoods[1] <- baseLineData$ll
+    modelParams[[1]] <- baseLineData$params
+    rankedData[[1]] <- baseLineData$data
 
-  if (length(TFs) > 0) {
-    for (i in 1:length(TFs)) {
-      returnData <- formModel(searchedData, TF = TFs[i], targets, fixedParams = TRUE, initParams = baseLineParameters, fixComps = 1:5)
-      logLikelihoods[i+1] <- returnData$ll
-      modelParams[[i+1]] <- returnData$params
-      rankedData[[i+1]] <- returnData$data
-    }
+    parameters <- modelExtractParam(baseLineData$data$model)
+    baseLineParameters <- array(dim = c(1, length(parameters) + 3))
+    baseLineParameters[1:(2*amountOfTargets+4)] <- parameters[1:(2*amountOfTargets+4)]
+    t <- 2 * amountOfKnownTargets + 5
+    baseLineParameters[(t+2):(t+1+amountOfTargets)] <- parameters[t:(t+amountOfTargets-1)]
+
+    initParams <- TRUE
+  }
+
+  for (i in 1:length(TFs)) {
+    returnData <- formModel(searchedData, TF = TFs[i], targets, fixedParams = TRUE, initParams = baseLineParameters, fixComps = 1:5)
+    logLikelihoods[i+1] <- returnData$ll
+    modelParams[[i+1]] <- returnData$params
+    rankedData[[i+1]] <- returnData$data
   }
 
   # Sort the log likelihoods.
