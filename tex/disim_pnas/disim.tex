@@ -34,14 +34,15 @@
 
 \begin{document}
 
-\title{Model-based transcription factor target
+\title{A model-based method for transcription factor target
   identification without perturbations}
 
 \author{Antti Honkela\affil{1}{Department of Information and Computer
-    Science, Helsinki University of Technology, Finland}, Neil
+    Science, Helsinki University of Technology, Finland}, Neil D.
   Lawrence\affil{2}{School of Computer Science, University of
     Manchester, UK}, Charles Girardot\affil{3}{Genome Biology unit,
-    European Molecular Biology Laboratory, Heidelberg, Germany} Eileen
+    European Molecular Biology Laboratory, Heidelberg, Germany},
+  Hilary Gustafson\affil{3}{}, Ya-Hsin Liu\affil{3}{}, Eileen
   E. Furlong\affil{3}{} \and Magnus Rattray\affil{2}{}}
 
 \contributor{Submitted to Proceedings of the National Academy of Sciences
@@ -215,6 +216,7 @@ prefer the above cascade model for cases where the level of active TF is under d
 \begin{figure*}[tb]
   \centering
   \subfloat[][]{\includegraphics{dros_gpdisim_singletarget_models}}
+  \hspace{0.5cm}
   \subfloat[][]{\includegraphics{dros_gpdisim_multitarget_model}}
   \caption{(a) Three independent single-target Gaussian process models
     for likely targets of Twist. Red marks denote observed expression
@@ -230,7 +232,7 @@ prefer the above cascade model for cases where the level of active TF is under d
 
 \section{Results}
 
-We applied our model-based approach to identify targets of the TFs Twist and Mef2 which regulate mesoderm and muscle development in Drosophila~\cite{Sandmann2007a}. We used a microarray dataset containing three replicated time-series of 12 time points collected hourly throughout Drosophila embryogenesis using wild-type embryos~\cite{Tomancak2002}.  Quiet candidate targets were eliminated by
+We applied our model-based approach to identify targets of the TFs Twist and Mef2 which regulate mesoderm and muscle development in Drosophila~\cite{Sandmann2007}. We used a microarray dataset containing three replicated time-series of 12 time points collected hourly throughout Drosophila embryogenesis using wild-type embryos~\cite{Tomancak2002}.  Quiet candidate targets were eliminated by
 considering average z-scores of expression values as described in
 Materials and Methods.
 
@@ -239,12 +241,23 @@ time (``single-target models'').  The candidate targets were ranked according to
 parameters can vary between models for different genes under this approach as the models
 are fitted completely independently. In an alternative approach we fitted another set of models using the five
 top-ranking genes in the single-target case as the training set (``multiple-target models''; see
-Materials and Methods).  An illustration comparing these alternative modeling approaches is shown in Fig.~\ref{fig:gpdisim_models}. 
+Materials and Methods).  An illustration comparing these alternative
+modeling approaches is shown in Fig.~\ref{fig:gpdisim_models}. The
+single-target model is more flexible because each
+potential target gene can be associated with a different inferred TF
+protein profile. The multiple-target model is constrained to explain
+all targets with the same TF protein profile and may therefore assign
+a low score to targets that have a high score according to the
+single-target model (this is the case for gene FBgn0003486 in
+Fig.~\ref{fig:gpdisim_models}). Nevertheless, both models are
+sufficiently flexible to fit target genes with significantly different
+profiles (genes FBgn0033188 and FBgn0035257 in
+Fig.~\ref{fig:gpdisim_models}).
 
 For comparison, candidates were also ranked by correlation of the
 expression profile with the TF expression profile (``correlation'')
 and by $q$-value of differential expression in TF knock-out
-experiments from~\cite{Sandmann2006a,Sandmann2007a} (``knock-out''). 
+experiments from~\cite{Sandmann2006a,Sandmann2007} (``knock-out''). 
 
 \begin{figure}[tb]
   \centering
@@ -273,7 +286,7 @@ fraction of $N$ top-ranking targets that are significantly
 differentially expressed in knock-outs of the TFs and the fraction
 of targets with ChIP-chip binding within 5000 base
 pairs of its beginning or end in the data
-from~\cite{Sandmann2006a,Sandmann2007a}.  For Mef2, this latter
+from~\cite{Sandmann2006a,Sandmann2007}.  For Mef2, this latter
 frequency is only computed for genes in the part of the genome covered
 by the ChIP-chip data. Both of our model-based approaches are found to be superior to the knock-out results in terms of ChIP binding enrichment and are mostly superior to the correlation results in terms of both ChIP binding enrichment and knock-out differential expression (see Fig.~\ref{fig:dros_global_evaluation}). The model-based ranking results also show a consistently high level of significance. The single-target models perform slightly better than the multiple-target models in most cases.
 
@@ -329,7 +342,13 @@ naturally help, but unfortunately such information is not available in
 this case or in general.  It is worth noting that any measurements of
 protein levels could very easily be incorporated in our models as well.
 
-Finally, since most expression time series are short~\cite{Ernst2005} we assessed whether similar results could be obtained with fewer time points. We sub-sampled the data keeping only 7 time points (2,3,4,5,6,8,10 hours). The results in this case are almost identical (see Supplementary Material) showing that the model-based approach presented here can be applied to typical short wild-type time series data.
+Finally, since most expression time series are short~\cite{Ernst2005}
+we assessed whether similar results could be obtained with fewer time
+points. We sub-sampled the data keeping only 7 time points
+(2,3,4,5,6,8,10 hours). The results in this case are almost identical
+(see Supplementary Material) showing that the model-based approach
+presented here can be applied to typical short wild-type time series
+data.
 
 \section{Discussion}
 
