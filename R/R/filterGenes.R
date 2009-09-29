@@ -9,13 +9,13 @@ filterGenes <- function(ratioData, filterLimit = 1.5, useMedians = TRUE) {
 
   for (i in 1:length(genes)) {
     if (useMedians) {
-      if (ratioData$medians[[1]][i] > filterLimit) {
+      if (ratioData$medians[[1]][i] >= filterLimit) {
 	approvedGenes[j] <- genes[i]
 	j <- j + 1
       }
     }
     else {
-      if (ratioData$means[[1]][i] > filterLimit) {
+      if (ratioData$means[[1]][i] >= filterLimit) {
 	approvedGenes[j] <- genes[i]
 	j <- j + 1
       }
@@ -24,7 +24,6 @@ filterGenes <- function(ratioData, filterLimit = 1.5, useMedians = TRUE) {
 
   return (approvedGenes)
 }
-
 
 
 averageToSDRatio <- function(y = NULL, yvar = NULL, times = NULL, genes = NULL, usePreprocData = FALSE, preprocData = NULL, searchedGenes = "100001_at", search = FALSE) {
