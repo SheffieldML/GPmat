@@ -22,7 +22,7 @@ newData <- searchData(yFull, genes, pcts, searchedGenes, amountOfColumns)
   \item{amountOfColumns}{The amount of columns in the expression data, in other words the amount of time points.}
 }
 \details{
-  In 'processData', the expression data and percentiles are normalized. A normal distribution is then fitted into the data with distfit. The expression data is then rescaled so that average standard deviation of curves is 1.
+  In 'processData', the expression data and percentiles are normalized. A normal distribution is then fitted into the data with distfit. The expression data is then rescaled so that average standard deviation of curves is 1. The ratio of the average to the standard deviation of each value in the expression data is also included, as well as a mean and median for each gene, to be used for filtering genes.
 }
 \value{
   'processData' returns the new processed data containing the expression data, variances, time points, genes and scale values.
