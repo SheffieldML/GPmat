@@ -346,6 +346,11 @@ function [Y, lbls, Ytest, lblstest] = lvmLoadData(dataset, seedVal)
    case {'dur', 'cmp'}
     [Y, void, lbls] = synthLoadData(dataset);
     
+   case {'cmpdur'}
+    [Y1, void, lbls] = synthLoadData('cmp');
+    [Y2, void, lbls] = synthLoadData('dur');
+    Y = [Y1, Y2];
+
    case {'grid_vowels', ...         
          'grid_consonants', ...
          'grid_approximants', ...
