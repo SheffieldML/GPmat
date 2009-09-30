@@ -1,4 +1,4 @@
-% DEMVOWELS2 Model the vowels data with a 2-D FGPLVM using RBF kernel.
+% DEMVOWELSFGPLVM2 Model the vowels data with a 2-D FGPLVM using RBF kernel.
 
 % FGPLVM
 
@@ -27,15 +27,13 @@ display = 1;
 model = fgplvmOptimise(model, display, iters);
 
 % Save the results.
-capName = dataSetName;;
-capName(1) = upper(capName(1));
-save(['dem' capName num2str(experimentNo) '.mat'], 'model');
+modelWriteResult(model, dataSetName, experimentNo);
 
 if exist('printDiagram') & printDiagram
-  fgplvmPrintPlot(model, lbls, capName, experimentNo);
+  lvmPrintPlot(model, lbls, dataSetName, experimentNo);
 end
 
 % Load the results and display dynamically.
-fgplvmResultsDynamic(dataSetName, experimentNo, 'vector')
+lvmResultsDynamic(dataSetName, experimentNo, 'vector')
 
-errors = fgplvmNearestNeighbour(model, lbls);
+errors = lvmNearestNeighbour(model, lbls);

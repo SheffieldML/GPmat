@@ -11,7 +11,8 @@ function model = fgplvmExpandParam(model, params)
 % the FGPLVM structure.
 % 
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2009
-% MODIFICATION: Carl Henrik Ek, 2009
+%
+% MODIFICATIONS : Carl Henrik Ek, 2009
 % 
 % SEEALSO : fgplvmCreate, fgplvmExtractParam, modelExpandParam
 

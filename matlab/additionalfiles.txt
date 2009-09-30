@@ -5,12 +5,14 @@ dir: .
 ~/mlprojects/fgplvm/matlab/35_01.amc
 dir: html
 ~/mlprojects/fgplvm/html/index.html
-~/mlprojects/fgplvm/html/demOil1.png
-~/mlprojects/fgplvm/html/demOil2.png
-~/mlprojects/fgplvm/html/demOil3.png
-~/mlprojects/fgplvm/html/demOil4.png
-~/mlprojects/fgplvm/html/demOil5.png
-~/mlprojects/fgplvm/html/demOil6.png
+~/mlprojects/fgplvm/html/demOilFgplvm1.png
+~/mlprojects/fgplvm/html/demOilFgplvm2.png
+~/mlprojects/fgplvm/html/demOilFgplvm3.png
+~/mlprojects/fgplvm/html/demOilFgplvm4.png
+~/mlprojects/fgplvm/html/demOilFgplvm5.png
+~/mlprojects/fgplvm/html/demOilFgplvm6.png
+~/mlprojects/fgplvm/html/demOilFgplvm7.png
+~/mlprojects/fgplvm/html/demOilFgplvm8.png
 ~/mlprojects/fgplvm/html/demVowels1.png
 ~/mlprojects/fgplvm/html/demVowels2.png
 ~/mlprojects/fgplvm/html/demVowels3.png

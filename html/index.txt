@@ -95,38 +95,45 @@ fix reading of GPLVM files from latest C++ code.
 
 <h4>FITC Approximation</h4>
 
-In all the examples we give there will be 100 points in the active set. We first considered the FITC approximation. The script <code>demOil1.m</code> runs the FITC approximation giving the result on the left of the figure shown below.
+In all the examples we give there will be 100 points in the active set. We first considered the FITC approximation. The script <code>demOilFgplvm1.m</code> runs the FITC approximation giving the result on the left of the figure shown below.
 
-<p><center><img src="demOil1.png" width="49%"><img src="demOil2.png" width="49%"><br>
+<p><center><img src="demOilFgplvm1.png" width="49%"><img src="demOilFgplvm2.png" width="49%"><br>
 <i>Left</i>: GP-LVM on the oil data using the FITC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses.  One hundred inducing variables are used. <i>Right</i>: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.</center>
 
-<p>Back constraints can be added to each of these approximations. In the example on the right we used a back constraint given by a multi-layer perceptron with 15 hidden nodes. This example can be recreated with <code>demOil2.m</code>.
+<p>Back constraints can be added to each of these approximations. In the example on the right we used a back constraint given by a multi-layer perceptron with 15 hidden nodes. This example can be recreated with <code>demOilFgplvm2.m</code>.
 
 <h4>DTC Approximation</h4>
 
 <p>The other approximations can also be used, in the figures below we give results from the DTC approximation. The can be recreated using <code>demOil3.m</code> and <code>demOil4.m</code>.
 
-<p><center><img src="demOil3.png" width="49%"><img src="demOil4.png" width="49%"><br>
-<i>Left</i>: GP-LVM on the oil data using the DITC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses.  One hundred inducing variables are used. <i>Right</i>: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.</center>
+<p><center><img src="demOilFgplvm3.png" width="49%"><img src="demOilFgplvm4.png" width="49%"><br>
+<i>Left</i>: GP-LVM on the oil data using the DTC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses.  One hundred inducing variables are used. <i>Right</i>: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.</center>
 
 <h4>PITC Approximation</h4>
 
-<p>Finally we show results using the PITC approximation, these results can be recreated using the scripts <code>demOil5.m</code> and <code>demOil6.m</code>.
+<p>We also show results using the PITC approximation, these results can be recreated using the scripts <code>demOilFgplvm5.m</code> and <code>demOilFgplvm6.m</code>.
 
-<p><center><img src="demOil5.png" width="49%"><img src="demOil6.png" width="49%"><br>
+<p><center><img src="demOilFgplvm5.png" width="49%"><img src="demOilFgplvm6.png" width="49%"><br>
 <i>Left</i>: GP-LVM on the oil data using the PITC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses.  One hundred inducing variables are used. <i>Right</i>: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.</center>
+
+<h4>Variational DTC Approximation</h4>
+
+<p>Finally we also show results using the variational DTC approximation of Titsias, these results can be recreated using the scripts <code>demOilFgplvm7.m</code> and <code>demOilFgplvm8.m</code>.
+
+<p><center><img src="demOilFgplvm7.png" width="49%"><img src="demOilFgplvm8.png" width="49%"><br>
+<i>Left</i>: GP-LVM on the oil data using the variational DTC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses.  One hundred inducing variables are used. <i>Right</i>: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.</center>
 
 
 <h3>Back Constraints and Dynamics</h3>
 
 First we will demonstrate the dynamics functionality of the toolbox. We raw x-y-z values from a motion capture data set, the <code>Figure Run 1</code> example available <a href="http://accad.osu.edu/research/mocap/mocap_data.htm">from Ohio State University</a>. To run without dynamics use the script:
 <p><code>
-&gt;&gt; demStick1
+&gt;&gt; demStickFgplvm1
 </code>
 
 <p>The results are given on the left of the figure below.
 
-<p><center><img src="demStick1.png" width="49%"><br>
+<p><center><img src="demStickFgplvm1.png" width="49%"><br>
 GP-LVM on the motion capture data without dynamics in the latent space. </center>
 
 <p>Notice that the sequence (which is a few strides of a man running) is split into several sub-sequences. These sub-sequences are aligned to the strides of the man. By introducing a dynamics prior, we can force the sequence to link up. Samples from the dynamics prior used are shown in the plot below.
@@ -138,10 +145,10 @@ Samples from the dynamics prior which is placed over the latent space. This prio
 <p>This prior is used in the model to obtain the results below,
 
 <p><code>
-&gt;&gt; demStick2
+&gt;&gt; demStickFgplvm2
 </code>
 
-<p><center><img src="demStick2.png" width="49%"><br>
+<p><center><img src="demStickFgplvm2.png" width="49%"><br>
 GP-LVM with dynamics. Samples from the dynamics prior used are given in the figure above.</center>
 
 Note now the circular form of the latent space. 
@@ -149,10 +156,10 @@ Note now the circular form of the latent space.
 Back constraints can also be used to achieve a similar effect,
 
 <p><code>
-&gt;&gt; demStick3
+&gt;&gt; demStickFgplvm3
 </code>
 
-<p><center><img src="demStick3.png" width="49%"><br>
+<p><center><img src="demStickFgplvm3.png" width="49%"><br>
 GP-LVM with back constraints. A RBF kernel mapping was used to form the back constraints with the inverse width set to 1e-4 (<i>i.e.</i>length scale set to 100).</center>
 
 <h3>Loop Closure in Robotics</h3>

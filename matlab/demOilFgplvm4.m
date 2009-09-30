@@ -1,4 +1,4 @@
-% DEMOIL4 Oil data with deterministic training conditional, and MLP back constraints.
+% DEMOILFGPLVM4 Oil data with deterministic training conditional, and MLP back constraints.
 
 % FGPLVM
 
@@ -29,16 +29,14 @@ display = 1;
 model = fgplvmOptimise(model, display, iters);
 
 % Save the results.
-capName = dataSetName;;
-capName(1) = upper(capName(1));
-save(['dem' capName num2str(experimentNo) '.mat'], 'model');
+modelWriteResult(model, dataSetName, experimentNo);
 
 if exist('printDiagram') & printDiagram
-  fgplvmPrintPlot(model, lbls, capName, experimentNo);
+  lvmPrintPlot(model, lbls, dataSetName, experimentNo);
 end
 
 % Load the results and display dynamically.
-fgplvmResultsDynamic(dataSetName, experimentNo, 'vector')
+lvmResultsDynamic(model.type, dataSetName, experimentNo, 'vector')
 
 % compute the nearest neighbours errors in latent space.
-errors = fgplvmNearestNeighbour(model, lbls);
+errors = lvmNearestNeighbour(model, lbls);

@@ -27,8 +27,5 @@ display = 1;
 model = fgplvmOptimise(model, display, iters);
 scatter3(model.X(:, 1), model.X(:, 2), model.X(:, 3), 'rx');
 % Save the results.
-capName = dataSetName;;
-capName(1) = upper(capName(1));
-save(['dem' capName num2str(experimentNo) '.mat'], 'model');
-
+modelWriteResult(model, dataSetName, experimentNo);
 

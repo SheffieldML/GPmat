@@ -8,7 +8,7 @@ function [model, lbls] = fgplvmLoadResult(dataSet, number)
 % RETURN model : the saved model.
 % RETURN lbls : labels of the data set (for visualisation purposes).
 %
-% SEEALSO : lvmLoadData
+% SEEALSO : fgplvmLoadResult
 %
 % COPYRIGHT : Neil D. Lawrence, 2003, 2004, 2005, 2006, 2008
   
@@ -17,4 +17,5 @@ function [model, lbls] = fgplvmLoadResult(dataSet, number)
 [Y, lbls] = lvmLoadData(dataSet);
 
 dataSet(1) = upper(dataSet(1));
-load(['dem' dataSet num2str(number)])
+load(['dem' dataSet 'Fgplvm' num2str(number)])
+model = fgplvmReconstruct(kern, noise, fgplvmInfo, X, Y);

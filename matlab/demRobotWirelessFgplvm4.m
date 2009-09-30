@@ -1,4 +1,4 @@
-% DEMSTICK2 Model the stick man using an RBF kernel and dynamics.
+% DEMROBOTWIRELESSFGPLVM4 Wireless Robot data from University of Washington with dynamics and back constraints.
 
 % FGPLVM
 
@@ -6,18 +6,20 @@
 randn('seed', 1e5);
 rand('seed', 1e5);
 
-dataSetName = 'stick';
-experimentNo = 2;
+dataSetName = 'robotWireless';
+experimentNo = 4;
 
 % load data
 [Y, lbls] = lvmLoadData(dataSetName);
 
 % Set up model
-% Train using the full training conditional (i.e. no approximation.)
 options = fgplvmOptions('ftc');
-latentDim = 2;
+options.back = 'mlp';
+options.backOptions = mlpOptions;
 
+latentDim = 2;
 d = size(Y, 2);
+
 model = fgplvmCreate(latentDim, d, Y, options);
 
 % Add dynamics model.
@@ -36,16 +38,12 @@ display = 1;
 model = fgplvmOptimise(model, display, iters);
 
 % Save the results.
-capName = dataSetName;
-capName(1) = upper(capName(1));
-save(['dem' capName num2str(experimentNo) '.mat'], 'model');
+modelWriteResult(model, dataSetName, experimentNo);
 
 if exist('printDiagram') & printDiagram
-  fgplvmPrintPlot(model, lbls, capName, experimentNo);
+  lvmPrintPlot(model, lbls, dataSetName, experimentNo);
 end
 
-% load connectivity matrix
-[void, connect] = mocapLoadTextData('run1');
-% Load the results and display dynamically.
-fgplvmResultsDynamic(dataSetName, experimentNo, 'stick', connect)
 
+% Load the results and display dynamically.
+lvmResultsDynamic(model.type, dataSetName, experimentNo, 'vector')

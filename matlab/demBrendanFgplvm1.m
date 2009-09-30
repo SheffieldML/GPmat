@@ -32,17 +32,15 @@ display = 1;
 model = fgplvmOptimise(model, display, iters);
 
 % Save the results.
-capName = dataSetName;;
-capName(1) = upper(capName(1));
-save(['dem' capName num2str(experimentNo) '.mat'], 'model');
+modelWriteResult(model, dataSetName, experimentNo);
 
 if exist('printDiagram') & printDiagram
-  fgplvmPrintPlot(model, lbls, capName, experimentNo);
+  lvmPrintPlot(model, lbls, dataSetName, experimentNo);
 end
 
 
 % Load the results and display dynamically.
-fgplvmResultsDynamic(dataSetName, experimentNo, 'image', [20 28], 1, 0, 1)
+lvmResultsDynamic(dataSetName, experimentNo, 'image', [20 28], 1, 0, 1)
 
 % compute the nearest neighbours errors in latent space.
-errors = fgplvmNearestNeighbour(model, lbls);
+errors = lvmNearestNeighbour(model, lbls);
