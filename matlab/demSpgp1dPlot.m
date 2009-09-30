@@ -31,6 +31,5 @@ set(gca, 'xlim', [-1.5 1.5])
 set(a, 'linewidth', 2);
 zeroAxes(gca, [], 10, 'arial')
 if exist('printDiagram') && printDiagram
-  fileName = ['dem' capName num2str(experimentNo)];
   printPlot(fileName, '../tex/diagrams', '../html');
 end

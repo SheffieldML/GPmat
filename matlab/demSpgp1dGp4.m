@@ -1,4 +1,4 @@
-% DEMSPGP1D4 Do a simple 1-D regression after Snelson & Ghahramani's example.
+% DEMSPGP1DGP4 Do a simple 1-D regression after Snelson & Ghahramani's example.
 
 % GP
 
@@ -31,9 +31,6 @@ params = gpExtractParam(model);
 model = gpExpandParam(model, params);
 
 % Save results
-capName = dataSetName;;
-capName(1) = upper(capName(1));
-save(['dem' capName num2str(experimentNo) '.mat'], 'model');
-
+fileName = modelWriteResult(model, dataSetName, experimentNo);
 
 demSpgp1dPlot

@@ -23,24 +23,16 @@ if isfield(model, 'noise')
 else
   noise = [];
 end
-gpInfo.learnScales = model.learnScales;
-gpInfo.approx = model.approx;
-switch model.approx
- case 'ftc'
- case {'dtc', 'dtcvar', 'fitc', 'pitc'}
-  gpInfo.beta = model.beta;
-  gpInfo.betaTransform = model.betaTransform;
-  gpInfo.fixInducing = model.fixInducing;
-  if model.fixInducing
-    gpInfo.inducingIndices = model.inducingIndices;
-  else
-    gpInfo.X_u = model.X_u;
+gpInfo = model;
+removeFields = {'S', 'X', 'y', 'm', 'diagK', 'K_uu', 'invK_uu', 'logDetK_uu', ...
+                'alpha', 'K_uf', 'sqrtK_uu', 'K', 'sqrtK_uu', 'innerProducts', ...
+                'A', 'Ainv', 'logDetA', 'L', 'diagD', 'detDiff', 'Dinv', ...
+                'logDetD', 'V', 'Am', 'Lm', 'invLmV', 'scaledM', 'bet', ...
+                'D', 'noise', 'kern', 'expectations'};
+
+for i = 1:length(removeFields)
+  if isfield(gpInfo, removeFields{i})
+    gpInfo = rmfield(gpInfo, removeFields{i});
   end
 end
-gpInfo.type = 'gp';
-gpInfo.scale = model.scale;
-gpInfo.bias = model.bias;
-gpInfo.d = model.d;
-gpInfo.q = model.q;
-gpInfo.k = model.k;
-gpInfo.N = model.N;
+

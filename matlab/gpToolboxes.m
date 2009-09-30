@@ -4,7 +4,8 @@ importLatest('netlab');
 importLatest('mocap');
 importLatest('ndlutil');
 importLatest('prior');
-importLatest('mltools');
+importTool('mltools');
+importTool('mocap')
 importLatest('optimi');
 importLatest('datasets');
 importLatest('kern');

@@ -1,4 +1,4 @@
-% DEMSPGP1D1 Do a simple 1-D regression after Snelson & Ghahramani's example.
+% DEMSPGP1D3 Do a simple 1-D regression after Snelson & Ghahramani's example.
 
 % GP
 
@@ -7,13 +7,13 @@ randn('seed', 1e5);
 rand('seed', 1e5);
 
 dataSetName = 'spgp1d';
-experimentNo = 1;
+experimentNo = 3;
 
 % load data
 [X, y] = mapLoadData(dataSetName);
 
 % Set up model
-options = gpOptions('dtc');
+options = gpOptions('pitc');
 options.numActive = 9;
 options.optimiser = 'conjgrad';
 
@@ -33,9 +33,6 @@ display = 1;
 model = gpOptimise(model, display, iters);
 
 % Save the results.
-capName = dataSetName;
-capName(1) = upper(capName(1));
-save(['dem' capName num2str(experimentNo) '.mat'], 'model');
+fileName = modelWriteResult(model, dataSetName, experimentNo);
 
-
-demSpgp1dPlot
+demSpgp1dPlot;

@@ -1,4 +1,4 @@
-% DEMSPGP1D2 Do a simple 1-D regression after Snelson & Ghahramani's example.
+% DEMSPGP1DGP2 Do a simple 1-D regression after Snelson & Ghahramani's example.
 
 % GP
 
@@ -36,9 +36,6 @@ model.kern.inverseWidth = 1./((-min(X)+max(X))'/2).^2
 model = gpOptimise(model, display, iters);
 
 % Save the results.
-capName = dataSetName;;
-capName(1) = upper(capName(1));
-save(['dem' capName num2str(experimentNo) '.mat'], 'model');
-
+fileName = modelWriteResult(model, dataSetName, experimentNo);
 
 demSpgp1dPlot

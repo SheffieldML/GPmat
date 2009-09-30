@@ -109,8 +109,9 @@ if(isfield(options, 'scaleVal'))
 end
 
 model.m = gpComputeM(model);
-
+model.computeS = false;
 if options.computeS 
+  model.computeS = true;
   model.S = model.m*model.m';
   if ~strcmp(model.approx, 'ftc')
     error('If compute S is set, approximation type must be ''ftc''')
@@ -142,7 +143,7 @@ if isfield(options, 'noise')
   % Set up storage for the expectations
   model.expectations.f = model.y;
   model.expectations.ff = ones(size(model.y));
-  model.expectations.fBar =ones(size(model.y));
+  model.expectations.fBar = ones(size(model.y));
   model.expectations.fBarfBar = ones(numData, ...
                                      numData, ...
                                      size(model.y, 2));

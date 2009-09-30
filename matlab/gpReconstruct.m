@@ -19,36 +19,19 @@ function model = gpReconstruct(kern, noise, gpInfo, X, y)
 
 % GP
 
-options = gpOptions(gpInfo.approx);
-options.kern = kern;
-switch gpInfo.approx
- case 'ftc'
- case {'dtc', 'dtcvar', 'fitc', 'pitc'}
-  options.numActive = size(gpInfo.X_u, 1);
-end
-model = gpCreate(size(X, 2), size(y, 2), X, y, options);
-model.scale = gpInfo.scale;
-model.bias = gpInfo.bias;
-model.m = gpComputeM(model);
-model.learnScales = gpInfo.learnScales;
-switch model.approx
- case 'ftc'
- case {'dtc', 'dtcvar', 'fitc', 'pitc'}
-  model.beta = gpInfo.beta;
-  model.fixInducing = gpInfo.fixInducing;
-  if gpInfo.fixInducing
-    model.inducingIndices = gpInfo.inducingIndices;
-  else
-    model.X_u = gpInfo.X_u;
+  model = gpInfo;
+  model.X = X;
+  model.y = y;
+  model.kern = kern;
+  if ~isempty(noise)
+    model.noise = noise;
   end
+  model.m = gpComputeM(model);
+  
+  if isfield(model, 'computeS') && model.computeS 
+    model.S = model.m*model.m';
+  end
+  params = gpExtractParam(model);
+  model = gpExpandParam(model, params);
+  
 end
-
-if gpInfo.d ~= size(y, 2)
-  error('y does not have correct number of dimensions.')
-end
-if gpInfo.q ~= size(X, 2)
-  error('X does not have correct number of dimensions.')
-end
-% FOrce update of everything.
-params = gpExtractParam(model);
-model = gpExpandParam(model, params);

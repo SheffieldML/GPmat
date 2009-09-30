@@ -315,12 +315,12 @@ training conditional&quot; (DTC) approximation.
 
 <p>To use this approximation the following script can be run.
 
-<p><code> &gt;&gt; demSpgp1d1 </code> 
+<p><code> &gt;&gt; demSpgp1dGp1 </code> 
 
 <p>The result of the script is
 given in the plot below.  
 
-<p><center><img src="demSpgp1d1.png" width
+<p><center><img src="demSpgp1dGp1.png" width
 ="50%"><br> Gaussian process using the DTC approximation with nine
 inducing variables. Data is shown as black spots, posterior mean
 prediction is shown as a black line and two standard deviations are
@@ -330,12 +330,12 @@ given as grey shading.</center>
 QR-terminology this is known as the fully independent training
 conditional (FITC). To try this approximation run the following script
 
-<p><code> &gt;&gt; demSpgp1d2 </code>
+<p><code> &gt;&gt; demSpgp1dGp2 </code>
 
 <p>The result of the script is given on the left of the plot below.
 
-<p><center><img src="demSpgp1d2.png" width="49%"><img
-src="demSpgp1d3.png" width="49%"><br>
+<p><center><img src="demSpgp1dGp2.png" width="49%"><img
+src="demSpgp1dGp3.png" width="49%"><br>
 
 <i>Left</i>: Gaussian process using the FITC approximation with nine
 inducing variables. Data is shown as black spots, posterior mean
@@ -355,7 +355,7 @@ and Rasmussen's</a> review. This approximation is known as the
 QR-terminology. To try this approximation run the following script
 
 <p><code>
-&gt;&gt; demSpgp1d3
+&gt;&gt; demSpgp1dGp3
 </code>
 
 <p>The result of the script is given on the right of the plot above.
@@ -365,12 +365,12 @@ Gaussian process on the data with the correct hyper-parameters. To do
 this the following script can be run.
 
 <p><code>
-&gt;&gt; demSpgp1d4
+&gt;&gt; demSpgp1dGp4
 </code>
 
 <p>The result of the script is given in the plot below.
 
-<p><center><img src="demSpgp1d4.png" width="50%"><br> Full Gaussian
+<p><center><img src="demSpgp1dGp4.png" width="50%"><br> Full Gaussian
 process on the toy data with the correct hyper-parameters. Data is
 shown as black spots, posterior mean prediction is shown as a black
 line and two standard deviations are given as grey shaded

@@ -36,8 +36,5 @@ model = gpOptimise(model, display, iters);
 modelDisplay(model)
 
 % Save results
-capName = dataSetName;
-capName(1) = upper(capName(1));
-fileBaseName = ['dem' capName 'Gp' num2str(experimentNo)];
-save([fileBaseName '.mat'], 'model');
+fileBaseName = modelWriteResult(model, dataSetName, experimentNo);
 demSilhouettePlot

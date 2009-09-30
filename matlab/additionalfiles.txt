@@ -27,7 +27,7 @@ dir: html
 ~/mlprojects/gp/html/demOptimiseGp15.png
 ~/mlprojects/gp/html/demOptimiseGp17.png
 ~/mlprojects/gp/html/demOptimiseGp18.png
-~/mlprojects/gp/html/demSpgp1d1.png
-~/mlprojects/gp/html/demSpgp1d2.png
-~/mlprojects/gp/html/demSpgp1d3.png
-~/mlprojects/gp/html/demSpgp1d4.png
+~/mlprojects/gp/html/demSpgp1dGp1.png
+~/mlprojects/gp/html/demSpgp1dGp2.png
+~/mlprojects/gp/html/demSpgp1dGp3.png
+~/mlprojects/gp/html/demSpgp1dGp4.png
