@@ -24,6 +24,7 @@ else
 end
 modelType = model.type;
 modelType(1) = upper(modelType(1));
+capName(1) = upper(capName(1));
 fileName = ['dem' capName modelType num2str(experimentNo)];
 directory = ['../tex/diagrams'];
 printPlot(fileName, directory, '../html');

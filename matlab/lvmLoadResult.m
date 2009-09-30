@@ -10,18 +10,23 @@ function [model, lbls] = lvmLoadResult(modelType, dataSet, number)
 %
 % SEEALSO : lvmLoadData
 %
-% COPYRIGHT : Neil D. Lawrence, 2003, 2004, 2005, 2006, 2008
+% COPYRIGHT : Neil D. Lawrence, 2003, 2004, 2005, 2006, 2008, 2009
   
 % MLTOOLS
 
+  fhandle = [modelType 'LoadResult'];
+  if exist(fhandle) == 2
+    fhandle = str2func(fhandle);
+    [model, lbls] = fhandle(dataSet, number);
+  else
+    [Y, lbls] = lvmLoadData(dataSet);
+    
+    dataSet(1) = upper(dataSet(1));
 
+    if ~isempty(modelType)
+      modelType(1) = upper(modelType(1));
+    end
 
-[Y, lbls] = lvmLoadData(dataSet);
-
-dataSet(1) = upper(dataSet(1));
-
-if ~isempty(modelType)
-    modelType(1) = upper(modelType(1));
+    load(['dem' dataSet modelType num2str(number)])
+  end
 end
-
-load(['dem' dataSet modelType num2str(number)])

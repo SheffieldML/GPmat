@@ -1,4 +1,4 @@
-function lvmClassClickVisualise(call)
+function lvmClassClickVisualise(call, model)
 
 % LVMCLASSCLICKVISUALISE Callback function for visualising data in 2-D with clicks.
 
@@ -12,9 +12,11 @@ switch call
   [x, y]  = localCheckPointPosition(visualiseInfo);  
 
   if ~isempty(x) 
+    visualiseInfo.latentPos(visualiseInfo.dim1) = x;
+    visualiseInfo.latentPos(visualiseInfo.dim2) = y;
     set(visualiseInfo.latentHandle, 'xdata', x, 'ydata', y);
     fhandle = str2func([visualiseInfo.model.type 'PosteriorMeanVar']);
-    [mu, varsigma] = fhandle(visualiseInfo.model, [x y]);
+    [mu, varsigma] = fhandle(visualiseInfo.model, visualiseInfo.latentPos);
     if isfield(visualiseInfo.model, 'noise')
       Y = noiseOut(visualiseInfo.model.noise, mu, varsigma);
     else
@@ -22,8 +24,34 @@ switch call
     end
     visualiseInfo.visualiseModify(visualiseInfo.visHandle, ...
                                   Y, visualiseInfo.varargin{:});
-    visualiseInfo.latentPos=[x, y];
   end
+  
+ case 'latentSliderChange'
+  counter = 0;
+  for i = 1:size(visualiseInfo.latentPos, 2)
+    if i~= visualiseInfo.dim1 && i ~= visualiseInfo.dim2
+      counter = counter + 1;
+      visualiseInfo.latentPos(i) = get(visualiseInfo.latentSlider(counter), 'value');
+      set(visualiseInfo.sliderTextVal(counter), 'string', num2str(visualiseInfo.latentPos(i)));
+    end
+  end
+  lvmSetPlot;
+  visualiseInfo.latentHandle = line(visualiseInfo.latentPos(visualiseInfo.dim1), ...
+                                    visualiseInfo.latentPos(visualiseInfo.dim2), ...
+                                    'markersize', 20, 'color', [0.5 0.5 0.5], ...
+                                    'marker', '.', 'visible', 'on', ...
+                                    'erasemode', 'xor');
+
+ case 'updateLatentRepresentation'
+  visualiseInfo.dim1 = get(visualiseInfo.xDimension, 'value');
+  visualiseInfo.dim2 = get(visualiseInfo.yDimension, 'value');
+  lvmSetPlot;
+  visualiseInfo.latentHandle = line(visualiseInfo.latentPos(visualiseInfo.dim1), ...
+                                    visualiseInfo.latentPos(visualiseInfo.dim2), ...
+                                    'markersize', 20, 'color', [0.5 0.5 0.5], ...
+                                    'marker', '.', 'visible', 'on', ...
+                                    'erasemode', 'xor');
+
   
   
 end

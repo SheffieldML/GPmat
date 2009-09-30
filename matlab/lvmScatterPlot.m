@@ -1,4 +1,4 @@
-function [ax, data] = lvmScatterPlot(model, YLbls, ax);
+function [ax, data] = lvmScatterPlot(model, YLbls, ax, dims, defaultVals);
 
 % LVMSCATTERPLOT 2-D scatter plot of the latent points.
 % FORMAT
@@ -28,42 +28,49 @@ function [ax, data] = lvmScatterPlot(model, YLbls, ax);
 % SEEALSO : lvmVisualise, lvmTwoDPlot, lvmScatterPlotColor
  
 % MLTOOLS
-
-if nargin<3
-  ax = [];
-  if nargin < 2
-    YLbls = [];
+  if nargin < 5
+    defaultVals = zeros(1, model.q);
+    
+    if nargin < 4
+      dims = [1, 2];
+      if nargin<3
+        ax = [];
+        if nargin < 2
+          YLbls = [];
+        end
+      end
+    end
   end
-end
-
-if isempty(YLbls)
-  symbol = [];
-else
-  if iscell(YLbls)
-    symbol = getSymbols(size(YLbls{1},2));
+  if isempty(YLbls)
+    symbol = [];
   else
-    symbol = getSymbols(size(YLbls,2));
+    if iscell(YLbls)
+      symbol = getSymbols(size(YLbls{1},2));
+    else
+      symbol = getSymbols(size(YLbls,2));
+    end
   end
-end
-x1Min = min(model.X(:, 1));
-x1Max = max(model.X(:, 1));
-x1Span = x1Max - x1Min;
-x1Min = x1Min - 0.05*x1Span;
-x1Max = x1Max + 0.05*x1Span;
-x1 = linspace(x1Min, x1Max, 150);
-
-x2Min = min(model.X(:, 2));
-x2Max = max(model.X(:, 2));
-x2Span = x2Max - x2Min;
-x2Min = x2Min - 0.05*x2Span;
-x2Max = x2Max + 0.05*x2Span;
-x2 = linspace(x2Min, x2Max, 150);
-
-if size(model.X, 2)==2
+  x1Min = min(model.X(:, dims(1)));
+  x1Max = max(model.X(:, dims(1)));
+  x1Span = x1Max - x1Min;
+  x1Min = x1Min - 0.05*x1Span;
+  x1Max = x1Max + 0.05*x1Span;
+  x1 = linspace(x1Min, x1Max, 150);
   
+  x2Min = min(model.X(:, dims(2)));
+  x2Max = max(model.X(:, dims(2)));
+  x2Span = x2Max - x2Min;
+  x2Min = x2Min - 0.05*x2Span;
+  x2Max = x2Max + 0.05*x2Span;
+  x2 = linspace(x2Min, x2Max, 150);
+  
+  %if size(model.X, 2)==2
+    
   try
     [X1, X2] = meshgrid(x1, x2);
-    XTest = [X1(:), X2(:)];
+    XTest = repmat(defaultVals, prod(size(X1)), 1);
+    XTest(:, dims(1)) = X1(:);
+    XTest(:, dims(2)) = X2(:);
     varsigma = modelPosteriorVar(model, XTest);
     posteriorVarDefined = true;
   catch 
@@ -108,30 +115,30 @@ if size(model.X, 2)==2
     %colorbar
   end
   
-  data = lvmTwoDPlot(model.X, YLbls, symbol);
+  data = lvmTwoDPlot(model.X(:, dims), YLbls, symbol);
   switch model.type
    case 'dnet'
-    plot(model.X_u(:, 1), model.X_u(:, 2), 'g.')
+    plot(model.X_u(:, dims(1)), model.X_u(:, dims(2)), 'g.')
   end
-elseif size(model.X, 2)==3
-  x3Min = min(model.X(:, 3));
-  x3Max = max(model.X(:, 3));
-  x3Span = x3Max - x3Min;
-  x3Min = x3Min - 0.05*x3Span;
-  x3Max = x3Max + 0.05*x3Span;
-  x3 = linspace(x3Min, x3Max, 150);
+% elseif size(model.X, 2)==3
+%   x3Min = min(model.X(:, 3));
+%   x3Max = max(model.X(:, 3));
+%   x3Span = x3Max - x3Min;
+%   x3Min = x3Min - 0.05*x3Span;
+%   x3Max = x3Max + 0.05*x3Span;
+%   x3 = linspace(x3Min, x3Max, 150);
 
-  data = lvmThreeDPlot(model.X, YLbls, symbol);
-end
+%   data = lvmThreeDPlot(model.X, YLbls, symbol);
+% end
 
 xLim = [min(x1) max(x1)];
 yLim = [min(x2) max(x2)];
 set(ax, 'xLim', xLim);
 set(ax, 'yLim', yLim);
-if size(model.X, 2) == 3
-  zLim = [min(x3) max(x3)];
-  set(ax, 'zLim', zLim);
-end
+% if size(model.X, 2) == 3
+%   zLim = [min(x3) max(x3)];
+%   set(ax, 'zLim', zLim);
+% end
 set(ax, 'fontname', 'arial');
 set(ax, 'fontsize', 20);
 

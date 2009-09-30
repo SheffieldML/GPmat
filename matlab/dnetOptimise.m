@@ -84,13 +84,16 @@ function model = dnetOptimise(model, display, iters)
       end
     end
   end
+end
+
 function [ll, oldll] = boundCheck(model, oldll, step)
 
 % BOUNDCHECK Helper function for checking bound.
 
-ll = dnetLowerBound(model);
-diffll = ll - oldll;
-if ll -oldll < 0
-  warning(['Log likelihood went down by ' num2str(diffll) ' in ' ...
-           'step: ' step ' in dnetOptimise'])
+  ll = dnetLowerBound(model);
+  diffll = ll - oldll;
+  if ll -oldll < 0
+    warning(['Log likelihood went down by ' num2str(diffll) ' in ' ...
+             'step: ' step ' in dnetOptimise'])
+  end
 end

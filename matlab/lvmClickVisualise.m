@@ -24,54 +24,28 @@ global visualiseInfo
 
 figure(1)
 clf
-visualiseInfo.plotAxes = lvmScatterPlot(model, YLbls);
-set(get(visualiseInfo.plotAxes, 'title'), 'string', 'X', 'fontsize', 30);
-set(visualiseInfo.plotAxes, 'position', [0.05 0.05 0.9 0.8]);
+visualiseInfo.dim1 = 1;
+visualiseInfo.dim2 = 2;
+visualiseInfo.latentPos = zeros(1, model.q);
+visualiseInfo.model = model;
+visualiseInfo.lbls = YLbls;
+visualiseInfo.plotAxes = lvmScatterPlot(model, YLbls, [], ...
+                                        [visualiseInfo.dim1, visualiseInfo.dim2], ...
+                                        visualiseInfo.latentPos);
+lvmSetPlot;
+visualiseInfo.latentHandle = line(visualiseInfo.latentPos(visualiseInfo.dim1), ...
+                                  visualiseInfo.latentPos(visualiseInfo.dim2), ...
+                                  'markersize', 20, 'color', [0.5 0.5 0.5], ...
+                                  'marker', '.', 'visible', 'on', ...
+                                  'erasemode', 'xor');
 
-visualiseInfo.latentHandle = line(0, 0, 'markersize', 20, 'color', ...
-                                  [0 0 0], 'marker', '.', 'visible', ...
-                                  'on', 'erasemode', 'xor');
 
-% Set up the X limits and Y limits of the main plot
-xLim = [min(model.X(:, 1)) max(model.X(:, 1))];
-xSpan = xLim(2) - xLim(1);
-xLim(1) = xLim(1) - 0.05*xSpan;
-xLim(2) = xLim(2) + 0.05*xSpan;
-xSpan = xLim(2) - xLim(1);
-
-yLim = [min(model.X(:, 2)) max(model.X(:, 2))];
-ySpan = yLim(2) - yLim(1);
-yLim(1) = yLim(1) - 0.05*ySpan;
-yLim(2) = yLim(2) + 0.05*ySpan;
-ySpan = yLim(2) - yLim(1);
-
-set(visualiseInfo.plotAxes, 'XLim', xLim)
-set(visualiseInfo.plotAxes, 'YLim', yLim)
 
 visualiseInfo.clicked = 0;
-
 visualiseInfo.digitAxes = [];
 visualiseInfo.digitIndex = [];
 
-% visualiseInfo.dynamicsRadio = ...
-%     uicontrol('Style', 'radiobutton', ...
-%               'String', 'Run Dynamics', ...
-%               'units', 'normalized', ...
-%               'position', [0 0 0.2 0.05], ...
-%               'Callback', 'lvmClassVisualise(''toggleDynamics'')', ...
-%               'value', 0);
 
-% visualiseInfo.dynamicsSlider = ...
-%     uicontrol('Style', 'slider', ...
-%               'String', 'Time', ...
-%               'sliderStep', [0.01, 0.1], ...
-%               'units', 'normalized', ...
-%               'position', [0 0.95 1 0.05], ...
-%               'callback', 'lvmClassVisualise(''dynamicsSliderChange'')');
-
-
-% Set the callback function
-%set(gcf, 'WindowButtonMotionFcn', 'lvmClassVisualise(''move'')')
 set(gcf, 'WindowButtonDownFcn', 'lvmClassClickVisualise(''click'')')
 
 figure(2)
@@ -112,9 +86,4 @@ visualiseInfo.varargin = varargin;
 visualiseInfo.visualiseModify = str2func(visualiseModify);
 visualiseInfo.visHandle = visHandle;
 
-
 hold off
-
-
-
-

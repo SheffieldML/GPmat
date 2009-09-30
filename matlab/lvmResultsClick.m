@@ -25,5 +25,6 @@ switch size(model.X, 2)
                  varargin{:});
   
  otherwise 
-  error('No visualisation code for data of this latent dimension.');
+  lvmClickVisualise(model, lbls, [dataType 'Visualise'], [dataType 'Modify'], ...
+                 varargin{:});
 end
