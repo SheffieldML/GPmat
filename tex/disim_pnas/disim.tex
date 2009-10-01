@@ -306,9 +306,6 @@ by the ChIP-chip data. Both of our model-based approaches are found to be superi
 %     of the gene.  $p$-values results significantly different from
 %     random are denoted by '***': $p < 0.001$, '**': $p < 0.01$, '*':
 %     $p < 0.05$.
-    The largest number of targets is smaller for Mef2
-    because there are only 200 positive examples in this subset of the
-    data.
 \label{fig:dros_focused_evaluation}
 }
   %\label{fig:dros_focused_evaluation}
@@ -325,7 +322,7 @@ with annotated expression in these tissues according to the
 % are even now clearly better than any of the tested alternatives.
 
 To assess the significance of the observed differences between alternative ranking approaches, we performed bootstrap
-resampling of the data set.  In 1000-fold resampling where the
+resampling of the data set.  In 100,000-fold resampling where the
 relative performances of different methods were recorded for each
 fold, the Gaussian process methods were superior to the alternatives
 with 95\% significance level in most Twist validation settings and in
@@ -344,7 +341,8 @@ protein levels could very easily be incorporated in our models as well.
 
 Finally, since most expression time series are short~\cite{Ernst2005}
 we assessed whether similar results could be obtained with fewer time
-points. We sub-sampled the data keeping only 7 time points
+points. We sub-sampled the data keeping only 7 time points most
+relevant in defining the Twist expression profile
 (2,3,4,5,6,8,10 hours). The results in this case are almost identical
 (see Supplementary Material) showing that the model-based approach
 presented here can be applied to typical short wild-type time series
