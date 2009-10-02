@@ -137,6 +137,23 @@ better than a simpler approach using correlation with TF
 expression. We further show how integrating complementary wild-type spatial
 {\em in situ} expression data can greatly improve target ranking accuracy. 
 
+\begin{figure*}[tb]
+  \centering
+  \subfloat[][]{\includegraphics{dros_gpdisim_singletarget_models}}
+  \hspace{0.5cm}
+  \subfloat[][]{\includegraphics{dros_gpdisim_multitarget_model}}
+  \caption{(a) Three independent single-target Gaussian process models
+    for likely targets of Twist. Red marks denote observed expression
+    levels with 2 s.d.\ error bars while blue functions are inferred
+    from the model.  The shaded regions denote 2 s.d.\ confidence
+    intervals. (b) A joint multiple-target Gaussian process model for
+    the same set of target genes as in (a). It should be noted that
+    the multiple-target models used in evaluation have more targets
+    than the one shown here.\label{fig:gpdisim_models}
+}
+  %\label{fig:gpdisim_models}
+\end{figure*}
+
 \section{Gaussian process inference for a linear activation model}
 
 A Gaussian process is a probability distribution over
@@ -211,25 +228,6 @@ targets for training the model whereas the approach described above
 can be applied without any prior knowledge of targets. We therefore
 prefer the above cascade model for cases where the level of active TF is under direct transcriptional control. 
 
-
-
-\begin{figure*}[tb]
-  \centering
-  \subfloat[][]{\includegraphics{dros_gpdisim_singletarget_models}}
-  \hspace{0.5cm}
-  \subfloat[][]{\includegraphics{dros_gpdisim_multitarget_model}}
-  \caption{(a) Three independent single-target Gaussian process models
-    for likely targets of Twist. Red marks denote observed expression
-    levels with 2 s.d.\ error bars while blue functions are inferred
-    from the model.  The shaded regions denote 2 s.d.\ confidence
-    intervals. (b) A joint multiple-target Gaussian process model for
-    the same set of target genes as in (a). It should be noted that
-    the multiple-target models used in evaluation have more targets
-    than the one shown here.\label{fig:gpdisim_models}
-}
-  %\label{fig:gpdisim_models}
-\end{figure*}
-
 \section{Results}
 
 We applied our model-based approach to identify targets of the TFs Twist and Mef2 which regulate mesoderm and muscle development in Drosophila~\cite{Sandmann2007}. We used a microarray dataset containing three replicated time-series of 12 time points collected hourly throughout Drosophila embryogenesis using wild-type embryos~\cite{Tomancak2002}.  Quiet candidate targets were eliminated by
@@ -268,7 +266,7 @@ experiments from~\cite{Sandmann2006a,Sandmann2007} (``knock-out'').
     The dashed line
     denotes the frequency in full population.
     The first row shows the frequency of targets with ChIP-chip
-    binding within 5 kb of the gene
+    binding within 5000 base pairs of the gene
     while the second row shows the frequency of
     predicted targets with significant differential
     expression in TF knock-outs.
@@ -292,7 +290,7 @@ by the ChIP-chip data. Both of our model-based approaches are found to be superi
 
 \begin{figure}[tb]
   \centering
-  \includegraphics[trim=0mm 10mm 0mm 0mm]{dros_focused_evaluation}
+  \includegraphics[trim=0mm 8mm 0mm 0mm]{dros_focused_evaluation}
   \caption{Evaluation results of different rankings based on
     ChIP-chip data similar to those in
     Fig.~\ref{fig:dros_global_evaluation} except only for genes
@@ -325,8 +323,9 @@ To assess the significance of the observed differences between alternative ranki
 resampling of the data set.  In 100,000-fold resampling where the
 relative performances of different methods were recorded for each
 fold, the Gaussian process methods were superior to the alternatives
-with 95\% significance level in most Twist validation settings and in
-the focused ChIP validation for the Mef2 top-20 ranked genes.  (Full results in
+in over 95\% of the repeats in most Twist validation settings.
+For Mef2, the differences, especially to correlation, are less
+significant in this comparison.  (Full results in 
 Supplementary Material.)
 
 We also repeated the experiment with the method of~\cite{Gatta2008}
@@ -339,14 +338,26 @@ naturally help, but unfortunately such information is not available in
 this case or in general.  It is worth noting that any measurements of
 protein levels could very easily be incorporated in our models as well.
 
+\begin{figure}[tb]
+  \centering
+  \includegraphics{dros_data_size_evaluation}
+  \caption{Evaluation results similar to those in 
+    Figs.~\ref{fig:dros_global_evaluation} and 
+    \ref{fig:dros_focused_evaluation} for single-target models
+    for full data (12 time points) and sub-sampled data (7 time points).
+    \label{fig:dros_data_size_evaluation}
+  }
+\end{figure}
+
 Finally, since most expression time series are short~\cite{Ernst2005}
 we assessed whether similar results could be obtained with fewer time
 points. We sub-sampled the data keeping only 7 time points most
 relevant in defining the Twist expression profile
-(2,3,4,5,6,8,10 hours). The results in this case are almost identical
-(see Supplementary Material) showing that the model-based approach
-presented here can be applied to typical short wild-type time series
-data.
+(2,3,4,5,6,8,10 hours). The results in this case, as shown in
+Fig.~\ref{fig:dros_data_size_evaluation}, are almost identical to 
+those obtained using the complete data showing that the model-based
+approach presented here can be applied to typical short wild-type time
+series data.
 
 \section{Discussion}
 
@@ -361,19 +372,19 @@ workstation rather than a supercomputer.
   using mmgMOS from the puma package~\cite{Pearson2009}.  The means of
   the log-scale expression values were equalized across chips.  The
   distributions over log-expression were transformed to means
-  ($\hat{m_i}(t_j), \hat{f_i}(t_j)$) and variances ($(\sigma_{ijm})^2,
-  (\sigma_{if})^2$) of absolute expression by minimising the squared
+  $\left(\hat{m_i}(t_j), \hat{f_i}(t_j)\right)$ and variances $\left((\sigma_{ijm})^2,
+  (\sigma_{if})^2 \right)$ of absolute expression by minimising the squared
   deviation of 5\%, 25\%, 50\%, 75\% and 95\% quantiles of a Gaussian
   distribution to corresponding quantiles obtained from mmgMOS.
 
   \section{Filtering quiet genes}
   Quiet genes can affect the ranking because any model with low or zero sensitivity can fit them
   well. Genes $j$ with an average z-score 
-  $$ \frac{1}{Rn} \sum_{r=1}^R \sum_{i=1}^n \frac{\hat{m_{jr}}(t_i)}{\sigma_{ijr}} < 1.5 $$
-  were considered quiet and removed from the data set.  The
-  performance of the methods is fairly insensitive to the actual value
-  of the threshold, at least values in the range $[1.2, 1.8]$ seem to
-  provide mostly similar ranking accuracy.
+  $$ \frac{1}{Rn} \sum_{r=1}^R \sum_{i=1}^n \frac{\hat{m_{jr}}(t_i)}{\sigma_{ijr}} < 1.8 $$
+  were considered quiet and removed from the data set.  The threshold
+  was selected by visually inspecting models for candidate targets:
+  practically all targets below the threshold elicited a
+  non-informative constant response from the model.
   
   \section{Covariance of the Gaussian Process}
   Differential
@@ -398,32 +409,34 @@ workstation rather than a supercomputer.
   where
   \begin{multline*}
     h_{kj}(t, t', D_x) = 
-    \exp\left(\left(\frac{D_x l}{2}\right)^2\right)
+    \exp\left(\gamma_x^2\right)
     \frac{\exp(-D_x t - D_k t')}{(D_x + \delta) (D_j - \delta)}
     \bigg\{ 
     \\
     % \frac{(D_k + \delta)\exp((D_k-\delta) t') - 2\delta}{(D_k^2-\delta^2)}
     \left(\frac{\exp((D_k-\delta) t') - 1}{D_k-\delta} +
       \frac{1}{D_k + D_x} \right)
-    [\erf(\frac{D_x l}{2} - \frac{t}{l}) - \erf(\frac{D_x l}{2})]
+    \left[\erf\left(\gamma_x - \frac{t}{l}\right) - \erf\left(\gamma_x\right)\right]
     \\
     + \frac{\exp((D_k+D_x)t')}{D_k+D_x}
-    [\erf(\frac{D_x l}{2} + \frac{t'}{l})
-    - \erf(\frac{D_x l}{2} - \frac{t-t'}{l})]
-    \bigg\}\ .
+    \left[\erf\left(\gamma_x + \frac{t'}{l}\right)
+    - \erf\left(\gamma_x - \frac{\Delta t}{l}\right)\right]
+    \bigg\}\ ,
   \end{multline*}
-  Denoting $\Delta t := t - t'$, we obtain similarly
+  where $\Delta t := t - t'$ and $\gamma_x = \frac{D_x l}{2}$.
+  Similarly, 
   \begin{multline*}
     k_{f m_k}(t, t')
     = S_k a^2 \frac{\sqrt{\pi} l}{2(\delta - D_k)} \\
-    \bigg(
-    \exp\left(\left(\frac{D_k l}{2}\right)^2 + D_k \Delta t \right)
-    [\erf(\frac{D_k l}{2} + \frac{t}{l}) - \erf(\frac{D_k l}{2} + \frac{\Delta t}{l})] \\
+    \bigg\{
+    \exp\left(\gamma_k^2 + D_k \Delta t \right)
+    \left[\erf\left(\gamma_k + \frac{t}{l}\right) - \erf\left(\gamma_k + \frac{\Delta t}{l}\right)\right] \\
     -
-    \exp\left(\left(\frac{\delta l}{2}\right)^2 + \delta \Delta t\right)
-    [\erf(\frac{\delta l}{2} + \frac{t}{l}) - \erf(\frac{\delta l}{2} + \frac{\Delta t}{l})]
-    \bigg)
+    \exp\left(\left(\gamma_\delta\right)^2 + \delta \Delta t\right)
+    \left[\erf\left(\gamma_\delta + \frac{t}{l}\right) - \erf\left(\gamma_\delta + \frac{\Delta t}{l}\right)\right]
+    \bigg\}\ ,
   \end{multline*}
+  where $\gamma_k = \frac{D_k l}{2}$ and $\gamma_\delta = \frac{\delta l}{2}$.
 
   \section{Training set ranking}
   The training set or multiple-target ranking was formed by fitting
@@ -440,7 +453,7 @@ workstation rather than a supercomputer.
 \end{materials}
 
 \begin{acknowledgments}
-A.H. was supported by a postdoctoral researcher's project of the Academy of Finland.
+A.H. was supported by a postdoctoral researcher's project No 121179 of the Academy of Finland.
 M.R. and N.D.L acknowledge support from EPSRC Grant No EP/F005687/1 "Gaussian Processes for Systems Identification with Applications in Systems Biology". 
 This work was supported in part by the IST Programme of the European Community, under the PASCAL2 Network of Excellence, IST-2007-216886. This publication only reflects the authors' views.
 \end{acknowledgments}
