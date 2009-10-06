@@ -1,5 +1,10 @@
 This toolbox allows MATLAB to read in and write bvh files and read acclaim files. There are also routines for visualising the files in MATLAB.
 
+Version 0.136 Release Notes
+---------------------------
+
+Missing a file for reading the poser data.
+
 Version 0.135 Release Notes
 ---------------------------
 

@@ -12,6 +12,8 @@ function xyzpoppeAnim(X, fps)
 %  
 % COPYRIGHT : Carl Henrik Ek and Neil Lawrence, 2008
 
+% MOCAP
+  
 if(nargin<3)
   fps = 24;
   if(nargin<2)

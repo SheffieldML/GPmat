@@ -1,5 +1,12 @@
 function handle = xyzpoppeDraw(joint,handle)
 
+% XYZPOPPEDRAW Helper function for drawing data from Poppe.
+% 
+% COPYRIGHT : Carl Henrik Ek, 2009
+%
+% SEEALSO xyzpoppeModify, xyzpoppeVisualise
+%
+
 % MOCAP
 
 limb{1} = [2 1;1 3]; % spine

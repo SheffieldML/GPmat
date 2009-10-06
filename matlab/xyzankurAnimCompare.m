@@ -1,6 +1,6 @@
 function xyzankurAnimCompare(X, X2, fps)
 
-% XYZANKURANIMTRUTH Animate a prediction and ground truth for stick man from Agarwal & Triggs dataset.
+% XYZANKURANIMCOMPARE Animate a prediction and ground truth for stick man from Agarwal & Triggs dataset.
 % FORMAT
 % DESC animates a matrix of x,y,z point clound positions representing the
 % motion of the figure used to generate the silhouttes for Agarwal &
