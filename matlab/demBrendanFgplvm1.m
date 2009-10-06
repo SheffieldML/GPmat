@@ -1,4 +1,4 @@
-% DEMBRENDAN1 Use the GP-LVM to model the Frey face data with back constraints.
+% DEMBRENDANFGPLVM1 Use the GP-LVM to model the Frey face data with back constraints.
 
 % FGPLVM
 

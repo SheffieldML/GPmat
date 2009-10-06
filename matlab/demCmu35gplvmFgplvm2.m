@@ -1,4 +1,4 @@
-% DEMCMU35GPLVM2 Learn a GPLVM on CMU 35 data set.
+% DEMCMU35GPLVMFGPLVM2 Learn a GPLVM on CMU 35 data set.
 
 % FGPLVM
 

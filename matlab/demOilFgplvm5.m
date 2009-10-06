@@ -1,4 +1,4 @@
-% DEMOIL5 Oil data with partially independent training conditional.
+% DEMOILFGPLVM5 Oil data with partially independent training conditional.
 
 % FGPLVM
 

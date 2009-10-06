@@ -1,4 +1,4 @@
-% DEMOIL3 Oil data with deterministic training conditional.
+% DEMOILFGPLVM3 Oil data with deterministic training conditional.
 
 % FGPLVM
 

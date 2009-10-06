@@ -1,4 +1,4 @@
-% DEMOILFGPLVM7 Oil data with variational sparse approximation.
+% DEMOILFGPLVM8 Oil data with variational sparse approximation.
 
 % FGPLVM
 
