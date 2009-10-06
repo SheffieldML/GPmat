@@ -372,7 +372,7 @@ workstation rather than a supercomputer.
   using mmgMOS from the puma package~\cite{Pearson2009}.  The means of
   the log-scale expression values were equalized across chips.  The
   distributions over log-expression were transformed to means
-  $\left(\hat{m_i}(t_j), \hat{f_i}(t_j)\right)$ and variances $\left((\sigma_{ijm})^2,
+  $\left(\hat{m}_i(t_j), \hat{f}_i(t_j)\right)$ and variances $\left((\sigma_{ijm})^2,
   (\sigma_{if})^2 \right)$ of absolute expression by minimising the squared
   deviation of 5\%, 25\%, 50\%, 75\% and 95\% quantiles of a Gaussian
   distribution to corresponding quantiles obtained from mmgMOS.
@@ -380,7 +380,7 @@ workstation rather than a supercomputer.
   \section{Filtering quiet genes}
   Quiet genes can affect the ranking because any model with low or zero sensitivity can fit them
   well. Genes $j$ with an average z-score 
-  $$ \frac{1}{Rn} \sum_{r=1}^R \sum_{i=1}^n \frac{\hat{m_{jr}}(t_i)}{\sigma_{ijr}} < 1.8 $$
+  $$ \frac{1}{Rn} \sum_{r=1}^R \sum_{i=1}^n \frac{\hat{m}_{jr}(t_i)}{\sigma_{ijr}} < 1.8 $$
   were considered quiet and removed from the data set.  The threshold
   was selected by visually inspecting models for candidate targets:
   practically all targets below the threshold elicited a
