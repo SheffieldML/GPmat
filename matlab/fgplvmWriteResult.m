@@ -19,7 +19,7 @@ function fileName = fgplvmWriteResult(model, dataSet, number)
 dataSet(1) = upper(dataSet(1));
 type = model.type;
 type(1) = upper(type(1));
-fileName = ['dem' dataSet type num2str(number)]
+fileName = ['dem' dataSet type num2str(number)];
 
 [kern, noise, fgplvmInfo, X] = fgplvmDeconstruct(model);
 

@@ -1,4 +1,4 @@
-% DEMBRENDANFGPLVM1 Use the GP-LVM to model the Frey face data with FITC.
+% DEMOILFGPLVM9 Oil data with three dimensions and variational sparse approximation.
 
 % FGPLVM
 
@@ -6,21 +6,21 @@
 randn('seed', 1e5);
 rand('seed', 1e5);
 
-dataSetName = 'brendan';
-experimentNo = 1;
+dataSetName = 'oil';
+experimentNo = 9;
 
 % load data
 [Y, lbls] = lvmLoadData(dataSetName);
 
 % Set up model
-options = fgplvmOptions('fitc');
-%options.optimiser = 'conjgrad';
-
-latentDim = 2;
+options = fgplvmOptions('dtcvar');
+options.kern = {'rbf', 'bias', 'whitefixed'};
+options.optimiser = 'scg';
+latentDim = 3;
 d = size(Y, 2);
 
 model = fgplvmCreate(latentDim, d, Y, options);
-
+model.kern.comp{3}.variance = 1e-4;
 % Optimise the model.
 iters = 1000;
 display = 1;
@@ -34,6 +34,8 @@ if exist('printDiagram') & printDiagram
   lvmPrintPlot(model, lbls, dataSetName, experimentNo);
 end
 
-
 % Load the results and display dynamically.
-lvmResultsDynamic(model.type, dataSetName, experimentNo, 'image', [20 28], 1, 0, 1)
+lvmResultsDynamic(model.type, dataSetName, experimentNo, 'vector')
+
+% compute the nearest neighbours errors in latent space.
+errors = fgplvmNearestNeighbour(model, lbls);

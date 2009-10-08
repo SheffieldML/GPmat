@@ -1,4 +1,4 @@
-% DEMBRENDANFGPLVM1 Use the GP-LVM to model the Frey face data with FITC.
+% DEMBRENDANFGPLVM5 Use the GP-LVM to model the Frey face data with DTCVAR and five latent dimensions..
 
 % FGPLVM
 
@@ -7,16 +7,15 @@ randn('seed', 1e5);
 rand('seed', 1e5);
 
 dataSetName = 'brendan';
-experimentNo = 1;
+experimentNo = 5;
 
 % load data
 [Y, lbls] = lvmLoadData(dataSetName);
 
 % Set up model
-options = fgplvmOptions('fitc');
-%options.optimiser = 'conjgrad';
+options = fgplvmOptions('dtcvar');
 
-latentDim = 2;
+latentDim = 5;
 d = size(Y, 2);
 
 model = fgplvmCreate(latentDim, d, Y, options);
@@ -33,7 +32,6 @@ modelWriteResult(model, dataSetName, experimentNo);
 if exist('printDiagram') & printDiagram
   lvmPrintPlot(model, lbls, dataSetName, experimentNo);
 end
-
 
 % Load the results and display dynamically.
 lvmResultsDynamic(model.type, dataSetName, experimentNo, 'image', [20 28], 1, 0, 1)

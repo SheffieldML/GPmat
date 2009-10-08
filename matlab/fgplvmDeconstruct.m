@@ -18,7 +18,7 @@ function [kern, noise, fgplvmInfo, X] = fgplvmDeconstruct(model)
 % FGPLVM
 
   [kern, noise, fgplvmInfo] = gpDeconstruct(model);
-  if isfield(fgplvmInfo, 'back')
+  if isfield(fgplvmInfo, 'back') && ~isempty(fgplvmInfo.back)
     switch fgplvmInfo.back.type
      case 'kbr'
       backToRemove = {'K', 'X'};
@@ -33,8 +33,8 @@ function [kern, noise, fgplvmInfo, X] = fgplvmDeconstruct(model)
       end
     end
   end
-  if isfield(fgplvmInfo, 'dynamics')
-    switch fgplvmInfo.dynamics.type
+  if isfield(fgplvmInfo, 'dynamics') && ~isempty(fgplvmInfo.dynamics)
+    switch fgplvmInfo.dynamics.type 
      case 'gp'
       dynamicsToRemove = {};
      case 'gpDynamics'

@@ -22,6 +22,14 @@ function model = fgplvmReconstruct(kern, noise, fgplvmInfo, X, y)
 
   model = gpReconstruct(kern, noise, fgplvmInfo, X, y);
   model.type = 'fgplvm';
+  if isfield(model, 'back') && ~isempty(model.back)
+    switch model.back.type
+     case 'kbr'
+      model.back.X = model.y;
+     otherwise
+      
+    end
+  end
   params = fgplvmExtractParam(model);
   model = fgplvmExpandParam(model, params);
 end

@@ -7,7 +7,7 @@ randn('seed', 1e5);
 rand('seed', 1e5);
 
 dataSetName = 'oil';
-experimentNo = 7;
+experimentNo = 8;
 
 % load data
 [Y, lbls] = lvmLoadData(dataSetName);

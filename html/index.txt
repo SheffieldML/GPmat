@@ -12,6 +12,11 @@
 
 RELEASEINFORMATION
 
+
+<p>Added new files fgplvmWriteResults fgplvmLoadResults for saving smaller model files.
+
+<H4>Version 0.161</h4>
+
 <p>Updates for running a GPLVM when the inner produce matrix is used
 (i.e. dimensionality much greater than data points).  Minor changes to
 fix reading of GPLVM files from latest C++ code.
