@@ -14,6 +14,10 @@
 
 RELEASEINFORMATION
 
+<p>Missing a file for reading the poser data.
+
+<h4>Release 0.135</h4>
+
 <p>Added visualisation files written by Carl Henrik Ek for the Human Eva data and for Ankur Agarwal's Poser generated silhouette data.
 
 <h4>Release 0.134</h4>
