@@ -1,6 +1,6 @@
 function noiseWriteToFID(noise, FID)
 
-% NOISEREADFROMFID Load from an FID written by the C++ implementation.
+% NOISEWRITETOFID Load from an FID written by the C++ implementation.
 % FORMAT
 % DESC loads in from a file stream the data format produced by 
 % C++ implementations.

@@ -1,6 +1,6 @@
 function L = gaussianNoiseExpectationLogLikelihood(noise, mu, varsigma, y)
 
-% GAUSSIANNOISELIKELIHOOD Likelihood of the data under the GAUSSIAN noise model.
+% GAUSSIANNOISEEXPECTATIONLOGLIKELIHOOD Likelihood of the data under the GAUSSIAN noise model.
 % FORMAT
 % DESC returns the likelihoods for data points under the  Gaussian noise model.
 % ARG noise : the noise structure for which the likelihood is required.
@@ -12,7 +12,6 @@ function L = gaussianNoiseExpectationLogLikelihood(noise, mu, varsigma, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% NOISE
 
 
 N = size(y, 1);

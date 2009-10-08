@@ -1,6 +1,6 @@
 function noiseWriteParamsToFID(noise, FID)
 
-% NOISEWRITEPARAMSFROMFID Write the noise parameters to a stream.
+% NOISEWRITEPARAMSTOFID Write the noise parameters to a stream.
 % FORMAT
 % DESC writes noise parameters to  a file stream.
 % ARG noise : the noise structure that is being written.
