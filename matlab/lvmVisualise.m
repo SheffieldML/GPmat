@@ -25,32 +25,18 @@ global visualiseInfo
 
 figure(1)
 clf
+visualiseInfo.dim1 = 1;
+visualiseInfo.dim2 = 2;
+visualiseInfo.latentPos = zeros(1, model.q);
+visualiseInfo.model = model;
+visualiseInfo.lbls = YLbls;
 visualiseInfo.plotAxes = lvmScatterPlot(model, YLbls);
-set(get(visualiseInfo.plotAxes, 'title'), 'string', 'X', 'fontsize', 30);
-set(visualiseInfo.plotAxes, 'position', [0.05 0.05 0.9 0.8]);
-
+lvmSetPlot;
 visualiseInfo.latentHandle = line(0, 0, 'markersize', 20, 'color', ...
                                   [0 0 0], 'marker', '.', 'visible', ...
                                   'on', 'erasemode', 'xor');
 
-% Set up the X limits and Y limits of the main plot
-xLim = [min(model.X(:, 1)) max(model.X(:, 1))];
-xSpan = xLim(2) - xLim(1);
-xLim(1) = xLim(1) - 0.05*xSpan;
-xLim(2) = xLim(2) + 0.05*xSpan;
-xSpan = xLim(2) - xLim(1);
-
-yLim = [min(model.X(:, 2)) max(model.X(:, 2))];
-ySpan = yLim(2) - yLim(1);
-yLim(1) = yLim(1) - 0.05*ySpan;
-yLim(2) = yLim(2) + 0.05*ySpan;
-ySpan = yLim(2) - yLim(1);
-
-set(visualiseInfo.plotAxes, 'XLim', xLim)
-set(visualiseInfo.plotAxes, 'YLim', yLim)
-
 visualiseInfo.clicked = 0;
-
 visualiseInfo.digitAxes = [];
 visualiseInfo.digitIndex = [];
 
@@ -92,6 +78,7 @@ else
   end
 end
 visualiseInfo.runDynamics = false;
+
 % Set the callback function
 set(gcf, 'WindowButtonMotionFcn', 'lvmClassVisualise(''move'')')
 set(gcf, 'WindowButtonDownFcn', 'lvmClassVisualise(''click'')')
@@ -119,10 +106,13 @@ else
   [void, indMax]= max(sum((model.y.*model.y), 2));
   visData = model.y(indMax, :);
 end
+
+set(get(visualiseInfo.visualiseAxes, 'title'), 'string', 'Y', 'fontsize', 30);
+set(visualiseInfo.visualiseAxes, 'position', [0.05 0.05 0.9 0.8]);
+
 visualiseInfo.visualiseFunction = str2func(visualiseFunction);
 visHandle = visualiseInfo.visualiseFunction(visData, varargin{:});
 set(visHandle, 'erasemode', 'xor')
-colormap gray
 
 % Pass the data to visualiseInfo
 visualiseInfo.model = model;
@@ -130,9 +120,6 @@ visualiseInfo.varargin = varargin;
 visualiseInfo.visualiseModify = str2func(visualiseModify);
 visualiseInfo.visHandle = visHandle;
 
-set(get(visualiseInfo.visualiseAxes, 'title'), 'string', 'Y', 'fontsize', ...
-                  30);
-set(visualiseInfo.visualiseAxes, 'position', [0.05 0.05 0.9 0.8]);
 
 hold off
 

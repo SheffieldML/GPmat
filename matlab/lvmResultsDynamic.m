@@ -19,11 +19,9 @@ function lvmResultsDynamic(modelType, dataSet, number, dataType, varargin)
 [model, lbls] = lvmLoadResult(modelType, dataSet, number);
 
 % Visualise the results
-switch size(model.X, 2) 
- case 2
+if size(model.X, 2) > 1
   lvmVisualise(model, lbls, [dataType 'Visualise'], [dataType 'Modify'], ...
                  varargin{:});
-  
- otherwise 
+else  
   error('No visualisation code for data of this latent dimension.');
 end

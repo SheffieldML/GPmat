@@ -1,6 +1,15 @@
 function lvmClassVisualise(call)
 
-% LVMCLASSVISUALISE Callback function for visualising data in 2-D.
+% LVMCLASSVISUALISE Callback function for visualising data.
+% FORMAT
+% DESC contains the callback functions for visualizing points from the
+% latent space in the higher dimension space.
+% ARG call : either 'click', 'move', 'toggleDynamics',
+% 'dynamicsSliderChange'
+%
+% COPYRIGHT : Neil D. Lawrence, 2003, 2009
+%
+% SEEALSO : lvmResultsDynamic
 
 % MLTOOLS 
 
@@ -11,7 +20,8 @@ switch call
  case 'click'
   [x, y]  = localCheckPointPosition(visualiseInfo);  
   if ~isempty(x) 
-    visualiseInfo.latentPos = [x, y];
+    visualiseInfo.latentPos(visualiseInfo.dim1) = x;
+    visualiseInfo.latentPos(visualiseInfo.dim2) = y;
   end
   visualiseInfo.clicked = ~visualiseInfo.clicked;
   if isfield(visualiseInfo.model, 'dynamics') & ~isempty(visualiseInfo.model.dynamics)
@@ -29,9 +39,11 @@ switch call
     [x, y]  = localCheckPointPosition(visualiseInfo);  
     if ~isempty(x) 
       % This should be changed to a model specific visualisation.
+      visualiseInfo.latentPos(visualiseInfo.dim1) = x;
+      visualiseInfo.latentPos(visualiseInfo.dim2) = y;
       set(visualiseInfo.latentHandle, 'xdata', x, 'ydata', y);
       fhandle = str2func([visualiseInfo.model.type 'PosteriorMeanVar']);
-      [mu, varsigma] = fhandle(visualiseInfo.model, [x y]);
+      [mu, varsigma] = fhandle(visualiseInfo.model, visualiseInfo.latentPos);
       if isfield(visualiseInfo.model, 'noise')
         Y = noiseOut(visualiseInfo.model.noise, mu, varsigma);
       else
@@ -39,7 +51,6 @@ switch call
       end
       visualiseInfo.visualiseModify(visualiseInfo.visHandle, ...
                                     Y, visualiseInfo.varargin{:});
-      visualiseInfo.latentPos=[x, y];
     end
   end
  case 'toggleDynamics'
@@ -50,10 +61,11 @@ switch call
   X = modelOut(visualiseInfo.model.dynamics, get(visualiseInfo.dynamicsSlider, 'value'));
   x = X(1);
   y = X(2);
-  visualiseInfo.latentPos = [x, y];
+  visualiseInfo.latentPos(visualiseInfo.dim1) = x;
+  visualiseInfo.latentPos(visualiseInfo.dim2) = y;
   set(visualiseInfo.latentHandle, 'xdata', x, 'ydata', y);
   fhandle = str2func([visualiseInfo.model.type 'PosteriorMeanVar']);
-  [mu, varsigma] = fhandle(visualiseInfo.model, [x y]);
+  [mu, varsigma] = fhandle(visualiseInfo.model, visualiseInfo.latentPos);
   if isfield(visualiseInfo.model, 'noise')
     Y = noiseOut(visualiseInfo.model.noise, mu, varsigma);
   else
@@ -61,6 +73,38 @@ switch call
   end
   visualiseInfo.visualiseModify(visualiseInfo.visHandle, ...
                                 Y, visualiseInfo.varargin{:});
+
+
+ case 'latentSliderChange'
+  counter = 0;
+  for i = 1:size(visualiseInfo.latentPos, 2)
+    if i~= visualiseInfo.dim1 && i ~= visualiseInfo.dim2
+      counter = counter + 1;
+      visualiseInfo.latentPos(i) = get(visualiseInfo.latentSlider(counter), 'value');
+      set(visualiseInfo.sliderTextVal(counter), 'string', num2str(visualiseInfo.latentPos(i)));
+    end
+  end
+  lvmSetPlot;
+  visualiseInfo.latentHandle = line(visualiseInfo.latentPos(visualiseInfo.dim1), ...
+                                    visualiseInfo.latentPos(visualiseInfo.dim2), ...
+                                    'markersize', 20, 'color', [0.5 0.5 0.5], ...
+                                    'marker', '.', 'visible', 'on', ...
+                                    'erasemode', 'xor');
+
+ case 'updateLatentRepresentation'
+  visualiseInfo.dim1 = get(visualiseInfo.xDimension, 'value');
+  visualiseInfo.dim2 = get(visualiseInfo.yDimension, 'value');
+  lvmSetPlot;
+  visualiseInfo.latentHandle = line(visualiseInfo.latentPos(visualiseInfo.dim1), ...
+                                    visualiseInfo.latentPos(visualiseInfo.dim2), ...
+                                    'markersize', 20, 'color', [0.5 0.5 0.5], ...
+                                    'marker', '.', 'visible', 'on', ...
+                                    'erasemode', 'xor');
+
+  
+  
+
+
 end
 
 

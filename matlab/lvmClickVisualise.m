@@ -40,13 +40,15 @@ visualiseInfo.latentHandle = line(visualiseInfo.latentPos(visualiseInfo.dim1), .
                                   'erasemode', 'xor');
 
 
-
-visualiseInfo.clicked = 0;
+visualiseInfo.runDynamics = false;
+visualiseInfo.clicked = true;
 visualiseInfo.digitAxes = [];
 visualiseInfo.digitIndex = [];
 
 
-set(gcf, 'WindowButtonDownFcn', 'lvmClassClickVisualise(''click'')')
+% Set the callback function
+set(gcf, 'WindowButtonMotionFcn', '')
+set(gcf, 'WindowButtonDownFcn', 'lvmClassVisualise(''move'')')
 
 figure(2)
 clf
@@ -71,7 +73,6 @@ else
   [void, indMax]= max(sum((model.y.*model.y), 2));
   visData = model.y(indMax, :);
 end
-%colormap gray
 
 set(get(visualiseInfo.visualiseAxes, 'title'), 'string', 'Y', 'fontsize', 30);
 set(visualiseInfo.visualiseAxes, 'position', [0.05 0.05 0.9 0.8]);

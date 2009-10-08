@@ -10,6 +10,10 @@
 
 RELEASEINFORMATION
 
+<p>Added functionality for writing model files using modelDeconstruct commands to keep written files smaller.
+
+<h4>Version 0.132</h4>
+
 <p>Add click visualise functionality for LVM visualization, Laplacian eigenmaps and wrapper for MVU. 
 
 <h4>Version 0.1311</h4>

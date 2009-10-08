@@ -12,7 +12,7 @@ function fileName = dnetWriteResult(model, dataSet, number)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
   
-% DNET
+% MLTOOLS
 
 dataSet(1) = upper(dataSet(1));
 type = model.type;
