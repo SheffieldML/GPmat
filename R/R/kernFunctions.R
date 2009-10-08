@@ -658,12 +658,6 @@ multiKernDiagCompute <- function (kern, x) {
 
 multiKernCacheBlock <- function(kern, fhandle = NULL, arg = NULL, i = NULL, j = NULL, X = NULL, X2 = NULL) {
 
-#  oneArgument <- FALSE
-#
-#  if(is.null(fhandle) && is.null(arg) && is.null(i) && is.null(j) && is.null(X) && is.null(X2)) {
-#    oneArgument <- TRUE
-#  }
-
   if(!exists("cacheEnvir") || !exists("cache")) {
     cacheEnvir <- new.env("cacheEnvir")
     cache <- list()
@@ -697,8 +691,6 @@ multiKernCacheBlock <- function(kern, fhandle = NULL, arg = NULL, i = NULL, j = 
 
 
 multiKernFixBlocks <- function(kern, blocks = 1) {
-
-  source("multiKernCacheBlock.R")
 
   length <- 30
   op <- options(digits.secs=15)

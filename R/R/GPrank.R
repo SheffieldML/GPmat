@@ -326,7 +326,9 @@ GPrankTFs <- function(preprocData, TFs = NULL, targets = NULL, filterLimit = 1.5
   baseLineParameters <- NULL
   initParams <- FALSE
 
-  if (length(targets) > 1) {
+  amountOfTargets <- length(targets)
+
+  if (amountOfTargets > 1) {
 
     baseLineData <- formModel(searchedData, TF = NULL, targets, useGPsim = TRUE)
     logLikelihoods[1] <- baseLineData$ll
@@ -336,7 +338,7 @@ GPrankTFs <- function(preprocData, TFs = NULL, targets = NULL, filterLimit = 1.5
     parameters <- modelExtractParam(baseLineData$data$model)
     baseLineParameters <- array(dim = c(1, length(parameters) + 3))
     baseLineParameters[1:(2*amountOfTargets+4)] <- parameters[1:(2*amountOfTargets+4)]
-    t <- 2 * amountOfKnownTargets + 5
+    t <- 2 * amountOfTargets + 5
     baseLineParameters[(t+2):(t+1+amountOfTargets)] <- parameters[t:(t+amountOfTargets-1)]
 
     initParams <- TRUE
@@ -424,6 +426,19 @@ formModel <- function(preprocData, TF = NULL, knownTargets = NULL, testTarget = 
   returnData$data <- rankedData
   returnData$params <- params
   return(returnData)
+}
+
+
+
+genePassedFiltering <- function(testedGene, approvedGenes) {
+
+  for (i in 1:length(approvedGenes)) {
+    if (!is.na(charmatch(testedGene, approvedGenes[i]))) {
+      return (TRUE)
+    }
+  }
+
+  return (FALSE)
 }
 
 
