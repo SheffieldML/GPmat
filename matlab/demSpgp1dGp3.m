@@ -1,4 +1,4 @@
-% DEMSPGP1D3 Do a simple 1-D regression after Snelson & Ghahramani's example.
+% DEMSPGP1DGP3 Do a simple 1-D regression after Snelson & Ghahramani's example.
 
 % GP
 

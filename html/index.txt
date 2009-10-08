@@ -11,22 +11,31 @@ Software (GP).
 
 RELEASEINFORMATION
 
+
+<p>Updates to allow deconstruction of model files when writing to disk (gpWriteResult, gpLoadResult, gpDeconstruct, gpReconstruct).
+
+<h4>Version 0.133</h4>
+
+<p>Updates for running a GPLVM/GP using the data's inner product matrix for Interspeech synthesis demos.
+
+<h4>Version 0.132</h4>
+
 <p>Examples transfered from oxford toolbox, variational approximation from Titsias added as an option with 'dtcvar'.
 
-<h3>Version 0.131</h3>
+<h4>Version 0.131</h4>
 
 <p>Changes to allow compatibility with SGPLVM and NCCA toolboxes.
 
-<h3>Version 0.13</h3>
+<h4>Version 0.13</h4>
 
 <p>Changes to allow more flexibility in optimisation of beta.
 
-<h3>Version 0.12</h3>
+<h4>Version 0.12</h4>
 
 <p>Various minor changes for enabling back constraints in hierarchical
 GP-LVM models.
 
-<h3>Version 0.11</h3>
+<h4>Version 0.11</h4>
 
 <p>Changes include the use of the optimiDefaultConstraint('positive') to
 obtain the function to constrain beta to be positive (which now
@@ -34,7 +43,7 @@ returns 'exp' rather than 'negLogLogit' which was previously the
 default). Similarly default optimiser is now given by a command in
 optimiDefaultOptimiser.
 
-<h3>Version 0.1</h3>
+<h4>Version 0.1</h4>
 
 <p>The first version which is spun out of the FGPLVM toolbox. The
 corresponding FGPLVM toolbox is 0.15.

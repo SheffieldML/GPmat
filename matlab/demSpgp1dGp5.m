@@ -1,4 +1,4 @@
-% DEMSPGP1D5 Do a simple 1-D regression after Snelson & Ghahramani's example.
+% DEMSPGP1DGP5 Do a simple 1-D regression after Snelson & Ghahramani's example.
 
 % GP
 
@@ -23,7 +23,7 @@ q = size(X, 2);
 d = size(y, 2);
 
 model = gpCreate(q, d, X, y, options);
-model.kern.comp{3}.setVariance(1e-4);
+model.kern.comp{3}.variance = 1e-4;
 model.X_u = randn(options.numActive, 1)*0.1;
 params = gpExtractParam(model);
 model = gpExpandParam(model, params);
@@ -35,6 +35,7 @@ display = 1;
 model = gpOptimise(model, display, iters);
 
 % Save the results.
-fileName = modelWriteResult(model, dataSetName, experimentNo);
+modelWriteResult(model, dataSetName, experimentNo);
+
 
 demSpgp1dPlot
