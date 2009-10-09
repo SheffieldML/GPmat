@@ -15,12 +15,12 @@ function leInfo = leDeconstruct(model)
 
 % MLTOOLS
 
-leInfo = model;
-removeFields = {'Y'};
-
-for i = 1:length(removeFields)
-  if isfield(leInfo, removeFields{i})
-    leInfo = rmfield(leInfo, removeFields{i});
+  leInfo = model;
+  removeFields = {'Y'};
+  
+  for i = 1:length(removeFields)
+    if isfield(leInfo, removeFields{i})
+      leInfo = rmfield(leInfo, removeFields{i});
+    end
   end
 end
-

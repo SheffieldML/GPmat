@@ -60,6 +60,41 @@ files = {prefix + 'Out.m' :
 % ''' + toolboxCapName + '''
 
 ''',
+prefix + 'Deconstruct.m' :
+'''function ''' + prefix + '''Info = ''' + prefix + '''Deconstruct(model)
+
+% ''' + ucPrefix + '''DECONSTRUCT break ''' + ucPrefix + ''' in pieces for saving.
+% FORMAT
+% DESC takes an ''' + longName + ''' model structure and breaks it into component
+% parts for saving. 
+% ARG model : the model that needs to be saved.
+% RETURN ''' + prefix + '''Info : a structure containing the other information
+% from the ''' + longName + ''': what the sparse approximation is, what the inducing
+% variables are.
+%
+% SEEALSO : ''' + prefix + '''Create, ''' + prefix + '''Reconstruct''' + copyRightText + '''
+ 
+% ''' + toolboxCapName + '''
+
+''',
+prefix + 'Reconstruct.m' :
+'''function model = ''' + prefix + '''Reconstruct(''' + prefix + '''Info, y)
+
+% ''' + ucPrefix + '''RECONSTRUCT Reconstruct an ''' + longName + ''' from component parts.
+% FORMAT
+% DESC takes component parts of an ''' + longName + ''' model and reconstructs the
+% ''' + longName + ''' model. The component parts are normally retrieved from a
+% saved file.
+% ARG ''' + prefix + '''Info : the active set and other information stored in a structure.
+% ARG y : the output target training data for the ''' + longName + '''.
+% RETURN model : an ''' + longName + ''' model structure that combines the component
+% parts.
+%
+% SEEALSO : ''' + prefix + '''Create, ''' + prefix + '''Reconstruct''' + copyRightText + '''
+ 
+% ''' + toolboxCapName + '''
+
+''',
 prefix + 'LogLikelihood.m' :
 '''function ll = ''' + prefix + '''LogLikelihood(model)
 
@@ -70,7 +105,7 @@ prefix + 'LogLikelihood.m' :
 % RETURN ll : the computed log likelihood.
 %
 % SEEALSO : ''' + prefix + '''Create, ''' + prefix + '''LogLikeGradients, modelLogLikelihood''' + copyRightText + '''
-
+ 
 % ''' + toolboxCapName + '''
 
 ''',
