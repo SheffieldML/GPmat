@@ -21,6 +21,30 @@ GPrank <- function(preprocData, TF = NULL, targets = NULL, useGPsim = FALSE, fil
   times <- newData$times
   scale <- newData$scale
 
+  # testing whether the TF passed filtering
+  if (!is.null(TF)) {
+    if (!genePassedFiltering(TF, genes)) {
+      TF <- NULL
+    }
+  }
+
+  # counter for the next passed gene
+  k <- 1
+
+  passedTargets <- array()
+
+  # testing whether the targets passed filtering
+  if (!is.null(targets)) {
+    for (i in 1:length(targets)) {
+      currentTarget <- targets[i]
+      if (genePassedFiltering(currentTarget, genes)) {
+        passedTargets[k] <- currentTarget
+        k <- k + 1
+      }
+    }
+    targets <- passedTargets
+  }
+
   Nrep <- length(y)
 
   options <- list(includeNoise=0, optimiser="CG")
