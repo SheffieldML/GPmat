@@ -402,13 +402,13 @@ workstation rather than a supercomputer.
   \begin{multline*}
     k_{m_j m_k}(t, t')
     = \frac{\sqrt{\pi} l a^2 S_j S_k}{2} \bigg(
-    h_{kj}(t, t', \delta) + h_{jk}(t', t, \delta) \\
-    - h_{kj}(t, t', D_j) - h_{jk}(t', t, D_k)
+    h_{jk}(t, t', \delta) + h_{kj}(t', t, \delta) \\
+    - h_{jk}(t, t', D_j) - h_{kj}(t', t, D_k)
     \bigg)\ ,
   \end{multline*}
   where
   \begin{multline*}
-    h_{kj}(t, t', D_x) = 
+    h_{jk}(t, t', D_x) = 
     \exp\left(\gamma_x^2\right)
     \frac{\exp(-D_x t - D_k t')}{(D_x + \delta) (D_j - \delta)}
     \bigg\{ 
@@ -432,7 +432,7 @@ workstation rather than a supercomputer.
     \exp\left(\gamma_k^2 + D_k \Delta t \right)
     \left[\erf\left(\gamma_k + \frac{t}{l}\right) - \erf\left(\gamma_k + \frac{\Delta t}{l}\right)\right] \\
     -
-    \exp\left(\left(\gamma_\delta\right)^2 + \delta \Delta t\right)
+    \exp\left(\gamma_\delta^2 + \delta \Delta t\right)
     \left[\erf\left(\gamma_\delta + \frac{t}{l}\right) - \erf\left(\gamma_\delta + \frac{\Delta t}{l}\right)\right]
     \bigg\}\ ,
   \end{multline*}
@@ -450,10 +450,19 @@ workstation rather than a supercomputer.
   were then fixed when fitting the larger models to the training set
   plus each candidate.
 
+  \section{Knock-out data processing}
+  The knock-out data was processed as explained
+  in~\cite{Sandmann2006a}.  $q$-values were computed at each time
+  point using SAM~\cite{Saeed2003,Tusher2001}, the values at
+  neighbouring time points were averaged and the minimum of these
+  averages was used as the final value.  A cut-off value of 0.1 was
+  used for detecting significant differential expression as
+  in~\cite{Sandmann2006a}.
+
 \end{materials}
 
 \begin{acknowledgments}
-A.H. was supported by a postdoctoral researcher's project No 121179 of the Academy of Finland.
+A.H. was supported by Postdoctoral Researcher's Project No 121179 of the Academy of Finland.
 M.R. and N.D.L acknowledge support from EPSRC Grant No EP/F005687/1 "Gaussian Processes for Systems Identification with Applications in Systems Biology". 
 This work was supported in part by the IST Programme of the European Community, under the PASCAL2 Network of Excellence, IST-2007-216886. This publication only reflects the authors' views.
 \end{acknowledgments}

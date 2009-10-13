@@ -4,7 +4,7 @@
 \usepackage{subfig}
 
 
-\title{Supplementary methods for ``Model-based transcription factor
+\title{Supplementary material for ``Model-based transcription factor
   target identification without perturbations''}
 
 
@@ -12,7 +12,9 @@
 Antti Honkela,
 Neil D. Lawrence,
 Charles Girardot, 
-Eileen E. Furlong, and
+Hilary Gustafson,
+Ya-Hsin Liu,\\
+\bf Eileen E. Furlong, and
 Magnus Rattray
 }
 
@@ -172,13 +174,13 @@ The final covariance between target genes is
   \int_0^{t'} \exp((D_k - \delta) u') \\
   \int_0^u \exp(\delta v) \int_0^{u'} \exp(\delta v') k_{ff}(v, v') \, dv'\, dv\, du'\, du \\
   = \frac{\sqrt{\pi} a l S_j S_k}{2} \bigg(
-  h_{kj}(t, t', \delta) + h_{jk}(t', t, \delta) 
-  - h_{kj}(t, t', D_j) - h_{jk}(t', t, D_k)
+  h_{jk}(t, t', \delta) + h_{kj}(t', t, \delta) 
+  - h_{jk}(t, t', D_j) - h_{kj}(t', t, D_k)
   \bigg)
 \end{multline}
 where
 \begin{multline}
-  h_{kj}(t, t', D_x) = 
+  h_{jk}(t, t', D_x) = 
   \exp\left(\left(\frac{D_x l}{2}\right)^2\right)
   \frac{\exp(-D_x t - D_k t')}{(D_x + \delta) (D_j - \delta)}
   \bigg\{ 
@@ -215,7 +217,7 @@ follows: '.': $> 70 \%$ dominance, '+': $> 80 \%$ dominance,
 '*': $> 90 \%$ dominance, '**': $> 95 \%$ dominance, '***': $> 99 \%$
 dominance, '-': comparison not applicable.
 
-\begin{table}[h]
+\begin{table}[p]
   \centering
 \subfloat[][Top 20]{
 \begin{tabular}{lcccc}
@@ -245,7 +247,7 @@ KO &     &     &     &    \\
   \label{tab:bootstrap1}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[p]
   \centering
 \subfloat[][Top 20]{
 \begin{tabular}{lcccc}
@@ -275,7 +277,7 @@ KO & -   & -   & -   & -  \\
   \label{tab:bootstrap2}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[p]
   \centering
 \subfloat[][Top 20]{
 \begin{tabular}{lcccc}
@@ -305,7 +307,7 @@ KO &     &     & +   &    \\
   \label{tab:bootstrap3}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[p]
   \centering
 \subfloat[][Top 20]{
 \begin{tabular}{lcccc}
@@ -335,7 +337,7 @@ KO &     &     &     &    \\
   \label{tab:bootstrap4}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[p]
   \centering
 \subfloat[][Top 20]{
 \begin{tabular}{lcccc}
@@ -365,7 +367,7 @@ KO & -   & -   & -   & -  \\
   \label{tab:bootstrap5}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[p]
   \centering
 \subfloat[][Top 20]{
 \begin{tabular}{lcccc}
