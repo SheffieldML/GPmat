@@ -107,18 +107,20 @@ likelihood-based approach feasible even for short time series
 datasets. 
 
 There are many existing approaches to inferring gene regulatory networks from
-time-series expression data, including dynamic Bayesian networks,
+time series expression data, including dynamic Bayesian networks,
 information theoretic approaches and differential equation approaches
 (reviewed in \cite{Bansal2007a}). These methods typically require many
 more data from a greater diversity of experimental conditions than are
 available from the short unperturbed wild-type time series that we
-consider. Indeed, most real gene expression time course data are short relative to the simulated data used to assess computational methods for network inference~\cite{Ernst2005}. However, our goal is more limited in scope since
+consider. Indeed, most real gene expression time course data are short
+relative to the simulated data used to assess computational methods
+for network inference~\cite{Ernst2005}. However, our goal is more limited in scope since
 we are primarily interested in providing additional support for hypothesised
 targets of a specific TF. Again, most approaches to this problem are
 designed for data containing large numbers of diverse conditions, as
 exemplified by the DREAM 2 target identification
-challenge~\cite{Stolovitzky2007} (challenge 1). Others
-have addressed this target identification problem using time-series
+challenge 1~\cite{Stolovitzky2007}. Others
+have addressed this target identification problem using time series
 data with a regulation model~\cite{Barenco2006a,Gatta2008}. However,
 these approaches either require a known target set for training~\cite{Barenco2006a} or
 they require measured TF protein data~\cite{Gatta2008}. As well as
@@ -158,7 +160,8 @@ expression. We further show how integrating complementary wild-type spatial
 
 A Gaussian process is a probability distribution over
 functions $f$ which take the value $f(t)$ at time
-$t$. Analogous to the Gaussian distribution, which is fully characterised by a mean and variance, the Gaussian process is
+$t$. Analogous to the Gaussian distribution, which is fully
+characterised by a mean and variance, the Gaussian process is
 characterised by a mean function $\mathrm{E}[f(t)]$ and a covariance
 function $k(t,t')=\mathrm{E}[f(t)f(t')]-\mathrm{E}[f(t)]\mathrm{E}[f(t')]$
 where the expectation is over function evaluations at times $t$ and
@@ -196,15 +199,21 @@ $\theta=[\delta,a,l,\{B_j,S_j,D_j\}]$ (see Materials and Methods).
 
 A microarray time course experiment provides a data vector $\bm y$ containing the noise-corrupted TF and target mRNA
 measurements at $n$ times,
-$\bm y=[\hat{f}(t_1),\hat{f}(t_2),\ldots,\hat{f}(t_n),\{\hat{m}_j(t_1),\ldots,\hat{m}_j(t_n)\}]^\mathrm{T}$. This is a continuous-time modeling framework so there is no
+$\bm
+y=[\hat{f}(t_1),\hat{f}(t_2),\ldots,\hat{f}(t_n),\{\hat{m}_j(t_1),\ldots,\hat{m}_j(t_n)\}]^\mathrm{T}$. This
+is a continuous-time modeling framework so there is no
 requirement that times are equally spaced. We assume Gaussian noise:
 $p(\bm y|f,\bm m)=\prod_i{\cal
   N}(\hat{f}(t_i)|f(t_i),\sigma_{if}^2)\prod_j{\cal
   N}(\hat{m_j}(t_i)|m_j(t_i),\sigma_{ijm}^2)$ where the gene and condition
-specific measurement variance parameters $\sigma_{if}^2$ and $\sigma_{ijm}^2$ are obtained from a probe-level analysis of the microarray data~\cite{Liu2005,Pearson2009} (see
+specific measurement variance parameters $\sigma_{if}^2$ and
+$\sigma_{ijm}^2$ are obtained from a probe-level analysis of the
+microarray data~\cite{Liu2005,Pearson2009} (see
 Materials and Methods). The log-likelihood for the model parameters
 $\theta$ can then be calculated exactly using standard Gaussian process regression
-techniques to integrate out the functions $m_j$ and $f$~\cite{Rasmussen2006}. For $R$ replicate datasets the log-likelihood is
+techniques to integrate out the functions $m_j$ and
+$f$~\cite{Rasmussen2006}. For $R$ replicate datasets the
+log-likelihood is
 \begin{equation*}
   \begin{split}
     L(\theta) & = \log p(\bm y_1,\bm y_2,\ldots,\bm y_{R}|\theta) \\
@@ -220,7 +229,9 @@ Materials and Methods). This allows us to compute the set of model
 parameters $\theta$ by maximum
 likelihood using gradient-based optimisation. 
 
-Rather than assuming that the TF protein is primarily under transcriptional control, as indicated by Eq.~(\ref{eq:translation_ode}), one can alternatively use the idea pioneered
+Rather than assuming that the TF protein is primarily under
+transcriptional control, as indicated by
+Eq.~(\ref{eq:translation_ode}), one can alternatively use the idea pioneered
 in~\cite{Barenco2006a} and model the TF protein as an unobserved
 latent variable. This approach can naturally be carried out using a
 similar Gaussian process framework as shown in~\cite{Gao2008}. However, that procedure requires a set of known
@@ -230,12 +241,19 @@ prefer the above cascade model for cases where the level of active TF is under d
 
 \section{Results}
 
-We applied our model-based approach to identify targets of the TFs Twist and Mef2 which regulate mesoderm and muscle development in Drosophila~\cite{Sandmann2007}. We used a microarray dataset containing three replicated time-series of 12 time points collected hourly throughout Drosophila embryogenesis using wild-type embryos~\cite{Tomancak2002}.  Quiet candidate targets were eliminated by
+We applied our model-based approach to identify targets of the TFs
+Twist and Mef2 which regulate mesoderm and muscle development in
+Drosophila~\cite{Sandmann2007}. We used a microarray dataset
+containing three replicated time series of 12 time points collected
+hourly throughout Drosophila embryogenesis using wild-type
+embryos~\cite{Tomancak2002}.  Quiet candidate targets were eliminated by 
 considering average z-scores of expression values as described in
 Materials and Methods.
 
-For each TF we fitted two sets of Gaussian process models. In one approach all other genes were considered as individual candidate targets one at a
-time (``single-target models'').  The candidate targets were ranked according to their likelihood under the model.  It is worth noting that even the global
+For each TF we fitted two sets of Gaussian process models. In one
+approach all other genes were considered as individual candidate targets one at a
+time (``single-target models'').  The candidate targets were ranked
+according to their likelihood under the model.  It is worth noting that even the global
 parameters can vary between models for different genes under this approach as the models
 are fitted completely independently. In an alternative approach we fitted another set of models using the five
 top-ranking genes in the single-target case as the training set (``multiple-target models''; see
@@ -254,7 +272,7 @@ Fig.~\ref{fig:gpdisim_models}).
 
 For comparison, candidates were also ranked by correlation of the
 expression profile with the TF expression profile (``correlation'')
-and by $q$-value of differential expression in TF knock-out
+and by $q$-value of differential expression in TF loss-of-function mutant
 experiments from~\cite{Sandmann2006a,Sandmann2007} (``knock-out''). 
 
 \begin{figure}[tb]
@@ -338,6 +356,16 @@ naturally help, but unfortunately such information is not available in
 this case or in general.  It is worth noting that any measurements of
 protein levels could very easily be incorporated in our models as well.
 
+Finally, since most expression time series are short~\cite{Ernst2005}
+we assessed whether similar results could be obtained with fewer time
+points. We sub-sampled the data keeping only 7 time points most
+relevant in defining the Twist expression profile
+(2,3,4,5,6,8,10 hours). The results in this case, as shown in
+Fig.~\ref{fig:dros_data_size_evaluation}, are almost identical to 
+those obtained using the complete data showing that the model-based
+approach presented here can be applied to typical short wild-type time
+series data.
+
 \begin{figure}[tb]
   \centering
   \includegraphics{dros_data_size_evaluation}
@@ -349,22 +377,125 @@ protein levels could very easily be incorporated in our models as well.
   }
 \end{figure}
 
-Finally, since most expression time series are short~\cite{Ernst2005}
-we assessed whether similar results could be obtained with fewer time
-points. We sub-sampled the data keeping only 7 time points most
-relevant in defining the Twist expression profile
-(2,3,4,5,6,8,10 hours). The results in this case, as shown in
-Fig.~\ref{fig:dros_data_size_evaluation}, are almost identical to 
-those obtained using the complete data showing that the model-based
-approach presented here can be applied to typical short wild-type time
-series data.
-
 \section{Discussion}
 
-The linear differential equation model is a simplification, and in
-many cases unrealistic. It is, however, necessary to keep the
-computational load at a level that allows performing the ranking in a
-workstation rather than a supercomputer.
+We have shown how a very simple regulation model can be used to rank
+genes according to their likelihood of being targeted by a specific
+TF. The linear differential equation model of regulation we use is a simplification, and in
+many cases unrealistic, but it can capture important differences in
+the profiles of target genes due to differences in protein and mRNA
+stability while still keeping the computational load at a level
+that allows us to perform genome-wide scoring using a workstation
+rather than a supercomputer. Our results show
+that the model-based approach presented here can outperform the use of
+loss-of-function mutant data for identifying targets. Such an approach
+can be combined with binding location (ChIP-chip or ChIP-seq)
+and spatial expression data to identify a confident set of regulatory
+targets. This is especially useful in cases where loss-of-function
+mutants are uninformative, either due to redundancy or because they do
+not display a phenotype of interest. 
+
+The main novelty of our approach is the use of recently proposed
+techniques to model a time-varying degree of freedom as a sample from
+a Gaussian process prior distribution~\cite{Gao2008}. By integrating out this functional
+degree of freedom before computing the likelihood, we keep the
+number of model parameters to a minimum and this allows us to model
+typical short wild-type time series without excessive over-fitting. In
+many applications it is difficult or impossible to achieve a high
+degree of temporal resolution. For example, in studies of
+embryogenesis it is often impossible to stage embryos with the
+precision sufficient to obtain a long expression time series over the
+period of interest. For one reason or another most expression time
+series datasets are short~\cite{Ernst2005} and developing inference approaches
+that are applicable to short time series datasets is of great
+practical importance.  
+
+Related methods have been proposed for identifying the
+targets of a TF using time series expression data but few of these are suitable given the
+limited data considered here~\cite{Bansal2007a}. Our approach was inspired by the work of Barenco {\em et
+al.} who also use a differential equation with a linear activation
+function to model the regulation of transcription. They focus on the
+case where the TF is activated post-transcription and they therefore
+require the use of a training set of
+known targets to infer the TF activity~\cite{Barenco2006a}. In the most recent
+implementation of their method~\cite{Barenco2009} the original Markov
+chain Monte Carlo procedure has been dropped due to its computational
+inefficiency and an alternative optimisation-based method is used. In our case a Bayesian treatment of the TF protein
+concentration is computationally efficient because we use Gaussian
+process inference techniques. A Bayesian approach reduces the number of parameters
+to be optimised, since we marginalise over the TF concentration, and
+thereby reduces the possibility of over-fitting. Nevertheless, the use of a training set to infer the
+TF concentration from targets was a very elegant solution to the
+problem of dealing with TFs activated post-transcription. This
+approach also fits very naturally into the Gaussian process
+framework as we have shown~\cite{Gao2008}. Such a scheme was unnecessary in the application considered
+here, where the TFs of interest were known to be transcriptionally
+regulated, but can be applied using our techniques in other
+contexts. Unfortunately it is difficult for us to compare our method
+directly with the results of Barenco {\em et al.} since their results
+were only validated using the positive and negative targets that they identified,
+rather than an unbiased test set. 
+
+Another relevant method was introduced by Della Gatta {\em et
+  al.}~\cite{Gatta2008}. They also use a linear regulation model but
+they introduce simplifications that avoid the explicit solution of
+differential equations. An interesting aspect of their approach is the
+inclusion of a regulatory network model designed to capture the effect
+of indirect regulation of putative targets by other genes. Sparse regression
+techniques are used to learn the regulation model. A limitation of
+their approach is the necessity to have measurements of the TF
+protein; such data are not readily available in most cases. As with
+Barenco's approach it is difficult for us to compare performance on
+the data they used in~\cite{Gatta2008} because they only validated
+selected predictions of their model. In our application we do not have
+access to any protein data and therefore cannot apply their method as
+intended. We were interested in whether
+their approach to modelling indirect regulation would be helpful in
+our case. Therefore we applied their approach using mRNA data as a
+proxy for protein data which is not unreasonable for TFs under
+transcriptional control. The results were no better than
+using correlation with TF concentration. However, this comparison is
+not fair to their method which really relies on the
+availability of protein measurements.
+
+There are some interesting differences in the ranking results for the two TFs studied
+here. The knock-out scores for Twist are found to be less informative
+about binding location than the knock-out scores for Mef2. This may be
+because Twist acts earlier and therefore has many more indirect
+downstream targets in the regulatory network. Indeed, Mef2 is a
+direct target of Twist and therefore the direct targets of Mef2 are
+indirect targets of Twist. These indirect targets will be
+differentially expressed in the mutant and will therefore increase the
+false positive rate. We also found that the model-based score results for Mef2 show a smaller
+improvement over the correlation score results in comparison to the Twist
+results. Again, this can be explained by the fact that Mef2 is
+later peaking. Targets activated by Mef2 are regulated towards the end of the
+time period covered by the expression data used here. Therefore, there
+are less data points available to capture the diversity of profiles
+that can be explained by the regulation model. Conversely, the
+correlation score is much less useful for Twist, since it misses many
+targets that have profiles very different from the Twist mRNA
+profile. 
+
+We are pursuing a number of extensions of the current work. Here, we
+have limited ourselves to detecting the targets of transcriptional activators. The
+Gaussian process approach can be used to compute the likelihood for
+repression models~\cite{Gao2008}. However, since models of repression
+are inherently non-linear, the likelihood calculation is no longer analytically
+tractable. Therefore approximate Bayesian inference methods are
+required and we are currently working on an efficient implementation
+for genome-wide ranking. We have also limited our attention
+to single input motif models, but many target will be regulated by other TFs and
+co-factors. It seems doubtful that more complex models of regulation
+will be useful for target ranking using only short wild-type time
+series data, since it is unlikely these data would be sufficient to parametrise more complex models. However,
+more general regulation models may be applicable if we were to use more data for
+inferring the model parameters, e.g. time series knock-out data and time series
+ChIP-seq data could be highly informative. Scoring multiple input
+models moves us closer to the more general gene regulatory network inference
+problem. We expect that Gaussian processes will provide a useful way
+to deal with inference over time-varying external inputs in these and other
+biological systems.
 
 \begin{materials}
   \section{Expression data preprocessing} Drosophila developmental
