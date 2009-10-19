@@ -145,7 +145,7 @@ expression. We further show how integrating complementary wild-type spatial
   \hspace{0.5cm}
   \subfloat[][]{\includegraphics{dros_gpdisim_multitarget_model}}
   \caption{(a) Three independent single-target Gaussian process models
-    for likely targets of Twist. Red marks denote observed expression
+    for likely targets of the TF Twist. Red marks denote observed expression
     levels with 2 s.d.\ error bars while blue functions are inferred
     from the model.  The shaded regions denote 2 s.d.\ confidence
     intervals. (b) A joint multiple-target Gaussian process model for
@@ -161,14 +161,14 @@ expression. We further show how integrating complementary wild-type spatial
 A Gaussian process is a probability distribution over
 functions $f$ which take the value $f(t)$ at time
 $t$. Analogous to the Gaussian distribution, which is fully
-characterised by a mean and variance, the Gaussian process is
+characterised by a mean and covariance, the Gaussian process is
 characterised by a mean function $\mathrm{E}[f(t)]$ and a covariance
 function $k(t,t')=\mathrm{E}[f(t)f(t')]-\mathrm{E}[f(t)]\mathrm{E}[f(t')]$
 where the expectation is over function evaluations at times $t$ and
 $t'$. 
 
 For the prior distribution of TF mRNA concentration profile $f$ we use a zero-mean squared exponential covariance
-$k(t,t')=a\exp(-(t-t')^2/l)$. Samples from a Gaussian process with this choice
+$k(t,t')=a\exp(-(t-t')^2/l^2)$. Samples from a Gaussian process with this choice
 of covariance are smooth, infinitely differentiable, stationary functions. Although single-cell mRNA counts may be low
 and vary in a highly stochastic manner, here we consider microarray data which
 corresponds to a population average and is therefore more
@@ -191,7 +191,7 @@ for the mRNA of $j$th target (as described in \cite{Barenco2006a}).
 The parameter $\delta$ is the decay rate of the TF protein.
 This linear system of differential equations can be
 explicitly solved and we find that the functions $p$ and $m_j$ are
-linear operators of $f$. Given $k$ target genes the functions $f$ and $\bm m\equiv[m_j]$ therefore
+linear functions of $f$. Given $k$ target genes the functions $f$ and $\bm m\equiv[m_j]$ therefore
 describe a $k$+1-dimensional Gaussian process prior $p(f,\bm m|\theta)$
 for which the covariance function can be calculated explicitly in terms of the
 $3$ global and $3k$ gene-dependent model parameters
@@ -301,7 +301,7 @@ The accuracy of the ranking was evaluated by looking at the global
 fraction of $N$ top-ranking targets that are significantly
 differentially expressed in knock-outs of the TFs and the fraction
 of targets with ChIP-chip binding within 5000 base
-pairs of its beginning or end in the data
+pairs of its beginning or end or within the gene in the data
 from~\cite{Sandmann2006a,Sandmann2007}.  For Mef2, this latter
 frequency is only computed for genes in the part of the genome covered
 by the ChIP-chip data. Both of our model-based approaches are found to be superior to the knock-out results in terms of ChIP binding enrichment and are mostly superior to the correlation results in terms of both ChIP binding enrichment and knock-out differential expression (see Fig.~\ref{fig:dros_global_evaluation}). The model-based ranking results also show a consistently high level of significance. The single-target models perform slightly better than the multiple-target models in most cases.
@@ -415,7 +415,7 @@ targets of a TF using time series expression data but few of these are suitable 
 limited data considered here~\cite{Bansal2007a}. Our approach was inspired by the work of Barenco {\em et
 al.} who also use a differential equation with a linear activation
 function to model the regulation of transcription. They focus on the
-case where the TF is activated post-transcription and they therefore
+case where the TF is activated post-translation and they therefore
 require the use of a training set of
 known targets to infer the TF activity~\cite{Barenco2006a}. In the most recent
 implementation of their method~\cite{Barenco2009} the original Markov
@@ -426,7 +426,7 @@ process inference techniques. A Bayesian approach reduces the number of paramete
 to be optimised, since we marginalise over the TF concentration, and
 thereby reduces the possibility of over-fitting. Nevertheless, the use of a training set to infer the
 TF concentration from targets was a very elegant solution to the
-problem of dealing with TFs activated post-transcription. This
+problem of dealing with TFs activated post-translation. This
 approach also fits very naturally into the Gaussian process
 framework as we have shown~\cite{Gao2008}. Such a scheme was unnecessary in the application considered
 here, where the TFs of interest were known to be transcriptionally
@@ -485,7 +485,7 @@ are inherently non-linear, the likelihood calculation is no longer analytically
 tractable. Therefore approximate Bayesian inference methods are
 required and we are currently working on an efficient implementation
 for genome-wide ranking. We have also limited our attention
-to single input motif models, but many target will be regulated by other TFs and
+to single input motif models, but many targets will be regulated by other TFs and
 co-factors. It seems doubtful that more complex models of regulation
 will be useful for target ranking using only short wild-type time
 series data, since it is unlikely these data would be sufficient to parametrise more complex models. However,
@@ -496,6 +496,11 @@ models moves us closer to the more general gene regulatory network inference
 problem. We expect that Gaussian processes will provide a useful way
 to deal with inference over time-varying external inputs in these and other
 biological systems.
+
+\subsection{Availability}
+Matlab code used in the experiments is available at
+\texttt{http://www.cis.hut.fi/ahonkela/gpdisim/}.  An R implementation of
+the ranking method is available from the authors upon request.
 
 \begin{materials}
   \section{Expression data preprocessing} Drosophila developmental
@@ -518,7 +523,7 @@ biological systems.
   non-informative constant response from the model.
   
   \section{Covariance of the Gaussian Process}
-  Differential
+  Under suitable initial conditions, the differential
   equations~[\ref{eq:translation_ode}--\ref{eq:transcription_ode}]
   can be solved to obtain
   \begin{align*}
@@ -558,7 +563,7 @@ biological systems.
   Similarly, 
   \begin{multline*}
     k_{f m_k}(t, t')
-    = S_k a^2 \frac{\sqrt{\pi} l}{2(\delta - D_k)} \\
+    = \frac{\sqrt{\pi} l a^2 S_k}{2(\delta - D_k)} \\
     \bigg\{
     \exp\left(\gamma_k^2 + D_k \Delta t \right)
     \left[\erf\left(\gamma_k + \frac{t}{l}\right) - \erf\left(\gamma_k + \frac{\Delta t}{l}\right)\right] \\
