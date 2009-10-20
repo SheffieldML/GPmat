@@ -24,13 +24,20 @@ function [k, sk] = linard2KernCompute(kern, x, x2)
 % KERN
 
 
-scales = sparse(diag(sqrt(kern.inputScales)));
-x = x*scales;
+%xx = x;
+
+%scales = sparse(diag(sqrt(kern.inputScales)));
+%x = x*scales;
     
 if nargin < 3
-  sk = x*x';
-else
-  x2 = x2*scales;
-  sk = x*x2';
+  %sk = x*x';
+  sk = x*sparse(diag(kern.inputScales))*x';
+  %sum(sum(abs(sk-sk1)))
+else  
+  %xx2 = x2;  
+  %x2 = x2*scales;
+  %sk = x*x2';
+  sk = x*sparse(diag(kern.inputScales))*x2';
+  %sum(sum(abs(sk-sk1)))
 end
 k = sk;
