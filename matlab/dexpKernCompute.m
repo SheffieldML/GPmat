@@ -27,17 +27,18 @@ function [K, sK, n1] = dexpKernCompute(kern, x1, x2)
 % RETURN n1: L1 distance between each row of x1 and x2.
 %
 % SEEALSO : ouKernParamInit, kernCompute, kernCreate, ouKernDiagCompute,
-% dist1
 %
 % COPYRIGHT : David Luengo, 2009
+%
+% COPYRIGHT : Neil D. Lawrence, 2009
 
 % KERN
 
 
 if nargin < 3
-  n1 = dist1(x1, x1);
+  n1 = sqrt(dist2(x1, x1));
 else
-  n1 = dist1(x1, x2);
+  n1 = sqrt(dist2(x1, x2));
 end
 
 sK = 0.5 * exp(-kern.decay * n1);
