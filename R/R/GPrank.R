@@ -102,19 +102,7 @@ GPrank <- function(preprocData, TF = NULL, targets = NULL, useGPsim = FALSE, fil
   optOptions$maxit <- 300
   optOptions$optimiser <- "SCG"
 
-  paramvec <- list()
-  param <- 0
-  for ( i in seq(length=Nrep) ) {
-    if (useGPsim) {
-      paramvec[[i]] <- gpsimExtractParam(model$comp[[i]])
-    }
-    else {
-      paramvec[[i]] <- gpdisimExtractParam(model$comp[[i]])
-    } 
-    param <- param + paramvec[[i]]    	
-  }
-
-  param <- param/Nrep
+  param <- modelExtractParam(model)
 
   cat (c("\n Optimizing genes", genes, sep=" "))
 
@@ -154,8 +142,9 @@ GPrank <- function(preprocData, TF = NULL, targets = NULL, useGPsim = FALSE, fil
     }
   }
 
-  data <- list(model = model, genes = genes)
+  #return (model)
 
+  data <- list(model = model, genes = genes)
   return (data)
 }
 
@@ -235,11 +224,16 @@ GPrankTargets <- function(preprocData, TF = NULL, knownTargets = NULL, testTarge
   baseLineParameters <- NULL
   fixedParams <- FALSE
 
-  if (!is.null(knownTargets) && length(knownTargets) > 1) {
+  genes <- list()
+  GPsimUses <- array(dim = length(testTargets) + 1)
+
+  if (!is.null(knownTargets) && length(knownTargets) > 0) {
     baseLineData <- formModel(searchedData, TF, knownTargets, useGPsim)
     logLikelihoods[1] <- baseLineData$ll
     modelParams[[1]] <- baseLineData$params
     rankedData[[1]] <- baseLineData$data
+    genes[[1]] <- c(TF, knownTargets)
+    GPsimUses[1] <- useGPsim
 
     parameters <- modelExtractParam(baseLineData$data$model)
     baseLineParameters <- array(dim = c(1, length(parameters) + 3))
@@ -257,32 +251,39 @@ GPrankTargets <- function(preprocData, TF = NULL, knownTargets = NULL, testTarge
         logLikelihoods[i] <- returnData$ll
         modelParams[[i]] <- returnData$params
         rankedData[[i]] <- returnData$data
+        genes[[i]] <- c(TF, knownTargets, testTargets[i])
+        GPsimUses[i] <- useGPsim
       }
       else {
         logLikelihoods[i+1] <- returnData$ll
         modelParams[[i+1]] <- returnData$params
         rankedData[[i+1]] <- returnData$data
+        genes[[i+1]] <- c(TF, knownTargets, testTargets[i])
+        GPsimUses[i+1] <- useGPsim
       }
     }
   }
 
   # Sort the log likelihoods.
   sortedValues <- sort(logLikelihoods, decreasing = TRUE, index.return = TRUE)
-  scoreList <- list()
-  scoreList$LLs <- sortedValues$x
+  LLs <- sortedValues$x
   sortedIndices <- sortedValues$ix
 
   # Sort the models based on the log likelihoods.
   sortedData <- array(dim = length(sortedIndices))
   sortedModelParams <- array(dim = length(sortedIndices))
+
   for (i in 1:length(sortedIndices)) {
     sortedData[i] <- rankedData[sortedIndices[i]]
     sortedModelParams[i] <- modelParams[sortedIndices[i]]
   }
-  scoreList$data <- sortedData
-  scoreList$params <- sortedModelParams
 
-  return (scoreList)
+  list <- list()
+  list$data <- sortedData
+
+  list$scoreList <- scoreList(params = sortedModelParams, LLs = LLs, genes = genes, useGPsim = GPsimUses)
+
+  return (list)
 }
 
 
@@ -352,12 +353,17 @@ GPrankTFs <- function(preprocData, TFs = NULL, targets = NULL, filterLimit = 1.5
 
   amountOfTargets <- length(targets)
 
+  genes <- list()
+  GPsimUses <- array()
+
   if (amountOfTargets > 1) {
 
     baseLineData <- formModel(searchedData, TF = NULL, targets, useGPsim = TRUE)
     logLikelihoods[1] <- baseLineData$ll
     modelParams[[1]] <- baseLineData$params
     rankedData[[1]] <- baseLineData$data
+    genes[[1]] <- targets
+    GPsimUses[[1]] <- TRUE
 
     parameters <- modelExtractParam(baseLineData$data$model)
     baseLineParameters <- array(dim = c(1, length(parameters) + 3))
@@ -373,12 +379,13 @@ GPrankTFs <- function(preprocData, TFs = NULL, targets = NULL, filterLimit = 1.5
     logLikelihoods[i+1] <- returnData$ll
     modelParams[[i+1]] <- returnData$params
     rankedData[[i+1]] <- returnData$data
+    genes[[i+1]] <- c(TFs[i], targets)
+    GPsimUses[[i+1]] <- FALSE
   }
 
   # Sort the log likelihoods.
   sortedValues <- sort(logLikelihoods, decreasing = TRUE, index.return = TRUE)
-  scoreList <- list()
-  scoreList$LLs <- sortedValues$x
+  LLs <- sortedValues$x
   sortedIndices <- sortedValues$ix
 
   # Sort the models based on the log likelihoods.
@@ -388,10 +395,13 @@ GPrankTFs <- function(preprocData, TFs = NULL, targets = NULL, filterLimit = 1.5
     sortedData[i] <- rankedData[sortedIndices[i]]
     sortedModelParams[i] <- modelParams[sortedIndices[i]]
   }
-  scoreList$data <- sortedData
-  scoreList$params <- sortedModelParams
 
-  return (scoreList)
+  list <- list()
+  list$data <- sortedData
+
+  list$scoreList <- scoreList(params = sortedModelParams, LLs = LLs, genes = genes, useGPsim = GPsimUses)
+
+  return (list)
 }
 
 
