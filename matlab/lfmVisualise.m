@@ -19,15 +19,15 @@ function lfmVisualise(model, visualiseFunction, visualiseModify, varargin)
 global visualiseInfo
 kernType = model.kernType(1:3);
 if ~strcmpi(kernType, 'lfm')
-    error('This function is only implemented for "LFM" kernels');
+  error('This function is only implemented for "LFM" kernels');
 else
-    if length(varargin)~=4,
-       error('Include the skeleton, the initial position and two posteriors for the outputs')
-    end     
+  if length(varargin)~=4,
+    error('Include the skeleton, the initial position and two posteriors for the outputs')
+  end     
 end
 range = 1.1*max(max(abs([varargin{3}{1} varargin{3}{2}])));
 figure(1)
-set(gcf,'Position',[19 202 582 527]);
+set(gcf, 'Position', [19 202 582 527]);
 clf
 % Create a black panel as background
 f1 = linspace(-range, range, 200);
@@ -44,31 +44,48 @@ set(ax, 'yLim', f2Lim);
 set(ax, 'fontname', 'arial');
 set(ax, 'fontsize', 15);
 set(ax, 'TickLength', [0 0]);
-plot(varargin{3}{1}, varargin{3}{2}, 'xb', 'markersize', 10, 'LineWidth', 2)
+
+plot(varargin{3}{1}, varargin{3}{2}, 'b.', 'markersize', 20, 'LineWidth', 2)
 hold on
-plot(varargin{4}{1}, varargin{4}{2}, 'xr', 'markersize', 10, 'LineWidth', 2)
+plot(varargin{4}{1}, varargin{4}{2}, 'r.', 'markersize', 20, 'LineWidth', 2)
+for i = 2:length(varargin{3}{1})
+  arrow([varargin{3}{1}(i-1) varargin{3}{1}(i)], ...
+        [varargin{3}{2}(i-1) varargin{3}{2}(i)], [], 'b', 2);
+end
+for i = 2:length(varargin{4}{1})
+  arrow([varargin{4}{1}(i-1) varargin{4}{1}(i)], ...
+        [varargin{4}{2}(i-1) varargin{4}{2}(i)], [], 'r', 2);
+end
+a = text(varargin{3}{1}(1), varargin{3}{2}(1), ' Motion 18')
+set(a, 'horizontalalignment', 'left', 'color', [0 0 1], 'fontsize', 16) 
+a = text(varargin{4}{1}(1), varargin{4}{2}(1), 'Motion 19 ')
+set(a, 'horizontalalignment', 'right', 'color', [1 0 0], 'fontsize', 16) 
 xlabel('f_1(t)')
 ylabel('f_2(t)')
+title('Latent Forces')
 grid on
 hold off
 %
 visualiseInfo.plotAxes = ax; 
-visualiseInfo.latentHandle = line(varargin{3}{1}(1), varargin{3}{2}(1), 'markersize', 20, 'color', ...
-                                 [0 0 0], 'marker', '.', 'visible', ...
+visualiseInfo.latentHandle = line(varargin{3}{1}(1), varargin{3}{2}(1), ...
+                                  'markersize', 20, ...
+                                  'color', [0.5 0.5 0.5], 'marker', ...
+                                  '.', 'visible', ...
                                  'on', 'erasemode', 'xor');
+visualiseInfo.latentLine = [];
 visualiseInfo.clicked = 0;
 visualiseInfo.digitAxes = [];
 visualiseInfo.digitIndex = [];
 
-visualiseInfo.dynamicsSlider = ...
-    uicontrol('Style', 'slider', ...
-              'String', 'Time', ...
-              'sliderStep', [0.01, 0.1], ...
-              'units', 'normalized', ...
-              'position', [0 0.95 1 0.05], ...
-              'callback', 'lfmClassVisualise(''dynamicsSliderChange'')');
+% visualiseInfo.dynamicsSlider = ...
+%     uicontrol('Style', 'slider', ...
+%               'String', 'Time', ...
+%               'sliderStep', [0.01, 0.1], ...
+%               'units', 'normalized', ...
+%               'position', [0 0.95 1 0.05], ...
+%               'callback', 'lfmClassVisualise(''dynamicsSliderChange'')');
 
-set(visualiseInfo.dynamicsSlider, 'visible', 'off');
+% set(visualiseInfo.dynamicsSlider, 'visible', 'off');
 set(gcf, 'WindowButtonMotionFcn', 'lfmClassVisualise(''move'')')
 set(gcf, 'WindowButtonDownFcn', 'lfmClassVisualise(''click'')')
 
@@ -122,5 +139,3 @@ visualiseInfo.visHandle = visHandle;
 % ylabel('f_2(t)')
 % set(gca, 'fontname', 'arial');
 % set(gca, 'fontsize', 15);
-
-                              

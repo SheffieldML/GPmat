@@ -4,9 +4,9 @@
 
 [Y, lbls] = lvmLoadData('swissRoll');
 
-options = lleOptions(32, 2);
+options = lleOptions(32);
 model = lleCreate(2, size(Y, 2), Y, options);
-model = lleOptimise(model);
+model = lleOptimise(model, 2);
 
 lvmScatterPlotColor(model, model.Y(:, 2));
 

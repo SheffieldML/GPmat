@@ -10,13 +10,19 @@ maxN = 30;
 switch call
  case 'click'       
   if ~visualiseInfo.clicked  
-    visualiseInfo.clicked = ~visualiseInfo.clicked;       
-    tic;
-    visualiseInfo.lastToc = 0;
-    visualiseInfo.timer.series = [];
-    visualiseInfo.f1.series = [];
-    visualiseInfo.f2.series = [];
-  else
+    [x, y]  = localCheckPointPosition(visualiseInfo);
+    if ~isempty(x)
+      set(visualiseInfo.latentHandle, 'xdata', x, 'ydata', y);                               
+      visualiseInfo.clicked = ~visualiseInfo.clicked;       
+      tic;
+      delete(visualiseInfo.latentLine)
+      visualiseInfo.latentLine = [];
+      visualiseInfo.lastToc = 0;
+      visualiseInfo.timer.series = [];
+      visualiseInfo.f1.series = [];
+      visualiseInfo.f2.series = [];
+    end
+    else
     visualiseInfo.clicked = ~visualiseInfo.clicked;       
     N = length(visualiseInfo.timer.series);
     if N >maxN
@@ -56,22 +62,25 @@ switch call
      
     end                
     case 'move'
-        if visualiseInfo.clicked
-          timeNow = toc;
-          if ~isfield(visualiseInfo, 'lastToc') || timeNow > visualiseInfo.lastToc + 1/24
-            visualiseInfo.lastToc = timeNow;
-          [x, y]  = localCheckPointPosition(visualiseInfo);
-            if ~isempty(x)              
-                set(visualiseInfo.latentHandle, 'xdata', x, 'ydata', y);                               
-                visualiseInfo.timer.series = [visualiseInfo.timer.series timeNow];
-                visualiseInfo.f1.series = [visualiseInfo.f1.series x];           
-                visualiseInfo.f2.series = [visualiseInfo.f2.series y];           
-                %set(visualiseInfo.f1.handle,'Xdata', visualiseInfo.timer.series, 'Ydata', visualiseInfo.f1.series);               
-                %set(visualiseInfo.f2.handle,'Xdata', visualiseInfo.timer.series, 'Ydata', visualiseInfo.f2.series);               
-                %sprintf('%f\n',length(visualiseInfo.f1.series))                
-            end            
-        end
-        end
+     if visualiseInfo.clicked
+       timeNow = toc;
+       if ~isfield(visualiseInfo, 'lastToc') || timeNow > visualiseInfo.lastToc + 1/24
+         visualiseInfo.lastToc = timeNow;
+         [x, y]  = localCheckPointPosition(visualiseInfo);
+         if ~isempty(x)              
+           oldPoint = [get(visualiseInfo.latentHandle, 'xdata');
+                       get(visualiseInfo.latentHandle, 'ydata')];
+           visualiseInfo.latentLine = [visualiseInfo.latentLine arrow([oldPoint(1); x], [oldPoint(2); y])];
+           set(visualiseInfo.latentHandle, 'xdata', x, 'ydata', y);                               
+           visualiseInfo.timer.series = [visualiseInfo.timer.series timeNow];
+           visualiseInfo.f1.series = [visualiseInfo.f1.series x];           
+           visualiseInfo.f2.series = [visualiseInfo.f2.series y];           
+           %set(visualiseInfo.f1.handle,'Xdata', visualiseInfo.timer.series, 'Ydata', visualiseInfo.f1.series);               
+           %set(visualiseInfo.f2.handle,'Xdata', visualiseInfo.timer.series, 'Ydata', visualiseInfo.f2.series);               
+           %sprintf('%f\n',length(visualiseInfo.f1.series))                
+         end            
+       end
+     end
     otherwise
 
     %
@@ -105,7 +114,7 @@ function point = localGetNormCursorPoint(figHandle)
 
 point = get(figHandle, 'currentPoint');
 figPos = get(figHandle, 'Position');
-% Normalise the point of the curstor
+% Normalise the point of the cursor
 point(1) = point(1)/figPos(3);
 point(2) = point(2)/figPos(4);
 
