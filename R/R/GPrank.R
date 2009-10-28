@@ -225,7 +225,13 @@ GPrankTargets <- function(preprocData, TF = NULL, knownTargets = NULL, testTarge
   fixedParams <- FALSE
 
   genes <- list()
-  GPsimUses <- array(dim = length(testTargets) + 1)
+
+  if (!is.null(knownTargets) && length(knownTargets) > 0) {
+    GPsimUses <- array(dim = length(testTargets) + 1)
+  }
+  else {
+    GPsimUses <- array(dim = length(testTargets))
+  }
 
   if (!is.null(knownTargets) && length(knownTargets) > 0) {
     baseLineData <- formModel(searchedData, TF, knownTargets, useGPsim)
@@ -354,7 +360,13 @@ GPrankTFs <- function(preprocData, TFs = NULL, targets = NULL, filterLimit = 1.5
   amountOfTargets <- length(targets)
 
   genes <- list()
-  GPsimUses <- array()
+
+  if (amountOfTargets > 1) {
+    GPsimUses <- array(dim = length(TFs) + 1)
+  }
+  else {
+    GPsimUses <- array(dim = length(TFs))
+  }
 
   if (amountOfTargets > 1) {
 
