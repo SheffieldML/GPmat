@@ -1,4 +1,4 @@
-gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options) {
+gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
 
   if ( any(dim(y)!=dim(yvar)) )
     stop("The gene variances have a different size matrix to the gene values.")
@@ -113,6 +113,10 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options) {
 
   if ( any(grep("fix", names(options))) ) {
     model$fix <- options$fix
+  }
+
+  if (!is.null(genes)) {
+    model$genes <- genes
   }
 
   params <- gpsimExtractParam(model)

@@ -37,13 +37,13 @@ generateModels <- function(preprocData = NULL, y = NULL, yvar = NULL, allGenes =
 
     if (useGPsimCurrently) {
       for (j in 1:Nrep) {
-        comp <- gpsimCreate(Ngenes = length(currentGenes), Ntf = 1, times, currentY[[j]], currentYvar[[j]], options)
+        comp <- gpsimCreate(Ngenes = length(currentGenes), Ntf = 1, times, currentY[[j]], currentYvar[[j]], options, genes = genes)
         model$comp[[j]] <- gpsimExpandParam(comp, currentParams)
       }
     }
     else {
       for (j in 1:Nrep) {
-        comp <- gpdisimCreate(Ngenes = length(currentGenes) - 1, Ntf = 1, times, currentY[[j]], currentYvar[[j]], options)
+        comp <- gpdisimCreate(Ngenes = length(currentGenes) - 1, Ntf = 1, times, currentY[[j]], currentYvar[[j]], options, genes = genes)
         model$comp[[j]] <- gpdisimExpandParam(comp, currentParams)
       }
     }
