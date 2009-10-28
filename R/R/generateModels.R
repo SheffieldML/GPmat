@@ -19,6 +19,7 @@ generateModels <- function(preprocData = NULL, y = NULL, yvar = NULL, allGenes =
   }
 
   listOfModels <- list()
+  Nrep <- length(y)
 
   # for each model in scoreList
   for (i in 1:length(genes)) {
@@ -32,16 +33,19 @@ generateModels <- function(preprocData = NULL, y = NULL, yvar = NULL, allGenes =
     currentYvar <- data$yvar
     currentGenes <- data$genes
 
-    #model <- gpsimCreate(Ngenes = length(currentGenes), Ntf = 1, times, currentY, currentYvar, options)
-    #model <- gpsimExpandParam(model, currentParams)
+    model <- list()
 
     if (useGPsimCurrently) {
-      model <- gpsimCreate(Ngenes = length(currentGenes), Ntf = 1, times, currentY, currentYvar, options)
-      model <- gpsimExpandParam(model, currentParams)
+      for (j in 1:Nrep) {
+        comp <- gpsimCreate(Ngenes = length(currentGenes), Ntf = 1, times, currentY[[j]], currentYvar[[j]], options)
+        model$comp[[j]] <- gpsimExpandParam(comp, currentParams)
+      }
     }
     else {
-      model <- gpdisimCreate(Ngenes = length(currentGenes) - 1, Ntf = 1, times, currentY, currentYvar, options)
-      model <- gpdisimExpandParam(model, currentParams)
+      for (j in 1:Nrep) {
+        comp <- gpdisimCreate(Ngenes = length(currentGenes) - 1, Ntf = 1, times, currentY[[j]], currentYvar[[j]], options)
+        model$comp[[j]] <- gpdisimExpandParam(comp, currentParams)
+      }
     }
 
     listOfModels[[i]] <- model
@@ -56,9 +60,9 @@ searchExpressionData <- function(y, yvar, allGenes, times, searchedGenes) {
   amountOfRows <- length(times)
   Nrep <- length(y)
 
-  #counting the amount of found genes
+  # counting the amount of found genes
 
-  #counter for found genes
+  # counter for found genes
   k <- 0
 
   # for each specified gene
@@ -77,13 +81,15 @@ searchExpressionData <- function(y, yvar, allGenes, times, searchedGenes) {
   foundY <- list()
   foundYvar <- list()
 
-  foundY <- array(dim = c(amountOfRows, k))
-  foundYvar <- array(dim = c(amountOfRows, k))
+  for (m in 1:Nrep) {
+    foundY[[m]] <- array(dim = c(amountOfRows, k))
+    foundYvar[[m]] <- array(dim = c(amountOfRows, k))
+  }
 
-  #resetting the counter
+  # resetting the counter
   k <- 0
 
-  #copying the data related to the found genes
+  # copying the data related to the found genes
 
   # for each specified gene
   for (i in 1:length(searchedGenes)) {
@@ -94,9 +100,11 @@ searchExpressionData <- function(y, yvar, allGenes, times, searchedGenes) {
       if (!is.na(charmatch(searchedGene, allGenes[j]))) {
         k <- k + 1
         foundGenes[k] <- searchedGene
-        for (l in 1: amountOfRows) {
-          foundY[l, k] <- y[l, j]
-          foundYvar[l, k] <- yvar[l, j]
+	for (m in 1:Nrep) {
+          for (l in 1: amountOfRows) {
+            foundY[[m]][l, k] <- y[[m]][l, j]
+            foundYvar[[m]][l, k] <- yvar[[m]][l, j]
+          }
 	}
       }
     }
