@@ -1,4 +1,4 @@
-gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL) {
+gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL, genes = NULL) {
 
   if ( any(dim(y)!=dim(yvar)) )
     stop("The gene variances have a different size matrix to the gene values.")
@@ -73,6 +73,10 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL)
 
   if ( !is.null(annotation) ) {
     model$annotation <- annotation
+  }
+
+  if (!is.null(genes)) {
+    model$genes <- genes
   }
 
   params <- gpdisimExtractParam(model)
