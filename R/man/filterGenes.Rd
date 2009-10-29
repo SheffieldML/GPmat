@@ -31,6 +31,9 @@ writeRatioData(ratioData, genes, fileName)
 
   'averageToSDRatio' returns data containing an array of ratios, means and medians for each gene.
 }
+\author{
+  Jonatan Ropponen
+}
 \seealso{
   \code{\link{GPrank}, \link{processData}}.
 }

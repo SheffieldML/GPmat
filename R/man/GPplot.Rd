@@ -18,6 +18,9 @@ GPplot(data, savepath = '', doParams = FALSE, selectGenes = data$genes, nameMapp
 \details{
   The function draws 3 plots in each figure. One of the plots represents the expression level of the transcription factor, one the expression level of the target and one the protein concentration of the inferred transcription factor.
 }
+\author{
+  Jonatan Ropponen
+}
 \seealso{
   \code{\link{GPrank}}.
 }

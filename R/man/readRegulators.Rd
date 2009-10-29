@@ -27,6 +27,9 @@ regulators <- removeDuplicates(fileName)
 \value{
   Each function returns an array of the regulators in probe form.
 }
+\author{
+  Jonatan Ropponen
+}
 \seealso{
 \code{\link{geneOutputFunctions}, \link{mgu74av2ALIAS2PROBE}, \link{mgu74av2PMID2PROBE}}.
 }

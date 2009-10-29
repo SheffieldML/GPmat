@@ -26,6 +26,9 @@ r <- distfit_obj(theta, y, cdf)
 
   'distfit_obj' returns the squared deviation of the quantiles of the distribution and the data.
 }
+\author{
+  Jonatan Ropponen
+}
 \seealso{
   \code{\link{processData}}.
 }

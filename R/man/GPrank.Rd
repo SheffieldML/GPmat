@@ -6,7 +6,7 @@
   Forms an optimized model of the desired genes. The function can form a model with GPsim or GPdisim and it's also possible to use initial parameters or fix parameters for future use. The genes can also be filtered based on ratios calculated from the expression values. The given data can also be searched for the data of specific genes.
 }
 \usage{
-data <- GPrank(preprocData, TF = NULL, targets = NULL, useGPsim = FALSE, filterLimit = 0, useMedians = TRUE, randomize = FALSE, addPriors = FALSE, fixedParams = FALSE, initParams = NULL, fixComps = 1)
+model <- GPrank(preprocData, TF = NULL, targets = NULL, useGPsim = TRUE, filterLimit = 0, useMedians = TRUE, randomize = FALSE, addPriors = FALSE, fixedParams = FALSE, initParams = NULL, fixComps = 1)
 }
 \arguments{
   \item{preprocData}{The preprocessed data to be used.}
@@ -23,7 +23,10 @@ data <- GPrank(preprocData, TF = NULL, targets = NULL, useGPsim = FALSE, filterL
   \item{fixComps}{The blocks of the kern cache that are to be fixed.}
 }
 \value{
-  Returns the data containing the model itself and the genes used.
+  Returns the optimized model.
+}
+\author{
+  Jonatan Ropponen
 }
 \seealso{
   \code{\link{gpsimCreate}, \link{GPrankTargets}, \link{GPrankTFs}, \link{filterGenes}}.
