@@ -432,7 +432,7 @@ GPrankTFs <- function(preprocData, TFs = NULL, targets = NULL, filterLimit = 1.5
 
 
 
-formModel <- function(preprocData, TF = NULL, knownTargets = NULL, testTarget = NULL, useGPsim = FALSE, fixedParams = FALSE, initParams = NULL, fixComps = 1) {
+formModel <- function(preprocData, TF = NULL, knownTargets = NULL, testTarget = NULL, useGPsim = TRUE, fixedParams = FALSE, initParams = NULL, fixComps = 1) {
 
     if (!is.null(testTarget)) {
       # taking a test target gene

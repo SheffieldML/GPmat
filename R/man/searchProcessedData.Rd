@@ -15,6 +15,9 @@ newData <- searchProcessedData(preprocData, searchedGenes)
 \value{
   Returns a new set of preprocessed data containing only the data of the specified genes.
 }
+\author{
+  Jonatan Ropponen
+}
 \seealso{
   \code{\link{GPrank}}.
 }

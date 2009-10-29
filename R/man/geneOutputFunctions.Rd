@@ -21,6 +21,9 @@ writeGenes(genes, fileName)
   \item{fileName}{The name of the text file in which the genes and LLs are written.}
   \item{genes}{An array of genes to be written in a text file.}
 }
+\author{
+  Jonatan Ropponen
+}
 \seealso{
   \code{\link{GPrankTargets}, \link{GPrankTFs}, \link{readRegulators}}.
 }
