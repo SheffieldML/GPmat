@@ -578,19 +578,51 @@ switch dataset
             yu = gsamp(zeros(size(K,1),1), K, 1);
             y = yu(size(XX{1},1)+1:end);
             Y = reshape(y,size(XX{2},1),nout);
+            F = reshape(y,size(XX{2},1),nout);
             for k=1:nout,
+                F(:,k) = Y(:,k);
                 Y(:,k) = Y(:,k) + 0.1*sqrt(var(Y(:,k)))*randn(size(Y(:,k),1),1);
             end
             X = cell(1,nout);
             y = cell(1,nout);
+            f = cell(1,nout);
             for k =1:nout,
                 X{k} = XX{k+nlf};
                 y{k} = Y(:,k);
+                f{k} = F(:,k);
             end
             XTest = [];
-            yTest = [];
+            yTest = f;
             save([baseDir 'toyMultigp1D.mat'], 'X', 'y', 'XTest', 'yTest')
         end
+        
+    case 'ggToyTrainTest'
+        try
+            load([baseDir 'toyMultigp1DTrainTest.mat'], 'X', 'y', 'XTest', 'yTest')
+        catch
+            [XTemp, yTemp, XTestTemp, yTestTemp] = mapLoadData('ggToy');
+            nout = size(XTemp,2);
+            ntrainx = 200;
+            randn('seed', 1e4); % This was taken to make the outputs equal to the ones of the NIPS paper
+            rand('seed', 1e4);  % This was taken to make the outputs equal to the ones of the NIPS paper
+            maxl = length(XTemp{1});
+            X = cell(1,nout);
+            y = cell(1,nout);
+            yTest = cell(1,nout);
+            indx = randperm(maxl);
+            pindx = sort(indx(1:ntrainx));
+            for k =1:nout,
+                X{k} = XTemp{k}(pindx,:);
+                y{k} = yTemp{k}(pindx,:);
+                yTest{k} = yTemp{k}(indx(ntrainx+1:end),:);
+            end
+            XTest = XTemp{1}(indx(ntrainx+1:end),:)';
+            yTest{end+1} = yTestTemp; %It has the groundtruth
+            save([baseDir 'toyMultigp1DTrainTest.mat'], 'X', 'y', 'XTest', 'yTest')
+        end
+    
+        
+        
     case 'ggToyMissing'
         try
             load([baseDir 'toyMultigp1DMissing.mat'], 'X', 'y', 'XTest', 'yTest')
@@ -617,6 +649,7 @@ switch dataset
                 yTest{k} = yTemp{k}(indx(ntrainx+1:end),:);
             end
             XTest = XTemp{1}(indx(ntrainx+1:end),:)';
+            yTest{end+1} = yTestTemp; % It has the groundtruth
             save([baseDir 'toyMultigp1DMissing.mat'], 'X', 'y', 'XTest', 'yTest')
         end
     case 'ggwhiteToy'
