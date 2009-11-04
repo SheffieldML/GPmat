@@ -33,6 +33,6 @@ function model = spectralUpdateLaplacian(model)
   model.L(1:model.N+1:end) = D;
   if model.isNormalised
     sqrtD = sqrt(D);
-    model.L = (model.L.*(sqrtD*sqrtD'));
+    model.L = (model.L.*((1./sqrtD)*(1./sqrtD')));
   end
 end
