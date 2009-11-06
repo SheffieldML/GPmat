@@ -12,6 +12,12 @@ function ll = pmvuLogLikelihood(model)
  
 % MLTOOLS
 
-ll = -model.d*model.logDetK;
-ll = ll - sum(sum(model.Y.*(model.L*model.Y))) -model.gamma*model.traceY;
-ll = ll*0.5;
+  if model.sigma2 == 0
+    ll = -model.d*model.logDetK;
+    ll = ll - sum(sum(model.Y.*((model.L*model.Y)+model.gamma*model.Y)));
+
+  else
+    ll = -model.d*model.logDetSigma;
+    ll = ll - sum(sum(model.Y.*(model.invSigma*model.Y)));
+  end
+  ll = ll*0.5;

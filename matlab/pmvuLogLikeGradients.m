@@ -13,16 +13,33 @@ function g = pmvuLogLikeGradients(model)
 % COPYRIGHT : Neil D. Lawrence 2009
 
 % MLTOOLS
-
-expD2 = zeros(model.N, model.k);
-for i = 1:model.N
-  for j = 1:model.k
-    ind = model.indices(i, j);
-    D2_e(i, j) = model.K(i, i) - 2*model.K(i, ind) + model.K(ind, ind);
+  if model.sigma2 == 0.0
+    expD2 = zeros(model.N, model.k);
+    for i = 1:model.N
+      for j = 1:model.k
+        ind = model.indices(i, j);
+        D2_e(i, j) = model.K(i, i) - 2*model.K(i, ind) + model.K(ind, ind);
+      end
+    end
+    gV = 0.5*( model.d*D2_e - model.D2);
+  else
+    AinvY = model.Ainv*model.Y;
+    AinvYYTAinv = AinvY*AinvY';
+    for i = 1:model.N
+      for j = 1:model.k
+        ind = model.indices(i, j);
+        gV(i, j) = model.d*(model.AinvLinv(i, i) ...
+                            - 2*model.AinvLinv(i, ind) ...
+                            + model.AinvLinv(ind, ind));
+        gV(i, j) = gV(i, j) - AinvYYTAinv(i, i) ...
+            + 2*AinvYYTAinv(i, ind) ...
+            - AinvYYTAinv(ind, ind);
+      end
+    end
+    gV = gV*0.5;
   end
-end
-gV = 0.5*( model.d*D2_e - model.D2);
-fhandle = str2func([model.kappaTransform 'Transform']);
-factors = fhandle(model.kappa, 'gradfact');
-gV = gV.*factors;
-g = gV(:)';
+  fhandle = str2func([model.kappaTransform 'Transform']);
+  factors = fhandle(model.kappa, 'gradfact');
+  gV = gV.*factors;
+  g = gV(:)';
+  

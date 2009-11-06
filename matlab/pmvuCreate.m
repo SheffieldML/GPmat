@@ -29,5 +29,6 @@ model.Y = Y;
 model.d = outputDim;
 model.q = inputDim;
 model.N = size(Y, 1);
+model.sigma2 = options.sigma2;
 model.kappaTransform = optimiDefaultConstraint('positive');
 model = pmvuParamInit(model);

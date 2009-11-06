@@ -23,7 +23,16 @@ function model = pmvuExpandParam(model, params)
   params = fhandle(params, 'atox');
   model.kappa = reshape(params, model.N, model.k);
   model = spectralUpdateLaplacian(model);
-  Kinv = model.L + model.gamma*speye(model.N);
-  [model.K, U] = pdinv(full(Kinv));
-  model.logDetK = - logdet(Kinv, U);
+  Kinv = model.L + repmat(model.gamma, model.N, model.N);
+  if model.sigma2>0
+    model.Sigma = pdinv(Kinv) + model.sigma2*eye(model.N);
+    [model.invSigma, U] = pdinv(model.Sigma);
+    model.logDetSigma = logdet(model.Sigma, U);
+    A = speye(model.N) + model.sigma2*Kinv;
+    model.Ainv = pdinv(A);
+    model.AinvLinv = pdinv(A*Kinv);
+  else
+    [model.K, U] = pdinv(full(Kinv));
+    model.logDetK = - logdet(Kinv, U);
+  end
 end
