@@ -1,6 +1,6 @@
 function kern = rbfard2KernExpandParam(kern, params)
 
-% RBFARDKERNEXPANDPARAM Create kernel structure from RBFARD kernel's parameters.
+% RBFARD2KERNEXPANDPARAM Create kernel structure from RBFARD2 kernel's parameters.
 % FORMAT
 % DESC returns a automatic relevance determination radial basis
 % function kernel structure filled with the parameters in the given
@@ -13,9 +13,11 @@ function kern = rbfard2KernExpandParam(kern, params)
 % RETURN kern : kernel structure with the given parameters in the
 % relevant locations.
 %
-% SEEALSO : rbfardKernParamInit, rbfardKernExtractParam, kernExpandParam
+% SEEALSO : rbfard2KernParamInit, rbfard2KernExtractParam, kernExpandParam
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
+%
+% COPYRIGHT : Michalis K. Titsias, 2009
 
 % KERN
 

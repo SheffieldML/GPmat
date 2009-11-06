@@ -1,6 +1,6 @@
-function g = linardKernGradient(kern, x, varargin)
+function g = linard2KernGradient(kern, x, varargin)
 
-% LINARDKERNGRADIENT Gradient of LINARD kernel's parameters.
+% LINARD2KERNGRADIENT Gradient of LINARD2 kernel's parameters.
 % FORMAT
 % DESC computes the gradient of functions with respect to the
 % automatic relevance determination linear
@@ -37,9 +37,11 @@ function g = linardKernGradient(kern, x, varargin)
 % RETURN g : gradients of the function of interest with respect to
 % the kernel parameters.
 %
-% SEEALSO linardKernParamInit, kernGradient, linardKernDiagGradient, kernGradX
+% SEEALSO linard2KernParamInit, kernGradient, linard2KernDiagGradient, kernGradX
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006, 2009
+%
+% COPYRIGHT : Michalis K. Titsias, 2009
 
 % KERN
 

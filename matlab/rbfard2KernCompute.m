@@ -1,7 +1,6 @@
 function [k, n2] = rbfard2KernCompute(kern, x, x2)
 
-
-% RBFARDKERNCOMPUTE Compute the RBFARD kernel given the parameters and X.
+% RBFARD2KERNCOMPUTE Compute the RBFARD kernel given the parameters and X.
 % FORMAT
 % DESC computes the kernel parameters for the automatic relevance determination radial basis function
 % kernel given inputs associated with rows and columns.
@@ -20,6 +19,8 @@ function [k, n2] = rbfard2KernCompute(kern, x, x2)
 % SEEALSO : rbfard2KernParamInit, kernCompute, kernCreate, rbfard2KernDiagCompute
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
+%
+% COPYRIGHT : Michalis K. Titsias, 2009
 
 % KERN
 

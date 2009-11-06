@@ -1,7 +1,7 @@
 function kern = linard2KernExpandParam(kern, params)
 
 
-% LINARDKERNEXPANDPARAM Create kernel structure from LINARD kernel's parameters.
+% LINARD2KERNEXPANDPARAM Create kernel structure from LINARD2 kernel's parameters.
 % FORMAT
 % DESC returns a automatic relevance determination linear kernel structure filled with the
 % parameters in the given vector. This is used as a helper function to
@@ -14,9 +14,11 @@ function kern = linard2KernExpandParam(kern, params)
 % RETURN kern : kernel structure with the given parameters in the
 % relevant locations.
 %
-% SEEALSO : linardKernParamInit, linardKernExtractParam, kernExpandParam
+% SEEALSO : linard2KernParamInit, linard2KernExtractParam, kernExpandParam
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
+%
+% COPYRIGHT : Michalis K. Titsias, 2009
 
 % KERN
 

@@ -1,7 +1,7 @@
 function [params, names] = rbfard2KernExtractParam(kern)
 
 
-% RBFARDKERNEXTRACTPARAM Extract parameters from the RBFARD kernel structure.
+% RBFARD2KERNEXTRACTPARAM Extract parameters from the RBFARD2 kernel structure.
 % FORMAT
 % DESC Extract parameters from the automatic relevance determination
 % radial basis function kernel structure into a vector of parameters for
@@ -23,9 +23,11 @@ function [params, names] = rbfard2KernExtractParam(kern)
 % positive only parameters could be logged before being returned).
 % RETURN names : cell array of strings containg the parameter names.
 %
-% SEEALSO rbfardKernParamInit, rbfardKernExpandParam, kernExtractParam, scg, conjgrad
+% SEEALSO rbfard2KernParamInit, rbfard2KernExpandParam, kernExtractParam, scg, conjgrad
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
+%
+% COPYRIGHT : Michalis K. Titsias, 2009
 %
 % KERN
 

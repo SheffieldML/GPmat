@@ -1,6 +1,6 @@
 function gX = linard2KernGradX(kern, X, X2)
 
-% LINARDKERNGRADX Gradient of LINARD kernel with respect to input locations.
+% LINARD2KERNGRADX Gradient of LINARD2 kernel with respect to input locations.
 % FORMAT
 % DESC computes the gradident of the automatic relevance determination linear
 % kernel with respect to the input positions where both the row
@@ -15,9 +15,11 @@ function gX = linard2KernGradX(kern, X, X2)
 % points in X2 and numInputs is the number of input
 % dimensions in X.
 %
-% SEEALSO linardKernParamInit, kernGradX, linardKernDiagGradX
+% SEEALSO linard2KernParamInit, kernGradX, linard2KernDiagGradX
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
+%
+% COPYRIGHT : Michalis K. Titsias, 2009
 
 % KERN
 

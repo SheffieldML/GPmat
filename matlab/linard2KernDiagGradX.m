@@ -1,7 +1,7 @@
 function gX = linard2KernDiagGradX(kern, X)
 
 
-% LINARDKERNDIAGGRADX Gradient of LINARD kernel's diagonal with respect to X.
+% LINARD2KERNDIAGGRADX Gradient of LINARD2 kernel's diagonal with respect to X.
 % FORMAT
 % DESC computes the gradient of the diagonal of the automatic relevance determination linear kernel matrix with
 % respect to the elements of the design matrix given in X.
@@ -10,9 +10,11 @@ function gX = linard2KernDiagGradX(kern, X)
 % RETURN gX : the gradients of the diagonal with respect to each element
 % of X. The returned matrix has the same dimensions as X.
 %
-% SEEALSO : linardKernParamInit, kernDiagGradX, linardkernGradX
+% SEEALSO : linard2KernParamInit, kernDiagGradX, linard2kernGradX
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
+%
+% COPYRIGHT : Michalis K. Titsias, 2009
 
 % KERN
 

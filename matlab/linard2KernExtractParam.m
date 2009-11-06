@@ -1,7 +1,7 @@
 function [params, names] = linard2KernExtractParam(kern)
 
 
-% LINARDKERNEXTRACTPARAM Extract parameters from the LINARD kernel structure.
+% LINARD2KERNEXTRACTPARAM Extract parameters from the LINARD2 kernel structure.
 % FORMAT
 % DESC Extract parameters from the automatic relevance
 % determination linear kernel structure into a vector of parameters
@@ -24,10 +24,12 @@ function [params, names] = linard2KernExtractParam(kern)
 % positive only parameters could be logged before being returned).
 % RETURN names : cell array of strings containing parameter names.
 %
-% SEEALSO linardKernParamInit, linardKernExpandParam, kernExtractParam, scg, conjgrad
+% SEEALSO linard2KernParamInit, linard2KernExpandParam, kernExtractParam, scg, conjgrad
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 %
+% COPYRIGHT : Michalis K. Titsias, 2009
+
 % KERN
 
 

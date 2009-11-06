@@ -1,3 +1,8 @@
+Version 0.224
+-------------
+
+Added disimSample and simSample for sampling from these multioutput covariance functions. Michalis added kernel types rbfard2 and linard2 which use a slightly different formulation of the ARD parameters.
+
 Version 0.223
 -------------
 

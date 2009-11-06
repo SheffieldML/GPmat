@@ -1,8 +1,8 @@
 function kern = rbfard2KernParamInit(kern)
 
-% RBFARDKERNPARAMINIT RBFARD kernel parameter initialisation.
+% RBFARD2KERNPARAMINIT RBFARD2 kernel parameter initialisation.
 % The automatic relevance determination version of the radial basis
-% function kernel (RBFARD) is a very smooth non-linear kernel and is a
+% function kernel (RBFARD2) is a very smooth non-linear kernel and is a
 % popular choice for generic use.
 %
 % k(x_i, x_j) = sigma2 * exp(-1/2 *(x_i - x_j)'*A*(x_i - x_j))
@@ -22,19 +22,18 @@ function kern = rbfard2KernParamInit(kern)
 % SEEALSO : kernCreate, kernParamInit
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
+%
+% COPYRIGHT : Michalis K. Titsias, 2009
 
 % KERN
 
 
 % This parameter is restricted positive.
 kern.variance = 1;
-% These parameters are restricted to lie between 0 and 1.
 kern.inputScales = 0.999*ones(1, kern.inputDimension);
 kern.nParams = 1 + kern.inputDimension;
 
 kern.transforms(1).index = [1:kern.nParams];
 kern.transforms(1).type = optimiDefaultConstraint('positive');
-%kern.transforms(2).index = [3:kern.nParams];
-%kern.transforms(2).type = optimiDefaultConstraint('zeroone');
 
 kern.isStationary = true;

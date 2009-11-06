@@ -1,6 +1,6 @@
 function g = rbfard2KernGradient(kern, x, varargin)
 
-% RBFARDKERNGRADIENT Gradient of RBFARD kernel's parameters.
+% RBFARD2KERNGRADIENT Gradient of RBFARD2 kernel's parameters.
 % FORMAT
 % DESC computes the gradient of functions with respect to the
 % automatic relevance determination radial basis function
@@ -37,9 +37,11 @@ function g = rbfard2KernGradient(kern, x, varargin)
 % RETURN g : gradients of the function of interest with respect to
 % the kernel parameters.
 %
-% SEEALSO rbfardKernParamInit, kernGradient, rbfardKernDiagGradient, kernGradX
+% SEEALSO rbfard2KernParamInit, kernGradient, rbfard2KernDiagGradient, kernGradX
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
+%
+% COPYRIGHT : Michalis K. Titsias, 2009
 
 % KERN
 

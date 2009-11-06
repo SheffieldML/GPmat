@@ -1,8 +1,8 @@
 function kern = linard2KernParamInit(kern)
 
-% LINARDKERNPARAMINIT LINARD kernel parameter initialisation.
+% LINARD2KERNPARAMINIT LINARD2 kernel parameter initialisation.
 % The automatic relevance determination version of the linear
-% kernel (LINARD) is the simple inner product kernel with feature
+% kernel (LINARD2) is the simple inner product kernel with feature
 % selection applied.
 %
 % k(x_i, x_j) = x_i'*A* x_j
@@ -21,6 +21,8 @@ function kern = linard2KernParamInit(kern)
 % SEEALSO : kernCreate, kernParamInit
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
+%
+% COPYRIGHT : Michalis K. Titsias, 2009
 
 % KERN
 
