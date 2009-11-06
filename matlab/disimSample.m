@@ -1,4 +1,4 @@
-% SIMSAMPLE Sample from SIM kernel
+% DISIMSAMPLE Sample from SIM kernel
 
 % KERN
 
