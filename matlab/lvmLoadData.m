@@ -590,6 +590,39 @@ function [Y, lbls, Ytest, lblstest] = lvmLoadData(dataset, seedVal)
    case 'brendan'
     load([baseDir 'frey_rawface.mat']);
     Y = double(ff)';
+
+    
+   case 'usps'
+    
+    % Fix seeds
+    randn('seed', 1e5);
+    rand('seed', 1e5);
+
+    load([baseDir 'usps_train.mat']);
+    [ALL_T, sortIndices] = sort(ALL_T);
+    ALL_DATA = ALL_DATA(sortIndices(:), :);
+    Y = ALL_DATA;
+    lbls = zeros(size(ALL_T,1),10);
+    for digit = 0:9;
+      ind1 = min(find(ALL_T==digit));
+      ind2 = max(find(ALL_T==digit));
+      lbls(ind1:ind2,digit+1) = ones(size(ind1:ind2,2),1);
+    end
+    
+    % Fix seeds
+    randn('seed', 1e5);
+    rand('seed', 1e5);
+    
+    load([baseDir 'usps_test.mat']);
+    [ALL_T, sortIndices] = sort(ALL_T);
+    ALL_DATA = ALL_DATA(sortIndices(:), :);
+    Ytest = ALL_DATA;
+    lbls = zeros(size(ALL_T,1),10);
+    for digit = 0:9;
+      ind1 = min(find(ALL_T==digit));
+      ind2 = max(find(ALL_T==digit));
+      lblstest(ind1:ind2,digit+1) = ones(size(ind1:ind2,2),1);
+    end
     
    case 'digits'
     
