@@ -2,7 +2,8 @@ function lvmClassClickVisualise(call, model)
 
 % LVMCLASSCLICKVISUALISE Callback function for visualising data in 2-D with clicks.
 
-
+% MLTOOLS
+  
 global visualiseInfo
 
 

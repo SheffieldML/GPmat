@@ -10,6 +10,10 @@
 
 RELEASEINFORMATION
 
+Added pmvu model.
+
+<h4>Version 0.133</h4>
+
 <p>Added functionality for writing model files using modelDeconstruct commands to keep written files smaller.
 
 <h4>Version 0.132</h4>

@@ -133,12 +133,13 @@ function [ax, data] = lvmScatterPlot(model, YLbls, ax, dims, defaultVals);
 
 xLim = [min(x1) max(x1)];
 yLim = [min(x2) max(x2)];
-set(ax, 'xLim', xLim);
-set(ax, 'yLim', yLim);
+set(gca, 'xlim', xLim);
+set(gca, 'ylim', yLim);
 % if size(model.X, 2) == 3
 %   zLim = [min(x3) max(x3)];
 %   set(ax, 'zLim', zLim);
 % end
-set(ax, 'fontname', 'arial');
-set(ax, 'fontsize', 20);
+set(gca, 'fontname', 'arial');
+set(gca, 'fontsize', 20);
 
+ax = gca;
