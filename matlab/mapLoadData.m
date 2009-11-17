@@ -984,15 +984,30 @@ switch dataset
   
   yTest1 = strength(216:end, :);
   XTest1 = Xfull(216:end, :);
+  indTrain  = zeros(1,1);
+  contTrain = 0;
+  indTest   = zeros(1,1);
+  contTest  = 0;
   for i = 1:size(y1, 2)
     ind = find(~isnan(y1(:, i)));
+    if isempty(ind)
+        contTrain = contTrain + 1;
+        indTrain(contTrain) = i;
+    end
     y{i} = y1(ind, i);
     X{i} = X1(ind, :);
     ind = find(~isnan(yTest1(:, i)));
+    if isempty(ind)
+        contTest = contTest + 1;
+        indTest(contTest) = i;
+    end
     yTest{i} = yTest1(ind, i);
     XTest{i} = XTest1(ind, :);
   end
-  
+  X([indTrain indTest]) = [];
+  y([indTrain indTest]) = [];
+  XTest([indTrain indTest]) = [];
+  yTest([indTrain indTest]) = [];
 
  case 'schoolData1'
   % This characterization of the School Data is due to Bakker and
