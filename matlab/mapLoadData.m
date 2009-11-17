@@ -972,7 +972,7 @@ switch dataset
   for i = 1:size(strength, 1)
     %[void, order] = sort(strength(i, :));
     %strength(i, order(1:end-8)) = NaN;
-    strength(i, find(strength(i, :)>-90)) = NaN;
+    strength(i, find(strength(i, :)<=-90)) = NaN;
   end
   y1 = strength(1:215, :);  
   X1 = Xfull(1:215, :);
