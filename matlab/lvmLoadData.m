@@ -4,7 +4,7 @@ function [Y, lbls, Ytest, lblstest] = lvmLoadData(dataset, seedVal)
 % FORMAT
 % DESC loads a data set for a latent variable modelling problem.
 % ARG dataset : the name of the data set to be loaded. Currently
-% the possible names are 'robotWireless', 'robotWirelessTest',
+% the possible names are 'robotWireless',
 % 'robotTwoLoops', 'robotTraces', 'robotTracesTest', 'cmu35gplvm',
 % 'cmu35Taylor', 'cmu35walkJog', 'vowels', 'stick', 'brendan',
 % 'digits', 'twos', 'oil', 'oilTest', 'oilValid', 'oil100',
@@ -19,7 +19,7 @@ function [Y, lbls, Ytest, lblstest] = lvmLoadData(dataset, seedVal)
 %
 % SEEALSO : mapLoadData, datasetsDirectory
 %
-% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006, 2008
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006, 2008, 2009
 
 % DATASETS
 
@@ -134,6 +134,7 @@ function [Y, lbls, Ytest, lblstest] = lvmLoadData(dataset, seedVal)
     
    case 'robotWireless'
     Ydat = parseWirelessData([baseDir 'uw-floor.txt']);
+    Ydat = (Ydat + 85)/15;
     lbls = 'connect';
     Y = Ydat(1:215, :);    
     Ytest = Ydat(216:end, :);
@@ -763,10 +764,12 @@ function [Y, lbls, Ytest, lblstest] = lvmLoadData(dataset, seedVal)
 
    case 'robotAtrium'
     Y = parseWirelessData([baseDir 'uw-atrium.txt']);
+    Y = (Y + 85)/15;
     Y = Y(1:281, :);
     lbls = 'connect'
    
     Ytest = parseWirelessData([baseDir 'uw-atrium.txt']);
+    Ytest = (Ytest + 85)/15;
     Ytest = Ytest(282:end, :);
 
     
