@@ -222,25 +222,25 @@ dominance, '-': comparison not applicable.
 \subfloat[][Top 20]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     & .   & **  & ***\\ 
-MT &     &     & **  & ***\\ 
-CO &     &     &     & +  \\ 
+ST &     &     & .   & ***\\ 
+MT &     &     & +   & ***\\ 
+CO &     &     &     & ***\\ 
 KO &     &     &     &    \\ 
 \end{tabular}}
 \subfloat[][Top 100]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     &     & *** & ***\\ 
-MT &     &     & *** & ***\\ 
-CO &     &     &     & ** \\ 
+ST &     & .   & **  & ***\\ 
+MT &     &     & *   & ***\\ 
+CO &     &     &     & ***\\ 
 KO &     &     &     &    \\ 
 \end{tabular}}
 \subfloat[][Top 250]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     & **  & *** & ***\\ 
+ST &     & *   & *** & ***\\ 
 MT &     &     & *** & ***\\ 
-CO &     &     &     & ** \\ 
+CO &     &     &     & ***\\ 
 KO &     &     &     &    \\ 
 \end{tabular}}
   \caption{Bootstrap results: Twist global ChIP-chip}
@@ -282,26 +282,26 @@ KO & -   & -   & -   & -  \\
 \subfloat[][Top 20]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     & .   & **  & +  \\ 
-MT &     &     & **  & .  \\ 
+ST &     &     & **  & +  \\ 
+MT &     &     & *   & +  \\ 
 CO &     &     &     &    \\ 
-KO &     &     & +   &    \\ 
+KO &     &     &     &    \\ 
 \end{tabular}}
 \subfloat[][Top 100]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
 ST &     & +   & *** & ***\\ 
-MT &     &     & *** & *  \\ 
+MT &     &     & **  & ** \\ 
 CO &     &     &     &    \\ 
-KO &     &     & **  &    \\ 
+KO &     &     &     &    \\ 
 \end{tabular}}
 \subfloat[][Top 250]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     & *** & *** & ***\\ 
-MT &     &     & *** & ** \\ 
+ST &     & **  & *** & ***\\ 
+MT &     &     & **  & ***\\ 
 CO &     &     &     &    \\ 
-KO &     &     & +   &    \\ 
+KO &     &     &     &    \\ 
 \end{tabular}}
   \caption{Bootstrap results: Twist focused ChIP-chip}
   \label{tab:bootstrap3}
@@ -312,25 +312,25 @@ KO &     &     & +   &    \\
 \subfloat[][Top 20]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     & *   & .   & .  \\ 
+ST &     & +   & .   &    \\ 
 MT &     &     &     &    \\ 
 CO &     &     &     &    \\ 
-KO &     &     &     &    \\ 
+KO &     & .   & .   &    \\ 
 \end{tabular}}
 \subfloat[][Top 100]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     & **  &     & *  \\ 
-MT &     &     &     &    \\ 
-CO &     & *   &     & ** \\ 
+ST &     & +   &     & +  \\ 
+MT &     &     &     & .  \\ 
+CO & +   & *   &     & ** \\ 
 KO &     &     &     &    \\ 
 \end{tabular}}
 \subfloat[][Top 250]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     & .   &     & +  \\ 
-MT &     &     &     & .  \\ 
-CO & *   & *   &     & ** \\ 
+ST &     & *** &     & ** \\ 
+MT &     &     &     &    \\ 
+CO & *   & *** &     & ***\\ 
 KO &     &     &     &    \\ 
 \end{tabular}}
   \caption{Bootstrap results: Mef2 global ChIP-chip}
@@ -359,7 +359,7 @@ KO & -   & -   & -   & -  \\
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
 ST &     & .   & +   & -  \\ 
-MT &     &     & .   & -  \\ 
+MT &     &     &     & -  \\ 
 CO &     &     &     & -  \\ 
 KO & -   & -   & -   & -  \\ 
 \end{tabular}}
@@ -372,25 +372,25 @@ KO & -   & -   & -   & -  \\
 \subfloat[][Top 20]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     & +   & +   & ** \\ 
-MT &     &     & .   & *  \\ 
-CO &     &     &     & +  \\ 
+ST &     &     & +   & .  \\ 
+MT &     &     & +   & +  \\ 
+CO &     &     &     &    \\ 
 KO &     &     &     &    \\ 
 \end{tabular}}
 \subfloat[][Top 100]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     & *   &     & +  \\ 
-MT &     &     &     &    \\ 
-CO &     & +   &     & +  \\ 
+ST &     & +   &     & +  \\ 
+MT &     &     &     & .  \\ 
+CO & *   & **  &     & ** \\ 
 KO &     &     &     &    \\ 
 \end{tabular}}
 \subfloat[][Top 250]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     & +   &     &    \\ 
+ST &     & **  &     & *  \\ 
 MT &     &     &     &    \\ 
-CO & **  & **  &     & *  \\ 
+CO & *** & *** &     & ***\\ 
 KO &     &     &     &    \\ 
 \end{tabular}}
   \caption{Bootstrap results: Mef2 focused ChIP-chip}

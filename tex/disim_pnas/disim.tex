@@ -35,7 +35,7 @@
 \begin{document}
 
 \title{A model-based method for transcription factor target
-  identification without perturbations}
+  identification with limited data}
 
 \author{Antti Honkela\affil{1}{Department of Information and Computer
     Science, Helsinki University of Technology, Finland}, Neil D.
@@ -52,7 +52,13 @@ of the United States of America}
 
 \begin{article}
 \begin{abstract}
-
+  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+  eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+  ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+  aliquip ex ea commodo consequat. Duis aute irure dolor in
+  reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+  pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+  culpa qui officia deserunt mollit anim id est laborum.
 \end{abstract}
 
 \keywords{transcriptional regulation | gene expression | systems biology | Gaussian process inference}
@@ -141,9 +147,7 @@ expression. We further show how integrating complementary wild-type spatial
 
 \begin{figure*}[tb]
   \centering
-  \subfloat[][]{\includegraphics{dros_gpdisim_singletarget_models}}
-  \hspace{0.5cm}
-  \subfloat[][]{\includegraphics{dros_gpdisim_multitarget_model}}
+  \includegraphics{dros_gpdisim_models}
   \caption{(a) Three independent single-target Gaussian process models
     for likely targets of the TF Twist. Red marks denote observed expression
     levels with 2 s.d.\ error bars while blue functions are inferred
@@ -243,7 +247,7 @@ prefer the above cascade model for cases where the level of active TF is under d
 
 We applied our model-based approach to identify targets of the TFs
 Twist and Mef2 which regulate mesoderm and muscle development in
-Drosophila~\cite{Sandmann2007}. We used a microarray dataset
+Drosophila~\cite{Sandmann2007,Zinzen2009}. We used a microarray dataset
 containing three replicated time series of 12 time points collected
 hourly throughout Drosophila embryogenesis using wild-type
 embryos~\cite{Tomancak2002}.  Quiet candidate targets were eliminated by 
@@ -277,7 +281,8 @@ experiments from~\cite{Sandmann2006a,Sandmann2007} (``knock-out'').
 
 \begin{figure}[tb]
   \centering
-  \includegraphics[trim=0mm 18mm 0mm 0mm]{dros_global_evaluation}
+  %\includegraphics[trim=0mm 18mm 0mm 0mm]{dros_global_evaluation}
+  \includegraphics{dros_global_evaluation}
   \caption{Global evaluation results of different rankings as
     discussed in the text showing the relative frequency of positive
     predictions among $N$ top-ranking targets.
@@ -302,13 +307,21 @@ fraction of $N$ top-ranking targets that are significantly
 differentially expressed in knock-outs of the TFs and the fraction
 of targets with ChIP-chip binding within 5000 base
 pairs of its beginning or end or within the gene in the data
-from~\cite{Sandmann2006a,Sandmann2007}.  For Mef2, this latter
+from~\cite{Zinzen2009}.  For Mef2, this latter
 frequency is only computed for genes in the part of the genome covered
-by the ChIP-chip data. Both of our model-based approaches are found to be superior to the knock-out results in terms of ChIP binding enrichment and are mostly superior to the correlation results in terms of both ChIP binding enrichment and knock-out differential expression (see Fig.~\ref{fig:dros_global_evaluation}). The model-based ranking results also show a consistently high level of significance. The single-target models perform slightly better than the multiple-target models in most cases.
+by the ChIP-chip data. Both of our model-based approaches are found to
+be superior to the knock-out results in terms of ChIP binding
+enrichment and are mostly superior to the correlation results in terms
+of both ChIP binding enrichment and knock-out differential expression
+(see Fig.~\ref{fig:dros_global_evaluation}). The model-based ranking
+results also show a consistently high level of significance. The
+single-target models perform slightly better than the multiple-target
+models in most cases.
 
 \begin{figure}[tb]
   \centering
-  \includegraphics[trim=0mm 8mm 0mm 0mm]{dros_focused_evaluation}
+  %\includegraphics[trim=0mm 8mm 0mm 0mm]{dros_focused_evaluation}
+  \includegraphics{dros_focused_evaluation}
   \caption{Evaluation results of different rankings based on
     ChIP-chip data similar to those in
     Fig.~\ref{fig:dros_global_evaluation} except only for genes
@@ -342,15 +355,15 @@ resampling of the data set.  In 100,000-fold resampling where the
 relative performances of different methods were recorded for each
 fold, the Gaussian process methods were superior to the alternatives
 in over 95\% of the repeats in most Twist validation settings.
-For Mef2, the differences, especially to correlation, are less
-significant in this comparison.  (Full results in 
-Supplementary Material.)
+For Mef2, there are fewer highly significant differences.
+(Full results in Supplementary Material.)
 
 We also repeated the experiment with the method of~\cite{Gatta2008}
 but using the TF expression levels as a proxy for the measured protein
 levels.  The results of this method are in general comparable to
 ranking by correlation; there are no cases where it would be
-significantly better than correlation according to the bootstrap.
+significantly better than correlation and especially in cases where
+correlation is doing well it is often worse.
 Using measured protein levels as proposed in~\cite{Gatta2008} would
 naturally help, but unfortunately such information is not available in
 this case or in general.  It is worth noting that any measurements of
