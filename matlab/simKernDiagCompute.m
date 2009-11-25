@@ -36,7 +36,10 @@ else
     h = exp(halfSigmaD*halfSigmaD + lnPart1) * ones(size(t));
 end
 
-k = kern.variance*h/(2*kern.decay);
+%k = kern.variance*h/(2*kern.decay);
+
+k = (kern.variance^2)*h/(2*kern.decay);
+
 if ~isfield(kern, 'isNormalised') || (kern.isNormalised == false)
     k = sqrt(pi)*sigma*k;
 end

@@ -1,4 +1,4 @@
-<<<<<<< .mine
+*
 	  SUBROUTINE MEXFUNCTION(NLHS, PLHS, NRHS, PRHS)
 	  IMPLICIT NONE
 	  INTEGER PLHS(*), PRHS(*)
@@ -7,10 +7,10 @@
 	  INTEGER M, N
 
 
-C      Check for proper number of arguments. 
-C      IF (NRHS .NE. 3) THEN
-C         CALL MEXERRMSGTXT('Four inputs required.')
-C      ENDIF
+*      Check for proper number of arguments. 
+*      IF (NRHS .NE. 3) THEN
+*         CALL MEXERRMSGTXT('Four inputs required.')
+*      ENDIF
 
 C	  Check that input #1 is a scalar.
       M = MXGETM(PRHS(1))

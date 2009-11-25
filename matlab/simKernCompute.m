@@ -57,4 +57,5 @@ if isfield(kern, 'isNormalised') && (kern.isNormalised == true)
 else
     k = sqrt(pi)*sigma*sk;
 end
-k = kern.variance*k;
+%k = kern.variance*k;
+k = (kern.variance^2)*k;

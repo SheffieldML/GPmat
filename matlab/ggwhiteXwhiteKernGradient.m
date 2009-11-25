@@ -65,7 +65,11 @@ matGrad = zeros(ggwhiteKern.inputDimension,1);
 for i = 1:ggwhiteKern.inputDimension,
     X = repmat(x(:,i),1, size(x2,1));
     X2 = repmat(x2(:,i)',size(x,1),1);
-    matGrad(i) = sum(sum(0.5*covPar.*k.*(Pinv(i) - (X - X2).*(X - X2))));
+    if ggwhiteKern.isArd
+        matGrad(i) = sum(sum(0.5*covPar.*k.*(Pinv(i) - (X - X2).*(X - X2))));
+    else
+        matGrad(i) = sum(sum(0.5*covPar.*k.*(Pinv - (X - X2).*(X - X2))));
+    end
 end
 
 if ~ggwhiteKern.isArd

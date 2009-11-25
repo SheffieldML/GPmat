@@ -91,7 +91,9 @@ sK = signs .* exp(halfSigmaD_i*halfSigmaD_i - simKern.decay*diffT + lnPart);
 sK = 0.5 * sK;
 if ~isSimNormalised
     sK = sK * sqrt(pi);
-    K = sK * sqrt(simKern.variance) * sigma;
+    K = sK * simKern.variance * sigma;
+    %K = sK * sqrt(simKern.variance) * sigma;
 else
-    K = sK * sqrt(simKern.variance);
+    K = sK * simKern.variance;
+    %K = sK * sqrt(simKern.variance);
 end

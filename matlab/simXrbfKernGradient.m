@@ -85,7 +85,8 @@ t2Mat = t2(:, ones(1, dim1))';
 diffT = (t1Mat - t2Mat);
 sigma = sqrt(2/simKern.inverseWidth);
 sigma2 = sigma*sigma;
-C_i = sqrt(simKern.variance);
+C_i = simKern.variance;
+%C_i = sqrt(simKern.variance);
 D_i = simKern.decay;
 N_i = 1/sqrt(2*pi*simKern.inverseWidth);
 
@@ -127,7 +128,8 @@ dk_dRbfVariance = 0;
 dk_dinvWidth = -0.5*sqrt(2)/(simKern.inverseWidth* ...
                              sqrt(simKern.inverseWidth))*dk_dsigma;
 
-dk_dSimVariance = dk_dC*0.5/C_i;
+%dk_dSimVariance = dk_dC*0.5/C_i;
+dk_dSimVariance = dk_dC;
 
 
 % only pass the gradient with respect to the inverse width to one
