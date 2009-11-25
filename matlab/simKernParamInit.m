@@ -40,14 +40,20 @@ end
 kern.delay = 0;
 kern.decay = 1;
 kern.initVal = 1;
-kern.variance = 1 + 2*rand;
+kern.variance = 1;
 kern.inverseWidth = 1;
 kern.nParams = 3;
 
-%kern.transforms.index = [1 2 3];
-kern.transforms.index = [1 2];
+kern.transforms.index = [1 2 3];
 kern.transforms.type = optimiDefaultConstraint('positive');
 
 kern.isStationary = false;
 kern.isNormalised = false;
 kern.positiveTime = true;
+kern.isNegativeS = false;
+
+if kern.isNegativeS == true
+    kern.transforms.index = [1 2];    
+end
+    
+

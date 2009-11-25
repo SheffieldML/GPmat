@@ -96,10 +96,14 @@ dK_dD1 = dh1_dD1 + dh2_dD1';
 dK_dD2 = dh1_dD2 + dh2_dD2';
 dK_dsigma = dh1_dsigma + dh2_dsigma';
 
-C1 = simKern1.variance;
-C2 = simKern2.variance;
-%C1 = sqrt(simKern1.variance);
-%C2 = sqrt(simKern2.variance);
+if isfield(simKern1, 'isNegativeS') && (simKern1.isNegativeS == true)
+    C1 = simKern1.variance;
+    C2 = simKern2.variance;
+else
+    C1 = sqrt(simKern1.variance);
+    C2 = sqrt(simKern2.variance);
+end
+
 K = 0.5 * (h1 + h2');
 var2 = C1*C2;
 if ~isSim1Normalised
@@ -117,12 +121,14 @@ else
     dk_dC2 = C1 * sum(sum(covGrad.*K));
 end
 
-% dk_dSim1Variance = dk_dC1*0.5/C1;
-% dk_dSim2Variance = dk_dC2*0.5/C2;
 
-dk_dSim1Variance = dk_dC1;
-dk_dSim2Variance = dk_dC2;
-
+if isfield(simKern1, 'isNegativeS') && (simKern1.isNegativeS == true)
+    dk_dSim1Variance = dk_dC1;
+    dk_dSim2Variance = dk_dC2;
+else
+    dk_dSim1Variance = dk_dC1*0.5/C1;
+    dk_dSim2Variance = dk_dC2*0.5/C2;
+end
 
 dk_dinvWidth = -0.5*sqrt(2)/(simKern1.inverseWidth* ...
                              sqrt(simKern1.inverseWidth))*dk_dsigma;

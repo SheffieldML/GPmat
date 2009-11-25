@@ -25,6 +25,8 @@ function [k, sk] = simKernCompute(kern, t, t2)
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
 % MODIFICATIONS : David Luengo, 2009
+%
+% MODIFICATIONS : Mauricio Alvarez, 2009
 
 % KERN
 
@@ -57,5 +59,10 @@ if isfield(kern, 'isNormalised') && (kern.isNormalised == true)
 else
     k = sqrt(pi)*sigma*sk;
 end
-%k = kern.variance*k;
-k = (kern.variance^2)*k;
+
+if isfield(kern, 'isNegativeS') && (kern.isNegativeS == true)
+    k = (kern.variance^2)*k;
+else
+    k = kern.variance*k;
+end
+

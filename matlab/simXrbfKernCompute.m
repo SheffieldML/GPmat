@@ -35,6 +35,8 @@ function [K, sK] = simXrbfKernCompute(simKern, rbfKern, t1, t2)
 % MODIFICATIONS : Antti Honkela, 2008, 2009
 %
 % MODIFICATIONS : David Luengo, 2009
+%
+% MODIFICATIONS : Mauricio Alvarez, 2009
 
 % KERN
 
@@ -91,9 +93,15 @@ sK = signs .* exp(halfSigmaD_i*halfSigmaD_i - simKern.decay*diffT + lnPart);
 sK = 0.5 * sK;
 if ~isSimNormalised
     sK = sK * sqrt(pi);
-    K = sK * simKern.variance * sigma;
-    %K = sK * sqrt(simKern.variance) * sigma;
+    if isfield(simKern, 'isNegativeS') && (simKern.isNegativeS == true)
+        K = sK * simKern.variance * sigma;
+    else
+        K = sK * sqrt(simKern.variance) * sigma;
+    end
 else
-    K = sK * simKern.variance;
-    %K = sK * sqrt(simKern.variance);
+    if isfield(simKern, 'isNegativeS') && (simKern.isNegativeS == true)
+        K = sK * simKern.variance;
+    else
+        K = sK * sqrt(simKern.variance);
+    end
 end

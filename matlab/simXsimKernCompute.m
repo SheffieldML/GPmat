@@ -71,5 +71,9 @@ sK = 0.5 * (h1 + h2');
 if (isSim1Normalised == false) || (isSim2Normalised == false)
     sK = sqrt(pi) * sigma * sK;
 end
-%K = sqrt(simKern1.variance) * sqrt(simKern2.variance) * sK;
-K = simKern1.variance * simKern2.variance * sK;
+
+if isfield(simKern1, 'isNegativeS') && (simKern1.isNegativeS == true)
+    K = simKern1.variance * simKern2.variance * sK;
+else
+    K = sqrt(simKern1.variance) * sqrt(simKern2.variance) * sK;
+end

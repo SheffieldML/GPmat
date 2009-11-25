@@ -15,6 +15,8 @@ function k = simKernDiagCompute(kern, t)
 % MODIFICATIONS : Antti Honkela, 2008
 %
 % MODIFICATIONS : David Luengo, 2009
+%
+% MODIFICATIONS : Mauricio Alvarez, 2009
 
 % KERN
 
@@ -36,9 +38,11 @@ else
     h = exp(halfSigmaD*halfSigmaD + lnPart1) * ones(size(t));
 end
 
-%k = kern.variance*h/(2*kern.decay);
-
-k = (kern.variance^2)*h/(2*kern.decay);
+if isfield(kern, 'isNegativeS') && (kern.isNegativeS == true)
+    k = (kern.variance^2)*h/(2*kern.decay);
+else
+    k = kern.variance*h/(2*kern.decay);
+end
 
 if ~isfield(kern, 'isNormalised') || (kern.isNormalised == false)
     k = sqrt(pi)*sigma*k;
