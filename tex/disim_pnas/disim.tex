@@ -41,9 +41,9 @@
     Science, Helsinki University of Technology, Finland}, Neil D.
   Lawrence\affil{2}{School of Computer Science, University of
     Manchester, UK}, Charles Girardot\affil{3}{Genome Biology unit,
-    European Molecular Biology Laboratory, Heidelberg, Germany},
-  Hilary Gustafson\affil{3}{}, Ya-Hsin Liu\affil{3}{}, Eileen
-  E. Furlong\affil{3}{} \and Magnus Rattray\affil{2}{}}
+    European Molecular Biology Laboratory (EMBL), Heidelberg, Germany},
+  E. Hilary Gustafson\affil{3}{}, Ya-Hsin Liu\affil{3}{}, Eileen
+  E.M. Furlong\affil{3}{} \and Magnus Rattray\affil{2}{}}
 
 \contributor{Submitted to Proceedings of the National Academy of Sciences
 of the United States of America}
@@ -61,14 +61,14 @@ of the United States of America}
   distribution that is integrated out using a non-parametric
   Bayesian procedure. This results in a parsimonious model with relatively few
   parameters which can be applied to short time series data
-  sets without excessive over-fitting. We assess our method using
+  sets without noticeable over-fitting. We assess our method using
   genome-wide Chromatin Immunoprecipitation
   (ChIP-chip) and loss-of-function mutant expression data for two
-  transcription factors controlling early mesoderm development in Drosophila. Lists of top-ranked
+  transcription factors controlling mesoderm development in \emph{Drosophila}. Lists of top-ranked
   genes identified by our method are significantly enriched for genes
   close to bound regions identified in the ChIP-chip data and significantly
   enriched for genes that are differentially expressed in
-  loss-of-function mutants. Our approach is found to be superior to
+  loss-of-function mutants. Our approach is superior to
   ranking using mutant differential expression scores and mostly
   superior to an approach based on correlation with transcription factor
   expression. We also show how integrating complementary wild-type
@@ -86,19 +86,25 @@ is the identification of target genes regulated by a specific
 transcription factor (TF). A
 common approach to this problem is to experimentally locate physical binding
 of TF proteins to DNA sequence {\em in vivo} using a genome-wide
-chromatin immunoprecipitation (ChIP) experiment~\cite{Ren2000,Iyer2001}. However, recent studies have shown that many observed binding events are neutral and do not regulate transcription, while regulatory binding events often occur at enhancers that are not proximal to the target gene that they control~\cite{Li2008,MacArthur2009}. Therefore, the task of identifying transcriptional
+chromatin immunoprecipitation (ChIP)
+experiment~\cite{Ren2000,Iyer2001}. However, recent studies suggest
+that many observed binding events are neutral and do not regulate
+transcription, while regulatory binding events often occur at
+enhancers that are not proximal to the target gene that they
+control~\cite{Li2008,MacArthur2009}. Therefore, the task of
+identifying transcriptional
 targets requires the integration of ChIP binding predictions
 with evidence from expression data to help associate binding events
 with target gene regulation. If there is access to expression data from a mutant in which the TF has
 been knocked out or over-expressed, then differential expression of genes between wild-type
 and mutant is indicative of a potential regulatory
-interaction~\cite{Furlong2001}. Available spatial expression data for the
+interaction~\cite{Furlong2001,Sandmann2006a}. Available spatial expression data for the
 TF and putative target can also provide support for a hypothesised
 regulatory link. 
 
 A problem with the above approach is that the creation of mutant
 strains is challenging or impossible for many TFs of interest. Even
-when viable mutants are available then they may provide very limited information because of redundancy or due to the
+when available, mutants may provide very limited information because of redundancy or due to the
 confounding of signal from indirect regulatory feedback~\cite{Gitter2009}. For these reasons it
 is useful to seek other sources of evidence to complement ChIP binding
 predictions. In this contribution we demonstrate how a dynamical model of wild-type transcriptional
@@ -143,7 +149,7 @@ challenge 1~\cite{Stolovitzky2007}. Others
 have addressed this target identification problem using time series
 data with a regulation model~\cite{Barenco2006a,Gatta2008}. However,
 these approaches either require a known target set for training~\cite{Barenco2006a} or
-they require measured TF protein data~\cite{Gatta2008}. As well as
+they require measured TF protein data~\cite{Gatta2008}. In addition to
 these differences in the assumed prior knowledge and data available,
 it is also difficult to validate other approaches on the same data used in these
 studies as they only carried out validation of positive targets
@@ -152,7 +158,7 @@ experimental validation.
 
 We validate our proposed method by comparing the model-based target
 ranking with published ChIP-chip data for two TFs controlling early
-mesoderm development in Drosophila. Our method is shown to be comparable
+mesoderm development in \emph{Drosophila}. Our method is shown to be comparable
 to, or outperform, the use of knockout mutant data which are available
 for these TFs. We demonstrate that a model-based approach is significantly
 better than a simpler approach using correlation with TF
@@ -261,10 +267,10 @@ prefer the above cascade model for cases where the level of active TF is under d
 
 We applied our model-based approach to identify targets of the TFs
 Twist and Mef2 which regulate mesoderm and muscle development in
-Drosophila~\cite{Sandmann2007,Zinzen2009}. We used a microarray dataset
+\emph{Drosophila}~\cite{Sandmann2007,Zinzen2009}. We used a microarray dataset
 containing three replicated time series of 12 time points collected
-hourly throughout Drosophila embryogenesis using wild-type
-embryos~\cite{Tomancak2002}.  Quiet candidate targets were eliminated by 
+hourly throughout \emph{Drosophila} embryogenesis in wild-type
+embryos~\cite{Tomancak2002}.  Weakly expressed candidate targets were eliminated by 
 considering average z-scores of expression values as described in
 Materials and Methods.
 
@@ -303,7 +309,7 @@ experiments from~\cite{Sandmann2006a,Sandmann2007} (``knock-out'').
     The dashed line
     denotes the frequency in the full population.
     The first row shows the frequency of targets with ChIP-chip
-    binding within 5000 base pairs of the gene
+    binding within 2000 base pairs of the gene
     while the second row shows the frequency of
     predicted targets with significant differential
     expression in TF knock-outs.
@@ -319,9 +325,16 @@ experiments from~\cite{Sandmann2006a,Sandmann2007} (``knock-out'').
 The accuracy of the ranking was evaluated by looking at the global
 fraction of $N$ top-ranking targets that are significantly
 differentially expressed in knock-outs of the TFs and the fraction
-of targets with ChIP-chip binding within 5000 base
+of targets with ChIP-chip binding within 2000 base
 pairs of its beginning or end or within the gene in the data
-from~\cite{Zinzen2009}. Both of our model-based approaches are found to
+from~\cite{Zinzen2009}. 
+\emph{!! Eileen: ``This sentence is far too strong.  You have no
+  evidence to say your method is superior.  Your correlation with the
+  mutant expression profiling data is low - that does not say that the
+  mutant data is wrong and you are correct.  Your multi-target method
+  does not perform that well compared to random (Fig.2) and for Mef2
+  the knockouts perform better for the top 20 (top right panel)''}
+Both of our model-based approaches are found to
 be superior to the knock-out results in terms of ChIP binding
 enrichment and are mostly superior to the correlation results in terms
 of both ChIP binding enrichment and knock-out differential expression
@@ -335,9 +348,10 @@ models in most cases.
   %\includegraphics[trim=0mm 8mm 0mm 0mm]{dros_focused_evaluation}
   \includegraphics{dros_focused_evaluation}
   \caption{Evaluation results of different rankings based on
-    ChIP-chip data similar to those in
-    Fig.~\ref{fig:dros_global_evaluation} except only for genes
-    with annotate expression in mesoderm and muscle.
+    ChIP-chip data and differential expression in knock-outs
+    similar to those in
+    Fig.~\ref{fig:dros_global_evaluation} except only considering genes
+    with annotated expression in mesoderm or muscle tissue.
 %     as discussed in the text showing the relative frequency of
 %     positive predictions among $N$ top-ranking targets.  The dashed
 %     line denotes the frequency in full population.  The first row
@@ -352,7 +366,7 @@ models in most cases.
   %\label{fig:dros_focused_evaluation}
 \end{figure}
 
-Because Twist and Mef2 are known to be mainly active in mesoderm and
+Because Twist and Mef2 activities are specific to the mesoderm and
 muscle development, we also looked at accuracy among genes
 with annotated expression in these tissues according to the
 \emph{in situ} data from~\cite{Tomancak2002}. These results are illustrated in Fig.~\ref{fig:dros_focused_evaluation}. We observe a larger relative increase in enrichment for ChIP binding events in the top-20 target gene predictions for Twist and Mef2 for this filtered set of genes. Results for Twist also show consistently improved results lower down the ranking for both model-based approaches. For Mef2, results lower down the ranking are comparable to using the correlation approach.
@@ -410,8 +424,8 @@ TF. The linear differential equation model of regulation we use is a simplificat
 many cases unrealistic, but it can capture important differences in
 the profiles of target genes due to differences in protein and mRNA
 stability while still keeping the computational load at a level
-that allows us to perform genome-wide scoring using a workstation
-rather than a supercomputer. Our results show
+that allows us to perform genome-wide scoring using reasonably modest
+computational resources. Our results show
 that the model-based approach presented here can outperform the use of
 loss-of-function mutant data for identifying targets. Such an approach
 can be combined with binding location (ChIP-chip or ChIP-seq)
@@ -422,7 +436,7 @@ not display a phenotype of interest.
 
 The main novelty of our approach is the use of recently proposed
 techniques to model a time-varying degree of freedom as a sample from
-a Gaussian process prior distribution~\cite{Gao2008}. By integrating out this functional
+a Gaussian process prior distribution~\cite{Gao2008}. By marginalising out this functional
 degree of freedom before computing the likelihood, we keep the
 number of model parameters to a minimum and this allows us to model
 typical short wild-type time series without excessive over-fitting. In
@@ -494,8 +508,8 @@ differentially expressed in the mutant and will therefore increase the
 false positive rate. We also found that the model-based score results
 for Mef2 show less improvement over the correlation score results in comparison to the Twist
 results. Again, this can be explained by the fact that Mef2 is
-later peaking. Targets activated by Mef2 are regulated towards the end of the
-time period covered by the expression data used here. Therefore, there
+active later, at stages downstream of Twist.
+Therefore, there
 are less data points available to capture the diversity of profiles
 that can be explained by the regulation model. Conversely, the
 correlation score is much less useful for Twist, since it misses many
@@ -528,7 +542,7 @@ Matlab code used in the experiments is available at
 the ranking method is available from the authors upon request.
 
 \begin{materials}
-  \section{Expression data preprocessing} Drosophila developmental
+  \section{Expression data preprocessing} \emph{Drosophila} developmental
   microarray time series from~\cite{Tomancak2002} were reprocessed
   using mmgMOS from the puma package~\cite{Pearson2009}.  The means of
   the log-scale expression values were equalized across chips.  The
@@ -538,11 +552,12 @@ the ranking method is available from the authors upon request.
   deviation of 5\%, 25\%, 50\%, 75\% and 95\% quantiles of a Gaussian
   distribution to corresponding quantiles obtained from mmgMOS.
 
-  \section{Filtering quiet genes}
-  Quiet genes can affect the ranking because any model with low or zero sensitivity can fit them
+  \section{Filtering weakly expressed genes}
+  Weakly expressed genes can affect the ranking because any model
+  with low or zero sensitivity can fit them
   well. Genes $j$ with an average z-score 
   $$ \frac{1}{Rn} \sum_{r=1}^R \sum_{i=1}^n \frac{\hat{m}_{jr}(t_i)}{\sigma_{ijr}} < 1.8 $$
-  were considered quiet and removed from the data set.  The threshold
+  were considered weakly expressed and removed from the data set.  The threshold
   was selected by visually inspecting models for candidate targets:
   practically all targets below the threshold elicited a
   non-informative constant response from the model.
@@ -610,6 +625,11 @@ the ranking method is available from the authors upon request.
   training set genes alone.  All the parameters concerning these genes
   were then fixed when fitting the larger models to the training set
   plus each candidate.
+
+  \section{In-situ data processing}
+  Genes with any of the annotation terms listed in Supplementary Table
+  3 of~\cite{Zinzen2009} in the data of~\cite{Tomancak2002} were
+  considered to be expressed in mesoderm or muscle tissue.
 
   \section{Knock-out data processing}
   The knock-out data was processed as explained
