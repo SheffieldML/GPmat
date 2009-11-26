@@ -13,8 +13,8 @@ function r = drosRemoveDuplicateGenes(drosexp, r0),
 
 % DISIMRANK
 
-[B, I, J] = unique(drosexp.fbgns(r0), 'first');
+[B, I, J] = unique(drosexp.genes(r0), 'first');
 r = r0(sort(I));
 
-J = strcmp(drosexp.fbgns(r), 'NA');
+J = strcmp(drosexp.genes(r), 'NA');
 r = r(~J);

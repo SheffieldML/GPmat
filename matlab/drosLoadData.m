@@ -40,10 +40,10 @@ else
 
   drosexp.pctvalues = prctiles;
   drosexp.pctiles = cat(3, pcts{:});
-  drosexp.genes = expdata.textdata(2:end, 1);
-  drosexp.fbgns = FBgns{2};
+  drosexp.probes = expdata.textdata(2:end, 1);
+  drosexp.genes = FBgns{2};
   drosexp.symbols = Symbols{2};
-  drosexp.geneids = drosMapGenesToIDs(drosexp.fbgns);
+  drosexp.geneids = drosMapGenesToIDs(drosexp.genes);
   
   drosexp.mean = expdata.data;
   drosexp.se = expse.data;
@@ -57,10 +57,12 @@ else
   chipdata.geneids = drosMapGenesToIDs(chipdata.genes);
 
   drosTF.names = {'tin', 'bin', 'twi', 'bap', 'mef2'};
-  drosTF.labels = {'143426_at', '148296_at', '143396_at', ...
-		   '143523_at', '153628_at'};
-  drosTF.fbgns = {'FBgn0004110', 'FBgn0045759', 'FBgn0003900', ...
-		  'FBgn0004862', 'FBgn0011656'};
+  drosTF.probes = struct('tin', {'143426_at'}, 'bin', {'148296_at'}, ...
+			 'twi', {'143396_at'}, 'bap', {'143523_at'}, ...
+			 'mef2', {'153628_at'});
+  drosTF.fbgns = struct('tin', {'FBgn0004110'}, 'bin', {'FBgn0045759'}, ...
+			'twi', {'FBgn0003900'}, 'bap', {'FBgn0004862'}, ...
+			'mef2', {'FBgn0011656'});
 
   insitudata = importdata([DATAPATH, 'insitu/insitu_data.txt']);
   drosinsitu.labels = insitudata.textdata(1, 2:end);
@@ -69,7 +71,7 @@ else
   drosinsitu.geneids = drosMapGenesToIDs(drosinsitu.genes);
 
   SIGNIFICANCE_LEVEL = .1;
-  CHIPTHRESHOLD = 5000;
+  CHIPTHRESHOLD = 2000;
 
   tflabels = {'twi', 'mef2'};
   

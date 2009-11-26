@@ -1,4 +1,4 @@
-function I = drosGetGeneinds(drosdata, genes, incnulls, dofbgns),
+function I = drosGetGeneinds(drosdata, genes, incnulls, doprobes),
 
 % DROSGETGENEINDS Find indices of given genes in a data set.
 % FORMAT
@@ -6,7 +6,7 @@ function I = drosGetGeneinds(drosdata, genes, incnulls, dofbgns),
 % ARG drosdata : any Drosophila data structure
 % ARG genes : cell array of genes to find
 % ARG incnulls : return 0 for all elements of genes not in drosdata (default: false)
-% ARG dofbgns : find by FBgn numbers instead of probe ids (default: false)
+% ARG doprobes : find by probe ids instead of FBgn numbers (default: false)
 % RETURN indices : the requested indices
 %
 % SEEALSO : drosLoadData
@@ -20,7 +20,7 @@ if nargin < 3,
 end
 
 if nargin < 4,
-  dofbgns = 0;
+  doprobes = 0;
 end
 
 I = [];
@@ -45,8 +45,8 @@ if ~iscell(genes) && isfield(drosdata, 'geneids'),
     end
   end
 else
-  if dofbgns,
-    myfield = 'fbgns';
+  if doprobes,
+    myfield = 'probes';
   else
     myfield = 'genes';
   end

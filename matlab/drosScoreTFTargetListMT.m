@@ -110,16 +110,16 @@ for l=1:length(targets),
   if ((l <= length(ll)) && isfinite(ll(l)) && ~isempty(params{l})) || (mod(l, modulus) ~= reminder),
     continue;
   end
-  if any(strcmp(drosexp.genes, targets{l})),
+  if any(strcmp(drosexp.probes, targets{l})),
     try,
-      [ll(l), params{l}] = learn_it(drosexp, drosTF, tf, [basetargets; targets{l}], baseparams, 1:5, 0);
+      [ll(l), params{l}] = learn_it(drosexp, drosTF, tf, [basetargets; targets{l}], baseparams, 1:(basenum+1), 0);
     catch
       % Something went wrong, let's try again with a different initialisation
       for k=1:10,
 	fprintf('Retrying gene %s\n', targets{l});
 	failed = 0;
 	try
-	  [ll(l), params{l}] = learn_it(drosexp, drosTF, tf, [basetargets; targets{l}], baseparams, 1:5, 1);
+	  [ll(l), params{l}] = learn_it(drosexp, drosTF, tf, [basetargets; targets{l}], baseparams, 1:(basenum+1), 1);
 	catch
 	  failed = 1;
 	end
@@ -144,7 +144,7 @@ results = struct('ll', {ll}, 'targets', {targets}, ...
 
 function [ll, params] = learn_it(drosexp, drosTF, tf, targets, baseparams, fixcomps, randomize),
 
-m = drosGpdisimLearnWithFixedInit2(drosexp, drosTF, tf, targets, baseparams, fixcomps, randomize);
+m = drosGpdisimLearnWithFixedInit(drosexp, drosTF, tf, targets, baseparams, fixcomps, randomize);
 ll = modelLogLikelihood(m);
 if ~isfinite(ll),
   error('non-finite log-likelihood');

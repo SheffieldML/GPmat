@@ -27,11 +27,7 @@ selectgenes = 1:numGenes;
 numPlots = length(selectgenes);
 
 tf = model.comp{1}.annotation.tf;
-if isfield(model.comp{1}.annotation, 'fbgns'),
-  genes = model.comp{1}.annotation.fbgns;
-else
-  genes = model.comp{1}.annotation.genes;
-end
+genes = model.comp{1}.annotation.genes;
 targets = genes(2:end);
 
 genenames = genes;
@@ -51,21 +47,26 @@ for j = 1:length(model.comp)
   % (simXrbfKernCompute does this for us).
   predt = [1:0.1:12 model.comp{j}.t']';
 
+  if model.comp{j}.includeNoise,
+    simMultiKern = model.comp{j}.kern.comp{1};
+  else
+    simMultiKern = model.comp{j}.kern;
+  end
   if strcmp(model.type, 'cgpdisim'),
     proteinKern = kernCreate(model.comp{j}.t, 'sim');
-    proteinKern.inverseWidth = model.comp{j}.kern.comp{1}.inverseWidth;
+    proteinKern.inverseWidth = simMultiKern.comp{1}.inverseWidth;
     proteinKern.decay = model.comp{j}.delta;
-    proteinKern.variance = model.comp{j}.kern.comp{2}.di_variance;  
+    proteinKern.variance = simMultiKern.comp{2}.di_variance;  
     % simXrbf requires an RBF with unit variance
     inputKern = kernCreate(model.comp{j}.t, 'rbf');
-    inputKern.inverseWidth = model.comp{j}.kern.comp{1}.inverseWidth;
+    inputKern.inverseWidth = simMultiKern.comp{1}.inverseWidth;
     inputKern.variance = 1;
     K = simXrbfKernCompute(proteinKern, inputKern, ...
 			   predt, model.comp{j}.t);
-    K = K * model.comp{j}.kern.comp{1}.variance;
+    K = K * simMultiKern.comp{1}.variance;
     warning('off', 'KERN:simRBFVariance');
-    for i=2:model.comp{j}.kern.numBlocks
-      blockK =  disimXsimKernCompute(model.comp{j}.kern.comp{i}, proteinKern, ...
+    for i=2:simMultiKern.numBlocks
+      blockK =  disimXsimKernCompute(simMultiKern.comp{i}, proteinKern, ...
 				     model.comp{j}.t, predt);
       K = [K blockK'];    
     end
@@ -75,23 +76,13 @@ for j = 1:length(model.comp)
 		    size(model.comp{j}.y));
   else
     proteinKern = kernCreate(model.comp{1}.t, 'rbf'); 
-    if model.comp{j}.includeNoise
-      proteinKern.inverseWidth = ...
-          model.comp{j}.kern.comp{1}.comp{1}.inverseWidth;
-    else
-      proteinKern.inverseWidth = ...
-          model.comp{j}.kern.comp{1}.inverseWidth;
-    end
+    proteinKern.inverseWidth = ...
+	simMultiKern.comp{1}.inverseWidth;
     K = [];
   
-    for i=1:model.comp{j}.kern.numBlocks
-      if model.comp{j}.includeNoise
-        K = [K; simXrbfKernCompute(model.comp{j}.kern.comp{1}.comp{i}, proteinKern, ...
-				   model.comp{j}.t, predt)];
-      else
-        K = [K; simXrbfKernCompute(model.comp{j}.kern.comp{i}, proteinKern, ...
-				   model.comp{j}.t, predt)];
-      end
+    for i=1:simMultiKern.numBlocks
+      K = [K; simXrbfKernCompute(simMultiKern.comp{i}, proteinKern, ...
+				 model.comp{j}.t, predt)];
     end
     
     K = K';
@@ -101,7 +92,7 @@ for j = 1:length(model.comp)
   
   predF = K*model.comp{j}.invK*(model.comp{j}.y-ymean);
   if strcmp(model.type, 'cgpdisim'),
-    varF = model.comp{j}.kern.comp{1}.variance * ...
+    varF = simMultiKern.comp{1}.variance * ...
 	   kernDiagCompute(proteinKern, predt) - sum(K'.* ...
 						     (model.comp{j}.invK* ...
 						      K'), 1)';
@@ -113,21 +104,15 @@ for j = 1:length(model.comp)
 
   % Predicted Gene Expressions
   if strcmp(model.type, 'cgpdisim'),
-    Kxx = multiKernCompute(model.comp{j}.kern, predt, model.comp{j}.t);
-    varX = real(kernDiagCompute(model.comp{j}.kern, predt) - ...
+    Kxx = multiKernCompute(simMultiKern, predt, model.comp{j}.t);
+    varX = real(kernDiagCompute(simMultiKern, predt) - ...
 		sum(Kxx'.* (model.comp{j}.invK*Kxx'), 1)');
     meanPredX = reshape(ones(length(predt),1)*([0 model.comp{j}.B./ ...
 		    model.comp{j}.D]), length(predt)*(numGenes), 1);
   else
-    if model.comp{j}.includeNoise,
-      Kxx = multiKernCompute(model.comp{j}.kern.comp{1}, predt, model.comp{j}.t);
-      varX = real(kernDiagCompute(model.comp{j}.kern.comp{1}, predt) - ...
-		  sum(Kxx'.* (model.comp{j}.invK*Kxx'), 1)');
-    else
-      Kxx = multiKernCompute(model.comp{j}.kern, predt, model.comp{j}.t);
-      varX = real(kernDiagCompute(model.comp{j}.kern, predt) - ...
-		  sum(Kxx'.* (model.comp{j}.invK*Kxx'), 1)');
-    end
+    Kxx = multiKernCompute(simMultiKern, predt, model.comp{j}.t);
+    varX = real(kernDiagCompute(simMultiKern, predt) - ...
+		sum(Kxx'.* (model.comp{j}.invK*Kxx'), 1)');
     meanPredX = reshape(ones(length(predt),1)*(model.comp{j}.B./ ...
 		    model.comp{j}.D), length(predt)*(numGenes), 1);
   end

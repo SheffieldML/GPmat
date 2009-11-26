@@ -1,4 +1,4 @@
-function results = drosScoreTFTargetList(tf, listfile, savepath, modulus, reminder, subsample),
+function results = drosScoreTFTargetList(tf, listfile, savepath, modulus, reminder, subsample, noiseModel),
 
 % DROSSCORETFTARGETLIST Score a list of candidate targets.
 % FORMAT
@@ -16,6 +16,7 @@ function results = drosScoreTFTargetList(tf, listfile, savepath, modulus, remind
 % This run will only look at genes where mod(index, modulus) == reminder
 % Use modulus=1, reminder=0 to disable parallelisation.
 % ARG subsample : Time point indices to use (default: [] = all)
+% ARG noiseModel : Noise model to use (default: drosGpdisimLearn default)
 % RETURN results : a structure with the fields:
 % ll : a list of model log-likelihoods
 % params : a cell array of model parameters
@@ -87,24 +88,33 @@ else
   end
 end
 
+gpdisimArgs = struct('randomize', {0}, ...
+		     'subsample', {subsample})
+
+if nargin > 6,
+  gpdisimArgs.noiseModel = noiseModel;
+end
+
 for l=1:length(targets),
   if ((l <= length(ll)) && isfinite(ll(l)) && ~isempty(params{l})) || (mod(l, modulus) ~= reminder),
     continue;
   end
-  if any(strcmp(drosexp.genes, targets{l})),
+  if any(strcmp(drosexp.probes, targets{l})),
     fprintf('Scoring %s...\n', targets{l});
     try,
-      [ll(l), params{l}] = learn_it(drosexp, drosTF, tf, targets{l}, 0, subsample);
+      [ll(l), params{l}] = learn_it(drosexp, drosTF, tf, targets(l), gpdisimArgs);
     catch
       % Something went wrong, let's try again with a different initialisation
       for k=1:10,
 	fprintf('Retrying gene %s\n', targets{l});
 	failed = 0;
 	try
-	  [ll(l), params{l}] = learn_it(drosexp, drosTF, tf, targets(l), 1, subsample);
+	  gpdisimArgs.randomize = 1;
+	  [ll(l), params{l}] = learn_it(drosexp, drosTF, tf, targets(l), gpdisimArgs);
 	catch
 	  failed = 1;
 	end
+	gpdisimArgs.randomize = 0;
 	if ~failed,
 	  break;
 	end
@@ -115,18 +125,19 @@ for l=1:length(targets),
     params{l} = [];
   end
   if ~isempty(savepath),
-    save(fname, 'll', 'targets', 'params', 'subsample');
+    save(fname, 'll', 'targets', 'params', 'subsample', 'noiseModel');
   end
 end
 
 results = struct('ll', {ll}, 'targets', {targets}, ...
-		 'params', {params}, 'subsample', {subsample});
+		 'params', {params}, 'subsample', {subsample}, ...
+		 'noiseModel', {noiseModel});
 
 
 
-function [ll, params] = learn_it(drosexp, drosTF, tf, targets, randomize, subsample),
+function [ll, params] = learn_it(drosexp, drosTF, tf, targets, args),
 
-m = drosGpdisimLearn(drosexp, drosTF, tf, targets, randomize, 0, subsample);
+m = drosGpdisimLearn(drosexp, drosTF, tf, targets, args);
 ll = modelLogLikelihood(m);
 if ~isfinite(ll),
   error('non-finte log-likelihood');

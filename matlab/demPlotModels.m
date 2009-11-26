@@ -14,7 +14,7 @@ plottargets0 = {'FBgn0003486', 'FBgn0033188', 'FBgn0035257'};
 plottargets = {};
 close all;
 for k=1:length(plottargets0),
-  plottargets{k} = drosexp.genes{strcmp(drosexp.fbgns, plottargets0{k})};
+  plottargets{k} = drosexp.probes{strcmp(drosexp.genes, plottargets0{k})};
 
   m = drosGpdisimLearn(drosexp, drosTF, tf, plottargets{k});
   drosPlot(m, length(plottargets0), k)

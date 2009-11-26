@@ -14,10 +14,10 @@ function r = drosCorrelationRank(drosexp, drosTF, tf),
 
 % DISIMRANK
 
-N = length(drosexp.genes);
+N = length(drosexp.probes);
 
 medprofiles = mean(reshape(drosexp.pctiles(:, :, 3), [N, 12, 3]), 3);
-I = strcmp(drosTF.labels{strcmp(tf, drosTF.names)}, drosexp.genes);
+I = strcmp(drosTF.probes.(tf), drosexp.probes);
 
 sigma = zeros(1, N);
 for k=1:N,
