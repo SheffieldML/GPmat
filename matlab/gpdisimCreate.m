@@ -75,24 +75,61 @@ tieParam = {tieDelta, tieWidth, tieSigma, tieRBFVariance};
 
 model.y = geneVals(:);
 model.yvar = geneVars(:);
-model.kern = kernCreate(times, kernType1);
+
+model.includeNoise = options.includeNoise;
+
+if model.includeNoise
+  model.yvar = zeros(size(geneVars(:)));
+else
+  model.yvar = geneVars(:);
+end
+
+% Check if we have a noise term.
+if model.includeNoise
+  % Create a new multi kernel to contain the noise term.
+  kernType2{1} = 'multi';
+
+  % Set the new multi kernel to just contain 'white' kernels.
+  for i = 1:numGenes+1
+    kernType2{i+1} = 'white';
+  end
+  if isfield(options, 'singleNoise') & options.singleNoise
+    tieParam{5} = (2+6*numGenes + 1):(2+6*numGenes + numGenes+1);
+  end
+  
+  % Now create model with a 'cmpnd' (compound) kernel build from two
+  % multi-kernels. The first multi-kernel is the sim-sim one the next
+  % multi-kernel is the white-white one. 
+  model.kern = kernCreate(times, {'cmpnd', kernType1, kernType2});
+  simMultiKern = 'model.kern.comp{1}';
+else
+  model.kern = kernCreate(times, kernType1);
+  simMultiKern = 'model.kern';
+end
+
 % This is if we need to place priors on parameters ...
 if isfield(options, 'addPriors') && options.addPriors,
   for i = 1:length(model.kern.numBlocks)
     % Priors on the sim kernels.
-    model.kern.comp{i}.priors = priorCreate('gamma');
-    model.kern.comp{i}.priors.a = 1;
-    model.kern.comp{i}.priors.b = 1;
+    eval([simMultiKern '.comp{i}.priors = priorCreate(''gamma'');']);
+    eval([simMultiKern '.comp{i}.priors.a = 1;']);
+    eval([simMultiKern '.comp{i}.priors.b = 1;']);
+    %model.kern.comp{i}.priors = priorCreate('gamma');
+    %model.kern.comp{i}.priors.a = 1;
+    %model.kern.comp{i}.priors.b = 1;
     if i == 1
       % For first kernel place prior on inverse width.
-      model.kern.comp{i}.priors.index = [1 2];
+      % model.kern.comp{i}.priors.index = [1 2];
+      eval([simMultiKern '.comp{i}.priors.index = [1 2];']);
     elseif i == 2
-      model.kern.comp{i}.priors.index = [1 3 4 5];
+      %model.kern.comp{i}.priors.index = [1 3 4 5];
+      eval([simMultiKern '.comp{i}.priors.index = [1 3 4 5];']);
     else
       % For other kernels don't place prior on inverse width --- as
       % they are all tied together and it will be counted multiple
       % times.
-      model.kern.comp{i}.priors.index = [4 5];
+      %model.kern.comp{i}.priors.index = [4 5];
+      eval([simMultiKern '.comp{i}.priors.index = [4 5];']);
     end
   end
 
@@ -103,16 +140,19 @@ if isfield(options, 'addPriors') && options.addPriors,
 end
 
 model.kern = modelTieParam(model.kern, tieParam);
+if model.includeNoise,
+  model.kern.comp{2}.comp{1}.variance = 1e-6;
+end
 
 % The decays and sensitivities are actually stored in the kernel.
 % We'll put them here as well for convenience.
 model.delta = 10;
 model.sigma = 1;
 for i = 2:model.kern.numBlocks
-  model.kern.comp{i}.di_decay = model.delta;
-  model.kern.comp{i}.di_variance = model.sigma^2;  
-  model.D(i-1) = model.kern.comp{i}.decay;
-  model.S(i-1) = sqrt(model.kern.comp{i}.variance);
+  eval([simMultiKern '.comp{i}.di_decay = model.delta;']);
+  eval([simMultiKern '.comp{i}.di_variance = model.sigma^2;']);
+  model.D(i-1) = eval([simMultiKern '.comp{i}.decay;']);
+  model.S(i-1) = sqrt(eval([simMultiKern '.comp{i}.variance;']));
 end
 
 rand('seed',0);
@@ -136,6 +176,8 @@ model.bTransform = optimiDefaultConstraint('positive');
 if nargin > 6,
   model.annotation = annotation;
 end
+
+model.options = options;
 
 % This forces kernel compute.
 params = gpdisimExtractParam(model);
