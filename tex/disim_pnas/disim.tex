@@ -255,7 +255,7 @@ likelihood using gradient-based optimisation.
 
 Rather than assuming that the TF protein is primarily under
 transcriptional control, as indicated by
-Eq.~(\ref{eq:translation_ode}), one can alternatively use the idea pioneered
+Eq.~[\ref{eq:translation_ode}], one can alternatively use the idea pioneered
 in~\cite{Barenco2006a} and model the TF protein as an unobserved
 latent variable. This approach can naturally be carried out using a
 similar Gaussian process framework as shown in~\cite{Gao2008}. However, that procedure requires a set of known
@@ -376,7 +376,25 @@ with annotated expression in these tissues according to the
 % improvement is highly significant.  Especially for Twist the results
 % are even now clearly better than any of the tested alternatives.
 
-To assess the significance of the observed differences between alternative ranking approaches, we performed bootstrap
+\begin{figure}[tb]
+  \centering
+  \includegraphics{dros_binding_site_distances}
+  \caption{The fraction of predicted targets having a ChIP-chip
+    binding site or CRM within $x$ base pairs as a function of $x$.
+    Binding sites within an intron of a gene are considered to
+    have a distance 0.
+    \label{fig:dros_binding_site_distances}}
+\end{figure}
+
+The distance threshold of 2000 bp used in ChIP-chip evaluation is
+somewhat arbitrary.  The performance of different methods when this
+threshold is changed is illustrated in
+Fig.~\ref{fig:dros_binding_site_distances} and in Supplementary
+Material.  The figure shows that the relative performances of
+different algorithms are fairly consistent across different values.
+
+To assess the significance of the observed differences between
+alternative ranking approaches, we performed bootstrap
 resampling of the data set.  In 100,000-fold resampling where the
 relative performances of different methods were recorded for each
 fold, the Gaussian process methods were superior to the alternatives

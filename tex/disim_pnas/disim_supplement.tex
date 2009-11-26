@@ -2,19 +2,19 @@
 \usepackage{nips07submit_e,times}
 \usepackage{amsmath}
 \usepackage{subfig}
-
+\usepackage{graphicx}
 
 \title{Supplementary material for ``Model-based transcription factor
-  target identification without perturbations''}
+  target identification with limited data''}
 
 
 \author{
 Antti Honkela,
 Neil D. Lawrence,
 Charles Girardot, 
-Hilary Gustafson,
+E. Hilary Gustafson,
 Ya-Hsin Liu,\\
-\bf Eileen E. Furlong, and
+\bf Eileen E.M. Furlong, and
 Magnus Rattray
 }
 
@@ -195,6 +195,31 @@ where
   - \erf(D_x l/2 - (t-t')/l)]
   \bigg\} \\
 \end{multline}
+
+\section{Distance from predicted targets to closest TF binding sites}
+
+Cumulative distributions of distances from predicted targets to the
+closest TF binding site in the ChIP-chip data are presented in
+Figs.~\ref{fig:dros_binding_site_distances_global} and
+\ref{fig:dros_binding_site_distances_focused}.
+
+\begin{figure}[p]
+  \centering
+  \includegraphics{dros_binding_site_distances_global}
+  \caption{The fraction of predicted targets having a ChIP-chip
+    binding site or CRM within $x$ base pairs as a function of $x$
+    in the global ChIP-chip evaluation.
+    \label{fig:dros_binding_site_distances_global}}
+\end{figure}
+
+\begin{figure}[p]
+  \centering
+  \includegraphics{dros_binding_site_distances_focused}
+  \caption{The fraction of predicted targets having a ChIP-chip
+    binding site or CRM within $x$ base pairs as a function of $x$
+    in the focused ChIP-chip evaluation.
+    \label{fig:dros_binding_site_distances_focused}}
+\end{figure}
 
 \section{Bootstrap sampling to estimate significance of differences of
   ranking methods}
