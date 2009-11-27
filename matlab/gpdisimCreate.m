@@ -141,7 +141,9 @@ end
 
 model.kern = modelTieParam(model.kern, tieParam);
 if model.includeNoise,
-  model.kern.comp{2}.comp{1}.variance = 1e-6;
+  for i = 1:numGenes+1,
+    model.kern.comp{2}.comp{i}.variance = 1e-2;
+  end
 end
 
 % The decays and sensitivities are actually stored in the kernel.
