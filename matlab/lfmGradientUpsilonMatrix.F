@@ -1,4 +1,10 @@
-	  SUBROUTINE MEXFUNCTION(NLHS, PLHS, NRHS, PRHS)
+#include "fintrf.h"
+C
+#if 0
+C     
+C     
+#endif	  
+      SUBROUTINE MEXFUNCTION(NLHS, PLHS, NRHS, PRHS)
 	  IMPLICIT NONE
 	  INTEGER PLHS(*), PRHS(*)
 	  INTEGER MXGETM, MXGETN
@@ -7,9 +13,9 @@
 
 
 C      Check for proper number of arguments. 
-C      IF (NRHS .NE. 4) THEN
-C         CALL MEXERRMSGTXT('Five inputs required.')
-C      ENDIF
+      IF (NRHS .NE. 4) THEN
+         CALL MEXERRMSGTXT('Four inputs required.')
+      ENDIF
 
 C	  Check that input #1 is a scalar.
       M = MXGETM(PRHS(1))
@@ -40,7 +46,7 @@ C	  Check that input #4 is a column vector.
 	  M = MXGETM(PRHS(3))
 	  N = MXGETM(PRHS(4))
 	
-!	CALL INTERMEDIATE GATEWAY:
+C	CALL INTERMEDIATE GATEWAY:
 	  CALL GATEWAY(PLHS,PRHS,M,N)
 
 	  END 
@@ -81,7 +87,7 @@ C ------ Convert t2
 C ------ Call computational subroutine     
 
       CALL COMPGUP(GAMMA,SIG2, T1, T2, ROWS, COLS, 
-     $  RGUPSI, IGUPSI)   
+     +  RGUPSI, IGUPSI)   
 
 C ------  Convert FORTRAN variables to MATLAB variables  
 
@@ -93,7 +99,7 @@ C ------  Convert FORTRAN variables to MATLAB variables
 
 C ----- Computational subroutine
       SUBROUTINE COMPGUP(GAMMA, SIG2, T1, T2, ROWS, COLS, 
-     $   RGUPSI, IGUPSI)
+     +   RGUPSI, IGUPSI)
       PARAMETER(PI = 3.141592653589793D0)   
 	  INTEGER I,J, ROWS, COLS 
       DOUBLE PRECISION RGUPSI(ROWS, COLS), IGUPSI(ROWS, COLS), SQRTPI
@@ -126,38 +132,38 @@ C ----- Computational subroutine
 C		real(z1) >= 0 and real(z2)>=0
              IF(REALZ1. GE. 0. AND .REALZ2(J). GE .0  ) THEN
                 GUPSI = EXP(SIG2*(GAMMA**2)/4 - GAMMA*(T1(I)-T2(J))
-     $                + LOG(SIG2*GAMMA - 2*(T1(I)-T2(J))))
-     $                - EXP(-(T1(I)-T2(J))**2/SIG2 + LOG(SIG)
-     $                + LOG(1/SQRTPI - Z1*WOFZ1))     
-     $                + EXP(-T2(J)**2/SIG2 - GAMMA*T1(I)
-     $                + LOG(T1(I)*WOFZ2(J) 
-     $                + SIG*(1/SQRTPI - Z2(J)*WOFZ2(J))))
+     +                + LOG(SIG2*GAMMA - 2*(T1(I)-T2(J))))
+     +                - EXP(-(T1(I)-T2(J))**2/SIG2 + LOG(SIG)
+     +                + LOG(1/SQRTPI - Z1*WOFZ1))     
+     +                + EXP(-T2(J)**2/SIG2 - GAMMA*T1(I)
+     +                + LOG(T1(I)*WOFZ2(J) 
+     +                + SIG*(1/SQRTPI - Z2(J)*WOFZ2(J))))
              END IF
 C		real(z1) < 0 and real(z2)>=0
 		     IF(REALZ1. LT. 0. AND .REALZ2(J). GE .0  ) THEN
                 GUPSI = - EXP(-(T1(I)-T2(J))**2/SIG2 + LOG(SIG)
-     $                + LOG(1/SQRTPI + Z1*WOFZ1))     
-     $                + EXP(-T2(J)**2/SIG2 - GAMMA*T1(I)
-     $                + LOG(T1(I)*WOFZ2(J) 
-     $                + SIG*(1/SQRTPI - Z2(J)*WOFZ2(J))))
+     +                + LOG(1/SQRTPI + Z1*WOFZ1))     
+     +                + EXP(-T2(J)**2/SIG2 - GAMMA*T1(I)
+     +                + LOG(T1(I)*WOFZ2(J) 
+     +                + SIG*(1/SQRTPI - Z2(J)*WOFZ2(J))))
              END IF
 C		real(z1) >= 0 and real(z2)<0
 		   IF(REALZ1. GE. 0. AND .REALZ2(J). LT .0  ) THEN
                 GUPSI = - EXP(-(T1(I)-T2(J))**2/SIG2 + LOG(SIG)
-     $                + LOG(1/SQRTPI - Z1*WOFZ1))     
-     $                - EXP(-T2(J)**2/SIG2 - GAMMA*T1(I)
-     $                + LOG(T1(I)*WOFZ2(J) 
-     $                - SIG*(1/SQRTPI + Z2(J)*WOFZ2(J))))
+     +                + LOG(1/SQRTPI - Z1*WOFZ1))     
+     +                - EXP(-T2(J)**2/SIG2 - GAMMA*T1(I)
+     +                + LOG(T1(I)*WOFZ2(J) 
+     +                - SIG*(1/SQRTPI + Z2(J)*WOFZ2(J))))
              END IF
 C		real(z1) < 0 and real(z2)<0             
 		   IF(REALZ1. LT. 0. AND .REALZ2(J). LT .0  ) THEN
                 GUPSI = - EXP(SIG2*(GAMMA**2)/4 - GAMMA*(T1(I)-T2(J))
-     $                + LOG(SIG2*GAMMA - 2*(T1(I)-T2(J))) )
-     $                - EXP(-(T1(I)-T2(J))**2/SIG2 + LOG(SIG)
-     $                + LOG(1/SQRTPI + Z1*WOFZ1))
-     $                - EXP(-T2(J)**2/SIG2 - GAMMA*T1(I) 
-     $                + LOG(T1(I)*WOFZ2(J) 
-     $                - SIG*(1/SQRTPI + Z2(J)*WOFZ2(J))))
+     +                + LOG(SIG2*GAMMA - 2*(T1(I)-T2(J))) )
+     +                - EXP(-(T1(I)-T2(J))**2/SIG2 + LOG(SIG)
+     +                + LOG(1/SQRTPI + Z1*WOFZ1))
+     +                - EXP(-T2(J)**2/SIG2 - GAMMA*T1(I) 
+     +                + LOG(T1(I)*WOFZ2(J) 
+     +                - SIG*(1/SQRTPI + Z2(J)*WOFZ2(J))))
            END IF
            RGUPSI(I,J) = DREAL(GUPSI) 
            IGUPSI(I,J) = DIMAG(GUPSI)
@@ -191,6 +197,6 @@ C-----  Complex error function due to Hui et al.
       Y = DIMAG(Z)  
       T = DCMPLX(Y, -X)
       W  = ((((((A6*T + A5)*T + A4)*T + A3)*T + A2)*T + A1)*T+A0)
-     $    /(((((((T + B6)*T + B5)*T + B4)*T + B3)*T + B2)*T + B1)*T+B0)
+     +    /(((((((T + B6)*T + B5)*T + B4)*T + B3)*T + B2)*T + B1)*T+B0)
       RETURN
       END
