@@ -1,3 +1,8 @@
+Version 0.225
+-------------
+
+Updates for latest version of MULTIGP toolbox associated with MULTIGP tech report.
+
 Version 0.224
 -------------
 
@@ -6,7 +11,7 @@ Added disimSample and simSample for sampling from these multioutput covariance f
 Version 0.223
 -------------
 
-Minor fix of "ard" kernel which somehow had a kernel computation bit placed in the parameter initialization --- cut and past mistake at some point..
+Minor fix of "ard" kernel which somehow had a kernel computation bit placed in the parameter initialization --- cut and past mistake at some point.
 
 Version 0.222
 -------------
