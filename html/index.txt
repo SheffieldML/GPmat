@@ -8,20 +8,21 @@
 
 RELEASEINFORMATION
 
+Updates from Mauricio for the latest release of the MULTIGP toolbox.
 
+<h3>Version 0.224</h3>
 
 Added disimSample and simSample for sampling from these multioutput covariance functions. Michalis added kernel types rbfard2 and linard2 which use a slightly different formulation of the ARD parameters.
 
 <h3>Version 0.223</h3>
 
-Minor fix of "ard" kernel which somehow had a kernel computation bit placed in the parameter initialization --- cut and past mistake at some point..
+Minor fix of "ard" kernel which somehow had a kernel computation bit placed in the parameter initialization --- cut and past mistake at some point.
 
 
 
 <h3>Version 0.222</h3>
 
-Minor fix of "ard" kernel which somehow had a kernel computation bit placed in the parameter initialization --- cut and past mistake at some point..
-
+Removed division by kernel variance in kernels for computing the variance of the kernel. It causes numerical problems when the variance is small. Also changed mlp kernels so that the default variance distant from the origin is 1 instead of pi/2. 
 
 <h3>Version 0.221</h3>
 
