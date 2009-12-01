@@ -14,7 +14,7 @@ function drosPlot(model, totgenes, thisgene)
 
 FONTSIZE = 8;
 LINEWIDTH = 1;
-MARKERSIZE = 10;
+MARKERSIZE = 6;
 
 if strcmp(model.type, 'cgpdisim'),
   numGenes = model.comp{1}.numGenes + 1;

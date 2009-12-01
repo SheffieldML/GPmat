@@ -159,9 +159,10 @@ tf = 'twi';
 clear accs;
 clear pvals;
 
+rankings = {indrank.(tf), ssrank.(tf)};
+
 subplot(2, 3, 1);
-[accs(:, :, k), pvals(:, :, k)] = drosPlotAccuracyBars(...
-    {indrank.(tf), ssrank.(tf)}, ...
+[accs(:, :, k), pvals(:, :, k)] = drosPlotAccuracyBars(rankings, ...
     chip_validation.(tf), t, styles, [], drosexp, drosinsitu);
 set(gca, 'FontSize', FONTSIZE);
 title(sprintf('Global ChIP: %s', tf));
@@ -169,8 +170,7 @@ xlabel('Top N to consider');
 ylabel('Relative enrichment (%)');
 
 subplot(2, 3, 2);
-[accs(:, :, k), pvals(:, :, k)] = drosPlotAccuracyBars(...
-    {indrank.(tf), ssrank.(tf)}, ...
+[accs(:, :, k), pvals(:, :, k)] = drosPlotAccuracyBars(rankings, ...
     mutant_validation.(tf), t, styles, [], drosexp, drosinsitu);
 set(gca, 'FontSize', FONTSIZE);
 title(sprintf('Global knock-outs: %s', tf));
@@ -178,8 +178,7 @@ xlabel('Top N to consider');
 %ylabel('Relative enrichment (%)');
 
 subplot(2, 3, 4);
-[accs(:, :, k), pvals(:, :, k)] = drosPlotAccuracyBars(...
-    {indrank.(tf), ssrank.(tf)}, ...
+[accs(:, :, k), pvals(:, :, k)] = drosPlotAccuracyBars(rankings, ...
     chip_validation.(tf), t, styles, 1, drosexp, drosinsitu);
 set(gca, 'FontSize', FONTSIZE);
 title(sprintf('Focused ChIP: %s', tf));
@@ -187,8 +186,7 @@ xlabel('Top N to consider');
 ylabel('Relative enrichment (%)');
 
 subplot(2, 3, 5);
-[accs(:, :, k), pvals(:, :, k)] = drosPlotAccuracyBars(...
-    {indrank.(tf), ssrank.(tf)}, ...
+[accs(:, :, k), pvals(:, :, k)] = drosPlotAccuracyBars(rankings, ...
     mutant_validation.(tf), t, styles, 1, drosexp, drosinsitu);
 set(gca, 'FontSize', FONTSIZE);
 title(sprintf('Focused knock-outs: %s', tf));
