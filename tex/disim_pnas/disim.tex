@@ -180,14 +180,6 @@ expression. We further show how integrating complementary wild-type spatial
   %\label{fig:gpdisim_models}
 \end{figure*}
 
-\begin{figure}[tb]
-  \centering
-  \includegraphics{dros_gpdisim_mef2_singletarget_models}
-  \caption{Three independent single-target Gaussian process models for
-    likely targets of the TF Mef2 similar to those for Twist in
-    Fig.~\ref{fig:gpdisim_models}.\label{fig:gpdisim_mef2_models} }
-\end{figure}
-
 \section{Gaussian process inference for a linear activation model}
 
 A Gaussian process is a probability distribution over
@@ -301,6 +293,21 @@ Fig.~\ref{fig:gpdisim_models}). Nevertheless, both models are
 sufficiently flexible to fit target genes with significantly different
 profiles (genes FBgn0033188 and FBgn0035257 in
 Fig.~\ref{fig:gpdisim_models}).
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics{dros_gpdisim_mef2_singletarget_models}
+  \caption{Three independent single-target Gaussian process models for
+    likely targets of the TF Mef2 similar to those for Twist in
+    Fig.~\ref{fig:gpdisim_models}.\label{fig:gpdisim_mef2_models} }
+\end{figure}
+
+Another example with a better-defined TF is shown in
+Fig.~\ref{fig:gpdisim_mef2_models}.  In this case most of the
+top-ranking targets are very similar to the first two from the left.
+The rankings of the targets shown using single-target models are 2, 27
+and 4910.  The corresponding rankings based on correlation are 241, 13
+and 5.
 
 For comparison, candidates were also ranked by correlation of the
 expression profile with the TF expression profile (``correlation'')
