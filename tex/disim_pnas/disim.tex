@@ -53,26 +53,22 @@ of the United States of America}
 \begin{article}
 \begin{abstract}
   We present a computational method for identifying potential targets of a
-  transcription factor using wild-type gene expression time series
+  transcription factor (TF) using wild-type gene expression time series
   data. For each putative target gene we fit a simple differential equation model
   of transcriptional regulation and the model likelihood serves as a
-  score to rank targets. The expression profile of the transcription
-  factor is modeled as a sample from a Gaussian process prior
+  score to rank targets. The expression profile of the TF is modeled as a sample from a Gaussian process prior
   distribution that is integrated out using a non-parametric
   Bayesian procedure. This results in a parsimonious model with relatively few
   parameters which can be applied to short time series data
   sets without noticeable over-fitting. We assess our method using
   genome-wide Chromatin Immunoprecipitation
-  (ChIP-chip) and loss-of-function mutant expression data for two
-  transcription factors controlling mesoderm development in {\it Drosophila}. Lists of top-ranked
+  (ChIP-chip) and loss-of-function mutant expression data for two TFs, 
+Twist and Mef2, controlling mesoderm development in {\it Drosophila}. Lists of top-ranked
   genes identified by our method are significantly enriched for genes
   close to bound regions identified in the ChIP-chip data and significantly
   enriched for genes that are differentially expressed in
-  loss-of-function mutants. Our approach is superior to
-  ranking using mutant differential expression scores and mostly
-  superior to an approach based on correlation with transcription factor
-  expression. We also show how integrating complementary wild-type
-  spatial expression data can further improve target ranking performance.
+  loss-of-function mutants. Targets of Twist display diverse expression profiles 
+and in this case a model-based approach performs significantly better than scoring based on correlation with TF expression. Our approach is found to be comparable or superior to ranking based on mutant differential expression scores. Also, we show how integrating  complementary wild-type spatial expression data can further improve target ranking performance.
 \end{abstract}
 
 \keywords{transcriptional regulation | gene expression | systems biology | Gaussian process inference}
@@ -161,18 +157,18 @@ ranking with published ChIP-chip data for two TFs controlling early
 mesoderm development in \emph{Drosophila}. Our method is shown to be comparable
 to, or outperform, the use of knockout mutant data which are available
 for these TFs. We demonstrate that a model-based approach is significantly
-better than a simpler approach using correlation with TF
-expression. We further show how integrating complementary wild-type spatial
+better than a simpler approach using correlation when targets display a diverse set of expression profiles. We further show how integrating complementary wild-type spatial
 {\em in situ} expression data can greatly improve target ranking accuracy. 
 
 \begin{figure*}[tb]
   \centering
   \includegraphics{dros_gpdisim_models}
-  \caption{(a) Three independent single-target Gaussian process models
-    for likely targets of the TF Twist. Red marks denote observed expression
-    levels with 2 s.d.\ error bars while blue functions are inferred
-    from the model.  The shaded regions denote 2 s.d.\ confidence
-    intervals. (b) A joint multiple-target Gaussian process model for
+  \caption{Examples of the model fit for two different classes of 
+    Gaussian process model fitted to potential targets of the TF Twist. (a) Three independent single-target models
+    for likely targets. Red marks denote observed expression
+    levels from~\cite{Tomancak2002} with 2 s.d.\ error bars while blue functions are inferred
+    using the model.  The shaded regions denote 2 s.d.\ confidence
+    intervals. (b) A joint multiple-target model for
     the same set of target genes as in (a). It should be noted that
     the multiple-target models used in evaluation have more targets
     than the one shown here.\label{fig:gpdisim_models}
@@ -282,7 +278,7 @@ parameters can vary between models for different genes under this approach as th
 are fitted completely independently. In an alternative approach we fitted another set of models using the five
 top-ranking genes in the single-target case as the training set (``multiple-target models''; see
 Materials and Methods).  An illustration comparing these alternative
-modeling approaches is shown in Fig.~\ref{fig:gpdisim_models}. The
+modeling approaches applied to the TF Twist is shown in Fig.~\ref{fig:gpdisim_models}. The
 single-target model is more flexible because each
 potential target gene can be associated with a different inferred TF
 protein profile. The multiple-target model is constrained to explain
@@ -297,22 +293,22 @@ Fig.~\ref{fig:gpdisim_models}).
 \begin{figure}[tb]
   \centering
   \includegraphics{dros_gpdisim_mef2_singletarget_models}
-  \caption{Three independent single-target Gaussian process models for
-    likely targets of the TF Mef2 similar to those for Twist in
-    Fig.~\ref{fig:gpdisim_models}.\label{fig:gpdisim_mef2_models} }
+  \caption{Examples of the model fit for three independent single-target Gaussian process models for
+    likely targets of the TF Mef2 (compare to the examples in Fig.~\ref{fig:gpdisim_models}(a) for Twist).\label{fig:gpdisim_mef2_models} }
 \end{figure}
 
-Another example with a better-defined TF is shown in
-Fig.~\ref{fig:gpdisim_mef2_models}.  In this case most of the
-top-ranking targets are very similar to the first two from the left.
-The rankings of the targets shown using single-target models are 2, 27
-and 4910.  The corresponding rankings based on correlation are 241, 13
-and 5.
+In Fig.~\ref{fig:gpdisim_mef2_models} we show some examples of the single-target model for Mef2.  For this TF most of the
+top-ranking targets identified by the model are very similar to the first two from the left. The predicted Mef2 targets show much less variability in expression profile than those for Twist. 
 
 For comparison, candidates were also ranked by correlation of the
 expression profile with the TF expression profile (``correlation'')
 and by $q$-value of differential expression in TF loss-of-function mutant
 experiments from~\cite{Sandmann2006a,Sandmann2007} (``knock-out''). 
+
+
+%The rankings of the targets shown using single-target models are 2, 27
+%and 4910.  The corresponding rankings based on correlation are 241, 13
+%and 5.
 
 \begin{figure}[tb]
   \centering
@@ -337,26 +333,10 @@ experiments from~\cite{Sandmann2006a,Sandmann2007} (``knock-out'').
  % \label{fig:dros_global_evaluation}
 \end{figure}
 
-The accuracy of the ranking was evaluated by looking at the global
-fraction of $N$ top-ranking targets that are significantly
-differentially expressed in knock-outs of the TFs and the fraction
+The accuracy of the ranking was first evaluated by looking globally at the fraction of $N$ top-ranking targets that are significantly differentially expressed in knock-outs of the TFs and the fraction
 of targets with ChIP-chip binding within 2000 base
 pairs of its beginning or end or within the gene in the data
-from~\cite{Zinzen2009}. 
-\emph{!! Eileen: ``This sentence is far too strong.  You have no
-  evidence to say your method is superior.  Your correlation with the
-  mutant expression profiling data is low - that does not say that the
-  mutant data is wrong and you are correct.  Your multi-target method
-  does not perform that well compared to random (Fig.2) and for Mef2
-  the knockouts perform better for the top 20 (top right panel)''}
-Both of our model-based approaches are found to
-be superior to the knock-out results in terms of ChIP binding
-enrichment and are mostly superior to the correlation results in terms
-of both ChIP binding enrichment and knock-out differential expression
-(see Fig.~\ref{fig:dros_global_evaluation}). The model-based ranking
-results also show a consistently high level of significance. The
-single-target models perform slightly better than the multiple-target
-models in most cases.
+from~\cite{Zinzen2009}. For Twist the single-target and multiple-target models both perform well, with the single-target model performing slightly better (see Fig.~\ref{fig:dros_global_evaluation}). In the ChIP validation the model-based methods both perform significantly better than ranking using both mutant differential expression and correlation with TF expression. In the knock-out validation both model-based approaches out-perform the correlation ranking. For Mef2 the results of all methods have more comparable performance. In the ChIP validation all methods provide highly significant enrichment in the top 100 and top 250 lists with the correlation performing best. In the knock-out validation the model-based and correlation-based rankings both provide highly significant enrichment in the top 100 and top 250 lists, with the single-target model performing best.
 
 \begin{figure}[tb]
   \centering
@@ -382,31 +362,34 @@ models in most cases.
 \end{figure}
 
 Because Twist and Mef2 activities are specific to the mesoderm and
-muscle development, we also looked at accuracy among genes
+muscle development, we also looked at accuracy focussing on genes
 with annotated expression in these tissues according to the
-\emph{in situ} data from~\cite{Tomancak2002}. These results are illustrated in Fig.~\ref{fig:dros_focused_evaluation}. We observe a larger relative increase in enrichment for ChIP binding events in the top-20 target gene predictions for Twist and Mef2 for this filtered set of genes. Results for Twist also show consistently improved results lower down the ranking for both model-based approaches. For Mef2, results lower down the ranking are comparable to using the correlation approach.
+\emph{in situ} data from~\cite{Tomancak2002}. These results are illustrated in Fig.~\ref{fig:dros_focused_evaluation}. For the Twist ChIP validation we now observe better performance for the knock-out scores although the model-based rankings remain best. However, we observe that the correlation ranking is no longer statistically significantly enriched for ChIP binding on this spatially filtered set of targets. For the Mef2 ChIP validation the relative performance of all methods is similar to the global enrichment analysis (Fig.~~\ref{fig:dros_global_evaluation}) although the knock-out top 20 ranking is improved.
 
 % The results for $N=10$ are only significantly better than random for
 % Twist ChIP-chip, while for $N=50$ and especially $N=250$ the
 % improvement is highly significant.  Especially for Twist the results
 % are even now clearly better than any of the tested alternatives.
 
+The distance threshold of 2000 bp used in ChIP-chip evaluation is
+somewhat arbitrary.  The performance of different methods when this
+threshold is changed is illustrated in
+Fig.~\ref{fig:dros_binding_site_distances} and in the Supplementary
+Material.  The figure shows that the relative performances of
+different algorithms are fairly consistent for different choices of threshold. 
+We see that the model-based rankings consistently perform best for Twist, while 
+methods perform more similarly for Mef2 with the correlation and single-target models 
+performing comparably well.
+
 \begin{figure}[tb]
   \centering
   \includegraphics{dros_binding_site_distances}
-  \caption{The fraction of predicted targets having a ChIP-chip
+  \caption{The fraction of top 100 predicted targets having a ChIP-chip
     binding site or CRM within $x$ base pairs as a function of $x$.
     Binding sites within an intron of a gene are considered to
     have a distance 0.
     \label{fig:dros_binding_site_distances}}
 \end{figure}
-
-The distance threshold of 2000 bp used in ChIP-chip evaluation is
-somewhat arbitrary.  The performance of different methods when this
-threshold is changed is illustrated in
-Fig.~\ref{fig:dros_binding_site_distances} and in Supplementary
-Material.  The figure shows that the relative performances of
-different algorithms are fairly consistent across different values.
 
 To assess the significance of the observed differences between
 alternative ranking approaches, we performed bootstrap
@@ -433,7 +416,7 @@ we assessed whether similar results could be obtained with fewer time
 points. We sub-sampled the data keeping only 7 time points most
 relevant in defining the Twist expression profile
 (2,3,4,5,6,8,10 hours). The results in this case, as shown in
-Fig.~\ref{fig:dros_data_size_evaluation}, are almost identical to 
+Fig.~\ref{fig:dros_data_size_evaluation}, are very similar to 
 those obtained using the complete data showing that the model-based
 approach presented here can be applied to typical short wild-type time
 series data.
@@ -459,7 +442,7 @@ the profiles of target genes due to differences in protein and mRNA
 stability while still keeping the computational load at a level
 that allows us to perform genome-wide scoring using reasonably modest
 computational resources. Our results show
-that the model-based approach presented here can outperform the use of
+that the model-based approach presented here can provide a viable alternative or complementary method to the use of
 loss-of-function mutant data for identifying targets. Such an approach
 can be combined with binding location (ChIP-chip or ChIP-seq)
 and spatial expression data to identify a confident set of regulatory
@@ -469,10 +452,10 @@ not display a phenotype of interest.
 
 The main novelty of our approach is the use of recently proposed
 techniques to model a time-varying degree of freedom as a sample from
-a Gaussian process prior distribution~\cite{Gao2008}. By marginalising out this functional
+a Gaussian process prior distribution~\cite{Gao2008}. By marginalizing out this functional
 degree of freedom before computing the likelihood, we keep the
 number of model parameters to a minimum and this allows us to model
-typical short wild-type time series without excessive over-fitting. In
+typical short wild-type time series without noticeable over-fitting. In
 many applications it is difficult or impossible to achieve a high
 degree of temporal resolution. For example, in studies of
 embryogenesis it is often impossible to stage embryos with the
@@ -538,16 +521,29 @@ downstream targets in the regulatory network. Indeed, Mef2 is a
 direct target of Twist and therefore the direct targets of Mef2 are
 indirect targets of Twist. These indirect targets will be
 differentially expressed in the mutant and will therefore increase the
-false positive rate. We also found that the model-based score results
-for Mef2 show less improvement over the correlation score results in comparison to the Twist
-results. Again, this can be explained by the fact that Mef2 is
-active later, at stages downstream of Twist.
-Therefore, there
+false positive rate. We found that the model-based scores provide 
+a significant improvement over correlation with TF expression for Twist. 
+This is most likely due to the diversity of target gene expression profiles
+ for this TF (recall Fig.~\ref{fig:gpdisim_models}). The models can fit 
+profiles that are very poorly correlated with the TF expression profile. For Mef2
+the models still provide highly significant enrichment of both ChIP and knock-out 
+predictions, but the correlation performs similarly well. Fig.~\ref{fig:gpdisim_mef2_models} 
+shows that predicted Mef2 targets are much less diverse in profile than those for Twist. Also, Mef2 is
+active later, at stages downstream of Twist. Therefore, there
 are less data points available to capture the diversity of profiles
-that can be explained by the regulation model. Conversely, the
+that can be explained by the regulation model while the correlation with TF profile will typically be good. Conversely, the
 correlation score is much less useful for Twist, since it misses many
-targets that have profiles very different from the Twist mRNA
-profile. 
+targets that have profiles very different from the Twist mRNA profile. 
+
+The two model-based approaches (single-target and multiple-target) perform 
+similarly well, although the single-target approach gave slightly better results in 
+most comparisons. Fig.~\ref{fig:gpdisim_models} suggests that the more constrained 
+multiple-target model conforms more with our assumption of a shared protein 
+profile for all targets. However, performance of this model may be strongly
+influenced by the choice of training genes. In order not to bias our validation, 
+we chose training genes using the single-target model ranking, without any reference
+to ChIP-chip, in situ or knock-out data. In practice it may be better to use a more 
+confident set of training genes. 
 
 We are pursuing a number of extensions of the current work. Here, we
 have limited ourselves to detecting the targets of transcriptional activators. The
