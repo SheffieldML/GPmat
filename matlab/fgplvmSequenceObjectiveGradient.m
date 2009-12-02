@@ -1,4 +1,4 @@
-function f = fgplvmSequenceObjectiveGradient(xvec, model, Y)
+function [f, g] = fgplvmSequenceObjectiveGradient(xvec, model, Y)
 
 % FGPLVMSEQUENCEOBJECTIVEGRADIENT Wrapper function for objective
 % and gradient of a single sequence in latent space and the corresponding output sequence.
