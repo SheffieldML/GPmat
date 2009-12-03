@@ -221,6 +221,60 @@ Figs.~\ref{fig:dros_binding_site_distances_global} and
     \label{fig:dros_binding_site_distances_focused}}
 \end{figure}
 
+\section{Ranking results using a variant of the method of Della Gatta et al.}
+
+Ranking results using a variant of the method from~\cite{Gatta2008}
+with TF expression measurements as a proxy for TF protein measurements
+in comparison to the methods included in the main paper are shown in
+Figures~\ref{fig:dros_global_evaluation}--\ref{fig:dros_focused_evaluation}.
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[trim=0mm 18mm 0mm 0mm]{dros_global_evaluation_supplement}
+  %\includegraphics{dros_global_evaluation_supplement}
+  \caption{Global evaluation results of different rankings as
+    discussed in the text showing the relative frequency of positive
+    predictions among $N$ top-ranking targets.
+    The dashed line
+    denotes the frequency in the full population.
+    The first row shows the frequency of targets with ChIP-chip
+    binding within 2000 base pairs of the gene
+    while the second row shows the frequency of
+    predicted targets with significant differential
+    expression in TF knock-outs.
+    $p$-values of results significantly different from random are
+    denoted by `***': $p <
+    0.001$, `**': $p < 0.01$, `*': $p < 0.05$.
+    Comparison to knock-out ranking is obviously omitted for knock-out
+    validation. \label{fig:dros_global_evaluation}
+  }
+ % \label{fig:dros_global_evaluation}
+\end{figure}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[trim=0mm 8mm 0mm 0mm]{dros_focused_evaluation_supplement}
+  %\includegraphics{dros_focused_evaluation_supplement}
+  \caption{Evaluation results of different rankings based on
+    ChIP-chip data and differential expression in knock-outs
+    similar to those in
+    Fig.~\ref{fig:dros_global_evaluation} except only considering
+    $N$ top genes
+    with annotated expression in mesoderm or muscle tissue.
+%     as discussed in the text showing the relative frequency of
+%     positive predictions among $N$ top-ranking targets.  The dashed
+%     line denotes the frequency in full population.  The first row
+%     shows the frequency of predicted targets that are significantly
+%     differentially expressed in knock-outs for the TF.  The second row
+%     shows the frequency of targets with ChIP-chip binding within 5 kb
+%     of the gene.  $p$-values results significantly different from
+%     random are denoted by '***': $p < 0.001$, '**': $p < 0.01$, '*':
+%     $p < 0.05$.
+\label{fig:dros_focused_evaluation}
+}
+  %\label{fig:dros_focused_evaluation}
+\end{figure}
+
 \section{Bootstrap sampling to estimate significance of differences of
   ranking methods}
 
@@ -232,7 +286,7 @@ better than the other.  It should be noted that these values are not
 $p$-values nor directly transferable to be such.
 
 The results of the sampling are presented below in
-Tables~\ref{tab:bootstrap1}--\ref{tab:bootstrap6}.  The methods
+Tables~\ref{tab:bootstrap1}--\ref{tab:bootstrap8}.  The methods
 studied are: ST = proposed single-target method, MT = proposed
 multiple-target method, CO = ranking by correlation, KO = ranking by
 $q$-value in knock-outs.  For each pair of methods, the marks in the
@@ -247,23 +301,23 @@ dominance, '-': comparison not applicable.
 \subfloat[][Top 20]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     &     & .   & ***\\ 
-MT &     &     & +   & ***\\ 
-CO &     &     &     & ***\\ 
+ST &     & *   & +   & ***\\ 
+MT &     &     &     & ** \\ 
+CO &     &     &     & *  \\ 
 KO &     &     &     &    \\ 
 \end{tabular}}
 \subfloat[][Top 100]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     & .   & **  & ***\\ 
-MT &     &     & *   & ***\\ 
-CO &     &     &     & ***\\ 
+ST &     & *   & *** & ***\\ 
+MT &     &     & *** & ***\\ 
+CO &     &     &     & ** \\ 
 KO &     &     &     &    \\ 
 \end{tabular}}
 \subfloat[][Top 250]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     & *   & *** & ***\\ 
+ST &     & **  & *** & ***\\ 
 MT &     &     & *** & ***\\ 
 CO &     &     &     & ***\\ 
 KO &     &     &     &    \\ 
@@ -277,23 +331,23 @@ KO &     &     &     &    \\
 \subfloat[][Top 20]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     &     &     & -  \\ 
-MT &     &     &     & -  \\ 
+ST &     & +   & *   & -  \\ 
+MT &     &     & .   & -  \\ 
 CO &     &     &     & -  \\ 
 KO & -   & -   & -   & -  \\ 
 \end{tabular}}
 \subfloat[][Top 100]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     &     & **  & -  \\ 
-MT &     &     & **  & -  \\ 
+ST &     & .   & *** & -  \\ 
+MT &     &     & *** & -  \\ 
 CO &     &     &     & -  \\ 
 KO & -   & -   & -   & -  \\ 
 \end{tabular}}
 \subfloat[][Top 250]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     &     & *** & -  \\ 
+ST &     & *   & *** & -  \\ 
 MT &     &     & *** & -  \\ 
 CO &     &     &     & -  \\ 
 KO & -   & -   & -   & -  \\ 
@@ -307,26 +361,26 @@ KO & -   & -   & -   & -  \\
 \subfloat[][Top 20]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     &     & **  & +  \\ 
-MT &     &     & *   & +  \\ 
+ST &     & .   & *   &    \\ 
+MT &     &     & +   &    \\ 
 CO &     &     &     &    \\ 
-KO &     &     &     &    \\ 
+KO &     &     & +   &    \\ 
 \end{tabular}}
 \subfloat[][Top 100]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     & +   & *** & ***\\ 
-MT &     &     & **  & ** \\ 
+ST &     & +   & *** & ** \\ 
+MT &     &     & *** & *  \\ 
 CO &     &     &     &    \\ 
-KO &     &     &     &    \\ 
+KO &     &     & +   &    \\ 
 \end{tabular}}
 \subfloat[][Top 250]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     & **  & *** & ***\\ 
-MT &     &     & **  & ***\\ 
+ST &     & *** & *** & ***\\ 
+MT &     &     & *** & *  \\ 
 CO &     &     &     &    \\ 
-KO &     &     &     &    \\ 
+KO &     &     & **  &    \\ 
 \end{tabular}}
   \caption{Bootstrap results: Twist focused ChIP-chip}
   \label{tab:bootstrap3}
@@ -337,28 +391,28 @@ KO &     &     &     &    \\
 \subfloat[][Top 20]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     & +   & .   &    \\ 
-MT &     &     &     &    \\ 
-CO &     &     &     &    \\ 
-KO &     & .   & .   &    \\ 
+ST &     & .   & *** & -  \\ 
+MT &     &     & *** & -  \\ 
+CO &     &     &     & -  \\ 
+KO & -   & -   & -   & -  \\ 
 \end{tabular}}
 \subfloat[][Top 100]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     & +   &     & +  \\ 
-MT &     &     &     & .  \\ 
-CO & +   & *   &     & ** \\ 
-KO &     &     &     &    \\ 
+ST &     & *   & *** & -  \\ 
+MT &     &     & *** & -  \\ 
+CO &     &     &     & -  \\ 
+KO & -   & -   & -   & -  \\ 
 \end{tabular}}
 \subfloat[][Top 250]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     & *** &     & ** \\ 
-MT &     &     &     &    \\ 
-CO & *   & *** &     & ***\\ 
-KO &     &     &     &    \\ 
+ST &     & *   & *** & -  \\ 
+MT &     &     & +   & -  \\ 
+CO &     &     &     & -  \\ 
+KO & -   & -   & -   & -  \\ 
 \end{tabular}}
-  \caption{Bootstrap results: Mef2 global ChIP-chip}
+  \caption{Bootstrap results: Twist focused knock-outs}
   \label{tab:bootstrap4}
 \end{table}
 
@@ -367,28 +421,28 @@ KO &     &     &     &    \\
 \subfloat[][Top 20]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     &     & .   & -  \\ 
-MT &     &     & .   & -  \\ 
-CO &     &     &     & -  \\ 
-KO & -   & -   & -   & -  \\ 
+ST &     & .   & .   & ** \\ 
+MT &     &     &     & ** \\ 
+CO &     &     &     & *  \\ 
+KO &     &     &     &    \\ 
 \end{tabular}}
 \subfloat[][Top 100]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     & +   & .   & -  \\ 
-MT &     &     &     & -  \\ 
-CO &     &     &     & -  \\ 
-KO & -   & -   & -   & -  \\ 
+ST &     & +   &     & +  \\ 
+MT &     &     &     & .  \\ 
+CO & *   & **  &     & ***\\ 
+KO &     &     &     &    \\ 
 \end{tabular}}
 \subfloat[][Top 250]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     & .   & +   & -  \\ 
-MT &     &     &     & -  \\ 
-CO &     &     &     & -  \\ 
-KO & -   & -   & -   & -  \\ 
+ST &     & *** &     & ***\\ 
+MT &     &     &     & *  \\ 
+CO & **  & *** &     & ***\\ 
+KO &     &     &     &    \\ 
 \end{tabular}}
-  \caption{Bootstrap results: Mef2 global knock-outs}
+  \caption{Bootstrap results: Mef2 global ChIP-chip}
   \label{tab:bootstrap5}
 \end{table}
 
@@ -397,17 +451,47 @@ KO & -   & -   & -   & -  \\
 \subfloat[][Top 20]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     &     & +   & .  \\ 
-MT &     &     & +   & +  \\ 
-CO &     &     &     &    \\ 
+ST &     &     & *   & -  \\ 
+MT &     &     & *   & -  \\ 
+CO &     &     &     & -  \\ 
+KO & -   & -   & -   & -  \\ 
+\end{tabular}}
+\subfloat[][Top 100]{
+\begin{tabular}{lcccc}
+    & ST  & MT  & CO  & KO \\
+ST &     & +   &     & -  \\ 
+MT &     &     &     & -  \\ 
+CO &     &     &     & -  \\ 
+KO & -   & -   & -   & -  \\ 
+\end{tabular}}
+\subfloat[][Top 250]{
+\begin{tabular}{lcccc}
+    & ST  & MT  & CO  & KO \\
+ST &     &     & **  & -  \\ 
+MT &     &     & *   & -  \\ 
+CO &     &     &     & -  \\ 
+KO & -   & -   & -   & -  \\ 
+\end{tabular}}
+  \caption{Bootstrap results: Mef2 global knock-outs}
+  \label{tab:bootstrap6}
+\end{table}
+
+\begin{table}[p]
+  \centering
+\subfloat[][Top 20]{
+\begin{tabular}{lcccc}
+    & ST  & MT  & CO  & KO \\
+ST &     &     &     &    \\ 
+MT &     &     &     & .  \\ 
+CO &     &     &     & .  \\ 
 KO &     &     &     &    \\ 
 \end{tabular}}
 \subfloat[][Top 100]{
 \begin{tabular}{lcccc}
     & ST  & MT  & CO  & KO \\
-ST &     & +   &     & +  \\ 
+ST &     & *   &     & ** \\ 
 MT &     &     &     & .  \\ 
-CO & *   & **  &     & ** \\ 
+CO & *   & **  &     & ***\\ 
 KO &     &     &     &    \\ 
 \end{tabular}}
 \subfloat[][Top 250]{
@@ -419,7 +503,37 @@ CO & *** & *** &     & ***\\
 KO &     &     &     &    \\ 
 \end{tabular}}
   \caption{Bootstrap results: Mef2 focused ChIP-chip}
-  \label{tab:bootstrap6}
+  \label{tab:bootstrap7}
+\end{table}
+
+\begin{table}[p]
+  \centering
+\subfloat[][Top 20]{
+\begin{tabular}{lcccc}
+    & ST  & MT  & CO  & KO \\
+ST &     & +   &     & -  \\ 
+MT &     &     &     & -  \\ 
+CO &     &     &     & -  \\ 
+KO & -   & -   & -   & -  \\ 
+\end{tabular}}
+\subfloat[][Top 100]{
+\begin{tabular}{lcccc}
+    & ST  & MT  & CO  & KO \\
+ST &     &     & **  & -  \\ 
+MT & *   &     & *** & -  \\ 
+CO &     &     &     & -  \\ 
+KO & -   & -   & -   & -  \\ 
+\end{tabular}}
+\subfloat[][Top 250]{
+\begin{tabular}{lcccc}
+    & ST  & MT  & CO  & KO \\
+ST &     &     & *   & -  \\ 
+MT &     &     & *   & -  \\ 
+CO &     &     &     & -  \\ 
+KO & -   & -   & -   & -  \\ 
+\end{tabular}}
+  \caption{Bootstrap results: Mef2 focused knock-outs}
+  \label{tab:bootstrap8}
 \end{table}
 
 \bibliographystyle{pnas}

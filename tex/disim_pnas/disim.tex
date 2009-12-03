@@ -123,10 +123,9 @@ or the TF protein, for TFs activated post-translationally. In the
 application considered here the TFs are transcriptionally regulated
 and we take the former approach. We use Bayesian marginalisation (also
 known as Bayesian model averaging) to
-integrate out this functional degree of freedom. This greatly reduces the
+integrate out these functional degrees of freedom. This greatly reduces the
 number of parameters required to model the data, making a
-likelihood-based approach feasible even for short time series
-datasets. 
+likelihood-based approach feasible even for short time series.
 
 There are many existing approaches to inferring gene regulatory networks from
 time series expression data, including dynamic Bayesian networks,
@@ -146,14 +145,14 @@ have addressed this target identification problem using time series
 data with a regulation model~\cite{Barenco2006a,Gatta2008}. However,
 these approaches either require a known target set for training~\cite{Barenco2006a} or
 they require measured TF protein data~\cite{Gatta2008}. In addition to
-these differences in the assumed prior knowledge and data available,
+these differences in the assumed prior knowledge and available data,
 it is also difficult to validate other approaches on the same data used in these
 studies as they only carried out validation of positive targets
 that they identified, rather than using unbiased genome-wide
 experimental validation. 
 
 We validate our proposed method by comparing the model-based target
-ranking with published ChIP-chip data for two TFs controlling early
+ranking with published ChIP-chip data for two TFs controlling
 mesoderm development in \emph{Drosophila}. Our method is shown to be comparable
 to, or outperform, the use of knockout mutant data which are available
 for these TFs. We demonstrate that a model-based approach is significantly
@@ -185,9 +184,10 @@ characterised by a mean and covariance, the Gaussian process is
 characterised by a mean function $\mathrm{E}[f(t)]$ and a covariance
 function $k(t,t')=\mathrm{E}[f(t)f(t')]-\mathrm{E}[f(t)]\mathrm{E}[f(t')]$
 where the expectation is over function evaluations at times $t$ and
-$t'$. 
+$t'$~\cite{Rasmussen2006}.
 
-For the prior distribution of TF mRNA concentration profile $f$ we use a zero-mean squared exponential covariance
+For the prior distribution of TF mRNA concentration profile $f$ we use a
+zero-mean Gaussian process with squared exponential covariance
 $k(t,t')=a\exp(-(t-t')^2/l^2)$. Samples from a Gaussian process with this choice
 of covariance are smooth, infinitely differentiable, stationary functions. Although single-cell mRNA counts may be low
 and vary in a highly stochastic manner, here we consider microarray data which
@@ -220,8 +220,8 @@ $\theta=[\delta,a,l,\{B_j,S_j,D_j\}]$ (see Materials and Methods).
 A microarray time course experiment provides a data vector $\bm y$ containing the noise-corrupted TF and target mRNA
 measurements at $n$ times,
 $\bm
-y=[\hat{f}(t_1),\hat{f}(t_2),\ldots,\hat{f}(t_n),\{\hat{m}_j(t_1),\ldots,\hat{m}_j(t_n)\}]^\mathrm{T}$. This
-is a continuous-time modeling framework so there is no
+y=[\hat{f}(t_1),\hat{f}(t_2),\ldots,\hat{f}(t_n),\{\hat{m}_j(t_1),\ldots,\hat{m}_j(t_n)\}]^\mathrm{T}$.
+In this continuous-time modeling framework there is no
 requirement that times are equally spaced. We assume Gaussian noise:
 $p(\bm y|f,\bm m)=\prod_i{\cal
   N}(\hat{f}(t_i)|f(t_i),\sigma_{if}^2)\prod_j{\cal
@@ -232,7 +232,8 @@ microarray data~\cite{Liu2005,Pearson2009} (see
 Materials and Methods). The log-likelihood for the model parameters
 $\theta$ can then be calculated exactly using standard Gaussian process regression
 techniques to integrate out the functions $\bm m$ and
-$f$~\cite{Rasmussen2006}. For $R$ replicate datasets the
+$f$~\cite{Rasmussen2006}. For independent replicate datasets, with
+$R$ experiments in total, the
 log-likelihood is
 \begin{equation*}
   \begin{split}
@@ -264,7 +265,7 @@ prefer the above cascade model for cases where the level of active TF is under d
 We applied our model-based approach to identify targets of the TFs
 Twist and Mef2 which regulate mesoderm and muscle development in
 \emph{Drosophila}~\cite{Sandmann2007,Zinzen2009}. We used a microarray dataset
-containing three replicated time series of 12 time points collected
+containing three independent time series of 12 time points collected
 hourly throughout \emph{Drosophila} embryogenesis in wild-type
 embryos~\cite{Tomancak2002}.  Weakly expressed candidate targets were eliminated by 
 considering average z-scores of expression values as described in
@@ -304,6 +305,14 @@ For comparison, candidates were also ranked by correlation of the
 expression profile with the TF expression profile (``correlation'')
 and by $q$-value of differential expression in TF loss-of-function mutant
 experiments from~\cite{Sandmann2006a,Sandmann2007} (``knock-out''). 
+To assess the significance of the observed differences between
+alternative ranking approaches, we performed 100,000-fold bootstrap
+resampling of the dataset, where the
+relative performances of different methods were recorded for each
+fold. Full bootstrap results are in Supplementary Material.
+%, the Gaussian process methods were superior to the alternatives
+%in over 95\% of the repeats in most Twist validation settings.
+%For Mef2, there are fewer highly significant differences.
 
 
 %The rankings of the targets shown using single-target models are 2, 27
@@ -336,7 +345,20 @@ experiments from~\cite{Sandmann2006a,Sandmann2007} (``knock-out'').
 The accuracy of the ranking was first evaluated by looking globally at the fraction of $N$ top-ranking targets that are significantly differentially expressed in knock-outs of the TFs and the fraction
 of targets with ChIP-chip binding within 2000 base
 pairs of its beginning or end or within the gene in the data
-from~\cite{Zinzen2009}. For Twist the single-target and multiple-target models both perform well, with the single-target model performing slightly better (see Fig.~\ref{fig:dros_global_evaluation}). In the ChIP validation the model-based methods both perform significantly better than ranking using both mutant differential expression and correlation with TF expression. In the knock-out validation both model-based approaches out-perform the correlation ranking. For Mef2 the results of all methods have more comparable performance. In the ChIP validation all methods provide highly significant enrichment in the top 100 and top 250 lists with the correlation performing best. In the knock-out validation the model-based and correlation-based rankings both provide highly significant enrichment in the top 100 and top 250 lists, with the single-target model performing best.
+from~\cite{Zinzen2009}. For Twist the single-target and
+multiple-target models both perform well, with the single-target model
+performing slightly better (see
+Fig.~\ref{fig:dros_global_evaluation}). In the ChIP validation the
+model-based methods both perform significantly better than ranking
+using either mutant differential expression or correlation with TF
+expression. In the knock-out validation both model-based approaches
+significantly out-perform the correlation ranking. For Mef2 the results of all
+methods have more roughly comparable performance. In the ChIP validation all
+methods provide highly significant enrichment in the top 100 and top
+250 lists with the correlation performing best. In the knock-out
+validation the model-based and correlation-based rankings both provide
+highly significant enrichment in the top 100 and top 250 lists, with
+the single-target model performing best.
 
 \begin{figure}[tb]
   \centering
@@ -345,7 +367,8 @@ from~\cite{Zinzen2009}. For Twist the single-target and multiple-target models b
   \caption{Evaluation results of different rankings based on
     ChIP-chip data and differential expression in knock-outs
     similar to those in
-    Fig.~\ref{fig:dros_global_evaluation} except only considering genes
+    Fig.~\ref{fig:dros_global_evaluation} except only considering
+    $N$ top genes
     with annotated expression in mesoderm or muscle tissue.
 %     as discussed in the text showing the relative frequency of
 %     positive predictions among $N$ top-ranking targets.  The dashed
@@ -362,9 +385,18 @@ from~\cite{Zinzen2009}. For Twist the single-target and multiple-target models b
 \end{figure}
 
 Because Twist and Mef2 activities are specific to the mesoderm and
-muscle development, we also looked at accuracy focussing on genes
+muscle development, we also looked at accuracy focusing on genes
 with annotated expression in these tissues according to the
-\emph{in situ} data from~\cite{Tomancak2002}. These results are illustrated in Fig.~\ref{fig:dros_focused_evaluation}. For the Twist ChIP validation we now observe better performance for the knock-out scores although the model-based rankings remain best. However, we observe that the correlation ranking is no longer statistically significantly enriched for ChIP binding on this spatially filtered set of targets. For the Mef2 ChIP validation the relative performance of all methods is similar to the global enrichment analysis (Fig.~~\ref{fig:dros_global_evaluation}) although the knock-out top 20 ranking is improved.
+\emph{in situ} data from~\cite{Tomancak2002}. These results are
+illustrated in Fig.~\ref{fig:dros_focused_evaluation}. For the Twist
+ChIP validation we now observe better performance for the knock-out
+scores although the model-based rankings remain best. However, we
+observe that the correlation ranking is no longer statistically
+significantly enriched for ChIP binding on this spatially filtered set
+of targets. For the Mef2 ChIP validation the relative performance of
+all methods is similar to the global enrichment analysis
+(Fig.~\ref{fig:dros_global_evaluation}) although the knock-out top 20
+ranking is improved.
 
 % The results for $N=10$ are only significantly better than random for
 % Twist ChIP-chip, while for $N=50$ and especially $N=250$ the
@@ -385,31 +417,32 @@ performing comparably well.
   \centering
   \includegraphics{dros_binding_site_distances}
   \caption{The fraction of top 100 predicted targets having a ChIP-chip
-    binding site or CRM within $x$ base pairs as a function of $x$.
+    binding site (\emph{cis}-regulatory module; CRM)
+    within $x$ base pairs as a function of $x$.
     Binding sites within an intron of a gene are considered to
     have a distance 0.
     \label{fig:dros_binding_site_distances}}
 \end{figure}
 
-To assess the significance of the observed differences between
-alternative ranking approaches, we performed bootstrap
-resampling of the data set.  In 100,000-fold resampling where the
-relative performances of different methods were recorded for each
-fold, the Gaussian process methods were superior to the alternatives
-in over 95\% of the repeats in most Twist validation settings.
-For Mef2, there are fewer highly significant differences.
-(Full results in Supplementary Material.)
+% To assess the significance of the observed differences between
+% alternative ranking approaches, we performed bootstrap
+% resampling of the data set.  In 100,000-fold resampling where the
+% relative performances of different methods were recorded for each
+% fold, the Gaussian process methods were superior to the alternatives
+% in over 95\% of the repeats in most Twist validation settings.
+% For Mef2, there are fewer highly significant differences.
+% (Full results in Supplementary Material.)
 
-We also repeated the experiment with the method of~\cite{Gatta2008}
-but using the TF expression levels as a proxy for the measured protein
-levels.  The results of this method are in general comparable to
-ranking by correlation; there are no cases where it would be
-significantly better than correlation and especially in cases where
-correlation is doing well it is often worse.
-Using measured protein levels as proposed in~\cite{Gatta2008} would
-naturally help, but unfortunately such information is not available in
-this case or in general.  It is worth noting that any measurements of
-protein levels could very easily be incorporated in our models as well.
+% We also repeated the experiment with the method of~\cite{Gatta2008}
+% but using the TF expression levels as a proxy for the measured protein
+% levels.  The results of this method are in general comparable to
+% ranking by correlation; there are no cases where it would be
+% significantly better than correlation and especially in cases where
+% correlation is doing well it is often worse.
+% Using measured protein levels as proposed in~\cite{Gatta2008} would
+% naturally help, but unfortunately such information is not available in
+% this case or in general.  It is worth noting that any measurements of
+% protein levels could very easily be incorporated in our models as well.
 
 Finally, since most expression time series are short~\cite{Ernst2005}
 we assessed whether similar results could be obtained with fewer time
@@ -452,8 +485,9 @@ not display a phenotype of interest.
 
 The main novelty of our approach is the use of recently proposed
 techniques to model a time-varying degree of freedom as a sample from
-a Gaussian process prior distribution~\cite{Gao2008}. By marginalizing out this functional
-degree of freedom before computing the likelihood, we keep the
+a Gaussian process prior distribution~\cite{Gao2008}. By marginalizing
+out these functional
+degrees of freedom before computing the likelihood, we keep the
 number of model parameters to a minimum and this allows us to model
 typical short wild-type time series without noticeable over-fitting. In
 many applications it is difficult or impossible to achieve a high
@@ -477,9 +511,11 @@ implementation of their method~\cite{Barenco2009} the original Markov
 chain Monte Carlo procedure for Bayesian inference has been dropped due to its computational
 inefficiency and an alternative optimisation-based method is used. In our case a Bayesian treatment of the TF protein
 concentration is computationally efficient because we use Gaussian
-process inference techniques. A Bayesian approach reduces the number of parameters
-to be optimised, since we marginalise over the TF concentration, and
-thereby reduces the possibility of over-fitting. Nevertheless, the use of a training set to infer the
+process inference techniques.
+%A Bayesian approach reduces the number of parameters
+%to be optimised, since we marginalise over the TF concentration, and
+%thereby reduces the possibility of over-fitting.
+Nevertheless, the use of a training set to infer the
 TF concentration from targets was a very elegant solution to the
 problem of dealing with TFs activated post-translation. This
 approach also fits very naturally into the Gaussian process
@@ -508,10 +544,16 @@ intended. We were interested in whether
 their approach to modelling indirect regulation would be helpful in
 our case. Therefore we applied their approach using mRNA data as a
 proxy for protein data which is not unreasonable for TFs under
-transcriptional control. The results were no better than
-using correlation with TF concentration. However, this comparison is
+transcriptional control. The results only show significant
+enrichment in global evaluation for top 100 and top 250 and Twist
+focused evaluation for top 250 and are in most cases no better than
+the our models and correlation (see Supplementary Material for full
+results).
+However, this comparison is
 not fair to their method which really relies on the
 availability of protein measurements.
+It is worth noting that any measurements of
+protein levels could very easily be incorporated in our models as well.
 
 There are some interesting differences in the ranking results for the two TFs studied
 here. The knock-out scores for Twist are found to be less informative
@@ -566,12 +608,12 @@ to deal with inference over time-varying external inputs in these and other
 biological systems.
 
 \subsection{Availability}
-Matlab code used in the experiments is available at
+Complete Matlab code for repeating the experiments is available at
 \texttt{http://www.cis.hut.fi/ahonkela/gpdisim/}.  An R implementation of
 the ranking method is available from the authors upon request.
 
 \begin{materials}
-  \section{Expression data preprocessing} \emph{Drosophila} developmental
+  \section{Expression data preprocessing} {\it Drosophila} developmental
   microarray time series from~\cite{Tomancak2002} were reprocessed
   using mmgMOS from the puma package~\cite{Pearson2009}.  The means of
   the log-scale expression values were equalized across chips.  The
@@ -586,7 +628,7 @@ the ranking method is available from the authors upon request.
   with low or zero sensitivity can fit them
   well. Genes $j$ with an average z-score 
   $$ \frac{1}{Rn} \sum_{r=1}^R \sum_{i=1}^n \frac{\hat{m}_{jr}(t_i)}{\sigma_{ijr}} < 1.8 $$
-  were considered weakly expressed and removed from the data set.  The threshold
+  were considered weakly expressed and removed from the dataset.  The threshold
   was selected by visually inspecting models for candidate targets:
   practically all targets below the threshold elicited a
   non-informative constant response from the model.
@@ -655,12 +697,10 @@ the ranking method is available from the authors upon request.
   were then fixed when fitting the larger models to the training set
   plus each candidate.
 
-  \section{In-situ data processing}
+  \section{In-situ and knock-out data processing}
   Genes with any of the annotation terms listed in Supplementary Table
   3 of~\cite{Zinzen2009} in the data of~\cite{Tomancak2002} were
   considered to be expressed in mesoderm or muscle tissue.
-
-  \section{Knock-out data processing}
   The knock-out data was processed as explained
   in~\cite{Sandmann2006a}.  $q$-values were computed at each time
   point using SAM~\cite{Saeed2003,Tusher2001}, the values at
