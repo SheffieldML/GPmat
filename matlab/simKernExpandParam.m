@@ -22,3 +22,6 @@ function kern = simKernExpandParam(kern, params)
 kern.decay = params(1);
 kern.inverseWidth = params(2);
 kern.variance = params(3);
+if isfield(kern, 'gaussianInitial') && kern.gaussianInitial,
+  kern.initialVariance = params(4);
+end

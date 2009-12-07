@@ -63,15 +63,17 @@ if disimKern1.rbf_variance ~= disimKern2.rbf_variance
   error('Kernels cannot be cross combined if they have different RBF variances.');
 end
 
-
+delta = disimKern1.di_decay;
+D1 = disimKern1.decay;
+D2 = disimKern2.decay;
 
 l = sqrt(2/disimKern1.inverseWidth);
-[h1, dh1_ddelta, dh1_dD1, dh1_dD2, dh1_dl] = disimComputeH(t1, t2, disimKern1.di_decay, disimKern1.decay, disimKern2.decay, l);
-[hp1, dhp1_ddelta, dhp1_dD1, dhp1_dD2, dhp1_dl] = disimComputeHPrime(t1, t2, disimKern1.di_decay, disimKern1.decay, disimKern2.decay, l);
+[h1, dh1_ddelta, dh1_dD1, dh1_dD2, dh1_dl] = disimComputeH(t1, t2, delta, D1, D2, l);
+[hp1, dhp1_ddelta, dhp1_dD1, dhp1_dD2, dhp1_dl] = disimComputeHPrime(t1, t2, delta, D1, D2, l);
 
 % Avoid making the expensive call twice with the same arguments
 if ((length(t1) == length(t2)) && all(t1 == t2) && ...
-    (disimKern1.decay == disimKern2.decay)),
+    (D1 == D2)),
   h2 = h1;
   dh2_ddelta = dh1_ddelta;
   dh2_dD2 = dh1_dD1;
@@ -84,8 +86,8 @@ if ((length(t1) == length(t2)) && all(t1 == t2) && ...
   dhp2_dD1 = dhp1_dD2;
   dhp2_dl = dhp1_dl;
 else,
-  [h2, dh2_ddelta, dh2_dD2, dh2_dD1, dh2_dl] = disimComputeH(t2, t1, disimKern1.di_decay, disimKern2.decay, disimKern1.decay, l);
-  [hp2, dhp2_ddelta, dhp2_dD2, dhp2_dD1, dhp2_dl] = disimComputeHPrime(t2, t1, disimKern1.di_decay, disimKern2.decay, disimKern1.decay, l);
+  [h2, dh2_ddelta, dh2_dD2, dh2_dD1, dh2_dl] = disimComputeH(t2, t1, delta, D2, D1, l);
+  [hp2, dhp2_ddelta, dhp2_dD2, dhp2_dD1, dhp2_dl] = disimComputeHPrime(t2, t1, delta, D2, D1, l);
 end
 
 dK_ddelta = dh1_ddelta + dh2_ddelta' + dhp1_ddelta + dhp2_ddelta';
@@ -121,7 +123,56 @@ dk_dinvWidth = -0.5*sqrt(2)/(disimKern1.inverseWidth* ...
 
 K = var2*K;
 
-% only pass the gradient with respect to the inverse width to one
-% of the gradient vectors ... otherwise it is counted twice.
-g1 = [dk_ddelta dk_dinvWidth dk_dDIVariance dk_dD1 dk_dDisim1Variance dk_dRBFVariance];
-g2 = [0 0 0 dk_dD2 dk_dDisim2Variance 0];
+if isfield(disimKern1, 'gaussianInitial') && disimKern1.gaussianInitial && ...
+  isfield(disimKern2, 'gaussianInitial') && disimKern2.gaussianInitial,
+  if disimKern1.initialVariance ~= disimKern2.initialVariance
+    error('Kernels cannot be cross combined if they have different initial variances.');
+  end
+  
+  dim1 = size(t1, 1);
+  dim2 = size(t2, 1);
+  t1Mat = t1(:, ones(1, dim2));
+  t2Mat = t2(:, ones(1, dim1))';
+  
+  the_rest = (exp(- delta * t1Mat) - exp(- D1 * t1Mat)) ./ (D1 - delta) .* ...
+      (exp(- delta * t2Mat) - exp(- D2 * t2Mat)) ./ (D2 - delta);
+  
+  dk_dinitVariance = sum(sum((sqrt(disimKern1.variance) * ...
+			      sqrt(disimKern2.variance) * ...
+			      the_rest) .* covGrad));
+  dk_dDisim1Variance = dk_dDisim1Variance + ...
+      sum(sum((.5 ./ sqrt(disimKern1.variance) * ...
+	       disimKern1.initialVariance * sqrt(disimKern2.variance) * the_rest) .* covGrad));
+  dk_dDisim2Variance = dk_dDisim2Variance + ...
+      sum(sum((.5 ./ sqrt(disimKern2.variance) * ...
+	       disimKern1.initialVariance * sqrt(disimKern1.variance) * the_rest) .* covGrad));
+
+  dk_dD1 = dk_dD1 + ...
+	   sum(sum((disimKern1.initialVariance * ...
+		    sqrt(disimKern1.variance) * sqrt(disimKern2.variance) * ...
+		    (t1Mat * (D1 - delta).*exp(-D1*t1Mat) - exp(-delta*t1Mat) + exp(-D1*t1Mat)) ./ (D1-delta).^2 .* ...
+		    (exp(- delta * t2Mat) - exp(- D2 * t2Mat)) ./ (D2 - delta)).*covGrad));
+  
+  dk_dD2 = dk_dD2 + ...
+	   sum(sum((disimKern1.initialVariance * ....
+		    sqrt(disimKern1.variance) * sqrt(disimKern2.variance) * ...
+		    (t2Mat * (D2 - delta).*exp(-D2*t2Mat) - exp(-delta*t2Mat) + exp(-D2*t2Mat)) ./ (D2-delta).^2 .* ...
+		    (exp(- delta * t1Mat) - exp(-D1 * t1Mat)) ./ (D1 - delta)).*covGrad));
+  
+  dk_ddelta = dk_ddelta + ...
+      sum(sum((disimKern1.initialVariance * ....
+	       sqrt(disimKern1.variance) * sqrt(disimKern2.variance) * ...
+	       ((-t2Mat * (D2 - delta).*exp(-delta*t2Mat) + exp(-delta*t2Mat) - exp(-D2*t2Mat)) ./ (D2-delta).^2 .* ...
+	       (exp(- delta * t1Mat) - exp(-D1 * t1Mat)) ./ (D1 - delta) + ...
+		(-t1Mat * (D1 - delta).*exp(-delta*t1Mat) + exp(-delta*t1Mat) - exp(-D1*t1Mat)) ./ (D1-delta).^2 .* ...
+		(exp(- delta * t2Mat) - exp(-D2 * t2Mat)) ./ (D2 - delta))).*covGrad));
+  
+  g1 = [dk_ddelta dk_dinvWidth dk_dDIVariance dk_dD1 dk_dDisim1Variance dk_dRBFVariance dk_dinitVariance];
+  g2 = [0 0 0 dk_dD2 dk_dDisim2Variance 0 0];
+else
+  % only pass the gradient with respect to the inverse width to one
+  % of the gradient vectors ... otherwise it is counted twice.
+  g1 = [dk_ddelta dk_dinvWidth dk_dDIVariance dk_dD1 dk_dDisim1Variance dk_dRBFVariance];
+  g2 = [0 0 0 dk_dD2 dk_dDisim2Variance 0];
+end
+

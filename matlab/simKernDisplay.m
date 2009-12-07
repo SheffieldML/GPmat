@@ -44,6 +44,10 @@ fprintf('SIM inverse width: %2.4f (length scale %2.4f)\n', ...
         kern.inverseWidth, 1/sqrt(kern.inverseWidth));
 fprintf(spacing);
 fprintf('SIM Variance: %2.4f\n', kern.variance)
+if isfield(kern, 'gaussianInitial') && kern.gaussianInitial,
+  fprintf(spacing);
+  fprintf('SIM Initial Variance: %2.4f\n', kern.initialVariance)
+end
 %fprintf(spacing);
 %fprintf('SIM Sensitivity: %2.4f\n', kern.sensitivity)
 %fprintf(spacing);

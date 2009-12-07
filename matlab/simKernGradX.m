@@ -72,3 +72,7 @@ end
 if ~isfield(kern, 'isNormalised') || (kern.isNormalised == false)
     gT = gT * sigma * sqrt(pi);
 end
+
+if isfield(kern, 'gaussianInitial') && kern.gaussianInitial,
+  error('simKerDiagGradX not implemented for gaussianInitial')
+end

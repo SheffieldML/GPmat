@@ -43,3 +43,14 @@ end
 k = 0.5*k*sqrt(pi)*l;
 k = kern.rbf_variance*kern.di_variance*kern.variance*k;
 k = real(k);
+
+if isfield(kern, 'gaussianInitial') && kern.gaussianInitial,
+  dim1 = size(t, 1);
+  dim2 = size(t2, 1);
+  t1Mat = t(:, ones(1, dim2));
+  t2Mat = t2(:, ones(1, dim1))';
+
+  k = k + kern.initialVariance * kern.variance * ...
+      (exp(- kern.di_decay * t1Mat) - exp(- kern.decay * t1Mat)) ./ (kern.decay - kern.di_decay) .* ...
+      (exp(- kern.di_decay * t2Mat) - exp(- kern.decay * t2Mat)) ./ (kern.decay - kern.di_decay);
+end

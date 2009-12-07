@@ -28,7 +28,14 @@ function [params, names] = simKernExtractParam(kern)
 %
 % KERN
 
-params = [kern.decay kern.inverseWidth kern.variance];
-if nargout > 1
-  names = {'decay', 'inverse width', 'variance'};
+if isfield(kern, 'gaussianInitial') && kern.gaussianInitial,
+  params = [kern.decay kern.inverseWidth kern.variance kern.initialVariance];
+  if nargout > 1
+    names = {'decay', 'inverse width', 'variance', 'initial variance'};
+  end
+else
+  params = [kern.decay kern.inverseWidth kern.variance];
+  if nargout > 1
+    names = {'decay', 'inverse width', 'variance'};
+  end
 end

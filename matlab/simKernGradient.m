@@ -52,3 +52,14 @@ end
 [g1, g2] = simXsimKernGradient(kern, kern, t, t2, varargin{end});
 
 g = g1 + g2;
+
+if isfield(kern, 'gaussianInitial') && kern.gaussianInitial,
+  dim1 = size(t, 1);
+  dim2 = size(t2, 1);
+  t1Mat = t(:, ones(1, dim2));
+  t2Mat = t2(:, ones(1, dim1))';
+
+  % Gradient with respect to the decay
+  g(1) = g(1) + sum(sum(-kern.initialVariance*(t1Mat + t2Mat).*exp(-kern.decay*(t1Mat + t2Mat)) .* varargin{end}));
+  g(end+1) = sum(sum(exp(-kern.decay*(t1Mat + t2Mat)) .* varargin{end}));
+end

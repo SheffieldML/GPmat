@@ -214,7 +214,47 @@ dk_dinvWidth = -0.5*sqrt(2)/(disimKern.inverseWidth* ...
                              sqrt(disimKern.inverseWidth))*dk_dl;
 
 
-% only pass the gradient with respect to the inverse width to one
-% of the gradient vectors ... otherwise it is counted twice.
-g1 = real([dk_ddelta dk_dinvWidth dk_dDIVariance dk_dD dk_dSimVariance dk_dRBFVariance]);
-g2 = [0 0 0];
+if isfield(disimKern, 'gaussianInitial') && disimKern.gaussianInitial && ...
+  isfield(simKern, 'gaussianInitial') && simKern.gaussianInitial,
+  if disimKern.initialVariance ~= simKern.initialVariance
+    error('Kernels cannot be cross combined if they have different initial variances.');
+  end
+  
+  dim1 = size(t1, 1);
+  dim2 = size(t2, 1);
+  t1Mat = t1(:, ones(1, dim2));
+  t2Mat = t2(:, ones(1, dim1))';
+  
+  delta = disimKern.di_decay;
+  D = disimKern.decay;
+
+  the_rest = (exp(-delta*t1Mat) - exp(-D*t1Mat)) ./ (D-delta) .* ...
+      exp(-delta*t2Mat);
+  
+  dk_dinitVariance = ...
+      sum(sum((sqrt(disimKern.variance) * the_rest) .* covGrad));
+
+  dk_dSimVariance = dk_dSimVariance + ...
+      sum(sum((.5 ./ sqrt(disimKern.variance) * ...
+	       disimKern.initialVariance * the_rest) .* covGrad));
+
+  dk_dD = dk_dD + ...
+	   sum(sum((disimKern.initialVariance * sqrt(disimKern.variance) * ...
+		    (t1Mat*(D-delta).*exp(-D*t1Mat) - exp(-delta*t1Mat) + exp(-D*t1Mat)) ./ (D-delta).^2 .* ...
+		    exp(-delta*t2Mat)).*covGrad));
+  
+  dk_ddelta = dk_ddelta + ...
+      sum(sum((disimKern.initialVariance * sqrt(disimKern.variance) * ...
+	       (-t2Mat.*exp(-delta*t2Mat) .* ...
+		(exp(-delta*t1Mat) - exp(-D*t1Mat)) ./ (D-delta) + ...
+		(-t1Mat*(D-delta).*exp(-delta*t1Mat) + exp(-delta*t1Mat) - exp(-D*t1Mat)) ./ (D-delta).^2 .* ...
+		exp(-delta*t2Mat))).*covGrad));
+  
+  g1 = real([dk_ddelta dk_dinvWidth dk_dDIVariance dk_dD dk_dSimVariance dk_dRBFVariance dk_dinitVariance]);
+  g2 = [0 0 0 0];
+else
+  % only pass the gradient with respect to the inverse width to one
+  % of the gradient vectors ... otherwise it is counted twice.
+  g1 = real([dk_ddelta dk_dinvWidth dk_dDIVariance dk_dD dk_dSimVariance dk_dRBFVariance]);
+  g2 = [0 0 0];
+end

@@ -27,6 +27,8 @@ function [k, sk] = simKernCompute(kern, t, t2)
 % MODIFICATIONS : David Luengo, 2009
 %
 % MODIFICATIONS : Mauricio Alvarez, 2009
+%
+% MODIFICATIONS : Antti Honkela, 2009
 
 % KERN
 
@@ -66,3 +68,11 @@ else
     k = kern.variance*k;
 end
 
+if isfield(kern, 'gaussianInitial') && kern.gaussianInitial,
+  dim1 = size(t, 1);
+  dim2 = size(t2, 1);
+  t1Mat = t(:, ones(1, dim2));
+  t2Mat = t2(:, ones(1, dim1))';
+
+  k = k + kern.initialVariance * exp(- kern.decay * (t1Mat + t2Mat));
+end

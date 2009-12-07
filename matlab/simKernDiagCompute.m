@@ -47,3 +47,7 @@ end
 if ~isfield(kern, 'isNormalised') || (kern.isNormalised == false)
     k = sqrt(pi)*sigma*k;
 end
+
+if isfield(kern, 'gaussianInitial') && kern.gaussianInitial,
+  k = k + kern.initialVariance*exp(-2*kern.decay*t);
+end

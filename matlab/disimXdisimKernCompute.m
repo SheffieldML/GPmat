@@ -57,3 +57,24 @@ hp2 = disimComputeHPrime(t2, t1, disimKern1.di_decay, disimKern2.decay, disimKer
 K = h1 + h2' + hp1 + hp2';
 K = 0.5*K*sqrt(pi)*l;
 K = disimKern1.rbf_variance*disimKern1.di_variance*sqrt(disimKern1.variance)*sqrt(disimKern2.variance)*K;
+
+if isfield(disimKern1, 'gaussianInitial') && disimKern1.gaussianInitial && ...
+  isfield(disimKern2, 'gaussianInitial') && disimKern2.gaussianInitial,
+  if disimKern1.initialVariance ~= disimKern2.initialVariance
+    error('Kernels cannot be cross combined if they have different initial variances.');
+  end
+  
+  dim1 = size(t1, 1);
+  dim2 = size(t2, 1);
+  t1Mat = t1(:, ones(1, dim2));
+  t2Mat = t2(:, ones(1, dim1))';
+
+  delta = disimKern1.di_decay;
+  D1 = disimKern1.decay;
+  D2 = disimKern2.decay;
+  
+  K = K + disimKern1.initialVariance * ...
+      sqrt(disimKern1.variance) * sqrt(disimKern2.variance) * ...
+      (exp(-delta * t1Mat) - exp(-D1 * t1Mat)) ./ (D1 - delta) .* ...
+      (exp(-delta * t2Mat) - exp(-D2 * t2Mat)) ./ (D2 - delta);
+end

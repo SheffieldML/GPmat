@@ -95,3 +95,22 @@ K = exp(lnCommon1 + lnFact1 + lnPart1) ...
 K = 0.5*K*sqrt(pi)*l;
 K = disimKern.rbf_variance*disimKern.di_variance*sqrt(disimKern.variance)*K;
 K = real(K);
+
+if isfield(disimKern, 'gaussianInitial') && disimKern.gaussianInitial && ...
+  isfield(simKern, 'gaussianInitial') && simKern.gaussianInitial,
+  if disimKern.initialVariance ~= simKern.initialVariance
+    error('Kernels cannot be cross combined if they have different initial variances.');
+  end
+  
+  dim1 = size(t1, 1);
+  dim2 = size(t2, 1);
+  t1Mat = t1(:, ones(1, dim2));
+  t2Mat = t2(:, ones(1, dim1))';
+
+  delta = disimKern.di_decay;
+  D = disimKern.decay;
+  
+  K = K + disimKern.initialVariance * sqrt(disimKern.variance) * ...
+      (exp(-delta * t1Mat) - exp(-D * t1Mat)) ./ (D - delta) .* ...
+      exp(-delta * t2Mat);
+end

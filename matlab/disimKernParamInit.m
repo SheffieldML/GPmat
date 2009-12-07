@@ -38,12 +38,20 @@ function kern = disimKernParamInit(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
-% COPYRIGHT : Antti Honkela, 2007
+% COPYRIGHT : Antti Honkela, 2007, 2009
 
 % KERN
 
 if kern.inputDimension > 1
   error('DISIM kernel only valid for one-D input.')
+end
+
+if isfield(kern, 'options') && isfield(kern.options, 'gaussianInitial') && ...
+      kern.options.gaussianInitial,
+  kern.gaussianInitial = 1;
+  kern.initialVariance = 1;
+else
+  kern.gaussianInitial = 0;
 end
 
 kern.di_decay = .1;
@@ -52,9 +60,14 @@ kern.di_variance = 1;
 kern.decay = 1;
 kern.variance = 1;
 kern.rbf_variance = 1;
-kern.nParams = 6;
 
-kern.transforms.index = [1 2 3 4 5 6];
+if kern.gaussianInitial,
+  kern.nParams = 7;
+else
+  kern.nParams = 6;
+end
+
+kern.transforms.index = 1:kern.nParams;
 kern.transforms.type = optimiDefaultConstraint('positive');
 
 kern.isStationary = false;

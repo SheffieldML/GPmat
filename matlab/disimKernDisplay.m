@@ -38,4 +38,7 @@ fprintf(spacing);
 fprintf('SIM decay: %2.4f\n', kern.decay)
 fprintf(spacing);
 fprintf('RBF variance: %2.4f\n', kern.rbf_variance)
-
+if isfield(kern, 'gaussianInitial') && kern.gaussianInitial,
+  fprintf(spacing);
+  fprintf('SIM Initial Variance: %2.4f\n', kern.initialVariance)
+end

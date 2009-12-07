@@ -37,23 +37,37 @@ if kern.inputDimension > 1
   error('SIM kernel only valid for one-D input.')
 end
 
+if isfield(kern, 'options') && isfield(kern.options, 'gaussianInitial') && ...
+      kern.options.gaussianInitial,
+  kern.gaussianInitial = 1;
+  kern.initialVariance = 1;
+else
+  kern.gaussianInitial = 0;
+end
+
 kern.delay = 0;
 kern.decay = 1;
 kern.initVal = 1;
 kern.variance = 1;
 kern.inverseWidth = 1;
-kern.nParams = 3;
 
-kern.transforms.index = [1 2 3];
+if kern.gaussianInitial,
+  kern.nParams = 4;
+else
+  kern.nParams = 3;
+end
+
+if isfield(kern, 'options') && isfield(kern.options, 'isNegativeS') && ...
+      kern.options.isNegativeS,
+  kern.isNegativeS = true;
+  kern.transforms.index = setdiff(1:kern.nParams, 3);
+else
+  kern.isNegativeS = false;
+  kern.transforms.index = 1:kern.nParams;
+end
 kern.transforms.type = optimiDefaultConstraint('positive');
 
 kern.isStationary = false;
 kern.isNormalised = false;
 kern.positiveTime = true;
-kern.isNegativeS = false;
-
-if kern.isNegativeS == true
-    kern.transforms.index = [1 2];    
-end
-    
 

@@ -13,7 +13,7 @@ function k = disimKernDiagCompute(kern, t)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
-% COPYRIGHT : Antti Honkela, 2007-2008
+% COPYRIGHT : Antti Honkela, 2007-2009
 
 % KERN
 
@@ -74,3 +74,8 @@ end
 k = 2*real(h+hp);
 k = 0.5*k*sqrt(pi)*l;
 k = kern.rbf_variance*kern.di_variance*kern.variance*k;
+
+if isfield(kern, 'gaussianInitial') && kern.gaussianInitial,
+  k = k + kern.initialVariance * kern.variance * ...
+      ((exp(-kern.di_decay*t) - exp(-kern.decay*t)) ./ (kern.decay-kern.di_decay)).^2;
+end

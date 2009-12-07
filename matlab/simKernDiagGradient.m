@@ -23,6 +23,8 @@
 
 % KERN
 
+error('simKernDiagGradient does not work.')
+
 if size(t, 2) > 1
   error('Input can only have one column');
 end
@@ -45,4 +47,8 @@ else
     g(1) = kern.variance * dh_dDp;
     g(2) = kern.variance * dh_dsigma;
     g(3) = h;
+end
+
+if isfield(kern, 'gaussianInitial') && kern.gaussianInitial,
+  g(4) = sum(exp(-2*kern.decay*t) .* covDiag);
 end
