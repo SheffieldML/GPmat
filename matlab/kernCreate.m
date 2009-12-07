@@ -12,9 +12,11 @@ function kern = kernCreate(X, kernelType)
 % 'cmpnd' element at the start of the sequence is
 % optional. Furthermore, {'tensor', 'rbf', 'lin'} can be used to
 % give a tensor product kernel, whose elements are the formed from
-% the products of the two indvidual kernel's elements and finally
+% the products of the two indvidual kernel's elements and
 % {'multi', 'rbf', ...} can be used to create a block structured
 % kernel for use with multiple outputs.
+% Finally the form {'parametric', struct('opt1', {val1}), 'rbf'} can
+% be used to pass options to other kernels.
 % RETURN kern : The kernel structure.
 %
 % FORMAT
@@ -26,6 +28,10 @@ function kern = kernCreate(X, kernelType)
 % RETURN kern : The kernel structure.
 %
 % SEEALSO : kernParamInit
+%
+% COPYRIGHT: Neil D. Lawrence, 2006
+%
+% MODIFICATIONS: Antti Honkela, 2009
 
 % KERN
   
@@ -49,6 +55,11 @@ else
   if dim == 1 & size(X, 1) == 1;
     dim = X;
   end
+end
+
+if iscell(kernelType) && strcmp(kernelType{1}, 'parametric'),
+  kern.options = kernelType{2};
+  kernelType = kernelType{3};
 end
 
 if iscell(kernelType)
