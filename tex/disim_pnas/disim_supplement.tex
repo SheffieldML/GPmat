@@ -145,20 +145,20 @@ where
   = 
   \frac{\sqrt{\pi}al}{4\delta}\exp\left(\left(\frac{\delta l}{2}\right)^2\right)
   \bigg(
-  \frac{2 \delta}{\delta^2 - D_j^2}
+  \frac{2 \delta \exp(- D_j t' - \delta t)}{\delta^2 - D_j^2}
   [\erf(\delta l / 2 - t/l) - \erf(\delta l / 2)]\\
   +
-  \frac{\exp((D_j - \delta)t')}{\delta - D_j}
+  \frac{\exp(- \delta (t + t'))}{\delta - D_j}
   [2\erf(\delta l / 2) - \erf(\delta l / 2 - t'/l) - \erf(\delta l / 2 - t/l)] \\
   +
-  \frac{\exp((D_j + \delta)t')}{\delta + D_j}
+  \frac{\exp(\delta (t' - t))}{\delta + D_j}
   [\erf(\delta l / 2 + t'/l) - \erf(\delta l / 2 - (t-t')/l)]\\
   +
-  \frac{\exp(2\delta t + (D_j - \delta)t')}{\delta - D_j}
+  \frac{\exp(\delta (t - t'))}{\delta - D_j}
   [\erf(\delta l / 2 + (t-t')/l) - \erf(\delta l / 2 + t/l)]
   \bigg) \\
   + \frac{\sqrt{\pi}l}{2(\delta^2 - D_j^2)}
-  \exp\left(\left(\frac{D_j l}{2}\right)^2\right)
+  \exp\left(\left(\frac{D_j l}{2}\right)^2 - D_j t' - \delta t \right)
   \bigg(
   \erf(D_j l/2 - t'/l) - \erf(D_j l/2) \\
   + \exp((D_j + \delta) t) [\erf(D_j l/2 + t/l) - \erf(D_j l/2 + (t-t')/l)]

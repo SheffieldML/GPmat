@@ -1,0 +1,92 @@
+\documentclass{article}
+\usepackage{a4wide}
+\usepackage{subfig}
+\usepackage{longtable}
+
+\begin{document}
+
+
+\begin{longtable}[c]{lcccc|lcccc|lcccc}
+  \caption{The results of 100,000-fold bootstrap sampling to assess
+significance of differences in ranking method performance.  The methods
+studied are: ST = proposed single-target method, MT = proposed
+multiple-target method, CO = ranking by correlation, KO = ranking by
+$q$-value in knock-outs.  For each pair of methods, the marks in the
+tables show how often the method on the corresponding row dominated
+the one on the corresponding column.  The marks are interpreted as
+follows: '.': $> 70 \%$ dominance, '+': $> 80 \%$ dominance,
+'*': $> 90 \%$ dominance, '**': $> 95 \%$ dominance, '***': $> 99 \%$
+dominance, '-': comparison not applicable.} \\
+\multicolumn{15}{c}{Twist global ChIP-chip} \\
+\multicolumn{5}{c|}{Top 20} &\multicolumn{5}{c|}{Top 100}  & \multicolumn{5}{c}{Top 250}\\
+    & ST  & MT  & CO  & KO &     & ST  & MT  & CO  & KO  &     & ST  & MT  & CO  & KO \\
+ST &     & *   & +   & *** & ST &     & *   & *** & *** & ST &     & **  & *** & ***\\
+MT &     &     &     & **  & MT &     &     & *** & *** & MT &     &     & *** & ***\\
+CO &     &     &     & *   & CO &     &     &     & **  & CO &     &     &     & ***\\
+KO &     &     &     &     & KO &     &     &     &     & KO &     &     &     &    \\
+\hline
+\\[0mm]
+\multicolumn{15}{c}{Twist global knock-outs} \\
+\multicolumn{5}{c|}{Top 20} &\multicolumn{5}{c|}{Top 100}  & \multicolumn{5}{c}{Top 250}\\
+    & ST  & MT  & CO  & KO &     & ST  & MT  & CO  & KO  &     & ST  & MT  & CO  & KO \\
+ST &     & +   & *   & -   & ST &     & .   & *** & -   & ST &     & *   & *** & -  \\
+MT &     &     & .   & -   & MT &     &     & *** & -   & MT &     &     & *** & -  \\
+CO &     &     &     & -   & CO &     &     &     & -   & CO &     &     &     & -  \\
+KO & -   & -   & -   & -   & KO & -   & -   & -   & -   & KO & -   & -   & -   & -  \\
+\hline
+\\[0mm]
+\multicolumn{15}{c}{Twist focused ChIP-chip} \\
+\multicolumn{5}{c|}{Top 20} &\multicolumn{5}{c|}{Top 100}  & \multicolumn{5}{c}{Top 250}\\
+    & ST  & MT  & CO  & KO &     & ST  & MT  & CO  & KO  &     & ST  & MT  & CO  & KO \\
+ST &     & .   & *   &     & ST &     & +   & *** & **  & ST &     & *** & *** & ***\\
+MT &     &     & +   &     & MT &     &     & *** & *   & MT &     &     & *** & *  \\
+CO &     &     &     &     & CO &     &     &     &     & CO &     &     &     &    \\
+KO &     &     & +   &     & KO &     &     & +   &     & KO &     &     & **  &    \\
+\hline
+\\[0mm]
+\multicolumn{15}{c}{Twist focused knock-outs} \\
+\multicolumn{5}{c|}{Top 20} &\multicolumn{5}{c|}{Top 100}  & \multicolumn{5}{c}{Top 250}\\
+    & ST  & MT  & CO  & KO &     & ST  & MT  & CO  & KO  &     & ST  & MT  & CO  & KO \\
+ST &     & .   & *** & -   & ST &     & *   & *** & -   & ST &     & *   & *** & -  \\
+MT &     &     & *** & -   & MT &     &     & *** & -   & MT &     &     & +   & -  \\
+CO &     &     &     & -   & CO &     &     &     & -   & CO &     &     &     & -  \\
+KO & -   & -   & -   & -   & KO & -   & -   & -   & -   & KO & -   & -   & -   & -  \\
+\hline
+\\[0mm]
+\multicolumn{15}{c}{Mef2 global ChIP-chip} \\
+\multicolumn{5}{c|}{Top 20} &\multicolumn{5}{c|}{Top 100}  & \multicolumn{5}{c}{Top 250}\\
+    & ST  & MT  & CO  & KO &     & ST  & MT  & CO  & KO  &     & ST  & MT  & CO  & KO \\
+ST &     & .   & .   & **  & ST &     & +   &     & +   & ST &     & *** &     & ***\\
+MT &     &     &     & **  & MT &     &     &     & .   & MT &     &     &     & *  \\
+CO &     &     &     & *   & CO & *   & **  &     & *** & CO & **  & *** &     & ***\\
+KO &     &     &     &     & KO &     &     &     &     & KO &     &     &     &    \\
+\hline
+\newpage
+\multicolumn{15}{c}{Mef2 global knock-outs} \\
+\multicolumn{5}{c|}{Top 20} &\multicolumn{5}{c|}{Top 100}  & \multicolumn{5}{c}{Top 250}\\
+    & ST  & MT  & CO  & KO &     & ST  & MT  & CO  & KO  &     & ST  & MT  & CO  & KO \\
+ST &     &     & *   & -   & ST &     & +   &     & -   & ST &     &     & **  & -  \\
+MT &     &     & *   & -   & MT &     &     &     & -   & MT &     &     & *   & -  \\
+CO &     &     &     & -   & CO &     &     &     & -   & CO &     &     &     & -  \\
+KO & -   & -   & -   & -   & KO & -   & -   & -   & -   & KO & -   & -   & -   & -  \\
+\hline
+\\[0mm]
+\multicolumn{15}{c}{Mef2 focused ChIP-chip} \\
+\multicolumn{5}{c|}{Top 20} &\multicolumn{5}{c|}{Top 100}  & \multicolumn{5}{c}{Top 250}\\
+    & ST  & MT  & CO  & KO &     & ST  & MT  & CO  & KO  &     & ST  & MT  & CO  & KO \\
+ST &     &     &     &     & ST &     & *   &     & **  & ST &     & **  &     & *  \\
+MT &     &     &     & .   & MT &     &     &     & .   & MT &     &     &     &    \\
+CO &     &     &     & .   & CO & *   & **  &     & *** & CO & *** & *** &     & ***\\
+KO &     &     &     &     & KO &     &     &     &     & KO &     &     &     &    \\[3mm]
+\hline
+\\[0mm]
+\multicolumn{15}{c}{Mef2 focused knock-outs} \\
+\multicolumn{5}{c|}{Top 20} &\multicolumn{5}{c|}{Top 100}  & \multicolumn{5}{c}{Top 250}\\
+    & ST  & MT  & CO  & KO &     & ST  & MT  & CO  & KO  &     & ST  & MT  & CO  & KO \\
+ST &     & +   &     & -   & ST &     &     & **  & -   & ST &     &     & *   & -  \\
+MT &     &     &     & -   & MT & *   &     & *** & -   & MT &     &     & *   & -  \\
+CO &     &     &     & -   & CO &     &     &     & -   & CO &     &     &     & -  \\
+KO & -   & -   & -   & -   & KO & -   & -   & -   & -   & KO & -   & -   & -   & -  \\
+\end{longtable}
+
+\end{document}

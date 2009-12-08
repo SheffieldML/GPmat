@@ -309,7 +309,7 @@ To assess the significance of the observed differences between
 alternative ranking approaches, we performed 100,000-fold bootstrap
 resampling of the dataset, where the
 relative performances of different methods were recorded for each
-fold. Full bootstrap results are in Supplementary Material.
+fold. Full bootstrap results are in Table S1.
 %, the Gaussian process methods were superior to the alternatives
 %in over 95\% of the repeats in most Twist validation settings.
 %For Mef2, there are fewer highly significant differences.
@@ -406,8 +406,8 @@ ranking is improved.
 The distance threshold of 2000 bp used in ChIP-chip evaluation is
 somewhat arbitrary.  The performance of different methods when this
 threshold is changed is illustrated in
-Fig.~\ref{fig:dros_binding_site_distances} and in the Supplementary
-Material.  The figure shows that the relative performances of
+Fig.~\ref{fig:dros_binding_site_distances} and in Fig.~S1.
+The figure shows that the relative performances of
 different algorithms are fairly consistent for different choices of threshold. 
 We see that the model-based rankings consistently perform best for Twist, while 
 methods perform more similarly for Mef2 with the correlation and single-target models 
@@ -547,7 +547,7 @@ proxy for protein data which is not unreasonable for TFs under
 transcriptional control. The results only show significant
 enrichment in global evaluation for top 100 and top 250 and Twist
 focused evaluation for top 250 and are in most cases no better than
-the our models and correlation (see Supplementary Material for full
+the our models and correlation (see Fig.~S2 for full
 results).
 However, this comparison is
 not fair to their method which really relies on the
@@ -591,7 +591,7 @@ We are pursuing a number of extensions of the current work. Here, we
 have limited ourselves to detecting the targets of transcriptional activators. The
 Gaussian process approach can be used to compute the likelihood for
 repression models~\cite{Gao2008}. However, since models of repression
-are inherently non-linear, the likelihood calculation is no longer analytically
+are inherently non-linear~\cite{Khanin2006}, the likelihood calculation is no longer analytically
 tractable. Therefore approximate Bayesian inference methods are
 required and we are currently working on an efficient implementation
 for genome-wide ranking. We have also limited our attention
@@ -645,7 +645,25 @@ the ranking method is available from the authors upon request.
     %\label{eq:gpsim_f_x_sol}
   \end{align*}
   Using these solutions and assuming a squared exponential covariance
-  for $f(t)$, $k_{ff}(t, t') = a \exp( -(t-t')^2/l^2)$, the covariance of target mRNAs is
+  for $f(t)$, $k_{ff}(t, t') = a \exp( -(t-t')^2/l^2)$, the covariance
+  of the TF and target mRNAs is
+  \begin{multline*}
+    k_{f m_k}(t, t')
+    = \frac{\sqrt{\pi} l a^2 S_k}{2(\delta - D_k)} \\
+    \bigg\{
+    \exp\left(\gamma_k^2 + D_k \Delta t \right)
+    \left[\erf\left(\gamma_k + \frac{t}{l}\right) 
+      - \erf\left(\gamma_k + \frac{\Delta t}{l}\right)\right] \\
+    -
+    \exp\left(\gamma_\delta^2 + \delta \Delta t\right)
+    \left[\erf\left(\gamma_\delta + \frac{t}{l}\right) 
+      - \erf\left(\gamma_\delta + \frac{\Delta t}{l}\right)\right]
+    \bigg\}\ ,
+  \end{multline*}
+  where $\Delta t := t - t'$, $\gamma_k = \frac{D_k l}{2}$
+  and $\gamma_\delta = \frac{\delta l}{2}$.
+
+  Similarly the covariance of target mRNAs is
   \begin{multline*}
     k_{m_j m_k}(t, t')
     = \frac{\sqrt{\pi} l a^2 S_j S_k}{2} \bigg(
@@ -670,20 +688,8 @@ the ranking method is available from the authors upon request.
     - \erf\left(\gamma_x - \frac{\Delta t}{l}\right)\right]
     \bigg\}\ ,
   \end{multline*}
-  where $\Delta t := t - t'$ and $\gamma_x = \frac{D_x l}{2}$.
-  Similarly, 
-  \begin{multline*}
-    k_{f m_k}(t, t')
-    = \frac{\sqrt{\pi} l a^2 S_k}{2(\delta - D_k)} \\
-    \bigg\{
-    \exp\left(\gamma_k^2 + D_k \Delta t \right)
-    \left[\erf\left(\gamma_k + \frac{t}{l}\right) - \erf\left(\gamma_k + \frac{\Delta t}{l}\right)\right] \\
-    -
-    \exp\left(\gamma_\delta^2 + \delta \Delta t\right)
-    \left[\erf\left(\gamma_\delta + \frac{t}{l}\right) - \erf\left(\gamma_\delta + \frac{\Delta t}{l}\right)\right]
-    \bigg\}\ ,
-  \end{multline*}
-  where $\gamma_k = \frac{D_k l}{2}$ and $\gamma_\delta = \frac{\delta l}{2}$.
+  where $\gamma_x = \frac{D_x l}{2}$.
+  Other covariances needed for inference of $p$ are derived in Text S1.
 
   \section{Training set ranking}
   The training set or multiple-target ranking was formed by fitting
