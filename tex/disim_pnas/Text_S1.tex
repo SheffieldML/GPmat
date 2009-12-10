@@ -1,6 +1,6 @@
 \documentclass{article}
 \usepackage{amsmath}
-\usepackage{a4wide}
+%\usepackage{a4wide}
 
 \title{Text S1 for ``Model-based transcription factor
   target identification with limited data''}
@@ -10,6 +10,20 @@
 \date{}
 
 \newcommand{\erf}{\operatorname{erf}}
+
+\oddsidemargin .5in    %   Note \oddsidemargin = \evensidemargin
+\evensidemargin .5in
+\marginparwidth 0.07 true in
+%\marginparwidth 0.75 true in
+%\topmargin 0 true pt           % Nominal distance from top of page to top of
+%\topmargin 0.125in
+\topmargin -0.625in
+\addtolength{\headsep}{0.25in}
+\textheight 9.0 true in       % Height of text (including footnotes & figures)
+\textwidth 5.5 true in        % Width of text line.
+\widowpenalty=10000
+\clubpenalty=10000
+
 
 \begin{document}
 
@@ -177,7 +191,23 @@ where
 \end{multline}
 
 
-\bibliographystyle{pnas}
-\bibliography{disim}
+%\bibliographystyle{pnas}
+%\bibliography{disim}
+
+\begin{thebibliography}{1}
+
+\bibitem{Rasmussen2006}
+Rasmussen, CE, Williams, CKI
+\newblock (2006) \emph{Gaussian Processes for Machine Learning}
+\newblock (MIT Press).
+
+\bibitem{Lawrence2007}
+Lawrence, ND, Sanguinetti, G, Rattray, M
+\newblock (2007) in \emph{Advances in Neural Information Processing Systems},
+  eds{} Sch\"{o}lkopf, B, Platt, JC, Hofmann, T
+\newblock (MIT Press, Cambridge, MA) Vol.{}~19, pp 785--792.
+
+\end{thebibliography}
+
 
 \end{document}
