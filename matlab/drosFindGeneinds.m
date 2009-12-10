@@ -1,4 +1,4 @@
-function I = drosGetGeneinds(drosdata, genes, incnulls, doprobes),
+function I = drosFindGeneinds(drosdata, genes, incnulls, doprobes),
 
 % DROSGETGENEINDS Find indices of given genes in a data set.
 % FORMAT

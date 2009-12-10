@@ -1,8 +1,27 @@
+% DROSPLOTCHIPDISTANCES Plot the accuracy figures appearing in the paper
+% FORMAT
+% DESC Plot the accuracy figures appearing in the paper
+%
+% COPYRIGHT : Antti Honkela, 2009
 
+% DISIMRANK
 
+tfnames = {'twi', 'mef2'};
 FONTSIZE = 8;
 styles = {'bo-', 'rd--', 'm*--', 'gs--', 'k--'};
 t = [20, 100, 250];
+
+rankings = {};
+for k=1:length(tfnames),
+  tf = tfnames{k};
+  if exist('INCLUDE_TSNI') && INCLUDE_TSNI,
+    rankings{k} = {indrank.(tf), disimrank.(tf), tsnirank.(tf), mutarank.(tf), corrrank.(tf)};
+    nonmutarankings{k} = {indrank.(tf), disimrank.(tf), tsnirank.(tf), [], corrrank.(tf)};
+  else
+    rankings{k} = {indrank.(tf), disimrank.(tf), mutarank.(tf), corrrank.(tf)};
+    nonmutarankings{k} = {indrank.(tf), disimrank.(tf), [], corrrank.(tf)};
+  end
+end
 
 clear accs;
 clear pvals;
@@ -12,8 +31,7 @@ for k=1:2,
   tf = tfnames{k};
 
   [accs(:, :, k), pvals(:, :, k)] = drosPlotAccuracyBars(...
-      {indrank.(tf), disimrank.(tf), ...
-       mutarank.(tf), corrrank.(tf)}, ...
+      rankings{k}, ...
       chip_validation.(tf), t, styles, [], drosexp, drosinsitu);
   set(gca, 'FontSize', FONTSIZE);
   title(sprintf('Global ChIP: %s', tfnames{k}));
@@ -30,8 +48,7 @@ for k=1:2,
   tf = tfnames{k};
 
   [accs(:, :, k), pvals(:, :, k)] = drosPlotAccuracyBars(...
-      {indrank.(tf), disimrank.(tf), ...
-       [], corrrank.(tf)}, ...
+      nonmutarankings{k}, ...
       mutant_validation.(tf), t, styles, [], drosexp, drosinsitu);
   set(gca, 'FontSize', FONTSIZE);
   title(sprintf('Global knock-outs: %s', tfnames{k}));
@@ -43,15 +60,24 @@ end
 
 
 subplot(3, 2, [5, 6]);
-bar(rand(4));
+if exist('INCLUDE_TSNI') && INCLUDE_TSNI,
+  bar(rand(5));
+else
+  bar(rand(4));
+end
 hold on
 plot(1:2, t(1:2), 'k--');
 
 axis([-10 -9 -10 -9]);
 set(gca, 'FontSize', FONTSIZE);
 axis off
-legend('Single-target models', 'Multiple-target models', ...
-       'Knock-outs', 'Correlation', 'Random', 'Location', 'North');
+if exist('INCLUDE_TSNI') && INCLUDE_TSNI,
+  legend('Single-target models', 'Multiple-target models', 'TSNI', ...
+	 'Knock-outs', 'Correlation', 'Random', 'Location', 'North');
+else
+  legend('Single-target models', 'Multiple-target models', ...
+	 'Knock-outs', 'Correlation', 'Random', 'Location', 'North');
+end
 
 set(gcf, 'PaperUnits', 'centimeters');
 set(gcf, 'PaperSize', [20 20])
@@ -67,8 +93,7 @@ for k=1:2,
   tf = tfnames{k};
 
   [accs(:, :, k), pvals(:, :, k)] = drosPlotAccuracyBars(...
-      {indrank.(tf), disimrank.(tf), ...
-       mutarank.(tf), corrrank.(tf)}, ...
+      rankings{k}, ...
       chip_validation.(tf), t, styles, 1, drosexp, drosinsitu);
   set(gca, 'FontSize', FONTSIZE);
   title(sprintf('Focused ChIP: %s', tfnames{k}));
@@ -85,8 +110,7 @@ for k=1:2,
   tf = tfnames{k};
 
   [accs(:, :, k), pvals(:, :, k)] = drosPlotAccuracyBars(...
-      {indrank.(tf), disimrank.(tf), ...
-       [], corrrank.(tf)}, ...
+      nonmutarankings{k}, ...
       mutant_validation.(tf), t, styles, 1, drosexp, drosinsitu);
   set(gca, 'FontSize', FONTSIZE);
   title(sprintf('Focused knock-outs: %s', tfnames{k}));
@@ -98,7 +122,11 @@ end
 
 
 subplot(3, 2, [5, 6]);
-bar(rand(4));
+if exist('INCLUDE_TSNI') && INCLUDE_TSNI,
+  bar(rand(5));
+else
+  bar(rand(4));
+end
 hold on
 plot(1:2, 1:2, 'k-.');
 plot(1:2, 1:2, 'k--');
@@ -106,51 +134,19 @@ plot(1:2, 1:2, 'k--');
 axis([-10 -9 -10 -9]);
 set(gca, 'FontSize', FONTSIZE);
 axis off
-legend('Single-target models', 'Multiple-target models', ...
-       'Knock-outs', 'Correlation', 'Filtered', 'Random', 'Location', 'North');
+if exist('INCLUDE_TSNI') && INCLUDE_TSNI,
+  legend('Single-target models', 'Multiple-target models', 'TSNI', ...
+	 'Knock-outs', 'Correlation', 'Random', 'Location', 'North');
+else
+  legend('Single-target models', 'Multiple-target models', ...
+	 'Knock-outs', 'Correlation', 'Random', 'Location', 'North');
+end
 
 set(gcf, 'PaperUnits', 'centimeters');
 set(gcf, 'PaperSize', [20 20])
 set(gcf, 'PaperPosition', [0 0 8.7 18])
 hold off
 
-
-% figure(2);
-
-% clear accs;
-% clear pvals;
-% for k=1:2,
-%   subplot(2, 2, k);
-%   tf = tfnames{k};
-
-%   [accs(:, :, k), pvals(:, :, k)] = drosPlotAccuracyBars(...
-%       {indrank.(tf), disimrank.(tf), ...
-%        mutarank.(tf), corrrank.(tf)}, ...
-%       chip_validation.(tf), t, styles, 1, drosexp, drosinsitu);
-%   set(gca, 'FontSize', FONTSIZE);
-%   title(sprintf('Focused ChIP: %s', tfnames{k}));
-%   xlabel('Top N to consider');
-%   if k==1,
-%     ylabel('Relative enrichment (%)');
-%   end
-% end
-
-% subplot(2, 2, 3:4);
-% bar(rand(4));
-% hold on
-% plot(1:2, 1:2, 'k-.');
-% plot(1:2, 1:2, 'k--');
-
-% axis([-10 -9 -10 -9]);
-% set(gca, 'FontSize', FONTSIZE);
-% axis off
-% legend('Single-target models', 'Multiple-target models', ...
-%        'Knock-outs', 'Correlation', 'Filtered', 'Random', 'Location', 'North');
-
-% set(gcf, 'PaperUnits', 'centimeters');
-% set(gcf, 'PaperSize', [20 20])
-% set(gcf, 'PaperPosition', [0 0 8.7 8.7])
-% hold off
 
 
 figure(3);

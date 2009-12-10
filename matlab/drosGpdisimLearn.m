@@ -82,8 +82,8 @@ if isfield(args, 'noiseModel'),
 else
   options.includeNoise = 0;
 end
-  
-I = drosGetGeneinds(drosexp, genes, 0, 1);
+
+I = drosFindGeneinds(drosexp, genes, 0, 1);
 if options.includeNoise,
   [y, yvar, gene, times, scale, rawExp, rawVar] = drosGetData(drosexp, I, 1);
 else

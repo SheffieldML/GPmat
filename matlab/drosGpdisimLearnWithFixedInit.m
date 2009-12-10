@@ -50,17 +50,13 @@ for k=1:length(I),
   options.fix(k+1).value = initparams(I(k));
 end
 
+options.fixBlocks = fixcomps;
 % initialise the model.
 model.type = 'cgpdisim';  % This new model type is a hack to run
                         % the model in a hierarchical manner.
                         % need to do this more elegantly later.
 for i =1:3          %% 3 original
   model.comp{i} = gpdisimCreate(length(targets), 1, times, y{i}, yvar{i}, options, struct('tf', {tf}, 'genes', {genes}));
-  if model.comp{i}.includeNoise,
-    model.comp{i}.kern.comp{1} = multiKernFixBlocks(model.comp{i}.kern.comp{1}, fixcomps);
-  else
-    model.comp{i}.kern = multiKernFixBlocks(model.comp{i}.kern, fixcomps);
-  end
 end
 
 if randomize,

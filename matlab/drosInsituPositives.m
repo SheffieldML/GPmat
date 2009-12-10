@@ -16,7 +16,7 @@ function v = drosInsituPositives(ids, drosinsitu, drosexp),
 % DISIMRANK
 
 isgenes = drosinsitu.genes(find(sum(drosinsitu.data, 2)));
-I = drosGetGeneinds(drosexp, isgenes, 0);
+I = drosFindGeneinds(drosexp, isgenes, 0);
 
 [C, IA, IB] = intersect(ids, I);
 

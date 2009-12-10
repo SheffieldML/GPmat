@@ -1,3 +1,11 @@
+% DROSDOBOOTSTRAP Perform bootstrap sampling to assess significance of differences in rankings
+% FORMAT
+% DESC Perform bootstrap sampling to assess significance of differences in rankings
+%
+% COPYRIGHT : Antti Honkela, 2009
+
+% DISIMRANK
+
 demRunRankings
 
 thresholds = [5000];
@@ -35,51 +43,19 @@ end
 
 save /share/work/ahonkela/bootstrap_results2.mat matrices data
 
-fprintf('\\begin{table}[p]\n');
-fprintf('  \\centering\n');
+fprintf('\\multicolumn{15}{c}{Twist global ChIP-chip} \\\\\n')
 drosPrintBootstrapMatrices(matrices{1}, 1:4)
-fprintf('  \\caption{Bootstrap results: Twist global ChIP-chip}\n');
-fprintf('  \\label{tab:bootstrap1}\n');
-fprintf('\\end{table}\n\n');
-fprintf('\\begin{table}[p]\n');
-fprintf('  \\centering\n');
+fprintf('\\multicolumn{15}{c}{Twist global knock-outs} \\\\\n')
 drosPrintBootstrapMatrices(matrices{2}, 1:4, 4)
-fprintf('  \\caption{Bootstrap results: Twist global knock-outs}\n');
-fprintf('  \\label{tab:bootstrap1}\n');
-fprintf('\\end{table}\n\n');
-fprintf('\\begin{table}[p]\n');
-fprintf('  \\centering\n');
+fprintf('\\multicolumn{15}{c}{Twist focused ChIP-chip} \\\\\n')
 drosPrintBootstrapMatrices(matrices{3}, 1:4)
-fprintf('  \\caption{Bootstrap results: Twist focused ChIP-chip}\n');
-fprintf('  \\label{tab:bootstrap1}\n');
-fprintf('\\end{table}\n\n');
-fprintf('\\begin{table}[p]\n');
-fprintf('  \\centering\n');
+fprintf('\\multicolumn{15}{c}{Twist focused knock-outs} \\\\\n')
 drosPrintBootstrapMatrices(matrices{4}, 1:4, 4)
-fprintf('  \\caption{Bootstrap results: Twist focused knock-outs}\n');
-fprintf('  \\label{tab:bootstrap1}\n');
-fprintf('\\end{table}\n\n');
-fprintf('\\begin{table}[p]\n');
-fprintf('  \\centering\n');
+fprintf('\\multicolumn{15}{c}{Mef2 global ChIP-chip} \\\\\n')
 drosPrintBootstrapMatrices(matrices{5}, 1:4)
-fprintf('  \\caption{Bootstrap results: Mef2 global ChIP-chip}\n');
-fprintf('  \\label{tab:bootstrap1}\n');
-fprintf('\\end{table}\n\n');
-fprintf('\\begin{table}[p]\n');
-fprintf('  \\centering\n');
+fprintf('\\multicolumn{15}{c}{Mef2 global knock-outs} \\\\\n')
 drosPrintBootstrapMatrices(matrices{6}, 1:4, 4)
-fprintf('  \\caption{Bootstrap results: Mef2 global knock-outs}\n');
-fprintf('  \\label{tab:bootstrap1}\n');
-fprintf('\\end{table}\n\n');
-fprintf('\\begin{table}[p]\n');
-fprintf('  \\centering\n');
+fprintf('\\multicolumn{15}{c}{Mef2 focused ChIP-chip} \\\\\n')
 drosPrintBootstrapMatrices(matrices{7}, 1:4)
-fprintf('  \\caption{Bootstrap results: Mef2 focused ChIP-chip}\n');
-fprintf('  \\label{tab:bootstrap1}\n');
-fprintf('\\end{table}\n\n');
-fprintf('\\begin{table}[p]\n');
-fprintf('  \\centering\n');
+fprintf('\\multicolumn{15}{c}{Mef2 focused knock-outs} \\\\\n')
 drosPrintBootstrapMatrices(matrices{8}, 1:4, 4)
-fprintf('  \\caption{Bootstrap results: Mef2 focused knock-outs}\n');
-fprintf('  \\label{tab:bootstrap1}\n');
-fprintf('\\end{table}\n\n');

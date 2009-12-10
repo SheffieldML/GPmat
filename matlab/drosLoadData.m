@@ -51,10 +51,10 @@ else
   drosexp.fitvar = expfitv.data;
 
   chipdata = importdata(sprintf('%s/chipchip/chip_validation_distances.txt', DATAPATH));
-  chipdata.labels = chipdata.textdata(1, 2:end);
-  chipdata.data = chipdata.data;
-  chipdata.genes = chipdata.textdata(2:end, 1);
-  chipdata.geneids = drosMapGenesToIDs(chipdata.genes);
+  chipdistances.labels = chipdata.textdata(1, 2:end);
+  chipdistances.data = chipdata.data;
+  chipdistances.genes = chipdata.textdata(2:end, 1);
+  chipdistances.geneids = drosMapGenesToIDs(chipdistances.genes);
 
   drosTF.names = {'tin', 'bin', 'twi', 'bap', 'mef2'};
   drosTF.probes = struct('tin', {'143426_at'}, 'bin', {'148296_at'}, ...
@@ -80,10 +80,10 @@ else
   for k=1:length(tflabels),
     tf = tflabels{k};
 
-    I = drosGetGeneinds(chipdata, drosexp.geneids, 1);
-    J = strmatch(tf, chipdata.labels);
+    I = drosFindGeneinds(chipdistances, drosexp.geneids, 1);
+    J = strmatch(tf, chipdistances.labels);
     chip_validation.(tf) = NaN * ones(size(drosexp.genes));
-    chip_validation.(tf)(I~=0) = chipdata.data(I(I~=0), J) < CHIPTHRESHOLD;
+    chip_validation.(tf)(I~=0) = chipdistances.data(I(I~=0), J) < CHIPTHRESHOLD;
     
     d = importdata(sprintf('%s/knockout/%s_knockout_qvalues.txt', DATAPATH, tflabels{k}));
     genes = d.rowheaders;
@@ -92,7 +92,7 @@ else
     drosmutant.(tf).data = d.data < SIGNIFICANCE_LEVEL;
     drosmutant.(tf).qvalues = d.data;
     
-    I = drosGetGeneinds(drosmutant.(tf), drosexp.geneids, 1);
+    I = drosFindGeneinds(drosmutant.(tf), drosexp.geneids, 1);
     mutant_validation.(tf) = NaN * ones(size(drosexp.genes));
     mutant_validation.(tf)(I~=0) = drosmutant.(tf).data(I(I~=0));
   end

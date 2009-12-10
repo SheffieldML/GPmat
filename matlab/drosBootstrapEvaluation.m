@@ -1,4 +1,28 @@
-function [res, accs] = drosBootstrapEvaluation2(drosexp, drosinsitu, rankings, validation, repeats, threshold, do_isfilter)
+function [res, accs] = drosBootstrapEvaluation(drosexp, drosinsitu, rankings, validation, repeats, threshold, do_isfilter)
+
+% DROSBOOTSTRAPEVALUATION Performs bootstrap sampling of rankings
+% FORMAT
+% DESC Performs bootstrap sampling of rankings to assess significance of differences.
+% ARG drosexp : the drosexp data structure from drosLoadData
+% ARG drosinsitu : the drosinsitu data structure from drosLoadData
+% ARG rankings : a cell array of R rankings, each of which is an array
+% of indices of genes in drosexp in order of descending preference
+% ARG validation : a binary vector of size(drosexp.genes) indicating
+% the validation results of each gene, or NaN if the gene should be ignored
+% ARG repeats : the number of repeats N
+% ARG threshold : a vector of T n's in top-n to consider
+% ARG is_filter : a flag whether to filter the results by positive in-situs
+% (default: []=false)
+% RETURN res : And RxRxT array where element (i,j,t) is the frequency that
+% method i was better than method j for t'th threshold
+% RETURN accs : An NxRxT array where element (n,i,t) is the accuracy of
+% method i on repeat n for t'th threshold
+%
+% SEEALSO : drosLoadData, demRunRankings, drosDoBootstrap
+%
+% COPYRIGHT : Antti Honkela, 2009
+
+% DISIMRANK
 
 res = zeros([length(rankings), length(rankings), length(threshold)]);
 accs = zeros([repeats, length(rankings), length(threshold)]);
@@ -6,10 +30,10 @@ accs = zeros([repeats, length(rankings), length(threshold)]);
 baseids = find(~isnan(validation));
 
 if do_isfilter,
-  baseids = is_positive_ids(baseids, drosinsitu, drosexp);
+  baseids = drosInsituPositives(baseids, drosinsitu, drosexp);
 end
 
-[B, I, J] = unique(drosexp.fbgns(baseids), 'first');
+[B, I, J] = unique(drosexp.genes(baseids), 'first');
 
 N = length(B);
 val = validation(baseids(I));

@@ -1,6 +1,6 @@
 function [y, yvar, gene, times, scale, rawExp, rawVar] = drosGetData(drosexp, genes, getmedians),
 
-% GPDISIMGETDROSDATA Get Drosophila data as processed by mmgMOS.
+% DROSGETDATA Get Drosophila data as processed by mmgMOS.
 % FORMAT
 % DESC Extract given genes from drosexp structure.
 % ARG drosexp : drosexp structure as returned by drosLoadData
@@ -26,7 +26,7 @@ if nargin < 3,
 end
 
 if iscell(genes),
-  genes = drosGetGeneinds(drosexp, genes, 0, 1);
+  genes = drosFindGeneinds(drosexp, genes, 0, 1);
 end
 
 N = length(genes);

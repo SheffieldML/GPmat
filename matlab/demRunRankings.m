@@ -1,7 +1,15 @@
-%fprintf('Warning: running this demo may take *SEVERAL DAYS OR WEEKS*\n');
-%fprintf('even on a very fast computer if the rankings need to be rerun.\n')
-%fprintf('Press Ctrl-C to cancel or any other key to continue...\n')
-%pause;
+% DEMRUNRANKINGS Runs the rankings presented in the paper
+% FORMAT
+% DESC Runs the rankings presented in the paper (may take a really long time...)
+%
+% COPYRIGHT : Antti Honkela, 2009
+
+% DISIMRANK
+
+fprintf('Warning: running this demo may take *SEVERAL DAYS OR WEEKS*\n');
+fprintf('even on a very fast computer if the rankings need to be rerun.\n')
+fprintf('Press Ctrl-C to cancel or any other key to continue...\n')
+pause;
 
 drosLoadData;
 z_scores = drosexp.fitmean ./ sqrt(drosexp.fitvar);
@@ -28,10 +36,6 @@ for k=1:length(tfnames),
     else
       ssres.(tf) = drosScoreTFTargetList(tf, drosexp.probes(active_genes), [], 1, 0, [2:6, 8, 10]);
     end
-    %ss2fname = sprintf('dros_gpdisim_%s_list_%s_subsample1_6_results.mat', tf, listfile);
-    %if exist(ssfname, 'file'),
-    %  ss2res.(tf) = load(ssfname);
-    %end
   end
   
   basefile = 'basetargets_kosher';
@@ -64,7 +68,7 @@ drosexp2.fitvar = drosexp2.fitvar(active_genes, :);
 
 for k=1:length(tfnames),
   tf = tfnames{k};
-  AG = drosGetGeneinds(drosexp, stres.(tf).targets, 0, 1);
+  AG = drosFindGeneinds(drosexp, stres.(tf).targets, 0, 1);
   [ll_sort, K] = sort(stres.(tf).ll(active_genes(AG)), 'descend');
   indrank.(tf) = drosRemoveDuplicateGenes(drosexp, AG(K));
 
@@ -74,23 +78,13 @@ for k=1:length(tfnames),
     z_scores2 = drosexp.fitmean(:, ss_inds) ./ sqrt(drosexp.fitvar(:, ss_inds));
     active_genes2 = (mean(z_scores2, 2) >= 1.8);
 
-    AG = drosGetGeneinds(drosexp, ssres.(tf).targets, 0, 1);
+    AG = drosFindGeneinds(drosexp, ssres.(tf).targets, 0, 1);
     [actives, I1, J1] = intersect(AG, find(active_genes2));
     [ll_sort, K] = sort(ssres.(tf).ll(I1), 'descend');
     ssrank.(tf) = drosRemoveDuplicateGenes(drosexp, actives(K));
-  
-%     inds0 = [1:6];
-%     ss_inds = [inds0, inds0+12, inds0+24];
-%     z_scores2 = drosexp.fitmean(:, ss_inds) ./ sqrt(drosexp.fitvar(:, ss_inds));
-%     active_genes2 = (mean(z_scores2, 2) >= 1.8);
-
-%     AG = drosGetGeneinds(drosexp, ss2res.(tf).targets, 0, 1);
-%     [actives, I1, J1] = intersect(AG, find(active_genes2));
-%     [ll_sort, K] = sort(ss2res.(tf).ll(I1), 'descend');
-%     ss2rank.(tf) = drosRemoveDuplicateGenes(drosexp, actives(K));
   end
 
-  AG = drosGetGeneinds(drosexp, mtres.(tf).targets, 0, 1);
+  AG = drosFindGeneinds(drosexp, mtres.(tf).targets, 0, 1);
   [ll_sort, K] = sort(mtres.(tf).ll(active_genes(AG)), 'descend');
   disimrank.(tf) = drosRemoveDuplicateGenes(drosexp, AG(K));
 
@@ -99,7 +93,7 @@ for k=1:length(tfnames),
 
   if exist('drosmutant'),
     if isfield(drosmutant, tf),
-      J = drosGetGeneinds(drosexp, drosmutant.(tf).genes, 1);
+      J = drosFindGeneinds(drosexp, drosmutant.(tf).genes, 1);
       mutarank.(tf) = drosRemoveDuplicateGenes(drosexp, J(J ~= 0));
     else
       mutarank.(tf) = [];

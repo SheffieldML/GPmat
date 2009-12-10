@@ -93,6 +93,8 @@ gpdisimArgs = struct('randomize', {0}, ...
 
 if nargin > 6,
   gpdisimArgs.noiseModel = noiseModel;
+else
+  noiseModel = [];
 end
 
 for l=1:length(targets),
