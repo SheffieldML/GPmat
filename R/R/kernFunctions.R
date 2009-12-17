@@ -12,7 +12,7 @@ kernCreate <- function(x, kernType) {
       dim <- x
   }
 
-  if ( is.list(kernType) & any(grep("complete",names(kernType))) ) {
+  if ( is.list(kernType) && ("complete" %in% names(kernType)) ) {
     if ( kernType$complete == 1 ) {
       kern <- kernType
     }
@@ -20,6 +20,9 @@ kernCreate <- function(x, kernType) {
   } else if ( is.list(kernType) ) {
     
     kern <- list(inputDimension=dim, type=kernType$type)
+
+    if ("options" %in% names(kernType))
+      kern$options <- kernType$options
     
     start <- 1    
     
@@ -41,7 +44,7 @@ kernCreate <- function(x, kernType) {
         kern$comp[[i-start+1]]$index = array()
       }
         
-    } else if ( any(grep(kern$type, c("cmpnd", "tensor", "translate"))) )  {
+    } else if ( kern$type %in% c("cmpnd", "tensor", "translate") )  {
       for ( i in start:length(kernType$comp) ) {
         if ( is.list(kernType$comp) ) {
           iType <- kernType$comp[[i]]
@@ -55,10 +58,10 @@ kernCreate <- function(x, kernType) {
       
     } else if ( kern$type == "exp" ) {
       ## need double check
-      if ( start == length(kernType) ) {
+      if ( start == length(kernType$comp) ) {
         kern$argument <- kernCreate(x, kernType$comp[start])
       } else {
-        kern$argument <- kernCreate(x, kernType$comp[start:length(kernType)])
+        kern$argument <- kernCreate(x, kernType$comp[start:length(kernType$comp)])
       }
     }
 
@@ -66,6 +69,9 @@ kernCreate <- function(x, kernType) {
 
   } else {
     kern <- list(type=kernType, inputDimension=dim)
+    if ("options" %in% names(kernType))
+      kern$options <- kernType$options
+
     kern <- kernParamInit(kern)
   }
 
@@ -103,7 +109,7 @@ kernExtractParam <- function (kern, option=1) {
     if ( any(is.nan(params)) )
       warning("Parameter has gone to NaN.")
 
-    if ( any(grep("transforms", names(kern))) ) 
+    if ( "transforms" %in% names(kern) ) 
       if ( length(kern$transforms) > 0 )
         for ( i in seq(along=kern$transforms$index) ) {
           index <- kern$transforms$index[i]
@@ -117,7 +123,7 @@ kernExtractParam <- function (kern, option=1) {
     if ( any(is.nan(params$values)) )
       warning("Parameter has gone to NaN.")
 
-    if ( any(grep("transforms", names(kern))) ) 
+    if ( "transforms" %in% names(kern) ) 
       if ( length(kern$transforms) > 0 )
         for ( i in seq(along=kern$transforms$index) ) {
           index <- kern$transforms$index[i]
@@ -137,7 +143,7 @@ kernExpandParam <- function (kern, params) {
   if ( is.list(params) )
     params <- params$values
   
-  if ( any(grep("transforms", names(kern))) ) 
+  if ( "transforms" %in% names(kern) ) 
     if ( length(kern$transforms) > 0 )
       for ( i in seq(along=kern$transforms$index) ) {
         index <- kern$transforms$index[i]
@@ -217,7 +223,7 @@ multiKernParamInit <- function (kern) {
   kern$nParams <- 0
   kern$transforms <- list()
 
-  if ( !any(grep("comp", names(kern))) )
+  if ( !("comp" %in% names(kern)) )
     kern$comp <- list()
 
   kern$numBlocks <- length(kern$comp)

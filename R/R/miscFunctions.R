@@ -6,19 +6,17 @@ expTransform <- function (x, transform="atox") {
   thre <- 36	## threshold
   y <- array(0, dim(as.array(x)))
 
-  if ( any(grep("atox", transform)) ) {
+  if ( "atox" == transform ) {
     for ( ind in 1:length(as.array(x)) ) {
       if ( x[ind] > thre ) y[ind] <- maxVal else
       if ( x[ind] < -thre ) y[ind]<- eps else
       y[ind] <- exp(x[ind])
     }
-  } else
-  if ( any(grep("xtoa", transform)) ) {
+  } else if ( "xtoa" == transform ) {
     for ( ind in 1:length(as.array(x)) ) {
-        y[ind] <- complexLog(x[ind])
+      y[ind] <- complexLog(x[ind])
     }
-  } else
-  if ( any(grep("gradfact", transform)) )
+  } else if ( "gradfact" == transform )
     y <- x
 
   return (y)
@@ -28,44 +26,40 @@ expTransform <- function (x, transform="atox") {
 modelTieParam <- function (model, paramsList) {
   columnToDel <- c()
 
-  if ( !is.list(paramsList) & length(paramsList)>0 ) {
+  if ( !is.list(paramsList) ) {
+    paramsList <- list(paramsList)
+  }
 
-    paramInd <- sort(paramsList)
+  params <- try(modelExtractParam(model, 2), TRUE)
+  if (! is.list(params) )
+    params <- kernExtractParam(model, 2)
+  
+  for ( i in seq(along=paramsList) ) {
+    if ( is.character(paramsList[[i]]) ) {
+      paramInd <- grep(paramsList[[i]], params$names)
+      if ( length(paramInd) == 0 )
+        warning(paste("No matches for parameter tie spec:", paramsList[[i]]))
+    }
+    else
+      paramInd <- sort(paramsList[[i]])
 
     if ( any(paramInd[1]==columnToDel) )
       stop("Parameters have already been tied.")
 
-    for ( j in seq(2,length.out=(length(paramInd)-1)) ) {
-      model$paramGroups[paramInd[j], paramInd[1]] <- 1
-      if ( any(paramInd[j]==columnToDel) )
-        stop("Parameters have already been tied.")
-      columnToDel <- c(columnToDel, paramInd[j])
-    }
-
-  } else if ( is.list(paramsList) ) {
-
-    for ( i in seq(length.out=length(paramsList)) ) {
-
-      paramInd <- sort(paramsList[[i]])
-
-      if ( any(paramInd[1]==columnToDel) )
-        stop("Parameters have already been tied.")
-
-      if ( length(paramInd) > 0 )
-        for ( j in seq(2,length.out=(length(paramInd)-1)) ) {
-          model$paramGroups[paramInd[j], paramInd[1]] <- 1
-          if ( any(paramInd[j]==columnToDel) )
-            stop("Parameters have already been tied.")
-          columnToDel <- c(columnToDel, paramInd[j])
-        }
-    }
+    if ( length(paramInd) > 0 )
+      for ( j in seq(2,length.out=(length(paramInd)-1)) ) {
+        model$paramGroups[paramInd[j], paramInd[1]] <- 1
+        if ( any(paramInd[j]==columnToDel) )
+          stop("Parameters have already been tied.")
+        columnToDel <- c(columnToDel, paramInd[j])
+      }
   }
 
   model$paramGroups <- model$paramGroups[,-columnToDel]
 
-  if ( any(grep("nParams", names(model))) ) {
+  if ( "nParams" %in% names(model) ) {
     model$nParams <- dim(model$paramGroups)[2]
-  } else if ( any(grep("numParams", names(model))) ) {
+  } else if ( "numParams" %in% names(model) ) {
     model$numParams <- dim(model$paramGroups)[2]
   }
 
@@ -201,7 +195,6 @@ lnDiffErfs2 <- function(x1, x2) {
 }
 
 
-
 gradLnDiffErfs <- function(x1, x2, fact1, fact2) {
   m <- pmin(as.matrix(x1)^2, as.matrix(x2)^2)
   dlnPart <- 2/sqrt(pi) * (exp(-x1^2 + m) * fact1 - exp(-x2^2 + m) * fact2)
@@ -251,10 +244,10 @@ listStruct <- function (list) {
 modelExtractParam <- function (model, option=1) {
   funcName <- paste(model$type, "ExtractParam", sep="")
   func <- get(funcName, mode="function")
-  params <- func(model)
+  params <- func(model, option)
 
   if ( option>1 ) {
-    if ( any(grep("paramGroups", names(model))) ) {
+    if ( "paramGroups" %in% names(model) ) {
       paramGroups <- model$paramGroups
       for ( i in seq(length.out=dim(paramGroups)[2]) ) {
         ind <- grep(1, paramGroups[,i])
@@ -283,7 +276,7 @@ modelExpandParam <- function (model, params) {
   if ( is.list(params) )
     params <- params$values
 
-  if ( any(grep("paramGroups", names(model))) )
+  if ( "paramGroups" %in% names(model) )
     params <- params %*% t(model$paramGroups)
 
   funcName <- paste(model$type, "ExpandParam", sep="")
@@ -336,6 +329,16 @@ modelGradient <- function (params, model, ...) {
 
 
 
+modelUpdateProcesses <- function (model) {
+  funcName <- paste(model$type, "UpdateProcesses", sep="")
+  func <- get(funcName, mode="function")
+  model <- func(model)
+
+  return (model)
+}
+
+
+
 sigmoid <- function (x) {
   y <- array(1, dim(x))/(1+exp(-x))
   return (y)
@@ -343,7 +346,7 @@ sigmoid <- function (x) {
 
 
 
-trace <- function (x) {
+matrixTrace <- function (x) {
   return ( sum(diag(as.matrix(x))) )
 }
 
@@ -369,7 +372,7 @@ logLikelihood <- function (model) {
   ll <- 0.5*ll
 
   ## prior contributions
-  if ( any(grep("bprior",names(model))) ) {
+  if ( "bprior" %in% names(model) ) {
     ll <- ll + kernPriorLogProb(dataLocation$kern)
     ll <- ll + priorLogProb(dataLocation$bprior, dataLocation$B)
   }
@@ -406,4 +409,21 @@ distfit_obj <- function(theta, y, cdf) {
   r <- .5 * sum((x - y)^2)
 
   return (r)
+}
+
+
+
+setClass("GPModel", 
+         representation(type = "character", comp = "list", llscore = "numeric")
+         )
+
+
+scoreList <- function(params = list(), LLs = array(), genes = list(), useGPsim = array()) {
+
+  new("scoreList", params = params, LLs = LLs, genes = genes, useGPsim = useGPsim)
+}
+
+
+is.scoreList <- function(object) {
+  return (class(object) == "scoreList")
 }

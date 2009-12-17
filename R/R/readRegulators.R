@@ -1,10 +1,10 @@
 readRegulators <- function(fileName) {
 
   regulatorTable <- read.table(fileName)
-  amountOfRegulators <- dim(regulatorTable)[1]
-  regulators <- array(dim = amountOfRegulators)
+  numberOfRegulators <- dim(regulatorTable)[1]
+  regulators <- array(dim = numberOfRegulators)
 
-  for (i in 1:amountOfRegulators) {
+  for (i in 1:numberOfRegulators) {
     currentRegulator <- as.character(regulatorTable[i, 1])
     tryCatch({
       regulators[i] <- as.character(mgu74av2ALIAS2PROBE[currentRegulator])
@@ -21,13 +21,13 @@ readRegulators <- function(fileName) {
 readPMIDRegulators <- function(fileName) {
 
   regulatorTable <- read.table(fileName)
-  amountOfRegulators <- dim(regulatorTable)[1]
+  numberOfRegulators <- dim(regulatorTable)[1]
   regulators <- array()
 
-  # counter for the amount of regulators found so far
+  # counter for the number of regulators found so far
   k <- 0
 
-  for (i in 1:amountOfRegulators) {
+  for (i in 1:numberOfRegulators) {
     currentRegulator <- as.character(regulatorTable[i, 1])
     tryCatch({
       currentProbes <- as.character(mgu74av2PMID2PROBE[currentRegulator])
@@ -48,10 +48,10 @@ readPMIDRegulators <- function(fileName) {
 readProbeRegulators <- function(fileName) {
 
   regulatorTable <- read.table(fileName)
-  amountOfRegulators <- dim(regulatorTable)[1]
-  regulators <- array(dim = amountOfRegulators)
+  numberOfRegulators <- dim(regulatorTable)[1]
+  regulators <- array(dim = numberOfRegulators)
 
-  for (i in 1:amountOfRegulators) {
+  for (i in 1:numberOfRegulators) {
     regulators[i] <- as.character(regulatorTable[i, 1])
   }
 

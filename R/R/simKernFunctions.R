@@ -8,11 +8,22 @@ simKernParamInit <- function (kern) {
   kern$initVal <- 1
   kern$variance <- 1
   kern$inverseWidth <- 1
-  kern$nParams <- 3
 
-  kern$transforms <- list(index=c(1,2,3), type="positive")
+  if ("options" %in% names(kern) && "gaussianInitial" %in% names(kern$options) && kern$options$gaussianInitial) {
+    kern$gaussianInitial <- TRUE
+    kern$initialVariance <- 1
+    kern$nParams <- 4
+    kern$paramNames <- c("decay", "inverseWidth", "variance", "initialVariance")
+  }
+  else {
+    kern$gaussianInitial <- FALSE
+    kern$nParams <- 3
+    kern$paramNames <- c("decay", "inverseWidth", "variance")
+  }
 
-  kern$isStationary=FALSE
+  kern$transforms <- list(index=1:kern$nParams, type="positive")
+
+  kern$isStationary <- FALSE
 
   return (kern)
 
@@ -21,6 +32,9 @@ simKernParamInit <- function (kern) {
 simXrbfKernCompute <- function (simKern, rbfKern, t1, t2=t1) {
   if ( ( dim(as.matrix(t1))[2] > 1 ) | ( dim(as.matrix(t2))[2] > 1 ) )
     stop("Input can only have one column.")
+
+  if (rbfKern$variance != 1)
+    warning('Non-unit RBF kernel variance. The SIM kernel can only be cross combined with an RBF kernel with variance 1.')
 
   if ( simKern$inverseWidth != rbfKern$inverseWidth )
     stop("Kernels cannot be cross combined if they have different inverse widths.")
@@ -40,7 +54,8 @@ simXrbfKernCompute <- function (simKern, rbfKern, t1, t2=t1) {
 
   K <- lnPart[[2]] * exp(halfSigmaDi*halfSigmaDi - simKern$decay*diffT + lnPart[[1]])
 
-  K <- 0.5*sqrt(simKern$variance)*sqrt(rbfKern$variance)*K*sqrt(pi)*sigma
+  #K <- 0.5*sqrt(simKern$variance)*sqrt(rbfKern$variance)*K*sqrt(pi)*sigma
+  K <- 0.5*sqrt(simKern$variance)*K*sqrt(pi)*sigma
 
   return (K)
 }
@@ -68,11 +83,19 @@ simXsimKernCompute <- function (simKern1, simKern2, t1, t2=t1) {
 
 simKernExtractParam <- function (kern, option=1) {
 
-  if ( option == 1 ) {
-    params <- c(kern$decay, kern$inverseWidth, kern$variance)
-
-  } else {
-    params <- list(values=c(kern$decay, kern$inverseWidth, kern$variance), names=c("decay", "inverseWidth", "variance"))
+  if ( "gaussianInitial" %in% names(kern) && kern$gaussianInitial ) {
+    if ( option == 1 ) {
+      params <- c(kern$decay, kern$inverseWidth, kern$variance, kern$initialVariance)
+    } else {
+      params <- list(values=c(kern$decay, kern$inverseWidth, kern$variance, kern$initialVariance), names=kern$paramNames)
+    }
+  }
+  else {
+    if ( option == 1 ) {
+      params <- c(kern$decay, kern$inverseWidth, kern$variance)
+    } else {
+      params <- list(values=c(kern$decay, kern$inverseWidth, kern$variance), names=kern$paramNames)
+    }
   }
 
   return (params)
@@ -87,6 +110,8 @@ simKernExpandParam <- function (kern, params) {
   kern$decay <- params[1]
   kern$inverseWidth <- params[2]
   kern$variance <- params[3]
+  if ( "gaussianInitial" %in% names(kern) && kern$gaussianInitial )
+    kern$initialVariance <- params[4]
 
   return (kern)
 }
@@ -110,6 +135,15 @@ simKernCompute <- function (kern, t, t2=t) {
 
   k <- 0.5*k*sqrt(pi)*sigma
   k <- kern$variance*k
+
+  if ( "gaussianInitial" %in% names(kern) && kern$gaussianInitial ) {
+    dim1 = size(t, 1);
+    dim2 = size(t2, 1);
+    t1Mat = t(:, ones(1, dim2));
+    t2Mat = t(t2(:, ones(1, dim1)));
+
+    k = k + kern.initialVariance * exp(- kern.decay * (t1Mat + t2Mat));
+  }
 
   return (k)
 }

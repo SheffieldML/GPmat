@@ -1036,19 +1036,19 @@ gpsimMapMarginalLikeliGradient <- function (model) {
     dWdgParam <- dW$dWdgParam
     dWdn <- dW$dWdn
  
-    gB[k] <- -0.5*trace(invC%*%dWdB)+dlogPdB[k]
-    gD[k] <- -0.5*trace(invC%*%dWdD)+dlogPdD[k]
-    gS[k] <- -0.5*trace(invC%*%dWdS)+dlogPdS[k]
+    gB[k] <- -0.5*matrixTrace(invC%*%dWdB)+dlogPdB[k]
+    gD[k] <- -0.5*matrixTrace(invC%*%dWdD)+dlogPdD[k]
+    gS[k] <- -0.5*matrixTrace(invC%*%dWdS)+dlogPdS[k]
 
     if ( any(grep("includeRepression", names(model))) )
       if ( model$includeRepression )
-        galpha[k] <- -0.5*trace(invC%*%dWdalpha)+dlogPdalpha[k]
+        galpha[k] <- -0.5*matrixTrace(invC%*%dWdalpha)+dlogPdalpha[k]
 
     if ( model$ngParam > 0 )
       for ( gParamIndex in seq(length=ngParamk) )
-        ggParam[gParamIndex,k] <- -0.5*trace(invC%*%dWdgParam[[gParamIndex]])+dlogPdgParam[k,gParamIndex]
+        ggParam[gParamIndex,k] <- -0.5*matrixTrace(invC%*%dWdgParam[[gParamIndex]])+dlogPdgParam[k,gParamIndex]
     if ( model$includeNoise )
-      gn[k] <- -0.5*trace(invC%*%dWdn) + dlogPdn[k]
+      gn[k] <- -0.5*matrixTrace(invC%*%dWdn) + dlogPdn[k]
   }
 
   funcName <- paste(model$Transform, "Transform", sep="")
@@ -1114,7 +1114,7 @@ gpsimMapLikeliGradientImplicit <- function (model) {
 
   for ( ftimeIndex in seq(length=model$numMapPts) ) {
     dWdf[[ftimeIndex]] <- gpsimMapFunctionalWGradient(model, ftimeIndex)
-    dlogPdf[ftimeIndex] <- -0.5*trace(covGrad%*%model$K%*%dWdf[[ftimeIndex]])
+    dlogPdf[ftimeIndex] <- -0.5*matrixTrace(covGrad%*%model$K%*%dWdf[[ftimeIndex]])
     g1 <- g1 + dlogPdf[ftimeIndex]*kernGrad[ftimeIndex,]
     g2 <- g2 + dlogPdf[ftimeIndex]*modelParamGrad[ftimeIndex,]
   }

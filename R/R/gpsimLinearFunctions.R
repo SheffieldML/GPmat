@@ -12,11 +12,11 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
   model <- list(type="gpsim", y=as.array(y), yvar=as.array(yvar))
 
   kernType1 <- list(type="multi", comp=array())
-  if ( any(grep("proteinPrior",names(options))) ) {
+  if ( "proteinPrior" %in% names(options) ) {
     model$proteinPrior <- options$proteinPrior
     kernType1$comp[1] <- "rbf"
 
-    if ( any(grep("times",names(model$proteinPrior))) )
+    if ( "times" %in% names(model$proteinPrior) )
       timesCell <- list(protein=model$proteinPrior$times) else
     timesCell <- list(protein=times)
 
@@ -49,7 +49,7 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
   if ( model$includeNoise ) {
 
     kernType2 <- list(type="multi", comp=array())
-    if ( any(grep("proteinPrior",names(options))) ) {
+    if ( "proteinPrior" %in% names(options) ) {
       for ( i in 1:(Ngenes+1) )
         kernType2$comp[i] <- "white"
     } else {
@@ -69,7 +69,7 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
 
   model$kern <- modelTieParam(model$kern, tieParam)
 
-  if ( any(grep("proteinPrior",names(options))) ) {
+  if ( "proteinPrior" %in% names(options) ) {
     for ( i in seq(2,model$kern$numBlocks,length.out=model$kern$numBlocks-1) ) {
       if ( model$includeNoise ) {
         model$D[i-1] <- model$kern$comp[[1]]$comp[[i]]$decay
@@ -96,14 +96,14 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
   model$mu <- apply(y, 2, mean)
   model$B <- model$D*model$mu
 
-  if ( any(grep("proteinPrior",names(model))) ) {
+  if ( "proteinPrior" %in% names(model) ) {
     model$m <- c(model$proteinPrior$values, model$y)
   } else {
     model$m <- c(model$y)
     model$t <- times
   }
 
-  if ( any(grep("bTransform",names(options))) ) {
+  if ( "bTransform" %in% names(options) ) {
     model$bTransform <- options$bTransform
   } else {
     model$bTransform <- "positive"
@@ -111,12 +111,22 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
 
   model$optimiser <- options$optimiser
 
-  if ( any(grep("fix", names(options))) ) {
-    model$fix <- options$fix
-  }
-
   if (!is.null(genes)) {
     model$genes <- genes
+  }
+
+  if ( "fix" %in% names(options) ) {
+    params <- modelExtractParam(model, 2)
+    model$fix <- options$fix
+    if (! "index" %in% names(model$fix)) {
+      for ( i in seq(along=model$fix$names) ) {
+        J <- grep(model$fix$names[[i]], params$names)
+        if (length(J) != 1) {
+          stop("gpsimCreate: inconsistent fixed parameter specification")
+        }
+        model$fix$index[i] <- J
+      }
+    }
   }
 
   params <- gpsimExtractParam(model)
@@ -139,7 +149,7 @@ gpsimExtractParam <- function (model, option=1) {
     params <- kernExtractParam(model$kern)
     params <- c(params, func(model$B, "xtoa"))
 
-    if ( any(grep("fix", names(model))) ) 
+    if ( "fix" %in% names(model) ) 
       for ( i in seq(along=model$fix$index) )
         params[model$fix$index[i]] <- model$fix$value[i]
 
@@ -152,7 +162,7 @@ gpsimExtractParam <- function (model, option=1) {
       params$names <- c(params$names, paste("Basal", i, sep=""))
     }
 
-    if ( any(grep("fix", names(model))) ) 
+    if ( "fix" %in% names(model) ) 
       for ( i in seq(along=model$fix$index) )
         params$values[model$fix$index[i]] <- model$fix$value[i]
 
@@ -170,7 +180,7 @@ gpsimExpandParam <- function (model, params) {
     params <- params$values
 
   params <- Re(params)
-  if ( any(grep("fix", names(model))) ) 
+  if ( "fix" %in% names(model) ) 
     for ( i in seq(along=model$fix$index) )
       params[model$fix$index[i]] <- model$fix$value[i]
 
@@ -186,7 +196,7 @@ gpsimExpandParam <- function (model, params) {
 
   model$B <- func(params[(endVal+1):length(params)], "atox")
 
-  if ( any(grep("proteinPrior",names(model))) ) {
+  if ( "proteinPrior" %in% names(model) ) {
     for ( i in seq(2,model$kern$numBlocks,length.out=model$kern$numBlocks-1) ) {
       if ( model$includeNoise ) {
         model$D[i-1] <- model$kern$comp[[1]]$comp[[i]]$decay
@@ -212,7 +222,7 @@ gpsimExpandParam <- function (model, params) {
 
   model <- gpsimUpdateKernels(model)
 
-  if ( any(grep("proteinPrior",names(model))) ) {
+  if ( "proteinPrior" %in% names(model) ) {
     if ( model$includeNoise ) {
       yInd <- 1:model$kern$comp[[1]]$diagBlockDim[2]
       mInd <- model$kern$comp[[1]]$diagBlockDim[1] + yInd
@@ -249,7 +259,7 @@ gpsimExpandParam <- function (model, params) {
 gpsimUpdateKernels <- function (model) {
   eps <-  1e-6
 
-  if ( any(grep("proteinPrior",names(model))) & any(grep("timesCell",names(model))) ) {
+  if ( ("proteinPrior" %in% names(model)) && ("timesCell" %in% names(model)) ) {
     k <- Re(kernCompute(model$kern, model$timesCell))
     if ( model$includeNoise ) {
       noiseVar <- c(array(0, model$kern$comp[[1]]$diagBlockDim[1], 1), model$yvar)
@@ -288,7 +298,7 @@ gpsimUpdateKernels <- function (model) {
 
 
 cgpsimOptimise <- function (model, options, ...) {
-  if ( any(grep("optimiser", names(options))) ) {
+  if ( "optimiser" %in% names(options) ) {
     funcName <- paste(options$optimiser, "optim", sep="")
   } else {
     funcName <- "CGoptim"
@@ -344,7 +354,7 @@ gpsimLogLikelihood <- function (model) {
   ll <- 0.5*ll
 
   ## prior contributions
-  if ( any(grep("bprior",names(model))) ) {
+  if ( "bprior" %in% names(model) ) {
     ll <- ll + kernPriorLogProb(model$kern)
     ll <- ll + priorLogProb(model$bprior, model$B)
   }
@@ -357,19 +367,19 @@ gpsimLogLikeGradients <- function (model) {
   covGrad <- -model$invK + model$invK %*% model$m %*% t(model$m) %*% model$invK
   covGrad <- 0.5*covGrad
 
-  if ( any(grep("proteinPrior",names(model))) ) {
+  if ( "proteinPrior" %in% names(model) ) {
     g <- kernGradient(model$kern, model$timesCell, covGrad)
   } else {
     g <- kernGradient(model$kern, model$t, covGrad)
   }
 
-  if ( any(grep("bprior",names(model))) ) {
+  if ( "bprior" %in% names(model) ) {
     g <- g + kernPriorGradient(model$kern)
   }
   
   gmuFull <- t(model$m) %*% model$invK
 
-  if ( any(grep("proteinPrior",names(model))) ) {
+  if ( "proteinPrior" %in% names(model) ) {
     if ( model$includeNoise ) {
       ind <- model$kern$comp[[1]]$diagBlockDim[1]+(1:model$kern$comp[[1]]$diagBlockDim[2])
       gmu <- array(0, model$numGenes)
@@ -403,7 +413,7 @@ gpsimLogLikeGradients <- function (model) {
   func <- get(funcName, mode="function")
 
   ## prior contribution
-  if ( any(grep("bprior",names(model))) ) {
+  if ( "bprior" %in% names(model) ) {
     gb <- gb + priorGradient(model$bprior, model$B)
   }
 
@@ -414,7 +424,7 @@ gpsimLogLikeGradients <- function (model) {
   if ( model$kern$numBlocks == 1 ) {
     decayIndices <- 1
   } else if ( model$kern$numBlocks>1 ) {
-    if ( any(grep("proteinPrior",names(model))) ) {
+    if ( "proteinPrior" %in% names(model) ) {
       decayIndices <- 3
       for ( i in seq(3, model$kern$numBlocks, length=(model$kern$numBlocks-2)) )
         decayIndices <- c(decayIndices, decayIndices[length(decayIndices)]+2)
@@ -429,7 +439,7 @@ gpsimLogLikeGradients <- function (model) {
 
   g <- c(g, gb)
 
-  if ( any(grep("fix",names(model))) ) 
+  if ( "fix" %in% names(model) ) 
     g[model$fix$index] <- 0
 
   return (g)  
@@ -503,6 +513,15 @@ cgpsimGradient <- function (params, model, ...) {
 
 
 
+cgpsimUpdateProcesses <- function (model) {
+  for ( i in seq(along=model$comp) )
+    model$comp[[i]] <- gpsimUpdateProcesses(model$comp[[i]])
+
+  return (model)
+}
+
+
+
 gpsimGradient <- function (params, model, ...) {
   model <- gpsimExpandParam(model, params)
   g <- - gpsimLogLikeGradients (model)
@@ -513,7 +532,7 @@ gpsimGradient <- function (params, model, ...) {
 
 
 gpsimUpdateProcesses <- function (model) {
-  if ( any(grep("proteinPrior",names(model))) ) {
+  if ( "proteinPrior" %in% names(model) ) {
     t <- model$timesCell[[2]]
   } else {
     t <- model$t
@@ -523,7 +542,7 @@ gpsimUpdateProcesses <- function (model) {
   predt <- c(seq(min(t), max(t), length=100), t)
   ymean <- t(matrix(model$y[1,], model$numGenes, numData))
 
-  if ( any(grep("proteinPrior",names(model))) ) {
+  if ( "proteinPrior" %in% names(model) ) {
     predTimeCell <- list()
     if ( model$includeNoise ) {
       for ( i in seq(length=model$kern$comp[[1]]$numBlocks) )
@@ -715,7 +734,7 @@ gpsimElkResults <- function (model, scale, genes, expType, expNo, option=1) {
         ymax <- max(c(model$comp[[i]]$ypred[,j]+2*sqrt(model$comp[[i]]$ypredVar[,j]), model$comp[[i]]$y[,j]))
         plot(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j], type="l", lwd=3, ylim=c(ymin, ymax), xlab="Time",ylab="")
         title(paste("mRNA", genes[j]))
-        if ( any(grep("proteinPrior",names(options))) ) {
+        if ( "proteinPrior" %in% names(options) ) {
           points(model$comp[[i]]$timesCell[[2]], model$comp[[i]]$y[,j], lwd=3, col=3)
         } else {
           points(model$comp[[i]]$t, model$comp[[i]]$y[,j], lwd=3, col=3)
@@ -752,7 +771,7 @@ gpsimElkResults <- function (model, scale, genes, expType, expNo, option=1) {
      
         plot(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j], type="l", lwd=3, ylim=c(ymin, ymax), xlab="Time",ylab="")
         title(paste("mRNA", genes[j]))
-        if ( any(grep("proteinPrior",names(options))) ) {
+        if ( "proteinPrior" %in% names(options) ) {
           points(model$comp[[i]]$timesCell[[2]], model$comp[[i]]$y[,j], lwd=3, col=3)
         } else {
           points(model$comp[[i]]$t, model$comp[[i]]$y[,j], lwd=3, col=3)

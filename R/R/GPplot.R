@@ -1,12 +1,16 @@
 GPplot <- function(data, savepath = '', doParams = FALSE,
-                   selectGenes = data$genes, nameMapping = NULL) {
+                   selectGenes = data$genes, nameMapping = NULL,
+                   predt = NULL) {
   require(gplots)
   
   FONTSIZE <- 10;
   LINEWIDTH <- 1;
   MARKERSIZE <- 10;
 
-  model <- data$model
+  if ("model" %in% names(data))
+    model <- data$model
+  else
+    model <- data
 
   is_gpdisim_model <- (model$type == 'cgpdisim')
   
@@ -24,10 +28,15 @@ GPplot <- function(data, savepath = '', doParams = FALSE,
 
   for ( i in seq(along=model$comp) ) {
     if (is_gpdisim_model) {
-      model$comp[[i]] <- gpdisimUpdateProcesses(model$comp[[i]])
+      model$comp[[i]] <- gpdisimUpdateProcesses(model$comp[[i]], predt=predt)
     }
     else {
       model$comp[[i]] <- gpsimUpdateProcesses(model$comp[[i]])
+    }
+
+    if (any(model$comp[[i]]$varF < 0) || any(model$comp[[i]]$ypredVar < 0)) {
+      warning('Negative variances in GPplot')
+      return()
     }
     #par(mfrow = c(2, trunc(numPlots / 2 + 0.5)))
     par(mfrow=c(2, 2))

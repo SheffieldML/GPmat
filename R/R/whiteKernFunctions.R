@@ -2,6 +2,7 @@ whiteKernParamInit <- function (kern) {
   
   kern$variance <- exp(-2)
   kern$nParams <- 1
+  kern$paramNames <- c("variance")
   
   kern$transforms <- list(index=c(1), type="positive")
 

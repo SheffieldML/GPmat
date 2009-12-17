@@ -294,7 +294,7 @@ flatOptimise <- function (model, options, ...) {
   for ( i in 1:4 ) 
     options[[i]] <- newOptions[[i]]
   
-  if ( any(grep("display",names(newOptions))) ) {
+  if ( "display" %in% names(newOptions) ) {
     options$display <- newOptions$display
   }
     
