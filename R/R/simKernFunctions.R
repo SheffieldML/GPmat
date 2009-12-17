@@ -137,12 +137,12 @@ simKernCompute <- function (kern, t, t2=t) {
   k <- kern$variance*k
 
   if ( "gaussianInitial" %in% names(kern) && kern$gaussianInitial ) {
-    dim1 = size(t, 1);
-    dim2 = size(t2, 1);
-    t1Mat = t(:, ones(1, dim2));
-    t2Mat = t(t2(:, ones(1, dim1)));
+    dim1 <- dim(as.matrix(t))[1]
+    dim2 <- dim(as.matrix(t2))[1]
+    t1Mat <- matrix(t, dim1, dim2)
+    t2Mat <- t(matrix(t2, dim2, dim1))
 
-    k = k + kern.initialVariance * exp(- kern.decay * (t1Mat + t2Mat));
+    k = k + kern$initialVariance * exp(- kern$decay * (t1Mat + t2Mat));
   }
 
   return (k)
