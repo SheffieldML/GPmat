@@ -10,42 +10,58 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL,
     stop("The number of time points given does not match the number of gene values given.")
 
   y <- as.matrix(y)
-  yvar <- as.matrix(yvar)
+  if (options$includeNoise)
+    yvar <- as.matrix(yvar)
+  else
+    yvar <- 0 * y
+  
   model <- list(type="gpdisim", y=as.array(y), yvar=as.array(yvar))
-
+  model$includeNoise <- options$includeNoise
+  
   kernType1 <- list(type="multi", comp=array())
-  kernType2 <- list(type="multi", comp=array())
   tieWidth <- 1
   tieRBFVariance <- 2
   kernType1$comp[1] <- "rbf"
   for ( i in 1:Ngenes ) {
     kernType1$comp[i+1] <- "disim"
-    if ( i==1 ) {
-      tieDelta = 3
-      tieWidth = c(tieWidth, 4)
-      tieSigma = 5
-      tieRBFVariance = c(tieRBFVariance, 8)
-    } else {
-      tieDelta = c(tieDelta, tieDelta[length(tieDelta)]+6)
-      tieWidth = c(tieWidth, tieWidth[length(tieWidth)]+6)
-      tieSigma = c(tieSigma, tieSigma[length(tieSigma)]+6)
-      tieRBFVariance = c(tieRBFVariance, tieRBFVariance[length(tieRBFVariance)]+6)
-    }
   }
+  tieParam <- list(tieDelta="di_decay", tieWidth="inverseWidth",
+                   tieSigma="di_variance", tieRBFVariance="rbf.?_variance")
 
-  tieParam <- list(tieDelta=tieDelta, tieWidth=tieWidth, tieSigma=tieSigma, tieRBFVariance=tieRBFVariance)
+  if (model$includeNoise) {
+    kernType2 <- list(type="multi", comp=array())
+    for ( i in 1:Ngenes+1 )
+      kernType2$comp[i] <- "white"        
 
-  model$kern <- kernCreate(times, kernType1)
+    if ("singleNoise" %in% names(options) && options$singleNoise) {
+      tieNoise <- (2+6*Ngenes + 1):(2+6*Ngenes + Ngenes+1)
+      tieParam$tieNoise <- "white._variance"
+    }
+
+    model$kern <- kernCreate(times,
+                             list(type="cmpnd", comp=list(kernType1, kernType2)))
+    simMultiKernName <- 'model$kern$comp[[1]]'
+  } else {
+    model$kern <- kernCreate(times, kernType1)
+    simMultiKernName <- 'model$kern'
+  }
+  eval(parse(text=paste("simMultiKern <-", simMultiKernName)))
+  
   model$kern <- modelTieParam(model$kern, tieParam)
 
+  if (model$includeNoise) {
+    for ( i in seq(1, Ngenes+1) ) {
+      model$kern$comp[[2]]$comp[[i]]$variance <- 1e-2
+    }
+  }
+  
   model$delta <- 10
   model$sigma <- 1
-
-  for ( i in seq(2, model$kern$numBlocks) ) {
-    model$kern$comp[[i]]$di_decay <- model$delta
-    model$kern$comp[[i]]$di_variance <- model$sigma^2
-    model$D[i-1] <- model$kern$comp[[i]]$decay
-    model$S[i-1] <- sqrt(model$kern$comp[[i]]$variance)
+  for ( i in seq(2, simMultiKern$numBlocks) ) {
+    eval(parse(text=paste(simMultiKernName, '$comp[[i]]$di_decay <- model$delta', sep="")))
+    eval(parse(text=paste(simMultiKernName, '$comp[[i]]$di_variance <- model$sigma^2', sep="")))
+    model$D[i-1] <- simMultiKern$comp[[i]]$decay
+    model$S[i-1] <- sqrt(simMultiKern$comp[[i]]$variance)
   }
 
   set.seed(1)
@@ -61,11 +77,7 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL,
 
   model$optimiser <- options$optimiser
 
-  if ( any(grep("fix", names(options))) ) {
-    model$fix <- options$fix
-  }
-
-  if ( any(grep("bTransform",names(options))) ) {
+  if ( "bTransform" %in% names(options) ) {
     model$bTransform <- options$bTransform
   } else {
     model$bTransform <- "positive"
@@ -77,6 +89,20 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL,
 
   if (!is.null(genes)) {
     model$genes <- genes
+  }
+
+  if ( "fix" %in% names(options) ) {
+    params <- gpdisimExtractParam(model, 2)
+    model$fix <- options$fix
+    if (! "index" %in% names(model$fix)) {
+      for ( i in seq(along=model$fix$names) ) {
+        J <- grep(model$fix$names[[i]], params$names)
+        if (length(J) != 1) {
+          stop("gpdisimCreate: inconsistent fixed parameter specification")
+        }
+        model$fix$index[i] <- J
+      }
+    }
   }
 
   params <- gpdisimExtractParam(model)
@@ -101,7 +127,7 @@ gpdisimExpandParam <- function (model, params) {
     params <- params$values
 
   params <- Re(params)
-  if ( any(grep("fix", names(model))) )
+  if ( "fix" %in% names(model) )
     for ( i in seq(along=model$fix$index) )
       params[model$fix$index[i]] <- model$fix$value[i]
 
@@ -117,12 +143,17 @@ gpdisimExpandParam <- function (model, params) {
 
   model$B <- func(params[(endVal+1):length(params)], "atox")
 
-  model$delta <- model$kern$comp[[2]]$di_decay
-  model$sigma <- model$kern$comp[[2]]$di_variance
+  if (model$includeNoise)
+    simMultiKern <- model$kern$comp[[1]]
+  else
+    simMultiKern <- model$kern
+  
+  model$delta <- simMultiKern$comp[[2]]$di_decay
+  model$sigma <- simMultiKern$comp[[2]]$di_variance
 
-  for ( i in seq(2, model$kern$numBlocks) ) {
-    model$D[i-1] <- model$kern$comp[[i]]$decay
-    model$S[i-1] <- sqrt(model$kern$comp[[i]]$variance)
+  for ( i in seq(2, simMultiKern$numBlocks) ) {
+    model$D[i-1] <- simMultiKern$comp[[i]]$decay
+    model$S[i-1] <- sqrt(simMultiKern$comp[[i]]$variance)
   }
 
   model$mu <- model$B/model$D
@@ -142,6 +173,7 @@ gpdisimExpandParam <- function (model, params) {
 
 
 
+
 gpdisimObjective <- function (params, model) {
   model <- gpdisimExpandParam(model, params)
   f <- -gpdisimLogLikelihood(model)
@@ -157,7 +189,7 @@ gpdisimLogLikelihood <- function (model) {
   ll <- 0.5*ll
 
   ## prior contributions
-  if ( any(grep("bprior",names(model))) ) {
+  if ( "bprior" %in% names(model) ) {
     ll <- ll + kernPriorLogProb(model$kern)
     ll <- ll + priorLogProb(model$bprior, model$B)
   }
@@ -180,19 +212,19 @@ gpdisimLogLikeGradients <- function (model) {
   covGrad <- -model$invK + model$invK %*% model$m %*% t(model$m) %*% model$invK
   covGrad <- 0.5*covGrad
 
-  if ( any(grep("proteinPrior",names(model))) ) {
+  if ( "proteinPrior" %in% names(model) ) {
     g <- kernGradient(model$kern, model$timesCell, covGrad)
   } else {
     g <- kernGradient(model$kern, model$t, covGrad)
   }
 
-  if ( any(grep("bprior",names(model))) ) {
+  if ( "bprior" %in% names(model) ) {
     g <- g + kernPriorGradient(model$kern)
   }
 
   gmuFull <- t(model$m) %*% model$invK
 
-  if ( any(grep("proteinPrior",names(model))) ) {
+  if ( "proteinPrior" %in% names(model) ) {
     if ( model$includeNoise ) {
       ind <- model$kern$comp[[1]]$diagBlockDim[1]+(1:model$kern$comp[[1]]$diagBlockDim[2])
       gmu <- array(0, model$numGenes)
@@ -227,7 +259,7 @@ gpdisimLogLikeGradients <- function (model) {
   func <- get(funcName, mode="function")
 
   ## prior contribution
-  if ( any(grep("bprior",names(model))) ) {
+  if ( "bprior" %in% names(model) ) {
     gb <- gb + priorGradient(model$bprior, model$B)
   }
 
@@ -237,14 +269,19 @@ gpdisimLogLikeGradients <- function (model) {
   gd <- -gmu*model$B/(model$D*model$D)
   decayIndices <- 5
 
-  for ( i in seq(3, model$kern$numBlocks, length=(model$kern$numBlocks-2)) )
-    decayIndices <- c(decayIndices, decayIndices[length(decayIndices)]+2)
+  if (model$includeNoise)
+    simMultiKern <- model$kern$comp[[1]]
+  else
+    simMultiKern <- model$kern
+
+  for ( i in seq(3, simMultiKern$numBlocks, length=(simMultiKern$numBlocks-2)) )
+    decayIndices <- c(decayIndices, tail(decayIndices, 1)+2)
 
   g[decayIndices] <- g[decayIndices]+gd*expTransform(model$D, "gradfact")
 
   g <- c(g, gb)
 
-  if ( any(grep("fix",names(model))) )
+  if ( "fix" %in% names(model) )
     g[model$fix$index] <- 0
 
   return (g)
@@ -318,34 +355,58 @@ cgpdisimGradient <- function (params, model, ...) {
 
 
 
-gpdisimUpdateProcesses <- function (model) {
+cgpdisimUpdateProcesses <- function (model) {
+  for ( i in seq(along=model$comp) )
+    model$comp[[i]] <- gpdisimUpdateProcesses(model$comp[[i]])
 
-  if ( any(grep("proteinPrior",names(model))) ) {
+  return (model)
+}
+
+
+
+gpdisimUpdateProcesses <- function (model, predt=NULL) {
+
+  if ( "proteinPrior" %in% names(model) ) {
     t <- model$timesCell[[2]]
   } else {
     t <- model$t
   }
 
   numData <- length(t)
-  predt <- c(seq(min(t), max(t), length=100), t)
+  if (is.null(predt)) {
+    predt <- c(seq(min(t), max(t), length=100), t)
+  }
+  else {
+    predt <- c(predt, t)
+  }
+
+  if (model$includeNoise)
+    simMultiKern <- model$kern$comp[[1]]
+  else
+    simMultiKern <- model$kern
+
   proteinKern <- kernCreate(model$t, "sim")
-  proteinKern$inverseWidth <- model$kern$comp[[1]]$inverseWidth
+  proteinKern$inverseWidth <- simMultiKern$comp[[1]]$inverseWidth
   proteinKern$decay <- model$delta
-  proteinKern$variance <- model$kern$comp[[2]]$di_variance
-  K <- simXrbfKernCompute(proteinKern, model$kern$comp[[1]], predt, model$t)
-  for ( i in seq(2, length=(model$kern$numBlocks-1)) )
-    K <- cbind(K,t(disimXsimKernCompute(model$kern$comp[[i]], proteinKern, model$t, predt)))
+  proteinKern$variance <- simMultiKern$comp[[2]]$di_variance
+  inputKern <- kernCreate(model$t, "rbf")
+  inputKern$inverseWidth <- simMultiKern$comp[[1]]$inverseWidth
+  inputKern$variance <- 1
+  K <- simXrbfKernCompute(proteinKern, inputKern, predt, model$t)
+  K <- K * simMultiKern$comp[[1]]$variance
+  for ( i in seq(2, length=(simMultiKern$numBlocks-1)) )
+    K <- cbind(K,t(disimXsimKernCompute(simMultiKern$comp[[i]], proteinKern, model$t, predt)))
 
   ymean <- t(matrix(c(0, model$mu), model$numGenes+1, numData))
 
   predF <- K %*% model$invK %*% c(model$y-ymean)
   #varF <- kernDiagCompute(proteinKern, predt) - apply(t(K)*(model$invK %*% t(K)), 2, sum)
-  varF <- model$kern$comp[[1]]$variance * kernDiagCompute(proteinKern, predt) - apply(t(K)*(model$invK %*% t(K)), 2, sum)
+  varF <- simMultiKern$comp[[1]]$variance * kernDiagCompute(proteinKern, predt) - apply(t(K)*(model$invK %*% t(K)), 2, sum) + 1e-15
 
-  Kxx <- multiKernCompute(model$kern, predt, model$t)
+  Kxx <- multiKernCompute(simMultiKern, predt, model$t)
   meanPredX <- t(matrix(c(0, model$B/model$D), model$numGenes+1, length(predt)))
   predX <- c(meanPredX) + Re(Kxx %*% model$invK %*% c(model$y-ymean))
-  varX <- Re( kernDiagCompute(model$kern, predt)-apply(t(Kxx)*(model$invK%*%t(Kxx)), 2, sum) )
+  varX <- Re( kernDiagCompute(simMultiKern, predt)-apply(t(Kxx)*(model$invK%*%t(Kxx)), 2, sum) ) + 1e-13
 
   predExprs <- matrix(predX, length(predt), model$numGenes+1)
   meanExprs <- t(matrix(apply(predExprs, 2, mean), model$numGenes+1, length(predt)))
@@ -362,10 +423,12 @@ gpdisimUpdateProcesses <- function (model) {
 
   model$predt <- predt
   model$predF <- predF
-  model$varF <- abs(varF)
+  #model$varF <- abs(varF)
+  model$varF <- varF
 
   model$ypred <- predExprs
-  model$ypredVar <- abs(varExprs)
+  #model$ypredVar <- abs(varExprs)
+  model$ypredVar <- varExprs
 
   return (model)
 }

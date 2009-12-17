@@ -29,26 +29,16 @@ modelOptimise <- function (model, options, ...) {
     func <- get(funcName, mode="function")
     model <- func(model, options, ...)
   } else {
-    newOptions <- options
-    options <- list()
-    for ( i in 1:4 ) 
-      options[[i]] <- newOptions[[i]]
-
-    if ( any(grep("display",names(newOptions))) ) {
-      options$display <- newOptions$display
+    if ( "optimiser" %in% names(options) ) {
+      funcName <- paste(options$optimiser, "optim", sep="")
+    } else {
+      funcName <- "CGoptim"
     }
-    
+    optFunc <- get(funcName, mode="function")
+
     params <- modelExtractParam(model)
-
-    if ( newOptions$optimiser=="CG" )
-      newParams <- CGoptim(params, modelObjective, modelGradient, options, model)
+    newParams <- optFunc(params, modelObjective, modelGradient, options, model)
     
-##    if ( options$optimiser == "CG" ) {
-##      modelopt <- optim(params, modelObjective, gr=modelGradient, method="CG", control=list(trace=options$trace, type=2, maxit=options$maxit, fnscale=options$fnscale, reltol=options$reltol), hessian=FALSE, model)
-##    } else {
-##      modelopt <- optim(params, modelObjective, gr=modelGradient, method=options$optimiser, control=list(trace=options$trace, maxit=options$maxit, fnscale=options$fnscale, reltol=options$reltol), hessian=options$hessian, model)
-##    }
-
     model <- modelExpandParam(model, newParams$xmin)
     model$llscore <- newParams$objective
   }
@@ -179,7 +169,7 @@ SCGoptim <- function (x, fn, grad, options, ...) {
   ## options = list(maxit, ln, xtol, fnTol, optimiser="SCG", gradcheck=FALSE)
   cat ("\n SCG Optimisation begins! \n")
 
-  if ( !is.na(options$maxit) ) {
+  if ( "maxit" %in% names(options) && !is.na(options$maxit) ) {
     niters <- options$maxit
   } else {
     niters <- 100

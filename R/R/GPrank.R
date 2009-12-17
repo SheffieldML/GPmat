@@ -6,10 +6,6 @@ GPrank <- function(preprocData, TF = NULL, targets = NULL, useGPsim = TRUE, filt
 
   # The preprocessed data is searched for the data of the specified genes.
   newData <- searchProcessedData(preprocData, genes)
-  y <- newData$y
-  yvar <- newData$yvar
-  times <- newData$times
-  scale <- newData$scale
 
   # Filtering the genes based on the calculated ratios. If the limit is 0, all genes are accepted.
   genes <- filterGenes(newData$ratioData, filterLimit, useMedians)
@@ -49,16 +45,17 @@ GPrank <- function(preprocData, TF = NULL, targets = NULL, useGPsim = TRUE, filt
 
   options <- list(includeNoise=0, optimiser="CG")
 
-  options$fix$index <- 4
-  options$fix$value <- expTransform(c(1, 1), "xtoa")
-
   if(addPriors) options$addPriors = TRUE
 
   if (useGPsim) {
     Ngenes <- length(genes)
+    options$fix$names <- "sim1_variance"
+    options$fix$value <- expTransform(c(1), "xtoa")
   }
   else {
     Ngenes <- length(genes) - 1
+    options$fix$names <- "di_variance"
+    options$fix$value <- expTransform(c(1), "xtoa")
   }
   Ntf <- 1
 
@@ -72,7 +69,11 @@ GPrank <- function(preprocData, TF = NULL, targets = NULL, useGPsim = TRUE, filt
   }
 
   # initializing the model
-  model <- list(type="cgpdisim")
+  if (useGPsim)
+    model <- list(type="cgpsim")
+  else
+    model <- list(type="cgpdisim")
+
   for ( i in seq(length=Nrep) ) {
     #repNames <- names(model$comp)
     if (useGPsim) {
@@ -105,41 +106,9 @@ GPrank <- function(preprocData, TF = NULL, targets = NULL, useGPsim = TRUE, filt
 
   cat (c("\n Optimizing genes", genes, sep=" "))
 
-  if(useGPsim) {
-    fn <- cgpsimObjective
-    grad=cgpsimGradient
-  }
-  else {
-    fn <- cgpdisimObjective
-    grad=cgpdisimGradient
-  }
+  model <- modelOptimise(model, optOptions)
 
-  # optimizing the model
-  optimResult <- SCGoptim(param, fn, grad, optOptions, model)
-  MLParams <- optimResult$xmin
-  #optimResult <- optim(param, fn=cgpdisimObjective, gr=cgpdisimGradient, model, method="BFGS", control=list(maxit=500,trace=10,REPORT=1,parscale=rep(3e-2, length(param))))
-  #MLParams <- optimResult$par
-
-  #fileName <- paste(expType, expNo, ".Rdata", sep="")
-  #save(model, expType, expNo, genes, scale, file=fileName)
-
-  # optOptions$maxit <- 3000
-
-  # optOptions$fnscale <- 1e1
-  # optOptions$trace <- TRUE
-
-  # model <- modelOptimise(model, optOptions)
-
-  for ( i in seq(length=Nrep) ) {
-    if (useGPsim) {
-      model$comp[[i]] <- gpsimExpandParam(model$comp[[i]], MLParams)
-      model$comp[[i]] <- gpsimUpdateProcesses(model$comp[[i]])
-    }
-    else {
-      model$comp[[i]] <- gpdisimExpandParam(model$comp[[i]], MLParams)
-      model$comp[[i]] <- gpdisimUpdateProcesses(model$comp[[i]])
-    }
-  }
+  model <- modelUpdateProcesses(model)
 
   return (model)
 }
@@ -211,7 +180,7 @@ GPrankTargets <- function(preprocData, TF = NULL, knownTargets = NULL, testTarge
 
   if (useGPsim && is.null(knownTargets)) stop("There are no known targets for GPsim.")
 
-  amountOfKnownTargets <- length(knownTargets)
+  numberOfKnownTargets <- length(knownTargets)
 
   logLikelihoods <- array(dim = length(testTargets) + 1)
   rankedModels <- array(list(NULL), length(testTargets) + 1)
@@ -239,9 +208,9 @@ GPrankTargets <- function(preprocData, TF = NULL, knownTargets = NULL, testTarge
 
     parameters <- modelExtractParam(baseLineData$model)
     baseLineParameters <- array(dim = c(1, length(parameters) + 3))
-    baseLineParameters[1:(2*amountOfKnownTargets+4)] <- parameters[1:(2*amountOfKnownTargets+4)]
-    t <- 2 * amountOfKnownTargets + 5
-    baseLineParameters[(t+2):(t+1+amountOfKnownTargets)] <- parameters[t:(t+amountOfKnownTargets-1)]
+    baseLineParameters[1:(2*numberOfKnownTargets+4)] <- parameters[1:(2*numberOfKnownTargets+4)]
+    t <- 2 * numberOfKnownTargets + 5
+    baseLineParameters[(t+2):(t+1+numberOfKnownTargets)] <- parameters[t:(t+numberOfKnownTargets-1)]
 
     fixedParams <- TRUE
   }
@@ -303,7 +272,7 @@ GPrankTFs <- function(preprocData, TFs = NULL, targets = NULL, filterLimit = 1.5
 
   if (is.null(targets)) stop("There are no targets for GPsim.")
 
-  amountOfTargets <- length(targets)
+  numberOfTargets <- length(targets)
 
   genes = c(TFs, targets)
 
@@ -362,18 +331,18 @@ GPrankTFs <- function(preprocData, TFs = NULL, targets = NULL, filterLimit = 1.5
   baseLineParameters <- NULL
   initParams <- FALSE
 
-  amountOfTargets <- length(targets)
+  numberOfTargets <- length(targets)
 
   genes <- list()
 
-  if (amountOfTargets > 1) {
+  if (numberOfTargets > 1) {
     GPsimUses <- array(dim = length(TFs) + 1)
   }
   else {
     GPsimUses <- array(dim = length(TFs))
   }
 
-  if (amountOfTargets > 1) {
+  if (numberOfTargets > 1) {
 
     baseLineData <- formModel(searchedData, TF = NULL, targets, useGPsim = TRUE)
     logLikelihoods[1] <- baseLineData$ll
@@ -384,9 +353,9 @@ GPrankTFs <- function(preprocData, TFs = NULL, targets = NULL, filterLimit = 1.5
 
     parameters <- modelExtractParam(baseLineData$model)
     baseLineParameters <- array(dim = c(1, length(parameters) + 3))
-    baseLineParameters[1:(2*amountOfTargets+4)] <- parameters[1:(2*amountOfTargets+4)]
-    t <- 2 * amountOfTargets + 5
-    baseLineParameters[(t+2):(t+1+amountOfTargets)] <- parameters[t:(t+amountOfTargets-1)]
+    baseLineParameters[1:(2*numberOfTargets+4)] <- parameters[1:(2*numberOfTargets+4)]
+    t <- 2 * numberOfTargets + 5
+    baseLineParameters[(t+2):(t+1+numberOfTargets)] <- parameters[t:(t+numberOfTargets-1)]
 
     initParams <- TRUE
   }
@@ -436,7 +405,7 @@ formModel <- function(preprocData, TF = NULL, knownTargets = NULL, testTarget = 
 
     if (!is.null(testTarget)) {
       # taking a test target gene
-      knownTargets[length(knownTargets) + 1] <- testTarget
+      knownTargets <- append(knownTargets, testTarget)
     }
 
     error1 <- TRUE
@@ -512,10 +481,10 @@ searchProcessedData <- function(preprocData, searchedGenes) {
   scale <- preprocData$scale
   ratioData <- preprocData$ratioData
 
-  amountOfRows <- length(times)
+  numberOfRows <- length(times)
   Nrep <- length(y)
 
-  #counting the amount of found genes
+  #counting the number of found genes
 
   #counter for found genes
   k <- 0
@@ -541,9 +510,9 @@ searchProcessedData <- function(preprocData, searchedGenes) {
   foundRatioData$medians <- list()
 
   for (m in 1:Nrep) {
-    foundY[[m]] <- array(dim = c(amountOfRows, k))
-    foundYvar[[m]] <- array(dim = c(amountOfRows, k))
-    foundRatioData$ratios[[m]] <- array(dim = c(amountOfRows, k))
+    foundY[[m]] <- array(dim = c(numberOfRows, k))
+    foundYvar[[m]] <- array(dim = c(numberOfRows, k))
+    foundRatioData$ratios[[m]] <- array(dim = c(numberOfRows, k))
     foundRatioData$means[[m]] <- array(dim = c(k))
     foundRatioData$medians[[m]] <- array(dim = c(k))
   }
@@ -565,7 +534,7 @@ searchProcessedData <- function(preprocData, searchedGenes) {
 	for (m in 1:Nrep) {
 	  foundRatioData$means[[m]][k] <- ratioData$means[[m]][j]
 	  foundRatioData$medians[[m]][k] <- ratioData$medians[[m]][j]
-          for (l in 1: amountOfRows) {
+          for (l in 1: numberOfRows) {
             foundY[[m]][l, k] <- y[[m]][l, j]
             foundYvar[[m]][l, k] <- yvar[[m]][l, j]
             foundRatioData$ratios[[m]][l, k] <- ratioData$ratios[[m]][l, j]
@@ -579,4 +548,21 @@ searchProcessedData <- function(preprocData, searchedGenes) {
 
   newData <- list(y = foundY, yvar = foundYvar, genes = foundGenes, times = times, scale = scale, ratioData = foundRatioData)
   return (newData)
+}
+
+
+setClass("scoreList", 
+	representation(params = "list", LLs = "array", genes = "list", useGPsim = "array"))
+
+	#prototype = list(params = list(), LLs = array(), genes = list(), useGPsim = array()))
+
+
+scoreList <- function(params = list(), LLs = array(), genes = list(), useGPsim = array()) {
+
+  new("scoreList", params = params, LLs = LLs, genes = genes, useGPsim = useGPsim)
+}
+
+
+is.scoreList <- function(object) {
+  return (class(object) == "scoreList")
 }

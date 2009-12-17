@@ -244,7 +244,7 @@ double calerf(double x, int jint)
 
 void
 ClnDiffErfs(double *in1, double *in2, int *dim1, int *dim2, double *out, int *signs) {
-  const double xsmall = 1.11e-16;
+  const double xsmall = 2.2204e-16;
 
   int inc1, inc2, i;
   int d1 = *dim1;
@@ -283,8 +283,8 @@ ClnDiffErfs(double *in1, double *in2, int *dim1, int *dim2, double *out, int *si
     else if (fabs(v1-v2) < xsmall)
       *out++ = -INFINITY;
     else if (v2 > 0)
-      *out++ = log(calerf(v2, 2) - calerf(v1, 2) * exp(v2*v2 - v1*v1)) - v2*v2;
+      *out++ = log(calerf(v2, 2) - calerf(v1, 2) * exp(v2*v2 - v1*v1) + 1e-100) - v2*v2;
     else
-      *out++ = log(calerf(-v1, 2) - calerf(-v2, 2) * exp(v1*v1 - v2*v2)) - v1*v1;
+      *out++ = log(calerf(-v1, 2) - calerf(-v2, 2) * exp(v1*v1 - v2*v2) + 1e-100) - v1*v1;
   }
 }

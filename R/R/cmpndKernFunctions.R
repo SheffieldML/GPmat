@@ -3,7 +3,7 @@ cmpndKernParamInit <- function (kern) {
   kern$nParams <- 0
   kern$transforms <- list()
 
-  if ( !any(grep("comp", names(kern))) )
+  if ( ! ("comp" %in% names(kern)) )
     kern$comp <- list()
 
   for ( i in seq(along=kern$comp) ) {
@@ -12,16 +12,16 @@ cmpndKernParamInit <- function (kern) {
     kern$nParams <- kern$nParams + kern$comp[[i]]$nParams
     kern$comp[[i]]$index <- array()
 
-    if ( any(grep("numBlocks", names(kern$comp[[i]]))) ) {
+    if ( "numBlocks" %in% names(kern$comp[[i]]) ) {
       if ( i==1 ) {
         kern$numBlocks <- kern$comp[[i]]$numBlocks
       } else {
-        if ( (!any(grep("numBlocks", names(kern)))) | (kern$numBlocks!=kern$comp[[i]]$numBlocks) ) {
+        if ( (!("numBlocks" %in% names(kern))) | (kern$numBlocks!=kern$comp[[i]]$numBlocks) ) {
           stop("Compound of multi kernels with different numbers of blocks.")
         }
       }
     } else {
-      if ( any(grep("numBlocks", names(kern))) )
+      if ( "numBlocks" %in% names(kern) )
         stop("Attempt to combine multi-kernel with non multi-kernel.")
     }
   }
@@ -38,7 +38,7 @@ cmpndKernParamInit <- function (kern) {
     if ( kern$comp[[i]]$type == "white" ) {
       kern$whiteVariance <- kern$whiteVariance + kern$comp[[i]]$variance
     } else {
-      if ( any(grep("whiteVariance", names(kern$comp[[i]]))) ) {
+      if ( "whiteVariance" %in% names(kern$comp[[i]]) ) {
         kern$whiteVariance <- kern$whiteVariance + kern$comp[[i]]$whiteVariance
       }
     }
@@ -75,7 +75,7 @@ cmpndKernExtractParam <- function (kern, option=1) {
     }
   }
 
-  if ( any(grep("paramGroups", names(kern))) ) {
+  if ( "paramGroups" %in% names(kern) ) {
     paramGroups <- kern$paramGroups
     for ( i in seq(length.out=dim(paramGroups)[2]) ) {
       ind <- grep(1, paramGroups[,i])
@@ -112,9 +112,9 @@ cmpndKernExpandParam <- function (kern, params) {
     endVal <- endVal+kern$comp[[i]]$nParams
     kern$comp[[i]] <- kernExpandParam(kern$comp[[i]], params[startVal:endVal])
     startVal <- endVal+1
-    if ( any(grep("white", kern$comp[[i]]$type)) ) {
+    if ( "white" %in% kern$comp[[i]]$type ) {
       kern$whiteVariance <- kern$whiteVairance+kern$comp[[i]]$variance
-    } else if ( any(grep("whiteVariance", names(kern$comp[[i]]))) ) {
+    } else if ( "whiteVariance" %in% names(kern$comp[[i]]) ) {
       kern$whiteVariance <- kern$whiteVariance+kern$comp[[i]]$whiteVariance
     }
   }      

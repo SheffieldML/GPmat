@@ -2,7 +2,8 @@ rbfKernParamInit <- function (kern) {
   kern$inverseWidth <- 1
   kern$variance <- 1
   kern$nParams <- 2
-
+  kern$paramNames <- c("inverseWidth", "variance")
+  
   kern$transforms <- list(index=c(1,2), type="positive")
 
   kern$isStationary=TRUE

@@ -57,10 +57,10 @@ generateModels <- function(preprocData = NULL, y = NULL, yvar = NULL, allGenes =
 
 searchExpressionData <- function(y, yvar, allGenes, times, searchedGenes) {
 
-  amountOfRows <- length(times)
+  numberOfRows <- length(times)
   Nrep <- length(y)
 
-  # counting the amount of found genes
+  # counting the number of found genes
 
   # counter for found genes
   k <- 0
@@ -82,8 +82,8 @@ searchExpressionData <- function(y, yvar, allGenes, times, searchedGenes) {
   foundYvar <- list()
 
   for (m in 1:Nrep) {
-    foundY[[m]] <- array(dim = c(amountOfRows, k))
-    foundYvar[[m]] <- array(dim = c(amountOfRows, k))
+    foundY[[m]] <- array(dim = c(numberOfRows, k))
+    foundYvar[[m]] <- array(dim = c(numberOfRows, k))
   }
 
   # resetting the counter
@@ -101,7 +101,7 @@ searchExpressionData <- function(y, yvar, allGenes, times, searchedGenes) {
         k <- k + 1
         foundGenes[k] <- searchedGene
 	for (m in 1:Nrep) {
-          for (l in 1: amountOfRows) {
+          for (l in 1: numberOfRows) {
             foundY[[m]][l, k] <- y[[m]][l, j]
             foundYvar[[m]][l, k] <- yvar[[m]][l, j]
           }
