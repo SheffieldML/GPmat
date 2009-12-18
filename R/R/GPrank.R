@@ -2,7 +2,10 @@ GPrank <- function(preprocData, TF = NULL, targets = NULL, useGPsim = TRUE, filt
 
   options(error = recover)
 
-  genes <- c(TF, targets)
+  if (useGPsim)
+    genes <- targets
+  else
+    genes <- c(TF, targets)
 
   # The preprocessed data is searched for the data of the specified genes.
   newData <- searchProcessedData(preprocData, genes)
