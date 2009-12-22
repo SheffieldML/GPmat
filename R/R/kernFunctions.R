@@ -4,7 +4,7 @@ kernCreate <- function(x, kernType) {
     for ( i in 1:length(x) ) {
       dim[i] <- dim(as.matrix(x[[i]]))[2]
       if ( (dim[i] == 1) & (dim(as.matrix(x[[i]]))[1] == 1) )
-          dim[i] <- x[[i]]
+        dim[i] <- x[[i]]
     }
   } else {
     dim <- dim(as.matrix(x))[2]
@@ -12,6 +12,12 @@ kernCreate <- function(x, kernType) {
       dim <- x
   }
 
+  ##   # Attempt to recreate Antti's idea for appending options to each kernel.
+  ##   if (is.list(kernType) && kernType[1]=="parametric") {
+  ##     kern$options <- kernType[2]
+  ##     kernType = kernType[3]
+  ##   }
+  
   if ( is.list(kernType) && ("complete" %in% names(kernType)) ) {
     if ( kernType$complete == 1 ) {
       kern <- kernType
@@ -43,7 +49,7 @@ kernCreate <- function(x, kernType) {
 
         kern$comp[[i-start+1]]$index = array()
       }
-        
+      
     } else if ( kern$type %in% c("cmpnd", "tensor", "translate") )  {
       for ( i in start:length(kernType$comp) ) {
         if ( is.list(kernType$comp) ) {
@@ -160,6 +166,15 @@ kernExpandParam <- function (kern, params) {
   
 }
 
+kernDisplay <- function (kern, ...) {
+
+  funcName <- paste(kern$type, "KernDisplay", sep="")
+  if(exists(funcName, mode="function")) {
+    func <- get(funcName, mode="function")
+    return (func(kern, ...))
+  }
+
+}
 
 
 kernCompute <- function (kern, x, x2) {
@@ -290,7 +305,16 @@ multiKernExpandParam <- function (kern, params) {
   return (kern)
 }
 
-
+multiKernDisplay <- function (kern, spaceNum=0) {
+  spacing = matrix("", spaceNum+1)
+  cat(spacing);
+  cat("Multiple output block kernel:\n")
+  for(i in seq(along=kern$comp)) {
+    cat(spacing)
+    cat("Block ", i, "\n", sep="")
+    kernDisplay(kern$comp[[i]], spaceNum)
+  }
+}
 
 multiKernCompute <- function (kern, x, x2=x) {
   if ( is.list(x) ) {
@@ -342,7 +366,7 @@ multiKernCompute <- function (kern, x, x2=x) {
         }
     }
   } else {
-    # non-cell part
+                                        # non-cell part
     dim1 = length(x)
     
     if ( nargs() > 2 ) {
@@ -350,9 +374,9 @@ multiKernCompute <- function (kern, x, x2=x) {
     } else {
       dim2 = dim1;
     }
-  
+    
     K <- matrix(0, kern$numBlocks*dim1, kern$numBlocks*dim2)
-  
+    
     for ( i in seq(length=kern$numBlocks) ) {
       startOne <- (i-1)*dim1 + 1
       endOne <- i*dim1
@@ -624,7 +648,7 @@ multiKernGradientBlock <- function (kern, x, x2, covGrad, i, j) {
       g1 <- g
     }
     g <- list(g1=g1, g2=g2)   
-  
+    
   }
   return (g)
 }
@@ -684,7 +708,7 @@ multiKernCacheBlock <- function(kern, fhandle = NULL, arg = NULL, i = NULL, j = 
     }
   }
 
-  # No match if we get all the way here
+                                        # No match if we get all the way here
   if (is.null(X2)) {
     K = fhandle(arg, X)
   }

@@ -2,13 +2,11 @@ simKernParamInit <- function (kern) {
 
   if ( kern$inputDimension > 1 )
     stop("SIM kernel is only valid for one-D input.")
-
   kern$delay <- 0
   kern$decay <- 1
   kern$initVal <- 1
   kern$variance <- 1
   kern$inverseWidth <- 1
-
   if ("options" %in% names(kern) && "gaussianInitial" %in% names(kern$options) && kern$options$gaussianInitial) {
     kern$gaussianInitial <- TRUE
     kern$initialVariance <- 1
@@ -21,8 +19,15 @@ simKernParamInit <- function (kern) {
     kern$paramNames <- c("decay", "inverseWidth", "variance")
   }
 
-  kern$transforms <- list(index=1:kern$nParams, type="positive")
-
+  if ("options" %in% names(kern) && "isNegativeS" %in% names(kern$options) && kern$options$isNegativeS) {
+    kern$isNegativeS <- TRUE
+    kern$transforms <- list(index=setdiff(1:kern$nParams, 3), type="positive")
+    kern$paramNames[3] <- "sensitivity"
+  }
+  else {
+    kern$isNegativeS <- FALSE
+    kern$transforms <- list(index=1:kern$nParams, type="positive")
+  }
   kern$isStationary <- FALSE
 
   return (kern)
@@ -55,8 +60,11 @@ simXrbfKernCompute <- function (simKern, rbfKern, t1, t2=t1) {
   K <- lnPart[[2]] * exp(halfSigmaDi*halfSigmaDi - simKern$decay*diffT + lnPart[[1]])
 
   #K <- 0.5*sqrt(simKern$variance)*sqrt(rbfKern$variance)*K*sqrt(pi)*sigma
-  K <- 0.5*sqrt(simKern$variance)*K*sqrt(pi)*sigma
-
+  K <- K*sqrt(pi)
+#  if(kern$isNegativeS)
+    K <- 0.5*simKern$sensitivity*K*sigma
+#  else
+#    K <- 0.5*sqrt(simKern$variance)*K*sigma
   return (K)
 }
 
@@ -74,7 +82,14 @@ simXsimKernCompute <- function (simKern1, simKern2, t1, t2=t1) {
   h2 <- simComputeH(t2, t1, simKern2$decay, simKern1$decay, simKern2$delay, simKern1$delay, sigma)
   K <- h1 + t(h2)
   K <- 0.5*K*sqrt(pi)*sigma
-  K <- sqrt(simKern1$variance)*sqrt(simKern2$variance)*K
+#  if(simKern1$isNegativeS)
+  K <- simKern1$sensitivity*simKern2$sensitivity*K
+#  else
+#    K <- sqrt(simKern1$variance)*K
+#  if(simKern2$isNegativeS)
+#  K <- simKern2$sensitivity*K
+#  else
+#    K <- sqrt(simKern2$variance)*K
 
   return (K)
 }
@@ -83,21 +98,38 @@ simXsimKernCompute <- function (simKern1, simKern2, t1, t2=t1) {
 
 simKernExtractParam <- function (kern, option=1) {
 
-  if ( "gaussianInitial" %in% names(kern) && kern$gaussianInitial ) {
-    if ( option == 1 ) {
-      params <- c(kern$decay, kern$inverseWidth, kern$variance, kern$initialVariance)
-    } else {
-      params <- list(values=c(kern$decay, kern$inverseWidth, kern$variance, kern$initialVariance), names=kern$paramNames)
+  if (kern$gaussianInitial) {
+    if (kern$isNegativeS) {
+      if ( option == 1 ) {
+        params <- c(kern$decay, kern$inverseWidth, kern$sensitivity, kern$initialVariance)
+      } else {
+        params <- list(values=c(kern$decay, kern$inverseWidth, kern$sensitivity, kern$initialVariance), names=kern$paramNames)
+      }
+    }
+    else {
+      if ( option == 1 ) {
+        params <- c(kern$decay, kern$inverseWidth, kern$variance, kern$initialVariance)
+      } else {
+        params <- list(values=c(kern$decay, kern$inverseWidth, kern$variance, kern$initialVariance), names=kern$paramNames)
+      }
     }
   }
   else {
-    if ( option == 1 ) {
-      params <- c(kern$decay, kern$inverseWidth, kern$variance)
-    } else {
-      params <- list(values=c(kern$decay, kern$inverseWidth, kern$variance), names=kern$paramNames)
+    if (kern$isNegativeS) {
+      if ( option == 1 ) {
+        params <- c(kern$decay, kern$inverseWidth, kern$sensitivity)
+      } else {
+        params <- list(values=c(kern$decay, kern$inverseWidth, kern$sensitivity), names=kern$paramNames)
+      }
+    }
+    else {
+      if ( option == 1 ) {
+        params <- c(kern$decay, kern$inverseWidth, kern$variance)
+      } else {
+        params <- list(values=c(kern$decay, kern$inverseWidth, kern$variance), names=kern$paramNames)
+      }
     }
   }
-
   return (params)
 }
 
@@ -109,13 +141,55 @@ simKernExpandParam <- function (kern, params) {
 
   kern$decay <- params[1]
   kern$inverseWidth <- params[2]
-  kern$variance <- params[3]
+  if(kern$isNegativeS) {
+    kern$sensitivity <- params[3]
+    kern$variance <- kern$sensitivity*kern$sensitivity
+  }
+  else {
+    kern$variance <- params[3]
+    kern$sensitivity <- sqrt(kern$variance)
+  }
   if ( "gaussianInitial" %in% names(kern) && kern$gaussianInitial )
     kern$initialVariance <- params[4]
 
   return (kern)
 }
 
+simKernDisplay <- function (kern, spaceNum=0) {
+
+  spacing = matrix("", spaceNum+1)
+  cat(spacing)
+  if(kern$isStationary)
+    cat("Stationary version of the kernel\n")
+  else
+    cat("Non-stationary version of the kernel\n")
+
+##   cat(spacing)
+##   if(kern$isNormalised)
+##     cat("Normalised version of the kernel\n")
+##   else
+##     cat("Unnormalised version of the kernel\n")
+
+  if(kern$isNegativeS)
+    cat("Sensitivities allowed to be negative.\n")
+  else
+    cat("Sensitivities constrained positive.\n")
+  cat(spacing)
+  cat("SIM decay: ", kern$decay, "\n", sep="")
+  cat(spacing)
+  cat("SIM inverse width: ", kern$inverseWidth, " (length scale ", 1/sqrt(kern$inverseWidth), ")\n", sep="")
+  cat(spacing)
+  if(kern$isNegativeS) 
+    cat("SIM Sensitivity: ", kern$sensitivity, "\n", sep="")  
+  else
+    cat("SIM Variance: ", kern$variance, "\n", sep="")
+  if(kern$gaussianInitial) {
+    cat(spacing)
+    cat("SIM Initial Variance: ", kern$initialVariance, "\n", sep="")
+  }
+  ## cat(spacing)
+  ## cat("SIM delay: %2.4f\n", kern$delay)
+}
 
 
 simKernCompute <- function (kern, t, t2=t) {
@@ -142,7 +216,7 @@ simKernCompute <- function (kern, t, t2=t) {
     t1Mat <- matrix(t, dim1, dim2)
     t2Mat <- t(matrix(t2, dim2, dim1))
 
-    k = k + kern$initialVariance * exp(- kern$decay * (t1Mat + t2Mat));
+    k = k + kern$initialVariance * exp(- kern$decay * (t1Mat + t2Mat))
   }
 
   return (k)
@@ -240,10 +314,12 @@ simXsimKernGradient <- function (simKern1, simKern2, t1, t2, covGrad) {
   dKdD2 <- dh1dD2 + t(dh2dD2)
   dKdsigma <- dh1dsigma + t(dh2dsigma)
 
-  C1 <- sqrt(simKern1$variance)
-  C2 <- sqrt(simKern2$variance)
+  C1 <- simKern1$sensitivity
+  C2 <- simKern2$sensitivity
+
   K <- h1 + t(h2)
   K <- 0.5*K*sqrt(pi)
+
   var2 <- C1*C2
   dkdD1 <- (sum(covGrad*dh1dD1)+sum(covGrad*t(dh2dD1)))*0.5*sqrt(pi)*sigma*var2
   dkdD2 <- (sum(covGrad*dh1dD2)+sum(covGrad*t(dh2dD2)))*0.5*sqrt(pi)*sigma*var2
@@ -252,8 +328,15 @@ simXsimKernGradient <- function (simKern1, simKern2, t1, t2, covGrad) {
   dkdC1 <- C2*sum(covGrad*K)
   dkdC2 <- C1*sum(covGrad*K)
 
-  dkdSim1Variance <- dkdC1*0.5/C1
-  dkdSim2Variance <- dkdC2*0.5/C2
+  if(simKern1$isNegativeS)
+    dkdSim1Variance <- dkdC1
+  else
+    dkdSim1Variance <- dkdC1*0.5/C1
+
+  if(simKern2$isNegativeS)
+    dkdSim2Variance <- dkdC2
+  else
+    dkdSim2Variance <- dkdC2*0.5/C2
 
   dkdinvWidth <- -0.5*sqrt(2)/(simKern1$inverseWidth*sqrt(simKern1$inverseWidth))*dkdsigma
   K <- var2*K
@@ -292,7 +375,7 @@ simXrbfKernGradient <- function (simKern, rbfKern, t1, t2, covGrad) {
   diffT <- t1Mat-t2Mat
   sigma <- sqrt(2/simKern$inverseWidth)
   sigma2 <- sigma*sigma
-  Ci <- sqrt(simKern$variance)
+  Ci <- simKern$sensitivity
   Cj <- sqrt(rbfKern$variance)
   Di <- simKern$decay
 

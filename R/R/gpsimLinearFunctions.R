@@ -12,6 +12,10 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
   model <- list(type="gpsim", y=as.array(y), yvar=as.array(yvar))
 
   kernType1 <- list(type="multi", comp=array())
+  if ("isNegativeS" %in% names(options) && options$isNegativeS)
+    isNegativeS = TRUE
+  else
+    isNegativeS = FALSE
   if ( "proteinPrior" %in% names(options) ) {
     model$proteinPrior <- options$proteinPrior
     kernType1$comp[1] <- "rbf"
@@ -73,20 +77,20 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
     for ( i in seq(2,model$kern$numBlocks,length.out=model$kern$numBlocks-1) ) {
       if ( model$includeNoise ) {
         model$D[i-1] <- model$kern$comp[[1]]$comp[[i]]$decay
-        model$S[i-1] <- sqrt(model$kern$comp[[1]]$comp[[i]]$variance)
+        model$S[i-1] <- model$kern$comp[[1]]$comp[[i]]$sensitivity
       } else {
         model$D[i-1] <- model$kern$comp[[i]]$decay
-        model$S[i-1] <- sqrt(model$kern$comp[[i]]$variance)
+        model$S[i-1] <- model$kern$comp[[i]]$sensitivity
       }
     }
   } else {
     for ( i in seq(length.out=model$kern$numBlocks) ) {
       if ( model$includeNoise ) {
         model$D[i] <- model$kern$comp[[1]]$comp[[i]]$decay
-        model$S[i] <- sqrt(model$kern$comp[[1]]$comp[[i]]$variance)
+        model$S[i] <- model$kern$comp[[1]]$comp[[i]]$sensitivity
       } else {
         model$D[i] <- model$kern$comp[[i]]$decay
-        model$S[i] <- sqrt(model$kern$comp[[i]]$variance)
+        model$S[i] <- model$kern$comp[[i]]$sensisitivty
       }
     }
   }
@@ -136,7 +140,28 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
  
 }
 
-
+gpsimDisplay <- function(model, spaceNum=0)  {
+  spacing = matrix("", spaceNum+1)
+  cat(spacing)
+  cat("Gaussian process single input motif model:\n")
+  cat(spacing)
+  cat(c("  Number of time points: ", dim(model$t)[1], "\n"), sep="")
+  cat(spacing)
+  cat(c("  Number of genes: ", model$numGenes, "\n"), sep="")
+  
+  if(any(model$mu!=0)) {
+    cat(spacing)
+    cat("  Basal transcription rate:\n")
+    for(i in seq(along=model$mu)) {
+      cat(spacing);
+      cat(c("    Gene ", i, ": ", model$B[i], "\n"), sep="")
+    }
+  }
+  cat(spacing)
+  cat("  Kernel:\n")
+  kernDisplay(model$kern, 4+spaceNum)
+}
+  
 
 gpsimExtractParam <- function (model, option=1) {
   ## option=1: only return parameter values;
@@ -200,20 +225,20 @@ gpsimExpandParam <- function (model, params) {
     for ( i in seq(2,model$kern$numBlocks,length.out=model$kern$numBlocks-1) ) {
       if ( model$includeNoise ) {
         model$D[i-1] <- model$kern$comp[[1]]$comp[[i]]$decay
-        model$S[i-1] <- sqrt(model$kern$comp[[1]]$comp[[i]]$variance)
+        model$S[i-1] <- model$kern$comp[[1]]$comp[[i]]$sensitivity
       } else {
         model$D[i-1] <- model$kern$comp[[i]]$decay
-        model$S[i-1] <- sqrt(model$kern$comp[[i]]$variance)
+        model$S[i-1] <- model$kern$comp[[i]]$sensitivity
       }
     }
   } else {
     for ( i in seq(length.out=model$kern$numBlocks) ) {
       if ( model$includeNoise ) {
         model$D[i] <- model$kern$comp[[1]]$comp[[i]]$decay
-        model$S[i] <- sqrt(model$kern$comp[[1]]$comp[[i]]$variance)
+        model$S[i] <- model$kern$comp[[1]]$comp[[i]]$sensitivity
       } else {
         model$D[i] <- model$kern$comp[[i]]$decay
-        model$S[i] <- sqrt(model$kern$comp[[i]]$variance)
+        model$S[i] <- model$kern$comp[[i]]$sensitivity
       }
     }
   }

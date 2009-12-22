@@ -1,0 +1,112 @@
+% Run this file from R using Sweave("tp63.Snw")
+\documentclass[a4paper]{article}
+\title{Analysis of TP53 Data}
+\author{Neil D. Lawrence}
+\begin{document}
+\maketitle
+
+To install the gpsim software, Antti suggests the following:
+\begin{verbatim}
+mkdir ~/R-libs
+cd ~/mlprojects/gpsim/R
+R CMD INSTALL --library=~/R-libs .
+\end{verbatim}
+
+First we load in the raw cel files and process using mmgmos. This takes about 20 minutes to run. 
+<<>>=
+# source("http://www.bioconductor.org/biocLite.R")
+# biocLite("puma")
+library(puma)
+library(affy)
+#expfiles <- paste("GSM2667", 80:92, ".CEL", sep="")
+#expdata <- ReadAffy(filenames=expfiles, celfile.path="/local/data/dibernardo")
+#pData(expdata) <- data.frame("time.h" = c(0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240), row.names=rownames(pData(expdata)))
+#eset_tp53_mmgmos <- mmgmos(expdata)
+#eset_tp53_RMA <- rma(expdata)
+@ 
+There is normalization done by multi-mgMOS which is median based. Just as a sanity check we can have a quick look at this normalization.
+\begin{figure}
+<<fig=TRUE, echo=TRUE>>=
+par(mfrow=c(1,2))
+boxplot(data.frame(exprs(eset_tp53_mmgmos)),main="mmgMOS - Median Normalized")
+boxplot(data.frame(exprs(eset_tp53_rma)),main="Standard RMA")
+@
+\caption{Left: multi-mgMOS normalization of expressin data. Right: standard RMA normalization of expression data.}
+\end{figure}
+
+Now we load in the gpsim software
+<<>>=
+library(gpsim, lib.loc="~/R-libs")
+#Preprocess data for Antti's approach to mean and variance.
+#preprocData <- processData(eset_tp53_mmgmos)
+summary(preprocData)
+@ 
+
+Now we create the model: we use the following targets, these are selected as highest five targets, when ranked according to ChIP, that have two separate confirmations in the literature according to supplementary material in \cite{DellaGatta:direct08} (Supplementary Table 1). 
+<<>>=
+genes <- c("1450014_at", "1437932_a_at", "1449519_at", "1432032_a_at", "1418350_at")
+newData <- searchProcessedData(preprocData, genes)
+y <- newData$y
+yvar <- newData$yvar
+times <- newData$times
+scale <- newData$scale
+nGenes <- length(genes)
+options <- list(includeNoise=0, optimiser="SCG")
+#options$fix$names <- "sim1_variance"
+#options$fix$value <- 1
+Ngenes <- 5
+model <- gpsimCreate(Ngenes, 1, times, y[[1]], yvar[[1]], options, genes=genes)
+for(i in seq(along=model$kern$comp)) {
+  model$kern$comp[[i]]$isNegativeS = TRUE
+  model$kern$comp[[i]]$transforms <- list(index=setdiff(1:model$kern$comp[[i]]$nParams, 3), type="positive")
+  model$kern$comp[[i]]$paramNames[3] <- "sensitivity"
+  model$kern$comp[[i]]$sensitivity = -1.0
+}
+model$kern <- multiKernFixBlocks(model$kern, 1)
+modelDisplay(model)
+param <- modelExtractParam(model)
+# Time scale is in minutes: set the inverse with to an appropriate value.
+param[[2]] <- -2*log(120)
+model <- modelExpandParam(model, param)
+@ 
+% Now we optimise the model for 300 iterations maximum with scaled conjugate gradient \cite{Moller:scg93}. This takes about 130 iterations of scg to run (about 30 minutes).
+<<>>=
+ 
+optOptions <- optimiDefaultOptions()
+optOptions$maxit <- 10
+optOptions$optimiser <- "SCG"
+param <- modelExtractParam(model)
+cat (c("\n Optimizing genes", genes, sep=" "))
+model <- modelOptimise(model, optOptions)
+model <- modelUpdateProcesses(model)
+@ 
+\begin{figure}
+  \begin{center}
+<<fig=TRUE,echo=FALSE>>=
+par(mfrow=c(3, 2))
+plot(model$predt, model$predF, ylim=c(min(model$predF-2*sqrt(model$varF)), max(model$predF+2*sqrt(model$varF))), type="l", lwd=3, xlab="Time", ylab="")
+lines(model$predt, model$predF+2*sqrt(model$varF), lty=2, lwd=3, col=2)
+lines(model$predt, model$predF-2*sqrt(model$varF), lty=2, lwd=3, col=2)
+title("Inferred Active TF")
+for ( j in seq(length=model$numGenes) ) {
+  plot(model$predt, model$ypred[,j],
+       ylim=c(min(c(model$ypred[,j]-2*sqrt(model$ypredVar[,j]),
+         model$y[,j]-2*sqrt(model$yvar[,j]))),
+         max(c(model$ypred[,j]+2*sqrt(model$ypredVar[,j]),
+               model$y[,j]+2*sqrt(model$yvar[,j])))),
+       type="l", lwd=3, xlab="Time",ylab="")
+  genename <- genes[j]
+  
+  title(paste(genename, "mRNA"))
+  plotCI(model$t, model$y[,j],
+         uiw=2*sqrt(model$yvar[,j]), lwd=3, col=3, add=TRUE)
+  lines(model$predt, model$ypred[,j]+2*sqrt(model$ypredVar[,j]), lty=2, lwd=3, col=2)
+  lines(model$predt, model$ypred[,j]-2*sqrt(model$ypredVar[,j]), lty=2, lwd=3, col=2)
+}
+@ 
+\end{center}
+\caption{Estimated transcription factor activity and gene expression derived from that activity.}
+\end{figure}
+
+ 
+\end{document}
