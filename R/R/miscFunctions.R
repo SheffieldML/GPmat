@@ -287,6 +287,13 @@ modelExpandParam <- function (model, params) {
 }
 
 
+modelDisplay <- function(model, ...) {
+  funcName <- paste(model$type, "Display", sep="")
+  if(exists(funcName, mode="function")) {
+    func <- get(funcName, mode="function")
+    func(model, ...)
+  }
+}
 
 modelObjective <- function (params, model, ...) {
   funcName <- paste(model$type, "Objective", sep="")
@@ -427,3 +434,4 @@ scoreList <- function(params = list(), LLs = array(), genes = list(), useGPsim =
 is.scoreList <- function(object) {
   return (class(object) == "scoreList")
 }
+
