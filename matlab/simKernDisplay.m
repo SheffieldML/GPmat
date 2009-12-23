@@ -32,10 +32,15 @@ else
     fprintf('Non-stationary version of the kernel\n');
 end
 fprintf(spacing);
-if isfield(kern, 'isNormalised') && (kern.isNormalised == true)
+if isfield(kern, 'isNormalised') && kern.isNormalised
     fprintf('Normalised version of the kernel\n');
 else
     fprintf('Unnormalised version of the kernel\n');
+end
+if isfield(kern, 'isNegativeS') && kern.isNegativeS
+    fprintf('Sensitivities allowed to be negative.\n');
+else
+    fprintf('Sensitivities constrained positive.\n');
 end
 fprintf(spacing);
 fprintf('SIM decay: %2.4f\n', kern.decay)
@@ -48,7 +53,9 @@ if isfield(kern, 'gaussianInitial') && kern.gaussianInitial,
   fprintf(spacing);
   fprintf('SIM Initial Variance: %2.4f\n', kern.initialVariance)
 end
-%fprintf(spacing);
-%fprintf('SIM Sensitivity: %2.4f\n', kern.sensitivity)
+if isfield(kern, 'isNegativeS') && kern.isNegativeS
+  fprintf(spacing);
+  fprintf('SIM Sensitivity: %2.4f\n', kern.sensitivity)
+end
 %fprintf(spacing);
 %fprintf('SIM delay: %2.4f\n', kern.delay)

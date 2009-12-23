@@ -63,7 +63,7 @@ else
 end
 
 if isfield(kern, 'isNegativeS') && (kern.isNegativeS == true)
-    k = (kern.variance^2)*k;
+    k = (kern.sensitivity*kern.sensitivity)*k;
 else
     k = kern.variance*k;
 end

@@ -24,18 +24,32 @@ function [params, names] = simKernExtractParam(kern)
 %
 % SEEALSO simKernParamInit, simKernExpandParam, kernExtractParam, scg, conjgrad
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
+% COPYRIGHT : Neil D. Lawrence, 2006, 2009
 %
 % KERN
 
 if isfield(kern, 'gaussianInitial') && kern.gaussianInitial,
-  params = [kern.decay kern.inverseWidth kern.variance kern.initialVariance];
-  if nargout > 1
-    names = {'decay', 'inverse width', 'variance', 'initial variance'};
+  if isfield(kern, 'isNegativeS') && kern.isNegativeS
+    params = [kern.decay kern.inverseWidth kern.sensitivity kern.initialVariance];
+    if nargout > 1
+      names = {'decay', 'inverse width', 'sensitivity', 'initial variance'};
+    end
+  else
+    params = [kern.decay kern.inverseWidth kern.variance kern.initialVariance];
+    if nargout > 1
+      names = {'decay', 'inverse width', 'variance', 'initial variance'};
+    end
   end
 else
-  params = [kern.decay kern.inverseWidth kern.variance];
-  if nargout > 1
-    names = {'decay', 'inverse width', 'variance'};
+  if isfield(kern, 'isNegativeS') && kern.isNegativeS
+    params = [kern.decay kern.inverseWidth kern.sensitivity];
+    if nargout > 1
+      names = {'decay', 'inverse width', 'sensitivity'};
+    end
+  else
+    params = [kern.decay kern.inverseWidth kern.variance];
+    if nargout > 1
+      names = {'decay', 'inverse width', 'variance'};
+    end
   end
 end

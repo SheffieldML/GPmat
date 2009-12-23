@@ -87,7 +87,7 @@ sigma = sqrt(2/simKern.inverseWidth);
 sigma2 = sigma*sigma;
 
 if isfield(simKern, 'isNegativeS') && (simKern.isNegativeS == true)
-    C_i = simKern.variance;
+    C_i = simKern.sensitivity;
 else
     C_i = sqrt(simKern.variance);
 end

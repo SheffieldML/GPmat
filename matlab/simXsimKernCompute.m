@@ -61,19 +61,28 @@ end
 sigma = sqrt(2/simKern1.inverseWidth);
 
 if simKern1.isStationary == false
-    h1 = simComputeH(t1, t2, simKern1.decay, simKern2.decay, simKern1.delay, simKern2.delay, sigma);
-    h2 = simComputeH(t2, t1, simKern2.decay, simKern1.decay, simKern2.delay, simKern1.delay, sigma);
+    h1 = simComputeH(t1, t2, simKern1.decay, simKern2.decay, ...
+                     simKern1.delay, simKern2.delay, sigma);
+    h2 = simComputeH(t2, t1, simKern2.decay, simKern1.decay, ...
+                     simKern2.delay, simKern1.delay, sigma);
 else
-    h1 = simComputeHStat(t1, t2, simKern1.decay, simKern2.decay, simKern1.delay, simKern2.delay, sigma);
-    h2 = simComputeHStat(t2, t1, simKern2.decay, simKern1.decay, simKern2.delay, simKern1.delay, sigma);
+    h1 = simComputeHStat(t1, t2, simKern1.decay, simKern2.decay, ...
+                         simKern1.delay, simKern2.delay, sigma);
+    h2 = simComputeHStat(t2, t1, simKern2.decay, simKern1.decay, ...
+                         simKern2.delay, simKern1.delay, sigma);
 end
 sK = 0.5 * (h1 + h2');
 if (isSim1Normalised == false) || (isSim2Normalised == false)
-    sK = sqrt(pi) * sigma * sK;
+  sK = sqrt(pi) * sigma * sK;
 end
 
 if isfield(simKern1, 'isNegativeS') && (simKern1.isNegativeS == true)
-    K = simKern1.variance * simKern2.variance * sK;
+  K = simKern1.sensitivity * sK;
 else
-    K = sqrt(simKern1.variance) * sqrt(simKern2.variance) * sK;
+  K = sqrt(simKern1.variance) *sK;
+end
+if isfield(simKern2, 'isNegativeS') && (simKern2.isNegativeS == true)
+  K = simKern2.sensitivity * K;
+else
+  K = sqrt(simKern2.variance) * K;
 end

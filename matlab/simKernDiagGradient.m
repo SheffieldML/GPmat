@@ -40,13 +40,20 @@ else
 end
 
 if ~isfield(kern, 'isNormalised') || (kern.isNormalised == false)
-    g(1) = kern.variance * sqrt(pi) * sigma * dh_dDp;
-    g(2) = kern.variance * sqrt(pi) * sigma * (dh_dsigma - 1/(2*kern.inverseWidth)*h);
+    g(1) = sqrt(pi) * sigma * dh_dDp;
+    g(2) = sqrt(pi) * sigma * (dh_dsigma - 1/(2*kern.inverseWidth)*h);
     g(3) = sqrt(pi) * sigma * h;
 else
-    g(1) = kern.variance * dh_dDp;
-    g(2) = kern.variance * dh_dsigma;
+    g(1) = dh_dDp;
+    g(2) = dh_dsigma;
     g(3) = h;
+end
+
+if isfield(kern, 'isNegativeS') && kern.isNegativeS
+  g(1:2) = g(1:2)*kern.sensitivity*kern.sensitivity;
+  g(3) = g(3)*2*kern.sensitivity;
+else
+  g(1:2) = g(1:2)*kern.variance;
 end
 
 if isfield(kern, 'gaussianInitial') && kern.gaussianInitial,

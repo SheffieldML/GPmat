@@ -30,7 +30,7 @@ function [K, sK] = simXrbfKernCompute(simKern, rbfKern, t1, t2)
 %
 % SEEALSO : multiKernParamInit, multiKernCompute, simKernParamInit, rbfKernParamInit
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
+% COPYRIGHT : Neil D. Lawrence, 2006, 2009
 %
 % MODIFICATIONS : Antti Honkela, 2008, 2009
 %
@@ -91,17 +91,18 @@ end
 sK = signs .* exp(halfSigmaD_i*halfSigmaD_i - simKern.decay*diffT + lnPart);
 
 sK = 0.5 * sK;
+
 if ~isSimNormalised
-    sK = sK * sqrt(pi);
-    if isfield(simKern, 'isNegativeS') && (simKern.isNegativeS == true)
-        K = sK * simKern.variance * sigma;
-    else
-        K = sK * sqrt(simKern.variance) * sigma;
-    end
+  sK = sK * sqrt(pi);
+  if isfield(simKern, 'isNegativeS') && (simKern.isNegativeS == true)
+    K = sK * simKern.sensitivity * sigma;
+  else
+    K = sK * sqrt(simKern.variance) * sigma;
+  end
 else
-    if isfield(simKern, 'isNegativeS') && (simKern.isNegativeS == true)
-        K = sK * simKern.variance;
-    else
-        K = sK * sqrt(simKern.variance);
-    end
+  if isfield(simKern, 'isNegativeS') && (simKern.isNegativeS == true)
+    K = sK * simKern.sensitivity;
+  else
+    K = sK * sqrt(simKern.variance);
+  end
 end

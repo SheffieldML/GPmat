@@ -34,7 +34,7 @@ function [g1, g2] = simXsimKernGradient(simKern1, simKern2, t1, t2, covGrad)
 %
 % SEEALSO : multiKernParamInit, multiKernCompute, simKernParamInit, simKernExtractParam
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
+% COPYRIGHT : Neil D. Lawrence, 2006, 2009
 %
 % MODIFICATIONS : David Luengo, 2009
 
@@ -97,39 +97,42 @@ dK_dD2 = dh1_dD2 + dh2_dD2';
 dK_dsigma = dh1_dsigma + dh2_dsigma';
 
 if isfield(simKern1, 'isNegativeS') && (simKern1.isNegativeS == true)
-    C1 = simKern1.variance;
-    C2 = simKern2.variance;
+  C1 = simKern1.sensitivity;
+  C2 = simKern2.sensitivity;
 else
-    C1 = sqrt(simKern1.variance);
-    C2 = sqrt(simKern2.variance);
+  C1 = sqrt(simKern1.variance);
+  C2 = sqrt(simKern2.variance);
 end
 
 K = 0.5 * (h1 + h2');
 var2 = C1*C2;
 if ~isSim1Normalised
-    K = sqrt(pi) * K;
-    dk_dD1 = (sum(sum(covGrad.*dh1_dD1)) + sum(sum(covGrad.*dh2_dD1')))*0.5*sqrt(pi)*sigma*var2;
-    dk_dD2 = (sum(sum(covGrad.*dh1_dD2)) + sum(sum(covGrad.*dh2_dD2')))*0.5*sqrt(pi)*sigma*var2;
-    dk_dsigma = sum(sum(covGrad.*(dK_dsigma*0.5*sqrt(pi)*sigma + K)))*var2;
-    dk_dC1 = sigma * C2 * sum(sum(covGrad.*K));
-    dk_dC2 = sigma * C1 * sum(sum(covGrad.*K));
+  K = sqrt(pi) * K;
+  dk_dD1 = (sum(sum(covGrad.*dh1_dD1)) + sum(sum(covGrad.*dh2_dD1')))*0.5*sqrt(pi)*sigma*var2;
+  dk_dD2 = (sum(sum(covGrad.*dh1_dD2)) + sum(sum(covGrad.*dh2_dD2')))*0.5*sqrt(pi)*sigma*var2;
+  dk_dsigma = sum(sum(covGrad.*(dK_dsigma*0.5*sqrt(pi)*sigma + K)))*var2;
+  dk_dC1 = sigma * C2 * sum(sum(covGrad.*K));
+  dk_dC2 = sigma * C1 * sum(sum(covGrad.*K));
 else
-    dk_dD1 = (sum(sum(covGrad.*dh1_dD1)) + sum(sum(covGrad.*dh2_dD1')))*0.5*var2;
-    dk_dD2 = (sum(sum(covGrad.*dh1_dD2)) + sum(sum(covGrad.*dh2_dD2')))*0.5*var2;
-    dk_dsigma = 0.5 * var2 * sum(sum(covGrad.*dK_dsigma));
-    dk_dC1 = C2 * sum(sum(covGrad.*K));
-    dk_dC2 = C1 * sum(sum(covGrad.*K));
+  dk_dD1 = (sum(sum(covGrad.*dh1_dD1)) + sum(sum(covGrad.*dh2_dD1')))*0.5*var2;
+  dk_dD2 = (sum(sum(covGrad.*dh1_dD2)) + sum(sum(covGrad.*dh2_dD2')))*0.5*var2;
+  dk_dsigma = 0.5 * var2 * sum(sum(covGrad.*dK_dsigma));
+  dk_dC1 = C2 * sum(sum(covGrad.*K));
+  dk_dC2 = C1 * sum(sum(covGrad.*K));
 end
 
 
-if isfield(simKern1, 'isNegativeS') && (simKern1.isNegativeS == true)
-    dk_dSim1Variance = dk_dC1;
-    dk_dSim2Variance = dk_dC2;
+if isfield(simKern1, 'isNegativeS') && simKern1.isNegativeS
+  dk_dSim1Variance = dk_dC1;
 else
-    dk_dSim1Variance = dk_dC1*0.5/C1;
-    dk_dSim2Variance = dk_dC2*0.5/C2;
+  dk_dSim1Variance = dk_dC1*0.5/C1;
 end
 
+if isfield(simKern2, 'isNegativeS') && simKern2.isNegativeS
+  dk_dSim2Variance = dk_dC2;
+else
+  dk_dSim2Variance = dk_dC2*0.5/C2;
+end
 dk_dinvWidth = -0.5*sqrt(2)/(simKern1.inverseWidth* ...
                              sqrt(simKern1.inverseWidth))*dk_dsigma;
 
