@@ -16,13 +16,15 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
     isNegativeS = TRUE
   else
     isNegativeS = FALSE
+  ## proteinPrior encodes observation of the latent function.
   if ( "proteinPrior" %in% names(options) ) {
     model$proteinPrior <- options$proteinPrior
     kernType1$comp[1] <- "rbf"
 
     if ( "times" %in% names(model$proteinPrior) )
-      timesCell <- list(protein=model$proteinPrior$times) else
-    timesCell <- list(protein=times)
+      timesCell <- list(protein=model$proteinPrior$times)
+    else
+      timesCell <- list(protein=times)
 
     tieParam <- 1
 
@@ -36,7 +38,7 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
   } else {
     timesCell <- times
     tieParam <- 2
-
+    
     kernType1 <- list(type="multi", comp=array())
     for ( i in 1:Ngenes ) {
       kernType1$comp[i] <- "sim"
@@ -563,9 +565,9 @@ gpsimUpdateProcesses <- function (model) {
     t <- model$t
   }
 
-  numData <- length(t)
+  ##numData <- length(t)
   predt <- c(seq(min(t), max(t), length=100), t)
-  ymean <- t(matrix(model$y[1,], model$numGenes, numData))
+  ## ymean <- t(matrix(model$y[1,], model$numGenes, numData))
 
   if ( "proteinPrior" %in% names(model) ) {
     predTimeCell <- list()
@@ -575,14 +577,14 @@ gpsimUpdateProcesses <- function (model) {
 
       Kxx <- multiKernCompute(model$kern$comp[[1]], predTimeCell, model$timesCell)
       diagKxx <- kernDiagCompute(model$kern$comp[[1]], predTimeCell)
-      x <- c(model$proteinPrior$values, model$y-ymean)
+      ## x <- c(model$proteinPrior$values, model$y-ymean)
       ind <- 1:length(predTimeCell[[1]])
       predFull <- list()
       varFull <- list()
       for ( indBlock in seq(length=model$kern$comp[[1]]$numBlocks) ) {
         K <- Kxx[ind,]
         diagK <- diagKxx[ind,]
-        predFull[[indBlock]] <- Re( K %*% model$invK %*% x )
+        predFull[[indBlock]] <- Re( K %*% model$invK %*% model$m )
         varFull[[indBlock]] <- Re( diagK - t(apply(t(K)*(model$invK %*% t(K)), 2, sum)) )
         ind <- ind + length(predTimeCell[[indBlock]])
       }
@@ -590,9 +592,9 @@ gpsimUpdateProcesses <- function (model) {
       for ( i in seq(length=model$kern$numBlocks) )
         predTimeCell[[i]] <- predt
 
-      Kxx <- multiKernCompute(model$kern, predTimeCell, model$timesCell)
+      Kxx <- kernCompute(model$kern, predTimeCell, model$timesCell)
       diagKxx <- kernDiagCompute(model$kern, predTimeCell)
-      x <- c(model$proteinPrior$values, model$y-ymean)
+      ##x <- c(model$proteinPrior$values, model$y-ymean)
 
       ind <- 1:length(predTimeCell[[1]])
       predFull <- list()
@@ -600,8 +602,8 @@ gpsimUpdateProcesses <- function (model) {
       for ( indBlock in seq(length=model$kern$numBlocks) ) {
         K <- Kxx[ind,]
         diagK <- diagKxx[ind,]
-        predFull[[indBlock]] <- Re( K %*% model$invK %*% x )
-        varFull[[indBlock]] <- Re( diagK - t(apply(t(K)*(model$invK%*%t(K)), 2)) )
+        predFull[[indBlock]] <- Re( K %*% model$invK %*% model$m )
+        varFull[[indBlock]] <- Re( diagK - t(apply(t(K)*(model$invK%*%t(K)), 2, sum)) )
         ind <- ind + length(predTimeCell[[indBlock]])
       }
     }
@@ -638,17 +640,17 @@ gpsimUpdateProcesses <- function (model) {
       for ( i in seq(2, length=(model$kern$numBlocks-1)) ) 
         K <- rbind(K,simXrbfKernCompute(model$kern$comp[[i]], proteinKern, model$t, predt))    }
 
-    predF <- Re( t(K)%*%model$invK%*%c(model$y-ymean) )
+    predF <- Re( t(K)%*%model$invK%*%model$m)
     varF <- Re( kernDiagCompute(proteinKern, predt) - apply(K*(model$invK%*%K), 2, sum) )
     meanPredX <- t(matrix(model$B/model$D, model$numGenes, length(predt)))
 
     if ( model$includeNoise ) {
       Kxx <- multiKernCompute(model$kern$comp[[1]], predt, t)
-      predX <- c(meanPredX) + Re( Kxx%*%model$invK%*%c(model$y-ymean) )
+      predX <- c(meanPredX) + Re( Kxx%*%model$invK%*%model$m)
       varX <- Re( kernDiagCompute(model$kern$comp[[1]], predt)-apply(t(Kxx)*(model$invK%*%t(Kxx)), 2, sum) ) 
     } else {
       Kxx <- multiKernCompute(model$kern, predt, t)
-      predX <- c(meanPredX) + Re( Kxx%*%model$invK%*%c(model$y-ymean) )
+      predX <- c(meanPredX) + Re( Kxx%*%model$invK%*%model$m)
       varX <- Re( kernDiagCompute(model$kern, predt)-apply(t(Kxx)*(model$invK%*%t(Kxx)), 2, sum) ) 
     }
 
