@@ -48,12 +48,13 @@ genes <- c("1450014_at", "1437932_a_at", "1449519_at", "1432032_a_at", "1418350_
 newData <- searchProcessedData(preprocData, genes)
 y <- newData$y
 yvar <- newData$yvar
-times <- newData$times
+times = newData$times
 scale <- newData$scale
 nGenes <- length(genes)
 options <- list(includeNoise=0, optimiser="SCG")
-#options$fix$names <- "sim1_variance"
-#options$fix$value <- 1
+options$proteinPrior <- list(values=array(0), times=array(0))
+options$fix$names <- "rbf1_variance"
+options$fix$value <- log(1)
 Ngenes <- 5
 model <- gpsimCreate(Ngenes, 1, times, y[[1]], yvar[[1]], options, genes=genes)
 for(i in seq(along=model$kern$comp)) {
@@ -66,19 +67,18 @@ model$kern <- multiKernFixBlocks(model$kern, 1)
 modelDisplay(model)
 param <- modelExtractParam(model)
 # Time scale is in minutes: set the inverse with to an appropriate value.
-param[[2]] <- -2*log(120)
+param[[1]] <- -2*log(60)
 model <- modelExpandParam(model, param)
 @ 
 % Now we optimise the model for 300 iterations maximum with scaled conjugate gradient \cite{Moller:scg93}. This takes about 130 iterations of scg to run (about 30 minutes).
 <<>>=
- 
 optOptions <- optimiDefaultOptions()
-optOptions$maxit <- 10
+optOptions$maxit <- 1000
 optOptions$optimiser <- "SCG"
 param <- modelExtractParam(model)
 cat (c("\n Optimizing genes", genes, sep=" "))
 model <- modelOptimise(model, optOptions)
-model <- modelUpdateProcesses(model)
+model <- gpsimUpdateProcesses(model)
 @ 
 \begin{figure}
   \begin{center}
@@ -98,7 +98,7 @@ for ( j in seq(length=model$numGenes) ) {
   genename <- genes[j]
   
   title(paste(genename, "mRNA"))
-  plotCI(model$t, model$y[,j],
+  plotCI(matrix(model$timesCell[[j+1]]), matrix(model$y[,j]),
          uiw=2*sqrt(model$yvar[,j]), lwd=3, col=3, add=TRUE)
   lines(model$predt, model$ypred[,j]+2*sqrt(model$ypredVar[,j]), lty=2, lwd=3, col=2)
   lines(model$predt, model$ypred[,j]-2*sqrt(model$ypredVar[,j]), lty=2, lwd=3, col=2)

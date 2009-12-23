@@ -38,6 +38,13 @@ rbfKernExpandParam <- function (kern, params) {
 }
 
 
+rbfKernDisplay <- function (kern, spaceNum=0) {
+  spacing <- matrix("", spaceNum+1)
+  cat(spacing)
+  cat("RBF inverse width: ", kern$inverseWidth, " (length scale ", 1/sqrt(kern$inverseWidth), "\n", sep="")
+  cat(spacing)
+  cat("RBF variance: ", kern$variance, "\n", sep="")
+}
 
 rbfKernCompute <- function (kern, x, x2=NULL) {
   if ( nargs() < 3 ) {
