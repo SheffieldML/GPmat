@@ -170,6 +170,7 @@ simKernDisplay <- function (kern, spaceNum=0) {
 ##   else
 ##     cat("Unnormalised version of the kernel\n")
 
+  cat(spacing)
   if(kern$isNegativeS)
     cat("Sensitivities allowed to be negative.\n")
   else

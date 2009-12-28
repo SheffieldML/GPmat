@@ -67,11 +67,11 @@ CGoptim <- function (x, fn, grad, options, ...) {
   ## option[4] : tolerence for fn to terminate the loop
   ## option$display : option of showing the details of optimisaton
 
-  if ( options$display ) {
-    cat ("\n CG Optimisation begins! \n")
-  } else {
-    cat ("\n")
-  }
+  ##if ( options$display ) {
+  ##  cat ("\n CG Optimisation begins! \n")
+  ##} else {
+  ##  cat ("\n")
+  ##}
   
   ## y = fn (x)
   func <- function(x, ...) fn(x, ...)
@@ -127,8 +127,8 @@ CGoptim <- function (x, fn, grad, options, ...) {
       xmin <- xnmin
       objective <- fnmin
       ans <- list(xmin=xmin, objective=objective, lnSchFail=lnSchFail)
-      if ( options$display ) 
-        cat("\n Optimisation ends! \n")
+      ##if ( options$display ) 
+      ##  cat("\n Optimisation ends! \n")
       return (ans)
     }
     
@@ -136,8 +136,8 @@ CGoptim <- function (x, fn, grad, options, ...) {
       xmin <- x
       objective <- fn_new
       ans <- list(xmin=xmin, objective=objective, lnSchFail=lnSchFail)
-      if ( options$display ) 
-        cat("\n Optimisation ends! \n")
+      ##if ( options$display ) 
+      ##  cat("\n Optimisation ends! \n")
       return (ans)
     }
     
@@ -158,8 +158,8 @@ CGoptim <- function (x, fn, grad, options, ...) {
   objective <- fn_new
   
   ans <- list(xmin=xmin, objective=objective, lnSchFail=lnSchFail)
-  if ( options$display ) 
-    cat("\n Optimisation ends! \n")
+  ##if ( options$display ) 
+  ##  cat("\n Optimisation ends! \n")
   return (ans)
 }
 
@@ -167,7 +167,7 @@ CGoptim <- function (x, fn, grad, options, ...) {
 
 SCGoptim <- function (x, fn, grad, options, ...) {
   ## options = list(maxit, ln, xtol, fnTol, optimiser="SCG", gradcheck=FALSE)
-  cat ("\n SCG Optimisation begins! \n")
+  ##cat ("\n SCG Optimisation begins! \n")
 
   if ( "maxit" %in% names(options) && !is.na(options$maxit) ) {
     niters <- options$maxit
@@ -175,7 +175,7 @@ SCGoptim <- function (x, fn, grad, options, ...) {
     niters <- 100
   }
 
-  display <- TRUE
+  display <- options$display
   gradcheck <- options$gradcheck
   
   ## y = fn (x)
@@ -256,8 +256,8 @@ SCGoptim <- function (x, fn, grad, options, ...) {
       success <- 0
       fnow <- fold
     }
-
-    cat("Cycle ", j, "Error ", round(fnow, digits=4), "Scale ", beta, "\n")
+    if(display)
+      cat("Cycle ", j, "Error ", round(fnow, digits=4), "Scale ", beta, "\n")
 
     if ( success == 1 )
       if ( (max(abs(alpha*d))<options$xtol) & (max(abs(fnew-fold))<options$fnTol) ) {

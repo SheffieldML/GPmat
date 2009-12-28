@@ -1,4 +1,4 @@
-% Run this file from R using Sweave("tp63.Snw")
+% Run this file from R using Sweave("tp63.Rnw")
 \documentclass[a4paper]{article}
 \title{Analysis of TP53 Data}
 \author{Neil D. Lawrence}
@@ -13,100 +13,354 @@ R CMD INSTALL --library=~/R-libs .
 \end{verbatim}
 
 First we load in the raw cel files and process using mmgmos. This takes about 20 minutes to run. 
-<<>>=
-# source("http://www.bioconductor.org/biocLite.R")
-# biocLite("puma")
+<<echo=FALSE>>=
+## source("http://www.bioconductor.org/biocLite.R")
+## biocLite("puma")
+## biocLite("mouse430a2.db")
 library(puma)
 library(affy)
-#expfiles <- paste("GSM2667", 80:92, ".CEL", sep="")
-#expdata <- ReadAffy(filenames=expfiles, celfile.path="/local/data/dibernardo")
-#pData(expdata) <- data.frame("time.h" = c(0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240), row.names=rownames(pData(expdata)))
-#eset_tp53_mmgmos <- mmgmos(expdata)
-#eset_tp53_RMA <- rma(expdata)
+library(annotate)
+library(mouse430a2.db)
+## expfiles <- paste("GSM2667", 80:92, ".CEL", sep="")
+## expdata <- ReadAffy(filenames=expfiles, celfile.path="/local/data/dibernardo")
+## pData(expdata) <- data.frame("time.h" = c(0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240), row.names=rownames(pData(expdata)))
+## eset_tp53_mmgmos <- mmgmos(expdata)
+## eset_tp53_RMA <- rma(expdata)
 @ 
 There is normalization done by multi-mgMOS which is median based. Just as a sanity check we can have a quick look at this normalization.
 \begin{figure}
-<<fig=TRUE, echo=TRUE>>=
+  \begin{center}
+<<fig=TRUE, echo=FALSE>>=
 par(mfrow=c(1,2))
 boxplot(data.frame(exprs(eset_tp53_mmgmos)),main="mmgMOS - Median Normalized")
 boxplot(data.frame(exprs(eset_tp53_rma)),main="Standard RMA")
 @
-\caption{Left: multi-mgMOS normalization of expressin data. Right: standard RMA normalization of expression data.}
+\end{center}
+\caption{Left: multi-mgMOS normalization of expression data. Right: standard RMA normalization of expression data.}
 \end{figure}
 
-Now we load in the gpsim software
-<<>>=
+Perform clustering on data with 11 clusters, 
+
+\begin{figure}
+  \begin{center}
+<<fig=TRUE,echo=FALSE>>=
+## tp53_cl <- pumaClust(eset_tp53_mmgmos, clusters=11)
+par(mfrow=c(3,4))
+for(i in seq(from=1, to=dim(tp53_cl$centers)[1])) {
+  plot(tp53_cl$centers[i,], type="l", xlab="time", ylab="", main=c("Component", i))
+}
+barplot(tp53_cl$centersigs, main="Component Variances")
+probeNames = names(which(tp53_cl$cluster==1))
+@ 
+\end{center}
+\caption{Clustering of the data using pumaClust using 11 components.} 
+\end{figure}
+
+
+%Now we load in the gpsim software
+<<echo=FALSE>>=
 library(gpsim, lib.loc="~/R-libs")
 #Preprocess data for Antti's approach to mean and variance.
 #preprocData <- processData(eset_tp53_mmgmos)
 summary(preprocData)
 @ 
 
-Now we create the model: we use the following targets, these are selected as highest five targets, when ranked according to ChIP, that have two separate confirmations in the literature according to supplementary material in \cite{DellaGatta:direct08} (Supplementary Table 1). 
-<<>>=
-genes <- c("1450014_at", "1437932_a_at", "1449519_at", "1432032_a_at", "1418350_at")
-newData <- searchProcessedData(preprocData, genes)
+\section{Targets Suggested by TSNI}
+
+First experiment; we take the top 9 predicted targets from TSNI. We
+try and explain these through the GPSIM model. Targets taken from
+\cite{DellaGatta:direct08} (Supplementary Table 1). We initialize the
+model setting sensitivities to -1 if a target is repressed, and
+setting the length scale to reflect the fact that time points are
+taken every 20 minutes.
+<<echo=FALSE>>=
+## This listed set of targets are from the first excel spreadsheet of Della Gatta, first nine ranked according to TSNI.
+probeNames <- c("1419728_at", "1417065_at", "1420350_at", "1419215_at", "1432032_a_at", "1418355_at", "1450811_at", "1420425_at", "1420352_at")
+
+## This gets gene symbols associated with these probes.
+geneName <- probeNames
+for(i in seq(along=probeNames)) {
+  geneName[i] <- get(probeNames[i], env=mouse430a2SYMBOL)
+}
+
+## Extract data associated with given probes.
+newData <- searchProcessedData(preprocData, probeNames)
 y <- newData$y
 yvar <- newData$yvar
 times = newData$times
 scale <- newData$scale
-nGenes <- length(genes)
+nGenes <- length(probeNames)
 options <- list(includeNoise=0, optimiser="SCG")
+
+## Fix time point zero of latent function to 0.
 options$proteinPrior <- list(values=array(0), times=array(0))
+
+## Set the variance of the latent function to 1.
 options$fix$names <- "rbf1_variance"
 options$fix$value <- log(1)
-Ngenes <- 5
-model <- gpsimCreate(Ngenes, 1, times, y[[1]], yvar[[1]], options, genes=genes)
-for(i in seq(along=model$kern$comp)) {
-  model$kern$comp[[i]]$isNegativeS = TRUE
-  model$kern$comp[[i]]$transforms <- list(index=setdiff(1:model$kern$comp[[i]]$nParams, 3), type="positive")
-  model$kern$comp[[i]]$paramNames[3] <- "sensitivity"
-  model$kern$comp[[i]]$sensitivity = -1.0
+modelTsni <- gpsimCreate(nGenes, 1, times, y[[1]], yvar[[1]], options, genes=probeNames)
+
+## Set some of the genes to repressors.
+for(i in seq(along=modelTsni$kern$comp)) {
+  modelTsni$kern$comp[[i]]$isNegativeS = TRUE
+  modelTsni$kern$comp[[i]]$transforms <- list(index=setdiff(1:modelTsni$kern$comp[[i]]$nParams, 3), type="positive")
+  modelTsni$kern$comp[[i]]$paramNames[3] <- "sensitivity"
+  if(i!=2 && i!=5)
+    modelTsni$kern$comp[[i]]$sensitivity = -1.0
 }
-model$kern <- multiKernFixBlocks(model$kern, 1)
-modelDisplay(model)
-param <- modelExtractParam(model)
-# Time scale is in minutes: set the inverse with to an appropriate value.
-param[[1]] <- -2*log(60)
-model <- modelExpandParam(model, param)
+modelTsni$kern <- multiKernFixBlocks(modelTsni$kern, 1)
+param <- modelExtractParam(modelTsni)
+
+## For this data, time scale is in minutes: set the inverse width to an 
+## appropriate value.
+param[[1]] <- -2*log(20) 
+modelTsni <- modelExpandParam(modelTsni, param)
+
+## Display the inital model
+modelDisplay(modelTsni)
 @ 
-% Now we optimise the model for 300 iterations maximum with scaled conjugate gradient \cite{Moller:scg93}. This takes about 130 iterations of scg to run (about 30 minutes).
-<<>>=
+Now we optimise the model for a maximum of 1000 iterations with scaled
+conjugate gradient \cite{Moller:scg93}. Below are the parameters of
+the optimized model.
+<<echo=FALSE>>=
+## Set the default optimiser to 1000 iterations of SCG.
 optOptions <- optimiDefaultOptions()
+optOptions$display = FALSE
 optOptions$maxit <- 1000
 optOptions$optimiser <- "SCG"
-param <- modelExtractParam(model)
-cat (c("\n Optimizing genes", genes, sep=" "))
-model <- modelOptimise(model, optOptions)
-model <- gpsimUpdateProcesses(model)
+
+## Optimise the model.
+cat (c("Optimizing genes", probeNames, sep=" "))
+modelTsni <- modelOptimise(modelTsni, optOptions)
+cat ("Finished.")
+modelDisplay(modelTsni)
+
+## Update the inference over the latent processes.
+modelTsni <- gpsimUpdateProcesses(modelTsni)
 @ 
+
+In Figure \ref{fig:TSNItargets} we show the inferred transcription factor activity and the implied gene expression for the top nine targets of TSNI.
 \begin{figure}
   \begin{center}
 <<fig=TRUE,echo=FALSE>>=
-par(mfrow=c(3, 2))
-plot(model$predt, model$predF, ylim=c(min(model$predF-2*sqrt(model$varF)), max(model$predF+2*sqrt(model$varF))), type="l", lwd=3, xlab="Time", ylab="")
-lines(model$predt, model$predF+2*sqrt(model$varF), lty=2, lwd=3, col=2)
-lines(model$predt, model$predF-2*sqrt(model$varF), lty=2, lwd=3, col=2)
+par(mfrow=c(3, 4))
+plot(modelTsni$predt, modelTsni$predF, ylim=c(min(modelTsni$predF-2*sqrt(modelTsni$varF)), max(modelTsni$predF+2*sqrt(modelTsni$varF))), type="l", lwd=3, xlab="Time", ylab="")
+lines(modelTsni$predt, modelTsni$predF+2*sqrt(modelTsni$varF), lty=2, lwd=3, col=2)
+lines(modelTsni$predt, modelTsni$predF-2*sqrt(modelTsni$varF), lty=2, lwd=3, col=2)
 title("Inferred Active TF")
-for ( j in seq(length=model$numGenes) ) {
-  plot(model$predt, model$ypred[,j],
-       ylim=c(min(c(model$ypred[,j]-2*sqrt(model$ypredVar[,j]),
-         model$y[,j]-2*sqrt(model$yvar[,j]))),
-         max(c(model$ypred[,j]+2*sqrt(model$ypredVar[,j]),
-               model$y[,j]+2*sqrt(model$yvar[,j])))),
+for ( j in seq(length=modelTsni$numGenes) ) {
+  plot(modelTsni$predt, modelTsni$ypred[,j],
+       ylim=c(min(c(modelTsni$ypred[,j]-2*sqrt(modelTsni$ypredVar[,j]),
+         modelTsni$y[,j]-2*sqrt(modelTsni$yvar[,j]))),
+         max(c(modelTsni$ypred[,j]+2*sqrt(modelTsni$ypredVar[,j]),
+               modelTsni$y[,j]+2*sqrt(modelTsni$yvar[,j])))),
        type="l", lwd=3, xlab="Time",ylab="")
-  genename <- genes[j]
   
-  title(paste(genename, "mRNA"))
-  plotCI(matrix(model$timesCell[[j+1]]), matrix(model$y[,j]),
-         uiw=2*sqrt(model$yvar[,j]), lwd=3, col=3, add=TRUE)
-  lines(model$predt, model$ypred[,j]+2*sqrt(model$ypredVar[,j]), lty=2, lwd=3, col=2)
-  lines(model$predt, model$ypred[,j]-2*sqrt(model$ypredVar[,j]), lty=2, lwd=3, col=2)
+  title(paste(geneName[j], "mRNA"))
+  plotCI(matrix(modelTsni$timesCell[[j+1]]), matrix(modelTsni$y[,j]),
+         uiw=2*sqrt(modelTsni$yvar[,j]), lwd=3, col=3, add=TRUE)
+  lines(modelTsni$predt, modelTsni$ypred[,j]+2*sqrt(modelTsni$ypredVar[,j]), lty=2, lwd=3, col=2)
+  lines(modelTsni$predt, modelTsni$ypred[,j]-2*sqrt(modelTsni$ypredVar[,j]), lty=2, lwd=3, col=2)
 }
 @ 
 \end{center}
-\caption{Estimated transcription factor activity and gene expression derived from that activity.}
+\caption{Estimated transcription factor activity and gene expression derived from that activity for TSNI identified targets.}\label{fig:TSNItargets}
 \end{figure}
 
+\section{ChIP Induced Targets}
  
+Now we create a different model using targets given by ChIP binding experiments.
+
+<<echo=FALSE>>=
+## This listed set of targets are from the first excel spreadsheet of Della Gatta, first nine ranked according to TSNI.
+probeNames <- c("1449876_at", "1420851_at", "1427537_at", "1450055_at", "1424842_a_at", "1418488_s_at", "1454647_at", "1438954_x_at", "1438244_at")
+
+## This gets gene symbols associated with these probes.
+geneName <- probeNames
+for(i in seq(along=probeNames)) {
+  geneName[i] <- get(probeNames[i], env=mouse430a2SYMBOL)
+}
+
+## Extract data associated with given probes.
+newData <- searchProcessedData(preprocData, probeNames)
+y <- newData$y
+yvar <- newData$yvar
+times = newData$times
+scale <- newData$scale
+nGenes <- length(probeNames)
+options <- list(includeNoise=0, optimiser="SCG")
+
+## Fix time point zero of latent function to 0.
+options$proteinPrior <- list(values=array(0), times=array(0))
+
+## Set the variance of the latent function to 1.
+options$fix$names <- "rbf1_variance"
+options$fix$value <- log(1)
+modelChip <- gpsimCreate(nGenes, 1, times, y[[1]], yvar[[1]], options, genes=probeNames)
+
+## Set some of the genes to repressors.
+for(i in seq(along=modelChip$kern$comp)) {
+  modelChip$kern$comp[[i]]$isNegativeS = TRUE
+  modelChip$kern$comp[[i]]$transforms <- list(index=setdiff(1:modelChip$kern$comp[[i]]$nParams, 3), type="positive")
+  modelChip$kern$comp[[i]]$paramNames[3] <- "sensitivity"
+  if(i!=2 && i!=3 && i!=5 && i!=6 && i!=7 && i!=8)
+    modelChip$kern$comp[[i]]$sensitivity = -1.0
+}
+modelChip$kern <- multiKernFixBlocks(modelChip$kern, 1)
+param <- modelExtractParam(modelChip)
+
+## For this data, time scale is in minutes: set the inverse width to an 
+## appropriate value.
+param[[1]] <- -2*log(20) 
+modelChip <- modelExpandParam(modelChip, param)
+
+## Display the inital model
+modelDisplay(modelChip)
+@ 
+Now we optimise the model for a maximum of 1000 iterations with scaled
+conjugate gradient \cite{Moller:scg93}. Below are the parameters of
+the optimized model.
+<<echo=FALSE>>=
+## Set the default optimiser to 1000 iterations of SCG.
+optOptions <- optimiDefaultOptions()
+optOptions$display = FALSE
+optOptions$maxit <- 1000
+optOptions$optimiser <- "SCG"
+
+## Optimise the model.
+cat (c("Optimizing genes", probeNames, sep=" "))
+modelChip <- modelOptimise(modelChip, optOptions)
+cat ("Finished.")
+modelDisplay(modelChip)
+
+## Update the inference over the latent processes.
+modelChip <- gpsimUpdateProcesses(modelChip)
+@ 
+
+In Figure \ref{fig:ChIPtargets} we show the inferred transcription factor activity and the implied gene expression for the top nine targets according to ChIP binding strength.
+\begin{figure}
+  \begin{center}
+<<fig=TRUE,echo=FALSE>>=
+par(mfrow=c(3, 4))
+plot(modelChip$predt, modelChip$predF, ylim=c(min(modelChip$predF-2*sqrt(modelChip$varF)), max(modelChip$predF+2*sqrt(modelChip$varF))), type="l", lwd=3, xlab="Time", ylab="")
+lines(modelChip$predt, modelChip$predF+2*sqrt(modelChip$varF), lty=2, lwd=3, col=2)
+lines(modelChip$predt, modelChip$predF-2*sqrt(modelChip$varF), lty=2, lwd=3, col=2)
+title("Inferred Active TF")
+for ( j in seq(length=modelChip$numGenes) ) {
+  plot(modelChip$predt, modelChip$ypred[,j],
+       ylim=c(min(c(modelChip$ypred[,j]-2*sqrt(modelChip$ypredVar[,j]),
+         modelChip$y[,j]-2*sqrt(modelChip$yvar[,j]))),
+         max(c(modelChip$ypred[,j]+2*sqrt(modelChip$ypredVar[,j]),
+               modelChip$y[,j]+2*sqrt(modelChip$yvar[,j])))),
+       type="l", lwd=3, xlab="Time",ylab="")
+  
+  title(paste(geneName[j], "mRNA"))
+  plotCI(matrix(modelChip$timesCell[[j+1]]), matrix(modelChip$y[,j]),
+         uiw=2*sqrt(modelChip$yvar[,j]), lwd=3, col=3, add=TRUE)
+  lines(modelChip$predt, modelChip$ypred[,j]+2*sqrt(modelChip$ypredVar[,j]), lty=2, lwd=3, col=2)
+  lines(modelChip$predt, modelChip$ypred[,j]-2*sqrt(modelChip$ypredVar[,j]), lty=2, lwd=3, col=2)
+}
+@ 
+\end{center}
+\caption{Estimated transcription factor activity and gene expression derived from that activity for ChIP identified targets.}\label{fig:ChIPtargets}
+\end{figure}
+
+\section{Independently Confirmed Literature Targets}
+ 
+Finally we create a further model using targets identified by the literature, in two separate papers. There are 12 of these, interestingly they are all cases where TP63 acts as a repressor, but for the other models we had several cases of activation.
+<<echo=FALSE>>=
+## This listed set of targets are from the first excel spreadsheet of Della Gatta, first nine ranked according to TSNI.
+probeNames <- c("1450014_at", "1449519_at","1432032_a_at","1418350_at","1416916_at","1448694_at","1423017_a_at","1448789_at","1419665_a_at","1448830_at","1430700_a_at","1422631_at")
+
+## This gets gene symbols associated with these probes.
+geneName <- probeNames
+for(i in seq(along=probeNames)) {
+  geneName[i] <- get(probeNames[i], env=mouse430a2SYMBOL)
+}
+
+## Extract data associated with given probes.
+newData <- searchProcessedData(preprocData, probeNames)
+y <- newData$y
+yvar <- newData$yvar
+times = newData$times
+scale <- newData$scale
+nGenes <- length(probeNames)
+options <- list(includeNoise=0, optimiser="SCG")
+
+## Fix time point zero of latent function to 0.
+options$proteinPrior <- list(values=array(0), times=array(0))
+
+## Set the variance of the latent function to 1.
+options$fix$names <- "rbf1_variance"
+options$fix$value <- log(1)
+modelChip <- gpsimCreate(nGenes, 1, times, y[[1]], yvar[[1]], options, genes=probeNames)
+
+## Set some of the genes to repressors.
+for(i in seq(along=modelChip$kern$comp)) {
+  modelChip$kern$comp[[i]]$isNegativeS = TRUE
+  modelChip$kern$comp[[i]]$transforms <- list(index=setdiff(1:modelChip$kern$comp[[i]]$nParams, 3), type="positive")
+  modelChip$kern$comp[[i]]$paramNames[3] <- "sensitivity"
+  modelChip$kern$comp[[i]]$sensitivity = -1.0
+}
+modelChip$kern <- multiKernFixBlocks(modelChip$kern, 1)
+param <- modelExtractParam(modelChip)
+
+## For this data, time scale is in minutes: set the inverse width to an 
+## appropriate value.
+param[[1]] <- -2*log(20) 
+modelChip <- modelExpandParam(modelChip, param)
+
+## Display the inital model
+modelDisplay(modelChip)
+@ 
+Now we optimise the model for a maximum of 1000 iterations with scaled
+conjugate gradient \cite{Moller:scg93}. Below are the parameters of
+the optimized model.
+<<echo=FALSE>>=
+## Set the default optimiser to 1000 iterations of SCG.
+optOptions <- optimiDefaultOptions()
+optOptions$display = FALSE
+optOptions$maxit <- 1000
+optOptions$optimiser <- "SCG"
+
+## Optimise the model.
+cat (c("Optimizing genes", probeNames, sep=" "))
+modelChip <- modelOptimise(modelChip, optOptions)
+cat ("Finished.")
+modelDisplay(modelChip)
+
+## Update the inference over the latent processes.
+modelChip <- gpsimUpdateProcesses(modelChip)
+@ 
+
+In Figure \ref{fig:Littargets} we show the inferred transcription factor activity and the implied gene expression for the twelve targets taken from the literature.
+\begin{figure}
+  \begin{center}
+<<fig=TRUE,echo=FALSE>>=
+par(mfrow=c(4, 4))
+plot(modelChip$predt, modelChip$predF, ylim=c(min(modelChip$predF-2*sqrt(modelChip$varF)), max(modelChip$predF+2*sqrt(modelChip$varF))), type="l", lwd=3, xlab="Time", ylab="")
+lines(modelChip$predt, modelChip$predF+2*sqrt(modelChip$varF), lty=2, lwd=3, col=2)
+lines(modelChip$predt, modelChip$predF-2*sqrt(modelChip$varF), lty=2, lwd=3, col=2)
+title("Inferred Active TF")
+for ( j in seq(length=modelChip$numGenes) ) {
+  plot(modelChip$predt, modelChip$ypred[,j],
+       ylim=c(min(c(modelChip$ypred[,j]-2*sqrt(modelChip$ypredVar[,j]),
+         modelChip$y[,j]-2*sqrt(modelChip$yvar[,j]))),
+         max(c(modelChip$ypred[,j]+2*sqrt(modelChip$ypredVar[,j]),
+               modelChip$y[,j]+2*sqrt(modelChip$yvar[,j])))),
+       type="l", lwd=3, xlab="Time",ylab="")
+  
+  title(paste(geneName[j], "mRNA"))
+  plotCI(matrix(modelChip$timesCell[[j+1]]), matrix(modelChip$y[,j]),
+         uiw=2*sqrt(modelChip$yvar[,j]), lwd=3, col=3, add=TRUE)
+  lines(modelChip$predt, modelChip$ypred[,j]+2*sqrt(modelChip$ypredVar[,j]), lty=2, lwd=3, col=2)
+  lines(modelChip$predt, modelChip$ypred[,j]-2*sqrt(modelChip$ypredVar[,j]), lty=2, lwd=3, col=2)
+}
+@ 
+\end{center}
+\caption{Estimated transcription factor activity and gene expression derived from literature targets.}\label{fig:Littargets}
+\end{figure}
+
+
 \end{document}
+
