@@ -360,7 +360,4 @@ for ( j in seq(length=modelChip$numGenes) ) {
 \end{center}
 \caption{Estimated transcription factor activity and gene expression derived from literature targets.}\label{fig:Littargets}
 \end{figure}
-
-
 \end{document}
-
