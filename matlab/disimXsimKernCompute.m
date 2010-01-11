@@ -64,19 +64,19 @@ invLDiffT = 1/l*diffT;
 halfLD_i = 0.5*l*D_i;
 halfLDelta = 0.5*l*delta;
 
-lnCommon1 = - log(2*delta) -delta * t2Mat - D_i * t1Mat + halfLDelta.^2;
+lnCommon1 = - log(2*delta) + halfLDelta.^2;
 
-lnFact1 = log(2 * delta) - log(delta^2 - D_i^2);
+lnFact1 = log(2 * delta) - log(delta^2 - D_i^2) -delta * t2Mat - D_i * t1Mat;
 lnPart1 = lnDiffErfs(halfLDelta - t2Mat/l, halfLDelta);
 
-lnFact2 = (D_i - delta) * t1Mat - log(delta - D_i);
+lnFact2 = -delta * (t1Mat+t2Mat) - log(delta - D_i);
 lnPart2a = lnDiffErfs(halfLDelta, halfLDelta - t1Mat/l);
 lnPart2b = lnDiffErfs(halfLDelta, halfLDelta - t2Mat/l);
 
-lnFact3 = (D_i + delta) * t1Mat - log(delta + D_i);
+lnFact3 = delta * diffT - log(delta + D_i);
 lnPart3 = lnDiffErfs(halfLDelta + t1Mat/l, halfLDelta + invLDiffT);
 
-lnFact4 = 2*delta*t2Mat + (D_i - delta) * t1Mat - log(delta - D_i);
+lnFact4 = -delta*diffT - log(delta - D_i);
 lnPart4 = lnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l);
 
 lnCommon2 = - log(delta^2 - D_i^2) - delta * t2Mat - D_i * t1Mat + halfLD_i^2;
