@@ -52,26 +52,11 @@ model.type = 'gpdisim';
 
 kernType1{1} = 'multi';
 kernType2{1} = 'multi';
-tieWidth = [1]; % These are the indices of the inverse widths which
-                % need to be constrained to be equal.
-tieRBFVariance = [2];
 kernType1{2} = 'rbf';
 for i = 1:numGenes
   kernType1{i+2} = 'disim';
-  if i==1
-    tieDelta = [3];
-    tieWidth = [tieWidth, 4];
-    tieSigma = [5];
-    tieRBFVariance = [tieRBFVariance, 8];
-  end
-  if i>1
-    tieDelta = [tieDelta tieDelta(end)+6];
-    tieWidth = [tieWidth tieWidth(end)+6];
-    tieSigma = [tieSigma tieSigma(end)+6];
-    tieRBFVariance = [tieRBFVariance tieRBFVariance(end)+6];
-  end
 end
-tieParam = {tieDelta, tieWidth, tieSigma, tieRBFVariance};
+tieParam = {'di_decay', 'inverse width', 'di_variance', 'rbf(_| . )variance'};
 
 model.y = geneVals(:);
 model.yvar = geneVars(:);
@@ -94,42 +79,43 @@ if model.includeNoise
     kernType2{i+1} = 'white';
   end
   if isfield(options, 'singleNoise') & options.singleNoise
-    tieParam{5} = (2+6*numGenes + 1):(2+6*numGenes + numGenes+1);
+    tieParam{5} = 'white . variance';
   end
   
   % Now create model with a 'cmpnd' (compound) kernel build from two
   % multi-kernels. The first multi-kernel is the sim-sim one the next
   % multi-kernel is the white-white one. 
   model.kern = kernCreate(times, {'cmpnd', kernType1, kernType2});
-  simMultiKern = 'model.kern.comp{1}';
+  simMultiKernName = 'model.kern.comp{1}';
 else
   model.kern = kernCreate(times, kernType1);
-  simMultiKern = 'model.kern';
+  simMultiKernName = 'model.kern';
 end
+simMultiKern = eval(simMultiKernName);
 
 % This is if we need to place priors on parameters ...
 if isfield(options, 'addPriors') && options.addPriors,
-  for i = 1:length(model.kern.numBlocks)
+  for i = 1:length(simMultiKern.numBlocks)
     % Priors on the sim kernels.
-    eval([simMultiKern '.comp{i}.priors = priorCreate(''gamma'');']);
-    eval([simMultiKern '.comp{i}.priors.a = 1;']);
-    eval([simMultiKern '.comp{i}.priors.b = 1;']);
+    eval([simMultiKernName '.comp{i}.priors = priorCreate(''gamma'');']);
+    eval([simMultiKernName '.comp{i}.priors.a = 1;']);
+    eval([simMultiKernName '.comp{i}.priors.b = 1;']);
     %model.kern.comp{i}.priors = priorCreate('gamma');
     %model.kern.comp{i}.priors.a = 1;
     %model.kern.comp{i}.priors.b = 1;
     if i == 1
       % For first kernel place prior on inverse width.
       % model.kern.comp{i}.priors.index = [1 2];
-      eval([simMultiKern '.comp{i}.priors.index = [1 2];']);
+      eval([simMultiKernName '.comp{i}.priors.index = [1 2];']);
     elseif i == 2
       %model.kern.comp{i}.priors.index = [1 3 4 5];
-      eval([simMultiKern '.comp{i}.priors.index = [1 3 4 5];']);
+      eval([simMultiKernName '.comp{i}.priors.index = [1 3 4 5];']);
     else
       % For other kernels don't place prior on inverse width --- as
       % they are all tied together and it will be counted multiple
       % times.
       %model.kern.comp{i}.priors.index = [4 5];
-      eval([simMultiKern '.comp{i}.priors.index = [4 5];']);
+      eval([simMultiKernName '.comp{i}.priors.index = [4 5];']);
     end
   end
 
@@ -150,11 +136,11 @@ end
 % We'll put them here as well for convenience.
 model.delta = 10;
 model.sigma = 1;
-for i = 2:model.kern.numBlocks
-  eval([simMultiKern '.comp{i}.di_decay = model.delta;']);
-  eval([simMultiKern '.comp{i}.di_variance = model.sigma^2;']);
-  model.D(i-1) = eval([simMultiKern '.comp{i}.decay;']);
-  model.S(i-1) = sqrt(eval([simMultiKern '.comp{i}.variance;']));
+for i = 2:simMultiKern.numBlocks
+  eval([simMultiKernName '.comp{i}.di_decay = model.delta;']);
+  eval([simMultiKernName '.comp{i}.di_variance = model.sigma^2;']);
+  model.D(i-1) = simMultiKern.comp{i}.decay;
+  model.S(i-1) = sqrt(simMultiKern.comp{i}.variance);
 end
 
 rand('seed',0);

@@ -33,7 +33,7 @@ function model = gpsimCreate(numGenes, numProteins, times, geneVals, ...
 % COPYRIGHT : Neil D. Lawrence, 2006, 2007
 %
 % MODIFIED : Pei Gao, 2008
-% MODIFIED : Antti Honkela, 2008
+% MODIFIED : Antti Honkela, 2008, 2009
 
 % GPSIM
 
@@ -61,24 +61,21 @@ if isfield(options, 'proteinPrior') && ~isempty(options.proteinPrior)
   else
     timesCell{1} = times;
   end
-  tieParam{1} = [1];                    % RBF kernel parameters: inverse
-                                        % widths and variance.
   for i = 1:numGenes
     kernType1{i+2} = 'sim';
     timesCell{i+1} = times; 
-    tieParam{1} = [tieParam{1} tieParam{1}(end)+3];
   end  
   model.timesCell = timesCell;
 else
   timesCell = times;                     % Non-cell structure in this case
-  tieParam{1} = [2]; % These are the indices of the inverse widths which
-                % need to be constrained to be equal.
   for i = 1:numGenes
     kernType1{i+1} = 'sim';
-    if i>1
-      tieParam{1} = [tieParam{1} tieParam{1}(end)+3];
-    end
   end
+end
+tieParam = {'inverse width'};
+
+if isfield(options, 'fixBlocks') && ~isempty(options.fixBlocks),
+  kernType1 = {'parametric', struct('fixBlocks', {options.fixBlocks}), kernType1};
 end
 
 model.y = geneVals(:);
@@ -95,9 +92,6 @@ model.includeNoise = options.includeNoise;
 if model.includeNoise
   % Create a new multi kernel to contain the noise term.
   kernType2{1} = 'multi';
-  % NEIL: Need to set up tie param to hold the variances of the white kernels
-  % the same ... perhaps have an option that determines to do this or not.
-  % tieParam{2} = INDEX OF FIRST NOISE VARIANCE; % These are the indices of the variances.
 
   % Set the new multi kernel to just contain 'white' kernels.
   if isfield(model, 'proteinPrior') && ~isempty(model.proteinPrior)
@@ -111,14 +105,7 @@ if model.includeNoise
     end
   end
   if isfield(options, 'singleNoise') & options.singleNoise
-    % NEIL Again, need to get the right indices on tie param if the
-    tieParam{2} = 2+3*numGenes + 1;
-    for i = 1:numGenes
-      if i>1
-        tieParam{2} = [tieParam{2} tieParam{2}(end)+1];
-      end
-    end
-    
+    tieParam{2} = 'white . variance';
   end
             
   
