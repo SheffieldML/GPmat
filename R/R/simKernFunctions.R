@@ -6,6 +6,7 @@ simKernParamInit <- function (kern) {
   kern$decay <- 1
   kern$initVal <- 1
   kern$variance <- 1
+  kern$sensitivity <- sqrt(kern$variance)
   kern$inverseWidth <- 1
   if ("options" %in% names(kern) && "gaussianInitial" %in% names(kern$options) && kern$options$gaussianInitial) {
     kern$gaussianInitial <- TRUE
@@ -280,7 +281,16 @@ simKernGradient <- function (kern, t, t2, covGrad) {
 
   g <- gFull$g1 + gFull$g2
 
-  return (g)
+  if ( "gaussianInitial" %in% names(kern) && kern$gaussianInitial ) {
+    dim1 <- dim(as.matrix(t))[1]
+    dim2 <- dim(as.matrix(t2))[1]
+    t1Mat <- matrix(t, dim1, dim2)
+    t2Mat <- t(matrix(t2, dim2, dim1))
+
+    return (c(g, sum(exp(-kern$decay*(t1Mat + t2Mat)) * covGrad)))
+  }
+  else
+    return (g)
 }
 
 
@@ -424,6 +434,10 @@ simKernDiagCompute <- function (kern, t) {
   k <- 2*h
   k <- 0.5*k*sqrt(pi)*sigma
   k <- kern$variance*k/(2*kern$decay)
+
+  if ( "gaussianInitial" %in% names(kern) && kern$gaussianInitial )
+    k = k + kern$initialVariance*exp(-2*kern$decay*t);
+
   return (k)
 }
 

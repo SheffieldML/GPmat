@@ -1,28 +1,32 @@
 \name{GPplot}
 \Rdversion{1.0}
 \alias{GPplot}
-\title{Drawing plots of expression levels}
+\title{Plot GP(DI)SIM models}
 \description{
-  Draws plots of the expression levels of specified genes.
+  Plots GP(DI)SIM models.
 }
 \usage{
-GPplot(data, savepath = '', doParams = FALSE, selectGenes = data$genes, nameMapping = NULL)
+GPplot(data, savepath = '', nameMapping = NULL, predt = NULL)
 }
 \arguments{
-  \item{data}{The data used for drawing the figures. The data is received as output from the function GPrank. The data is assumed to have one trancription factor and one target in each model.}
+  \item{model}{The model to plot as returned by GPLearn.}
   \item{savepath}{The location in the file system where the images are saved.}
-  \item{doParams}{}
-  \item{selectGenes}{The genes for which the figures are drawn. By default, all genes of the data are selected.}
-  \item{nameMapping}{The function used for mapping the names of the genes for the figures.}
+  \item{nameMapping}{The annotation used for mapping the names of the
+    genes for the figures.}
+  \item{predt}{The set of time points to use in plotting
+    (default: the time interval covering the data).}
 }
 \details{
-  The function draws 3 plots in each figure. One of the plots represents the expression level of the transcription factor, one the expression level of the target and one the protein concentration of the inferred transcription factor.
+  The function plots
+  the fitted expression level of the transcription factor (if applicable),
+  the inferred activity of the transcription factor,
+  and the fitted expression level of the target(s).
 }
 \author{
-  Jonatan Ropponen
+  Antti Honkela
 }
 \seealso{
-  \code{\link{GPrank}}.
+  \code{\link{GPLearn}}.
 }
 \examples{
 ## missing

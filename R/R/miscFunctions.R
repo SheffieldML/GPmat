@@ -242,6 +242,9 @@ listStruct <- function (list) {
 
 
 modelExtractParam <- function (model, option=1) {
+  if (is.GPmodel(model))
+    model <- model@model
+  
   funcName <- paste(model$type, "ExtractParam", sep="")
   func <- get(funcName, mode="function")
   params <- func(model, option)
@@ -273,6 +276,9 @@ modelExtractParam <- function (model, option=1) {
 
 
 modelExpandParam <- function (model, params) {
+  if (is.GPmodel(model))
+    return (modelExpandParam(model@model, params))
+
   if ( is.list(params) )
     params <- params$values
 
@@ -288,6 +294,9 @@ modelExpandParam <- function (model, params) {
 
 
 modelDisplay <- function(model, ...) {
+  if (is.GPmodel(model))
+    model <- model@model
+
   funcName <- paste(model$type, "Display", sep="")
   if(exists(funcName, mode="function")) {
     func <- get(funcName, mode="function")
@@ -296,6 +305,9 @@ modelDisplay <- function(model, ...) {
 }
 
 modelObjective <- function (params, model, ...) {
+  if (is.GPmodel(model))
+    model <- model@model
+
   funcName <- paste(model$type, "Objective", sep="")
   if ( exists(funcName, mode="function") ) {
     func <- get(funcName, mode="function")
@@ -316,6 +328,9 @@ modelObjective <- function (params, model, ...) {
 
 
 modelGradient <- function (params, model, ...) {
+  if (is.GPmodel(model))
+    model <- model@model
+
   funcName <- paste(model$type, "Gradient", sep="")
 
   if ( exists(funcName, mode="function") ) {
@@ -337,11 +352,23 @@ modelGradient <- function (params, model, ...) {
 
 
 modelUpdateProcesses <- function (model) {
+  if (is.GPmodel(model))
+    return (modelUpdateProcesses(model@model))
+
   funcName <- paste(model$type, "UpdateProcesses", sep="")
   func <- get(funcName, mode="function")
-  model <- func(model)
+  return (func(model))
+}
 
-  return (model)
+
+
+modelLogLikelihood <- function (model) {
+  if (is.GPmodel(model))
+    model <- model@model
+
+  funcName <- paste(model$type, "LogLikelihood", sep="")
+  func <- get(funcName, mode="function")
+  return (func(model))
 }
 
 
@@ -417,21 +444,3 @@ distfit_obj <- function(theta, y, cdf) {
 
   return (r)
 }
-
-
-
-setClass("GPModel", 
-         representation(type = "character", comp = "list", llscore = "numeric")
-         )
-
-
-scoreList <- function(params = list(), LLs = array(), genes = list(), useGPsim = array()) {
-
-  new("scoreList", params = params, LLs = LLs, genes = genes, useGPsim = useGPsim)
-}
-
-
-is.scoreList <- function(object) {
-  return (class(object) == "scoreList")
-}
-
