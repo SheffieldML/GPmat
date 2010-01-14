@@ -1,4 +1,4 @@
-processData <- function(data, searchedGenes = "100001_at", search = FALSE) {
+processData <- function(data, replicates = NULL, searchGenes = NULL) {
 
   require(puma)
 
@@ -6,9 +6,14 @@ processData <- function(data, searchedGenes = "100001_at", search = FALSE) {
   times <- pData(data)
   genes <- rownames(exprs(data))
 
+  times <- times[,grep('time', colnames(times))]
+
   numberOfRows <- length(genes)
   numberOfColumns <- length(colnames(exprs(data)))
 
+  if (is.null(replicates))
+    replicates <- rep(1, numberOfColumns)
+  
   # Normalisation is done for all genes, before specific genes are taken from the array.
   normalisation <- array(0, dim = c(1, numberOfColumns))
 
@@ -34,9 +39,9 @@ processData <- function(data, searchedGenes = "100001_at", search = FALSE) {
     pcts[,,i] <- pcts[,,i] + sweep(zeroArray, 2, normalisation)
   }
 
-  # The variable search determines whether the specified genes are searched.
-  if (search) {
-    newData <- searchData(yFull, genes, pcts, searchedGenes, numberOfColumns)
+  # Search specified genes if requested
+  if (! is.null(searchGenes) ) {
+    newData <- searchData(yFull, genes, pcts, searchGenes, numberOfColumns)
     yFull <- newData$yFull
     genes <- newData$genes
     pcts <- newData$pcts
@@ -64,18 +69,23 @@ processData <- function(data, searchedGenes = "100001_at", search = FALSE) {
   scaleMat <- array(1, dim = c(numberOfColumns, 1)) %*% scale
   yFull <- yFull / scaleMat
   yFullVar <- yFullVar / scaleMat^2
-
+  rownames(yFullVar) <- rownames(yFull)
+  colnames(yFullVar) <- colnames(yFull)
+  
   y <- list()
-  y[[1]] <- yFull
   yvar <- list()
-  yvar[[1]] <- yFullVar
-  times <- array(times[, 1], dim = c(numberOfColumns)) 
 
-  ratioData <- averageToSDRatio(usePreprocData = FALSE, y = y, yvar = yvar, times = times, genes = genes)
+  repids <- unique(replicates)
+  for (i in seq(along=repids)) {
+    y[[i]] <- yFull[replicates==repids[i],]
+    yvar[[i]] <- yFullVar[replicates==repids[i],]
+  }
+  times <- as.array(times[replicates==repids[1]])
+  ##times <- array(times[, 1], dim = c(numberOfColumns)) 
 
-  preprocData <- list(y = y, yvar = yvar, times = times, genes = genes, scale = scale, ratioData = ratioData)
+  zScores <- as.array(colMeans(yFull / sqrt(yFullVar)))
 
-  return(preprocData)
+  return (GPdata(y = y, yvar = yvar, times = times, genes = genes, scale = as.array(scale), zScores = zScores, annotation=annotation(data), phenoData=phenoData(data), featureData=featureData(data)))
 }
 
 
@@ -131,104 +141,27 @@ searchData <- function(yFull, genes, pcts, searchedGenes, numberOfColumns) {
 }
 
 
-filterGenes <- function(ratioData, filterLimit = 1.5, useMedians = TRUE) {
+setClass("GPdata", 
+	representation(y = "list", yvar = "list", times = "array",
+                       genes = "character", scale = "array", zScores = "array",
+                       annotation = "character",
+                       phenoData = "AnnotatedDataFrame",
+                       featureData = "AnnotatedDataFrame"))
 
-  genes <- ratioData$genes
 
-  approvedGenes <- array()
-
-  # counter for the next approved gene
-  j <- 1
-
-  for (i in 1:length(genes)) {
-    if (useMedians) {
-      if (ratioData$medians[[1]][i] >= filterLimit) {
-	approvedGenes[j] <- genes[i]
-	j <- j + 1
-      }
-    }
-    else {
-      if (ratioData$means[[1]][i] >= filterLimit) {
-	approvedGenes[j] <- genes[i]
-	j <- j + 1
-      }
-    }
-  }
-
-  return (approvedGenes)
+GPdata <- function(y, yvar, times, genes, scale, zScores, annotation, phenoData, featureData) {
+  new("GPdata", y = y, yvar = yvar, times = times, genes = genes, scale = scale, zScores = zScores, annotation=annotation, phenoData=phenoData, featureData=featureData)
 }
 
-
-averageToSDRatio <- function(y = NULL, yvar = NULL, times = NULL, genes = NULL, usePreprocData = FALSE, preprocData = NULL, searchedGenes = "100001_at", search = FALSE) {
-
-  if (usePreprocData) {
-    if (search) {
-      newData <- searchProcessedData(preprocData, searchedGenes)
-    }
-    else {
-      newData <- preprocData
-    }
-
-    y <- newData$y
-    yvar <- newData$yvar
-    times <- newData$times
-    genes <- newData$genes
-  }
-
-  numberOfRows <- length(times)
-  Nrep <- length(y)
-
-  ratios <- list()
-
-  # for each gene of the data
-  for (m in 1:Nrep) {
-    ratios[[m]] <- array(dim = dim(y[[m]]))
-    for (j in 1:length(genes)) {
-      for (i in 1: numberOfRows) {
-        average <- y[[m]][i, j]
-        variance <- yvar[[m]][i, j]
-	ratios[[m]][i, j] <- average / sqrt(variance)
-      }
-    }
-  }
-
-  means <- list()
-  medians <- list()
-
-  # counting the mean and median of ratios
-  for (m in 1:Nrep) {
-    means[[m]] <- array(dim = length(genes))
-    medians[[m]] <- array(dim = length(genes))
-    for (j in 1:length(genes)) {
-      means[[m]][j] <- mean(ratios[[m]][, j])
-      medians[[m]][j] <- median(ratios[[m]][, j])
-    }
-  }
-
-  ratioData <- list()
-  ratioData$ratios <- ratios
-  ratioData$means <- means
-  ratioData$medians <- medians
-  ratioData$genes <- genes
-
-  return (ratioData)
+is.GPdata <- function(object) {
+  return (class(object) == "GPdata")
 }
 
-
-
-writeRatioData <- function(ratioData, genes, fileName) {
-
-  text <- ""
-  for (i in 1:length(genes)) {
-    gene <- genes[i]
-    #ratios <- ratioData$ratios[[1]][, i]
-    mean <- ratioData$means[[1]][i]
-    median <- ratioData$medians[[1]][i]
-    #newText <- c(gene, "\n", "ratios: ", ratios, "\n", 
-#"mean: ", mean, "\n", "median: ", median, "\n")
-    newText <- c(gene, "mean: ", mean, "median: ", median, "\n")
-    text <- c(text, newText)
-  }
-  write(text, file = fileName)
-
+print.GPdata <- function(x) {
+  cat("An object of class GPdata:\n")
+  show(x@featureData)
+  show(x@phenoData)
+  cat("Annotation: ", x@annotation)
 }
+
+setMethod("show", "GPdata", function(object) print.GPdata(object))

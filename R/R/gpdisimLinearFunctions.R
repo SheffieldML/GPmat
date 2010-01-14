@@ -10,20 +10,35 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL,
     stop("The number of time points given does not match the number of gene values given.")
 
   y <- as.matrix(y)
-  if (options$includeNoise)
-    yvar <- as.matrix(yvar)
-  else
-    yvar <- 0 * y
-  
+##   if (options$includeNoise)
+##     yvar <- 0 * y
+##   else
+  yvar <- as.matrix(yvar)
+
   model <- list(type="gpdisim", y=as.array(y), yvar=as.array(yvar))
   model$includeNoise <- options$includeNoise
+  if (("gaussianInitial" %in% names(options)) && options$gaussianInitial)
+    model$gaussianInitial <- TRUE
+  else
+    model$gaussianInitial <- FALSE
+
+  if ("timeSkew" %in% names(options)) {
+    model$timeSkew <- options$timeSkew
+    times <- times + model$timeSkew
+  }
+  else
+    model$timeSkew <- 0.0
   
-  kernType1 <- list(type="multi", comp=array())
+  kernType1 <- list(type="multi", comp=list())
   tieWidth <- 1
   tieRBFVariance <- 2
-  kernType1$comp[1] <- "rbf"
+  kernType1$comp[[1]] <- "rbf"
   for ( i in 1:Ngenes ) {
-    kernType1$comp[i+1] <- "disim"
+    if (model$gaussianInitial)
+      kernType1$comp[[i+1]] <- list(type="parametric", realType="disim",
+                                    options=list(gaussianInitial=TRUE))
+    else
+      kernType1$comp[[i+1]] <- "disim"
   }
   tieParam <- list(tieDelta="di_decay", tieWidth="inverseWidth",
                    tieSigma="di_variance", tieRBFVariance="rbf.?_variance")
@@ -74,6 +89,7 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL,
   model$B <- model$D*yArray[1, ]
   model$m <- array(model$y, length(model$y))
   model$t <- times
+  model$realt <- times - model$timeSkew
 
   model$optimiser <- options$optimiser
 
@@ -109,10 +125,37 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL,
   model <- gpdisimExpandParam(model, params)
 
   return (model)
-
 }
 
 
+gpdisimDisplay <- function(model, spaceNum=0)  {
+  spacing = matrix("", spaceNum+1)
+  cat(spacing)
+  cat("Gaussian process driving input single input motif model:\n")
+  cat(spacing)
+  cat(c("  Number of time points: ", dim(model$t)[1], "\n"), sep="")
+  cat(spacing)
+  cat(c("  Driving TF: ", model$genes[[1]], "\n"), sep="")
+  cat(spacing)
+  cat(c("  Target genes (", model$numGenes, "):\n"), sep="")
+  for (i in seq(2, length(model$genes))) {
+    cat(spacing)
+    cat(c("    ", model$genes[[i]], "\n"), sep="")
+  }
+
+  if(any(model$mu!=0)) {
+    cat(spacing)
+    cat("  Basal transcription rate:\n")
+    for(i in seq(along=model$mu)) {
+      cat(spacing);
+      cat(c("    Gene ", i, ": ", model$B[i], "\n"), sep="")
+    }
+  }
+  cat(spacing)
+  cat("  Kernel:\n")
+  kernDisplay(model$kern, 4+spaceNum)
+}
+  
 
 gpdisimExtractParam <- function (model, option=1) {
   params <- gpsimExtractParam(model, option)
@@ -377,7 +420,7 @@ gpdisimUpdateProcesses <- function (model, predt=NULL) {
     predt <- c(seq(min(t), max(t), length=100), t)
   }
   else {
-    predt <- c(predt, t)
+    predt <- c(predt + model$timeSkew, t)
   }
 
   if (model$includeNoise)
@@ -385,7 +428,13 @@ gpdisimUpdateProcesses <- function (model, predt=NULL) {
   else
     simMultiKern <- model$kern
 
-  proteinKern <- kernCreate(model$t, "sim")
+  if (model$gaussianInitial) {
+    proteinKern <- kernCreate(model$t, list(type="parametric", realType="sim",
+                                            options=list(gaussianInitial=TRUE)))
+    proteinKern$initialVariance <- simMultiKern$comp[[2]]$initialVariance
+  }
+  else
+    proteinKern <- kernCreate(model$t, "sim")
   proteinKern$inverseWidth <- simMultiKern$comp[[1]]$inverseWidth
   proteinKern$decay <- model$delta
   proteinKern$variance <- simMultiKern$comp[[2]]$di_variance
@@ -421,7 +470,7 @@ gpdisimUpdateProcesses <- function (model, predt=NULL) {
   varF <- varF[1:(length(predt)-length(t))]
   predt <- predt[1:(length(predt)-length(t))]
 
-  model$predt <- predt
+  model$predt <- predt - model$timeSkew
   model$predF <- predF
   #model$varF <- abs(varF)
   model$varF <- varF

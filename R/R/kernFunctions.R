@@ -12,11 +12,12 @@ kernCreate <- function(x, kernType) {
       dim <- x
   }
 
-  ##   # Attempt to recreate Antti's idea for appending options to each kernel.
-  ##   if (is.list(kernType) && kernType[1]=="parametric") {
-  ##     kern$options <- kernType[2]
-  ##     kernType = kernType[3]
-  ##   }
+  if ( is.list(kernType) && kernType$type == "parametric" ) {
+    kernOptions <- kernType$options
+    kernType <- kernType$realType
+  }
+  else
+    kernOptions <- NULL
   
   if ( is.list(kernType) && ("complete" %in% names(kernType)) ) {
     if ( kernType$complete == 1 ) {
@@ -27,8 +28,8 @@ kernCreate <- function(x, kernType) {
     
     kern <- list(inputDimension=dim, type=kernType$type)
 
-    if ("options" %in% names(kernType))
-      kern$options <- kernType$options
+    if (!is.null(kernOptions))
+      kern$options <- kernOptions
     
     start <- 1    
     
@@ -75,8 +76,9 @@ kernCreate <- function(x, kernType) {
 
   } else {
     kern <- list(type=kernType, inputDimension=dim)
-    if ("options" %in% names(kernType))
-      kern$options <- kernType$options
+
+    if (!is.null(kernOptions))
+      kern$options <- kernOptions
 
     kern <- kernParamInit(kern)
   }

@@ -9,10 +9,20 @@ disimKernParamInit <- function (kern) {
   kern$decay <- 1
   kern$variance <- 1
   kern$rbf_variance <- 1
-  kern$nParams <- 6
-  kern$paramNames <- c("di_decay", "inverseWidth", "di_variance", "decay", "variance", "rbf_variance")
-  
-  kern$transforms <- list(index=c(1,2,3,4,5,6), type="positive")
+
+  if ("options" %in% names(kern) && "gaussianInitial" %in% names(kern$options) && kern$options$gaussianInitial) {
+    kern$gaussianInitial <- TRUE
+    kern$initialVariance <- 1
+    kern$nParams <- 7
+    kern$paramNames <- c("di_decay", "inverseWidth", "di_variance", "decay", "variance", "rbf_variance", "initialVariance")
+  }
+  else {
+    kern$gaussianInitial <- FALSE
+    kern$nParams <- 6
+    kern$paramNames <- c("di_decay", "inverseWidth", "di_variance", "decay", "variance", "rbf_variance")
+  }
+
+  kern$transforms <- list(index=1:kern$nParams, type="positive")
 
   kern$isStationary=FALSE
 
@@ -22,25 +32,38 @@ disimKernParamInit <- function (kern) {
 
 
 
-disimKernCompute <- function (kern, t, t2=t) {
+disimKernCompute <- function (kern, t1, t2=t1) {
 
-  if ( ( dim(as.matrix(t))[2] > 1 ) | ( dim(as.matrix(t2))[2] > 1 ) )
+  if ( ( dim(as.matrix(t1))[2] > 1 ) | ( dim(as.matrix(t2))[2] > 1 ) )
     stop("Input can only have one column.")
 
   l <- sqrt(2/kern$inverseWidth)
 
-  h <- disimComputeH(t, t2, kern$di_decay, kern$decay, kern$decay, l)
-  hp <- disimComputeHPrime(t, t2, kern$di_decay, kern$decay, kern$decay, l)
+  h <- disimComputeH(t1, t2, kern$di_decay, kern$decay, kern$decay, l)
+  hp <- disimComputeHPrime(t1, t2, kern$di_decay, kern$decay, kern$decay, l)
   if ( nargs()<3 ) {
     k <- h + t(h) + hp + t(hp)
   } else {
-    h2 <- disimComputeH(t2, t, kern$di_decay, kern$decay, kern$decay, l)
-    hp2 <- disimComputeHPrime(t2, t, kern$di_decay, kern$decay, kern$decay, l)
+    h2 <- disimComputeH(t2, t1, kern$di_decay, kern$decay, kern$decay, l)
+    hp2 <- disimComputeHPrime(t2, t1, kern$di_decay, kern$decay, kern$decay, l)
     k <- h + t(h2) + hp + t(hp2)
   }
   k <- 0.5*k*sqrt(pi)*l
   k <- kern$rbf_variance*kern$di_variance*kern$variance*k
   k <- Re(k)
+
+  if ( "gaussianInitial" %in% names(kern) && kern$gaussianInitial ) {
+    dim1 <- dim(as.matrix(t1))[1]
+    dim2 <- dim(as.matrix(t2))[1]
+    t1Mat <- matrix(t1, dim1, dim2)
+    t2Mat <- t(matrix(t2, dim2, dim1))
+
+    k = k + kern$initialVariance * kern$variance * 
+      (exp(- kern$di_decay * t1Mat) - exp(- kern$decay * t1Mat)) /
+        (kern$decay - kern$di_decay) * 
+          (exp(- kern$di_decay * t2Mat) - exp(- kern$decay * t2Mat)) /
+            (kern$decay - kern$di_decay);
+  }
 
   return (k)
 }
@@ -204,13 +227,23 @@ disimComputeHPrime <-  function (t1, t2, delta, Dj, Dk, l, option=1) {
 
 disimKernExtractParam <- function (kern, option=1) {
 
-  if ( option == 1 ) {
-    params <- c(kern$di_decay, kern$inverseWidth, kern$di_variance, kern$decay, kern$variance, kern$rbf_variance)
+  if ( "gaussianInitial" %in% names(kern) && kern$gaussianInitial ) {
+    if ( option == 1 ) {
+      params <- c(kern$di_decay, kern$inverseWidth, kern$di_variance, kern$decay, kern$variance, kern$rbf_variance, kern$initialVariance)
 
-  } else {
-    params <- list(values=c(kern$di_decay, kern$inverseWidth, kern$di_variance, kern$decay, kern$variance, kern$rbf_variance), names=c("di_decay", "inverseWidth", "di_variance", "decay", "variance", "rbf_variance"))
+    } else {
+      params <- list(values=c(kern$di_decay, kern$inverseWidth, kern$di_variance, kern$decay, kern$variance, kern$rbf_variance, kern$initialVariance), names=kern$paramNames)
+    }
   }
+  else {
+    if ( option == 1 ) {
+      params <- c(kern$di_decay, kern$inverseWidth, kern$di_variance, kern$decay, kern$variance, kern$rbf_variance)
 
+    } else {
+      params <- list(values=c(kern$di_decay, kern$inverseWidth, kern$di_variance, kern$decay, kern$variance, kern$rbf_variance), names=kern$paramNames)
+    }
+  }
+  
   return (params)
 }
 
@@ -226,10 +259,52 @@ disimKernExpandParam <- function (kern, params) {
   kern$decay <- params[4]
   kern$variance <- params[5]
   kern$rbf_variance <- params[6]
+  if ( "gaussianInitial" %in% names(kern) && kern$gaussianInitial )
+    kern$initialVariance <- params[7]
 
   return (kern)
 }
 
+
+disimKernDisplay <- function (kern, spaceNum=0) {
+
+  spacing = matrix("", spaceNum+1)
+##   cat(spacing)
+##   if(kern$isStationary)
+##     cat("Stationary version of the kernel\n")
+##   else
+##     cat("Non-stationary version of the kernel\n")
+
+##   cat(spacing)
+##   if(kern$isNormalised)
+##     cat("Normalised version of the kernel\n")
+##   else
+##     cat("Unnormalised version of the kernel\n")
+
+##   cat(spacing)
+##   if(kern$isNegativeS)
+##     cat("Sensitivities allowed to be negative.\n")
+##   else
+##     cat("Sensitivities constrained positive.\n")
+  cat(spacing)
+  cat("DISIM decay: ", kern$di_decay, "\n", sep="")
+  cat(spacing)
+  cat("DISIM inverse width: ", kern$inverseWidth, " (length scale ", 1/sqrt(kern$inverseWidth), ")\n", sep="")
+  cat(spacing)
+  cat("DISIM Variance: ", kern$di_variance, "\n", sep="")
+  cat(spacing)
+  cat("SIM decay: ", kern$decay, "\n", sep="")
+  cat(spacing)
+  cat("SIM Variance: ", kern$variance, "\n", sep="")
+  cat(spacing)
+  cat("RBF Variance: ", kern$rbf_variance, "\n", sep="")
+  if(kern$gaussianInitial) {
+    cat(spacing)
+    cat("DISIM Initial Variance: ", kern$initialVariance, "\n", sep="")
+  }
+  ## cat(spacing)
+  ## cat("SIM delay: %2.4f\n", kern$delay)
+}
 
 
 disimXdisimKernCompute <- function (disimKern1, disimKern2, t1, t2=t1) {
@@ -257,6 +332,26 @@ disimXdisimKernCompute <- function (disimKern1, disimKern2, t1, t2=t1) {
   K <- 0.5*K*sqrt(pi)*l
   K <- disimKern1$rbf_variance*disimKern1$di_variance*sqrt(disimKern1$variance)*sqrt(disimKern2$variance)*K
 
+  if ("gaussianInitial" %in% names(disimKern1) && disimKern1$gaussianInitial && 
+      "gaussianInitial" %in% names(disimKern2) && disimKern2$gaussianInitial) {
+    if (disimKern1$initialVariance != disimKern2$initialVariance)
+      stop("Kernels cannot be cross combined if they have different initial variances.");
+    
+    dim1 <- dim(as.matrix(t1))[1]
+    dim2 <- dim(as.matrix(t2))[1]
+    t1Mat <- matrix(t1, dim1, dim2)
+    t2Mat <- t(matrix(t2, dim2, dim1))
+
+    delta = disimKern1$di_decay;
+    D1 = disimKern1$decay;
+    D2 = disimKern2$decay;
+  
+    K = K + disimKern1$initialVariance * 
+      sqrt(disimKern1$variance) * sqrt(disimKern2$variance) * 
+        (exp(-delta * t1Mat) - exp(-D1 * t1Mat)) / (D1 - delta) *
+          (exp(-delta * t2Mat) - exp(-D2 * t2Mat)) / (D2 - delta)
+  }
+  
   return (K)
 }
 
@@ -383,13 +478,32 @@ disimXsimKernCompute <- function (disimKern, simKern, t1, t2=t1) {
   K <- disimKern$rbf_variance*disimKern$di_variance*sqrt(disimKern$variance)*K
   K <- Re(K)
 
+  if ("gaussianInitial" %in% names(disimKern) && disimKern$gaussianInitial && 
+      "gaussianInitial" %in% names(simKern) && simKern$gaussianInitial) {
+    if (disimKern$initialVariance != simKern$initialVariance)
+      stop("Kernels cannot be cross combined if they have different initial variances.")
+    
+    dim1 <- dim(as.matrix(t1))[1]
+    dim2 <- dim(as.matrix(t2))[1]
+    t1Mat <- matrix(t1, dim1, dim2)
+    t2Mat <- t(matrix(t2, dim2, dim1))
+
+    delta = disimKern$di_decay
+    D = disimKern$decay
+  
+    K = K + disimKern$initialVariance * 
+      sqrt(disimKern$variance) *
+        (exp(-delta * t1Mat) - exp(-D * t1Mat)) / (D - delta) *
+          exp(-delta * t2Mat)
+  }
+
   return (K)
 }
 
 
 
-disimKernDiagCompute <- function (kern, t) {
-  if ( dim(as.matrix(t))[2]>1 )
+disimKernDiagCompute <- function (kern, t1) {
+  if ( dim(as.matrix(t1))[2]>1 )
     stop("Input can only have one column.")
 
   l <- sqrt(2/kern$inverseWidth)
@@ -398,41 +512,41 @@ disimKernDiagCompute <- function (kern, t) {
   halfLD <- 0.5*l*D
   halfLDelta <- 0.5*l*delta
 
-  lnPart1_f <- lnDiffErfs(halfLDelta - t/l, halfLDelta)
-  lnPart2_f <- lnDiffErfs(halfLDelta + t/l, halfLDelta)
+  lnPart1_f <- lnDiffErfs(halfLDelta - t1/l, halfLDelta)
+  lnPart2_f <- lnDiffErfs(halfLDelta + t1/l, halfLDelta)
 
   lnPart1 <- lnPart1_f[[1]]
   signs1 <- lnPart1_f[[2]]
   lnPart2 <- lnPart2_f[[1]]
   signs2 <- lnPart2_f[[2]]
 
-  lnCommon <- halfLDelta ^ 2 -(D+delta)*t - log(2*delta) - log(0i + D-delta)
-  lnFact2 <- (D+delta)*t - log(D + delta)
+  lnCommon <- halfLDelta ^ 2 -(D+delta)*t1 - log(2*delta) - log(0i + D-delta)
+  lnFact2 <- (D+delta)*t1 - log(D + delta)
 
   if (abs(D - delta) < .1)
-    h <- signs1 * exp(lnCommon + lnPart1) * ((exp((D-delta)*t) - 1) / (D - delta) + 1/(D+delta)) + signs2 * exp(lnCommon + lnFact2 + lnPart2)
+    h <- signs1 * exp(lnCommon + lnPart1) * ((exp((D-delta)*t1) - 1) / (D - delta) + 1/(D+delta)) + signs2 * exp(lnCommon + lnFact2 + lnPart2)
   else {
-    lnFact1a <- (D - delta) * t + log(D + delta) - log(0i + D^2 - delta^2)
+    lnFact1a <- (D - delta) * t1 + log(D + delta) - log(0i + D^2 - delta^2)
     lnFact1b <- log(2*delta) - log(0i + D^2 - delta^2)
     h <- signs1 * exp(lnCommon + lnFact1a + lnPart1) - signs1 * exp(lnCommon + lnFact1b + lnPart1) + signs2 * exp(lnCommon + lnFact2 + lnPart2)
   }
 
-  lnPart1p_f <- lnDiffErfs(halfLD - t/l, halfLD)
-  lnPart2p_f <- lnDiffErfs(halfLD + t/l, halfLD)
+  lnPart1p_f <- lnDiffErfs(halfLD - t1/l, halfLD)
+  lnPart2p_f <- lnDiffErfs(halfLD + t1/l, halfLD)
   lnPart1p <- lnPart1p_f[[1]]
   signs1p <- lnPart1p_f[[2]]
   lnPart2p <- lnPart2p_f[[1]]
   signs2p <- lnPart2p_f[[2]]
 
-  lnCommonp <- halfLD^2 - 2*D*t - log(0i + delta^2 - D^2)
-  lnFact2p <- 2*D*t - log(2*D)
+  lnCommonp <- halfLD^2 - 2*D*t1 - log(0i + delta^2 - D^2)
+  lnFact2p <- 2*D*t1 - log(2*D)
 
   if (abs(D - delta) < .1) {
-    hp <- signs1p * exp(lnCommonp + lnPart1p) * ((exp((D-delta)*t) - 1) / (D - delta) + 1/(2*D)) + signs2p * exp(lnCommonp + lnFact2p + lnPart2p)
+    hp <- signs1p * exp(lnCommonp + lnPart1p) * ((exp((D-delta)*t1) - 1) / (D - delta) + 1/(2*D)) + signs2p * exp(lnCommonp + lnFact2p + lnPart2p)
   }
   else {
     lnFact1ap <- log(D + delta) - log(0i + delta - D) - log(2*D)
-    lnFact1bp <- (D-delta)*t - log(0i + delta - D)
+    lnFact1bp <- (D-delta)*t1 - log(0i + delta - D)
 
     hp <- signs1p * exp(lnCommonp + lnFact1ap + lnPart1p) - signs1p * exp(lnCommonp + lnFact1bp + lnPart1p) + signs2p * exp(lnCommonp + lnFact2p + lnPart2p)
   }
@@ -441,18 +555,23 @@ disimKernDiagCompute <- function (kern, t) {
   k <- 0.5*k*sqrt(pi)*l
   k <- kern$rbf_variance*kern$di_variance*kern$variance*k
 
+  if ( "gaussianInitial" %in% names(kern) && kern$gaussianInitial )
+    k = k + kern$initialVariance*kern$variance * 
+      ((exp(-kern$di_decay*t1) - exp(-kern$decay*t1)) /
+       (kern$decay-kern$di_decay))^2;
+
   return (k)
 }
 
 
 
-disimKernGradient <- function (kern, t, t2, covGrad) {
+disimKernGradient <- function (kern, t1, t2, covGrad) {
   if ( nargs() == 3 ) {
     covGrad <- t2
-    t2 <- t
+    t2 <- t1
   }
 
-  gFull <- disimXdisimKernGradient(kern, kern, t, t2, covGrad)
+  gFull <- disimXdisimKernGradient(kern, kern, t1, t2, covGrad)
 
   g <- gFull$g1 + gFull$g2
 
@@ -545,8 +664,71 @@ disimXdisimKernGradient <- function (disimKern1, disimKern2, t1, t2, covGrad) {
 
   K <- var2*K
 
-  g1 <- c(dk_ddelta, dk_dinvWidth, dk_dDIVariance, dk_dD1, dk_dDisim1Variance, dk_dRBFVariance)
-  g2 <- c(0, 0, 0, dk_dD2, dk_dDisim2Variance, 0)
+    if ("gaussianInitial" %in% names(disimKern1) && disimKern1$gaussianInitial && 
+      "gaussianInitial" %in% names(disimKern2) && disimKern2$gaussianInitial) {
+    if (disimKern1$initialVariance != disimKern2$initialVariance)
+      stop("Kernels cannot be cross combined if they have different initial variances.");
+    
+    dim1 <- dim(as.matrix(t1))[1]
+    dim2 <- dim(as.matrix(t2))[1]
+    t1Mat <- matrix(t1, dim1, dim2)
+    t2Mat <- t(matrix(t2, dim2, dim1))
+
+    delta <- disimKern1$di_decay
+    D1 <- disimKern1$decay
+    D2 <- disimKern2$decay
+
+    the_rest <- (exp(- delta * t1Mat) - exp(- D1 * t1Mat)) / (D1 - delta) *
+      (exp(- delta * t2Mat) - exp(- D2 * t2Mat)) / (D2 - delta)
+  
+    dk_dinitVariance <- sum((sqrt(disimKern1$variance) *
+      sqrt(disimKern2$variance) * the_rest) * covGrad)
+
+    dk_dDisim1Variance <- dk_dDisim1Variance + 
+      sum((.5 / sqrt(disimKern1$variance) *
+           disimKern1$initialVariance * sqrt(disimKern2$variance) * the_rest)
+          * covGrad)
+
+    dk_dDisim2Variance <- dk_dDisim2Variance +
+      sum((.5 / sqrt(disimKern2$variance) *
+           disimKern1$initialVariance * sqrt(disimKern1$variance) * the_rest)
+          * covGrad)
+
+    dk_dD1 <- dk_dD1 +
+      sum((disimKern1$initialVariance *
+           sqrt(disimKern1$variance) * sqrt(disimKern2$variance) *
+           (t1Mat * (D1 - delta)*exp(-D1*t1Mat) - exp(-delta*t1Mat) + 
+            exp(-D1*t1Mat)) / (D1-delta)^2 *
+           (exp(- delta * t2Mat) - exp(- D2 * t2Mat)) / (D2 - delta))
+          *covGrad)
+  
+    dk_dD2 <- dk_dD2 +
+      sum((disimKern1$initialVariance *
+           sqrt(disimKern1$variance) * sqrt(disimKern2$variance) *
+           (t2Mat * (D2 - delta)*exp(-D2*t2Mat) - exp(-delta*t2Mat) + 
+            exp(-D2*t2Mat)) / (D2-delta)^2 *
+           (exp(- delta * t1Mat) - exp(-D1 * t1Mat)) / (D1 - delta))
+          *covGrad)
+
+    dk_ddelta <- dk_ddelta +
+      sum((disimKern1$initialVariance *
+           sqrt(disimKern1$variance) * sqrt(disimKern2$variance) *
+           ((-t2Mat * (D2 - delta)*exp(-delta*t2Mat) + exp(-delta*t2Mat) - 
+             exp(-D2*t2Mat)) / (D2-delta)^2 *
+            (exp(- delta * t1Mat) - exp(-D1 * t1Mat)) / (D1 - delta) +
+            (-t1Mat * (D1 - delta)*exp(-delta*t1Mat) + exp(-delta*t1Mat) - 
+             exp(-D1*t1Mat)) / (D1-delta)^2 *
+            (exp(- delta * t2Mat) - exp(-D2 * t2Mat)) / (D2 - delta)))
+          *covGrad)
+    
+    g1 <- c(dk_ddelta, dk_dinvWidth, dk_dDIVariance, dk_dD1, dk_dDisim1Variance, dk_dRBFVariance, dk <- dk_dinitVariance)
+    g2 <- c(0, 0, 0, dk_dD2, dk_dDisim2Variance, 0, 0)
+
+  }
+  else {
+    g1 <- c(dk_ddelta, dk_dinvWidth, dk_dDIVariance, dk_dD1, dk_dDisim1Variance, dk_dRBFVariance)
+    g2 <- c(0, 0, 0, dk_dD2, dk_dDisim2Variance, 0)
+  }
 
   g <- list(g1=g1, g2=g2)
   return (g)
@@ -639,7 +821,10 @@ disimXrbfKernGradient <- function (disimKern, rbfKern, t1, t2, covGrad) {
   dk_dDisimVariance <- dk_dC_i*0.5/C_i
   dk_dDIVariance <- dk_dC_0*0.5/C_0
 
-  g1 <- Re(c(dk_ddelta, dk_dinvWidth, dk_dDIVariance, dk_dD, dk_dDisimVariance, 0))
+  if ("gaussianInitial" %in% names(disimKern) && disimKern$gaussianInitial)
+    g1 <- Re(c(dk_ddelta, dk_dinvWidth, dk_dDIVariance, dk_dD, dk_dDisimVariance, 0, 0))
+  else
+    g1 <- Re(c(dk_ddelta, dk_dinvWidth, dk_dDIVariance, dk_dD, dk_dDisimVariance, 0))
   g2 <- Re(c(0, dk_dRbfVariance))
 
   g <- list(g1=g1, g2=g2)
@@ -823,8 +1008,49 @@ disimXsimKernGradient <- function (disimKern, simKern, t1, t2, covGrad) {
 
   dk_dinvWidth <- -0.5*sqrt(2)/(disimKern$inverseWidth* sqrt(disimKern$inverseWidth))*dk_dl
 
-  g1 <- Re(c(dk_ddelta, dk_dinvWidth, dk_dDIVariance, dk_dD, dk_dSimVariance, dk_dRBFVariance))
-  g2 <- c(0, 0, 0)
+  if ("gaussianInitial" %in% names(disimKern) && disimKern$gaussianInitial && 
+      "gaussianInitial" %in% names(simKern) && simKern$gaussianInitial) {
+    if (disimKern$initialVariance != simKern$initialVariance)
+      stop("Kernels cannot be cross combined if they have different initial variances.")
+    
+    dim1 <- dim(as.matrix(t1))[1]
+    dim2 <- dim(as.matrix(t2))[1]
+    t1Mat <- matrix(t1, dim1, dim2)
+    t2Mat <- t(matrix(t2, dim2, dim1))
+
+    delta = disimKern$di_decay
+    D = disimKern$decay
+
+    the_rest = (exp(-delta*t1Mat) - exp(-D*t1Mat)) / (D-delta) *
+      exp(-delta*t2Mat)
+  
+    dk_dinitVariance = sum((sqrt(disimKern$variance) * the_rest) * covGrad)
+
+    dk_dSimVariance = dk_dSimVariance +
+      sum((.5 / sqrt(disimKern$variance) *
+           disimKern$initialVariance * the_rest) * covGrad)
+
+    dk_dD = dk_dD +
+      sum((disimKern$initialVariance * sqrt(disimKern$variance) *
+           (t1Mat*(D-delta)*exp(-D*t1Mat) - exp(-delta*t1Mat)
+            + exp(-D*t1Mat)) / (D-delta)^2 *
+           exp(-delta*t2Mat))*covGrad)
+  
+    dk_ddelta = dk_ddelta +
+      sum((disimKern$initialVariance * sqrt(disimKern$variance) *
+           (-t2Mat*exp(-delta*t2Mat) *
+            (exp(-delta*t1Mat) - exp(-D*t1Mat)) / (D-delta) +
+            (-t1Mat*(D-delta)*exp(-delta*t1Mat) + exp(-delta*t1Mat)
+             - exp(-D*t1Mat)) / (D-delta)^2 *
+            exp(-delta*t2Mat)))*covGrad)
+    
+    g1 <- Re(c(dk_ddelta, dk_dinvWidth, dk_dDIVariance, dk_dD, dk_dSimVariance, dk_dRBFVariance, dk_dinitVariance))
+    g2 <- c(0, 0, 0, 0)
+  }
+  else {
+    g1 <- Re(c(dk_ddelta, dk_dinvWidth, dk_dDIVariance, dk_dD, dk_dSimVariance, dk_dRBFVariance))
+    g2 <- c(0, 0, 0)
+  }
 
   g <- list(g1=g1, g2=g2)
   return (g)

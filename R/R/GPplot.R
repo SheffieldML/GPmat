@@ -1,16 +1,19 @@
 GPplot <- function(data, savepath = '', doParams = FALSE,
-                   selectGenes = data$genes, nameMapping = NULL,
-                   predt = NULL) {
+                   nameMapping = NULL, predt = NULL) {
   require(gplots)
   
   FONTSIZE <- 10;
   LINEWIDTH <- 1;
   MARKERSIZE <- 10;
 
-  if ("model" %in% names(data))
-    model <- data$model
-  else
-    model <- data
+  if (is.GPmodel(data))
+    model <- data@model
+  else {
+    if ("model" %in% names(data))
+      model <- data$model
+    else
+      model <- data
+  }
 
   is_gpdisim_model <- (model$type == 'cgpdisim')
   
@@ -21,8 +24,7 @@ GPplot <- function(data, savepath = '', doParams = FALSE,
     numGenes <- model$comp[[1]]$numGenes
   }
 
-  numPlots <- length(selectGenes)
-  genes <- data$genes
+  genes <- model$comp[[1]]$genes
   tf <- genes[1]
   targetGenes <- genes[2:length(genes)]
 
@@ -39,6 +41,7 @@ GPplot <- function(data, savepath = '', doParams = FALSE,
       return()
     }
     #par(mfrow = c(2, trunc(numPlots / 2 + 0.5)))
+    dev.new()
     par(mfrow=c(2, 2))
     plot(model$comp[[i]]$predt, model$comp[[i]]$predF,
          ylim=c(min(model$comp[[i]]$predF-2*sqrt(model$comp[[i]]$varF)),
@@ -49,7 +52,6 @@ GPplot <- function(data, savepath = '', doParams = FALSE,
     lines(model$comp[[i]]$predt, model$comp[[i]]$predF-2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
 
     for ( j in seq(length=numGenes) ) {
-      #x11()
       plot(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j],
            ylim=c(min(c(model$comp[[i]]$ypred[,j]-2*sqrt(model$comp[[i]]$ypredVar[,j]),
                         model$comp[[i]]$y[,j]-2*sqrt(model$comp[[i]]$yvar[,j]))),
@@ -67,7 +69,7 @@ GPplot <- function(data, savepath = '', doParams = FALSE,
       } else {
         title(paste(genename, "mRNA"))
       }
-      plotCI(model$comp[[i]]$t, model$comp[[i]]$y[,j],
+      plotCI(model$comp[[i]]$realt, model$comp[[i]]$y[,j],
              uiw=2*sqrt(model$comp[[i]]$yvar[,j]), lwd=3, col=3, add=TRUE)
       #points(model$comp[[i]]$t, model$comp[[i]]$y[,j], lwd=3, col=3)
       lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]+2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)

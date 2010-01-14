@@ -11,7 +11,9 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
   
   model <- list(type="gpsim", y=as.array(y), yvar=as.array(yvar))
 
-  kernType1 <- list(type="multi", comp=array())
+  kernType1 <- list(type="multi", comp=list())
+  tieParam <- list("inverseWidth")
+
   if ("isNegativeS" %in% names(options) && options$isNegativeS)
     isNegativeS = TRUE
   else
@@ -19,30 +21,25 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
   ## proteinPrior encodes observation of the latent function.
   if ( "proteinPrior" %in% names(options) ) {
     model$proteinPrior <- options$proteinPrior
-    kernType1$comp[1] <- "rbf"
+    kernType1$comp[[1]] <- "rbf"
 
     if ( "times" %in% names(model$proteinPrior) )
       timesCell <- list(protein=model$proteinPrior$times)
     else
       timesCell <- list(protein=times)
 
-    tieParam <- 1
-
     for ( i in 1:Ngenes ) {
-      kernType1$comp[i+1] <- "sim"
+      kernType1$comp[[i+1]] <- "sim"
       timesCell <- c(timesCell, list(mRNA=times))
-      tieParam <- c(tieParam, tieParam[length(tieParam)]+3)
     }
 
     model$timesCell <- timesCell
   } else {
     timesCell <- times
-    tieParam <- 2
     
-    kernType1 <- list(type="multi", comp=array())
+    kernType1 <- list(type="multi", comp=list())
     for ( i in 1:Ngenes ) {
-      kernType1$comp[i] <- "sim"
-      if ( i>1 ) tieParam <- c(tieParam, tieParam[length(tieParam)]+3)
+      kernType1$comp[[i]] <- "sim"
     }
   }
 

@@ -3,7 +3,7 @@
 \alias{formModel}
 \title{Forming optimized models with error handling.}
 \description{
-  Forms an optimized model by calling the function GPrank with the given parameters. If GPrank produces an error, it is called again several times with randomized parameters. The parameters and the log-likelihood of the model are also determined.
+  Forms an optimized model by calling the function GPLearn with the given parameters. If GPLearn produces an error, it is called again several times with randomized parameters. The parameters and the log-likelihood of the model are also determined.
 }
 \usage{
 returnData <- formModel(preprocData, TF = NULL, knownTargets = NULL, testTarget = NULL, useGPsim = TRUE, fixedParams = FALSE, initParams = NULL, fixComps = 1)
@@ -22,13 +22,13 @@ returnData <- formModel(preprocData, TF = NULL, knownTargets = NULL, testTarget 
   \item{fixComps}{The blocks of the kern cache that are to be fixed.}
 }
 \value{
-  Returns a list containing three items: the model returned by GPrank, the parameters of the model and the log-likelihood of the model.
+  Returns a list containing three items: the model returned by GPLearn, the parameters of the model and the log-likelihood of the model.
 }
 \author{
   Jonatan Ropponen
 }
 \seealso{
-\code{\link{GPrank}, \link{GPrankTargets}, \link{GPrankTFs}}.
+\code{\link{GPLearn}, \link{GPrankTargets}, \link{GPrankTFs}}.
 }
 \examples{
 ## missing

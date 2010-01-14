@@ -1,63 +1,47 @@
-GPrank <- function(preprocData, TF = NULL, targets = NULL, useGPsim = TRUE, filterLimit = 0, useMedians = TRUE, randomize = FALSE, addPriors = FALSE, fixedParams = FALSE, initParams = NULL, fixComps = 1) {
+require(Biobase)
 
-  options(error = recover)
+GPLearn <- function(preprocData, TF = NULL, targets = NULL, useGpdisim = FALSE, randomize = FALSE, addPriors = FALSE, fixedParams = FALSE, initParams = NULL, initialZero = TRUE, fixComps = NULL, timeSkew = 1000.0, dontOptimise = FALSE, gpsimOptions = NULL, allArgs = NULL) {
 
-  if (useGPsim)
-    genes <- targets
-  else
+  if (!is.null(allArgs)) {
+    for (i in seq(along=allArgs))
+      assign(names(allArgs)[[i]], allArgs[[i]])
+  }
+  
+  if (useGpdisim)
     genes <- c(TF, targets)
+  else
+    genes <- targets
 
   # The preprocessed data is searched for the data of the specified genes.
   newData <- searchProcessedData(preprocData, genes)
-
-  # Filtering the genes based on the calculated ratios. If the limit is 0, all genes are accepted.
-  genes <- filterGenes(newData$ratioData, filterLimit, useMedians)
-
-  # The data is searched for the data of the filtered genes.
-  newData <- searchProcessedData(newData, genes)
   y <- newData$y
   yvar <- newData$yvar
   times <- newData$times
-  scale <- newData$scale
-
-  # testing whether the TF passed filtering
-  if (!is.null(TF)) {
-    if (!genePassedFiltering(TF, genes)) {
-      TF <- NULL
-    }
-  }
-
-  # counter for the next passed gene
-  k <- 1
-
-  passedTargets <- array()
-
-  # testing whether the targets passed filtering
-  if (!is.null(targets)) {
-    for (i in 1:length(targets)) {
-      currentTarget <- targets[i]
-      if (genePassedFiltering(currentTarget, genes)) {
-        passedTargets[k] <- currentTarget
-        k <- k + 1
-      }
-    }
-    targets <- passedTargets
-  }
 
   Nrep <- length(y)
 
-  options <- list(includeNoise=0, optimiser="CG")
+  options <- list(includeNoise=0, optimiser="SCG")
 
-  if(addPriors) options$addPriors = TRUE
+  if (!is.null(gpsimOptions)) {
+    for (i in seq(along=gpsimOptions))
+      options[[names(gpsimOptions)[[i]]]] <- gpsimOptions[[i]]
+  }
+  
+  if (addPriors) options$addPriors = TRUE
 
-  if (useGPsim) {
-    Ngenes <- length(genes)
-    options$fix$names <- "sim1_variance"
+  if (!initialZero)
+    options$gaussianInitial <- TRUE
+
+  options$timeSkew <- timeSkew
+
+  if (useGpdisim) {
+    Ngenes <- length(genes) - 1
+    options$fix$names <- "di_variance"
     options$fix$value <- expTransform(c(1), "xtoa")
   }
   else {
-    Ngenes <- length(genes) - 1
-    options$fix$names <- "di_variance"
+    Ngenes <- length(genes)
+    options$fix$names <- "sim1_variance"
     options$fix$value <- expTransform(c(1), "xtoa")
   }
   Ntf <- 1
@@ -72,18 +56,18 @@ GPrank <- function(preprocData, TF = NULL, targets = NULL, useGPsim = TRUE, filt
   }
 
   # initializing the model
-  if (useGPsim)
-    model <- list(type="cgpsim")
-  else
+  if (useGpdisim)
     model <- list(type="cgpdisim")
+  else
+    model <- list(type="cgpsim")
 
   for ( i in seq(length=Nrep) ) {
     #repNames <- names(model$comp)
-    if (useGPsim) {
-      model$comp[[i]] <- gpsimCreate(Ngenes, Ntf, times, y[[i]], yvar[[i]], options, genes = genes)
+    if (useGpdisim) {
+      model$comp[[i]] <- gpdisimCreate(Ngenes, Ntf, times, y[[i]], yvar[[i]], options, genes = genes)
     }
     else {
-      model$comp[[i]] <- gpdisimCreate(Ngenes, Ntf, times, y[[i]], yvar[[i]], options, genes = genes)
+      model$comp[[i]] <- gpsimCreate(Ngenes, Ntf, times, y[[i]], yvar[[i]], options, genes = genes)
     }
     #names(model$comp) <- c(repNames, paste("rep", i, sep=""))
     if (fixedParams) {
@@ -100,114 +84,71 @@ GPrank <- function(preprocData, TF = NULL, targets = NULL, useGPsim = TRUE, filt
     model <- modelExpandParam(model, a)
   }
 
+  if (!is.null(initParams) && all(is.finite(initParams)))
+    model <- modelExpandParam(model, initParams)
+
   optOptions <- optimiDefaultOptions()
 
-  optOptions$maxit <- 300
+  optOptions$maxit <- 3000
   optOptions$optimiser <- "SCG"
-
-  param <- modelExtractParam(model)
 
   cat (c("\n Optimizing genes", genes, sep=" "))
 
-  model <- modelOptimise(model, optOptions)
+  if (!dontOptimise)
+    model <- modelOptimise(model, optOptions)
 
   model <- modelUpdateProcesses(model)
 
-  return (model)
+  model$allArgs <- list(TF=TF, targets=targets, useGpdisim=useGpdisim, randomize=randomize, addPriors=addPriors, fixedParams=fixedParams, initParams=initParams, initialZero=initialZero, fixComps=fixComps, timeSkew=timeSkew, dontOptimise=dontOptimise)
+
+  return (GPmodel(model))
 }
 
 
 
-GPrankTargets <- function(preprocData, TF = NULL, knownTargets = NULL, testTargets = NULL, filterLimit = 1.5, useMedians = TRUE, returnScoreList = TRUE, returnModels = FALSE) {
+GPrankTargets <- function(preprocData, TF = NULL, knownTargets = NULL, testTargets = NULL, filterLimit = 1.8, returnModels = FALSE, options = NULL, scoreSaveFile = NULL) {
 
-  genes <- c(TF, knownTargets, testTargets)
+  if (is.null(testTargets))
+    testTargets <- preprocData@genes
 
-  if (length(genes) < 2) stop("There are too few genes in input.")
+  testTargets <- names(which(preprocData@zScores[testTargets] > filterLimit))
 
-  # searching for the data of the specified genes
-  searchedData <- searchProcessedData(preprocData, genes)
+  if (length(testTargets) < 1)
+    stop("No test targets passed filtering")
+  
+  # The variable useGpdisim determines whether GPDISIM is used in creating the 
+  # models. GPSIM (default) is used if no TF has been specified.
+  useGpdisim = !is.null(TF)
 
-  # Filtering the genes based on the calculated ratios. If the limit is 0, all genes are accepted.
-  genes <- filterGenes(searchedData$ratioData, filterLimit, useMedians)
-
-  if (length(genes) < 2) stop("Too few genes passed the filtering.")
-
-  # searching for the data of the genes that passed the filtering
-  searchedData <- searchProcessedData(searchedData, genes)
-
-  # testing whether the TF passed filtering
-  if (!is.null(TF)) {
-    if (!genePassedFiltering(TF, genes)) {
-      TF <- NULL
-    }
-  }
-
-  # counter for the next passed gene
-  k <- 1
-
-  passedKnownTargets <- array()
-
-  # testing whether the known targets passed filtering
-  if (!is.null(knownTargets)) {
-    for (i in 1:length(knownTargets)) {
-      currentTarget <- knownTargets[i]
-      if (genePassedFiltering(currentTarget, genes)) {
-        passedKnownTargets[k] <- currentTarget
-        k <- k + 1
-      }
-    }
-    knownTargets <- passedKnownTargets
-  }
-
-  k <- 1
-
-  passedTestTargets <- array()
-
-  # testing whether the test targets passed filtering
-  if (!is.null(testTargets)) {
-    for (i in 1:length(testTargets)) {
-      currentTarget <- testTargets[i]
-      if (genePassedFiltering(currentTarget, genes)) {
-        passedTestTargets[k] <- currentTarget
-        k <- k + 1
-      }
-    }
-    testTargets <- passedTestTargets
-  }
-
-
-  # The variable useGPsim determines whether GPsim is used in creating the 
-  # models. If its value is false, GPdisim is used. GPsim is used if no TF
-  # has been specified.
-  useGPsim = is.null(TF)
-
-  if (useGPsim && is.null(knownTargets)) stop("There are no known targets for GPsim.")
+  if (!useGpdisim && is.null(knownTargets)) stop("There are no known targets for GPSIM.")
 
   numberOfKnownTargets <- length(knownTargets)
 
-  logLikelihoods <- array(dim = length(testTargets) + 1)
-  rankedModels <- array(list(NULL), length(testTargets) + 1)
-  modelParams <- array(list(NA), length(testTargets) + 1)
+  logLikelihoods <- rep(NA, length.out=length(testTargets))
+  modelParams <- list()
+  modelArgs <- list()
+  if (returnModels)
+    rankedModels <- list()
 
   baseLineParameters <- NULL
   fixedParams <- FALSE
 
   genes <- list()
 
-  if (!is.null(knownTargets) && length(knownTargets) > 0) {
-    GPsimUses <- array(dim = length(testTargets) + 1)
+  if (!is.null(options)) {
+    allArgs <- options
+    allArgs$useGpdisim <- useGpdisim
   }
-  else {
-    GPsimUses <- array(dim = length(testTargets))
-  }
-
+  else
+    allArgs <- list(useGpdisim=useGpdisim)
+  
+  ## CHECKME!
   if (!is.null(knownTargets) && length(knownTargets) > 0) {
-    baseLineData <- formModel(searchedData, TF, knownTargets, useGPsim)
-    logLikelihoods[1] <- baseLineData$ll
-    modelParams[[1]] <- baseLineData$params
-    rankedModels[[1]] <- baseLineData$model
-    genes[[1]] <- c(TF, knownTargets)
-    GPsimUses[1] <- useGPsim
+    baseLineData <- formModel(preprocData, TF, knownTargets, allArgs=allArgs)
+    baselogLikelihoods[1] <- baseLineData$ll
+    basemodelParams[[1]] <- baseLineData$params
+    baserankedModels[[1]] <- baseLineData$model
+    basegenes[[1]] <- c(TF, knownTargets)
 
     parameters <- modelExtractParam(baseLineData$model)
     baseLineParameters <- array(dim = c(1, length(parameters) + 3))
@@ -216,79 +157,51 @@ GPrankTargets <- function(preprocData, TF = NULL, knownTargets = NULL, testTarge
     baseLineParameters[(t+2):(t+1+numberOfKnownTargets)] <- parameters[t:(t+numberOfKnownTargets-1)]
 
     fixedParams <- TRUE
+    allArgs$fixedParams <- TRUE
+    allArgs$initParams <- baseLineParameters
+    allArgs$fixedComps <- 1:numberOfKnownTargets
   }
 
   if (length(testTargets) > 0) {
     for (i in 1:length(testTargets)) {
-      returnData <- formModel(searchedData, TF, knownTargets, testTargets[i], useGPsim, fixedParams, initParams = baseLineParameters, fixComps = 1:5)
-      if (is.null(knownTargets)) {
-        logLikelihoods[i] <- returnData$ll
-        modelParams[[i]] <- returnData$params
+      returnData <- formModel(preprocData, TF, knownTargets, testTargets[i], allArgs = allArgs)
+
+      logLikelihoods[i] <- returnData$ll
+      modelParams[[i]] <- returnData$params
+      modelArgs[[i]] <- returnData$model@model$allArgs
+      if (returnModels)
         rankedModels[[i]] <- returnData$model
-        genes[[i]] <- c(TF, knownTargets, testTargets[i])
-        GPsimUses[i] <- useGPsim
-      }
-      else {
-        logLikelihoods[i+1] <- returnData$ll
-        modelParams[[i+1]] <- returnData$params
-        rankedModels[[i+1]] <- returnData$model
-        genes[[i+1]] <- c(TF, knownTargets, testTargets[i])
-        GPsimUses[i+1] <- useGPsim
+      genes[[i]] <- testTargets[[i]]
+
+      if (!is.null(scoreSaveFile)) {
+        scoreList <- scoreList(params = modelParams, LLs = logLikelihoods, genes = genes, modelArgs = modelArgs, knownTargets = knownTargets, TF = TF)
+        save(scoreList, file=scoreSaveFile)
       }
     }
   }
 
-  # Sort the log likelihoods.
-  sortedValues <- sort(logLikelihoods, decreasing = TRUE, index.return = TRUE)
-  LLs <- sortedValues$x
-  sortedIndices <- sortedValues$ix
+  scoreList <- scoreList(params = modelParams, LLs = logLikelihoods, genes = genes, modelArgs = modelArgs, knownTargets = knownTargets, TF = TF)
 
-  # Sort the models based on the log likelihoods.
-  sortedModels <- array(dim = length(sortedIndices))
-  sortedModelParams <- array(dim = length(sortedIndices))
-
-  for (i in 1:length(sortedIndices)) {
-    sortedModels[i] <- rankedModels[sortedIndices[i]]
-    sortedModelParams[i] <- modelParams[sortedIndices[i]]
-  }
-
-  if (returnScoreList && returnModels) {
-    data <- list()
-    data$scoreList <- scoreList(params = sortedModelParams, LLs = LLs, genes = genes, useGPsim = GPsimUses)
-    data$models <- sortedModels
-    return (data)
-  }
-
-  if (returnScoreList) {
-    scoreList <- scoreList(params = sortedModelParams, LLs = LLs, genes = genes, useGPsim = GPsimUses)
+  if (returnModels)
+    return (list(scores=scoreList, models=rankedModels))
+  else
     return (scoreList)
-  }
-
-  if (returnModels) {
-    return (sortedModels)
-  }
 }
 
 
 
-GPrankTFs <- function(preprocData, TFs = NULL, targets = NULL, filterLimit = 1.5, useMedians = TRUE, returnScoreList = TRUE, returnModels = FALSE) {
+GPrankTFs <- function(preprocData, TFs = NULL, targets = NULL, filterLimit = 1.5, returnScoreList = TRUE, returnModels = FALSE) {
 
-  if (is.null(targets)) stop("There are no targets for GPsim.")
+  if (is.null(targets)) stop("No targets specified.")
 
   numberOfTargets <- length(targets)
 
   genes = c(TFs, targets)
 
-  # searching for the data of the specified genes
-  searchedData <- searchProcessedData(preprocData, genes)
-
   # Filtering the genes based on the calculated ratios. If the limit is 0, all genes are accepted.
-  genes <- filterGenes(searchedData$ratioData, filterLimit, useMedians)
+  genes <- filterGenes(preprocData$ratioData, filterLimit)
 
   if (length(genes) < 2) stop("Too few genes passed the filtering.")
-
-  # searching for the data of the genes that passed the filtering
-  searchedData <- searchProcessedData(searchedData, genes)
 
   # counter for the next passed gene
   k <- 1
@@ -347,7 +260,7 @@ GPrankTFs <- function(preprocData, TFs = NULL, targets = NULL, filterLimit = 1.5
 
   if (numberOfTargets > 1) {
 
-    baseLineData <- formModel(searchedData, TF = NULL, targets, useGPsim = TRUE)
+    baseLineData <- formModel(preprocData, TF = NULL, targets, useGPsim = TRUE)
     logLikelihoods[1] <- baseLineData$ll
     modelParams[[1]] <- baseLineData$params
     rankedModels[[1]] <- baseLineData$model
@@ -364,7 +277,7 @@ GPrankTFs <- function(preprocData, TFs = NULL, targets = NULL, filterLimit = 1.5
   }
 
   for (i in 1:length(TFs)) {
-    returnData <- formModel(searchedData, TF = TFs[i], targets, useGPsim = FALSE, fixedParams = TRUE, initParams = baseLineParameters, fixComps = 1:5)
+    returnData <- formModel(preprocData, TF = TFs[i], targets, useGPsim = FALSE, fixedParams = TRUE, initParams = baseLineParameters, fixComps = 1:5)
     logLikelihoods[i+1] <- returnData$ll
     modelParams[[i+1]] <- returnData$params
     rankedModels[[i+1]] <- returnData$model
@@ -404,54 +317,52 @@ GPrankTFs <- function(preprocData, TFs = NULL, targets = NULL, filterLimit = 1.5
 
 
 
-formModel <- function(preprocData, TF = NULL, knownTargets = NULL, testTarget = NULL, useGPsim = TRUE, fixedParams = FALSE, initParams = NULL, fixComps = 1) {
+formModel <- function(preprocData, TF = NULL, knownTargets = NULL, testTarget = NULL, allArgs = NULL) {
 
-    if (!is.null(testTarget)) {
-      # taking a test target gene
-      knownTargets <- append(knownTargets, testTarget)
+  if (!is.null(testTarget))
+    targets <- append(knownTargets, testTarget)
+  else
+    targets <- knownTargets
+
+  error1 <- TRUE
+  error2 <- TRUE
+
+  tryCatch({
+    model <- GPLearn(preprocData, TF, targets, allArgs = allArgs)
+    error1 <- FALSE
+  }, error = function(ex) {
+    cat("Stopped due to an error.\n")
+  })
+
+  if (error1) {
+    success <- FALSE
+    i <- 0
+    while (!success && i < 10) {
+      tryCatch({
+        cat("Trying again with different parameters.\n")
+        model <- GPLearn(preprocData, TF, targets, randomize = TRUE, allArgs = allArgs)
+        success <- TRUE
+        error2 <- FALSE
+      }, error = function(ex) {
+        cat("Stopped due to an error.\n")
+      })
+      i <- i + 1
     }
+  }
+  else {
+    error2 <- FALSE
+  }
 
-    error1 <- TRUE
-    error2 <- TRUE
-
-    tryCatch({
-      model <- GPrank(preprocData, TF, knownTargets, useGPsim, fixedParams = fixedParams, initParams = initParams, fixComps = fixComps)
-      error1 <- FALSE
-    }, error = function(ex) {
-      cat("Stopped due to an error.\n")
-    })
-
-    if (error1) {
-      success <- FALSE
-      i <- 0
-      while (!success && i < 10) {
-        tryCatch({
-	  cat("Trying again with different parameters.\n")
-  	  model <- GPrank(preprocData, TF, knownTargets, useGPsim, randomize = TRUE, fixedParams = fixedParams, initParams = initParams, fixComps = fixComps)
-          success <- TRUE
-          error2 <- FALSE
-        }, error = function(ex) {
-          cat("Stopped due to an error.\n")
-        })
-        i <- i + 1
-      }
-    }
-
-    else {
-      error2 <- FALSE
-    }
-
-    if (error2) {
-      logLikelihood <- -Inf
-      params <- NA
-      rankedModel <- NA
-    }
-
-    else {
-      logLikelihood <- logLikelihood(model)
-      params <- modelExtractParam(model)
-      rankedModel <- model
-    }
+  if (error2) {
+    logLikelihood <- -Inf
+    params <- NA
+    rankedModel <- NA
+  }
+  else {
+    logLikelihood <- modelLogLikelihood(model)
+    params <- modelExtractParam(model)
+    rankedModel <- model
+  }
 
   returnData <- list()
   returnData$ll <- logLikelihood
@@ -460,6 +371,20 @@ formModel <- function(preprocData, TF = NULL, knownTargets = NULL, testTarget = 
   return(returnData)
 }
 
+
+generateModels <- function(preprocData, scores) {
+  models <- list()
+
+  # recreate the models for each gene in the scoreList
+  for (i in seq(along=scores@params)) {
+    args <- scores@modelArgs[[i]]
+    args$initParams <- scores@params[[i]]
+    args$dontOptimise <- TRUE
+    models[[i]] <- GPLearn(preprocData, allArgs=args)
+  }
+
+  return (models)
+}
 
 
 genePassedFiltering <- function(testedGene, approvedGenes) {
@@ -476,96 +401,79 @@ genePassedFiltering <- function(testedGene, approvedGenes) {
 
 
 searchProcessedData <- function(preprocData, searchedGenes) {
+  times <- preprocData@times
 
-  y <- preprocData$y
-  yvar <- preprocData$yvar
-  times <- preprocData$times
-  genes <- preprocData$genes
-  scale <- preprocData$scale
-  ratioData <- preprocData$ratioData
-
-  numberOfRows <- length(times)
-  Nrep <- length(y)
-
-  #counting the number of found genes
-
-  #counter for found genes
-  k <- 0
-
-  # for each specified gene
-  for (i in 1:length(searchedGenes)) {
-    searchedGene <- searchedGenes[i]
-
-    # for each gene of the data
-    for (j in 1:length(genes)) {
-      if (!is.na(charmatch(searchedGene, genes[j]))) {
-        k <- k + 1
-      }
-    }
+  y <- list()
+  yvar <- list()
+  for (i in seq(along=preprocData@y)) {
+    y[[i]] <- preprocData@y[[i]][,searchedGenes]
+    yvar[[i]] <- preprocData@yvar[[i]][,searchedGenes]
   }
 
-  foundGenes <- array(dim = k)
-  foundY <- list()
-  foundYvar <- list()
-  foundRatioData <- list()
-  foundRatioData$ratios <- list()
-  foundRatioData$means <- list()
-  foundRatioData$medians <- list()
+  genes <- preprocData@genes[searchedGenes]
 
-  for (m in 1:Nrep) {
-    foundY[[m]] <- array(dim = c(numberOfRows, k))
-    foundYvar[[m]] <- array(dim = c(numberOfRows, k))
-    foundRatioData$ratios[[m]] <- array(dim = c(numberOfRows, k))
-    foundRatioData$means[[m]] <- array(dim = c(k))
-    foundRatioData$medians[[m]] <- array(dim = c(k))
-  }
-
-  #resetting the counter
-  k <- 0
-
-  #copying the data related to the found genes
-
-  # for each specified gene
-  for (i in 1:length(searchedGenes)) {
-    searchedGene <- searchedGenes[i]
-
-    # for each gene of the data
-    for (j in 1:length(genes)) {
-      if (!is.na(charmatch(searchedGene, genes[j]))) {
-        k <- k + 1
-        foundGenes[k] <- searchedGene
-	for (m in 1:Nrep) {
-	  foundRatioData$means[[m]][k] <- ratioData$means[[m]][j]
-	  foundRatioData$medians[[m]][k] <- ratioData$medians[[m]][j]
-          for (l in 1: numberOfRows) {
-            foundY[[m]][l, k] <- y[[m]][l, j]
-            foundYvar[[m]][l, k] <- yvar[[m]][l, j]
-            foundRatioData$ratios[[m]][l, k] <- ratioData$ratios[[m]][l, j]
-          }
-	}
-      }
-    }
-  }
-
-  foundRatioData$genes <- foundGenes
-
-  newData <- list(y = foundY, yvar = foundYvar, genes = foundGenes, times = times, scale = scale, ratioData = foundRatioData)
+  newData <- list(y = y, yvar = yvar, genes = genes, times = times)
   return (newData)
 }
 
 
 setClass("scoreList", 
-	representation(params = "list", LLs = "array", genes = "list", useGPsim = "array"))
+	representation(params = "list", LLs = "numeric", genes = "list", modelArgs = "list", knownTargets = "character", TF = "character"))
 
 	#prototype = list(params = list(), LLs = array(), genes = list(), useGPsim = array()))
 
 
-scoreList <- function(params = list(), LLs = array(), genes = list(), useGPsim = array()) {
+scoreList <- function(params, LLs, genes, modelArgs, knownTargets, TF) {
+  if (is.null(knownTargets))
+    knownTargets <- ""
 
-  new("scoreList", params = params, LLs = LLs, genes = genes, useGPsim = useGPsim)
+  if (is.null(TF))
+    TF <- ""
+
+  names(params) <- genes
+  names(modelArgs) <- genes
+  names(LLs) <- genes
+  
+  new("scoreList", params = params, LLs = LLs, genes = genes, modelArgs = modelArgs, knownTargets = knownTargets, TF = TF)
 }
 
 
 is.scoreList <- function(object) {
   return (class(object) == "scoreList")
 }
+
+setMethod("show", "scoreList",
+          function(object) {
+            if (object@TF == "")
+              cat("Score list of", length(object@LLs), "genes.\n")
+            else
+              cat("Score list of", length(object@LLs), "genes for TF ", object@TF, ".\n")
+            if (object@knownTargets != "") {
+              cat("Known targets: ")
+              print(object@knownTargets)
+            }
+          })
+
+setClass("GPmodel", 
+	representation(model = "list", type = "character"))
+
+
+GPmodel <- function(model) {
+  new("GPmodel", model = model, type = model$type)
+}
+
+
+is.GPmodel <- function(object) {
+  return (class(object) == "GPmodel")
+}
+
+print.GPmodel <- function(m) {
+  if (m@type == "cgpdisim")
+    gpdisimDisplay(m@model$comp[[1]])
+  else
+    gpsimDisplay(m@model$comp[[1]])
+  cat("  Log-likelihood:", modelLogLikelihood(m), "\n")
+}
+
+setMethod("show", "GPmodel",
+          function(object) { print.GPmodel(object) })

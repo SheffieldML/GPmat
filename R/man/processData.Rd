@@ -1,39 +1,38 @@
 \name{processData}
 \Rdversion{1.0}
 \alias{processData}
-\alias{searchData}
 \title{Processing further data preprocessed by mmgmos}
 \description{
   'processData' processes further data preprocessed by mmgmos in 'preprocess_affy'. The resulting data can then be used as input for the function 'GPrank'.
-
-  'searchData' searches for the data of specified genes from the data preprocessed by mmgmos.
 }
 \usage{
-preprocData <- processData(data, searchedGenes = "100001_at", search = FALSE)
-newData <- searchData(yFull, genes, pcts, searchedGenes, amountOfColumns)
+preprocData <- processData(data, replicates = NULL, searchedGenes = NULL)
 }
 \arguments{
-  \item{data}{The preprocessed data to be used.}
-  \item{searchedGenes}{An array of the genes to be searched if the variable search is true.}
-  \item{search}{A logical value determining whether the preprocessed data is searched for the data of the specified genes.}
-  \item{yFull}{The expression data searched.}
-  \item{genes}{An array of all genes.}
-  \item{pcts}{An array of the percentiles at the 5 used time points.}
-  \item{amountOfColumns}{The amount of columns in the expression data, in other words the amount of time points.}
+  \item{data}{The preprocessed data from mmgMOS to be used.}
+  \item{replicates}{The replicate structure of the data indicating
+    which expression data points belong to which replicates.
+    By default all the data points
+    are assumed to be from same replicate.}
+  \item{searchedGenes}{If set, an array of the genes to be include in
+    the result.}
 }
 \details{
-  In 'processData', the expression data and percentiles are normalized. A normal distribution is then fitted into the data with distfit. The expression data is then rescaled so that average standard deviation of curves is 1. The ratio of the average to the standard deviation of each value in the expression data is also included, as well as a mean and median for each gene, to be used for filtering genes.
+  The expression data and percentiles are normalized. A normal
+  distribution is then fitted into the data with distfit. The expression
+  data is then rescaled so that average standard deviation of curves is
+  1. The ratio of the average to the standard deviation of each value in
+  the expression data is also included, as well as a mean and median for
+  each gene, to be used for filtering genes.
 }
 \value{
   'processData' returns the new processed data containing the expression data, variances, time points, genes and scale values.
-
-  'searchData' returns the data of the specified genes.
 }
 \author{
-  Jonatan Ropponen
+  Jonatan Ropponen, Antti Honkela
 }
 \seealso{
-  \code{\link{GPrank}, \link{preprocess_affy}}.
+  \code{\link{GPLearn, GPrankTargets}}.
 }
 \examples{
 ## missing
