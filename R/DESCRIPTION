@@ -2,9 +2,10 @@ Package: gpsim
 Version: 0.0-1
 Date: 2009-08-06
 Title: GPSIM
-Author: Pei Gao <pg349@medschl.cam.ac.uk>, Antti Honkela <antti.honkela@tkk.fi>
+Author: Pei Gao <pg349@medschl.cam.ac.uk>, Antti Honkela <antti.honkela@tkk.fi>, Jonatan Ropponen <jroppone@cc.hut.fi>
 Maintainer: Antti Honkela <antti.honkela@tkk.fi>
-Depends: R (>= 2.5.0), gplots, Biobase, puma
+Depends: R (>= 2.5.0)
+Imports: gplots, Biobase, puma
 Description: GP Single Input Motif modelling in R
-License: GPL (>= 2)
+License: AGPL-3
 URL: http://www.cs.man.ac.uk/~neill/gpsim/

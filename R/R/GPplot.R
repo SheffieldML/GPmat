@@ -1,11 +1,14 @@
 GPplot <- function(data, savepath = '', doParams = FALSE,
-                   nameMapping = NULL, predt = NULL) {
+                   nameMapping = NULL, predt = NULL, fileOutput=FALSE) {
   require(gplots)
   
   FONTSIZE <- 10;
   LINEWIDTH <- 1;
   MARKERSIZE <- 10;
 
+  if (is.list(data))
+    data <- data[[1]]
+  
   if (is.GPmodel(data))
     model <- data@model
   else {
@@ -41,7 +44,9 @@ GPplot <- function(data, savepath = '', doParams = FALSE,
       return()
     }
     #par(mfrow = c(2, trunc(numPlots / 2 + 0.5)))
-    dev.new()
+    if (!fileOutput)
+      dev.new()
+
     par(mfrow=c(2, 2))
     plot(model$comp[[i]]$predt, model$comp[[i]]$predF,
          ylim=c(min(model$comp[[i]]$predF-2*sqrt(model$comp[[i]]$varF)),

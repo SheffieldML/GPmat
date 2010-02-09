@@ -33,7 +33,7 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL,
   tieWidth <- 1
   tieRBFVariance <- 2
   kernType1$comp[[1]] <- "rbf"
-  for ( i in 1:Ngenes ) {
+  for ( i in seq(1, Ngenes) ) {
     if (model$gaussianInitial)
       kernType1$comp[[i+1]] <- list(type="parametric", realType="disim",
                                     options=list(gaussianInitial=TRUE))
@@ -45,7 +45,7 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL,
 
   if (model$includeNoise) {
     kernType2 <- list(type="multi", comp=array())
-    for ( i in 1:Ngenes+1 )
+    for ( i in seq(1, Ngenes+1) )
       kernType2$comp[i] <- "white"        
 
     if ("singleNoise" %in% names(options) && options$singleNoise) {

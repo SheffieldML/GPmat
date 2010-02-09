@@ -6,8 +6,13 @@ rbfKernParamInit <- function (kern) {
   
   kern$transforms <- list(index=c(1,2), type="positive")
 
-  kern$isStationary=TRUE
+  kern$isStationary <- TRUE
 
+  if ("options" %in% names(kern) && "isNormalised" %in% names(kern$options) && kern$options$isNormalised)
+    kern$isNormalised <- TRUE
+  else
+    kern$isNormalised <- FALSE
+  
   return (kern)
 }
 
@@ -41,6 +46,11 @@ rbfKernExpandParam <- function (kern, params) {
 rbfKernDisplay <- function (kern, spaceNum=0) {
   spacing <- matrix("", spaceNum+1)
   cat(spacing)
+  if ("isNormalised" in names(kern) && kern$isNormalised)
+    cat("Normalised version of the kernel.\n")
+  else
+    cat("Unnormalised version of the kernel.\n")
+  cat(spacing)
   cat("RBF inverse width: ", kern$inverseWidth, " (length scale ", 1/sqrt(kern$inverseWidth), ")\n", sep="")
   cat(spacing)
   cat("RBF variance: ", kern$variance, "\n", sep="")
@@ -56,6 +66,9 @@ rbfKernCompute <- function (kern, x, x2=NULL) {
   wi2 <- 0.5*kern$inverseWidth
   k <- kern$variance*exp(-n2*wi2)
 
+  if ("isNormalised" in names(kern) && kern$isNormalised)
+    k <- k * sqrt(kern$inverseWidth/(2*pi))
+  
   return (k)
 }
 
@@ -72,8 +85,16 @@ rbfKernGradient <- function (kern, x, x2, covGrad) {
   }
 
   g <- array()
-  g[1] <- -0.5*sum(covGrad*k*dist2xx)
-  g[2] <- sum(covGrad*k)/kern$variance
+  if ("isNormalised" in names(kern) && kern$isNormalised) {
+    g[1] <- (0.5*kern$variance/sqrt(2*pi)) *
+      sum(covGrad * k * (1/sqrt(kern$inverseWidth) -
+                         sqrt(kern$inverseWidth)*dist2xx)))
+    g[2] <- sqrt(kern$inverseWidth/(2*pi)) * sum(covGrad*k)/kern$variance
+  }
+  else {
+    g[1] <- -0.5*sum(covGrad*k*dist2xx)
+    g[2] <- sum(covGrad*k)/kern$variance
+  }
 
   if ( any(is.nan(g)) )
     warning("g is NaN.")
@@ -85,5 +106,9 @@ rbfKernGradient <- function (kern, x, x2, covGrad) {
 
 rbfKernDiagCompute <- function (kern, x) {
   k <- matrix(kern$variance, length(x), 1)
+
+  if ("isNormalised" in names(kern) && kern$isNormalised)
+    k <- k * sqrt(kern$inverseWidth/(2*pi))
+
   return (k)
 }

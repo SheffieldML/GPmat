@@ -22,12 +22,17 @@ disimKernParamInit <- function (kern) {
     kern$paramNames <- c("di_decay", "inverseWidth", "di_variance", "decay", "variance", "rbf_variance")
   }
 
+  if ("options" %in% names(kern) && "isNormalised" %in% names(kern$options) && kern$options$isNormalised) {
+    kern$isNormalised <- TRUE
+  }
+  else
+    kern$isNormalised <- FALSE
+
   kern$transforms <- list(index=1:kern$nParams, type="positive")
 
-  kern$isStationary=FALSE
+  kern$isStationary <- FALSE
 
   return (kern)
-
 }
 
 

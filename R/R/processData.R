@@ -89,6 +89,45 @@ processData <- function(data, replicates = NULL, searchGenes = NULL) {
 }
 
 
+processRawData <- function(data, times, replicates=NULL) {
+  yFull <- as.matrix(data)
+  genes <- rownames(data)
+
+  numberOfRows <- length(genes)
+  numberOfColumns <- length(colnames(data))
+
+  if (is.null(replicates))
+    replicates <- rep(1, numberOfColumns)
+  
+  normalisation <- colMeans(yFull) - mean(yFull)
+  zeroArray <- array(0, dim=c(numberOfRows, numberOfColumns))
+
+  # The default operation of sweep is "-".
+  yFull <- yFull + sweep(zeroArray, 2, normalisation)
+
+  yFull <- t(exp(yFull))
+
+  scale <- sd(yFull)
+  scaleMat <- array(1, dim = c(numberOfColumns, 1)) %*% scale
+  yFull <- yFull / scaleMat
+
+  y <- list()
+  yvar <- list()
+
+  repids <- unique(replicates)
+  for (i in seq(along=repids)) {
+    y[[i]] <- yFull[replicates==repids[i],]
+    yvar[[i]] <- 0 * y[[i]]
+  }
+  times <- as.array(times[replicates==repids[1]])
+
+  zScores <- array(NA, dim=length(genes))
+  names(zScores) <- colnames(y[[1]])
+  
+  return (GPdata(y = y, yvar = yvar, times = times, genes = genes, scale = as.array(scale), zScores = zScores, annotation="NA", phenoData=new("AnnotatedDataFrame"), featureData=new("AnnotatedDataFrame")))
+}
+
+
 searchData <- function(yFull, genes, pcts, searchedGenes, numberOfColumns) {
 
   #counting the number of found genes
@@ -139,29 +178,3 @@ searchData <- function(yFull, genes, pcts, searchedGenes, numberOfColumns) {
   newData <- list(yFull = foundY, genes = foundGenes, pcts = foundPcts)
   return (newData)
 }
-
-
-setClass("GPdata", 
-	representation(y = "list", yvar = "list", times = "array",
-                       genes = "character", scale = "array", zScores = "array",
-                       annotation = "character",
-                       phenoData = "AnnotatedDataFrame",
-                       featureData = "AnnotatedDataFrame"))
-
-
-GPdata <- function(y, yvar, times, genes, scale, zScores, annotation, phenoData, featureData) {
-  new("GPdata", y = y, yvar = yvar, times = times, genes = genes, scale = scale, zScores = zScores, annotation=annotation, phenoData=phenoData, featureData=featureData)
-}
-
-is.GPdata <- function(object) {
-  return (class(object) == "GPdata")
-}
-
-print.GPdata <- function(x) {
-  cat("An object of class GPdata:\n")
-  show(x@featureData)
-  show(x@phenoData)
-  cat("Annotation: ", x@annotation)
-}
-
-setMethod("show", "GPdata", function(object) print.GPdata(object))

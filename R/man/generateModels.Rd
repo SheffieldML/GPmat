@@ -7,11 +7,14 @@
   stored in a scoreList.
 }
 \usage{
-models <- generateModels(preprocData, scores)
+models <- generateModels(preprocData, scores, indices=NULL)
 }
 \arguments{
   \item{preprocData}{The preprocessed data to be used.}
-  \item{scores}{A scoreList object containing data of the models to be generated.}
+  \item{scores}{A scoreList object containing data of the models to be
+    generated.}
+  \item{indices}{Indices of the models in the scores list to generate,
+    default=NULL meaning all.}
 }
 %\details{
 %  'generateModels' first creates a model with 'gpsimCreate' or 'gpdisimCreate'. Then 'gpsimExpandParam' or 'gpdisimExpandParam' is used to generate the original models without having to optimize them again.

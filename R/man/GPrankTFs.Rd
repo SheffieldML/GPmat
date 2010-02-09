@@ -27,7 +27,7 @@ data <- GPrankTFs(preprocData, TFs = NULL, targets = NULL, filterLimit = 1.5, us
   Jonatan Ropponen
 }
 \seealso{
-  \code{\link{GPrank}, \link{formModel}, \link{GPrankTargets},  \link{scoreList}, \link{generateModels}}.
+  \code{\link{GPrank}, \link{formModel}, \link{GPrankTargets},  \linkS4class{scoreList}, \link{generateModels}}.
 }
 \examples{
 ## missing
