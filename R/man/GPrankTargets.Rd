@@ -53,7 +53,7 @@ NULL, scoreSaveFile = NULL)
   Jonatan Ropponen, Antti Honkela
 }
 \seealso{
-  \code{\link{GPLearn}, \link{formModel}, \link{GPrankTFs}, \link{scoreList}, \link{generateModels}}.
+  \code{\link{GPLearn}, \link{formModel}, \link{GPrankTFs}, \linkS4class{scoreList}, \link{generateModels}}.
 }
 \examples{
 ## missing

@@ -29,6 +29,12 @@ simKernParamInit <- function (kern) {
     kern$isNegativeS <- FALSE
     kern$transforms <- list(index=1:kern$nParams, type="positive")
   }
+
+  if ("options" %in% names(kern) && "isNormalised" %in% names(kern$options) && kern$options$isNormalised)
+    kern$isNormalised <- TRUE
+  else
+    kern$isNormalised <- FALSE
+  
   kern$isStationary <- FALSE
 
   return (kern)
@@ -61,11 +67,8 @@ simXrbfKernCompute <- function (simKern, rbfKern, t1, t2=t1) {
   K <- lnPart[[2]] * exp(halfSigmaDi*halfSigmaDi - simKern$decay*diffT + lnPart[[1]])
 
   #K <- 0.5*sqrt(simKern$variance)*sqrt(rbfKern$variance)*K*sqrt(pi)*sigma
-  K <- K*sqrt(pi)
-#  if(kern$isNegativeS)
-    K <- 0.5*simKern$sensitivity*K*sigma
-#  else
-#    K <- 0.5*sqrt(simKern$variance)*K*sigma
+  K <- 0.5*simKern$sensitivity*K*sigma*sqrt(pi)
+
   return (K)
 }
 

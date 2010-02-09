@@ -32,7 +32,7 @@ preprocData <- processData(data, replicates = NULL, searchedGenes = NULL)
   Jonatan Ropponen, Antti Honkela
 }
 \seealso{
-  \code{\link{GPLearn, GPrankTargets}}.
+  \code{\link{GPLearn}, \link{GPrankTargets}}.
 }
 \examples{
 ## missing

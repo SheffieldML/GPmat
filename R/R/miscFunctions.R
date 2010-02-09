@@ -46,7 +46,7 @@ modelTieParam <- function (model, paramsList) {
     if ( any(paramInd[1]==columnToDel) )
       stop("Parameters have already been tied.")
 
-    if ( length(paramInd) > 0 )
+    if ( length(paramInd) > 1 )
       for ( j in seq(2,length.out=(length(paramInd)-1)) ) {
         model$paramGroups[paramInd[j], paramInd[1]] <- 1
         if ( any(paramInd[j]==columnToDel) )
@@ -55,7 +55,8 @@ modelTieParam <- function (model, paramsList) {
       }
   }
 
-  model$paramGroups <- model$paramGroups[,-columnToDel]
+  if (length(columnToDel) > 0)
+    model$paramGroups <- model$paramGroups[,-columnToDel]
 
   if ( "nParams" %in% names(model) ) {
     model$nParams <- dim(model$paramGroups)[2]
