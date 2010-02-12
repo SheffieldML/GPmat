@@ -1,9 +1,10 @@
 \documentclass{article}
 \usepackage{amsmath}
 %\usepackage{a4wide}
+\usepackage{bm}
 
-\title{Text S1 for ``Model-based transcription factor
-  target identification with limited data''}
+\title{Supplementary Text S1 for ``A model-based method for
+  transcription factor target identification with limited data''}
 
 
 \author{Antti Honkela et al.}
@@ -31,15 +32,17 @@
 
 \section{Derivation of the Gaussian process model}
 
-The linear system ODEs underlying our model is
+The linear system of ordinary differential equations underlying our model is
 \begin{align}
   \label{eq:translation_ode}
   \frac{dp(t)}{dt} & = f(t) - \delta p(t) \\
   \label{eq:translation_ode}
-  \frac{dm_j(t)}{dt} & = B_j + S_j p(t) - D_j m_j(t).
+  \frac{dm_j(t)}{dt} & = B_j + S_j p(t) - D_j m_j(t),
 \end{align}
+where $f(t)$ denotes the TF mRNA, $p(t)$ the
+TF protein and $m_j(t)$ the target gene mRNA concentration.
 Assuming steady-state initial conditions $p(0) = 0$ and
-$m_j(0) = B_j / D_j$, its solution is
+$m_j(0) = B_j / D_j$, the solution of the system is
 \begin{align}
   \label{eq:protein_ode_sol}
   p(t) & = \exp(-\delta t) \int_0^t f(v) \exp(\delta v) \, dv \\
@@ -47,11 +50,9 @@ $m_j(0) = B_j / D_j$, its solution is
   m_j(t) & = \frac{B_j}{D_j} + S_j \exp(-D_j t) \int_0^t \exp(D_j
   u) \exp(-\delta u) \int_0^u f(v) \exp(\delta v) \, dv \, du.
 \end{align}
-
 Both of these are linear operators of $f(t)$.  Hence, placing a
 Gaussian process prior on $f(t)$ implies a joint Gaussian process
-model over all $(f(t), p(t), m_j(t))$~\cite{Rasmussen2006}.
-
+model over all $(f(t), p(t), m_j(t))$~\cite{Rasmussen2006,Lawrence2007}.
 This Gaussian process is completely characterised by its mean and
 covariance functions.  Assuming $\mathrm{E}[f(t)] = 0$, the above
 solutions (\ref{eq:protein_ode_sol})-(\ref{eq:mrna_ode_sol}) imply
@@ -83,18 +84,22 @@ by repeated application of the identity
 
 \subsection{Covariance function $k_{fp}$}
 
-The covariance $k_{fp}$ is the same as the cross-covariance derived
-in~\cite{Lawrence2007}:
+The covariance of the TF mRNA and TF protein $k_{fp}$ is the same
+as the cross-covariance derived
+in~\cite{Lawrence2007}.  In our model, this is only needed for
+inference of the protein concentration (such as in Figs.~1 and 2).
+The covariance is
 \begin{equation}
   \begin{split}
     k_{fp}(t, t') &= \exp(-\delta t') \int_0^{t'} \exp(\delta u) k_{ff}(u, t) du \\
     &= \frac{\sqrt{\pi}al}{2} \exp\left(\left(\frac{\delta l}{2}\right)^2 + \delta (t - t') \right)
-    [\erf(\delta l / 2 + t/l) - \erf(\delta l / 2 + (t-t')/l)]
+    [\erf(\delta l / 2 + t/l) - \erf(\delta l / 2 + (t-t')/l)].
   \end{split}
 \end{equation}
 
 \subsection{Covariance function $k_{fm_j}$}
 
+The covariance of the TF mRNA and target mRNA $k_{fm_j}$ is
 \begin{multline}
   k_{f m_j}(t, t') = S_j \exp(-D_j t') \int_0^{t'}
   \exp((D_j - \delta) u) \int_0^u \exp(\delta v) k_{ff}(t, v)\, dv\, du \\
@@ -105,12 +110,13 @@ in~\cite{Lawrence2007}:
   -
   \exp\left(\left(\frac{\delta l}{2}\right)^2 + \delta t + D_j t'\right)
   [\erf(\delta l / 2 + t/l) - \erf(\delta l / 2 + (t-t')/l)]
-  \bigg)
+  \bigg).
 \end{multline}
 
 \subsection{Covariance function $k_{pp}$}
 
-Again following~\cite{Lawrence2007},
+Again following~\cite{Lawrence2007}, the covariance of the
+TF protein $k_{pp}$ is
 \begin{align*}
   k_{p p}(t, t') &= \exp(-\delta (t +t')) \int_0^t \exp(\delta u)
   \int_0^{t'} \exp(\delta u') k_{ff}(u, u') du' du \\
@@ -129,9 +135,11 @@ where
        \erf\left(\left(\frac{\delta l}{2}\right) - \frac{t'}{l} \right) -
        \erf\left(\left(\frac{\delta l}{2}\right) \right) \bigg] \bigg\}.
 \end{multline}
+This is only needed for inference of the protein concentrations.
 
 \subsection{Covariance function $k_{pm_j}$}
 
+The covariance of the TF protein and target mRNA $k_{pm_j}$ is
 \begin{multline}
   \frac{k_{p m_j}(t, t')}{S_j \exp(-\delta t - D_j t')} = 
   \int_0^{t'} \exp((D_j - \delta) u') \int_0^t \exp(\delta v) \int_0^{u'}
@@ -156,12 +164,13 @@ where
   \bigg(
   \erf(D_j l/2 - t'/l) - \erf(D_j l/2) \\
   + \exp((D_j + \delta) t) [\erf(D_j l/2 + t/l) - \erf(D_j l/2 + (t-t')/l)]
-  \bigg)
+  \bigg).
 \end{multline}
+This is only needed for inference of the protein concentrations.
 
 \subsection{Covariance function $k_{m_j m_k}$}
 
-The final covariance between target genes is
+The final covariance between target genes $k_{m_j m_k}$ is
 \begin{multline}
   k_{m_j m_k}(t, t') = S_j S_k \exp(-D_j t - D_k t')
   \int_0^t \exp((D_j - \delta) u)
@@ -187,8 +196,29 @@ where
   + \frac{\exp((D_k+D_x)t')}{D_k+D_x}
   [\erf(D_x l/2 + t'/l)
   - \erf(D_x l/2 - (t-t')/l)]
-  \bigg\} \\
+  \bigg\}.
 \end{multline}
+
+\section{Gaussian process inference}
+
+Denoting all the observations of replicate $r$ by $\bm y_r$ and a
+diagonal matrix with their measurement variance parameters by
+$\Sigma_r = \mathrm{diag}(\sigma_{1f}^2, \ldots, \sigma_{nf}^2,
+\{\sigma_{1jm}^2, \ldots, \sigma_{njm}^2\})$, the
+full kernel is $K_r = K + \Sigma_r$, where $K$ can be evaluated using
+the above formulae.
+
+Based on standard Gaussian process regression~\cite{Rasmussen2006},
+the posterior distribution of a vector $\bm x$ consisting of values of
+$f$, $p$ and $m_j$, not necessarily at times of observations, is
+Gaussian with
+\begin{equation}
+  \label{eq:gp_posterior}
+  \bm x | \bm y_r \sim \mathcal{N}(K_{\bm x \bm y} K_r^{-1} \bm y_r,
+  K_{\bm x \bm x} - K_{\bm x \bm y} K_r^{-1} K_{\bm y \bm x}),
+\end{equation}
+where $K_{\bm x \bm y}$ and $K_{\bm x \bm x}$ can again be evaluated
+using the above formulae.
 
 
 %\bibliographystyle{pnas}
