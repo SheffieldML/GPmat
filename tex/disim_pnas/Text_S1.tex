@@ -34,11 +34,11 @@
 The linear system ODEs underlying our model is
 \begin{align}
   \label{eq:translation_ode}
-  \frac{df(t)}{dt} & = f(t) - \delta p(t) \\
+  \frac{dp(t)}{dt} & = f(t) - \delta p(t) \\
   \label{eq:translation_ode}
   \frac{dm_j(t)}{dt} & = B_j + S_j p(t) - D_j m_j(t).
 \end{align}
-Assuming steady-state initial conditions $f(0) = 0$ and
+Assuming steady-state initial conditions $p(0) = 0$ and
 $m_j(0) = B_j / D_j$, its solution is
 \begin{align}
   \label{eq:protein_ode_sol}
@@ -87,7 +87,7 @@ The covariance $k_{fp}$ is the same as the cross-covariance derived
 in~\cite{Lawrence2007}:
 \begin{equation}
   \begin{split}
-    k_{fp}(t, t') &= \exp(-\delta t) \int_0^{t} \exp(\delta u) k_{ff}(u, t') du \\
+    k_{fp}(t, t') &= \exp(-\delta t') \int_0^{t'} \exp(\delta u) k_{ff}(u, t) du \\
     &= \frac{\sqrt{\pi}al}{2} \exp\left(\left(\frac{\delta l}{2}\right)^2 + \delta (t - t') \right)
     [\erf(\delta l / 2 + t/l) - \erf(\delta l / 2 + (t-t')/l)]
   \end{split}
@@ -135,7 +135,7 @@ where
 \begin{multline}
   \frac{k_{p m_j}(t, t')}{S_j \exp(-\delta t - D_j t')} = 
   \int_0^{t'} \exp((D_j - \delta) u') \int_0^t \exp(\delta v) \int_0^{u'}
-  \exp(\delta v') k_{yy}(v, v')\, dv'\, dv\, du' \\
+  \exp(\delta v') k_{ff}(v, v')\, dv'\, dv\, du' \\
   = 
   \frac{\sqrt{\pi}al}{4\delta}\exp\left(\left(\frac{\delta l}{2}\right)^2\right)
   \bigg(

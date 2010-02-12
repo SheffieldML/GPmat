@@ -38,7 +38,8 @@
   identification with limited data}
 
 \author{Antti Honkela\affil{1}{Department of Information and Computer
-    Science, Helsinki University of Technology, Finland}, Neil D.
+    Science, Aalto University School of Science and Technology,
+    Helsinki, Finland}, Neil D.
   Lawrence\affil{2}{School of Computer Science, University of
     Manchester, UK}, Charles Girardot\affil{3}{Genome Biology unit,
     European Molecular Biology Laboratory (EMBL), Heidelberg, Germany},
@@ -165,8 +166,9 @@ better than a simpler approach using correlation when targets display a diverse 
   \caption{Examples of the model fit for two different classes of 
     Gaussian process model fitted to potential targets of the TF Twist. (a) Three independent single-target models
     for likely targets. Red marks denote observed expression
-    levels from~\cite{Tomancak2002} with 2 s.d.\ error bars while blue functions are inferred
-    using the model.  The shaded regions denote 2 s.d.\ confidence
+    levels from~\cite{Tomancak2002} with 2 s.d.\ error bars.
+    The inferred posterior means of the functions are shown in blue
+    and the shaded regions denote 2 s.d.\ posterior confidence
     intervals. (b) A joint multiple-target model for
     the same set of target genes as in (a). It should be noted that
     the multiple-target models used in evaluation have more targets
@@ -319,13 +321,16 @@ fold. Full bootstrap results are in Table S1.
 %and 4910.  The corresponding rankings based on correlation are 241, 13
 %and 5.
 
-\begin{figure}[tb]
+\begin{figure*}[tb]
   \centering
   %\includegraphics[trim=0mm 18mm 0mm 0mm]{dros_global_evaluation}
   \includegraphics{fig3}
-  \caption{Global evaluation results of different rankings as
+  \caption{Evaluation results of different rankings as
     discussed in the text showing the relative frequency of positive
-    predictions among $N$ top-ranking targets.
+    predictions among $N$ top-ranking targets (``global'' evaluations,
+    left) or among $N$ top genes
+    with annotated expression in mesoderm or muscle tissue
+    (``focused'' evaluations, right).
     The dashed line
     denotes the frequency in the full population.
     The first row shows the frequency of targets with ChIP-chip
@@ -340,7 +345,7 @@ fold. Full bootstrap results are in Table S1.
     validation. \label{fig:dros_global_evaluation}
   }
  % \label{fig:dros_global_evaluation}
-\end{figure}
+\end{figure*}
 
 The accuracy of the ranking was first evaluated by looking globally at the fraction of $N$ top-ranking targets that are significantly differentially expressed in knock-outs of the TFs and the fraction
 of targets with ChIP-chip binding within 2000 base
@@ -360,35 +365,36 @@ validation the model-based and correlation-based rankings both provide
 highly significant enrichment in the top 100 and top 250 lists, with
 the single-target model performing best.
 
-\begin{figure}[tb]
-  \centering
-  %\includegraphics[trim=0mm 8mm 0mm 0mm]{dros_focused_evaluation}
-  \includegraphics{fig4}
-  \caption{Evaluation results of different rankings based on
-    ChIP-chip data and differential expression in knock-outs
-    similar to those in
-    Fig.~\ref{fig:dros_global_evaluation} except only considering
-    $N$ top genes
-    with annotated expression in mesoderm or muscle tissue.
-%     as discussed in the text showing the relative frequency of
-%     positive predictions among $N$ top-ranking targets.  The dashed
-%     line denotes the frequency in full population.  The first row
-%     shows the frequency of predicted targets that are significantly
-%     differentially expressed in knock-outs for the TF.  The second row
-%     shows the frequency of targets with ChIP-chip binding within 5 kb
-%     of the gene.  $p$-values results significantly different from
-%     random are denoted by '***': $p < 0.001$, '**': $p < 0.01$, '*':
-%     $p < 0.05$.
-\label{fig:dros_focused_evaluation}
-}
-  %\label{fig:dros_focused_evaluation}
-\end{figure}
+% \begin{figure}[tb]
+%   \centering
+%   %\includegraphics[trim=0mm 8mm 0mm 0mm]{dros_focused_evaluation}
+%   \includegraphics{fig4}
+%   \caption{Evaluation results of different rankings based on
+%     ChIP-chip data and differential expression in knock-outs
+%     similar to those in
+%     Fig.~\ref{fig:dros_global_evaluation} except only considering
+%     $N$ top genes
+%     with annotated expression in mesoderm or muscle tissue.
+% %     as discussed in the text showing the relative frequency of
+% %     positive predictions among $N$ top-ranking targets.  The dashed
+% %     line denotes the frequency in full population.  The first row
+% %     shows the frequency of predicted targets that are significantly
+% %     differentially expressed in knock-outs for the TF.  The second row
+% %     shows the frequency of targets with ChIP-chip binding within 5 kb
+% %     of the gene.  $p$-values results significantly different from
+% %     random are denoted by '***': $p < 0.001$, '**': $p < 0.01$, '*':
+% %     $p < 0.05$.
+% \label{fig:dros_focused_evaluation}
+% }
+%   %\label{fig:dros_focused_evaluation}
+% \end{figure}
 
 Because Twist and Mef2 activities are specific to the mesoderm and
 muscle development, we also looked at accuracy focusing on genes
 with annotated expression in these tissues according to the
 \emph{in situ} data from~\cite{Tomancak2002}. These results are
-illustrated in Fig.~\ref{fig:dros_focused_evaluation}. For the Twist
+illustrated in right half of
+Fig.~\ref{fig:dros_global_evaluation}. For the Twist
 ChIP validation we now observe better performance for the knock-out
 scores although the model-based rankings remain best. However, we
 observe that the correlation ranking is no longer statistically
@@ -458,8 +464,9 @@ series data.
   \centering
   \includegraphics{fig6}
   \caption{Evaluation results similar to those in 
-    Figs.~\ref{fig:dros_global_evaluation} and 
-    \ref{fig:dros_focused_evaluation} for single-target models
+    Fig.~\ref{fig:dros_global_evaluation}
+    %and \ref{fig:dros_focused_evaluation}
+    for single-target models
     for full data (12 time points) and sub-sampled data (7 time points).
     \label{fig:dros_data_size_evaluation}
   }
@@ -469,12 +476,26 @@ series data.
 
 We have shown how a very simple regulation model can be used to rank
 genes according to their likelihood of being targeted by a specific
-TF. The linear differential equation model of regulation we use is a simplification, and in
+TF using their likelihoods under the model.  Genes with a
+near-constant profile may have high likelihoods without being targets,
+but the filtering of weakly expressed genes usually removes these.  It
+is also possible to filter targets using a comparison to a model with
+zero sensitivity, but the proposed approach achieves similar results
+with significantly smaller computational cost.
+The linear differential equation model of regulation we use
+is a simplification, and in
 many cases unrealistic, but it can capture important differences in
 the profiles of target genes due to differences in protein and mRNA
 stability while still keeping the computational load at a level
 that allows us to perform genome-wide scoring using reasonably modest
-computational resources. Our results show
+computational resources without the need for expensive sampling.
+In case of limited data, the linear model can be quite good
+approximation to non-linear models.
+The linear model does not restrict concentrations from being negative
+and occasionally at least the error bars extend to negative values.
+As the parameters and observations are constrained to be positive,
+this is rare and does not seem to affect the ranking performance.
+Our results show
 that the model-based approach presented here can provide a viable alternative or complementary method to the use of
 loss-of-function mutant data for identifying targets. Such an approach
 can be combined with binding location (ChIP-chip or ChIP-seq)
@@ -554,6 +575,13 @@ not fair to their method which really relies on the
 availability of protein measurements.
 It is worth noting that any measurements of
 protein levels could very easily be incorporated in our models as well.
+To evaluate the advantage from using Gaussian processes in our
+approach, we performed a comparison to direct maximum likelihood fit
+of the same differential equation model using the observed TF mRNA
+levels $\hat{f}_i(t_j)$ in trapezoidal quadrature evaluation of
+Eqs.~[\ref{eq:gpsim_f_ode_sol}--\ref{eq:gpsim_f_x_sol}].  The
+results, which are roughly comparable to those with the method of
+Della Gatta, are shown in Fig.~S2.
 
 There are some interesting differences in the ranking results for the two TFs studied
 here. The knock-out scores for Twist are found to be less informative
@@ -637,13 +665,13 @@ the ranking method is available from the authors upon request.
   Under suitable initial conditions, the differential
   equations~[\ref{eq:translation_ode}--\ref{eq:transcription_ode}]
   can be solved to obtain
-  \begin{align*}
-    %\label{eq:gpsim_f_ode_sol}
+  \begin{align}
+    \label{eq:gpsim_f_ode_sol}
     p(t) &= \exp(-\delta t) \int_0^t f(v) \exp(\delta v) dv\ , \\
     m_j(t) &= \frac{B_j}{D_j} + S_j \exp(-D_j t) \int_0^t p(u)
     \exp(D_j u) du\ .
-    %\label{eq:gpsim_f_x_sol}
-  \end{align*}
+    \label{eq:gpsim_f_x_sol}
+  \end{align}
   Using these solutions and assuming a squared exponential covariance
   for $f(t)$, $k_{ff}(t, t') = a \exp( -(t-t')^2/l^2)$, the covariance
   of the TF and target mRNAs is
