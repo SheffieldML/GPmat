@@ -252,6 +252,15 @@ Materials and Methods). This allows us to compute the set of model
 parameters $\theta$ by maximum
 likelihood using gradient-based optimisation. 
 
+We use the likelihood to rank genes according to their fit to the
+regulation model. Genes with a
+near-constant profile may have high likelihoods without being targets,
+but we find that filtering of weakly expressed genes removes most of
+these (see Materials and Methods). It is also possible to filter
+targets using a comparison to a model with
+zero sensitivity but we find that the proposed approach achieves
+similar results with significantly smaller computational cost.
+
 Rather than assuming that the TF protein is primarily under
 transcriptional control, as indicated by
 Eq.~[\ref{eq:translation_ode}], one can alternatively use the idea pioneered
@@ -476,28 +485,20 @@ series data.
 \section{Discussion}
 
 We have shown how a very simple regulation model can be used to rank
-genes according to their likelihood of being targeted by a specific
-TF using their likelihoods under the model.  Genes with a
-near-constant profile may have high likelihoods without being targets,
-but the filtering of weakly expressed genes usually removes these.  It
-is also possible to filter targets using a comparison to a model with
-zero sensitivity, but the proposed approach achieves similar results
-with significantly smaller computational cost.
-The linear differential equation model of regulation we use
-is a simplification, and in
-many cases unrealistic, but it can capture important differences in
+genes according to their likelihood under a model of transcriptional
+regulation by a TF of interest. The linear differential equation model of regulation we use
+is a simplification, and in many cases unrealistic, but it can capture important differences in
 the profiles of target genes due to differences in protein and mRNA
 stability while still keeping the computational load at a level
 that allows us to perform genome-wide scoring using reasonably modest
 computational resources without the need for expensive sampling.
-In case of limited data, the linear model can be quite good
-approximation to non-linear models.
-The linear model does not restrict concentrations from being negative
-and occasionally at least the error bars extend to negative values.
-As the parameters and observations are constrained to be positive,
-this is rare and does not seem to affect the ranking performance.
-Our results show
-that the model-based approach presented here can provide a viable alternative or complementary method to the use of
+When data are limited then the linear model can provide a sufficiently good
+approximation to a non-linear model. The linear model does not restrict concentrations from being negative
+and occasionally the inferred credible region of functions extends to negative
+values. However, as the parameters and observations are constrained to be positive,
+this is rare and does not seem to affect the ranking performance. Our
+results show that the model-based approach presented here can provide
+a viable alternative or complementary method to the use of
 loss-of-function mutant data for identifying targets. Such an approach
 can be combined with binding location (ChIP-chip or ChIP-seq)
 and spatial expression data to identify a confident set of regulatory
@@ -519,7 +520,13 @@ precision sufficient to obtain a long expression time series over the
 period of interest. For one reason or another most expression time
 series datasets are short~\cite{Ernst2005} and developing inference approaches
 that are applicable to short time series datasets is of great
-practical importance.  
+practical importance. To evaluate the advantage from using Gaussian processes in our
+approach, we performed a comparison to direct maximum likelihood fit
+of the same differential equation model using the observed TF mRNA
+levels $\hat{f}_i(t_j)$ in trapezoidal quadrature evaluation of
+Eqs.~[\ref{eq:gpsim_f_ode_sol}--\ref{eq:gpsim_f_x_sol}]. The
+results, which are roughly comparable to the method of
+Della Gatta discussed below, are shown in Fig.~S2.
 
 Related methods have been proposed for identifying the
 targets of a TF using time series expression data but few of these are suitable given the
@@ -570,19 +577,11 @@ transcriptional control. The results only show significant
 enrichment in global evaluation for top 100 and top 250 and Twist
 focused evaluation for top 250 and are in most cases no better than
 the our models and correlation (see Fig.~S2 for full
-results).
-However, this comparison is
+results). However, this comparison is
 not fair to their method which really relies on the
 availability of protein measurements.
 It is worth noting that any measurements of
 protein levels could very easily be incorporated in our models as well.
-To evaluate the advantage from using Gaussian processes in our
-approach, we performed a comparison to direct maximum likelihood fit
-of the same differential equation model using the observed TF mRNA
-levels $\hat{f}_i(t_j)$ in trapezoidal quadrature evaluation of
-Eqs.~[\ref{eq:gpsim_f_ode_sol}--\ref{eq:gpsim_f_x_sol}].  The
-results, which are roughly comparable to those with the method of
-Della Gatta, are shown in Fig.~S2.
 
 There are some interesting differences in the ranking results for the two TFs studied
 here. The knock-out scores for Twist are found to be less informative
