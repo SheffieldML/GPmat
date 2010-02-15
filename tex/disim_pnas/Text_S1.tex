@@ -214,7 +214,8 @@ $f$, $p$ and $m_j$, not necessarily at times of observations, is
 Gaussian with
 \begin{equation}
   \label{eq:gp_posterior}
-  \bm x | \bm y_r \sim \mathcal{N}(K_{\bm x \bm y} K_r^{-1} \bm y_r,
+  \bm x | \bm y_r \sim 
+  \mathcal{N}(\bm \mu_x + K_{\bm x \bm y} K_r^{-1} (\bm y_r - \bm \mu y),
   K_{\bm x \bm x} - K_{\bm x \bm y} K_r^{-1} K_{\bm y \bm x}),
 \end{equation}
 where $K_{\bm x \bm y}$ and $K_{\bm x \bm x}$ can again be evaluated

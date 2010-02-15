@@ -2,7 +2,10 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{url}
+\usepackage{soul}
 
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3mm}
 
 \newcommand{\myquote}[1]{\begin{quote}#1\end{quote}}
 
@@ -17,8 +20,8 @@ that have helped us improve the paper.
 
 \section*{Reviewer 1}
 
-\begin{itemize}
-\item
+%\begin{itemize}
+%\item
   \begin{quote}
     The discussion is clear and well presented. I think that the
     description of Gaussian Processes is easy to follow, and even
@@ -36,32 +39,40 @@ of vast datasets in very short time. In the present description both
 points may need some expansion.
   \end{quote}
 
-Added to the beginning of Discussion:
-\emph{In case of limited data, the linear model can be quite good
-approximation to non-linear models.
-The linear model does not restrict concentrations from being negative
-and occasionally at least the error bars extend to negative values.
-As the parameters and observations are constrained to be positive,
-this is rare and does not seem to affect the ranking performance.}
+Clarified this in the beginning of Discussion:
+\emph{The linear differential equation model of regulation we use
+is a simplification, and in many cases unrealistic, but it can capture important differences in
+the profiles of target genes due to differences in protein and mRNA
+stability while still keeping the computational load at a level
+that allows us to perform genome-wide scoring using reasonably modest
+computational resources \ul{without the need for expensive sampling.
+When data are limited then the linear model can provide a sufficiently good
+approximation to a non-linear model. The linear model does not restrict concentrations from being negative
+and occasionally the inferred credible region of functions extends to negative
+values. However, as the parameters and observations are constrained to be positive,
+this is rare and does not seem to affect the ranking performance.}}
 
-\item \begin{quote} In the context of the log-likelihood the first
+%\item
+\begin{quote} In the context of the log-likelihood the first
     term may be written/expressed in terms of the Mahalanobis
     distance. And while the manuscript is generally well written, the
     discussion of the ranking requires some classification.
   \end{quote}
 
-The discussion of the ranking in the beginning of Discussion was
-clarified to:
-\emph{We have shown how a very simple regulation model can be used to rank
-genes according to their likelihood of being targeted by a specific
-TF using their likelihoods under the model.  Genes with a
+The following paragraph clarifying the ranking method was added
+under section ``Gaussian process inference for a linear activation
+model'' (end of page 2):
+\emph{We use the likelihood to rank genes according to their fit to the
+regulation model. Genes with a
 near-constant profile may have high likelihoods without being targets,
-but the filtering of weakly expressed genes usually removes these.  It
-is also possible to filter targets using a comparison to a model with
-zero sensitivity, but the proposed approach achieves similar results
-with significantly smaller computational cost.}
+but we find that filtering of weakly expressed genes removes most of
+these (see Materials and Methods). It is also possible to filter
+targets using a comparison to a model with
+zero sensitivity but we find that the proposed approach achieves
+similar results with significantly smaller computational cost.}
 
-\item \begin{quote} I would also like to see some clarification
+%\item
+\begin{quote} I would also like to see some clarification
     regarding the bootstrapping procedure: was the time-course
     bootstrapped? This would clearly destroy much of the information;
     gaussian process regression would be a better method to generate
@@ -82,14 +93,16 @@ the data set of observed genes}
 The derivation of the Gaussian process model in supplementary material
 has been expanded.
 
-\item \begin{quote} A minor concern are the figures; especially
+%\item
+\begin{quote} A minor concern are the figures; especially
     figures 1,2 and 3,4 could perhaps be combined.
   \end{quote}
 
   Figures 3,4 have been combined. Combining figures 1,2 would be
   extremely difficult due to incompatible geometries.
 
-\item \begin{quote} Finallly, in the results section and discussion
+%\item
+  \begin{quote} Finallly, in the results section and discussion
     the authors provide details as to why single target data may
     provide a better fit compared to five targets. I agree entirely
     with this discussion but was left wondering if there is some $n$
@@ -105,16 +118,17 @@ has been expanded.
   the GP as the linear model is too inflexible to capture all the
   different target behaviours simultaneously.
 
-  MAGNUS: SHOULD WE ADD SOMETHING TO THE PAPER? - No need I think.
+  %MAGNUS: SHOULD WE ADD SOMETHING TO THE PAPER? - No need I think.
 
-\end{itemize}
+%\end{itemize}
 
 \newpage
 
 \section*{Reviewer 2}
 
-\begin{itemize}
-\item \begin{quote} The authors describe an approach to the analysis
+%\begin{itemize}
+%\item
+\begin{quote} The authors describe an approach to the analysis
     of gene-expression time-series data that avoids discretization and
     over-fitting by applying the gaussian process approach to
     integrate out the functional parameters allowing fitting of the
@@ -135,12 +149,13 @@ best in our evaluation so is actually the most significant
 contribution of the paper. In addition to these important new
 developments the training set model developed here was described only
 very briefly in the final section of ref. [8] with no
-mathematical detail and no evalution. The present paper is the first to
-provide a very throrough empirical evalution of the performance of the
+mathematical detail and no evaluation. The present paper is the first to
+provide a very thorough empirical evaluation of the performance of the
 GP approach and coincides with the release of new software for
 target ranking that we developed here. 
 
-\item \begin{quote} Are the concentrations allowed to become negative?
+%\item
+\begin{quote} Are the concentrations allowed to become negative?
     This is discussed in the previous articles but not mentioned here,
     so it looks as if this is not considered to be an issue. It seems
     as if this could come up in some of the single-target models,
@@ -155,11 +170,12 @@ making that issue far less significant than in our previous papers.
 
 The following explanation has been added to the beginning of Discussion:
 \emph{The linear model does not restrict concentrations from being negative
-and occasionally at least the error bars extend to negative values.
-As the parameters and observations are constrained to be positive,
+and occasionally the inferred credible region of functions extends to negative
+values. However, as the parameters and observations are constrained to be positive,
 this is rare and does not seem to affect the ranking performance.}
 
-\item \begin{quote} From the Results text it sounds like the targets
+%\item
+\begin{quote} From the Results text it sounds like the targets
     are ranked by their model likelihood, but the beginning of the
     Discussion describes ranking genes "according their likelihood of
     being targeted by a specific TF." In the former, the actual
@@ -187,24 +203,27 @@ comparison approach is certainly important in case the proposed
 filtering is not possible (e.g.\ with data from a different platform
 with less sophisticated pre-processing tools).
 
-We have now clarified the very beginning of the Discussion to:
-\emph{We have shown how a very simple regulation model can be used to rank
-genes according to their likelihood of being targeted by a specific
-TF using their likelihoods under the model.  Genes with a
+The following paragraph clarifying the ranking method was added
+under section ``Gaussian process inference for a linear activation
+model'' (end of page 2):
+\emph{We use the likelihood to rank genes according to their fit to the
+regulation model. Genes with a
 near-constant profile may have high likelihoods without being targets,
-but the filtering of weakly expressed genes usually removes these.  It
-is also possible to filter targets using a comparison to a model with
-zero sensitivity, but the proposed approach achieves similar results
-with significantly smaller computational cost.}
+but we find that filtering of weakly expressed genes removes most of
+these (see Materials and Methods). It is also possible to filter
+targets using a comparison to a model with
+zero sensitivity but we find that the proposed approach achieves
+similar results with significantly smaller computational cost.}
 
-\end{itemize}
+%\end{itemize}
 
 \newpage
 
 \section*{Reviewer 3}
 
-\begin{itemize}
-\item \begin{quote}
+%\begin{itemize}
+%\item
+\begin{quote}
 Point 1 - Presentation 
 
 I think I got the gist of how the method works - you model the protein
@@ -227,7 +246,8 @@ The caption of Fig.~1 has been clarified to better stress this:
   and the shaded regions denote 2 s.d.\ posterior confidence
   intervals.}
 
-\item \begin{quote}
+%\item 
+\begin{quote}
 Point 2 - Marginal value of gaussian process model 
 
 There are clearly differences between the success of your model and of
@@ -249,10 +269,11 @@ approach, we performed a comparison to direct maximum likelihood fit
 of the same differential equation model using the observed TF mRNA
 levels $\hat{f}_i(t_j)$ in trapezoidal quadrature evaluation of
 Eqs.~[3--4].  The
-results, which are roughly comparable to those with the method of
-Della Gatta, are shown in Fig.~S2.}
+results show significant enrichment in less than half of
+the evaluation settings (results in Fig.~S2).}
 
-\item \begin{quote} I'm also curious if the model is indirectly
+%\item
+\begin{quote} I'm also curious if the model is indirectly
     selecting for features that might themselves be associated with
     being targets of the TF in question. For example, I would imagine
     the GP models are less sensitive to noise than the correlation
@@ -269,15 +290,16 @@ there is nothing that would explicitly favour genes with certain
 overall level of expression.  That said, genes with low overall
 expression tend to be more noisy, and that is captured by the noise
 estimates we have from pre-processing, which are then handled somewhat
-differetly by different methods.
+differently by different methods.
 
 Anecdotally in the case of Mef2 (Fig.~2), the GP model seems to smooth
 the data quite strongly and therefore misses faster responding genes
 that correlation picks up.
 
-MAGNUS: SHOULD WE ADD SOMETHING TO THE PAPER? - No, too speculative.
+%MAGNUS: SHOULD WE ADD SOMETHING TO THE PAPER? - No, too speculative.
 
-\item \begin{quote} All in all this is my major concern about the
+%\item 
+\begin{quote} All in all this is my major concern about the
     paper - and it's one that runs throughout the field - the authors
     convince me that the method is interesting and has potential, but
     they don't directly ask whether the features of the model they are
@@ -288,6 +310,6 @@ We hope the new comparison to direct maximum likelihood with the ODE
 model that clearly demonstrates the superiority of the GP approach
 addresses this concern.
 
-\end{itemize}
+%\end{itemize}
 
 \end{document}

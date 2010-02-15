@@ -39,12 +39,13 @@
 
 \author{Antti Honkela\affil{1}{Department of Information and Computer
     Science, Aalto University School of Science and Technology,
-    Helsinki, Finland}, Neil D.
-  Lawrence\affil{2}{School of Computer Science, University of
-    Manchester, UK}, Charles Girardot\affil{3}{Genome Biology unit,
+    Helsinki, Finland},
+  Charles Girardot\affil{2}{Genome Biology unit,
     European Molecular Biology Laboratory (EMBL), Heidelberg, Germany},
-  E. Hilary Gustafson\affil{3}{}, Ya-Hsin Liu\affil{3}{}, Eileen
-  E.M. Furlong\affil{3}{} \and Magnus Rattray\affil{2}{}}
+  E. Hilary Gustafson\affil{2}{}, Ya-Hsin Liu\affil{2}{}, Eileen
+  E.M. Furlong\affil{2}{}, Neil D.
+  Lawrence\affil{3}{School of Computer Science, University of
+    Manchester, UK} \and Magnus Rattray\affil{3}{}}
 
 \contributor{Submitted to Proceedings of the National Academy of Sciences
 of the United States of America}
@@ -242,13 +243,14 @@ log-likelihood is
     L(\theta) & = \log p(\bm y_1,\bm y_2,\ldots,\bm y_{R}|\theta) \\
     & = \sum_{r=1}^{R} \log \!\int 
     \!\!p(\bm y_r|f,\bm m)p(f,\bm m|\theta) \, \mathrm{d}\!f\mathrm{d}\bm m\\
-    & = \sum_{r=1}^{R} \left[-\frac{1}{2}\bm y_r^\mathrm{T} K_r^{-1} \bm y_r -
-      \frac{1}{2}\log|K_r|\right] -nR\log 2\pi
+    & = \sum_{r=1}^{R} \left[-\frac{1}{2}(\bm y_r - \bm \mu_y)^\mathrm{T} K_r^{-1} (\bm y_r - \bm \mu_y) -
+      \frac{1}{2}\log|K_r|\right] -C      %nR\log 2\pi
   \end{split}
 \end{equation*}
-where $K_r$ is the covariance matrix for the
+where $\bm \mu_y$ is the mean and $K_r$ is the covariance matrix for the
 noise-corrupted dataset $\bm y_r$ under the Gaussian process prior (see
-Materials and Methods). This allows us to compute the set of model
+Materials and Methods), and $C$ is a constant independent of the
+parameters.  This allows us to compute the set of model
 parameters $\theta$ by maximum
 likelihood using gradient-based optimisation. 
 
@@ -466,8 +468,10 @@ points. We sub-sampled the data keeping only 7 time points most
 relevant in defining the Twist expression profile
 (2,3,4,5,6,8,10 hours). The results in this case, as shown in
 Fig.~\ref{fig:dros_data_size_evaluation}, are very similar to 
-those obtained using the complete data showing that the model-based
-approach presented here can be applied to typical short wild-type time
+those obtained using the complete data showing that 
+%the model-based approach presented here
+our approach
+can be applied to typical short wild-type time
 series data.
 
 \begin{figure}[tb]
@@ -493,7 +497,8 @@ stability while still keeping the computational load at a level
 that allows us to perform genome-wide scoring using reasonably modest
 computational resources without the need for expensive sampling.
 When data are limited then the linear model can provide a sufficiently good
-approximation to a non-linear model. The linear model does not restrict concentrations from being negative
+approximation to a non-linear model. 
+The linear model does not restrict concentrations from being negative
 and occasionally the inferred credible region of functions extends to negative
 values. However, as the parameters and observations are constrained to be positive,
 this is rare and does not seem to affect the ranking performance. Our
@@ -525,8 +530,8 @@ approach, we performed a comparison to direct maximum likelihood fit
 of the same differential equation model using the observed TF mRNA
 levels $\hat{f}_i(t_j)$ in trapezoidal quadrature evaluation of
 Eqs.~[\ref{eq:gpsim_f_ode_sol}--\ref{eq:gpsim_f_x_sol}]. The
-results, which are roughly comparable to the method of
-Della Gatta discussed below, are shown in Fig.~S2.
+results show significant enrichment in less than half of
+the evaluation settings (results in Fig.~S2).
 
 Related methods have been proposed for identifying the
 targets of a TF using time series expression data but few of these are suitable given the
@@ -548,13 +553,15 @@ Nevertheless, the use of a training set to infer the
 TF concentration from targets was a very elegant solution to the
 problem of dealing with TFs activated post-translation. This
 approach also fits very naturally into the Gaussian process
-framework as we have shown~\cite{Gao2008}. Such a scheme was unnecessary in the application considered
-here, where the TFs of interest were known to be transcriptionally
+framework as we have shown~\cite{Gao2008}. Such a scheme was unnecessary in
+this application,
+where the TFs of interest were known to be transcriptionally
 regulated, but can be applied using our techniques in other
-contexts. Unfortunately it is difficult for us to compare our method
-directly with the results of Barenco {\em et al.} since their results
-were only validated using the positive and negative targets that they identified,
-rather than an unbiased test set. 
+contexts.
+% Unfortunately it is difficult for us to compare our method
+% directly with the results of Barenco {\em et al.} since their results
+% were only validated using the positive and negative targets that they identified,
+% rather than an unbiased test set. 
 
 Another relevant method was introduced by Della Gatta {\em et
   al.}~\cite{Gatta2008}. They also use a linear regulation model but
@@ -568,20 +575,25 @@ protein; such data are not readily available in most cases. As with
 Barenco's approach it is difficult for us to compare performance on
 the data they used in~\cite{Gatta2008} because they only validated
 selected predictions of their model. In our application we do not have
-access to any protein data and therefore cannot apply their method as
-intended. We were interested in whether
-their approach to modelling indirect regulation would be helpful in
-our case. Therefore we applied their approach using mRNA data as a
-proxy for protein data which is not unreasonable for TFs under
-transcriptional control. The results only show significant
-enrichment in global evaluation for top 100 and top 250 and Twist
-focused evaluation for top 250 and are in most cases no better than
-the our models and correlation (see Fig.~S2 for full
-results). However, this comparison is
-not fair to their method which really relies on the
-availability of protein measurements.
-It is worth noting that any measurements of
-protein levels could very easily be incorporated in our models as well.
+access to any protein data and therefore were only able to compare to
+their approach using mRNA data as a proxy for protein data.
+The results of this somewhat unfair comparison show significant
+enrichment in only slightly more than a half of the evaluation
+settings.
+%  cannot apply their method as
+% intended. We were interested in whether
+% their approach to modelling indirect regulation would be helpful in
+% our case. Therefore we applied their approach using mRNA data as a
+% proxy for protein data which is not unreasonable for TFs under
+% transcriptional control. The results only show significant
+% enrichment in global evaluation for top 100 and top 250 and Twist
+% focused evaluation for top 250 and are in most cases no better than
+% the our models and correlation (see Fig.~S2 for full
+% results). However, this comparison is
+% not fair to their method which really relies on the
+% availability of protein measurements.
+It is worth noting that any measurements of protein levels to help
+their model could very easily be incorporated in our models as well.
 
 There are some interesting differences in the ranking results for the two TFs studied
 here. The knock-out scores for Twist are found to be less informative
@@ -637,7 +649,8 @@ biological systems.
 
 \subsection{Availability}
 Complete Matlab code for repeating the experiments is available at
-\texttt{http://www.cis.hut.fi/ahonkela/gpdisim/}.  An R implementation of
+\texttt{http://users.ics.tkk.fi/ahonkela/gpdisim/}.
+An R implementation of
 the ranking method is available from the authors upon request.
 
 \begin{materials}
@@ -659,9 +672,9 @@ the ranking method is available from the authors upon request.
   were considered weakly expressed and removed from the dataset.  The threshold
   was selected by visually inspecting models for candidate targets:
   practically all targets below the threshold elicited a
-  non-informative constant response from the model.
+  non-informative constant response. % from the model.
   
-  \section{Covariance of the Gaussian Process}
+  \section{The Gaussian process model}
   Under suitable initial conditions, the differential
   equations~[\ref{eq:translation_ode}--\ref{eq:transcription_ode}]
   can be solved to obtain
@@ -672,6 +685,8 @@ the ranking method is available from the authors upon request.
     \exp(D_j u) du\ .
     \label{eq:gpsim_f_x_sol}
   \end{align}
+  Assuming $\mathrm{E}[f(t)]=0$, $\mathrm{E}[p(t)]=0$ and
+  $\mathrm{E}[m_j(t)]=\frac{B_j}{D_j}$.
   Using these solutions and assuming a squared exponential covariance
   for $f(t)$, $k_{ff}(t, t') = a \exp( -(t-t')^2/l^2)$, the covariance
   of the TF and target mRNAs is
@@ -717,7 +732,7 @@ the ranking method is available from the authors upon request.
     \bigg\}\ ,
   \end{multline*}
   where $\gamma_x = \frac{D_x l}{2}$.
-  Other covariances needed for inference of $p$ are derived in Text S1.
+  Full model for inference of $p$ is derived in Text S1.
 
   \section{Training set ranking}
   The training set or multiple-target ranking was formed by fitting
@@ -858,7 +873,7 @@ Pearson, RD et~al.
 \bibitem{Khanin2006}
 Khanin, R, Vinciotti, V, Wit, E
 \newblock (2006) Reconstructing repressor protein levels from expression of
-  gene targets in escherichia coli.
+  gene targets in {E}scherichia coli.
 \newblock \emph{Proc Natl Acad Sci U S A} 103:18592--18596.
 
 \bibitem{Sandmann2007}
