@@ -50,7 +50,7 @@ $m_j(0) = B_j / D_j$, the solution of the system is
   m_j(t) & = \frac{B_j}{D_j} + S_j \exp(-D_j t) \int_0^t \exp(D_j
   u) \exp(-\delta u) \int_0^u f(v) \exp(\delta v) \, dv \, du.
 \end{align}
-Both of these are linear operators of $f(t)$.  Hence, placing a
+Both of these are linear operators on $f(t)$.  Hence, placing a
 Gaussian process prior on $f(t)$ implies a joint Gaussian process
 model over all $(f(t), p(t), m_j(t))$~\cite{Rasmussen2006,Lawrence2007}.
 This Gaussian process is completely characterised by its mean and
@@ -65,7 +65,9 @@ be evaluated as expectations
   k_{xy}(t,t') = \mathrm{E}[(x(t) - \mathrm{E}[x(t)])(y(t') - \mathrm{E}[y(t')])],
 \end{equation}
 where $x,y \in \{f, p, m_j\}$.  Assuming the squared exponential
-covariance for $f(t)$,
+covariance\footnote{The form used here differs from standard squared
+  exponential by reparametrisation $2l^2 \rightarrow l^2$ that makes
+  the arguments of $\erf$s simpler.} for $f(t)$,
 \begin{equation}
   \label{eq:sqexp_kernel}
   k_{ff}(t, t') = a \exp\left( -\frac{(t-t')^2}{l^2} \right),
@@ -215,11 +217,12 @@ Gaussian with
 \begin{equation}
   \label{eq:gp_posterior}
   \bm x | \bm y_r \sim 
-  \mathcal{N}(\bm \mu_x + K_{\bm x \bm y} K_r^{-1} (\bm y_r - \bm \mu y),
+  \mathcal{N}(\bm \mu_x + K_{\bm x \bm y} K_r^{-1} (\bm y_r - \bm \mu_y),
   K_{\bm x \bm x} - K_{\bm x \bm y} K_r^{-1} K_{\bm y \bm x}),
 \end{equation}
-where $K_{\bm x \bm y}$ and $K_{\bm x \bm x}$ can again be evaluated
-using the above formulae.
+where $\bm \mu_x$ and $\bm \mu_y$ are the means of $\bm x$ and $\bm
+y$, respectively.  $K_{\bm x \bm y}$ and $K_{\bm x \bm x}$ can again
+be evaluated using the above formulae.
 
 
 %\bibliographystyle{pnas}

@@ -260,17 +260,21 @@ GP? It should be easy to evaluate this.
 \end{quote}
 
 We have performed an additional comparison against direct maximum
-likelihood fit with the same differential equation model which clearly
-demonstrates the superiority of the GP approach.  The new results are
-in Supplementary Fig.~S2 and the following text was added to the
-discussion:
+likelihood fit using a quadrature-based solution of the same
+differential equation model which demonstrates the slight edge given
+by the GP approach.  Note that this simplification of our method is
+also novel.  The results have been included in the text:
 \emph{To evaluate the advantage from using Gaussian processes in our
 approach, we performed a comparison to direct maximum likelihood fit
 of the same differential equation model using the observed TF mRNA
 levels $\hat{f}_i(t_j)$ in trapezoidal quadrature evaluation of
-Eqs.~[3--4].  The
-results show significant enrichment in less than half of
-the evaluation settings (results in Fig.~S2).}
+Eqs.~[3--4]
+(``single-target quadrature'').}
+
+\emph{Overall, the Gaussian process methods tend to perform better than the
+quadrature-based method. The differences are statistically significant
+in focused Twist validation for top 250 list and several Mef2 validation
+settings for top 100 and top 250 lists.}
 
 %\item
 \begin{quote} I'm also curious if the model is indirectly
@@ -306,9 +310,9 @@ that correlation picks up.
     highlighting really account for its success.
 \end{quote}
 
-We hope the new comparison to direct maximum likelihood with the ODE
-model that clearly demonstrates the superiority of the GP approach
-addresses this concern.
+We hope the new comparison to direct maximum-likelihood-type approach
+with the same ODE model that demonstrates the superiority of the GP
+approach addresses this concern.
 
 %\end{itemize}
 
