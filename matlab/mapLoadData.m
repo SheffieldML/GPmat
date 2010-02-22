@@ -990,14 +990,14 @@ switch dataset
   contTest  = 0;
   for i = 1:size(y1, 2)
     ind = find(~isnan(y1(:, i)));
-    if isempty(ind)
+    if isempty(ind) %|| length(ind)<=2 
         contTrain = contTrain + 1;
         indTrain(contTrain) = i;
     end
     y{i} = y1(ind, i);
     X{i} = X1(ind, :);
     ind = find(~isnan(yTest1(:, i)));
-    if isempty(ind)
+    if isempty(ind) %|| length(ind)<=2
         contTest = contTest + 1;
         indTest(contTest) = i;
     end
@@ -1434,7 +1434,16 @@ switch dataset
   X = (1:size(data,2))';
   y = data;
   %
-  XTest = [];  
+  XTest = []; 
+  
+ case 'sensorsTemperature'
+  
+  data = load([baseDir 'temperatureSensor.mat']);
+  X = data.XTrain;
+  y = data.yTrain;
+  XTest = data.XTest;
+  yTest = data.yTest;
+     
   
  otherwise
   error('Unknown data set requested.')
