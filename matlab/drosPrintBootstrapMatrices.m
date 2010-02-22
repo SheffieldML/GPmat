@@ -27,10 +27,10 @@ function print_it(m, mysize, ignore),
 
 [M, N, O] = size(m);
 
-LABELS = {'ST', 'MT', 'CO', 'KO'};
+LABELS = {'ST', 'MT', 'QR', 'CO', 'KO'};
 
-fprintf('\\multicolumn{5}{c|}{Top %d} &\\multicolumn{5}{c|}{Top %d}  & \\multicolumn{5}{c}{Top %d}\\\\\n', mysize);
-fprintf('    & ST  & MT  & CO  & KO &     & ST  & MT  & CO  & KO  &     & ST  & MT  & CO  & KO \\\\\n');
+fprintf('\\multicolumn{6}{c|}{Top %d} &\\multicolumn{6}{c|}{Top %d}  & \\multicolumn{6}{c}{Top %d}\\\\\n', mysize);
+fprintf('    & ST  & MT  & QR  & CO  & KO &     & ST  & MT  & QR  & CO  & KO  &     & ST  & MT  & QR  & CO  & KO \\\\\n');
 
 for k=1:M,
   for j=1:O,

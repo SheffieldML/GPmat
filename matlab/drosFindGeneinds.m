@@ -1,6 +1,6 @@
 function I = drosFindGeneinds(drosdata, genes, incnulls, doprobes),
 
-% DROSGETGENEINDS Find indices of given genes in a data set.
+% DROSFINDGENEINDS Find indices of given genes in a data set.
 % FORMAT
 % DESC Find indices of given genes in a data set.
 % ARG drosdata : any Drosophila data structure
@@ -45,6 +45,10 @@ if ~iscell(genes) && isfield(drosdata, 'geneids'),
     end
   end
 else
+  if ~iscell(genes),
+    genes = {genes};
+  end
+
   if doprobes,
     myfield = 'probes';
   else

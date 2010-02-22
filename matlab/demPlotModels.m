@@ -13,10 +13,9 @@ tf = 'twi';
 plottargets0 = {'FBgn0003486', 'FBgn0033188', 'FBgn0035257'};
 plottargets = {};
 close all;
-if ~exist('m'),
-  for k=1:length(plottargets0),
-    plottargets{k} = drosexp.probes{strcmp(drosexp.genes, plottargets0{k})};
-    
+for k=1:length(plottargets0),
+  plottargets{k} = drosexp.probes{drosFindGeneinds(drosexp, plottargets0(k))};
+  if ~exist('m'),
     m{k} = drosGpdisimLearn(drosexp, drosTF, tf, plottargets{k});
   end
 end

@@ -1,4 +1,4 @@
-CELPATH <- "/home/ahonkela/data/dros_data/embryo_tc_array_data"
+CELPATH <- paste(Sys.getenv("HOME"), "/data/dros_data/embryo_tc_array_data", sep="")
 
 expfiles <- paste(rep(paste("embryo_tc", 2*2:4, sep="_"), each=12), "_", 1:12, ".CEL", sep="")
 expdata <- ReadAffy(filenames=expfiles, celfile.path=CELPATH)
