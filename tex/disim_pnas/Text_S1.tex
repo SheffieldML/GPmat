@@ -7,7 +7,8 @@
   transcription factor target identification with limited data''}
 
 
-\author{Antti Honkela et al.}
+\author{Antti Honkela, Charles Girardot, E. Hilary Gustafson, Ya-Hsin
+  Liu,\\ Eileen E.M. Furlong, Neil D. Lawrence, and Magnus Rattray}
 \date{}
 
 \newcommand{\erf}{\operatorname{erf}}
@@ -93,7 +94,7 @@ inference of the protein concentration (such as in Figs.~1 and 2).
 The covariance is
 \begin{equation}
   \begin{split}
-    k_{fp}(t, t') &= \exp(-\delta t') \int_0^{t'} \exp(\delta u) k_{ff}(u, t) du \\
+    k_{fp}(t, t') &= \exp(-\delta t') \int_0^{t'} \exp(\delta u) k_{ff}(t, u) du \\
     &= \frac{\sqrt{\pi}al}{2} \exp\left(\left(\frac{\delta l}{2}\right)^2 + \delta (t - t') \right)
     [\erf(\delta l / 2 + t/l) - \erf(\delta l / 2 + (t-t')/l)].
   \end{split}

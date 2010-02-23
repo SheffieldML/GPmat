@@ -32,6 +32,8 @@
 %\setcounter{page}{2687} %Set page number here if desired
 %%%%%%%%%%%%
 
+\usepackage{url}
+
 \begin{document}
 
 \title{A model-based method for transcription factor target
@@ -65,7 +67,7 @@ of the United States of America}
   sets without noticeable over-fitting. We assess our method using
   genome-wide Chromatin Immunoprecipitation
   (ChIP-chip) and loss-of-function mutant expression data for two TFs, 
-Twist and Mef2, controlling mesoderm development in {\it Drosophila}. Lists of top-ranked
+  Twist and Mef2, controlling mesoderm development in {\it Drosophila}. Lists of top-ranked
   genes identified by our method are significantly enriched for genes
   close to bound regions identified in the ChIP-chip data and
   for genes that are differentially expressed in
@@ -167,6 +169,8 @@ for these TFs. We demonstrate that a model-based approach is significantly
 better than a simpler approach using correlation when targets display a diverse set of expression profiles. We further show how integrating complementary wild-type spatial
 {\em in situ} expression data can greatly improve target ranking accuracy. 
 
+\section{Gaussian process inference for a linear activation model}
+
 \begin{figure*}[tb]
   \centering
   \includegraphics{fig1}
@@ -183,8 +187,6 @@ better than a simpler approach using correlation when targets display a diverse 
 }
   %\label{fig:gpdisim_models}
 \end{figure*}
-
-\section{Gaussian process inference for a linear activation model}
 
 A Gaussian process is a probability distribution over
 functions $f$ which take the value $f(t)$ at time
@@ -242,7 +244,10 @@ microarray data~\cite{Liu2005,Pearson2009} (see
 Materials and Methods). The log-likelihood for the model parameters
 $\theta$ can then be calculated exactly using standard Gaussian process regression
 techniques to integrate out the functions $\bm m$ and
-$f$~\cite{Rasmussen2006}. For independent replicate datasets, with
+$f$~\cite{Rasmussen2006}. 
+This allows us to compute the set of maximum likelihood model
+parameters $\theta$ using gradient-based optimisation. 
+For independent replicate datasets, with
 $R$ experiments in total, the
 log-likelihood is
 \begin{equation*}
@@ -257,9 +262,14 @@ log-likelihood is
 where $\bm \mu_y$ is the mean and $K_r$ is the covariance matrix for the
 noise-corrupted dataset $\bm y_r$ under the Gaussian process prior (see
 Materials and Methods), and $C$ is a constant independent of the
-parameters.  This allows us to compute the set of model
-parameters $\theta$ by maximum
-likelihood using gradient-based optimisation. 
+parameters.
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics{fig2}
+  \caption{Examples of the model fit for three independent single-target Gaussian process models for
+    likely targets of the TF Mef2 (compare to the examples in Fig.~\ref{fig:gpdisim_models}(a) for Twist).\label{fig:gpdisim_mef2_models} }
+\end{figure}
 
 We use the likelihood to rank genes according to their fit to the
 regulation model. Genes with a
@@ -286,6 +296,33 @@ prefer the above cascade model for cases where the level of active
 TF is under direct transcriptional control. 
 
 \section{Results}
+
+\begin{figure*}[tb]
+  \centering
+  %\includegraphics[trim=0mm 18mm 0mm 0mm]{dros_global_evaluation}
+  \includegraphics{fig3}
+  \caption{Evaluation results of different rankings as
+    discussed in the text showing the relative frequency of positive
+    predictions among $N$ top-ranking targets (``global'' evaluations)
+    or among $N$ top genes
+    with annotated expression in mesoderm or muscle tissue
+    (``focused'' evaluations).
+    The dashed line
+    denotes the frequency in the full population and the dash-dot
+    line within the population considered in focused evaluation.
+    The first row shows the frequency of targets with ChIP-chip
+    binding within 2000 base pairs of the gene
+    while the second row shows the frequency of
+    predicted targets with significant differential
+    expression in TF knock-outs.
+    $p$-values of results significantly different from random are
+    denoted by `***': $p <
+    0.001$, `**': $p < 0.01$, `*': $p < 0.05$.
+    Comparison to knock-out ranking is obviously omitted for knock-out
+    validation. \label{fig:dros_global_evaluation}
+  }
+ % \label{fig:dros_global_evaluation}
+\end{figure*}
 
 We applied our model-based approach to identify targets of the TFs
 Twist and Mef2 which regulate mesoderm and muscle development in
@@ -322,13 +359,6 @@ profiles in the first two columns of the figure.
 The predicted Mef2 targets show much less variability in expression
 profile than those for Twist.
 
-\begin{figure}[tb]
-  \centering
-  \includegraphics{fig2}
-  \caption{Examples of the model fit for three independent single-target Gaussian process models for
-    likely targets of the TF Mef2 (compare to the examples in Fig.~\ref{fig:gpdisim_models}(a) for Twist).\label{fig:gpdisim_mef2_models} }
-\end{figure}
-
 To evaluate the advantage from using Gaussian processes in our
 approach, we performed a comparison to direct maximum likelihood fit
 of the same differential equation model using the observed TF mRNA
@@ -353,33 +383,6 @@ fold. Full bootstrap results are in Table S1.
 %and 4910.  The corresponding rankings based on correlation are 241, 13
 %and 5.
 
-\begin{figure*}[tb]
-  \centering
-  %\includegraphics[trim=0mm 18mm 0mm 0mm]{dros_global_evaluation}
-  \includegraphics{fig3}
-  \caption{Evaluation results of different rankings as
-    discussed in the text showing the relative frequency of positive
-    predictions among $N$ top-ranking targets (``global'' evaluations)
-    or among $N$ top genes
-    with annotated expression in mesoderm or muscle tissue
-    (``focused'' evaluations).
-    The dashed line
-    denotes the frequency in the full population and the dash-dot
-    line within the population considered in focused evaluation.
-    The first row shows the frequency of targets with ChIP-chip
-    binding within 2000 base pairs of the gene
-    while the second row shows the frequency of
-    predicted targets with significant differential
-    expression in TF knock-outs.
-    $p$-values of results significantly different from random are
-    denoted by `***': $p <
-    0.001$, `**': $p < 0.01$, `*': $p < 0.05$.
-    Comparison to knock-out ranking is obviously omitted for knock-out
-    validation. \label{fig:dros_global_evaluation}
-  }
- % \label{fig:dros_global_evaluation}
-\end{figure*}
-
 The accuracy of the ranking was first evaluated by looking globally at
 the fraction of $N$ top-ranking targets that are significantly
 differentially expressed in knock-outs of the TFs and the fraction
@@ -390,7 +393,7 @@ multiple-target models both perform well, with the single-target model
 performing slightly better (first column of
 Fig.~\ref{fig:dros_global_evaluation}). The simplified quadrature
 method is almost as good. In the ChIP validation the
-model-based methods both perform significantly better than ranking
+model-based methods perform significantly better than ranking
 using either mutant differential expression or correlation with TF
 expression. In the knock-out validation all model-based approaches
 significantly out-perform the correlation ranking. For Mef2
@@ -459,17 +462,6 @@ We see that the model-based rankings consistently perform best for Twist, while
 methods perform more similarly for Mef2 with the correlation and single-target models 
 performing comparably well.
 
-\begin{figure}[tb]
-  \centering
-  \includegraphics{fig5}
-  \caption{The fraction of top 250 predicted targets having a ChIP-chip
-    binding site (\emph{cis}-regulatory module; CRM)
-    within $x$ base pairs as a function of $x$.
-    Binding sites within an intron of a gene are considered to
-    have a distance 0.
-    \label{fig:dros_binding_site_distances}}
-\end{figure}
-
 % To assess the significance of the observed differences between
 % alternative ranking approaches, we performed bootstrap
 % resampling of the data set.  In 100,000-fold resampling where the
@@ -502,18 +494,6 @@ our approach
 can be applied to typical short wild-type time
 series data.
 
-\begin{figure}[tb]
-  \centering
-  \includegraphics{fig6}
-  \caption{Evaluation results similar to those in 
-    Fig.~\ref{fig:dros_global_evaluation}
-    %and \ref{fig:dros_focused_evaluation}
-    for single-target Gaussian process models
-    for full data (12 time points) and sub-sampled data (7 time points).
-    \label{fig:dros_data_size_evaluation}
-  }
-\end{figure}
-
 \section{Discussion}
 
 We have shown how a very simple regulation model can be used to rank
@@ -538,6 +518,29 @@ and spatial expression data to identify a confident set of regulatory
 targets. This is especially useful in cases where loss-of-function
 mutants are uninformative, either due to redundancy or because they do
 not display a phenotype of interest. 
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics{fig4}
+  \caption{The fraction of top 250 predicted targets having a ChIP-chip
+    binding site (\emph{cis}-regulatory module; CRM)
+    within $x$ base pairs as a function of $x$.
+    Binding sites within an intron of a gene are considered to
+    have a distance 0.
+    \label{fig:dros_binding_site_distances}}
+\end{figure}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics{fig5}
+  \caption{Evaluation results similar to those in 
+    Fig.~\ref{fig:dros_global_evaluation}
+    %and \ref{fig:dros_focused_evaluation}
+    for single-target Gaussian process models
+    for full data (12 time points) and sub-sampled data (7 time points).
+    \label{fig:dros_data_size_evaluation}
+  }
+\end{figure}
 
 The main novelty of our approach is the use of a differential equation
 transcription model while minimising the number of free parameters.
@@ -597,8 +600,8 @@ techniques are used to learn the regulation model. A limitation of
 their approach is the necessity to have measurements of the TF
 protein; such data are not readily available in most cases. As with
 Barenco's approach it is difficult for us to compare performance on
-the data they used in~\cite{Gatta2008} because they only validated
-selected predictions of their model. In our application we do not have
+the data they used in~\cite{Gatta2008} because they do not provide data
+for genome-wide validation. In our application we do not have
 access to any protein data and therefore were only able to compare to
 their approach using mRNA data as a proxy for protein data.
 The results of this somewhat unfair comparison show significant
@@ -674,7 +677,7 @@ probabilistic and mechanistic modelling techniques.
 
 \subsection{Availability}
 Complete Matlab code for repeating the experiments is available at
-\texttt{http://users.ics.tkk.fi/ahonkela/gpdisim/}.
+\url{http://www.cs.manchester.ac.uk/~neill/disimrank/}.
 An R implementation of
 the ranking method is available from the authors upon request.
 
