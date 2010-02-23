@@ -1,6 +1,6 @@
 function v = drosInsituPositives(ids, drosinsitu, drosexp),
 
-% DROSGETGENEINDS Filter genes by looking for positive in-situ annotations.
+% DROSINSITUPOSITIVES Filter genes by looking for positive in-situ annotations.
 % FORMAT
 % DESC Filter a set of genes by retaining ones with positive in-situ
 % annotations, keeping the order of the original list.

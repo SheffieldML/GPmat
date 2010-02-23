@@ -1,6 +1,6 @@
 function drosPrintBootstrapMatrices(m, values, ignore),
 
-% DROSPRINTBOOSTRAPMATRICES Print bootstrap sampling results as a LaTeX table
+% DROSPRINTBOOTSTRAPMATRICES Print bootstrap sampling results as a LaTeX table
 % FORMAT
 % DESC Print bootstrap sampling results as a LaTeX table
 % ARG m : the res array returned by drosBoostrapEvaluation

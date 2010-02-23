@@ -1,6 +1,6 @@
 function [r, pvals] = drosPlotAccuracyBars(rankings, validation, t, styles, filter, drosexp, drosinsitu),
 
-% DROSGETGENEINDS Plot accuracies of alternative ranking methods.
+% DROSPLOTACCURACYBARS Plot accuracies of alternative ranking methods.
 % FORMAT
 % DESC Plot a bar chart of accuracies of different ranking methods
 % with stars indicating the p-value of the result against a random baseline
