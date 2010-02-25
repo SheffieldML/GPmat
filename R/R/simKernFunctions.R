@@ -22,12 +22,12 @@ simKernParamInit <- function (kern) {
 
   if ("options" %in% names(kern) && "isNegativeS" %in% names(kern$options) && kern$options$isNegativeS) {
     kern$isNegativeS <- TRUE
-    kern$transforms <- list(index=setdiff(1:kern$nParams, 3), type="positive")
+    kern$transforms <- list(list(index=setdiff(1:kern$nParams, 3), type="positive"))
     kern$paramNames[3] <- "sensitivity"
   }
   else {
     kern$isNegativeS <- FALSE
-    kern$transforms <- list(index=1:kern$nParams, type="positive")
+    kern$transforms <- list(list(index=1:kern$nParams, type="positive"))
   }
 
   if ("options" %in% names(kern) && "isNormalised" %in% names(kern$options) && kern$options$isNormalised)
@@ -35,6 +35,13 @@ simKernParamInit <- function (kern) {
   else
     kern$isNormalised <- FALSE
   
+  if ("options" %in% names(kern) && "inverseWidthBounds" %in% names(kern$options)) {
+    kern$transforms[[1]]$index <- setdiff(kern$transforms[[1]]$index, 2)
+    kern$transforms[[2]] <- list(index=2, type="bounded")
+    kern$transformArgs <- list()
+    kern$transformArgs[[2]] <- kern$options$inverseWidthBounds
+  }
+
   kern$isStationary <- FALSE
 
   return (kern)
@@ -50,6 +57,9 @@ simXrbfKernCompute <- function (simKern, rbfKern, t1, t2=t1) {
 
   if ( simKern$inverseWidth != rbfKern$inverseWidth )
     stop("Kernels cannot be cross combined if they have different inverse widths.")
+
+  if ( simKern$isNormalised != rbfKern$isNormalised )
+    stop("Both the SIM and the RBF kernels have to be either normalised or not.")
 
   dim1 <- dim(as.matrix(t1))[1]
   dim2 <- dim(as.matrix(t2))[1]
@@ -67,7 +77,10 @@ simXrbfKernCompute <- function (simKern, rbfKern, t1, t2=t1) {
   K <- lnPart[[2]] * exp(halfSigmaDi*halfSigmaDi - simKern$decay*diffT + lnPart[[1]])
 
   #K <- 0.5*sqrt(simKern$variance)*sqrt(rbfKern$variance)*K*sqrt(pi)*sigma
-  K <- 0.5*simKern$sensitivity*K*sigma*sqrt(pi)
+  K <- 0.5*simKern$sensitivity*K
+
+  if (!simKern$isNormalised)
+    K <- K*sigma*sqrt(pi)
 
   return (K)
 }
@@ -81,19 +94,17 @@ simXsimKernCompute <- function (simKern1, simKern2, t1, t2=t1) {
   if ( simKern1$inverseWidth != simKern2$inverseWidth )
     stop("Kernels cannot be cross combined if they have different inverse widths.")
 
+  if ( simKern1$isNormalised != simKern2$isNormalised )
+    stop("Both the SIM kernels have to be either normalised or not.")
+
   sigma <- sqrt(2/simKern1$inverseWidth)
   h1 <- simComputeH(t1, t2, simKern1$decay, simKern2$decay, simKern1$delay, simKern2$delay, sigma)
   h2 <- simComputeH(t2, t1, simKern2$decay, simKern1$decay, simKern2$delay, simKern1$delay, sigma)
   K <- h1 + t(h2)
-  K <- 0.5*K*sqrt(pi)*sigma
-#  if(simKern1$isNegativeS)
-  K <- simKern1$sensitivity*simKern2$sensitivity*K
-#  else
-#    K <- sqrt(simKern1$variance)*K
-#  if(simKern2$isNegativeS)
-#  K <- simKern2$sensitivity*K
-#  else
-#    K <- sqrt(simKern2$variance)*K
+  K <- 0.5*simKern1$sensitivity*simKern2$sensitivity*K
+
+  if (!simkern1$isNormalised)
+    K <- K*sigma*sqrt(pi)
 
   return (K)
 }
@@ -168,11 +179,11 @@ simKernDisplay <- function (kern, spaceNum=0) {
   else
     cat("Non-stationary version of the kernel\n")
 
-##   cat(spacing)
-##   if(kern$isNormalised)
-##     cat("Normalised version of the kernel\n")
-##   else
-##     cat("Unnormalised version of the kernel\n")
+  cat(spacing)
+  if(kern$isNormalised)
+    cat("Normalised version of the kernel\n")
+  else
+    cat("Unnormalised version of the kernel\n")
 
   cat(spacing)
   if(kern$isNegativeS)
@@ -212,8 +223,10 @@ simKernCompute <- function (kern, t, t2=t) {
     k <- h + t(h2)
   }
 
-  k <- 0.5*k*sqrt(pi)*sigma
-  k <- kern$variance*k
+  k <- 0.5*kern$variance*k
+
+  if (!kern$isNormalised)
+    k <- k*sigma*sqrt(pi)
 
   if ( "gaussianInitial" %in% names(kern) && kern$gaussianInitial ) {
     dim1 <- dim(as.matrix(t))[1]
@@ -310,6 +323,9 @@ simXsimKernGradient <- function (simKern1, simKern2, t1, t2, covGrad) {
   if ( simKern1$inverseWidth != simKern2$inverseWidth )
     stop("Kernels cannot be cross combined if they have different inverse widths.")
 
+  if ( simKern1$isNormalised != simKern2$isNormalised )
+    stop("Both the SIM kernels have to be either normalised or not.")
+
   option <- 2
   sigma <- sqrt(2/simKern1$inverseWidth)
   simH1 <- simComputeH(t1, t2, simKern1$decay, simKern2$decay, simKern1$delay, simKern2$delay, sigma, option)
@@ -331,16 +347,24 @@ simXsimKernGradient <- function (simKern1, simKern2, t1, t2, covGrad) {
   C1 <- simKern1$sensitivity
   C2 <- simKern2$sensitivity
 
-  K <- h1 + t(h2)
-  K <- 0.5*K*sqrt(pi)
-
+  K <- 0.5 * (h1 + t(h2))
   var2 <- C1*C2
-  dkdD1 <- (sum(covGrad*dh1dD1)+sum(covGrad*t(dh2dD1)))*0.5*sqrt(pi)*sigma*var2
-  dkdD2 <- (sum(covGrad*dh1dD2)+sum(covGrad*t(dh2dD2)))*0.5*sqrt(pi)*sigma*var2
-  dkdsigma <- sum(covGrad*(dKdsigma*0.5*sqrt(pi)*sigma + K))*var2
-  K <- sigma*K
-  dkdC1 <- C2*sum(covGrad*K)
-  dkdC2 <- C1*sum(covGrad*K)
+
+  if (!simKern1$isNormalised) {
+    K <- K*sqrt(pi)
+    dkdD1 <- (sum(covGrad*dh1dD1)+sum(covGrad*t(dh2dD1)))*0.5*sqrt(pi)*sigma*var2
+    dkdD2 <- (sum(covGrad*dh1dD2)+sum(covGrad*t(dh2dD2)))*0.5*sqrt(pi)*sigma*var2
+    dkdsigma <- sum(covGrad*(dKdsigma*0.5*sqrt(pi)*sigma + K))*var2
+    dkdC1 <- sigma*C2*sum(covGrad*K)
+    dkdC2 <- sigma*C1*sum(covGrad*K)
+  }
+  else {
+    dkdD1 <- (sum(covGrad*dh1dD1)+sum(covGrad*t(dh2dD1)))*0.5*var2
+    dkdD2 <- (sum(covGrad*dh1dD2)+sum(covGrad*t(dh2dD2)))*0.5*var2
+    dkdsigma <- 0.5*sum(covGrad*dKdsigma)*var2
+    dkdC1 <- C2*sum(covGrad*K)
+    dkdC2 <- C1*sum(covGrad*K)
+  }
 
   if(simKern1$isNegativeS)
     dkdSim1Variance <- dkdC1
@@ -353,7 +377,6 @@ simXsimKernGradient <- function (simKern1, simKern2, t1, t2, covGrad) {
     dkdSim2Variance <- dkdC2*0.5/C2
 
   dkdinvWidth <- -0.5*sqrt(2)/(simKern1$inverseWidth*sqrt(simKern1$inverseWidth))*dkdsigma
-  K <- var2*K
 
   g1 <- c(dkdD1, dkdinvWidth, dkdSim1Variance)
   g2 <- c(dkdD2, 0, dkdSim2Variance)
@@ -376,6 +399,9 @@ simXrbfKernGradient <- function (simKern, rbfKern, t1, t2, covGrad) {
   if ( simKern$inverseWidth != rbfKern$inverseWidth )
     stop("Kernels cannot be cross combined if they have different inverse widths.")
 
+  if ( simKern$isNormalised != rbfKern$isNormalised )
+    stop("Both the SIM and the RBF kernels have to be either normalised or not.")
+
   if ( nargs()<5 ) {
     k <- simXrbfKernCompute(simKern, rbfKern, t1)
   } else {
@@ -395,11 +421,21 @@ simXrbfKernGradient <- function (simKern, rbfKern, t1, t2, covGrad) {
 
   part2 <- exp(-t2Mat*t2Mat/sigma2-t1Mat*Di) - exp(-diffT*diffT/sigma2)
 
-  dkdD <- sum((k*(0.5*sigma2*Di - diffT) + 0.5*Ci*Cj*sigma2*part2)*covGrad)
+  if (!simKern$isNormalised) {
+    dkdD <- sum((k*(0.5*sigma2*Di - diffT) + 0.5*Ci*Cj*sigma2*part2)*covGrad)
 
-  dkdsigma <- sum((k*(1/sigma+0.5*sigma*Di*Di)+Ci*Cj*sigma*((-diffT/sigma2-Di/2)*exp(-diffT*diffT/sigma2)+(-t2Mat/sigma2+Di/2)*exp(-t2Mat*t2Mat/sigma2-t1Mat*Di)))*covGrad)
+    dkdsigma <- sum((k*(1/sigma+0.5*sigma*Di*Di)+Ci*Cj*sigma*((-diffT/sigma2-Di/2)*exp(-diffT*diffT/sigma2)+(-t2Mat/sigma2+Di/2)*exp(-t2Mat*t2Mat/sigma2-t1Mat*Di)))*covGrad)
 
-  dkdC <- sum(k*covGrad)/Ci
+    dkdC <- sum(k*covGrad)/Ci
+  }
+  else {
+    dkdD <- sum((k*(0.5*sigma2*Di - diffT) + 0.5*Ci*Cj*sigma/sqrt(pi)*part2)*covGrad)
+
+    dkdsigma <- sum((0.5*sigma*Di*Di*k + Ci*Cj/sqrt(pi)*((-diffT/sigma2-Di/2)*exp(-diffT*diffT/sigma2)+(-t2Mat/sigma2+Di/2)*exp(-t2Mat*t2Mat/sigma2-t1Mat*Di)))*covGrad)
+
+    dkdC <- sum(k*covGrad)/Ci
+  }
+
   dkdRbfVariance <- 0.5*sum(k*covGrad)/rbfKern$variance
 
   dkdinvWidth <-  -0.5*sqrt(2)/(simKern$inverseWidth*sqrt(simKern$inverseWidth))*dkdsigma
@@ -434,9 +470,11 @@ simKernDiagCompute <- function (kern, t) {
 
   # h <- exp(halfSigmaD*halfSigmaD)*(erff(-halfSigmaD)+erff(t/sigma+halfSigmaD))-exp(halfSigmaD*halfSigmaD-(2*kern$decay*t))*(erff(t/sigma-halfSigmaD)+erff(halfSigmaD))
 
-  k <- 2*h
-  k <- 0.5*k*sqrt(pi)*sigma
-  k <- kern$variance*k/(2*kern$decay)
+  k <- kern$variance*h/(2*kern$decay)
+
+  if (!kern$isNormalised) {
+    k <- k*sqrt(pi)*sigma
+  }
 
   if ( "gaussianInitial" %in% names(kern) && kern$gaussianInitial )
     k = k + kern$initialVariance*exp(-2*kern$decay*t);

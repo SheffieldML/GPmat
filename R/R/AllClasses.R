@@ -1,7 +1,9 @@
 require(Biobase)
 
 setClass("scoreList", 
-	representation(params = "list", LLs = "numeric", genes = "list", modelArgs = "list", knownTargets = "character", TF = "character"))
+	representation(params = "list", LLs = "numeric",
+                       genes = "list", modelArgs = "list",
+                       knownTargets = "character", TF = "character"))
 
 	#prototype = list(params = list(), LLs = array(), genes = list(), useGPsim = array()))
 
@@ -17,12 +19,33 @@ scoreList <- function(params, LLs, genes, modelArgs, knownTargets, TF) {
   names(modelArgs) <- genes
   names(LLs) <- genes
   
-  new("scoreList", params = params, LLs = LLs, genes = genes, modelArgs = modelArgs, knownTargets = knownTargets, TF = TF)
+  new("scoreList", params = params, LLs = LLs, genes = genes,
+      modelArgs = modelArgs, knownTargets = knownTargets, TF = TF)
 }
 
 
 is.scoreList <- function(object) {
   return (class(object) == "scoreList")
+}
+
+c.scoreList <- function(..., recursive=FALSE) {
+  lists <- unlist(list(...))
+  params <- do.call(c, lapply(lists, function(x) x@params))
+  LLs <- do.call(c, lapply(lists, function(x) x@LLs))
+  genes <- do.call(c, lapply(lists, function(x) x@genes))
+  modelArgs <- do.call(c, lapply(lists, function(x) x@modelArgs))
+  return (new("scoreList", params=params, LLs=LLs, genes=genes,
+              modelArgs=modelArgs, knownTargets=lists[[1]]@knownTargets,
+              TF=lists[[1]]@TF))
+}
+
+sort.scoreList <- function(x, decreasing=FALSE, ...) {
+  r <- sort(x@LLs, decreasing, index.return=TRUE)
+  x@LLs <- r$x
+  x@params <- x@params[r$ix]
+  x@modelArgs <- x@modelArgs[r$ix]
+  x@genes <- x@genes[r$ix]
+  return (x)
 }
 
 setMethod("show", "scoreList",
@@ -65,13 +88,16 @@ setMethod("show", "GPmodel",
 setClass("GPdata", 
 	representation(y = "list", yvar = "list", times = "array",
                        genes = "character", scale = "array", zScores = "array",
-                       annotation = "character",
+                       experiments = "array", annotation = "character",
                        phenoData = "AnnotatedDataFrame",
                        featureData = "AnnotatedDataFrame"))
 
 
-GPdata <- function(y, yvar, times, genes, scale, zScores, annotation, phenoData, featureData) {
-  new("GPdata", y = y, yvar = yvar, times = times, genes = genes, scale = scale, zScores = zScores, annotation=annotation, phenoData=phenoData, featureData=featureData)
+GPdata <- function(y, yvar, times, genes, scale, zScores, experiments,
+                   annotation, phenoData, featureData) {
+  new("GPdata", y = y, yvar = yvar, times = times, genes = genes,
+      scale = scale, zScores = zScores, experiments=experiments,
+      annotation=annotation, phenoData=phenoData, featureData=featureData)
 }
 
 is.GPdata <- function(object) {

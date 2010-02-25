@@ -4,7 +4,7 @@ whiteKernParamInit <- function (kern) {
   kern$nParams <- 1
   kern$paramNames <- c("variance")
   
-  kern$transforms <- list(index=c(1), type="positive")
+  kern$transforms <- list(list(index=c(1), type="positive"))
 
   kern$isStationary <- TRUE
 

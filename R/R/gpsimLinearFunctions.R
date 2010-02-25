@@ -12,7 +12,12 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
   model <- list(type="gpsim", y=as.array(y), yvar=as.array(yvar))
 
   kernType1 <- list(type="multi", comp=list())
-  tieParam <- list("inverseWidth")
+  tieParam <- list(tieWidth="inverseWidth")
+
+  model$uniqueT <- sort(unique(times))
+  lBounds <- c(min(diff(model$uniqueT)),
+               (model$uniqueT[length(model$uniqueT)]-model$uniqueT[1]))
+  invWidthBounds <- c(2/(lBounds[2]^2), 2/(lBounds[1]^2))
 
   if ("isNegativeS" %in% names(options) && options$isNegativeS)
     isNegativeS = TRUE
@@ -21,7 +26,9 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
   ## proteinPrior encodes observation of the latent function.
   if ( "proteinPrior" %in% names(options) ) {
     model$proteinPrior <- options$proteinPrior
-    kernType1$comp[[1]] <- "rbf"
+    kernType1$comp[[1]] <- list(type="parametric", realType="rbf",
+                                options=list(isNormalised=TRUE,
+                                  inverseWidthBounds=invWidthBounds))
 
     if ( "times" %in% names(model$proteinPrior) )
       timesCell <- list(protein=model$proteinPrior$times)
@@ -29,7 +36,9 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
       timesCell <- list(protein=times)
 
     for ( i in 1:Ngenes ) {
-      kernType1$comp[[i+1]] <- "sim"
+      kernType1$comp[[i+1]] <- list(type="parametric", realType="sim",
+                                    options=list(isNormalised=TRUE,
+                                      inverseWidthBounds=invWidthBounds))
       timesCell <- c(timesCell, list(mRNA=times))
     }
 
@@ -39,7 +48,9 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
     
     kernType1 <- list(type="multi", comp=list())
     for ( i in 1:Ngenes ) {
-      kernType1$comp[[i]] <- "sim"
+      kernType1$comp[[i]] <- list(type="parametric", realType="sim",
+                                  options=list(isNormalised=TRUE,
+                                    inverseWidthBounds=invWidthBounds))
     }
   }
 
@@ -60,11 +71,18 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
         kernType2$comp[i] <- "white"        
     }     
 
+    if ("singleNoise" %in% names(options) && options$singleNoise) {
+      tieParam$tieNoise <- "white._variance"
+    }
+
     model$kern <- kernCreate(timesCell,
                              list(type="cmpnd", comp=list(kernType1, kernType2)))
+    simMultiKernName <- 'model$kern$comp[[1]]'
   } else {
     model$kern <- kernCreate(timesCell, kernType1)
+    simMultiKernName <- 'model$kern'
   }
+  eval(parse(text=paste("simMultiKern <-", simMultiKernName)))
 
   ## This is if we need to place priors on parameters ...
   ## ...
@@ -74,23 +92,13 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
 
   if ( "proteinPrior" %in% names(options) ) {
     for ( i in seq(2,model$kern$numBlocks,length.out=model$kern$numBlocks-1) ) {
-      if ( model$includeNoise ) {
-        model$D[i-1] <- model$kern$comp[[1]]$comp[[i]]$decay
-        model$S[i-1] <- model$kern$comp[[1]]$comp[[i]]$sensitivity
-      } else {
-        model$D[i-1] <- model$kern$comp[[i]]$decay
-        model$S[i-1] <- model$kern$comp[[i]]$sensitivity
-      }
+      model$D[i-1] <- simMultiKern$comp[[i]]$decay
+      model$S[i-1] <- simMultiKern$comp[[i]]$sensitivity
     }
   } else {
     for ( i in seq(length.out=model$kern$numBlocks) ) {
-      if ( model$includeNoise ) {
-        model$D[i] <- model$kern$comp[[1]]$comp[[i]]$decay
-        model$S[i] <- model$kern$comp[[1]]$comp[[i]]$sensitivity
-      } else {
-        model$D[i] <- model$kern$comp[[i]]$decay
-        model$S[i] <- model$kern$comp[[i]]$sensisitivty
-      }
+      model$D[i] <- simMultiKern$comp[[i]]$decay
+      model$S[i] <- simMultiKern$comp[[i]]$sensitivity
     }
   }
 
@@ -166,11 +174,12 @@ gpsimExtractParam <- function (model, option=1) {
   ## option=1: only return parameter values;
   ## option=2: return both parameter values and names.
 
-  funcName <- paste(optimiDefaultConstraint(model$bTransform), "Transform", sep="")
-  func <- get(funcName, mode="function")
+  funcName <- optimiDefaultConstraint(model$bTransform)
+  func <- get(funcName$func, mode="function")
 
   if ( option == 1 ) {
     params <- kernExtractParam(model$kern)
+    # Note: ignores funcName$hasArgs
     params <- c(params, func(model$B, "xtoa"))
 
     if ( "fix" %in% names(model) ) 
@@ -181,6 +190,7 @@ gpsimExtractParam <- function (model, option=1) {
 
   } else {
     params <- kernExtractParam(model$kern, option)
+    # Note: ignores funcName$hasArgs
     params$values <- c(params$values, func(model$B, "xtoa"))
     for ( i in seq(along=model$mu) ) {
       params$names <- c(params$names, paste("Basal", i, sep=""))
@@ -215,30 +225,26 @@ gpsimExpandParam <- function (model, params) {
   endVal <- model$kern$nParams
   model$kern <- kernExpandParam(model$kern, params[startVal:endVal])
 
-  funcName <- paste(optimiDefaultConstraint(model$bTransform), "Transform", sep="")
-  func <- get(funcName, mode="function")
+  funcName <- optimiDefaultConstraint(model$bTransform)
+  func <- get(funcName$func, mode="function")
 
+  # Note: ignores funcName$hasArgs
   model$B <- func(params[(endVal+1):length(params)], "atox")
+
+  if (model$includeNoise)
+    simMultiKern <- model$kern$comp[[1]]
+  else
+    simMultiKern <- model$kern
 
   if ( "proteinPrior" %in% names(model) ) {
     for ( i in seq(2,model$kern$numBlocks,length.out=model$kern$numBlocks-1) ) {
-      if ( model$includeNoise ) {
-        model$D[i-1] <- model$kern$comp[[1]]$comp[[i]]$decay
-        model$S[i-1] <- model$kern$comp[[1]]$comp[[i]]$sensitivity
-      } else {
-        model$D[i-1] <- model$kern$comp[[i]]$decay
-        model$S[i-1] <- model$kern$comp[[i]]$sensitivity
-      }
+      model$D[i-1] <- simMultiKern$comp[[i]]$decay
+      model$S[i-1] <- simMultiKern$comp[[i]]$sensitivity
     }
   } else {
     for ( i in seq(length.out=model$kern$numBlocks) ) {
-      if ( model$includeNoise ) {
-        model$D[i] <- model$kern$comp[[1]]$comp[[i]]$decay
-        model$S[i] <- model$kern$comp[[1]]$comp[[i]]$sensitivity
-      } else {
-        model$D[i] <- model$kern$comp[[i]]$decay
-        model$S[i] <- model$kern$comp[[i]]$sensitivity
-      }
+      model$D[i] <- simMultiKern$comp[[i]]$decay
+      model$S[i] <- simMultiKern$comp[[i]]$sensitivity
     }
   }
 
@@ -247,24 +253,13 @@ gpsimExpandParam <- function (model, params) {
   model <- gpsimUpdateKernels(model)
 
   if ( "proteinPrior" %in% names(model) ) {
-    if ( model$includeNoise ) {
-      yInd <- 1:model$kern$comp[[1]]$diagBlockDim[2]
-      mInd <- model$kern$comp[[1]]$diagBlockDim[1] + yInd
+    yInd <- seq(1, simMultiKern$diagBlockDim[2])
+    mInd <- simMultiKern$diagBlockDim[1] + yInd
 
-      for ( i in seq(length=model$numGenes) ) {
-        model$m[mInd] <- model$y[yInd]-model$mu[i]*array(1, length(yInd), 1)
-        yInd <- yInd+model$kern$comp[[1]]$diagBlockDim[i+1]
-        mInd <- mInd+model$kern$comp[[1]]$diagBlockDim[i+1]
-      }
-    } else {
-      yInd <- 1:model$kern$diagBlockDim[2]
-      mInd <- model$kern$diagBlockDim[1] + yInd
-      
-      for ( i in seq(length=model$numGenes) ) {
-        model$m[mInd] <- model$y[yInd]-model$mu[i]*array(1, length(yInd), 1)
-        yInd <- yInd+model$kern$diagBlockDim[i+1]
-        mInd <- mInd+model$kern$diagBlockDim[i+1]
-      }         
+    for ( i in seq(length=model$numGenes) ) {
+      model$m[mInd] <- model$y[yInd]-model$mu[i]*array(1, length(yInd), 1)
+      yInd <- yInd+simMultiKern$diagBlockDim[i+1]
+      mInd <- mInd+simMultiKern$diagBlockDim[i+1]
     }
   } else {
     ind <- seq(along=model$t)
@@ -274,7 +269,7 @@ gpsimExpandParam <- function (model, params) {
       ind <- ind+lengthObs
     }
   }
-    
+
   return (model)
 }
 
@@ -285,11 +280,7 @@ gpsimUpdateKernels <- function (model) {
 
   if ( ("proteinPrior" %in% names(model)) && ("timesCell" %in% names(model)) ) {
     k <- Re(kernCompute(model$kern, model$timesCell))
-    if ( model$includeNoise ) {
-      noiseVar <- c(array(0, model$kern$comp[[1]]$diagBlockDim[1], 1), model$yvar)
-    } else {
-      noiseVar <- c(array(eps, model$kern$comp[[1]]$diagBlockDim[1], 1), model$yvar)
-    }
+    noiseVar <- c(array(eps, model$kern$comp[[1]]$diagBlockDim[1], 1), model$yvar)
   } else {
     k <- Re(kernCompute(model$kern, model$t))
     noiseVar <- c(as.array(model$yvar))
@@ -433,14 +424,15 @@ gpsimLogLikeGradients <- function (model) {
 
   gb <- gmu/model$D
 
-  funcName <- paste(optimiDefaultConstraint(model$bTransform), "Transform", sep="")
-  func <- get(funcName, mode="function")
+  funcName <- optimiDefaultConstraint(model$bTransform)
+  func <- get(funcName$func, mode="function")
 
   ## prior contribution
   if ( "bprior" %in% names(model) ) {
     gb <- gb + priorGradient(model$bprior, model$B)
   }
 
+  # Note: ignores funcName$hasArgs
   gb <- gb*func(model$B, "gradfact")
 
   ## gradient for D
@@ -554,7 +546,6 @@ gpsimGradient <- function (params, model, ...) {
 }
 
 
-
 gpsimUpdateProcesses <- function (model) {
   if ( "proteinPrior" %in% names(model) ) {
     t <- model$timesCell[[2]]
@@ -566,43 +557,28 @@ gpsimUpdateProcesses <- function (model) {
   predt <- c(seq(min(t), max(t), length=100), t)
   ## ymean <- t(matrix(model$y[1,], model$numGenes, numData))
 
+  if (model$includeNoise)
+    simMultiKern <- model$kern$comp[[1]]
+  else
+    simMultiKern <- model$kern
+
   if ( "proteinPrior" %in% names(model) ) {
     predTimeCell <- list()
-    if ( model$includeNoise ) {
-      for ( i in seq(length=model$kern$comp[[1]]$numBlocks) )
-        predTimeCell[[i]] <- predt
+    for ( i in seq(length=simMultiKern$numBlocks) )
+      predTimeCell[[i]] <- predt
 
-      Kxx <- multiKernCompute(model$kern$comp[[1]], predTimeCell, model$timesCell)
-      diagKxx <- kernDiagCompute(model$kern$comp[[1]], predTimeCell)
-      ## x <- c(model$proteinPrior$values, model$y-ymean)
-      ind <- 1:length(predTimeCell[[1]])
-      predFull <- list()
-      varFull <- list()
-      for ( indBlock in seq(length=model$kern$comp[[1]]$numBlocks) ) {
-        K <- Kxx[ind,]
-        diagK <- diagKxx[ind,]
-        predFull[[indBlock]] <- Re( K %*% model$invK %*% model$m )
-        varFull[[indBlock]] <- Re( diagK - t(apply(t(K)*(model$invK %*% t(K)), 2, sum)) )
-        ind <- ind + length(predTimeCell[[indBlock]])
-      }
-    } else {
-      for ( i in seq(length=model$kern$numBlocks) )
-        predTimeCell[[i]] <- predt
-
-      Kxx <- kernCompute(model$kern, predTimeCell, model$timesCell)
-      diagKxx <- kernDiagCompute(model$kern, predTimeCell)
-      ##x <- c(model$proteinPrior$values, model$y-ymean)
-
-      ind <- 1:length(predTimeCell[[1]])
-      predFull <- list()
-      varFull <- list()
-      for ( indBlock in seq(length=model$kern$numBlocks) ) {
-        K <- Kxx[ind,]
-        diagK <- diagKxx[ind,]
-        predFull[[indBlock]] <- Re( K %*% model$invK %*% model$m )
-        varFull[[indBlock]] <- Re( diagK - t(apply(t(K)*(model$invK%*%t(K)), 2, sum)) )
-        ind <- ind + length(predTimeCell[[indBlock]])
-      }
+    Kxx <- multiKernCompute(simMultiKern, predTimeCell, model$timesCell)
+    diagKxx <- kernDiagCompute(simMultiKern, predTimeCell)
+    ## x <- c(model$proteinPrior$values, model$y-ymean)
+    ind <- 1:length(predTimeCell[[1]])
+    predFull <- list()
+    varFull <- list()
+    for ( indBlock in seq(length=simMultiKern$numBlocks) ) {
+      K <- Kxx[ind,]
+      diagK <- diagKxx[ind,]
+      predFull[[indBlock]] <- Re( K %*% model$invK %*% model$m )
+      varFull[[indBlock]] <- Re( diagK - t(apply(t(K)*(model$invK %*% t(K)), 2, sum)) )
+      ind <- ind + length(predTimeCell[[indBlock]])
     }
 
     meanPredX <- t(matrix(model$B/model$D, model$numGenes, length(predt)))
@@ -622,34 +598,19 @@ gpsimUpdateProcesses <- function (model) {
 
   } else {
     proteinKern <- kernCreate(model$t, "rbf")
-    if ( model$includeNoise ) {
-      proteinKern$inverseWidth <- model$kern$comp[[1]]$comp[[1]]$inverseWidth
-    } else {
-      proteinKern$inverseWidth <- model$kern$comp[[1]]$inverseWidth
-    }
+    proteinKern$inverseWidth <- simMultiKern$comp[[1]]$inverseWidth
 
-    if ( model$includeNoise) {
-      K <- simXrbfKernCompute(model$kern$comp[[1]]$comp[[1]], proteinKern, model$t, predt)
-      for ( i in seq(2, length=(model$kern$numBlocks-1)) ) 
-        K <- rbind(K, simXrbfKernCompute(model$kern$comp[[1]]$comp[[i]], proteinKern, model$t, predt))
-    } else {
-      K <- simXrbfKernCompute(model$kern$comp[[1]], proteinKern, model$t, predt)
-      for ( i in seq(2, length=(model$kern$numBlocks-1)) ) 
-        K <- rbind(K,simXrbfKernCompute(model$kern$comp[[i]], proteinKern, model$t, predt))    }
+    K <- simXrbfKernCompute(simMultiKern$comp[[1]], proteinKern, model$t, predt)
+    for ( i in seq(2, length=(simMultiKern$numBlocks-1)) ) 
+      K <- rbind(K, simXrbfKernCompute(simMultiKern$comp[[i]], proteinKern, model$t, predt))
 
     predF <- Re( t(K)%*%model$invK%*%model$m)
     varF <- Re( kernDiagCompute(proteinKern, predt) - apply(K*(model$invK%*%K), 2, sum) )
     meanPredX <- t(matrix(model$B/model$D, model$numGenes, length(predt)))
 
-    if ( model$includeNoise ) {
-      Kxx <- multiKernCompute(model$kern$comp[[1]], predt, t)
-      predX <- c(meanPredX) + Re( Kxx%*%model$invK%*%model$m)
-      varX <- Re( kernDiagCompute(model$kern$comp[[1]], predt)-apply(t(Kxx)*(model$invK%*%t(Kxx)), 2, sum) ) 
-    } else {
-      Kxx <- multiKernCompute(model$kern, predt, t)
-      predX <- c(meanPredX) + Re( Kxx%*%model$invK%*%model$m)
-      varX <- Re( kernDiagCompute(model$kern, predt)-apply(t(Kxx)*(model$invK%*%t(Kxx)), 2, sum) ) 
-    }
+    Kxx <- multiKernCompute(simMultiKern, predt, t)
+    predX <- c(meanPredX) + Re( Kxx%*%model$invK%*%model$m)
+    varX <- Re( kernDiagCompute(simMultiKern, predt)-apply(t(Kxx)*(model$invK%*%t(Kxx)), 2, sum) ) 
 
     predExprs <- matrix(predX, length(predt), model$numGenes)
     varExprs <- matrix(varX, length(predt), model$numGenes)
