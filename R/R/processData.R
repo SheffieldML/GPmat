@@ -85,7 +85,10 @@ processData <- function(data, replicates = NULL, searchGenes = NULL) {
 
   zScores <- as.array(colMeans(yFull / sqrt(yFullVar)))
 
-  return (GPdata(y = y, yvar = yvar, times = times, genes = genes, scale = as.array(scale), zScores = zScores, annotation=annotation(data), phenoData=phenoData(data), featureData=featureData(data)))
+  return (GPdata(y = y, yvar = yvar, times = times, genes = genes,
+                 scale = as.array(scale), zScores = zScores,
+                 experiments=array(), annotation=annotation(data),
+                 phenoData=phenoData(data), featureData=featureData(data)))
 }
 
 
@@ -124,7 +127,11 @@ processRawData <- function(data, times, replicates=NULL) {
   zScores <- array(NA, dim=length(genes))
   names(zScores) <- colnames(y[[1]])
   
-  return (GPdata(y = y, yvar = yvar, times = times, genes = genes, scale = as.array(scale), zScores = zScores, annotation="NA", phenoData=new("AnnotatedDataFrame"), featureData=new("AnnotatedDataFrame")))
+  return (GPdata(y = y, yvar = yvar, times = times, genes = genes,
+                 scale = as.array(scale), zScores = zScores,
+                 experiments=array(), annotation="NA",
+                 phenoData=new("AnnotatedDataFrame"),
+                 featureData=new("AnnotatedDataFrame")))
 }
 
 

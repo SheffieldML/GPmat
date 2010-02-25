@@ -1,6 +1,11 @@
 require(Biobase)
 
-GPLearn <- function(preprocData, TF = NULL, targets = NULL, useGpdisim = FALSE, randomize = FALSE, addPriors = FALSE, fixedParams = FALSE, initParams = NULL, initialZero = TRUE, fixComps = NULL, timeSkew = 1000.0, dontOptimise = FALSE, gpsimOptions = NULL, allArgs = NULL) {
+GPLearn <- function(preprocData, TF = NULL, targets = NULL,
+                    useGpdisim = FALSE, randomize = FALSE,
+                    addPriors = FALSE, fixedParams = FALSE,
+                    initParams = NULL, initialZero = TRUE,
+                    fixComps = NULL, dontOptimise = FALSE,
+                    gpsimOptions = NULL, allArgs = NULL) {
 
   if (!is.null(allArgs)) {
     for (i in seq(along=allArgs))
@@ -30,12 +35,12 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL, useGpdisim = FALSE, 
       options[[names(gpsimOptions)[[i]]]] <- gpsimOptions[[i]]
   }
   
-  if (addPriors) options$addPriors = TRUE
+  if (addPriors)
+    options$addPriors <- TRUE
 
   if (!initialZero)
-    options$gaussianInitial <- TRUE
-
-  options$timeSkew <- timeSkew
+    options$timeSkew <- 1000.0
+  #options$gaussianInitial <- TRUE
 
   if (useGpdisim) {
     Ngenes <- length(genes) - 1
@@ -80,10 +85,10 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL, useGpdisim = FALSE, 
 
   if (randomize) {
     a <- modelExtractParam(model)
-    I <- a==0
+    #I <- a==0
     n <- length(a)
-    a <- array(rnorm(n^2), dim = c(1, n))
-    a[I] <- 0
+    a <- array(rnorm(n), dim = c(1, n))
+    #a[I] <- 0
     model <- modelExpandParam(model, a)
   }
 
@@ -102,14 +107,21 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL, useGpdisim = FALSE, 
 
   model <- modelUpdateProcesses(model)
 
-  model$allArgs <- list(TF=TF, targets=targets, useGpdisim=useGpdisim, randomize=randomize, addPriors=addPriors, fixedParams=fixedParams, initParams=initParams, initialZero=initialZero, fixComps=fixComps, timeSkew=timeSkew, dontOptimise=dontOptimise, gpsimOptions=gpsimOptions)
+  model$allArgs <- list(TF=TF, targets=targets, useGpdisim=useGpdisim,
+                        randomize=randomize, addPriors=addPriors,
+                        fixedParams=fixedParams, initParams=initParams,
+                        initialZero=initialZero, fixComps=fixComps,
+                        dontOptimise=dontOptimise, gpsimOptions=gpsimOptions)
 
   return (GPmodel(model))
 }
 
 
 
-GPrankTargets <- function(preprocData, TF = NULL, knownTargets = NULL, testTargets = NULL, filterLimit = 1.8, returnModels = FALSE, options = NULL, scoreSaveFile = NULL) {
+GPrankTargets <- function(preprocData, TF = NULL, knownTargets = NULL,
+                          testTargets = NULL, filterLimit = 1.8,
+                          returnModels = FALSE, options = NULL,
+                          scoreSaveFile = NULL) {
 
   if (is.null(testTargets))
     testTargets <- preprocData@genes
@@ -352,10 +364,11 @@ formModel <- function(preprocData, TF = NULL, knownTargets = NULL, testTarget = 
   if (error1) {
     success <- FALSE
     i <- 0
+    allArgs$randomize <- TRUE
     while (!success && i < 10) {
       tryCatch({
         cat("Trying again with different parameters.\n")
-        model <- GPLearn(preprocData, TF, targets, randomize = TRUE, allArgs = allArgs)
+        model <- GPLearn(preprocData, TF, targets, allArgs = allArgs)
         success <- TRUE
         error2 <- FALSE
       }, error = function(ex) {

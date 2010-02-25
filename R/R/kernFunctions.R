@@ -113,36 +113,32 @@ kernExtractParam <- function (kern, option=1) {
   func <- get(funcName, mode="function")
 
   if ( option==1 ) {
-    params <- func(kern)
-    if ( any(is.nan(params)) )
-      warning("Parameter has gone to NaN.")
-
-    if ( "transforms" %in% names(kern) ) 
-      if ( length(kern$transforms) > 0 )
-        for ( i in seq(along=kern$transforms$index) ) {
-          index <- kern$transforms$index[i]
-          funcName <- paste(optimiDefaultConstraint(kern$transforms$type), "Transform", sep="")
-          func <- get(funcName, mode="function")
-          params[index] <- func(params[index], "xtoa")
-        }
-    
+    values <- func(kern)
   } else {
     params <- func(kern, option)
-    if ( any(is.nan(params$values)) )
-      warning("Parameter has gone to NaN.")
-
-    if ( "transforms" %in% names(kern) ) 
-      if ( length(kern$transforms) > 0 )
-        for ( i in seq(along=kern$transforms$index) ) {
-          index <- kern$transforms$index[i]
-          funcName <- paste(optimiDefaultConstraint(kern$transforms$type), "Transform", sep="")
-          func <- get(funcName, mode="function")
-          params$values[index] <- func(params$values[index], "xtoa")
-        }             
+    values <- params$values
   }
 
-  return (params)
-  
+  if ( any(is.nan(values)) )
+    warning("Parameter has gone to NaN.")
+
+  if ( "transforms" %in% names(kern) && (length(kern$transforms) > 0) )
+    for ( i in seq(along=kern$transforms) ) {
+      index <- kern$transforms[[i]]$index
+      funcName <- optimiDefaultConstraint(kern$transforms[[i]]$type)
+      func <- get(funcName$func, mode="function")
+      if (funcName$hasArgs)
+        values[index] <- func(values[index], "xtoa", kern$transformArgs[[i]])
+      else
+        values[index] <- func(values[index], "xtoa")
+    }
+
+  if ( option==1 )
+    return (values)
+  else {
+    params$values <- values
+    return (params)
+  }
 }
 
 
@@ -151,14 +147,16 @@ kernExpandParam <- function (kern, params) {
   if ( is.list(params) )
     params <- params$values
   
-  if ( "transforms" %in% names(kern) ) 
-    if ( length(kern$transforms) > 0 )
-      for ( i in seq(along=kern$transforms$index) ) {
-        index <- kern$transforms$index[i]
-        funcName <- paste(optimiDefaultConstraint(kern$transforms$type), "Transform", sep="")
-        func <- get(funcName, mode="function")
+  if ( "transforms" %in% names(kern) && (length(kern$transforms) > 0) )
+    for ( i in seq(along=kern$transforms) ) {
+      index <- kern$transforms[[i]]$index
+      funcName <- optimiDefaultConstraint(kern$transforms[[i]]$type)
+      func <- get(funcName$func, mode="function")
+      if (funcName$hasArgs)
+        params[index] <- func(params[index], "atox", kern$transformArgs[[i]])
+      else
         params[index] <- func(params[index], "atox")
-      }
+    }
 
   funcName <- paste(kern$type, "KernExpandParam", sep="")
   func <- get(funcName, mode="function")
@@ -202,24 +200,32 @@ kernGradient <- function (kern, x, ...) {
   g <- func(kern, x, ...)
 
   factors <- kernFactors(kern, "gradfact")
-  g[factors$index] <- g[factors$index]*factors$val
+  for (i in seq(along=factors))
+    g[factors[[i]]$index] <- g[factors[[i]]$index]*factors[[i]]$val
+
   return (g)
 }
 
 
 
 kernFactors <- function (kern, factorType) {
-  factors <- list(index=c(), val=c())
+  factors <- list()
 
   if ( length(kern$transforms) > 0 ) {
     funcName <- paste(kern$type, "KernExtractParam", sep="")
     func <- get(funcName, mode="function")
     params <- func(kern)
 
-    factors$index <- kern$transforms$index
-    funcName <- paste(optimiDefaultConstraint(kern$transforms$type), "Transform", sep="")
-    func <- get(funcName, mode="function")
-    factors$val <- func(params[factors$index], factorType)
+    for (i in seq(along=kern$transforms)) {
+      factors[[i]] <- list()
+      factors[[i]]$index <- kern$transforms[[i]]$index
+      funcName <- optimiDefaultConstraint(kern$transforms[[i]]$type)
+      func <- get(funcName$func, mode="function")
+      if (funcName$hasArgs)
+        factors[[i]]$val <- func(params[factors[[i]]$index], factorType, kern$transformArgs[[i]])
+      else
+        factors[[i]]$val <- func(params[factors[[i]]$index], factorType)
+    }
   }
   return (factors)
 }
@@ -608,7 +614,8 @@ multiKernGradientBlock <- function (kern, x, x2, covGrad, i, j) {
     } else {
       g <- func(arg1, x, x2, covGrad)
     }
-    g[factors$index] <- g[factors$index]*factors$val
+    for (i in seq(along=factors))
+      g[factors[[i]]$index] <- g[factors[[i]]$index]*factors[[i]]$val
     
   } else {
     if ( j<i ) {
@@ -641,8 +648,11 @@ multiKernGradientBlock <- function (kern, x, x2, covGrad, i, j) {
     g1 <- gList$g1
     g2 <- gList$g2
     
-    g1[factors1$index] <- g1[factors1$index]*factors1$val
-    g2[factors2$index] <- g2[factors2$index]*factors2$val
+    for (i in seq(along=factors1))
+      g1[factors1[[i]]$index] <- g1[factors1[[i]]$index]*factors1[[i]]$val
+
+    for (i in seq(along=factors2))
+      g2[factors2[[i]]$index] <- g2[factors2[[i]]$index]*factors2[[i]]$val
 
     if ( transpose ) {
       g <- g2
@@ -742,4 +752,219 @@ multiKernFixBlocks <- function(kern, blocks = 1) {
   multiKernCacheBlock(kern)
 
   return(kern)
+}
+
+
+kernTest <- function(kernType, numIn=4, tieParamNames=list(), testindex=NULL) {
+  numData <- 20
+
+  kern <- kernCreate(numIn, kernType)
+##   if exist([kern.type 'KernSetIndex'])==2 
+##     for i = 1:length(kern.comp)
+##       if rand(1)>0.5
+##         indices = randperm(numIn);
+##         indices = indices(1:ceil(rand(1)*numIn));
+##         kern = kernSetIndex(kern, i, indices);
+##       end
+##     end
+##   end
+  if ( 'positiveTime' %in% names(kern) && kern$positiveTime ) {
+    # For convolutional kernels starting at t=0 it does not make sense to use
+    # negative inputs...
+    x <- abs(matrix(rnorm(numData * numIn), numData))
+    x2 <- abs(matrix(rnorm(numData/2 * numIn), numData/2))
+  }
+  else {
+    x <- matrix(rnorm(numData * numIn), numData)
+    x2 <- matrix(rnorm(numData/2 * numIn), numData/2)
+  }
+
+  kern <- modelTieParam(kern, tieParamNames)
+  # Set the parameters randomly.
+  params <- kernExtractParam(kern)
+  params <- rnorm(length(params))/sqrt(rnorm(length(params))^2)
+  kern <- kernExpandParam(kern, params)
+
+  # Test for positive definiteness
+  K <- kernCompute(kern, x);
+  e <- tryCatch(eigen(K, only.values=TRUE)$values, error=function(e) NaN)
+  if (!all(is.finite(e))) {
+    cat('NaNs in the kernel, unable to test.\n')
+    kernDisplay(kern)
+    return(kern)
+  }
+  else if (min(e) > 0)
+    cat('The kernel is positive definite.\n')
+  else
+    cat(sprintf('The kernel is not positive definite: max eig %g, min eig %g\n',
+                max(e), min(e)))
+
+  if (!is.null(testindex)) {
+    covGrad <- array(0, dim(K))
+    covGrad[testindex[1], testindex[2]] = 1
+  }
+  else
+    covGrad <- array(1, dim(K))
+  epsilon <- 1e-6
+  params <- kernExtractParam(kern)
+  origParams <- params
+  Lplus <- 0*params
+  Lminus <- 0*params
+  for ( i in seq(1, length(params)) ) {
+    params <- origParams
+    params[i] <- origParams[i] + epsilon
+    kern <- kernExpandParam(kern, params)
+    if (!is.null(testindex)) {
+      Lplus[i] <- sum(kernCompute(kern, x)[testindex[1], testindex[2]])
+    }
+    else
+      Lplus[i] <- sum(kernCompute(kern, x))
+    params[i] <- origParams[i] - epsilon
+    kern <- kernExpandParam(kern, params)
+    if (!is.null(testindex)) {
+      Lminus[i] <- sum(kernCompute(kern, x)[testindex[1], testindex[2]])
+    }
+    else
+      Lminus[i] <- sum(kernCompute(kern, x))
+  }
+  params <- origParams
+  kern <- kernExpandParam(kern, params)
+  names <- kernExtractParam(kern, 2)$names
+  gLDiff <- .5*(Lplus - Lminus)/epsilon
+  g <- kernGradient(kern, x, covGrad)
+
+  paramMaxDiff <- max(abs(gLDiff-g))
+  if (paramMaxDiff > 2*epsilon) {
+    l <- 0
+    for (i in seq(1, length(names))) {
+      if (l < length(names[[i]]))
+        l <- length(names[[i]]);
+    }
+  
+    cat(rep(' ', l), '\tanalytic   diffs     delta\n')
+    for (i in seq(1, length(names))) {
+      spaceLen = l - length(names[[i]]);
+      space = rep(' ', spaceLen)
+      cat(space, names[[i]],
+          sprintf(':\t%4.6g\t%4.6g\t%4.6g\n', g[i], gLDiff[i], gLDiff[i] - g[i]))
+    }
+  }
+## try 
+##   Lplus = zeros(size(x));
+##   Lminus = zeros(size(x));
+##   gx = zeros(size(x));
+##   origX = x;
+##   for i = 1:size(x, 1)
+##     for j = 1:size(x, 2)
+##       x = origX;
+##       x(i, j) = origX(i, j) + epsilon;
+##       K = kernCompute(kern, x);
+##       Lplus(i, j) =  full(sum(sum(K)));
+##       LplusDiag(i, j) = full(trace(K));
+##       x(i, j) = origX(i, j) - epsilon;
+##       K = kernCompute(kern, x);
+##       Lminus(i, j) = full(sum(sum(K)));
+##       LminusDiag(i, j) = full(trace(K));
+##     end
+##     x = origX;
+##     gx(i, :) = 2*sum(kernGradX(kern, x(i, :), x), 1);
+##     gxDiag(i, :) = kernDiagGradX(kern, x(i, :));
+##   end
+
+##   gXDiff = .5*(Lplus - Lminus)/epsilon;
+##   xMaxDiff = max(max(abs(gx-gXDiff)));
+  
+##   if xMaxDiff > 2*epsilon
+##     fprintf('gX\n')
+##     disp(gx)
+##     fprintf('gXDiff\n')
+##     disp(gXDiff)
+##   end
+  
+##   gXDiagDiff = .5*(LplusDiag - LminusDiag)/epsilon;
+##   xDiagMaxDiff = max(max(abs(gxDiag-gXDiagDiff)));
+  
+##   if xDiagMaxDiff > 2*epsilon
+##     fprintf('gxDiag\n')
+##     disp(gxDiag)
+##     fprintf('gXDiagDiff\n')
+##     disp(gXDiagDiff)
+##   end
+## catch
+##   fprintf('kernGradX has an error.\n')
+##   warning(lasterr)
+##   xMaxDiff = 0;
+##   xDiagMaxDiff = 0;
+## end
+
+## K = kernCompute(kern, x);
+## traceK =  full(trace(K));
+## K2 = kernDiagCompute(kern, x);
+## traceK2 = full(sum(K2));
+## traceDiff = traceK - traceK2; 
+## %if abs(traceDiff) > 2*epsilon,
+## %  fprintf('kernDiagCompute is not in sync with kernCompute.\n')
+## %  fprintf('diag(kernCompute)\tkernDiagCompute')
+## %  disp([diag(K), K2])
+## %end
+
+## covGrad = ones(size(kernCompute(kern, x, x2)));
+## epsilon = 1e-6;
+## params = kernExtractParam(kern) * paramPack;
+## origParams = params;
+## Lplus = zeros(size(params));
+## Lminus = zeros(size(params));
+## for i = 1:length(params);
+##   params = origParams;
+##   params(i) = origParams(i) + epsilon;
+##   kern = kernExpandParam(kern, params * paramExpand);
+##   Lplus(i) = full(sum(sum(kernCompute(kern, x, x2))));
+##   params(i) = origParams(i) - epsilon;
+##   kern = kernExpandParam(kern, params * paramExpand);
+##   Lminus(i) = full(sum(sum(kernCompute(kern, x, x2))));
+## end
+## params = origParams;
+## kern = kernExpandParam(kern, params * paramExpand);
+## [void, names] = kernExtractParam(kern);
+## names(toRemove) = [];
+## gL2Diff = .5*(Lplus - Lminus)/epsilon;
+## g = kernGradient(kern, x, x2, covGrad) * paramExpand;
+
+## param2MaxDiff = max(max(abs(gL2Diff-g)));
+## if param2MaxDiff > 2*epsilon
+##   l = 0;
+##   for i = 1:length(names)
+##     if l < length(names{i})
+##       l = length(names{i});
+##     end
+##   end
+  
+##   fprintf([char(repmat(32, 1, l)) '\tanalytic   diffs     delta\n']);
+##   for i = 1:length(names)
+##     spaceLen = l - length(names{i});
+##     space = char(repmat(32, 1, spaceLen));
+##     fprintf([space names{i} ':\t%4.6g\t%4.6g\t%4.6g\n'], ...
+##             g(i), gL2Diff(i), gL2Diff(i) - g(i));
+##   end
+##   pause(0);
+## end
+
+
+## fprintf('Trace max diff: %2.6g.\n', traceDiff);
+## fprintf('Param max diff: %2.6g.\n', paramMaxDiff)
+## fprintf('Param X2 max diff: %2.6g.\n', param2MaxDiff)
+## fprintf('X max diff: %2.6g.\n', xMaxDiff)
+## fprintf('XDiag max diff: %2.6g.\n', xDiagMaxDiff)
+## fprintf('\n');
+
+## if nargout > 0
+##   kernRet = kern;
+## else
+##   kernDisplay(kern);
+## end
+
+  kernDisplay(kern)
+  return(kern)
+# We don't test kernCompute(kern, x, x2) here at all!
+
 }

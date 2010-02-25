@@ -4,7 +4,7 @@ mlpKernParamInit <- function (kern) {
   kern$variance <- 1
   kern$nParams <- 3
 
-  kern$transforms <- list(index=c(1,2,3), type="positive")
+  kern$transforms <- list(list(index=c(1,2,3), type="positive"))
 
   kern$isStationary <- FALSE
 

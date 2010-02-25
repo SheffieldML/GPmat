@@ -28,7 +28,14 @@ disimKernParamInit <- function (kern) {
   else
     kern$isNormalised <- FALSE
 
-  kern$transforms <- list(index=1:kern$nParams, type="positive")
+  if ("options" %in% names(kern) && "inverseWidthBounds" %in% names(kern$options)) {
+    kern$transforms <- list(list(index=setdiff(1:kern$nParams, 2), type="positive"),
+                            list(index=2, type="bounded"))
+    kern$transformArgs <- list()
+    kern$transformArgs[[2]] <- kern$options$inverseWidthBounds
+  }
+  else
+    kern$transforms <- list(list(index=1:kern$nParams, type="positive"))
 
   kern$isStationary <- FALSE
 
@@ -53,8 +60,9 @@ disimKernCompute <- function (kern, t1, t2=t1) {
     hp2 <- disimComputeHPrime(t2, t1, kern$di_decay, kern$decay, kern$decay, l)
     k <- h + t(h2) + hp + t(hp2)
   }
-  k <- 0.5*k*sqrt(pi)*l
-  k <- kern$rbf_variance*kern$di_variance*kern$variance*k
+  k <- 0.5*kern$rbf_variance*kern$di_variance*kern$variance*k
+  if (!kern$isNormalised)
+    k <- k*sqrt(pi)*l
   k <- Re(k)
 
   if ( "gaussianInitial" %in% names(kern) && kern$gaussianInitial ) {
@@ -280,11 +288,11 @@ disimKernDisplay <- function (kern, spaceNum=0) {
 ##   else
 ##     cat("Non-stationary version of the kernel\n")
 
-##   cat(spacing)
-##   if(kern$isNormalised)
-##     cat("Normalised version of the kernel\n")
-##   else
-##     cat("Unnormalised version of the kernel\n")
+  cat(spacing)
+  if(kern$isNormalised)
+    cat("Normalised version of the kernel\n")
+  else
+    cat("Unnormalised version of the kernel\n")
 
 ##   cat(spacing)
 ##   if(kern$isNegativeS)
@@ -328,14 +336,19 @@ disimXdisimKernCompute <- function (disimKern1, disimKern2, t1, t2=t1) {
   if ( disimKern1$rbf_variance != disimKern2$rbf_variance)
     stop("Kernels cannot be cross combined if they have different RBF variances.")
 
+  if ( disimKern1$isNormalised != disimKern2$isNormalised )
+    stop("Both the DISIM kernels have to be either normalised or not.")
+
   l <- sqrt(2/disimKern1$inverseWidth)
   h1 <- disimComputeH(t1, t2, disimKern1$di_decay, disimKern1$decay, disimKern2$decay, l)
   h2 <- disimComputeH(t2, t1, disimKern1$di_decay, disimKern2$decay, disimKern1$decay, l)
   hp1 <- disimComputeHPrime(t1, t2, disimKern1$di_decay, disimKern1$decay, disimKern2$decay, l)
   hp2 <- disimComputeHPrime(t2, t1, disimKern1$di_decay, disimKern2$decay, disimKern1$decay, l)
   K <- h1 + t(h2) + hp1 + t(hp2)
-  K <- 0.5*K*sqrt(pi)*l
-  K <- disimKern1$rbf_variance*disimKern1$di_variance*sqrt(disimKern1$variance)*sqrt(disimKern2$variance)*K
+  K <- 0.5*disimKern1$rbf_variance*disimKern1$di_variance*sqrt(disimKern1$variance)*sqrt(disimKern2$variance)*K
+
+  if (!disimKern1$isNormalised)
+    K <- K*l*sqrt(pi)
 
   if ("gaussianInitial" %in% names(disimKern1) && disimKern1$gaussianInitial && 
       "gaussianInitial" %in% names(disimKern2) && disimKern2$gaussianInitial) {
@@ -373,6 +386,9 @@ disimXrbfKernCompute <- function (disimKern, rbfKern, t1, t2=t1) {
   if ( disimKern$rbf_variance != rbfKern$variance )
     stop("Kernels cannot be cross combined if they have different RBF variances.")
 
+  if ( disimKern$isNormalised != rbfKern$isNormalised )
+    stop("Both kernels have to be either normalised or not.")
+
   dim1 <- dim(as.matrix(t1))[1]
   dim2 <- dim(as.matrix(t2))[1]
 
@@ -400,7 +416,9 @@ disimXrbfKernCompute <- function (disimKern, rbfKern, t1, t2=t1) {
 
   K <- signs1 * exp(lnCommon + halfLDelta^2 - delta * diffT + lnPart1) + signs2 * exp(lnCommon + halfLD_i^2 - Di * diffT + lnPart2)
 
-  K <- 0.5*sqrt(disimKern$variance)*sqrt(disimKern$di_variance)*rbfKern$variance*K*sqrt(pi)*l
+  K <- 0.5*sqrt(disimKern$variance)*sqrt(disimKern$di_variance)*rbfKern$variance*K
+  if (!disimKern$isNormalised)
+    K <- K*l*sqrt(pi)
   K <- Re(K)
 
   return (K)
@@ -421,6 +439,9 @@ disimXsimKernCompute <- function (disimKern, simKern, t1, t2=t1) {
 
   if ( disimKern$di_variance != simKern$variance)
     stop("Kernels cannot be cross combined if they have different driving input variances.")
+
+  if ( disimKern$isNormalised != simKern$isNormalised )
+    stop("Both kernels have to be either normalised or not.")
 
 #  if ( disimKern$rbf_variance != simKern$rbf_variance)
 #    stop("Kernels cannot be cross combined if they have different RBF variances.")
@@ -479,8 +500,9 @@ disimXsimKernCompute <- function (disimKern, simKern, t1, t2=t1) {
   signs6 <- lnPart6_f[[2]]
 
   K <- signs1 * exp(lnCommon1 + lnFact1 + lnPart1) +signs2a*exp(lnCommon1 + lnFact2 + lnPart2a) +signs2b*exp(lnCommon1 + lnFact2 + lnPart2b) +signs3*exp(lnCommon1 + lnFact3 + lnPart3) +signs4*exp(lnCommon1 + lnFact4 + lnPart4) +signs5*exp(lnCommon2 + lnPart5) +signs6*exp(lnCommon2 + lnFact6 + lnPart6)
-  K <- 0.5*K*sqrt(pi)*l
-  K <- disimKern$rbf_variance*disimKern$di_variance*sqrt(disimKern$variance)*K
+  K <- 0.5*disimKern$rbf_variance*disimKern$di_variance*sqrt(disimKern$variance)*K
+  if (!disimKern$isNormalised)
+    K <- K*l*sqrt(pi)
   K <- Re(K)
 
   if ("gaussianInitial" %in% names(disimKern) && disimKern$gaussianInitial && 
@@ -556,9 +578,9 @@ disimKernDiagCompute <- function (kern, t1) {
     hp <- signs1p * exp(lnCommonp + lnFact1ap + lnPart1p) - signs1p * exp(lnCommonp + lnFact1bp + lnPart1p) + signs2p * exp(lnCommonp + lnFact2p + lnPart2p)
   }
 
-  k <- 2*Re(h+hp)
-  k <- 0.5*k*sqrt(pi)*l
-  k <- kern$rbf_variance*kern$di_variance*kern$variance*k
+  k <- kern$rbf_variance*kern$di_variance*kern$variance*Re(h+hp)
+  if (!kern$isNormalised)
+    k <- k*l*sqrt(pi)
 
   if ( "gaussianInitial" %in% names(kern) && kern$gaussianInitial )
     k = k + kern$initialVariance*kern$variance * 
@@ -606,6 +628,9 @@ disimXdisimKernGradient <- function (disimKern1, disimKern2, t1, t2, covGrad) {
   if ( disimKern1$rbf_variance != disimKern2$rbf_variance )
     stop("Kernels cannot be cross combined if they have different RBF variances.")
 
+  if ( disimKern1$isNormalised != disimKern2$isNormalised )
+    stop("Both the DISIM kernels have to be either normalised or not.")
+
   option <- 5
   l <- sqrt(2/disimKern1$inverseWidth)
   disimH1 <- disimComputeH(t1, t2, disimKern1$di_decay, disimKern1$decay, disimKern2$decay, l, option)
@@ -646,15 +671,23 @@ disimXdisimKernGradient <- function (disimKern1, disimKern2, t1, t2, covGrad) {
   C1 <- sqrt(disimKern1$variance)
   C2 <- sqrt(disimKern2$variance)
   C3 <- disimKern1$rbf_variance
-  K <- h1 + t(h2) + hp1 + t(hp2)
-  K <- 0.5*K*sqrt(pi)
+  K <- 0.5 * (h1 + t(h2) + hp1 + t(hp2))
   var2 <- C0*C1*C2*C3
 
-  dk_ddelta <- sum(covGrad*dK_ddelta)*0.5*sqrt(pi)*l*var2
-  dk_dD1 <- sum(covGrad*dK_dD1)*0.5*sqrt(pi)*l*var2
-  dk_dD2 <- sum(covGrad*dK_dD2)*0.5*sqrt(pi)*l*var2
-  dk_dl <- sum(covGrad*(dK_dl*0.5*sqrt(pi)*l + K))*var2
-  K <- l*K
+  if (disimKern1$isNormalised) {
+    dk_ddelta <- sum(covGrad*dK_ddelta)*0.5*var2
+    dk_dD1 <- sum(covGrad*dK_dD1)*0.5*var2
+    dk_dD2 <- sum(covGrad*dK_dD2)*0.5*var2
+    dk_dl <- sum(covGrad*dK_dl)*0.5*var2
+  }
+  else {
+    K <- K*sqrt(pi)
+    dk_ddelta <- sum(covGrad*dK_ddelta)*0.5*sqrt(pi)*l*var2
+    dk_dD1 <- sum(covGrad*dK_dD1)*0.5*sqrt(pi)*l*var2
+    dk_dD2 <- sum(covGrad*dK_dD2)*0.5*sqrt(pi)*l*var2
+    dk_dl <- sum(covGrad*(dK_dl*0.5*sqrt(pi)*l + K))*var2
+    K <- l*K
+  }
   dk_dC0 <- C1*C2*C3*sum(covGrad*K)
   dk_dC1 <- C0*C2*C3*sum(covGrad*K)
   dk_dC2 <- C0*C1*C3*sum(covGrad*K)
@@ -669,7 +702,7 @@ disimXdisimKernGradient <- function (disimKern1, disimKern2, t1, t2, covGrad) {
 
   K <- var2*K
 
-    if ("gaussianInitial" %in% names(disimKern1) && disimKern1$gaussianInitial && 
+  if ("gaussianInitial" %in% names(disimKern1) && disimKern1$gaussianInitial && 
       "gaussianInitial" %in% names(disimKern2) && disimKern2$gaussianInitial) {
     if (disimKern1$initialVariance != disimKern2$initialVariance)
       stop("Kernels cannot be cross combined if they have different initial variances.");
@@ -756,6 +789,9 @@ disimXrbfKernGradient <- function (disimKern, rbfKern, t1, t2, covGrad) {
   if ( disimKern$rbf_variance != rbfKern$variance )
     stop("Kernels cannot be cross combined if they have different RBF variances.")
 
+  if ( disimKern$isNormalised != rbfKern$isNormalised )
+    stop("Both kernels have to be either normalised or not.")
+
   if ( nargs()<5 ) {
     k <- disimXrbfKernCompute(disimKern, rbfKern, t1)
   } else {
@@ -780,7 +816,10 @@ disimXrbfKernGradient <- function (disimKern, rbfKern, t1, t2, covGrad) {
   halfLD_i <- 0.5*l*D_i
   halfLDelta <- 0.5*l*delta
 
-  prefact <- C_0 * C_i * C_j * sqrt(pi)/2 * l
+  if (disimKern$isNormalised)
+    prefact <- 0.5 * C_0 * C_i * C_j
+  else
+    prefact <- C_0 * C_i * C_j * sqrt(pi)/2 * l
 
   lnCommon <- - log(0i + delta - D_i)
   lnPart1_f <- lnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l)
@@ -815,7 +854,10 @@ disimXrbfKernGradient <- function (disimKern, rbfKern, t1, t2, covGrad) {
   dlnPart2 <- gradln2$dlnPart
   m2 <- gradln2$m
 
-  dK_dl <- k/l + prefact * (delta*halfLDelta * signs1 * exp(lnCommon + lnFact1 + lnPart1) + D_i*halfLD_i * signs2 * exp(lnCommon + lnFact2 + lnPart2) + dlnPart1 * exp(lnCommon + lnFact1 - m1) + dlnPart2 * exp(lnCommon + lnFact2 - m2))
+  dK_dl <- prefact * (delta*halfLDelta * signs1 * exp(lnCommon + lnFact1 + lnPart1) + D_i*halfLD_i * signs2 * exp(lnCommon + lnFact2 + lnPart2) + dlnPart1 * exp(lnCommon + lnFact1 - m1) + dlnPart2 * exp(lnCommon + lnFact2 - m2))
+  if (!disimKern$isNormalised)
+    dK_dl <- dK_dl + k/l
+  
   dk_dl <- sum(dK_dl*covGrad)
 
   dk_dC_i <- sum(k*covGrad)/C_i
@@ -856,6 +898,9 @@ disimXsimKernGradient <- function (disimKern, simKern, t1, t2, covGrad) {
 
   if ( disimKern$di_variance != simKern$variance)
     stop("Kernels cannot be cross combined if they have different driving input variances.")
+
+  if ( disimKern$isNormalised != simKern$isNormalised )
+    stop("Both kernels have to be either normalised or not.")
 
 #  if ( disimKern$rbf_variance != simKern$rbf_variance)
 #    stop("Kernels cannot be cross combined if they have different RBF variances.")
@@ -918,7 +963,10 @@ disimXsimKernGradient <- function (disimKern, simKern, t1, t2, covGrad) {
 
   K2 <- signs5*exp( lnCommon2 + lnPart5) +signs6*exp(lnCommon2 + lnFact6 + lnPart6)
 
-  prefact <- 0.5*sqrt(pi)*l*disimKern$rbf_variance*disimKern$di_variance*sqrt(disimKern$variance)
+  if (disimKern$isNormalised)
+    prefact <- 0.5*disimKern$rbf_variance*disimKern$di_variance*sqrt(disimKern$variance)
+  else
+    prefact <- 0.5*sqrt(pi)*l*disimKern$rbf_variance*disimKern$di_variance*sqrt(disimKern$variance)
   K <- prefact*Re(K1+K2)
 
   dcommon1 <- - 1/delta - t2Mat + l*halfLDelta
@@ -982,8 +1030,9 @@ disimXsimKernGradient <- function (disimKern, simKern, t1, t2, covGrad) {
   dpart6 <- gradln6$dlnPart
   m6 <- gradln6$m
 
-  dK_dl <- Re(prefact * (dcommon1 * K1 + dcommon2 * K2 +dpart1 * exp(lnCommon1 + lnFact1 - m1) +dpart2a * exp(lnCommon1 + lnFact2 - m2a) +dpart2b * exp(lnCommon1 + lnFact2 - m2b) +dpart3 * exp(lnCommon1 + lnFact3 - m3) +dpart4 * exp(lnCommon1 + lnFact4 - m4) +dpart5 * exp(lnCommon2 - m5) +dpart6 * exp(lnCommon2 + lnFact6 - m6))) + K / l
-
+  dK_dl <- Re(prefact * (dcommon1 * K1 + dcommon2 * K2 +dpart1 * exp(lnCommon1 + lnFact1 - m1) +dpart2a * exp(lnCommon1 + lnFact2 - m2a) +dpart2b * exp(lnCommon1 + lnFact2 - m2b) +dpart3 * exp(lnCommon1 + lnFact3 - m3) +dpart4 * exp(lnCommon1 + lnFact4 - m4) +dpart5 * exp(lnCommon2 - m5) +dpart6 * exp(lnCommon2 + lnFact6 - m6)))
+  if (!disimKern$isNormalised)
+    dK_dl <- dK_dl + K / l
 
   dcommon1 <- - t1Mat
   dfact1 <- 2 * D_i / (delta^2 - D_i^2)

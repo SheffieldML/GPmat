@@ -28,17 +28,29 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL,
   }
   else
     model$timeSkew <- 0.0
-  
+
+  model$uniqueT <- sort(unique(times))
+  lBounds <- c(min(diff(model$uniqueT)),
+               (model$uniqueT[length(model$uniqueT)]-model$uniqueT[1]))
+  invWidthBounds <- c(2/(lBounds[2]^2), 2/(lBounds[1]^2))
+
   kernType1 <- list(type="multi", comp=list())
   tieWidth <- 1
   tieRBFVariance <- 2
-  kernType1$comp[[1]] <- "rbf"
+  kernType1$comp[[1]] <- list(type="parametric", realType="rbf",
+                              options=list(isNormalised=TRUE,
+                                inverseWidthBounds=invWidthBounds))
+  #kernType1$comp[[1]] <- "rbf"
   for ( i in seq(1, Ngenes) ) {
     if (model$gaussianInitial)
       kernType1$comp[[i+1]] <- list(type="parametric", realType="disim",
-                                    options=list(gaussianInitial=TRUE))
+                                    options=list(gaussianInitial=TRUE,
+                                      isNormalised=TRUE,
+                                      inverseWidthBounds=invWidthBounds))
     else
-      kernType1$comp[[i+1]] <- "disim"
+      kernType1$comp[[i+1]] <- list(type="parametric", realType="disim",
+                                    options=list(isNormalised=TRUE,
+                                      inverseWidthBounds=invWidthBounds))
   }
   tieParam <- list(tieDelta="di_decay", tieWidth="inverseWidth",
                    tieSigma="di_variance", tieRBFVariance="rbf.?_variance")
@@ -49,7 +61,6 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL,
       kernType2$comp[i] <- "white"        
 
     if ("singleNoise" %in% names(options) && options$singleNoise) {
-      tieNoise <- (2+6*Ngenes + 1):(2+6*Ngenes + Ngenes+1)
       tieParam$tieNoise <- "white._variance"
     }
 
@@ -181,8 +192,9 @@ gpdisimExpandParam <- function (model, params) {
   endVal <- model$kern$nParams
   model$kern <- kernExpandParam(model$kern, params[startVal:endVal])
 
-  funcName <- paste(optimiDefaultConstraint(model$bTransform), "Transform", sep="")
-  func <- get(funcName, mode="function")
+  funcName <- optimiDefaultConstraint(model$bTransform)
+  # Note: ignores funcName$hasArgs
+  func <- get(funcName$func, mode="function")
 
   model$B <- func(params[(endVal+1):length(params)], "atox")
 
@@ -298,8 +310,9 @@ gpdisimLogLikeGradients <- function (model) {
 
   gb <- gmu/model$D
 
-  funcName <- paste(optimiDefaultConstraint(model$bTransform), "Transform", sep="")
-  func <- get(funcName, mode="function")
+  funcName <- optimiDefaultConstraint(model$bTransform)
+  # Note: ignores funcName$hasArgs
+  func <- get(funcName$func, mode="function")
 
   ## prior contribution
   if ( "bprior" %in% names(model) ) {
@@ -430,15 +443,19 @@ gpdisimUpdateProcesses <- function (model, predt=NULL) {
 
   if (model$gaussianInitial) {
     proteinKern <- kernCreate(model$t, list(type="parametric", realType="sim",
-                                            options=list(gaussianInitial=TRUE)))
+                                            options=list(gaussianInitial=TRUE,
+                                              isNormalised=TRUE)))
     proteinKern$initialVariance <- simMultiKern$comp[[2]]$initialVariance
   }
   else
-    proteinKern <- kernCreate(model$t, "sim")
+    proteinKern <- kernCreate(model$t, list(type="parametric", realType="sim",
+                                            options=list(isNormalised=TRUE)))
+  #proteinKern <- kernCreate(model$t, "sim")
   proteinKern$inverseWidth <- simMultiKern$comp[[1]]$inverseWidth
   proteinKern$decay <- model$delta
   proteinKern$variance <- simMultiKern$comp[[2]]$di_variance
-  inputKern <- kernCreate(model$t, "rbf")
+  inputKern <- kernCreate(model$t, list(type="parametric", realType="rbf",
+                                        options=list(isNormalised=TRUE)))
   inputKern$inverseWidth <- simMultiKern$comp[[1]]$inverseWidth
   inputKern$variance <- 1
   K <- simXrbfKernCompute(proteinKern, inputKern, predt, model$t)
