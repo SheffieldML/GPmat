@@ -1,0 +1,35 @@
+Decoding Underlying Behaviour from Destructive Time Series Experiments
+through Gaussian Process Models
+
+A major problem for biological time series is that often experiments
+(such as gene expression measurements using microarrays or RNA-seq)
+require the organism or cells to be destroyed. This means that a
+particular time series is often a series of measurements of different
+organisms (or batches of cells) at different times. Biological
+replicates normally consist of a separate biological sample measured
+at the same time. With the advent of single cell expression
+experiments, where it is not currently conceivable to make genome-wide
+gene expression measurements without destroying the cell, we expect
+such set ups to be sustained.
+
+Many existing approaches to modelling transcriptional data postulate a
+differential equation model for continuous-time expression profiles
+from which the repeated observations arise.  Two ways of modelling
+repeat experiments would be either to handle repeated observations as
+being from a shared profile, or from completely independent profiles.
+The former approach assumes that gene expression profile for each
+experiment does not vary, whilst the latter approach assumes no
+relationship between the gene expression profiles. For many
+experimental set ups we might expect something in between these two
+extremes where, whilst each individual measurement comes from a
+different collection of cells or a different organism, the
+experimental set up is broadly the same. We therefore expect some
+shared affects and some independent affects for the experiments.
+
+In this work we propose an integrated Gaussian process framework for
+analysis of such experiments.  In our approach, independent aspects of
+the experiments are modelled as independent Gaussian process draws,
+while the common profile across the experiments is modelled by a
+separate Gaussian process.  The method adds power through sharing of
+replicates for the common profile while being robust to outliers from
+individual rogue experiments.
