@@ -502,3 +502,15 @@ distfit_obj <- function(theta, y, cdf) {
 
   return (r)
 }
+
+
+gpsimExperimentMask <- function(Ngenes, experiments) {
+  mask <- diag(1, nrow=Ngenes*length(experiments))
+
+  expids <- unique(experiments)
+  for (i in seq(along=expids)) {
+    mask[experiments==expids[i],experiments==expids[i]] <- 1
+  }
+
+  return(mask)
+}

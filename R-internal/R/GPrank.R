@@ -42,6 +42,12 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
     options$timeSkew <- 1000.0
   #options$gaussianInitial <- TRUE
 
+
+  if (!any(is.na(preprocData@experiments))) {
+    options$structuredExperiments <- TRUE
+    options$experiments <- preprocData@experiments
+  }
+
   if (useGpdisim) {
     Ngenes <- length(genes) - 1
     options$fix$names <- "di_variance"

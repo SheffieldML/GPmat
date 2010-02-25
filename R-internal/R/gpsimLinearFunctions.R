@@ -19,6 +19,16 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
                (model$uniqueT[length(model$uniqueT)]-model$uniqueT[1]))
   invWidthBounds <- c(2/(lBounds[2]^2), 2/(lBounds[1]^2))
 
+  if ("structuredExperiments" %in% names(options) &&
+      options$structuredExperiments &&
+      (length(unique(options$experiments)) > 1)) {
+    model$isHierarchical <- TRUE
+    model$experimentStructure <- options$experiments
+    model$experimentMask <- gpsimExperimentMask(Ngenes+1, options$experiments)
+  }
+  else
+    model$isHierarchical <- FALSE
+  
   if ("isNegativeS" %in% names(options) && options$isNegativeS)
     isNegativeS = TRUE
   else
@@ -103,6 +113,9 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
   }
 
   model$numParams <- Ngenes + model$kern$nParams
+  if (model$isHierarchical)
+    model$numParams <- model$numParams + 1
+
   model$numGenes <- Ngenes
   model$mu <- apply(y, 2, mean)
   model$B <- model$D*model$mu
@@ -164,6 +177,10 @@ gpsimDisplay <- function(model, spaceNum=0)  {
       cat(c("    Gene ", i, ": ", model$B[i], "\n"), sep="")
     }
   }
+  if (model$isHierarchical) {
+    cat(spacing)
+    cat(c("  Hierarchical kernel variance: ", model$hierkern$comp[[1]]$variance, "\n"), sep="")
+  }
   cat(spacing)
   cat("  Kernel:\n")
   kernDisplay(model$kern, 4+spaceNum)
@@ -182,6 +199,11 @@ gpsimExtractParam <- function (model, option=1) {
     # Note: ignores funcName$hasArgs
     params <- c(params, func(model$B, "xtoa"))
 
+    if (model$isHierarchical) {
+      hparams <- kernExtractParam(model$hierkern)
+      params <- c(params, hparams[2])
+    }
+    
     if ( "fix" %in% names(model) ) 
       for ( i in seq(along=model$fix$index) )
         params[model$fix$index[i]] <- model$fix$value[i]
@@ -194,6 +216,12 @@ gpsimExtractParam <- function (model, option=1) {
     params$values <- c(params$values, func(model$B, "xtoa"))
     for ( i in seq(along=model$mu) ) {
       params$names <- c(params$names, paste("Basal", i, sep=""))
+    }
+
+    if (model$isHierarchical) {
+      hparams <- kernExtractParam(model$hierkern, option)
+      params$values <- c(params$values, hparams$values[2])
+      params$names <- c(params$names, "hier_rbf_variance")
     }
 
     if ( "fix" %in% names(model) ) 
@@ -229,7 +257,12 @@ gpsimExpandParam <- function (model, params) {
   func <- get(funcName$func, mode="function")
 
   # Note: ignores funcName$hasArgs
-  model$B <- func(params[(endVal+1):length(params)], "atox")
+  if (model$isHierarchical) {
+    model$B <- func(params[(endVal+1):(length(params)-1)], "atox")
+    model$hierkern <- kernExpandParam(model$hierkern, params[c(1, length(params), 3:endVal)])
+  }
+  else
+    model$B <- func(params[(endVal+1):length(params)], "atox")
 
   if (model$includeNoise)
     simMultiKern <- model$kern$comp[[1]]
@@ -280,13 +313,24 @@ gpsimUpdateKernels <- function (model) {
 
   if ( ("proteinPrior" %in% names(model)) && ("timesCell" %in% names(model)) ) {
     k <- Re(kernCompute(model$kern, model$timesCell))
-    noiseVar <- c(array(eps, model$kern$comp[[1]]$diagBlockDim[1], 1), model$yvar)
+    if (model$isHierarchical)
+      hierk <- Re(kernCompute(model$hierkern, model$timesCell)) * model$experimentMask
+    if ( model$includeNoise ) {
+      noiseVar <- c(array(0, model$kern$comp[[1]]$diagBlockDim[1], 1), model$yvar)
+    } else {
+      noiseVar <- c(array(eps, model$kern$comp[[1]]$diagBlockDim[1], 1), model$yvar)
+    }
   } else {
     k <- Re(kernCompute(model$kern, model$t))
+    if (model$isHierarchical)
+      hierk <- Re(kernCompute(model$hierkern, model$t)) * model$experimentMask
     noiseVar <- c(as.array(model$yvar))
   }
 
-  model$K <- k+diag(as.array(noiseVar))
+  if (model$isHierarchical)
+    model$K <- k+hierk+diag(as.array(noiseVar))
+  else
+    model$K <- k+diag(as.array(noiseVar))
   invK <- jitCholInv(model$K)
 
   if ( is.nan(invK[1]) ) { 
@@ -384,8 +428,12 @@ gpsimLogLikeGradients <- function (model) {
 
   if ( "proteinPrior" %in% names(model) ) {
     g <- kernGradient(model$kern, model$timesCell, covGrad)
+    if (model$isHierarchical)
+      gh <- kernGradient(model$hierkern, model$timesCell, covGrad * model$experimentMask)
   } else {
     g <- kernGradient(model$kern, model$t, covGrad)
+    if (model$isHierarchical)
+      gh <- kernGradient(model$hierkern, model$t, covGrad * model$experimentMask)
   }
 
   if ( "bprior" %in% names(model) ) {
@@ -454,6 +502,11 @@ gpsimLogLikeGradients <- function (model) {
   g[decayIndices] <- g[decayIndices]+gd*expTransform(model$D, "gradfact")
 
   g <- c(g, gb)
+  if (model$isHierarchical) {
+    sharedIndices <- c(1, 3:model$kern$nParams)
+    g[sharedIndices] <- g[sharedIndices] + gh[sharedIndices]
+    g <- c(g, gh[2])
+  }
 
   if ( "fix" %in% names(model) ) 
     g[model$fix$index] <- 0
@@ -546,6 +599,7 @@ gpsimGradient <- function (params, model, ...) {
 }
 
 
+# FIXME: isHierarchical not handled (?)
 gpsimUpdateProcesses <- function (model) {
   if ( "proteinPrior" %in% names(model) ) {
     t <- model$timesCell[[2]]
