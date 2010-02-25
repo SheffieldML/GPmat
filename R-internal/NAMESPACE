@@ -1,0 +1,4 @@
+useDynLib("gpsim", ClnDiffErfs)
+
+##export everything that does not start with a .
+exportPattern("^[^\\.]")
