@@ -1,4 +1,4 @@
-GPplot <- function(data, savepath = '', doParams = FALSE,
+GPPlot <- function(data, savepath = '', doParams = FALSE,
                    nameMapping = NULL, predt = NULL, fileOutput=FALSE) {
   require(gplots)
   
@@ -9,7 +9,7 @@ GPplot <- function(data, savepath = '', doParams = FALSE,
   if (is.list(data))
     data <- data[[1]]
   
-  if (is.GPmodel(data))
+  if (is.GPModel(data))
     model <- modelStruct(data)
   else {
     if ("model" %in% names(data))
@@ -43,7 +43,7 @@ GPplot <- function(data, savepath = '', doParams = FALSE,
     }
 
     if (any(model$comp[[i]]$varF < 0) || any(model$comp[[i]]$ypredVar < 0)) {
-      warning('Negative variances in GPplot')
+      warning('Negative variances in GPPlot')
       return()
     }
     #par(mfrow = c(2, trunc(numPlots / 2 + 0.5)))
