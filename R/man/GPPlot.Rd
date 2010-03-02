@@ -1,12 +1,12 @@
-\name{GPplot}
+\name{GPPlot}
 \Rdversion{1.0}
-\alias{GPplot}
+\alias{GPPlot}
 \title{Plot GP(DI)SIM models}
 \description{
   Plots GP(DI)SIM models.
 }
 \usage{
-GPplot(data, savepath = '', nameMapping = NULL, predt = NULL)
+GPPlot(data, savepath = '', nameMapping = NULL, predt = NULL)
 }
 \arguments{
   \item{model}{The model to plot as returned by GPLearn.}
