@@ -16,7 +16,7 @@ rgpsimMapRank <- function(model, times, ry, ryvar, genes) {
         ## checking times
     
         origModel <- model$comp[[j]]
-        fixParams <- gpsimMapExtractParam(origModel, 2)
+        fixParams <- gpsimMapExtractParam(origModel, only.values=FALSE)
         Nfixparams <- origModel$numParams
         
         options <- list()
@@ -47,7 +47,7 @@ rgpsimMapRank <- function(model, times, ry, ryvar, genes) {
         rankModel$comp[[j]] <- gpsimMapCreate(Ngenes, Ntf, times, y, yvar, options)
         rankModel$comp[[j]]$updateF <- FALSE
 
-        params <- gpsimMapExtractParam(rankModel$comp[[j]], 2)
+        params <- gpsimMapExtractParam(rankModel$comp[[j]], only.values=FALSE)
         
         Nparams <- length(params[[1]])
         if ( origModel$includeNoise ) {

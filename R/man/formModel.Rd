@@ -28,7 +28,7 @@ returnData <- formModel(preprocData, TF = NULL, knownTargets = NULL, testTarget 
   Jonatan Ropponen
 }
 \seealso{
-\code{\link{GPLearn}, \link{GPrankTargets}, \link{GPrankTFs}}.
+\code{\link{GPLearn}, \link{GPRankTargets}, \link{GPRankTFs}}.
 }
 \examples{
 ## missing

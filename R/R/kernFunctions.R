@@ -105,17 +105,14 @@ kernParamInit <- function (kern) {
 
 
 
-kernExtractParam <- function (kern, option=1) {
-  ## option=1: only return parameter values;
-  ## option=2: return both parameter values and names.
-
+kernExtractParam <- function (kern, only.values=TRUE) {
   funcName <- paste(kern$type, "KernExtractParam", sep="")
   func <- get(funcName, mode="function")
 
-  if ( option==1 ) {
+  if ( only.values ) {
     values <- func(kern)
   } else {
-    params <- func(kern, option)
+    params <- func(kern, only.values=FALSE)
     values <- params$values
   }
 
@@ -133,7 +130,7 @@ kernExtractParam <- function (kern, option=1) {
         values[index] <- func(values[index], "xtoa")
     }
 
-  if ( option==1 )
+  if ( only.values )
     return (values)
   else {
     params$values <- values
@@ -284,14 +281,21 @@ multiKernParamInit <- function (kern) {
 
   kern$paramGroups <- diag(1, nrow=kern$nParams, ncol=kern$nParams)
 
+  kern$fixBlocks <- rep(FALSE, kern$numBlocks)
+  if ("options" %in% names(kern) && "fixedBlocks" %in% names(kern$options)
+      && kern$options$fixedBlocks) {
+    kern$fixBlocks[kern$options$fixedBlocks] <- TRUE
+    kern$cache <- new.env(parent=emptyenv())
+    assign("cache", list(list(list())), envir=kern$cache)
+  }
+
   return (kern)
 }
 
 
 
-multiKernExtractParam <- function (kern, option=1) {
-  params <- cmpndKernExtractParam(kern, option)
-  return (params)
+multiKernExtractParam <- function (kern, only.values=TRUE) {
+  return (cmpndKernExtractParam(kern, only.values))
 }
 
 
@@ -352,9 +356,9 @@ multiKernCompute <- function (kern, x, x2=x) {
       endThree <- sum(dim2[seq(length.out=i)])
 
       if ( nargs()<3 ) {
-        K[startOne:endOne, startThree:endThree] <- multiKernComputeBlock(kern, x[[i]], i, i)
+        K[startOne:endOne, startThree:endThree] <- multiKernComputeBlock(kern, i, i, x[[i]])
       } else {
-        K[startOne:endOne, startThree:endThree] <- multiKernComputeBlock(kern, x[[i]], x2[[i]], i, i)
+        K[startOne:endOne, startThree:endThree] <- multiKernComputeBlock(kern, i, i, x[[i]], x2[[i]])
       }
 
       for ( j in seq(length.out=(i-1)) )
@@ -363,13 +367,13 @@ multiKernCompute <- function (kern, x, x2=x) {
           endTwo <- sum(dim2[seq(length.out=j)])
 
           if ( nargs()<3 ) {
-            K[startOne:endOne, startTwo:endTwo] <- multiKernComputeBlock(kern, x[[i]], x[[j]], i, j)
+            K[startOne:endOne, startTwo:endTwo] <- multiKernComputeBlock(kern, i, j, x[[i]], x[[j]])
             K[startTwo:endTwo, startOne:endOne] <- t(K[startOne:endOne, startTwo:endTwo])
           } else {
-            K[startOne:endOne, startTwo:endTwo] <- multiKernComputeBlock(kern, x[[i]], x2[[j]], i, j)
+            K[startOne:endOne, startTwo:endTwo] <- multiKernComputeBlock(kern, i, j, x[[i]], x2[[j]])
             startFour <- sum(dim1[seq(length.out=(j-1))])+1
             endFour <- sum(dim1[seq(length.out=j)])
-            K[startFour:endFour, startThree:endThree] <- t(multiKernComputeBlock(kern, x2[[i]], x[[j]], j, i))
+            K[startFour:endFour, startThree:endThree] <- t(multiKernComputeBlock(kern, j, i, x2[[i]], x[[j]]))
           }
         }
     }
@@ -391,9 +395,9 @@ multiKernCompute <- function (kern, x, x2=x) {
       startThree <- (i-1)*dim2 + 1
       endThree <- i*dim2
       if ( nargs() < 3 ) {
-        K[startOne:endOne, startThree:endThree] <- multiKernComputeBlock(kern, x, i, i)
+        K[startOne:endOne, startThree:endThree] <- multiKernComputeBlock(kern, i, i, x)
       } else {
-        K[startOne:endOne, startThree:endThree] <- multiKernComputeBlock(kern, x, x2, i, i)
+        K[startOne:endOne, startThree:endThree] <- multiKernComputeBlock(kern, i, i, x, x2)
       }
 
       for ( j in seq(length=(i-1)) ) {
@@ -401,16 +405,16 @@ multiKernCompute <- function (kern, x, x2=x) {
           startTwo <- (j-1)*dim2 + 1
           endTwo <- j*dim2
           if ( nargs() < 3 ) {
-            K[startOne:endOne, startTwo:endTwo] <- multiKernComputeBlock(kern, x, i, j)
+            K[startOne:endOne, startTwo:endTwo] <- multiKernComputeBlock(kern, i, j, x)
           } else {
-            K[startOne:endOne, startTwo:endTwo] <- multiKernComputeBlock(kern, x, x2, i, j)
+            K[startOne:endOne, startTwo:endTwo] <- multiKernComputeBlock(kern, i, j, x, x2)
           }
           if ( nargs()< 3 ) {
             K[startTwo:endTwo, startOne:endOne] <- t(K[startOne:endOne, startTwo:endTwo])
           } else {
             startFour <- (j-1)*dim1 + 1
             endFour <- j*dim1
-            K[startFour:endFour, startThree:endThree] <- t(multiKernComputeBlock(kern, x2, x, j, i))
+            K[startFour:endFour, startThree:endThree] <- t(multiKernComputeBlock(kern, j, i, x2, x))
           }
         }
       }
@@ -422,23 +426,21 @@ multiKernCompute <- function (kern, x, x2=x) {
 
 
 
-multiKernComputeBlock <- function (kern, x, x2, i, j) {
-  if ( nargs() < 5 ) {
-    j <- i
-    i <- x2
-    x2 <- array()
-  }
-
+multiKernComputeBlock <- function (kern, i, j, x1, x2=NULL) {
   if ( i==j ) {
     funcName <- paste(kern$comp[[i]]$type, "KernCompute", sep="")
     transpose <- 0
     arg1 <- kern$comp[[i]]
 
     func <- get(funcName, mode="function")
-    if ( any(is.na(x2)) ) {
-      K <- func(arg1, x)
-    } else {
-      K <- func(arg1, x, x2)
+    if (kern$fixBlocks[[i]] && kern$fixBlocks[[j]]) {
+      K <- multiKernCacheBlock(kern, func, i, j, arg1=arg1, x1=x1, x2=x2)
+    }
+    else {
+      if (is.null(x2))
+        K <- func(arg1, x1)
+      else
+        K <- func(arg1, x1, x2)
     }
   } else {
 
@@ -459,10 +461,14 @@ multiKernComputeBlock <- function (kern, x, x2, i, j) {
     }
     
     func <- get(funcName, mode="function")
-    if ( any(is.na(x2)) ) {
-      K <- func(arg1, arg2, x)
-    } else {
-      K <- func(arg1, arg2, x, x2)
+    if (kern$fixBlocks[[i]] && kern$fixBlocks[[j]]) {
+      K <- multiKernCacheBlock(kern, func, i, j, arg1=arg1, arg2=arg2, x1=x1, x2=x2)
+    }
+    else {
+      if (is.null(x2))
+        K <- func(arg1, arg2, x1)
+      else
+        K <- func(arg1, arg2, x1, x2)
     }
   }
   return (K)
@@ -601,6 +607,13 @@ multiKernGradientBlock <- function (kern, x, x2, covGrad, i, j) {
     x2 <- array()
   }
 
+  if (kern$fixBlocks[[i]] && kern$fixBlocks[[j]]) {
+    if (i==j)
+      return (0)
+    else
+      return (list(g1=0, g2=0))
+  }
+
   if ( i==j ) {
     funcName <- paste(kern$comp[[i]]$type, "KernGradient", sep="")
     transpose <- 0
@@ -698,61 +711,44 @@ multiKernDiagCompute <- function (kern, x) {
 }
 
 
-multiKernCacheBlock <- function(kern, fhandle = NULL, arg = NULL, i = NULL, j = NULL, X = NULL, X2 = NULL) {
+multiKernCacheBlock <- function(kern, fhandle, i, j, x1, x2=NULL, arg1, arg2=NULL) {
 
-  if(!exists("cacheEnvir") || !exists("cache")) {
-    cacheEnvir <- new.env("cacheEnvir")
+  global_cache <- get("cache", envir = kern$cache)
+  if ((length(global_cache) >= i) && (length(global_cache[[i]]) >= j))
+    cache <- global_cache[[i]][[j]]
+  else
     cache <- list()
-    cache$kern$uuid <- array(dim = kern$numBlocks)
-    assign("cache", cache, pos = cacheEnvir)
-    K <- array()
-    return (K)
-  }
+  key <- c(x1, x2)
 
-  cache <- get("cache", envir = as.environment(cacheEnvir)) 
-  myCache <- cache$kern$uuid[i,j]
-  key <- rbind(X, X2)
-
-  for (k in 1:length(myCache)) {
-    if (dim(key)[2] == length(myCache[k][1]) && all(key == myCache[k][1])) {
-      K = myCache[k][2]
-      return (K)
+  for (k in seq(along=cache)) {
+    if (length(key) == length(cache[[k]]$key) && all(key == cache[[k]]$key)) {
+      #cat("multiKernCacheBlock: cache hit ", i, j, x1, x2, "\n")
+      return (cache[[k]]$value)
     }
   }
 
-                                        # No match if we get all the way here
-  if (is.null(X2)) {
-    K = fhandle(arg, X)
+  #cat("multiKernCacheBlock: cache miss ", i, j, x1, x2, "\n")
+  # No match if we get all the way here
+  if (is.null(arg2)) {
+    if (is.null(x2))
+      K <- fhandle(arg1, x1)
+    else
+      K <- fhandle(arg1, x1, x2)
   }
   else {
-    K = fhandle(arg, X, X2)
+    if (is.null(x2))
+      K <- fhandle(arg1, arg2, x1)
+    else
+      K <- fhandle(arg1, arg2, x1, x2)
   }
-  cache$kern$uuid[i, j][end+1] <- c(key, K)
+  cache <- append(cache, list(list(key=key, value=K)))
+  if (length(global_cache) < i)
+    global_cache[[i]] <- list()
+  global_cache[[i]][[j]] <- cache
+  assign("cache", global_cache, envir=kern$cache)
+  return(K)
 }
 
-
-
-multiKernFixBlocks <- function(kern, blocks = 1) {
-
-  length <- 30
-  op <- options(digits.secs=15)
-  time <- Sys.time()
-  uuid <- ""
-  for (i in 1:length) {
-    char <- substr(time, i, i)
-    if (is.na(charmatch(char, ".")) && is.na(charmatch(char, ":")) && is.na(charmatch(char, "-")) && is.na(charmatch(char, " "))) {
-      uuid <- paste(uuid, char, sep="")
-    }
-  }
-  uuid <- paste('a', uuid, sep="")
-
-  kern$fixedBlocks <- array(0, dim = c(1, kern$numBlocks))
-  kern$fixedBlocks[blocks] <- 1
-  kern$uuid <- uuid
-  multiKernCacheBlock(kern)
-
-  return(kern)
-}
 
 
 kernTest <- function(kernType, numIn=4, tieParamNames=list(), testindex=NULL) {
@@ -829,7 +825,7 @@ kernTest <- function(kernType, numIn=4, tieParamNames=list(), testindex=NULL) {
   }
   params <- origParams
   kern <- kernExpandParam(kern, params)
-  names <- kernExtractParam(kern, 2)$names
+  names <- kernExtractParam(kern, only.values=FALSE)$names
   gLDiff <- .5*(Lplus - Lminus)/epsilon
   g <- kernGradient(kern, x, covGrad)
 

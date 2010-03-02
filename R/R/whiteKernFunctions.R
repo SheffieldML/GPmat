@@ -39,8 +39,8 @@ whiteKernCompute <- function (kern, x, x2) {
 
 
 
-whiteKernExtractParam <- function (kern, option=1) {
-  if ( option == 1 ) {
+whiteKernExtractParam <- function (kern, only.values=TRUE) {
+  if ( only.values ) {
     params <- c(kern$variance)
     
   } else {

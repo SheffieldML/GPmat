@@ -55,6 +55,10 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL,
   tieParam <- list(tieDelta="di_decay", tieWidth="inverseWidth",
                    tieSigma="di_variance", tieRBFVariance="rbf.?_variance")
 
+  if ("fixedBlocks" %in% names(options))
+    kernType1 <- list(type="parametric", realType=kernType1,
+                      options=list(fixedBlocks=options$fixedBlocks))
+
   if (model$includeNoise) {
     kernType2 <- list(type="multi", comp=array())
     for ( i in seq(1, Ngenes+1) )
@@ -119,7 +123,7 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL,
   }
 
   if ( "fix" %in% names(options) ) {
-    params <- gpdisimExtractParam(model, 2)
+    params <- gpdisimExtractParam(model, only.values=FALSE)
     model$fix <- options$fix
     if (! "index" %in% names(model$fix)) {
       for ( i in seq(along=model$fix$names) ) {
@@ -168,9 +172,8 @@ gpdisimDisplay <- function(model, spaceNum=0)  {
 }
   
 
-gpdisimExtractParam <- function (model, option=1) {
-  params <- gpsimExtractParam(model, option)
-  return (params)
+gpdisimExtractParam <- function (model, only.values=TRUE) {
+  return (gpsimExtractParam(model, only.values))
 }
 
 
@@ -366,17 +369,8 @@ cgpdisimLogLikelihood <- function (model) {
 
 
 
-cgpdisimExtractParam <- function (model, option=1) {
-  ## option=1: only return parameter values;
-  ## option=2: return both parameter values and names.
-
-  if ( option == 1 ) {
-    params <- gpdisimExtractParam(model$comp[[1]])
-  } else {
-    params <- gpdisimExtractParam(model$comp[[1]], option)
-  }
-
-  return (params)
+cgpdisimExtractParam <- function (model, only.values=TRUE) {
+  return (gpdisimExtractParam(model$comp[[1]], only.values))
 }
 
 

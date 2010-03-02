@@ -33,6 +33,7 @@ disimKernParamInit <- function (kern) {
                             list(index=2, type="bounded"))
     kern$transformArgs <- list()
     kern$transformArgs[[2]] <- kern$options$inverseWidthBounds
+    kern$inverseWidth <- mean(kern$options$inverseWidthBounds)
   }
   else
     kern$transforms <- list(list(index=1:kern$nParams, type="positive"))
@@ -238,10 +239,10 @@ disimComputeHPrime <-  function (t1, t2, delta, Dj, Dk, l, option=1) {
 
 
 
-disimKernExtractParam <- function (kern, option=1) {
+disimKernExtractParam <- function (kern, only.values=TRUE) {
 
   if ( "gaussianInitial" %in% names(kern) && kern$gaussianInitial ) {
-    if ( option == 1 ) {
+    if ( only.values ) {
       params <- c(kern$di_decay, kern$inverseWidth, kern$di_variance, kern$decay, kern$variance, kern$rbf_variance, kern$initialVariance)
 
     } else {
@@ -249,7 +250,7 @@ disimKernExtractParam <- function (kern, option=1) {
     }
   }
   else {
-    if ( option == 1 ) {
+    if ( only.values ) {
       params <- c(kern$di_decay, kern$inverseWidth, kern$di_variance, kern$decay, kern$variance, kern$rbf_variance)
 
     } else {

@@ -494,14 +494,11 @@ gpsimMapFunctionalUpdateW <- function (model) {
 
 
 
-gpsimMapExtractParam <- function (model, option=1) {
-  ## option=1: only return parameter values;
-  ## option=2: return both parameter values and names.
-
+gpsimMapExtractParam <- function (model, only.values=TRUE) {
   funcName <- paste(model$Transform, "Transform", sep="")
   func <- get(funcName, mode="function")
 
-  if ( option == 1 ) {
+  if ( only.values ) {
     params <- kernExtractParam(model$kern)
     for ( i in seq(length=model$numGenes) ) {
       if ( any(grep("bTransform", names(model))) ) {
@@ -544,7 +541,7 @@ gpsimMapExtractParam <- function (model, option=1) {
     params <- Re(params)
     
   } else {
-    params <- kernExtractParam(model$kern, option)
+    params <- kernExtractParam(model$kern, only.values=FALSE)
     for ( i in seq(length=model$numGenes) ) {
       if ( any(grep("bTransform", names(model))) ) {
         if ( is.na(model$bTransform) ) {
@@ -1120,7 +1117,7 @@ gpsimMapLikeliGradientImplicit <- function (model) {
   }
 
   ## Check if model parameters are being optimised in a transformed space
-  params <- gpsimMapExtractParam(model, 2)
+  params <- gpsimMapExtractParam(model, only.values=FALSE)
   paramvec <- params$values
   names <- params$names
 

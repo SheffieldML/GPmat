@@ -1,18 +1,18 @@
-processData <- function(data, replicates = NULL, searchGenes = NULL) {
-
+processData <- function(data, times = NULL, experiments = NULL) {
   require(puma)
 
   yFull <- exprs(data)
-  times <- pData(data)
   genes <- rownames(exprs(data))
 
-  times <- times[,grep('time', colnames(times))]
+  if (is.null(times)) {
+    times <- pData(data)[,grep('time', colnames(pData(data)))]
+  }
 
   numberOfRows <- length(genes)
   numberOfColumns <- length(colnames(exprs(data)))
 
-  if (is.null(replicates))
-    replicates <- rep(1, numberOfColumns)
+  if (is.null(experiments))
+    experiments <- rep(1, numberOfColumns)
   
   # Normalisation is done for all genes, before specific genes are taken from the array.
   normalisation <- array(0, dim = c(1, numberOfColumns))
@@ -39,17 +39,6 @@ processData <- function(data, replicates = NULL, searchGenes = NULL) {
     pcts[,,i] <- pcts[,,i] + sweep(zeroArray, 2, normalisation)
   }
 
-  # Search specified genes if requested
-  if (! is.null(searchGenes) ) {
-    newData <- searchData(yFull, genes, pcts, searchGenes, numberOfColumns)
-    yFull <- newData$yFull
-    genes <- newData$genes
-    pcts <- newData$pcts
-  }
-
-  numberOfRows <- length(genes)
-  numberOfColumns <- length(colnames(exprs(data)))
-
   yFullVar <- array(dim = c(numberOfRows, numberOfColumns))
 
   for (i in 1:numberOfRows) {
@@ -61,46 +50,30 @@ processData <- function(data, replicates = NULL, searchGenes = NULL) {
     }
   }
 
-  yFull <- t(yFull)
-  yFullVar <- t(yFullVar)
-
-  # Rescale so that average standard deviation of curves is 1.
-  scale <- sd(yFull)
-  scaleMat <- array(1, dim = c(numberOfColumns, 1)) %*% scale
-  yFull <- yFull / scaleMat
-  yFullVar <- yFullVar / scaleMat^2
   rownames(yFullVar) <- rownames(yFull)
   colnames(yFullVar) <- colnames(yFull)
   
-  y <- list()
-  yvar <- list()
-
-  repids <- unique(replicates)
-  for (i in seq(along=repids)) {
-    y[[i]] <- yFull[replicates==repids[i],]
-    yvar[[i]] <- yFullVar[replicates==repids[i],]
-  }
-  times <- as.array(times[replicates==repids[1]])
-  ##times <- array(times[, 1], dim = c(numberOfColumns)) 
-
-  zScores <- as.array(colMeans(yFull / sqrt(yFullVar)))
-
-  return (GPdata(y = y, yvar = yvar, times = times, genes = genes,
-                 scale = as.array(scale), zScores = zScores,
-                 experiments=array(), annotation=annotation(data),
-                 phenoData=phenoData(data), featureData=featureData(data)))
+  pData <- phenoData(data)
+  pData[['experiments', labelDescription='experiment ID']] <- experiments
+  pData[['modeltime', labelDescription='modeltimes']] <- times
+  
+  return (new("ExpressionTimeSeries", exprs = yFull, var.exprs = yFullVar, 
+              annotation=annotation(data), phenoData=pData,
+              featureData=featureData(data),
+              experimentData=experimentData(data)))
 }
 
 
-processRawData <- function(data, times, replicates=NULL) {
+processRawData <- function(rawData, times, experiments=NULL) {
+  data <- rawData
   yFull <- as.matrix(data)
   genes <- rownames(data)
 
   numberOfRows <- length(genes)
   numberOfColumns <- length(colnames(data))
 
-  if (is.null(replicates))
-    replicates <- rep(1, numberOfColumns)
+  if (is.null(experiments))
+    experiments <- rep(1, numberOfColumns)
   
   normalisation <- colMeans(yFull) - mean(yFull)
   zeroArray <- array(0, dim=c(numberOfRows, numberOfColumns))
@@ -108,80 +81,13 @@ processRawData <- function(data, times, replicates=NULL) {
   # The default operation of sweep is "-".
   yFull <- yFull + sweep(zeroArray, 2, normalisation)
 
-  yFull <- t(exp(yFull))
+  yFull <- exp(yFull)
 
-  scale <- sd(yFull)
-  scaleMat <- array(1, dim = c(numberOfColumns, 1)) %*% scale
-  yFull <- yFull / scaleMat
-
-  y <- list()
-  yvar <- list()
-
-  repids <- unique(replicates)
-  for (i in seq(along=repids)) {
-    y[[i]] <- yFull[replicates==repids[i],]
-    yvar[[i]] <- 0 * y[[i]]
-  }
-  times <- as.array(times[replicates==repids[1]])
-
-  zScores <- array(NA, dim=length(genes))
-  names(zScores) <- colnames(y[[1]])
-  
-  return (GPdata(y = y, yvar = yvar, times = times, genes = genes,
-                 scale = as.array(scale), zScores = zScores,
-                 experiments=array(), annotation="NA",
-                 phenoData=new("AnnotatedDataFrame"),
-                 featureData=new("AnnotatedDataFrame")))
-}
-
-
-searchData <- function(yFull, genes, pcts, searchedGenes, numberOfColumns) {
-
-  #counting the number of found genes
-
-  #counter for found genes
-  k <- 0
-
-  # for each target gene
-  for (i in 1:length(searchedGenes)) {
-    searchedGene <- searchedGenes[i]
-
-    # for each gene of the data
-    for (j in 1:length(genes)) {
-      if (!is.na(charmatch(searchedGene, genes[j]))) {
-        k <- k + 1
-      }
-    }
-  }
-
-  foundGenes <- array(dim = k)
-  foundY <- array(dim = c(k, numberOfColumns))
-  foundPcts <- array(dim = c(k, numberOfColumns, 5))
-
-  #resetting the counter
-  k <- 0
-
-  #copying the data related to the found genes
-
-  # for each specified gene
-  for (i in 1:length(searchedGenes)) {
-    searchedGene <- searchedGenes[i]
-
-    # for each gene of the data
-    for (j in 1:length(genes)) {
-      if (!is.na(charmatch(searchedGene, genes[j]))) {
-        k <- k + 1
-        foundGenes[k] <- searchedGene
-        for (l in 1: numberOfColumns) {
-          foundY[k, l] <- yFull[j, l]
-          # for each percentile
-          for (m in 1:5) {
-            foundPcts[k, l, m] <- pcts[j, l, m]
-          }
-        }
-      }
-    }
-  }
-  newData <- list(yFull = foundY, genes = foundGenes, pcts = foundPcts)
-  return (newData)
+  pData <- data.frame(experiments=experiments, modeltime=times)
+  rownames(pData) <- colnames(data)
+  metadata <- data.frame(labelDescription = c("experiment ID", "modeltimes"),
+                         row.names = c("experiments", "modeltime"))
+  phenoData <- new("AnnotatedDataFrame", data=pData, varMetadata=metadata)
+  return (new("ExpressionTimeSeries", assayData=assayDataNew(exprs = yFull),
+              phenoData=phenoData))
 }

@@ -16,7 +16,7 @@ gpsimRank <- function(model, times, ry, ryvar, genes) {
         ## checking times
     
         origModel <- model$comp[[j]]
-        fixParams <- gpsimExtractParam(origModel, 2)
+        fixParams <- gpsimExtractParam(origModel, only.values=FALSE)
         NorigParams <- length(fixParams[[1]])
         if ( origModel$includeNoise ) {
           tfKernNparams <- origModel$kern$comp[[1]]$comp[[1]]$nParams
@@ -37,7 +37,7 @@ gpsimRank <- function(model, times, ry, ryvar, genes) {
         Ntf <- 1
         
         rankModel$comp[[j]] <- gpsimCreate(Ngenes, Ntf, times, y, yvar, options)
-        params <- gpsimExtractParam(rankModel$comp[[j]], 2)
+        params <- gpsimExtractParam(rankModel$comp[[j]], only.values=FALSE)
 
         Nparams <- length(params[[1]])
         if ( origModel$includeNoise ) {
@@ -261,8 +261,8 @@ flatGradient <- function (params, model) {
 }
 
 
-
-flatExtractParam <- function (model) {
+# only.values is ignored
+flatExtractParam <- function (model, only.values=TRUE) {
   Nrep <- length(model$comp)
 
   params <- 0
