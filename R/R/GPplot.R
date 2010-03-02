@@ -10,7 +10,7 @@ GPplot <- function(data, savepath = '', doParams = FALSE,
     data <- data[[1]]
   
   if (is.GPmodel(data))
-    model <- data@model
+    model <- modelStruct(data)
   else {
     if ("model" %in% names(data))
       model <- data$model
@@ -31,6 +31,9 @@ GPplot <- function(data, savepath = '', doParams = FALSE,
   tf <- genes[1]
   targetGenes <- genes[2:length(genes)]
 
+  v <- matrix(seq(1, 3*length(model$comp)), nrow=3)
+  v[1:2,] <- v[seq(2, 1, by=-1),]
+  layout(v)
   for ( i in seq(along=model$comp) ) {
     if (is_gpdisim_model) {
       model$comp[[i]] <- gpdisimUpdateProcesses(model$comp[[i]], predt=predt)
@@ -44,10 +47,10 @@ GPplot <- function(data, savepath = '', doParams = FALSE,
       return()
     }
     #par(mfrow = c(2, trunc(numPlots / 2 + 0.5)))
-    if (!fileOutput)
-      dev.new()
+    #if (!fileOutput)
+    #  dev.new()
 
-    par(mfrow=c(2, 2))
+    #par(mfrow=c(2, 2))
     plot(model$comp[[i]]$predt, model$comp[[i]]$predF,
          ylim=c(min(model$comp[[i]]$predF-2*sqrt(model$comp[[i]]$varF)),
            max(model$comp[[i]]$predF+2*sqrt(model$comp[[i]]$varF))),

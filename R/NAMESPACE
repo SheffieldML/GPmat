@@ -1,4 +1,7 @@
 useDynLib("gpsim", ClnDiffErfs)
 
+importClassesFrom(Biobase, AnnotatedDataFrame, AssayData, eSet, ExpressionSet,
+                  MIAME, Versioned, VersionedBiobase, Versions)
+
 ##export everything that does not start with a .
 exportPattern("^[^\\.]")

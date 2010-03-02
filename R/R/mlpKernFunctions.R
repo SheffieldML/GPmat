@@ -13,9 +13,9 @@ mlpKernParamInit <- function (kern) {
 
 
 
-mlpKernExtractParam <- function (kern, option=1) {
+mlpKernExtractParam <- function (kern, only.values=TRUE) {
 
-  if ( option == 1 ) {
+  if ( only.values ) {
     params <- c(kern$weightVariance, kern$biasVariance, kern$variance)
 
     if ( any(is.na(params)) )

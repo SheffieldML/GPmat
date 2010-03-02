@@ -87,9 +87,9 @@ modelTieParam <- function (model, paramsList) {
     paramsList <- list(paramsList)
   }
 
-  params <- try(modelExtractParam(model, 2), TRUE)
+  params <- try(modelExtractParam(model, only.values=FALSE), TRUE)
   if (! is.list(params) )
-    params <- kernExtractParam(model, 2)
+    params <- kernExtractParam(model, only.values=FALSE)
   
   for ( i in seq(along=paramsList) ) {
     if ( is.character(paramsList[[i]]) ) {
@@ -299,15 +299,15 @@ listStruct <- function (list) {
 
 
 
-modelExtractParam <- function (model, option=1) {
-  if (is.GPmodel(model))
-    model <- model@model
+modelExtractParam <- function (model, only.values=TRUE) {
+  if (is.GPModel(model))
+    model <- modelStruct(model)
   
   funcName <- paste(model$type, "ExtractParam", sep="")
   func <- get(funcName, mode="function")
-  params <- func(model, option)
+  params <- func(model, only.values)
 
-  if ( option>1 ) {
+  if ( !only.values ) {
     if ( "paramGroups" %in% names(model) ) {
       paramGroups <- model$paramGroups
       for ( i in seq(length.out=dim(paramGroups)[2]) ) {
@@ -334,8 +334,8 @@ modelExtractParam <- function (model, option=1) {
 
 
 modelExpandParam <- function (model, params) {
-  if (is.GPmodel(model))
-    return (modelExpandParam(model@model, params))
+  if (is.GPModel(model))
+    return (modelExpandParam(modelStruct(model), params))
 
   if ( is.list(params) )
     params <- params$values
@@ -352,8 +352,8 @@ modelExpandParam <- function (model, params) {
 
 
 modelDisplay <- function(model, ...) {
-  if (is.GPmodel(model))
-    model <- model@model
+  if (is.GPModel(model))
+    model <- modelStruct(model)
 
   funcName <- paste(model$type, "Display", sep="")
   if(exists(funcName, mode="function")) {
@@ -363,8 +363,8 @@ modelDisplay <- function(model, ...) {
 }
 
 modelObjective <- function (params, model, ...) {
-  if (is.GPmodel(model))
-    model <- model@model
+  if (is.GPModel(model))
+    model <- modelStruct(model)
 
   funcName <- paste(model$type, "Objective", sep="")
   if ( exists(funcName, mode="function") ) {
@@ -386,8 +386,8 @@ modelObjective <- function (params, model, ...) {
 
 
 modelGradient <- function (params, model, ...) {
-  if (is.GPmodel(model))
-    model <- model@model
+  if (is.GPModel(model))
+    model <- modelStruct(model)
 
   funcName <- paste(model$type, "Gradient", sep="")
 
@@ -410,8 +410,8 @@ modelGradient <- function (params, model, ...) {
 
 
 modelUpdateProcesses <- function (model) {
-  if (is.GPmodel(model))
-    return (modelUpdateProcesses(model@model))
+  if (is.GPModel(model))
+    return (modelUpdateProcesses(modelStruct(model)))
 
   funcName <- paste(model$type, "UpdateProcesses", sep="")
   func <- get(funcName, mode="function")
@@ -421,8 +421,8 @@ modelUpdateProcesses <- function (model) {
 
 
 modelLogLikelihood <- function (model) {
-  if (is.GPmodel(model))
-    model <- model@model
+  if (is.GPModel(model))
+    model <- modelStruct(model)
 
   funcName <- paste(model$type, "LogLikelihood", sep="")
   func <- get(funcName, mode="function")
@@ -501,4 +501,19 @@ distfit_obj <- function(theta, y, cdf) {
   r <- .5 * sum((x - y)^2)
 
   return (r)
+}
+
+
+# Adapted from selectSomeIndex for AnnotatedDataFrame in Biobase
+# Original (c) R. Gentleman, V. Carey, M. Morgan, S. Falcon
+listSelectSomeIndex <- function(object, maxToShow=5) {
+  len <- length(object)
+  if (maxToShow < 3) maxToShow <- 3
+  if (len > maxToShow) {
+    maxToShow <- maxToShow - 1
+    bot <- ceiling(maxToShow/2)
+    top <- len-(maxToShow-bot-1)
+    list(1:bot, "...", top:len)
+  } else if (len >= 1) list(1:len, NULL, NULL)
+  else list(NULL, NULL, NULL)
 }

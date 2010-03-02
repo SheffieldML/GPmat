@@ -54,6 +54,10 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
     }
   }
 
+  if ("fixedBlocks" %in% names(options))
+    kernType1 <- list(type="parametric", realType=kernType1,
+                      options=list(fixedBlocks=options$fixedBlocks))
+
   model$includeNoise <- options$includeNoise
 
   ## can be removed
@@ -127,7 +131,7 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
   }
 
   if ( "fix" %in% names(options) ) {
-    params <- modelExtractParam(model, 2)
+    params <- modelExtractParam(model, only.values=FALSE)
     model$fix <- options$fix
     if (! "index" %in% names(model$fix)) {
       for ( i in seq(along=model$fix$names) ) {
@@ -170,14 +174,11 @@ gpsimDisplay <- function(model, spaceNum=0)  {
 }
   
 
-gpsimExtractParam <- function (model, option=1) {
-  ## option=1: only return parameter values;
-  ## option=2: return both parameter values and names.
-
+gpsimExtractParam <- function (model, only.values=TRUE) {
   funcName <- optimiDefaultConstraint(model$bTransform)
   func <- get(funcName$func, mode="function")
 
-  if ( option == 1 ) {
+  if ( only.values ) {
     params <- kernExtractParam(model$kern)
     # Note: ignores funcName$hasArgs
     params <- c(params, func(model$B, "xtoa"))
@@ -189,7 +190,7 @@ gpsimExtractParam <- function (model, option=1) {
     params <- Re(params)        
 
   } else {
-    params <- kernExtractParam(model$kern, option)
+    params <- kernExtractParam(model$kern, only.values)
     # Note: ignores funcName$hasArgs
     params$values <- c(params$values, func(model$B, "xtoa"))
     for ( i in seq(along=model$mu) ) {
@@ -484,17 +485,8 @@ cgpsimLogLikelihood <- function (model) {
 
 
 
-cgpsimExtractParam <- function (model, option=1) {
-  ## option=1: only return parameter values;
-  ## option=2: return both parameter values and names.
-
-  if ( option == 1 ) {
-    params <- gpsimExtractParam(model$comp[[1]])
-  } else {
-    params <- gpsimExtractParam(model$comp[[1]], option)
-  }
-
-  return (params)
+cgpsimExtractParam <- function (model, only.values=TRUE) {
+  return (gpsimExtractParam(model$comp[[1]], only.values))
 }
 
 

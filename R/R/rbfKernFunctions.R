@@ -16,6 +16,7 @@ rbfKernParamInit <- function (kern) {
                             list(index=2, type="positive"))
     kern$transformArgs <- list()
     kern$transformArgs[[1]] <- kern$options$inverseWidthBounds
+    kern$inverseWidth <- mean(kern$options$inverseWidthBounds)
   }
   else {
     kern$transforms <- list(list(index=c(1,2), type="positive"))
@@ -26,9 +27,9 @@ rbfKernParamInit <- function (kern) {
 
 
 
-rbfKernExtractParam <- function (kern, option=1) {
+rbfKernExtractParam <- function (kern, only.values=TRUE) {
 
-  if ( option == 1 ) {
+  if ( only.values ) {
     params <- c(kern$inverseWidth, kern$variance)
     
   } else {
