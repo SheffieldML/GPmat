@@ -10,7 +10,11 @@
   given data can also be searched for the data of specific genes.
 }
 \usage{
-GPLearn <- function(preprocData, TF = NULL, targets = NULL, useGpdisim = FALSE, randomize = FALSE, addPriors = FALSE, fixedParams = FALSE, initParams = NULL, initialZero = TRUE, fixComps = NULL, dontOptimise = FALSE, gpsimOptions = NULL, allArgs = NULL)
+GPLearn <- function(preprocData, TF = NULL, targets = NULL,
+ useGpdisim = FALSE, randomize = FALSE, addPriors = FALSE,
+ fixedParams = FALSE, initParams = NULL, initialZero = TRUE,
+ fixComps = NULL, dontOptimise = FALSE, allowNegativeSensitivities =
+FALSE, quiet = FALSE, gpsimOptions = NULL, allArgs = NULL)
 }
 \arguments{
   \item{preprocData}{The preprocessed data to be used.}
@@ -33,6 +37,10 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL, useGpdisim = FALSE, 
   \item{fixComps}{The blocks of the kernel the parameters of which are
     to be fixed. To be used together with fixedParams and initParams.}
   \item{dontOptimise}{Just create the model, do not run optimisation.}
+  \item{allowNegativeSensitivities}{Allow sensitivities to go negative.
+    This is an experimental feature, and the negative values have no
+    physical interpretation.}
+  \item{quiet}{Suppress optimiser output.}
   \item{gpsimOptions}{Internal: additional options to pass to
     gp[di]simCreate.}
   \item{allArgs}{A list of arguments that can be used to override
@@ -48,6 +56,10 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL, useGpdisim = FALSE, 
   \code{\link{gpsimCreate}, \link{GPRankTargets}, \link{GPRankTFs}}.
 }
 \examples{
-## missing
+  ## Load a mmgmos preprocessed fragment of the Drosophila developmental
+  ## time series
+  data(drosophila_gpsim_fragment)
+
+
 }
 \keyword{model}

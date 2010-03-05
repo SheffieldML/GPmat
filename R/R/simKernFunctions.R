@@ -104,7 +104,7 @@ simXsimKernCompute <- function (simKern1, simKern2, t1, t2=t1) {
   K <- h1 + t(h2)
   K <- 0.5*simKern1$sensitivity*simKern2$sensitivity*K
 
-  if (!simkern1$isNormalised)
+  if (!simKern1$isNormalised)
     K <- K*sigma*sqrt(pi)
 
   return (K)

@@ -42,6 +42,7 @@ processData <- function(data, times = NULL, experiments = NULL) {
   yFullVar <- array(dim = c(numberOfRows, numberOfColumns))
 
   for (i in 1:numberOfRows) {
+    cat("Processing gene ", i, "/", numberOfRows, "\r", sep="")
     prof <- pcts[i,,]
     for (j in 1:numberOfColumns) {
       t <- distfit(exp(prof[j, ]), 'normal')
@@ -49,7 +50,8 @@ processData <- function(data, times = NULL, experiments = NULL) {
       yFullVar[i, j] <- t$par[2] ^ 2
     }
   }
-
+  cat("\n")
+  
   rownames(yFullVar) <- rownames(yFull)
   colnames(yFullVar) <- colnames(yFull)
   
@@ -64,7 +66,7 @@ processData <- function(data, times = NULL, experiments = NULL) {
 }
 
 
-processRawData <- function(rawData, times, experiments=NULL) {
+processRawData <- function(rawData, times, experiments=NULL, is.logged=TRUE) {
   data <- rawData
   yFull <- as.matrix(data)
   genes <- rownames(data)
@@ -81,7 +83,8 @@ processRawData <- function(rawData, times, experiments=NULL) {
   # The default operation of sweep is "-".
   yFull <- yFull + sweep(zeroArray, 2, normalisation)
 
-  yFull <- exp(yFull)
+  if (is.logged)
+    yFull <- exp(yFull)
 
   pData <- data.frame(experiments=experiments, modeltime=times)
   rownames(pData) <- colnames(data)

@@ -1,6 +1,6 @@
-\name{GPrankTargets}
+\name{GPRankTargets}
 \Rdversion{1.0}
-\alias{GPrankTargets}
+\alias{GPRankTargets}
 \title{Ranking possible target genes by forming optimized models}
 \description{
   Ranks possible target genes by forming optimized models with a fixed
@@ -13,7 +13,7 @@
   logarithmic value of their marginal likelihood.
 }
 \usage{
-scores <- GPrankTargets(preprocData, TF = NULL, knownTargets = NULL,
+scores <- GPRankTargets(preprocData, TF = NULL, knownTargets = NULL,
 testTargets = NULL, filterLimit = 1.8, returnModels = FALSE, options =
 NULL, scoreSaveFile = NULL)
 }
@@ -53,7 +53,7 @@ NULL, scoreSaveFile = NULL)
   Jonatan Ropponen, Antti Honkela
 }
 \seealso{
-  \code{\link{GPLearn}, \link{formModel}, \link{GPrankTFs}, \linkS4class{scoreList}, \link{generateModels}}.
+  \code{\link{GPLearn}, \link{formModel}, \link{GPRankTFs}, \linkS4class{scoreList}, \link{generateModels}}.
 }
 \examples{
 ## missing

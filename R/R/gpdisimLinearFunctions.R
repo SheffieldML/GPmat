@@ -405,9 +405,9 @@ cgpdisimGradient <- function (params, model, ...) {
 
 
 
-cgpdisimUpdateProcesses <- function (model) {
+cgpdisimUpdateProcesses <- function (model, predt=NULL) {
   for ( i in seq(along=model$comp) )
-    model$comp[[i]] <- gpdisimUpdateProcesses(model$comp[[i]])
+    model$comp[[i]] <- gpdisimUpdateProcesses(model$comp[[i]], predt=predt)
 
   return (model)
 }

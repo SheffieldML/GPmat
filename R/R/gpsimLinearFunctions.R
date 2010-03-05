@@ -38,7 +38,8 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
     for ( i in 1:Ngenes ) {
       kernType1$comp[[i+1]] <- list(type="parametric", realType="sim",
                                     options=list(isNormalised=TRUE,
-                                      inverseWidthBounds=invWidthBounds))
+                                      inverseWidthBounds=invWidthBounds,
+                                      isNegativeS=isNegativeS))
       timesCell <- c(timesCell, list(mRNA=times))
     }
 
@@ -50,7 +51,8 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
     for ( i in 1:Ngenes ) {
       kernType1$comp[[i]] <- list(type="parametric", realType="sim",
                                   options=list(isNormalised=TRUE,
-                                    inverseWidthBounds=invWidthBounds))
+                                    inverseWidthBounds=invWidthBounds,
+                                    isNegativeS=isNegativeS))
     }
   }
 
@@ -95,12 +97,12 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
   model$kern <- modelTieParam(model$kern, tieParam)
 
   if ( "proteinPrior" %in% names(options) ) {
-    for ( i in seq(2,model$kern$numBlocks,length.out=model$kern$numBlocks-1) ) {
+    for ( i in seq(2,simMultiKern$numBlocks,length.out=simMultiKern$numBlocks-1) ) {
       model$D[i-1] <- simMultiKern$comp[[i]]$decay
       model$S[i-1] <- simMultiKern$comp[[i]]$sensitivity
     }
   } else {
-    for ( i in seq(length.out=model$kern$numBlocks) ) {
+    for ( i in seq(along=simMultiKern$comp) ) {
       model$D[i] <- simMultiKern$comp[[i]]$decay
       model$S[i] <- simMultiKern$comp[[i]]$sensitivity
     }
@@ -148,8 +150,8 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
   model <- gpsimExpandParam(model, params)
   
   return (model)
- 
 }
+
 
 gpsimDisplay <- function(model, spaceNum=0)  {
   spacing = matrix("", spaceNum+1)
@@ -521,9 +523,9 @@ cgpsimGradient <- function (params, model, ...) {
 
 
 
-cgpsimUpdateProcesses <- function (model) {
+cgpsimUpdateProcesses <- function (model, predt=NULL) {
   for ( i in seq(along=model$comp) )
-    model$comp[[i]] <- gpsimUpdateProcesses(model$comp[[i]])
+    model$comp[[i]] <- gpsimUpdateProcesses(model$comp[[i]], predt=predt)
 
   return (model)
 }
@@ -538,7 +540,7 @@ gpsimGradient <- function (params, model, ...) {
 }
 
 
-gpsimUpdateProcesses <- function (model) {
+gpsimUpdateProcesses <- function (model, predt=NULL) {
   if ( "proteinPrior" %in% names(model) ) {
     t <- model$timesCell[[2]]
   } else {
@@ -546,7 +548,8 @@ gpsimUpdateProcesses <- function (model) {
   }
 
   ##numData <- length(t)
-  predt <- c(seq(min(t), max(t), length=100), t)
+  if (is.null(predt))
+    predt <- c(seq(min(t), max(t), length=100), t)
   ## ymean <- t(matrix(model$y[1,], model$numGenes, numData))
 
   if (model$includeNoise)
