@@ -31,21 +31,25 @@ GPPlot <- function(data, savepath = '', doParams = FALSE,
   tf <- genes[1]
   targetGenes <- genes[2:length(genes)]
 
-  v <- matrix(seq(1, 3*length(model$comp)), nrow=3)
-  v[1:2,] <- v[seq(2, 1, by=-1),]
-  layout(v)
+  if (numGenes <= 2) {
+    v <- matrix(seq(1, (numGenes+1)*length(model$comp)), nrow=(numGenes+1))
+    v[1:2,] <- v[seq(2, 1, by=-1),]
+    layout(v)
+    singlePlot <- TRUE
+  }
+  else {
+    singlePlot <- FALSE
+  }
+  model <- modelUpdateProcesses(model, predt=predt)
   for ( i in seq(along=model$comp) ) {
-    if (is_gpdisim_model) {
-      model$comp[[i]] <- gpdisimUpdateProcesses(model$comp[[i]], predt=predt)
-    }
-    else {
-      model$comp[[i]] <- gpsimUpdateProcesses(model$comp[[i]])
-    }
-
     if (any(model$comp[[i]]$varF < 0) || any(model$comp[[i]]$ypredVar < 0)) {
       warning('Negative variances in GPPlot')
       return()
     }
+
+    if (!singlePlot)
+      par(mfrow = c(3, ceiling((numGenes+1) / 3)))
+
     #par(mfrow = c(2, trunc(numPlots / 2 + 0.5)))
     #if (!fileOutput)
     #  dev.new()
@@ -69,7 +73,7 @@ GPPlot <- function(data, savepath = '', doParams = FALSE,
       if ( is.null(nameMapping) ) {
         genename <- genes[j]
       } else {
-        genename <- nameMapping[genes[j]][[1]]
+        genename <- get(genes[j], env=nameMapping)
       }
       
       if ( j==1 && is_gpdisim_model ) {
@@ -77,7 +81,14 @@ GPPlot <- function(data, savepath = '', doParams = FALSE,
       } else {
         title(paste(genename, "mRNA"))
       }
-      plotCI(model$comp[[i]]$realt, model$comp[[i]]$y[,j],
+      if ("realt" %in% names(model$comp[[i]]))
+        plotTime <- model$comp[[i]]$realt
+      else if ("timesCell" %in% names(model$comp[[i]]))
+        plotTime <- model$comp[[i]]$timesCell$mRNA
+      else
+        plotTime <- model$comp[[i]]$t
+
+      plotCI(plotTime, model$comp[[i]]$y[,j],
              uiw=2*sqrt(model$comp[[i]]$yvar[,j]), lwd=3, col=3, add=TRUE)
       #points(model$comp[[i]]$t, model$comp[[i]]$y[,j], lwd=3, col=3)
       lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]+2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
