@@ -3,6 +3,7 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
                     addPriors = FALSE, fixedParams = FALSE,
                     initParams = NULL, initialZero = TRUE,
                     fixComps = NULL, dontOptimise = FALSE,
+                    allowNegativeSensitivities = FALSE, quiet = FALSE,
                     gpsimOptions = NULL, allArgs = NULL) {
 
   if (!is.null(allArgs)) {
@@ -36,7 +37,7 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
   if (addPriors)
     options$addPriors <- TRUE
 
-  if (!initialZero)
+  if (!initialZero && useGpdisim)
     options$timeSkew <- 1000.0
   #options$gaussianInitial <- TRUE
 
@@ -47,11 +48,25 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
   }
   else {
     Ngenes <- length(genes)
-    options$fix$names <- "sim1_variance"
-    options$fix$value <- expTransform(c(1), "xtoa")
+    if (allowNegativeSensitivities) {
+      options$fix$names <- "sim1_sensitivity"
+      options$fix$value <- 1
+    }
+    else {
+      options$fix$names <- "sim1_variance"
+      options$fix$value <- expTransform(c(1), "xtoa")
+    }
   }
   Ntf <- 1
 
+  if (initialZero && !useGpdisim) {
+    options$proteinPrior <- list(values=array(0), times=array(0))
+
+    ## Set the variance of the latent function to 1.
+    options$fix$names <- append(options$fix$names, "rbf1_variance")
+    options$fix$value <- append(options$fix$value, expTransform(1, "xtoa"))
+  }
+  
   # fixing first output sensitivity to fix the scaling
   if (fixedParams && !is.null(initParams)) {
     if (is.list(initParams)) {
@@ -69,6 +84,9 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
 
   if (! is.null(fixComps))
     options$fixedBlocks <- fixComps
+
+  if (allowNegativeSensitivities)
+    options$isNegativeS <- TRUE
   
   # initializing the model
   if (useGpdisim)
@@ -99,13 +117,28 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
     model <- modelExpandParam(model, a)
   }
 
-  if (!is.null(initParams) && !is.list(initParams) && all(is.finite(initParams)))
-    model <- modelExpandParam(model, initParams)
+  if (!is.null(initParams)) {
+    if (!is.list(initParams) && all(is.finite(initParams)))
+      model <- modelExpandParam(model, initParams)
+    else if (is.list(initParams)) {
+      params <- modelExtractParam(model, only.values=FALSE)
+      for (i in seq(along=initParams$names)) {
+        j <- grep(initParams$names[i], params$names)
+        if (length(j) > 0)
+          params$values[j] <- initParams$values[i]
+        else
+          warning(paste("Ignoring invalid initial parameter specification:", initParams$names[i]))
+      }
+      model <- modelExpandParam(model, params$values)
+    }
+  }
 
   optOptions <- optimiDefaultOptions()
 
   optOptions$maxit <- 3000
   optOptions$optimiser <- "SCG"
+  if (quiet)
+    optOptions$display <- FALSE
 
   if (!dontOptimise) {
     cat (c("Optimizing genes", genes, sep=" "), "\n")

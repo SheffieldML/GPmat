@@ -1,3 +1,6 @@
+import(methods)
+import(AnnotationDbi)
+
 useDynLib("gpsim", ClnDiffErfs)
 
 importClassesFrom(Biobase, AnnotatedDataFrame, AssayData, eSet, ExpressionSet,

@@ -16,7 +16,8 @@
 }
 \usage{
 preprocData <- processData(data, times = NULL, experiments = NULL)
-preprocData <- processRawData(rawData, times, experiments = NULL)
+preprocData <- processRawData(rawData, times, experiments = NULL,
+  is.logged = TRUE)
 }
 \arguments{
   \item{data}{The preprocessed data (\code{\linkS4class{exprsReslt}})
@@ -30,7 +31,10 @@ preprocData <- processRawData(rawData, times, experiments = NULL)
     which expression data points arise from which experiments.
     This should be an array in integers from 1 to N with length
     equal to the number of data points.
-    By default all the data points are assumed to be from same replicate.}
+    By default all the data points are assumed to be from same
+    replicate.}
+  \item{is.logged}{Indicates whether the expression values are on
+    log scale or not.}
 }
 \details{
   The expression data (and percentiles, if available) are normalized
@@ -38,7 +42,7 @@ preprocData <- processRawData(rawData, times, experiments = NULL)
   distribution is then fitted into the data with distfit.
 }
 \value{
-  'processData' returns an \code{\linkS4class{ExpressionTimeSeries}}
+  An \code{\linkS4class{ExpressionTimeSeries}}
   object containing all provided information.
 }
 \author{
@@ -48,6 +52,12 @@ preprocData <- processRawData(rawData, times, experiments = NULL)
   \code{\link{GPLearn}, \link{GPRankTargets}}.
 }
 \examples{
-## missing
+  ## Load a mmgmos preprocessed fragment of the Drosophila developmental
+  ## time series
+  data(drosophila_mmgmos_fragment)
+
+  ## Process the data (3 experiments containing 12 time points each)
+  drosophila_gpsim_fragment <- processData(drosophila_mmgmos_fragment,
+    experiments=rep(1:3, each=12))
 }
 \keyword{model}
