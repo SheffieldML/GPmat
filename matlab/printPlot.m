@@ -22,7 +22,8 @@ else
   png = true;
 end
 fprintf('Printing eps plot ...\n');
-print('-depsc', [directory filesep fileName])
+print('-depsc', [directory filesep fileName '.eps']) % OCTAVE doesn't
+                                                     % include .eps automatically
 cmap = colormap;
 if png
   fprintf('Printing png plot ...\n');
@@ -36,7 +37,7 @@ if png
   set(gca, 'fontsize', fontsize/2);
   lineWidth = get(gca, 'lineWidth');
   set(gca, 'lineWidth', lineWidth*2);
-  print('-dpng', [directoryHtml filesep fileName]);
+  print('-dpng', [directoryHtml filesep fileName '.png']);
   set(gcf, 'paperposition', origpos);
   set(gca, 'fontsize', fontsize);
   set(gca, 'lineWidth', lineWidth);
@@ -44,5 +45,8 @@ end
 
 fprintf('Printing black and white eps plot ...\n');
 colormap gray
-print('-deps', [directory filesep fileName 'NoColour'])
+print('-deps', [directory filesep fileName 'NoColour.eps']) % Octave
+                                                            % doesn't
+                                                            % include
+                                                            % .eps automatically
 colormap(cmap);
