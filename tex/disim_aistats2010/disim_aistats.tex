@@ -1,0 +1,165 @@
+\documentclass[accepted]{article}
+\usepackage{aistats2e}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{natbib}
+
+% If your paper is accepted, change the options for the package aistats2e as follows
+%\usepackage[accepted]{aistats2e}
+% This option will print headings for the title of your paper and headings for the
+% authors names, plus a copyright note at the end of the first column of the first page.
+
+
+\begin{document}
+
+% If your paper is accepted and the title of your paper is very long, the style will print
+% as headings an error message. Use the following command to supply a shorter title of your
+% paper so that it can be used as headings.
+%\runningtitle{I use this title instead because the last one was very long}
+
+% If your paper is accepted and the number of authors is large, the style will print
+% as headings an error message. Use the following command to supply a shorter version of the authors
+% names so that they can be used as headings (for example, use only the surnames)
+%\runningauthor{Surname 1, Surname 2, Surname 3, ...., Surname n}
+
+\twocolumn[
+
+\aistatstitle{A model-based method for transcription factor target
+  identification with limited data}
+
+\aistatsauthor{Antti Honkela$^1$ \And Neil D. Lawrence$^2$ \And Magnus Rattray$^2$}
+
+\aistatsaddress{ 
+  $^1$ Dept. of Information and Computer Science,
+  Aalto University School of Science and Technology,
+  Finland \\
+  $^2$ School of Computer Science, University of Manchester, UK } ]
+
+\section{Introduction}
+
+Based on an upcoming journal paper~\citep{Honkela2010PNAS}, we present
+a computational method for identifying potential targets of a
+transcription factor (TF) using wild-type gene expression time series
+data. For each putative target gene we fit a simple differential
+equation model of transcriptional regulation and the model likelihood
+serves as a score to rank targets~\citep{Gao2008}.
+
+The expression profile of the TF is modeled as a sample from a
+Gaussian process prior distribution that is integrated out using a
+non-parametric Bayesian procedure. This results in a parsimonious
+model with relatively few parameters which can be applied to short
+time series data sets without noticeable over-fitting.
+
+We assess our method using genome-wide Chromatin Immunoprecipitation
+(ChIP-chip) and loss-of-function mutant expression data for two TFs,
+Twist and Mef2, controlling mesoderm development in {\it
+  Drosophila}~\citep{Zinzen2009}. Lists of top-ranked genes identified
+by our method are significantly enriched for genes close to bound
+regions identified in the ChIP-chip data and for genes that are
+differentially expressed in loss-of-function mutants. Targets of Twist
+display diverse expression profiles and in this case a model-based
+approach performs significantly better than scoring based on
+correlation with TF expression. Our approach is found to be comparable
+or superior to ranking based on mutant differential expression
+scores. Also, we show how integrating complementary wild-type spatial
+expression data can further improve target ranking performance.
+
+% Transcription factors are key nodes in the gene regulatory
+% networks that determine the function and fate of
+% cells. An important first step in uncovering a gene regulatory network
+% is the identification of target genes regulated by a specific
+% transcription factor (TF). A
+% common approach to this problem is to experimentally locate physical binding
+% of TF proteins to DNA sequence {\em in vivo} using a genome-wide
+% chromatin immunoprecipitation (ChIP)
+% experiment~\cite{Ren2000,Iyer2001}. However, recent studies suggest
+% that many observed binding events are neutral and do not regulate
+% transcription, while regulatory binding events often occur at
+% enhancers that are not proximal to the target gene that they
+% control~\cite{Li2008,MacArthur2009}. Therefore, the task of
+% identifying transcriptional
+% targets requires the integration of ChIP binding predictions
+% with evidence from expression data to help associate binding events
+% with target gene regulation. If there is access to expression data from a mutant in which the TF has
+% been knocked out or over-expressed, then differential expression of genes between wild-type
+% and mutant is indicative of a potential regulatory
+% interaction~\cite{Furlong2001,Sandmann2006a}. Available spatial expression data for the
+% TF and putative target can also provide support for a hypothesised
+% regulatory link. 
+
+% A problem with the above approach is that the creation of mutant
+% strains is challenging or impossible for many TFs of interest. Even
+% when available, mutants may provide very limited information because of redundancy or due to the
+% confounding of signal from indirect regulatory feedback~\cite{Gitter2009}. For these reasons it
+% is useful to seek other sources of evidence to complement ChIP binding
+% predictions. In this contribution we demonstrate how a dynamical model of wild-type transcriptional
+% regulation can be used for genome-wide scoring of putative target genes. All that is required to apply
+% our method is wild-type time series data collected over a period
+% where TF activity is changing. Our approach allows for complementary
+% evidence from expression data to be integrated with ChIP binding data
+% for a specific TF without carrying out TF perturbations. 
+
+% To score putative targets we use the data likelihood under a simple
+% cascaded differential equation model of transcriptional regulation. The regulation model
+% we apply is ``open'' in the sense that we do not explicitly model regulation of the TF
+% itself. To deal with this technical issue we use a recently developed
+% non-parametric probabilistic inference methodology to
+% effectively deal with open differential equation
+% systems~\cite{Gao2008}. We model the TF concentration as a function
+% drawn from a Gaussian process prior distribution~\cite{Rasmussen2006,Lawrence2010}.
+% This functional prior can either be placed
+% on the TF mRNA, for TFs primarily under transcriptional regulation,
+% or the TF protein, for TFs activated post-translationally. In the
+% application considered here the TFs are transcriptionally regulated
+% and we take the former approach. We use Bayesian marginalisation (also
+% known as Bayesian model averaging) to
+% integrate out these functional degrees of freedom. This greatly reduces the
+% number of parameters required to model the data, making a
+% likelihood-based approach feasible even for short time series.
+
+% There are many existing approaches to inferring gene regulatory networks from
+% time series expression data, including dynamic Bayesian networks,
+% information theoretic approaches and differential equation approaches
+% (reviewed in \cite{Bansal2007a}). These methods typically require many
+% more data from a greater diversity of experimental conditions than are
+% available from the short unperturbed wild-type time series that we
+% consider. Indeed, most real gene expression time course data are short
+% relative to the simulated data used to assess computational methods
+% for network inference~\cite{Ernst2005}. However, our goal is more limited in scope since
+% we are primarily interested in providing additional support for hypothesised
+% targets of a specific TF. Again, most approaches to this problem are
+% designed for data containing large numbers of diverse conditions, as
+% exemplified by the DREAM 2 target identification
+% challenge 1~\cite{Stolovitzky2007}. Others
+% have addressed this target identification problem using time series
+% data with a regulation model~\cite{Barenco2006a,Gatta2008}. However,
+% these approaches either require a known target set for training~\cite{Barenco2006a} or
+% they require measured TF protein data~\cite{Gatta2008}. In addition to
+% these differences in the assumed prior knowledge and available data,
+% it is also difficult to validate other approaches on the same data used in these
+% studies as they only carried out validation of selected targets
+% that they identified, rather than using unbiased genome-wide
+% experimental validation. 
+
+% We validate our proposed method by comparing the model-based target
+% ranking with published ChIP-chip data for two TFs controlling
+% mesoderm development in \emph{Drosophila}. Our method is shown to be comparable
+% to, or outperform, the use of knockout mutant data which are available
+% for these TFs. We demonstrate that a model-based approach is significantly
+% better than a simpler approach using correlation when targets display a diverse set of expression profiles. We further show how integrating complementary wild-type spatial
+% {\em in situ} expression data can greatly improve target ranking accuracy. 
+
+\subsubsection*{Acknowledgements}
+
+A.H. was supported by Postdoctoral Researcher's Project No 121179 of
+the Academy of Finland.  M.R. and N.D.L acknowledge support from EPSRC
+Grant No EP/F005687/1 "Gaussian Processes for Systems Identification
+with Applications in Systems Biology".  This work was supported in
+part by the IST Programme of the European Community, under the PASCAL2
+Network of Excellence, IST-2007-216886. This publication only reflects
+the authors' views.
+
+\bibliographystyle{myabbrvnat}
+\bibliography{disim}
+
+\end{document}
