@@ -9,7 +9,6 @@
 % This option will print headings for the title of your paper and headings for the
 % authors names, plus a copyright note at the end of the first column of the first page.
 
-
 \begin{document}
 
 % If your paper is accepted and the title of your paper is very long, the style will print
@@ -25,7 +24,7 @@
 \twocolumn[
 
 \aistatstitle{A model-based method for transcription factor target
-  identification with limited data}
+  identification from short gene expression time series data}
 
 \aistatsauthor{Antti Honkela$^1$ \And Neil D. Lawrence$^2$ \And Magnus Rattray$^2$}
 
@@ -42,13 +41,16 @@ a computational method for identifying potential targets of a
 transcription factor (TF) using wild-type gene expression time series
 data. For each putative target gene we fit a simple differential
 equation model of transcriptional regulation and the model likelihood
-serves as a score to rank targets~\citep{Gao2008}.
+serves as a score to rank targets~\citep{Lawrence2007,Gao2008}.
 
 The expression profile of the TF is modeled as a sample from a
-Gaussian process prior distribution that is integrated out using a
-non-parametric Bayesian procedure. This results in a parsimonious
-model with relatively few parameters which can be applied to short
-time series data sets without noticeable over-fitting.
+Gaussian process (GP) prior distribution that is integrated out using a
+non-parametric Bayesian procedure. We use a linear differential 
+equation model of TF protein translation and target gene transcription~\citep{Gao2008} which, 
+although highly simplified, allows for both TF protein decay and target gene mRNA decay. This
+is a parsimonious model with relatively few parameters which can be applied to short
+time series data sets without noticeable over-fitting. The GP marginal likelihood is exactly tractable
+for this model and we therefore avoid fitting functional degrees of freedom by maximum likelihood.
 
 We assess our method using genome-wide Chromatin Immunoprecipitation
 (ChIP-chip) and loss-of-function mutant expression data for two TFs,
@@ -153,7 +155,7 @@ expression data can further improve target ranking performance.
 
 A.H. was supported by Postdoctoral Researcher's Project No 121179 of
 the Academy of Finland.  M.R. and N.D.L acknowledge support from EPSRC
-Grant No EP/F005687/1 "Gaussian Processes for Systems Identification
+Grant No EP/F005687/1 ``Gaussian Processes for Systems Identification
 with Applications in Systems Biology".  This work was supported in
 part by the IST Programme of the European Community, under the PASCAL2
 Network of Excellence, IST-2007-216886. This publication only reflects
