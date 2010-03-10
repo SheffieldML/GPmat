@@ -601,6 +601,9 @@ gpsimMapExtractParam <- function (model, only.values=TRUE) {
         params$values[model$fix$index[i]] <- model$fix$value[i]
 
     params$values <- Re(params$values)
+    trueparams <- params$values
+    names(trueparans) <- params$names
+    params <- trueparams
   }
 
   return (params)

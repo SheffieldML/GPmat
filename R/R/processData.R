@@ -1,4 +1,4 @@
-processData <- function(data, times = NULL, experiments = NULL) {
+processData <- function(data, times = NULL, experiments = NULL, do.normalisation=TRUE) {
   require(puma)
 
   yFull <- exprs(data)
@@ -14,16 +14,17 @@ processData <- function(data, times = NULL, experiments = NULL) {
   if (is.null(experiments))
     experiments <- rep(1, numberOfColumns)
   
-  # Normalisation is done for all genes, before specific genes are taken from the array.
   normalisation <- array(0, dim = c(1, numberOfColumns))
-
-  for (i in 1:numberOfColumns) {
-    normalisation[i] <- mean(yFull[, i]) - mean(yFull)
-  }
   zeroArray <- array(0, dim=c(numberOfRows, numberOfColumns))
 
-  # The default operation of sweep is "-".
-  yFull <- yFull + sweep(zeroArray, 2, normalisation)
+  if (do.normalisation) {
+    for (i in 1:numberOfColumns) {
+      normalisation[i] <- mean(yFull[, i]) - mean(yFull)
+    }
+
+    # The default operation of sweep is "-".
+    yFull <- yFull + sweep(zeroArray, 2, normalisation)
+  }
 
   pcts <- array(dim = c(numberOfRows, numberOfColumns, 5))
 

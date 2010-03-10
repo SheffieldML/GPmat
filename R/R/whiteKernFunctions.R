@@ -40,11 +40,10 @@ whiteKernCompute <- function (kern, x, x2) {
 
 
 whiteKernExtractParam <- function (kern, only.values=TRUE) {
-  if ( only.values ) {
-    params <- c(kern$variance)
-    
-  } else {
-    params <- list(values=c(kern$variance), names=c("variance"))    
+  params <- c(kern$variance)
+
+  if ( !only.values ) {
+    names(params) <- c("variance")
   }
 
   return (params)

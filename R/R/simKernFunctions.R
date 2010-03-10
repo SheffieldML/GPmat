@@ -115,37 +115,20 @@ simXsimKernCompute <- function (simKern1, simKern2, t1, t2=t1) {
 simKernExtractParam <- function (kern, only.values=TRUE) {
 
   if (kern$gaussianInitial) {
-    if (kern$isNegativeS) {
-      if ( only.values ) {
-        params <- c(kern$decay, kern$inverseWidth, kern$sensitivity, kern$initialVariance)
-      } else {
-        params <- list(values=c(kern$decay, kern$inverseWidth, kern$sensitivity, kern$initialVariance), names=kern$paramNames)
-      }
-    }
-    else {
-      if ( only.values ) {
-        params <- c(kern$decay, kern$inverseWidth, kern$variance, kern$initialVariance)
-      } else {
-        params <- list(values=c(kern$decay, kern$inverseWidth, kern$variance, kern$initialVariance), names=kern$paramNames)
-      }
-    }
+    if (kern$isNegativeS)
+      params <- c(kern$decay, kern$inverseWidth, kern$sensitivity, kern$initialVariance)
+    else
+      params <- c(kern$decay, kern$inverseWidth, kern$variance, kern$initialVariance)
   }
   else {
-    if (kern$isNegativeS) {
-      if ( only.values ) {
-        params <- c(kern$decay, kern$inverseWidth, kern$sensitivity)
-      } else {
-        params <- list(values=c(kern$decay, kern$inverseWidth, kern$sensitivity), names=kern$paramNames)
-      }
-    }
-    else {
-      if ( only.values ) {
-        params <- c(kern$decay, kern$inverseWidth, kern$variance)
-      } else {
-        params <- list(values=c(kern$decay, kern$inverseWidth, kern$variance), names=kern$paramNames)
-      }
-    }
+    if (kern$isNegativeS)
+      params <- c(kern$decay, kern$inverseWidth, kern$sensitivity)
+    else
+      params <- c(kern$decay, kern$inverseWidth, kern$variance)
   }
+  if (! only.values)
+    names(params) <- kern$paramNames
+
   return (params)
 }
 

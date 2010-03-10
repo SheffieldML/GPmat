@@ -63,40 +63,39 @@ cmpndKernExtractParam <- function (kern, only.values=TRUE) {
 
   } else {
     storedTypes <- c()
-    params <- list(values=c(), names=c())
+    params <- c()
+    paramNames <- c()
     origNames <- c()
     for ( i in seq(along=kern$comp) ) {
       paramsList <- kernExtractParam(kern$comp[[i]], only.values=only.values)
-      params$values <- c(params$values, paramsList$values)
+      params <- c(params, paramsList)
       kernName <- paste(kern$comp[[i]]$type, length(grep(kern$comp[[i]]$type, storedTypes))+1, sep="")
-      paramName <- paste(kernName, paramsList$names, sep="_")
+      paramName <- paste(kernName, names(paramsList), sep="_")
       origNames <- c(origNames, paramName)
       storedTypes <- c(storedTypes, kern$comp[[i]]$type)
     }
   }
 
+  paramNames <- array()
   if ( "paramGroups" %in% names(kern) ) {
     paramGroups <- kern$paramGroups
     for ( i in seq(length.out=dim(paramGroups)[2]) ) {
       ind <- grep(1, paramGroups[,i])
-      if ( is.list(params) ) {
-        params$names[i] <- origNames[ind[1]]
+      if ( !only.values ) {
+        paramNames[i] <- origNames[ind[1]]
         for ( j in seq(2, length.out=length(ind)-1) )
-          params$names[i] <- paste(params$names[i], origNames[ind[j]],sep="/")
+          paramNames[i] <- paste(paramNames[i], origNames[ind[j]],sep="/")
       }
    
       paramGroups[ind[seq(2,length(ind),length=length(ind)-1)], i] <- 0
     }
   }
 
-  if ( is.list(params) ) {
-    params$values <- params$values%*%paramGroups
-  } else {
-    params <- params%*%paramGroups
-  }    
+  params <- params%*%paramGroups
+  if ( !only.values )
+    names(params) <- paramNames
 
   return (params)
-
 }
 
 

@@ -1,44 +1,57 @@
 setClass("scoreList", 
-	representation(params = "list", LLs = "numeric",
+	representation(params = "list", loglikelihoods = "numeric",
+                       baseloglikelihoods = "numeric",
                        genes = "list", modelArgs = "list",
                        knownTargets = "character", TF = "character",
-                       sharedModel = "list"))
+                       sharedModel = "list"),
+         prototype(params=list(), loglikelihoods = numeric(),
+                   baseloglikelihoods = numeric(),
+                   genes=list(), modelArgs=list(), knownTargets="",
+                   TF="", sharedModel=list()))
 
-	#prototype = list(params = list(), LLs = array(), genes = list(), useGPsim = array()))
 
+setMethod("initialize", "scoreList",
+          function(.Object, params, loglikelihoods,
+                   baseloglikelihoods=numeric(), genes, modelArgs,
+                   knownTargets="", TF="", sharedModel=list()) {
+            if (!is.list(sharedModel))
+              sharedModel <- list(sharedModel)
 
-scoreList <- function(params, LLs, genes, modelArgs, knownTargets="", TF="",
-                      sharedModel=list()) {
-  if (is.null(knownTargets))
-    knownTargets <- ""
+            if (is.null(knownTargets))
+              knownTargets <- ""
 
-  if (is.null(TF))
-    TF <- ""
+            if (is.null(TF))
+              TF <- ""
 
-  if (!is.list(sharedModel))
-    sharedModel <- list(sharedModel)
-
-  names(params) <- genes
-  names(modelArgs) <- genes
-  names(LLs) <- genes
+            names(params) <- genes
+            names(modelArgs) <- genes
+            names(loglikelihoods) <- genes
+            if (length(baseloglikelihoods) > 0)
+              names(baseloglikelihoods) <- genes
   
-  new("scoreList", params = params, LLs = LLs, genes = genes,
-      modelArgs = modelArgs, knownTargets = knownTargets, TF = TF,
-      sharedModel = sharedModel)
-}
+            .Object@params <- params
+            .Object@loglikelihoods <- loglikelihoods
+            .Object@baseloglikelihoods <- baseloglikelihoods
+            .Object@genes <- genes
+            .Object@modelArgs <- modelArgs
+            .Object@knownTargets <- knownTargets
+            .Object@TF <- TF
+            .Object@sharedModel <- sharedModel
+            .Object
+          })
 
 
 setMethod("show", "scoreList",
           function(object) {
-            if (length(object@LLs) != 1)
+            if (length(object@loglikelihoods) != 1)
               genetext <- "genes"
             else
               genetext <- "gene"
             
             if (object@TF == "")
-              cat("scoreList of ", length(object@LLs), " ", genetext, ".\n", sep="")
+              cat("scoreList of ", length(object@loglikelihoods), " ", genetext, ".\n", sep="")
             else
-              cat("scoreList of ", length(object@LLs), " ", genetext, " for TF ", object@TF, ".\n", sep="")
+              cat("scoreList of ", length(object@loglikelihoods), " ", genetext, " for TF ", object@TF, ".\n", sep="")
             if (all(object@knownTargets != "")) {
               cat("  Known targets: ", paste(object@knownTargets, collapse=", "), "\n")
             }
@@ -54,15 +67,29 @@ setMethod("show", "scoreList",
 
 setGeneric("loglikelihoods",    function(object) standardGeneric("loglikelihoods"))
 setGeneric("loglikelihoods<-",  function(object, value) standardGeneric("loglikelihoods<-"))
-setMethod("loglikelihoods", "scoreList", function(object) object@LLs)
+setMethod("loglikelihoods", "scoreList", function(object) object@loglikelihoods)
 setReplaceMethod("loglikelihoods", c("scoreList", "ANY"),
                  function(object, value) {
-                   if (length(value) != length(object@LLs))
+                   if (length(value) != length(object@loglikelihoods))
                      stop(paste("the length of replacement (",
                                 length(value),
                                 ") should equal the existing length (",
-                                length( object@LLs ), ")",sep=""))
-                   object@LLs <- value
+                                length( object@loglikelihoods ), ")",sep=""))
+                   object@loglikelihoods <- value
+                   object
+                 })
+
+setGeneric("baseloglikelihoods",    function(object) standardGeneric("baseloglikelihoods"))
+setGeneric("baseloglikelihoods<-",  function(object, value) standardGeneric("baseloglikelihoods<-"))
+setMethod("baseloglikelihoods", "scoreList", function(object) object@baseloglikelihoods)
+setReplaceMethod("baseloglikelihoods", c("scoreList", "ANY"),
+                 function(object, value) {
+                   if (length(value) != length(object@baseloglikelihoods))
+                     stop(paste("the length of replacement (",
+                                length(value),
+                                ") should equal the existing length (",
+                                length( object@baseloglikelihoods ), ")",sep=""))
+                   object@baseloglikelihoods <- value
                    object
                  })
 
@@ -135,16 +162,18 @@ setReplaceMethod("sharedModel", c("scoreList", "ANY"),
                    object
                  })
 
-setMethod("length", "scoreList", function(x) length(x@LLs))
+setMethod("length", "scoreList", function(x) length(x@loglikelihoods))
 
 setMethod("[",
           signature(x="scoreList"),
           function(x, i, j, ..., drop) {
             par <- x@params[i]
-            ll <- x@LLs[i]
+            ll <- x@loglikelihoods[i]
+            bll <- x@baseloglikelihoods[i]
             genes <- x@genes[i]
             args <- x@modelArgs[i]
-            new("scoreList", params=par, LLs=ll, genes=genes,
+            new("scoreList", params=par, loglikelihoods=ll,
+                baseloglikelihoods=bll, genes=genes,
                 modelArgs=args, knownTargets=x@knownTargets, TF=x@TF,
                 sharedModel=x@sharedModel)
           })
@@ -153,10 +182,12 @@ setMethod("c", signature(x="scoreList"),
           function(x, ..., recursive=FALSE) {
             lists <- unlist(list(x, ...))
             params <- do.call(c, lapply(lists, function(y) y@params))
-            LLs <- do.call(c, lapply(lists, function(y) y@LLs))
+            loglikelihoods <- do.call(c, lapply(lists, function(y) y@loglikelihoods))
+            baseloglikelihoods <- do.call(c, lapply(lists, function(y) y@baseloglikelihoods))
             genes <- do.call(c, lapply(lists, function(y) y@genes))
             modelArgs <- do.call(c, lapply(lists, function(y) y@modelArgs))
-            new("scoreList", params=params, LLs=LLs, genes=genes,
+            new("scoreList", params=params, loglikelihoods=loglikelihoods,
+                baseloglikelihoods=baseloglikelihoods, genes=genes,
                 modelArgs=modelArgs, knownTargets=lists[[1]]@knownTargets,
                 TF=lists[[1]]@TF, sharedModel=lists[[1]]@sharedModel)
           })
@@ -164,7 +195,7 @@ setMethod("c", signature(x="scoreList"),
 setGeneric("sort", function(x, decreasing=FALSE, ...) standardGeneric("sort"))
 setMethod("sort", signature(x="scoreList"), 
           function(x, decreasing=FALSE, ...) {
-            r <- sort(x@LLs, decreasing, index.return=TRUE)
+            r <- sort(x@loglikelihoods, decreasing, index.return=TRUE)
             x[r$ix]
           })
 

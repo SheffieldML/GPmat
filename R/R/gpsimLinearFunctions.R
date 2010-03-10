@@ -23,6 +23,10 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
     isNegativeS = TRUE
   else
     isNegativeS = FALSE
+
+  if ("debug" %in% names(options))
+    model$debug <- options$debug
+
   ## proteinPrior encodes observation of the latent function.
   if ( "proteinPrior" %in% names(options) ) {
     model$proteinPrior <- options$proteinPrior
@@ -137,7 +141,7 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
     model$fix <- options$fix
     if (! "index" %in% names(model$fix)) {
       for ( i in seq(along=model$fix$names) ) {
-        J <- grep(model$fix$names[[i]], params$names)
+        J <- grep(model$fix$names[i], names(params))
         if (length(J) != 1) {
           stop("gpsimCreate: inconsistent fixed parameter specification")
         }
@@ -184,28 +188,21 @@ gpsimExtractParam <- function (model, only.values=TRUE) {
     params <- kernExtractParam(model$kern)
     # Note: ignores funcName$hasArgs
     params <- c(params, func(model$B, "xtoa"))
-
-    if ( "fix" %in% names(model) ) 
-      for ( i in seq(along=model$fix$index) )
-        params[model$fix$index[i]] <- model$fix$value[i]
-
-    params <- Re(params)        
-
   } else {
     params <- kernExtractParam(model$kern, only.values)
     # Note: ignores funcName$hasArgs
-    params$values <- c(params$values, func(model$B, "xtoa"))
-    for ( i in seq(along=model$mu) ) {
-      params$names <- c(params$names, paste("Basal", i, sep=""))
+    Bparams <- func(model$B, "xtoa")
+    for ( i in seq(along=Bparams) ) {
+      names(Bparams)[i] <- paste("Basal", i, sep="")
     }
-
-    if ( "fix" %in% names(model) ) 
-      for ( i in seq(along=model$fix$index) )
-        params$values[model$fix$index[i]] <- model$fix$value[i]
-
-    params$values <- Re(params$values)    
-    
+    params <- c(params, Bparams)
   }
+
+  if ( "fix" %in% names(model) ) 
+    for ( i in seq(along=model$fix$index) )
+      params[model$fix$index[i]] <- model$fix$value[i]
+
+  params <- Re(params)        
 
   return (params)
 }
@@ -290,22 +287,23 @@ gpsimUpdateKernels <- function (model) {
   }
 
   model$K <- k+diag(as.array(noiseVar))
-  invK <- jitCholInv(model$K)
+  invK <- jitCholInv(model$K, silent=TRUE)
 
-  if ( is.nan(invK[1]) ) { 
-    cat("kern$decay = \n", model$D, "\n")
-    cat("\n")
-    cat("kern$sensitivity = \n", model$S, "\n")
-    cat("\n")
-    cat("kern$flength = \n", model$kern$comp[1]$flength, "\n")
-    cat("\n")
-				
+  if ( is.nan(invK[1]) ) {
+    if ("debug" %in% names(model) && model$debug) {
+      cat("kern$decay = \n", model$D, "\n")
+      cat("\n")
+      cat("kern$sensitivity = \n", model$S, "\n")
+      cat("\n")
+      cat("kern$flength = \n", model$kern$comp[1]$flength, "\n")
+      cat("\n")
+    }
     stop("Singular chol(K) matrix!")
   }
   
   model$invK <- invK$invM
 
-  if ( invK$jitter > 1e-4 )
+  if ( invK$jitter > 1e-4 && "debug" %in% names(model) && model$debug )
     warning(paste("Warning: gpsimUpdateKernels added jitter of", signif(invK$jitter, digits=4)))
 
   model$logDetK <- 2* sum( log ( diag(invK$chol) ) )
@@ -488,7 +486,7 @@ cgpsimLogLikelihood <- function (model) {
 
 
 cgpsimExtractParam <- function (model, only.values=TRUE) {
-  return (gpsimExtractParam(model$comp[[1]], only.values))
+  return (gpsimExtractParam(model$comp[[1]], only.values=only.values))
 }
 
 

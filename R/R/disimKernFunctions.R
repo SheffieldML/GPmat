@@ -240,23 +240,13 @@ disimComputeHPrime <-  function (t1, t2, delta, Dj, Dk, l, option=1) {
 
 
 disimKernExtractParam <- function (kern, only.values=TRUE) {
+  if ( "gaussianInitial" %in% names(kern) && kern$gaussianInitial )
+    params <- c(kern$di_decay, kern$inverseWidth, kern$di_variance, kern$decay, kern$variance, kern$rbf_variance, kern$initialVariance)
+  else
+    params <- c(kern$di_decay, kern$inverseWidth, kern$di_variance, kern$decay, kern$variance, kern$rbf_variance)
 
-  if ( "gaussianInitial" %in% names(kern) && kern$gaussianInitial ) {
-    if ( only.values ) {
-      params <- c(kern$di_decay, kern$inverseWidth, kern$di_variance, kern$decay, kern$variance, kern$rbf_variance, kern$initialVariance)
-
-    } else {
-      params <- list(values=c(kern$di_decay, kern$inverseWidth, kern$di_variance, kern$decay, kern$variance, kern$rbf_variance, kern$initialVariance), names=kern$paramNames)
-    }
-  }
-  else {
-    if ( only.values ) {
-      params <- c(kern$di_decay, kern$inverseWidth, kern$di_variance, kern$decay, kern$variance, kern$rbf_variance)
-
-    } else {
-      params <- list(values=c(kern$di_decay, kern$inverseWidth, kern$di_variance, kern$decay, kern$variance, kern$rbf_variance), names=kern$paramNames)
-    }
-  }
+  if ( !only.values )
+    names(params) <- kern$paramNames
   
   return (params)
 }

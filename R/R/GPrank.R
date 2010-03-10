@@ -10,6 +10,9 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
     for (i in seq(along=allArgs))
       assign(names(allArgs)[[i]], allArgs[[i]])
   }
+
+  if (is.list(targets))
+    targets <- unlist(targets)
   
   if (useGpdisim)
     genes <- c(TF, targets)
@@ -69,9 +72,11 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
   
   # fixing first output sensitivity to fix the scaling
   if (fixedParams && !is.null(initParams)) {
-    if (is.list(initParams)) {
-      options$fix$names <- initParams$names
-      options$fix$value <- initParams$values
+    if (is.list(initParams))
+      initParams <- unlist(initParams)
+    if (!is.null(names(initParams))) {
+      options$fix$names <- names(initParams)
+      options$fix$value <- initParams
     }
     else {
       I <- which(!is.na(initParams))
@@ -118,18 +123,19 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
   }
 
   if (!is.null(initParams)) {
-    if (!is.list(initParams) && all(is.finite(initParams)))
+    if (!is.list(initParams) && all(is.finite(initParams))
+        && is.null(names(initParams)))
       model <- modelExpandParam(model, initParams)
-    else if (is.list(initParams)) {
+    else if (!is.null(names(initParams))) {
       params <- modelExtractParam(model, only.values=FALSE)
-      for (i in seq(along=initParams$names)) {
-        j <- grep(initParams$names[i], params$names)
+      for (i in seq(along=initParams)) {
+        j <- grep(names(initParams)[i], names(params))
         if (length(j) > 0)
-          params$values[j] <- initParams$values[i]
+          params[j] <- initParams[i]
         else
           warning(paste("Ignoring invalid initial parameter specification:", initParams$names[i]))
       }
-      model <- modelExpandParam(model, params$values)
+      model <- modelExpandParam(model, params)
     }
   }
 
@@ -166,6 +172,12 @@ GPRankTargets <- function(preprocData, TF = NULL, knownTargets = NULL,
   if (is.null(testTargets))
     testTargets <- featureNames(preprocData)
 
+  if (is.list(testTargets))
+    testTargets <- unlist(testTargets)
+  
+  if (is.list(knownTargets))
+    knownTargets <- unlist(knownTargets)
+  
   if ('var.exprs' %in% assayDataElementNames(preprocData))
     testTargets <- filterTargets(preprocData[testTargets,], filterLimit)
   else
@@ -187,6 +199,7 @@ GPRankTargets <- function(preprocData, TF = NULL, knownTargets = NULL,
     numberOfKnownGenes <- length(knownTargets)
 
   logLikelihoods <- rep(NA, length.out=length(testTargets))
+  baselogLikelihoods <- rep(NA, length.out=length(testTargets))
   modelParams <- list()
   modelArgs <- list()
   if (returnModels)
@@ -237,19 +250,28 @@ GPRankTargets <- function(preprocData, TF = NULL, knownTargets = NULL,
     }
     genes[[i]] <- testTargets[[i]]
 
+    testdata <- preprocData[testTargets[i],]
+    testdata$experiments <- rep(1, length(testdata$experiments))
+    newData <- getProcessedData(testdata)
+    baselogLikelihoods[i] <- baselineOptimise(newData$y[[1]], newData$yvar[[1]], list(includeNoise=(any(newData$yvar[[1]]==0))))
+
     if (!is.null(scoreSaveFile)) {
-      scoreList <- scoreList(params = modelParams, LLs = logLikelihoods,
-                             genes = genes, modelArgs = modelArgs,
-                             knownTargets = knownTargets, TF = TF,
-                             sharedModel = sharedModel)
+      scoreList <- new("scoreList", params = modelParams,
+                       loglikelihoods = logLikelihoods,
+                       baseloglikelihoods = baselogLikelihoods,
+                       genes = genes, modelArgs = modelArgs,
+                       knownTargets = knownTargets, TF = TF,
+                       sharedModel = sharedModel)
       save(scoreList, file=scoreSaveFile)
     }
   }
 
-  scoreList <- scoreList(params = modelParams, LLs = logLikelihoods,
-                         genes = genes, modelArgs = modelArgs,
-                         knownTargets = knownTargets, TF = TF,
-                         sharedModel = sharedModel)
+  scoreList <- new("scoreList", params = modelParams,
+                   loglikelihoods = logLikelihoods,
+                   baseloglikelihoods = baselogLikelihoods,
+                   genes = genes, modelArgs = modelArgs,
+                   knownTargets = knownTargets, TF = TF,
+                   sharedModel = sharedModel)
 
   if (returnModels)
     return (list(scores=scoreList, models=rankedModels))
@@ -264,6 +286,12 @@ GPRankTFs <- function(preprocData, TFs = NULL, targets,
                       returnModels = FALSE) {
   if (is.null(targets)) stop("No targets specified.")
 
+  if (is.list(testTargets))
+    testTargets <- unlist(testTargets) 
+
+  if (is.list(knownTargets))
+    knownTargets <- unlist(knownTargets)
+  
   numberOfTargets <- length(targets)
 
   genes = c(TFs, targets)
@@ -306,16 +334,18 @@ GPRankTFs <- function(preprocData, TFs = NULL, targets,
     genes[[i]] <- testTargets[[i]]
 
     if (!is.null(scoreSaveFile)) {
-      scoreList <- scoreList(params = modelParams, LLs = logLikelihoods,
-                             genes = genes, modelArgs = modelArgs,
-                             knownTargets = knownTargets, TF = TF)
+      scoreList <- new("scoreList", params = modelParams,
+                       loglikelihoods = logLikelihoods,
+                       genes = genes, modelArgs = modelArgs,
+                       knownTargets = knownTargets, TF = TF)
       save(scoreList, file=scoreSaveFile)
     }
   }
 
-  scoreList <- scoreList(params = modelParams, LLs = logLikelihoods,
-                         genes = genes, modelArgs = modelArgs,
-                         knownTargets = knownTargets, TF = TF)
+  scoreList <- new("scoreList", params = modelParams,
+                   loglikelihoods = logLikelihoods,
+                   genes = genes, modelArgs = modelArgs,
+                   knownTargets = knownTargets, TF = TF)
 
   if (returnModels)
     return (list(scores=scoreList, models=rankedModels))

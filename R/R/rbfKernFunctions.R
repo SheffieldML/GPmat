@@ -28,13 +28,10 @@ rbfKernParamInit <- function (kern) {
 
 
 rbfKernExtractParam <- function (kern, only.values=TRUE) {
+  params <- c(kern$inverseWidth, kern$variance)
 
-  if ( only.values ) {
-    params <- c(kern$inverseWidth, kern$variance)
-    
-  } else {
-    params <- list(values=c(kern$inverseWidth, kern$variance), names=c("inverseWidth", "variance"))    
-  }
+  if ( !only.values )
+    names(params) <- c("inverseWidth", "variance")
 
   return (params)
 }
