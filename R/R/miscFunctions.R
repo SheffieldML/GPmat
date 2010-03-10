@@ -93,7 +93,7 @@ modelTieParam <- function (model, paramsList) {
   
   for ( i in seq(along=paramsList) ) {
     if ( is.character(paramsList[[i]]) ) {
-      paramInd <- grep(paramsList[[i]], params$names)
+      paramInd <- grep(paramsList[[i]], names(params))
       if ( length(paramInd) == 0 )
         warning(paste("No matches for parameter tie spec:", paramsList[[i]]))
     }
@@ -126,7 +126,7 @@ modelTieParam <- function (model, paramsList) {
 
 
 
-jitCholInv <- function ( M, Num=10 ) {
+jitCholInv <- function ( M, Num=10, silent=FALSE ) {
   jitter <- 0
   jitter1 <- abs(mean(diag(M)))*1e-6
   eyeM <- diag( 1, nrow=length(M[,1]), ncol=length(M[1,]) )
@@ -144,9 +144,11 @@ jitCholInv <- function ( M, Num=10 ) {
       jitter1 <- jitter1*10
       jitter <- jitter1
 
-      warnmsg <- paste("Matrix is not positive definite, adding",
-                       signif(jitter,digits=4), "jitter!")
-      warning(warnmsg)
+      if (! silent) {
+        warnmsg <- paste("Matrix is not positive definite, adding",
+                         signif(jitter,digits=4), "jitter!")
+        warning(warnmsg)
+      }
     }
     else break
   }
@@ -313,19 +315,15 @@ modelExtractParam <- function (model, only.values=TRUE) {
       for ( i in seq(length.out=dim(paramGroups)[2]) ) {
         ind <- grep(1, paramGroups[,i])
         if ( is.list(params) ) {
-          params$names[i] <- origNames[ind[1]]
+          names(params)[i] <- origNames[ind[1]]
           for ( j in seq(2, length.out=length(ind)-1) )
-            params$names[i] <- paste(params$names[i], origNames[ind[j]],sep="/")
+            names(params)[i] <- paste(names(params)[i], origNames[ind[j]],sep="/")
         }
 
         paramGroups[ind[seq(2,length(ind),length=length(ind)-1)], i] <- 0
       }
 
-      if ( is.list(params) ) {
-        params$values <- params$values%*%paramGroups
-      } else {
-        params <- params%*%paramGroups
-      }
+      params <- params%*%paramGroups
     }
   }
   return (params)

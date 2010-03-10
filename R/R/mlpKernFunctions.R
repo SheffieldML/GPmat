@@ -14,19 +14,13 @@ mlpKernParamInit <- function (kern) {
 
 
 mlpKernExtractParam <- function (kern, only.values=TRUE) {
+  params <- c(kern$weightVariance, kern$biasVariance, kern$variance)
 
-  if ( only.values ) {
-    params <- c(kern$weightVariance, kern$biasVariance, kern$variance)
+  if ( !only.values )
+    names(params) <- c("weightVariance", "biasVariance", "variance")
 
-    if ( any(is.na(params)) )
-      warning("params are infinite")
-    
-  } else {
-    params <- list(values=c(kern$weightVariance, kern$biasVariance, kern$variance), names=c("weightVariance", "biasVariance", "variance"))
-    
-    if ( any(is.na(params$values)) )
-      warning("params are infinite")
-  }
+  if ( any(is.na(params)) )
+    warning("params are infinite")
 
   return (params)
 }

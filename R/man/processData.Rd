@@ -15,7 +15,8 @@
   \code{\link{GPLearn}} and {\link{GPRankTargets}}.
 }
 \usage{
-preprocData <- processData(data, times = NULL, experiments = NULL)
+preprocData <- processData(data, times = NULL, experiments = NULL,
+  do.normalisation = TRUE)
 preprocData <- processRawData(rawData, times, experiments = NULL,
   is.logged = TRUE)
 }
@@ -35,6 +36,8 @@ preprocData <- processRawData(rawData, times, experiments = NULL,
     replicate.}
   \item{is.logged}{Indicates whether the expression values are on
     log scale or not.}
+  \item{do.normalisation}{Indicates whether to perform the
+    normalisation.}
 }
 \details{
   The expression data (and percentiles, if available) are normalized

@@ -88,8 +88,12 @@ GPPlot <- function(data, savepath = '', doParams = FALSE,
       else
         plotTime <- model$comp[[i]]$t
 
+      # plotCI seems to generate a lot of spurious warnings
+      warnOption <- getOption('warn')
+      options(warn=-1)
       plotCI(plotTime, model$comp[[i]]$y[,j],
              uiw=2*sqrt(model$comp[[i]]$yvar[,j]), lwd=3, col=3, add=TRUE)
+      options(warn=warnOption)
       #points(model$comp[[i]]$t, model$comp[[i]]$y[,j], lwd=3, col=3)
       lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]+2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
       lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]-2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)

@@ -22,6 +22,9 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL,
   else
     model$gaussianInitial <- FALSE
 
+  if ("debug" %in% names(options))
+    model$debug <- options$debug
+
   if ("timeSkew" %in% names(options)) {
     model$timeSkew <- options$timeSkew
     times <- times + model$timeSkew
@@ -127,7 +130,7 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL,
     model$fix <- options$fix
     if (! "index" %in% names(model$fix)) {
       for ( i in seq(along=model$fix$names) ) {
-        J <- grep(model$fix$names[[i]], params$names)
+        J <- grep(model$fix$names[i], names(params))
         if (length(J) != 1) {
           stop("gpdisimCreate: inconsistent fixed parameter specification")
         }
@@ -173,7 +176,7 @@ gpdisimDisplay <- function(model, spaceNum=0)  {
   
 
 gpdisimExtractParam <- function (model, only.values=TRUE) {
-  return (gpsimExtractParam(model, only.values))
+  return (gpsimExtractParam(model, only.values=only.values))
 }
 
 
@@ -370,7 +373,7 @@ cgpdisimLogLikelihood <- function (model) {
 
 
 cgpdisimExtractParam <- function (model, only.values=TRUE) {
-  return (gpdisimExtractParam(model$comp[[1]], only.values))
+  return (gpdisimExtractParam(model$comp[[1]], only.values=only.values))
 }
 
 
