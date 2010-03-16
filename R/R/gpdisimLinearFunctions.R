@@ -74,11 +74,12 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL,
     model$kern <- kernCreate(times,
                              list(type="cmpnd", comp=list(kernType1, kernType2)))
     simMultiKernName <- 'model$kern$comp[[1]]'
+    simMultiKern <- model$kern$comp[[1]]
   } else {
     model$kern <- kernCreate(times, kernType1)
     simMultiKernName <- 'model$kern'
+    simMultiKern <- model$kern
   }
-  eval(parse(text=paste("simMultiKern <-", simMultiKernName)))
   
   model$kern <- modelTieParam(model$kern, tieParam)
 
@@ -250,10 +251,10 @@ gpdisimLogLikelihood <- function (model) {
   ll <- 0.5*ll
 
   ## prior contributions
-  if ( "bprior" %in% names(model) ) {
-    ll <- ll + kernPriorLogProb(model$kern)
-    ll <- ll + priorLogProb(model$bprior, model$B)
-  }
+  #if ( "bprior" %in% names(model) ) {
+  #  ll <- ll + kernPriorLogProb(model$kern)
+  #  ll <- ll + priorLogProb(model$bprior, model$B)
+  #}
   return (ll)
 }
 
@@ -279,9 +280,9 @@ gpdisimLogLikeGradients <- function (model) {
     g <- kernGradient(model$kern, model$t, covGrad)
   }
 
-  if ( "bprior" %in% names(model) ) {
-    g <- g + kernPriorGradient(model$kern)
-  }
+  #if ( "bprior" %in% names(model) ) {
+  #  g <- g + kernPriorGradient(model$kern)
+  #}
 
   gmuFull <- t(model$m) %*% model$invK
 
@@ -321,9 +322,9 @@ gpdisimLogLikeGradients <- function (model) {
   func <- get(funcName$func, mode="function")
 
   ## prior contribution
-  if ( "bprior" %in% names(model) ) {
-    gb <- gb + priorGradient(model$bprior, model$B)
-  }
+  #if ( "bprior" %in% names(model) ) {
+  #  gb <- gb + priorGradient(model$bprior, model$B)
+  #}
 
   gb <- gb*func(model$B, "gradfact")
 
@@ -495,60 +496,3 @@ gpdisimUpdateProcesses <- function (model, predt=NULL) {
 
   return (model)
 }
-
-
-
-
-
-
-gpdisimMef2Results <- function (model, scale, expType, expNo, option=1) {
-  geneNames <- c("gene1", "Rya-r44F", "gene3 ", "ttk", "gene5", "gene6")
-
-  ## Display the result
-  if ( option==1 ) {
-    for ( i in seq(along=model$comp) ) {
-      plot(model$comp[[i]]$predt, model$comp[[i]]$predF, type="l", lwd=3, xlab="Time",ylab="")
-      title("Inferred Mef2 Protein Concentration")
-      lines(model$comp[[i]]$predt, model$comp[[i]]$predF+2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
-      lines(model$comp[[i]]$predt, model$comp[[i]]$predF-2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
-
-      for ( j in seq(length=model$comp[[i]]$numGenes+1) ) {
-        x11()
-        plot(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j], ylim=c(0,4), type="l", lwd=3, xlab="Time",ylab="")
-        if ( j==1 ) {
-          title(paste("Driving Input mRNA"))
-        } else {
-          title(paste("mRNA", geneNames[j]))
-        }
-        points(model$comp[[i]]$t, model$comp[[i]]$y[,j], lwd=3, col=3)
-        lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]+2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
-        lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]-2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
-      }
-    }
-
-  } else {
-    postscript(paste(expType, expNo, ".ps", sep=""), horizontal=FALSE, width=8.0, height=6.0)
-    for ( i in seq(along=model$comp) ) {
-      plot(model$comp[[i]]$predt, model$comp[[i]]$predF, type="l", lwd=3, xlab="Time",ylab="")
-      title("Inferred Mef2 Protein Concentration")
-      lines(model$comp[[i]]$predt, model$comp[[i]]$predF+2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
-      lines(model$comp[[i]]$predt, model$comp[[i]]$predF-2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
-
-      for ( j in seq(length=model$comp[[i]]$numGenes) ) {
-        plot(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j], ylim=c(0,4), type="l", lwd=3, xlab="Time",ylab="")
-        if ( j==1 ) {
-          title(paste("Driving Input mRNA"))
-        } else {
-          title(paste("mRNA", geneNames[j]))
-        }
-        points(model$comp[[i]]$t, model$comp[[i]]$y[,j], lwd=3, col=3)
-        lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]+2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
-        lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]-2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
-      }
-    }
-
-    dev.off()
-  }
-
-}
-

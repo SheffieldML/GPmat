@@ -53,9 +53,26 @@ NULL, scoreSaveFile = NULL)
   Jonatan Ropponen, Antti Honkela
 }
 \seealso{
-  \code{\link{GPLearn}, \link{formModel}, \link{GPRankTFs}, \linkS4class{scoreList}, \link{generateModels}}.
+  \code{\link{GPLearn}, \link{GPRankTFs}, \linkS4class{scoreList}, \link{generateModels}}.
 }
 \examples{
-## missing
+  ## Load a mmgmos preprocessed fragment of the Drosophila developmental
+  ## time series
+  data(drosophila_gpsim_fragment)
+
+  ## Get the target probe names
+  targets <- c('FBgn0003486', 'FBgn0033188', 'FBgn0035257')
+  library(annotate)
+  aliasMapping <- getAnnMap("ALIAS2PROBE",
+                    annotation(drosophila_gpsim_fragment))
+  twi <- get('twi', env=aliasMapping)
+  fbgnMapping <- getAnnMap("FLYBASE2PROBE",
+                   annotation(drosophila_gpsim_fragment))
+  targetProbes <- mget(targets, env=fbgnMapping)
+
+  scores <- GPRankTargets(drosophila_gpsim_fragment, TF=twi,
+                          testTargets=targetProbes,
+                          options=list(quiet=TRUE),
+                          filterLimit=1.8)
 }
 \keyword{model}

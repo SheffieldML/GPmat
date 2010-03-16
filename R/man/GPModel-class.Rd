@@ -2,9 +2,15 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{GPModel-class}
+\alias{is.GPModel}
+\alias{modelStruct}
+\alias{modelStruct<-}
+\alias{modelType}
 \alias{initialize,GPModel-method}
+\alias{is.GPModel,GPModel-method}
 \alias{modelStruct,GPModel-method}
 \alias{modelStruct<-,GPModel,matrix-method}
+\alias{modelType,GPModel-method}
 \alias{show,GPModel-method}
 
 \title{A container for gpsim models}
@@ -24,7 +30,9 @@ Objects can be created by calls of the form \code{new("GPModel", model)}.
   \describe{
     \item{\code{modelStruct(object)}, \code{modelStruct(object)<-
 	value}}{Access and set the internal \code{model} structure}
+    \item{\code{modelType(object)}}{Access the internal \code{type} values}
     \item{\code{show(object)}}{Informatively display object contents.}
+    \item{\code{is.GPModel(object)}}{Check if object is a GPModel.}
     \item{\code{initialize("GPModel")}}{Object instantiation, used by new; not to be called directly by the user.}
   }
 }

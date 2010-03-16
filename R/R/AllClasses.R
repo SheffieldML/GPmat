@@ -55,7 +55,7 @@ setMethod("show", "scoreList",
             if (all(object@knownTargets != "")) {
               cat("  Known targets: ", paste(object@knownTargets, collapse=", "), "\n")
             }
-            idx <- listSelectSomeIndex(object@genes, maxToShow=4)
+            idx <- .listSelectSomeIndex(object@genes, maxToShow=4)
             l <- object@genes[c(idx[[1]], idx[[3]]), drop=FALSE]
             itms <- c(l[idx[[1]]], idx[[2]],
                       if (!is.null(idx[[1]])) l[-idx[[1]]] else NULL)
@@ -195,8 +195,16 @@ setMethod("c", signature(x="scoreList"),
 setGeneric("sort", function(x, decreasing=FALSE, ...) standardGeneric("sort"))
 setMethod("sort", signature(x="scoreList"), 
           function(x, decreasing=FALSE, ...) {
-            r <- sort(x@loglikelihoods, decreasing, index.return=TRUE)
+            r <- sort(loglikelihoods(x), decreasing=decreasing, index.return=TRUE)
             x[r$ix]
+          })
+
+setGeneric("write.scores", function(x, ...) standardGeneric("write.scores"))
+setMethod("write.scores", signature(x="scoreList"), 
+          function(x, ...) {
+            v <- cbind(loglikelihoods(x), baseloglikelihoods(x))
+            colnames(v) <- c('log-likelihood', 'null log-likelihood')
+            write.table(v, ...)
           })
 
 setClass("GPModel", 
@@ -260,5 +268,5 @@ setValidity("ExpressionTimeSeries", function(object) {
 setGeneric("var.exprs",    function(object) standardGeneric("var.exprs"))
 setGeneric("var.exprs<-",  function(object, value) standardGeneric("var.exprs<-"))
 setMethod("var.exprs", "ExpressionTimeSeries", function(object) assayDataElement(object,"var.exprs"))
-setReplaceMethod("var.exprs", signature(object="ExpressionTimeSeries",value="matrix"),
+setReplaceMethod("var.exprs", "ExpressionTimeSeries",
                  function(object, value) assayDataElementReplace(object, "var.exprs", value))

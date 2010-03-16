@@ -10,10 +10,10 @@ optimiDefaultConstraint <- function (constraint) {
 
 
 
-optimiFdefaultOptions <- function () {
-  options <- list(maxit=100, tolf=1e-4, tol=1e-4, display=TRUE)
-  return (options)
-}
+## optimiFdefaultOptions <- function () {
+##   options <- list(maxit=100, tolf=1e-4, tol=1e-4, display=TRUE)
+##   return (options)
+## }
 
 
 
@@ -50,7 +50,7 @@ modelOptimise <- function (model, options, ...) {
 
 
 
-fn_line <- function (linemin, fun, para0, direction, ...) {
+.fn_line <- function (linemin, fun, para0, direction, ...) {
   ## y = fn (x)
   func <- function(x, ...) fun(x, ...)
   
@@ -109,7 +109,7 @@ CGoptim <- function (x, fn, grad, options, ...) {
     dnorm <- sqrt(sum(direction*direction))
     line_dir <- direction / dnorm
     ## cat ("\n line_dir :", line_dir, "\n\n")
-    lnSch <- try( optimize(fn_line, options[[2]], para0=x_old, direction=line_dir, fun=fn, ...) )
+    lnSch <- try( optimize(.fn_line, options[[2]], para0=x_old, direction=line_dir, fun=fn, ...) )
 
     if ( is.list(lnSch) ) {
       x <- x_old + lnSch$minimum * line_dir		

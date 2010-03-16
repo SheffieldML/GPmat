@@ -10,11 +10,12 @@
   given data can also be searched for the data of specific genes.
 }
 \usage{
-GPLearn <- function(preprocData, TF = NULL, targets = NULL,
- useGpdisim = FALSE, randomize = FALSE, addPriors = FALSE,
- fixedParams = FALSE, initParams = NULL, initialZero = TRUE,
- fixComps = NULL, dontOptimise = FALSE, allowNegativeSensitivities =
-FALSE, quiet = FALSE, gpsimOptions = NULL, allArgs = NULL)
+  model <- GPLearn(preprocData, TF = NULL, targets = NULL,
+    useGpdisim = FALSE, randomize = FALSE, addPriors = FALSE,
+    fixedParams = FALSE, initParams = NULL, initialZero = TRUE,
+    fixComps = NULL, dontOptimise = FALSE,
+    allowNegativeSensitivities = FALSE, quiet = FALSE,
+    gpsimOptions = NULL, allArgs = NULL)
 }
 \arguments{
   \item{preprocData}{The preprocessed data to be used.}
@@ -53,13 +54,25 @@ FALSE, quiet = FALSE, gpsimOptions = NULL, allArgs = NULL)
   Jonatan Ropponen, Antti Honkela
 }
 \seealso{
-  \code{\link{gpsimCreate}, \link{GPRankTargets}, \link{GPRankTFs}}.
+  \code{\link{GPRankTargets}, \link{GPRankTFs}}.
 }
 \examples{
   ## Load a mmgmos preprocessed fragment of the Drosophila developmental
   ## time series
   data(drosophila_gpsim_fragment)
 
+  ## Get the target probe names
+  library(annotate)
+  aliasMapping <- getAnnMap("ALIAS2PROBE",
+                    annotation(drosophila_gpsim_fragment))
+  twi <- get('twi', env=aliasMapping)
+  fbgnMapping <- getAnnMap("FLYBASE2PROBE",
+                   annotation(drosophila_gpsim_fragment))
+  targetProbe <- get('FBgn0035257', env=fbgnMapping)
 
+  ## Learn the model
+  model <- GPLearn(drosophila_gpsim_fragment,
+                   TF=twi, targets=targetProbe,
+                   useGpdisim=TRUE, quiet=TRUE)
 }
 \keyword{model}

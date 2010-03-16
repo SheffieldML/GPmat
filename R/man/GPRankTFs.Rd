@@ -27,7 +27,7 @@ data <- GPRankTFs(preprocData, TFs = NULL, targets = NULL, filterLimit = 1.5, us
   Jonatan Ropponen
 }
 \seealso{
-  \code{\link{GPLearn}, \link{formModel}, \link{GPRankTargets},  \linkS4class{scoreList}, \link{generateModels}}.
+  \code{\link{GPLearn}, \link{GPRankTargets},  \linkS4class{scoreList}, \link{generateModels}}.
 }
 \examples{
 ## missing

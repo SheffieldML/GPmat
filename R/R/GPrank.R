@@ -20,7 +20,7 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
     genes <- targets
 
   # The preprocessed data is searched for the data of the specified genes.
-  newData <- getProcessedData(preprocData[genes,])
+  newData <- .getProcessedData(preprocData[genes,])
   y <- newData$y
   yvar <- newData$yvar
   times <- newData$times
@@ -179,7 +179,7 @@ GPRankTargets <- function(preprocData, TF = NULL, knownTargets = NULL,
     knownTargets <- unlist(knownTargets)
   
   if ('var.exprs' %in% assayDataElementNames(preprocData))
-    testTargets <- filterTargets(preprocData[testTargets,], filterLimit)
+    testTargets <- .filterTargets(preprocData[testTargets,], filterLimit)
   else
     testTargets <- featureNames(preprocData[testTargets,])
 
@@ -215,7 +215,7 @@ GPRankTargets <- function(preprocData, TF = NULL, knownTargets = NULL,
     allArgs <- list(useGpdisim=useGpdisim)
   
   if (!is.null(knownTargets) && length(knownTargets) > 0) {
-    baselineModel <- formModel(preprocData, TF, knownTargets, allArgs=allArgs)
+    baselineModel <- .formModel(preprocData, TF, knownTargets, allArgs=allArgs)
     baselineParameters <- modelExtractParam(baselineModel$model,
                                             only.values=FALSE)
     sharedModel <- list(ll=baselineModel$ll,
@@ -231,7 +231,7 @@ GPRankTargets <- function(preprocData, TF = NULL, knownTargets = NULL,
   }
 
   for (i in seq(along=testTargets)) {
-    returnData <- formModel(preprocData, TF, knownTargets,
+    returnData <- .formModel(preprocData, TF, knownTargets,
                             testTargets[i], allArgs = allArgs)
 
     if (!is.finite(returnData$ll)) {
@@ -252,8 +252,8 @@ GPRankTargets <- function(preprocData, TF = NULL, knownTargets = NULL,
 
     testdata <- preprocData[testTargets[i],]
     testdata$experiments <- rep(1, length(testdata$experiments))
-    newData <- getProcessedData(testdata)
-    baselogLikelihoods[i] <- baselineOptimise(newData$y[[1]], newData$yvar[[1]], list(includeNoise=(any(newData$yvar[[1]]==0))))
+    newData <- .getProcessedData(testdata)
+    baselogLikelihoods[i] <- .baselineOptimise(newData$y[[1]], newData$yvar[[1]], list(includeNoise=(any(newData$yvar[[1]]==0))))
 
     if (!is.null(scoreSaveFile)) {
       scoreList <- new("scoreList", params = modelParams,
@@ -283,7 +283,8 @@ GPRankTargets <- function(preprocData, TF = NULL, knownTargets = NULL,
 
 GPRankTFs <- function(preprocData, TFs = NULL, targets,
                       filterLimit = 1.8, returnScoreList = TRUE,
-                      returnModels = FALSE) {
+                      returnModels = FALSE, options = NULL,
+                      scoreSaveFile = NULL) {
   if (is.null(targets)) stop("No targets specified.")
 
   if (is.list(testTargets))
@@ -298,7 +299,7 @@ GPRankTFs <- function(preprocData, TFs = NULL, targets,
 
   # Filtering the genes based on the calculated ratios. If the limit is 0, all genes are accepted.
   if ('var.exprs' %in% assayDataElementNames(preprocData))
-    TFs <- filterTargets(preprocData[TFs,], filterLimit)
+    TFs <- .filterTargets(preprocData[TFs,], filterLimit)
   else
     TFs <- featureNames(preprocData[TFs,])
 
@@ -311,12 +312,19 @@ GPRankTFs <- function(preprocData, TFs = NULL, targets,
   if (returnModels)
     rankedModels <- list()
 
+  if (!is.null(options)) {
+    allArgs <- options
+    allArgs$useGpdisim <- TRUE
+  }
+  else
+    allArgs <- list(useGpdisim=TRUE)
+
   numberOfTargets <- length(targets)
 
   genes <- list()
 
   for (i in 1:length(TFs)) {
-    returnData <- formModel(preprocData, TF = TFs[i], targets, useGPsim = FALSE)
+    returnData <- .formModel(preprocData, TF = TFs[i], targets, allArgs=allArgs)
     if (!is.finite(returnData$ll)) {
       logLikelihoods[i] <- NA
       modelParams[[i]] <- NA
@@ -355,7 +363,7 @@ GPRankTFs <- function(preprocData, TFs = NULL, targets,
 
 
 
-formModel <- function(preprocData, TF = NULL, knownTargets = NULL, testTarget = NULL, allArgs = NULL) {
+.formModel <- function(preprocData, TF = NULL, knownTargets = NULL, testTarget = NULL, allArgs = NULL) {
 
   if (!is.null(testTarget))
     targets <- append(knownTargets, testTarget)
@@ -422,20 +430,7 @@ generateModels <- function(preprocData, scores) {
 }
 
 
-genePassedFiltering <- function(testedGene, approvedGenes) {
-
-  for (i in 1:length(approvedGenes)) {
-    if (!is.na(charmatch(testedGene, approvedGenes[i]))) {
-      return (TRUE)
-    }
-  }
-
-  return (FALSE)
-}
-
-
-
-getProcessedData <- function(data) {
+.getProcessedData <- function(data) {
   times <- data$modeltime
   experiments <- data$experiments
 
@@ -468,7 +463,7 @@ getProcessedData <- function(data) {
 
 
 
-filterTargets <- function(data, filterLimit) {
+.filterTargets <- function(data, filterLimit) {
   y <- assayDataElement(data, 'exprs')
   yvar <- assayDataElement(data, 'var.exprs')
 

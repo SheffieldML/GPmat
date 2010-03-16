@@ -64,9 +64,9 @@ rbfKernDisplay <- function (kern, spaceNum=0) {
 
 rbfKernCompute <- function (kern, x, x2=NULL) {
   if ( nargs() < 3 ) {
-    n2 <- dist2(x,x)
+    n2 <- .dist2(x,x)
   } else {
-    n2 <- dist2(x,x2)
+    n2 <- .dist2(x,x2)
   }
 
   wi2 <- 0.5*kern$inverseWidth
@@ -83,11 +83,11 @@ rbfKernCompute <- function (kern, x, x2=NULL) {
 rbfKernGradient <- function (kern, x, x2, covGrad) {
   if ( nargs()==3 ) {
     k <- rbfKernCompute(kern, x)
-    dist2xx <- dist2(x, x)
+    dist2xx <- .dist2(x, x)
     covGrad <- x2
   } else if ( nargs()==4 ) {
     k <- rbfKernCompute(kern, x, x2)
-    dist2xx <- dist2(x, x2)
+    dist2xx <- .dist2(x, x2)
   }
 
   g <- array()

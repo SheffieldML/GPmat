@@ -1,7 +1,7 @@
-GPPlot <- function(data, savepath = '', doParams = FALSE,
+require(gplots)
+
+GPPlot <- function(data, savepath = '', 
                    nameMapping = NULL, predt = NULL, fileOutput=FALSE) {
-  require(gplots)
-  
   FONTSIZE <- 10;
   LINEWIDTH <- 1;
   MARKERSIZE <- 10;

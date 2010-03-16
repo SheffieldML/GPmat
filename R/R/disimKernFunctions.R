@@ -52,13 +52,13 @@ disimKernCompute <- function (kern, t1, t2=t1) {
 
   l <- sqrt(2/kern$inverseWidth)
 
-  h <- disimComputeH(t1, t2, kern$di_decay, kern$decay, kern$decay, l)
-  hp <- disimComputeHPrime(t1, t2, kern$di_decay, kern$decay, kern$decay, l)
+  h <- .disimComputeH(t1, t2, kern$di_decay, kern$decay, kern$decay, l)
+  hp <- .disimComputeHPrime(t1, t2, kern$di_decay, kern$decay, kern$decay, l)
   if ( nargs()<3 ) {
     k <- h + t(h) + hp + t(hp)
   } else {
-    h2 <- disimComputeH(t2, t1, kern$di_decay, kern$decay, kern$decay, l)
-    hp2 <- disimComputeHPrime(t2, t1, kern$di_decay, kern$decay, kern$decay, l)
+    h2 <- .disimComputeH(t2, t1, kern$di_decay, kern$decay, kern$decay, l)
+    hp2 <- .disimComputeHPrime(t2, t1, kern$di_decay, kern$decay, kern$decay, l)
     k <- h + t(h2) + hp + t(hp2)
   }
   k <- 0.5*kern$rbf_variance*kern$di_variance*kern$variance*k
@@ -84,7 +84,7 @@ disimKernCompute <- function (kern, t1, t2=t1) {
 
 
 
-disimComputeH <-  function (t1, t2, delta, Dj, Dk, l, option=1) {
+.disimComputeH <-  function (t1, t2, delta, Dj, Dk, l, option=1) {
 
   if ( ( dim(as.matrix(t1))[2] > 1 ) | ( dim(as.matrix(t2))[2] > 1 ) )
     stop("Input can only have one column.")
@@ -162,7 +162,7 @@ disimComputeH <-  function (t1, t2, delta, Dj, Dk, l, option=1) {
 
 
 
-disimComputeHPrime <-  function (t1, t2, delta, Dj, Dk, l, option=1) {
+.disimComputeHPrime <-  function (t1, t2, delta, Dj, Dk, l, option=1) {
 
   if ( ( dim(as.matrix(t1))[2] > 1 ) | ( dim(as.matrix(t2))[2] > 1 ) )
     stop("Input can only have one column.")
@@ -331,10 +331,10 @@ disimXdisimKernCompute <- function (disimKern1, disimKern2, t1, t2=t1) {
     stop("Both the DISIM kernels have to be either normalised or not.")
 
   l <- sqrt(2/disimKern1$inverseWidth)
-  h1 <- disimComputeH(t1, t2, disimKern1$di_decay, disimKern1$decay, disimKern2$decay, l)
-  h2 <- disimComputeH(t2, t1, disimKern1$di_decay, disimKern2$decay, disimKern1$decay, l)
-  hp1 <- disimComputeHPrime(t1, t2, disimKern1$di_decay, disimKern1$decay, disimKern2$decay, l)
-  hp2 <- disimComputeHPrime(t2, t1, disimKern1$di_decay, disimKern2$decay, disimKern1$decay, l)
+  h1 <- .disimComputeH(t1, t2, disimKern1$di_decay, disimKern1$decay, disimKern2$decay, l)
+  h2 <- .disimComputeH(t2, t1, disimKern1$di_decay, disimKern2$decay, disimKern1$decay, l)
+  hp1 <- .disimComputeHPrime(t1, t2, disimKern1$di_decay, disimKern1$decay, disimKern2$decay, l)
+  hp2 <- .disimComputeHPrime(t2, t1, disimKern1$di_decay, disimKern2$decay, disimKern1$decay, l)
   K <- h1 + t(h2) + hp1 + t(hp2)
   K <- 0.5*disimKern1$rbf_variance*disimKern1$di_variance*sqrt(disimKern1$variance)*sqrt(disimKern2$variance)*K
 
@@ -624,21 +624,21 @@ disimXdisimKernGradient <- function (disimKern1, disimKern2, t1, t2, covGrad) {
 
   option <- 5
   l <- sqrt(2/disimKern1$inverseWidth)
-  disimH1 <- disimComputeH(t1, t2, disimKern1$di_decay, disimKern1$decay, disimKern2$decay, l, option)
+  disimH1 <- .disimComputeH(t1, t2, disimKern1$di_decay, disimKern1$decay, disimKern2$decay, l, option)
   h1 <- disimH1$h
   dh1_ddelta <- disimH1$dh_ddelta
   dh1_dD1 <- disimH1$dh_dD_j
   dh1_dD2 <- disimH1$dh_dD_k
   dh1_dl <- disimH1$dh_dl
 
-  disimH2 <- disimComputeH(t2, t1, disimKern1$di_decay, disimKern2$decay, disimKern1$decay, l, option)
+  disimH2 <- .disimComputeH(t2, t1, disimKern1$di_decay, disimKern2$decay, disimKern1$decay, l, option)
   h2 <- disimH2$h
   dh2_ddelta <- disimH2$dh_ddelta
   dh2_dD2 <- disimH2$dh_dD_j
   dh2_dD1 <- disimH2$dh_dD_k
   dh2_dl <- disimH2$dh_dl
 
-  disimHp1 <- disimComputeHPrime(t1, t2, disimKern1$di_decay, disimKern1$decay, disimKern2$decay, l, option)
+  disimHp1 <- .disimComputeHPrime(t1, t2, disimKern1$di_decay, disimKern1$decay, disimKern2$decay, l, option)
 
   hp1 <- disimHp1$h
   dhp1_ddelta <- disimHp1$dh_ddelta
@@ -646,7 +646,7 @@ disimXdisimKernGradient <- function (disimKern1, disimKern2, t1, t2, covGrad) {
   dhp1_dD2 <- disimHp1$dh_dD_k
   dhp1_dl <- disimHp1$dh_dl
 
-  disimHp2 <- disimComputeHPrime(t2, t1, disimKern1$di_decay, disimKern2$decay, disimKern1$decay, l, option)
+  disimHp2 <- .disimComputeHPrime(t2, t1, disimKern1$di_decay, disimKern2$decay, disimKern1$decay, l, option)
   hp2 <- disimHp2$h
   dhp2_ddelta <- disimHp2$dh_ddelta
   dhp2_dD2 <- disimHp2$dh_dD_j
@@ -823,11 +823,11 @@ disimXrbfKernGradient <- function (disimKern, rbfKern, t1, t2, covGrad) {
   lnFact1 <- halfLDelta^2 - delta * diffT
   lnFact2 <- halfLD_i^2 - D_i * diffT
 
-  gradln1 <- gradLnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l, l/2, l/2)
+  gradln1 <- .gradLnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l, l/2, l/2)
   dlnPart1 <- gradln1$dlnPart
   m1 <- gradln1$m
 
-  gradln2 <-gradLnDiffErfs(halfLD_i + t2Mat/l, halfLD_i - invLDiffT, l/2, l/2)
+  gradln2 <-.gradLnDiffErfs(halfLD_i + t2Mat/l, halfLD_i - invLDiffT, l/2, l/2)
   dlnPart2 <- gradln2$dlnPart
   m2 <- gradln2$m
 
@@ -837,11 +837,11 @@ disimXrbfKernGradient <- function (disimKern, rbfKern, t1, t2, covGrad) {
   dK_ddelta <- k * (-1/(delta-D_i)) + prefact * ((l*halfLDelta - diffT) * signs1 * exp(lnCommon + lnFact1 + lnPart1) + dlnPart1 * exp(lnCommon + lnFact1 - m1))
   dk_ddelta <- sum(dK_ddelta*covGrad)
 
-  gradln1 <- gradLnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l, delta/2 + invLDiffT/l, delta/2 - t2Mat/l2)
+  gradln1 <- .gradLnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l, delta/2 + invLDiffT/l, delta/2 - t2Mat/l2)
   dlnPart1 <- gradln1$dlnPart
   m1 <- gradln1$m
 
-  gradln2 <-gradLnDiffErfs(halfLD_i + t2Mat/l, halfLD_i - invLDiffT, D_i/2 - t2Mat/l2, D_i/2 + invLDiffT/l)
+  gradln2 <-.gradLnDiffErfs(halfLD_i + t2Mat/l, halfLD_i - invLDiffT, D_i/2 - t2Mat/l2, D_i/2 + invLDiffT/l)
   dlnPart2 <- gradln2$dlnPart
   m2 <- gradln2$m
 
@@ -913,15 +913,15 @@ disimXsimKernGradient <- function (disimKern, simKern, t1, t2, covGrad) {
   halfLDelta <- 0.5*l*delta
   invLDiffT <- 1/l*diffT
 
-  lnCommon1 <- - log(2*delta) -delta * t2Mat - Di * t1Mat + halfLDelta^2
+  lnCommon1 <- - log(2*delta) -delta * t2Mat - D_i * t1Mat + halfLDelta^2
 
-  lnFact1 <- log(2 * delta) - log(0i + delta^2 - Di^2)
+  lnFact1 <- log(2 * delta) - log(0i + delta^2 - D_i^2)
   lnPart1_f <- lnDiffErfs(halfLDelta - t2Mat/l, halfLDelta)
 
   lnPart1 <- lnPart1_f[[1]]
   signs1 <- lnPart1_f[[2]]
 
-  lnFact2 <- (Di - delta) * t1Mat - log(0i + delta - Di)
+  lnFact2 <- (D_i - delta) * t1Mat - log(0i + delta - D_i)
   lnPart2a_f <- lnDiffErfs(halfLDelta, halfLDelta - t1Mat/l)
   lnPart2b_f <- lnDiffErfs(halfLDelta, halfLDelta - t2Mat/l)
 
@@ -930,22 +930,22 @@ disimXsimKernGradient <- function (disimKern, simKern, t1, t2, covGrad) {
   lnPart2b <- lnPart2b_f[[1]]
   signs2b <- lnPart2b_f[[2]]
 
-  lnFact3 <- (Di + delta) * t1Mat - log(delta + Di)
+  lnFact3 <- (D_i + delta) * t1Mat - log(delta + D_i)
   lnPart3_f <- lnDiffErfs(halfLDelta + t1Mat/l, halfLDelta + invLDiffT)
   lnPart3 <- lnPart3_f[[1]]
   signs3 <- lnPart3_f[[2]]
 
-  lnFact4 <- 2*delta*t2Mat + (Di - delta) * t1Mat - log(0i + delta - Di)
+  lnFact4 <- 2*delta*t2Mat + (D_i - delta) * t1Mat - log(0i + delta - D_i)
   lnPart4_f <- lnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l)
   lnPart4 <- lnPart4_f[[1]]
   signs4 <- lnPart4_f[[2]]
 
-  lnCommon2 <- - log(0i + delta^2 - Di^2) - delta * t2Mat - Di * t1Mat + halfLD_i^2
+  lnCommon2 <- - log(0i + delta^2 - D_i^2) - delta * t2Mat - D_i * t1Mat + halfLD_i^2
   lnPart5_f <- lnDiffErfs(halfLD_i - t1Mat/l, halfLD_i)
   lnPart5 <- lnPart5_f[[1]]
   signs5 <- lnPart5_f[[2]]
 
-  lnFact6 <- (Di + delta) * t2Mat
+  lnFact6 <- (D_i + delta) * t2Mat
   lnPart6_f <- lnDiffErfs(halfLD_i + t2Mat/l, halfLD_i - invLDiffT)
   lnPart6 <- lnPart6_f[[1]]
   signs6 <- lnPart6_f[[2]]
@@ -968,23 +968,23 @@ disimXsimKernGradient <- function (disimKern, simKern, t1, t2, covGrad) {
   dcommon2 <- - 2*delta/(delta^2 - D_i^2) - t2Mat
   dfact6 <- t2Mat
 
-  gradln1 <- gradLnDiffErfs(halfLDelta - t2Mat/l, halfLDelta, l/2, l/2)
+  gradln1 <- .gradLnDiffErfs(halfLDelta - t2Mat/l, halfLDelta, l/2, l/2)
   dpart1 <- gradln1$dlnPart
   m1 <- gradln1$m
 
-  gradln2a <-gradLnDiffErfs(halfLDelta, halfLDelta - t1Mat/l, l/2, l/2)
+  gradln2a <-.gradLnDiffErfs(halfLDelta, halfLDelta - t1Mat/l, l/2, l/2)
   dpart2a <- gradln2a$dlnPart
   m2a <- gradln2a$m
 
-  gradln2b <-gradLnDiffErfs(halfLDelta, halfLDelta - t2Mat/l, l/2, l/2)
+  gradln2b <-.gradLnDiffErfs(halfLDelta, halfLDelta - t2Mat/l, l/2, l/2)
   dpart2b <- gradln2b$dlnPart
   m2b <- gradln2b$m
 
-  gradln3 <- gradLnDiffErfs(halfLDelta + t1Mat/l, halfLDelta + invLDiffT, l/2, l/2)
+  gradln3 <- .gradLnDiffErfs(halfLDelta + t1Mat/l, halfLDelta + invLDiffT, l/2, l/2)
   dpart3 <- gradln3$dlnPart
   m3 <- gradln3$m
 
-  gradln4 <- gradLnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l, l/2, l/2)
+  gradln4 <- .gradLnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l, l/2, l/2)
   dpart4 <- gradln4$dlnPart
   m4 <- gradln4$m
 
@@ -993,31 +993,31 @@ disimXsimKernGradient <- function (disimKern, simKern, t1, t2, covGrad) {
   dcommon1 <- delta * halfLDelta
   dcommon2 <- D_i * halfLD_i
 
-  gradln1 <- gradLnDiffErfs(halfLDelta - t2Mat/l, halfLDelta, delta/2 + t2Mat/l2, delta/2)
+  gradln1 <- .gradLnDiffErfs(halfLDelta - t2Mat/l, halfLDelta, delta/2 + t2Mat/l2, delta/2)
   dpart1 <- gradln1$dlnPart
   m1 <- gradln1$m
 
-  gradln2a <-gradLnDiffErfs(halfLDelta, halfLDelta - t1Mat/l, delta/2, delta/2 + t1Mat/l2)
+  gradln2a <-.gradLnDiffErfs(halfLDelta, halfLDelta - t1Mat/l, delta/2, delta/2 + t1Mat/l2)
   dpart2a <- gradln2a$dlnPart
   m2a <- gradln2a$m
 
-  gradln2b <-gradLnDiffErfs(halfLDelta, halfLDelta - t2Mat/l, delta/2, delta/2 + t2Mat/l2)
+  gradln2b <-.gradLnDiffErfs(halfLDelta, halfLDelta - t2Mat/l, delta/2, delta/2 + t2Mat/l2)
   dpart2b <- gradln2b$dlnPart
   m2b <- gradln2b$m
 
-  gradln3 <- gradLnDiffErfs(halfLDelta + t1Mat/l, halfLDelta + invLDiffT, delta/2 - t1Mat/l2, delta/2 - invLDiffT/l)
+  gradln3 <- .gradLnDiffErfs(halfLDelta + t1Mat/l, halfLDelta + invLDiffT, delta/2 - t1Mat/l2, delta/2 - invLDiffT/l)
   dpart3 <- gradln3$dlnPart
   m3 <- gradln3$m
 
-  gradln4 <- gradLnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l, delta/2 + invLDiffT/l, delta/2 - t2Mat/l2)
+  gradln4 <- .gradLnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l, delta/2 + invLDiffT/l, delta/2 - t2Mat/l2)
   dpart4 <- gradln4$dlnPart
   m4 <- gradln4$m
 
-  gradln5 <- gradLnDiffErfs(halfLD_i - t1Mat/l, halfLD_i, D_i/2 + t1Mat/l2, D_i/2)
+  gradln5 <- .gradLnDiffErfs(halfLD_i - t1Mat/l, halfLD_i, D_i/2 + t1Mat/l2, D_i/2)
   dpart5 <- gradln5$dlnPart
   m5 <- gradln5$m
 
-  gradln6 <- gradLnDiffErfs(halfLD_i + t2Mat/l, halfLD_i - invLDiffT, D_i/2 - t2Mat/l2, D_i/2 + invLDiffT/l)
+  gradln6 <- .gradLnDiffErfs(halfLD_i + t2Mat/l, halfLD_i - invLDiffT, D_i/2 - t2Mat/l2, D_i/2 + invLDiffT/l)
   dpart6 <- gradln6$dlnPart
   m6 <- gradln6$m
 
@@ -1033,11 +1033,11 @@ disimXsimKernGradient <- function (disimKern, simKern, t1, t2, covGrad) {
   dcommon2 <- 2 * D_i / (delta^2 - D_i^2) - t1Mat + l*halfLD_i
   dfact6 <- t2Mat
 
-  gradln5 <- gradLnDiffErfs(halfLD_i - t1Mat/l, halfLD_i, l/2, l/2)
+  gradln5 <- .gradLnDiffErfs(halfLD_i - t1Mat/l, halfLD_i, l/2, l/2)
   dpart5 <- gradln5$dlnPart
   m5 <- gradln5$m
 
-  gradln6 <- gradLnDiffErfs(halfLD_i + t2Mat/l, halfLD_i - invLDiffT, l/2, l/2)
+  gradln6 <- .gradLnDiffErfs(halfLD_i + t2Mat/l, halfLD_i - invLDiffT, l/2, l/2)
   dpart6 <- gradln6$dlnPart
   m6 <- gradln6$m
 
