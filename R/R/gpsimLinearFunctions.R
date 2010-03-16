@@ -88,11 +88,12 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
     model$kern <- kernCreate(timesCell,
                              list(type="cmpnd", comp=list(kernType1, kernType2)))
     simMultiKernName <- 'model$kern$comp[[1]]'
+    simMultiKern <- model$kern$comp[[1]]
   } else {
     model$kern <- kernCreate(timesCell, kernType1)
     simMultiKernName <- 'model$kern'
+    simMultiKern <- model$kern
   }
-  eval(parse(text=paste("simMultiKern <-", simMultiKernName)))
 
   ## This is if we need to place priors on parameters ...
   ## ...
@@ -287,7 +288,7 @@ gpsimUpdateKernels <- function (model) {
   }
 
   model$K <- k+diag(as.array(noiseVar))
-  invK <- jitCholInv(model$K, silent=TRUE)
+  invK <- .jitCholInv(model$K, silent=TRUE)
 
   if ( is.nan(invK[1]) ) {
     if ("debug" %in% names(model) && model$debug) {
@@ -370,10 +371,10 @@ gpsimLogLikelihood <- function (model) {
   ll <- 0.5*ll
 
   ## prior contributions
-  if ( "bprior" %in% names(model) ) {
-    ll <- ll + kernPriorLogProb(model$kern)
-    ll <- ll + priorLogProb(model$bprior, model$B)
-  }
+  #if ( "bprior" %in% names(model) ) {
+  #  ll <- ll + kernPriorLogProb(model$kern)
+  #  ll <- ll + priorLogProb(model$bprior, model$B)
+  #}
   return (ll)
 }
 
@@ -389,9 +390,9 @@ gpsimLogLikeGradients <- function (model) {
     g <- kernGradient(model$kern, model$t, covGrad)
   }
 
-  if ( "bprior" %in% names(model) ) {
-    g <- g + kernPriorGradient(model$kern)
-  }
+  #if ( "bprior" %in% names(model) ) {
+  #  g <- g + kernPriorGradient(model$kern)
+  #}
   
   gmuFull <- t(model$m) %*% model$invK
 
@@ -429,9 +430,9 @@ gpsimLogLikeGradients <- function (model) {
   func <- get(funcName$func, mode="function")
 
   ## prior contribution
-  if ( "bprior" %in% names(model) ) {
-    gb <- gb + priorGradient(model$bprior, model$B)
-  }
+  #if ( "bprior" %in% names(model) ) {
+  #  gb <- gb + priorGradient(model$bprior, model$B)
+  #}
 
   # Note: ignores funcName$hasArgs
   gb <- gb*func(model$B, "gradfact")
@@ -622,154 +623,4 @@ gpsimUpdateProcesses <- function (model, predt=NULL) {
   model$ypredVar <- abs(varExprs)
 
   return (model)
-}
-
-
-
-gpsimBarencoResults <- function (model, scale, expType, expNo, option=1) {
-  geneNames <- c("DDB2", "hPA26", "TNFRSF10b", "p21", "BIK")
-  order <- c(1,5,3,4,2)
-
-  modelB <- model$comp[[1]]$B*scale
-  scaleModelB <- modelB/mean(modelB)
-  modelS <- model$comp[[1]]$S*scale
-  modelS <- modelS/modelS[4]
-  
-  ## Display the result
-  if ( option==1 ) {
-    for ( i in seq(along=model$comp) ) {
-      plot(model$comp[[i]]$predt, model$comp[[i]]$predF, ylim=c(-1,3), type="l", lwd=3, xlab="Time",ylab="")
-      title("Predicted Protein Concentration for p53")
-      lines(model$comp[[i]]$predt, model$comp[[i]]$predF+2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
-      lines(model$comp[[i]]$predt, model$comp[[i]]$predF-2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
-
-      for ( j in seq(length=model$comp[[i]]$numGenes) ) {
-        x11()
-        plot(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j], ylim=c(0,4), type="l", lwd=3, xlab="Time",ylab="")
-##        title(paste("mRNA", geneNames[order[j]]))
-        points(model$comp[[i]]$timesCell[[2]], model$comp[[i]]$y[,j], lwd=3, col=3) 
-        lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]+2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
-        lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]-2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
-      }
-    }
-
-    x11()
-    barplot(modelB[order], names.arg=geneNames, mfg=c(3,1))
-    title("Basal Transcription Rates")
-    x11()
-    barplot(model$comp[[1]]$D[order], names.arg=geneNames, mfg=c(2,1))
-    title("Decay rate of the mRNA")
-    x11()
-    barplot(modelS[order], names.arg=geneNames, mfg=c(1,1))
-    title("Sensitivities to the Transcription Factor")
-    
-  } else {
-    postscript(paste(expType, expNo, ".ps", sep=""), horizontal=FALSE, width=8.0, height=6.0)
-    for ( i in seq(along=model$comp) ) {
-      plot(model$comp[[i]]$predt, model$comp[[i]]$predF, ylim=c(-1,3), type="l", lwd=3, xlab="Time",ylab="")
-      title("Predicted Protein Concentration for p53 using a Linear Response Model")
-      lines(model$comp[[i]]$predt, model$comp[[i]]$predF+2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
-      lines(model$comp[[i]]$predt, model$comp[[i]]$predF-2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
-
-      for ( j in seq(length=model$comp[[i]]$numGenes) ) {
-        plot(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j], ylim=c(0,4), type="l", lwd=3, xlab="Time",ylab="")
-        title(paste("mRNA", geneNames[order[j]]))
-        points(model$comp[[i]]$timesCell[[2]], model$comp[[i]]$y[,j], lwd=3, col=3)       
-        lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]+2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
-        lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]-2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
-      }
-
-    }
-
-    barplot(modelB[order], names.arg=geneNames, mfg=c(3,1))
-    title("Basal Transcription Rates")
-    barplot(model$comp[[1]]$D[order], names.arg=geneNames, mfg=c(2,1))
-    title("Decay rate of the mRNA")
-    barplot(modelS[order], names.arg=geneNames, mfg=c(1,1))
-    title("Sensitivities to the Transcription Factor")
-    
-    dev.off()
-  }
-
-}
-
-
-
-gpsimElkResults <- function (model, scale, genes, expType, expNo, option=1) {
-  ## Display the result
-  if ( option==1 ) {
-    for ( i in seq(along=model$comp) ) {
-      ymin <- min(model$comp[[i]]$predF-2*sqrt(model$comp[[i]]$varF))
-      ymax <- max(model$comp[[i]]$predF+2*sqrt(model$comp[[i]]$varF))
-      plot(model$comp[[i]]$predt, model$comp[[i]]$predF, type="l", lwd=3, ylim=c(ymin, ymax), xlab="Time",ylab="")
-      title("Predicted Protein Concentration")
-      lines(model$comp[[i]]$predt, model$comp[[i]]$predF+2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
-      lines(model$comp[[i]]$predt, model$comp[[i]]$predF-2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
-      
-      for ( j in seq(length=model$comp[[i]]$numGenes) ) {
-        x11()
-        ymin <- min(c(model$comp[[i]]$ypred[,j]-2*sqrt(model$comp[[i]]$ypredVar[,j]), model$comp[[i]]$y[,j]))
-        ymax <- max(c(model$comp[[i]]$ypred[,j]+2*sqrt(model$comp[[i]]$ypredVar[,j]), model$comp[[i]]$y[,j]))
-        plot(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j], type="l", lwd=3, ylim=c(ymin, ymax), xlab="Time",ylab="")
-        title(paste("mRNA", genes[j]))
-        if ( "proteinPrior" %in% names(options) ) {
-          points(model$comp[[i]]$timesCell[[2]], model$comp[[i]]$y[,j], lwd=3, col=3)
-        } else {
-          points(model$comp[[i]]$t, model$comp[[i]]$y[,j], lwd=3, col=3)
-        }
-        lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]+2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
-        lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]-2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
-      }
-    }
-
-    x11()
-    barplot(model$comp[[1]]$B, mfg=c(3,1))
-    title("Basal Transcription Rates")
-    x11()
-    barplot(model$comp[[1]]$D, mfg=c(2,1))
-    title("Decay rate of the mRNA")
-    x11()
-    barplot(model$comp[[1]]$S, mfg=c(1,1))
-    title("Sensitivities to the Transcription Factor")
-    
-  } else {
-    postscript(paste(expType, expNo, ".ps", sep=""), horizontal=FALSE, width=8.0, height=6.0)
-    for ( i in seq(along=model$comp) ) {
-      ymin <- min(model$comp[[i]]$predF-2*sqrt(model$comp[[i]]$varF))
-      ymax <- max(model$comp[[i]]$predF+2*sqrt(model$comp[[i]]$varF))
-      
-      plot(model$comp[[i]]$predt, model$comp[[i]]$predF, type="l", lwd=3, ylim=c(ymin, ymax), xlab="Time",ylab="")
-      title("Predicted Protein Concentration using a Linear Response Model")
-      lines(model$comp[[i]]$predt, model$comp[[i]]$predF+2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
-      lines(model$comp[[i]]$predt, model$comp[[i]]$predF-2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
-      
-      for ( j in seq(length=model$comp[[i]]$numGenes) ) {
-        ymin <- min(c(model$comp[[i]]$ypred[,j]-2*sqrt(model$comp[[i]]$ypredVar[,j]), model$comp[[i]]$y[,j]))
-        ymax <- max(c(model$comp[[i]]$ypred[,j]+2*sqrt(model$comp[[i]]$ypredVar[,j]), model$comp[[i]]$y[,j]))
-     
-        plot(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j], type="l", lwd=3, ylim=c(ymin, ymax), xlab="Time",ylab="")
-        title(paste("mRNA", genes[j]))
-        if ( "proteinPrior" %in% names(options) ) {
-          points(model$comp[[i]]$timesCell[[2]], model$comp[[i]]$y[,j], lwd=3, col=3)
-        } else {
-          points(model$comp[[i]]$t, model$comp[[i]]$y[,j], lwd=3, col=3)
-        }
-        lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]+2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
-        lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]-2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
-      }
-
-    }
-
-    barplot(model$comp[[1]]$B, mfg=c(3,1))
-    title("Basal Transcription Rates")
-
-    barplot(model$comp[[1]]$D, mfg=c(2,1))
-    title("Decay rate of the mRNA")
-
-    barplot(model$comp[[1]]$S, mfg=c(1,1))
-    title("Sensitivities to the Transcription Factor")
-    
-    dev.off()
-  }
-
 }

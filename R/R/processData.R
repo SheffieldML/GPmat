@@ -46,7 +46,7 @@ processData <- function(data, times = NULL, experiments = NULL, do.normalisation
     cat("Processing gene ", i, "/", numberOfRows, "\r", sep="")
     prof <- pcts[i,,]
     for (j in 1:numberOfColumns) {
-      t <- distfit(exp(prof[j, ]), 'normal')
+      t <- .distfit(exp(prof[j, ]), 'normal')
       yFull[i, j] <- t$par[1]
       yFullVar[i, j] <- t$par[2] ^ 2
     }

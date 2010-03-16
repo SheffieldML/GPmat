@@ -237,7 +237,7 @@ cmpndKernGradX <- function (kern, X, X2) {
       gX <- gX + func(kern$comp[[i]], X, X2)
     }
   }
-    
+ 
   return (gX)
 }
 
@@ -251,7 +251,7 @@ cmpndKernDiagGradX <- function (kern, X) {
 
   if ( !is.na(kern$comp[[i]]$index) ) {
     gX <- array(0, dim=dim(X))
-    gX[,kern$comp[[i]]$index,] <- kernDiagGradX(kern$comp[[i]], X[,kern$comp[[i]]$index])
+    gX[,kern$comp[[i]]$index,] <- func(kern$comp[[i]], X[,kern$comp[[i]]$index])
   } else {
     gX <- func(kern$comp[[i]], X)
   }
@@ -263,6 +263,6 @@ cmpndKernDiagGradX <- function (kern, X) {
       gX <- gX + func(kern$comp[[i]], X)
     }
   }
-    
+ 
   return (gX)
 }

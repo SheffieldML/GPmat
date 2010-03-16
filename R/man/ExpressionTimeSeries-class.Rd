@@ -2,8 +2,11 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{ExpressionTimeSeries-class}
+\alias{var.exprs}
+\alias{var.exprs<-}
 \alias{initialize,ExpressionTimeSeries-method}
 \alias{var.exprs,ExpressionTimeSeries-method}
+\alias{var.exprs<-,ExpressionTimeSeries-method}
 
 \title{Class to contain time series expression assays}
 \description{Container for time series expression assays and
