@@ -13,20 +13,14 @@ mlpKernParamInit <- function (kern) {
 
 
 
-mlpKernExtractParam <- function (kern, option=1) {
+mlpKernExtractParam <- function (kern, only.values=TRUE) {
+  params <- c(kern$weightVariance, kern$biasVariance, kern$variance)
 
-  if ( option == 1 ) {
-    params <- c(kern$weightVariance, kern$biasVariance, kern$variance)
+  if ( !only.values )
+    names(params) <- c("weightVariance", "biasVariance", "variance")
 
-    if ( any(is.na(params)) )
-      warning("params are infinite")
-    
-  } else {
-    params <- list(values=c(kern$weightVariance, kern$biasVariance, kern$variance), names=c("weightVariance", "biasVariance", "variance"))
-    
-    if ( any(is.na(params$values)) )
-      warning("params are infinite")
-  }
+  if ( any(is.na(params)) )
+    warning("params are infinite")
 
   return (params)
 }
@@ -124,15 +118,15 @@ mlpKernGradient <- function (kern, x, x2, covGrad) {
 mlpKernDiagGradX <- function (kern, X) {
   gX <- array(0, dim=dim(as.matrix(X)))
   for ( i in seq(length=dim(X)[1]) ) {
-    gX[i,] <- mlpKernDiagGradXpoint(kern, as.matrix(X)[i,])
+    gX[i,] <- .mlpKernDiagGradXpoint(kern, as.matrix(X)[i,])
   }
-  
+
   return (gX)
 }
 
 
 
-mlpKernDiagGradXpoint <- function (kern, x) {
+.mlpKernDiagGradXpoint <- function (kern, x) {
   x <- as.matrix(x)
   innerProd <- x %*% t(x)
   numer <- innerProd*kern$weightVariance + kern$biasVariance
@@ -143,7 +137,7 @@ mlpKernDiagGradXpoint <- function (kern, x) {
     gX[,j] <- 1/demon - numer/demon^2
     gX[,j] <- ((2*x[,j]*kern$weightVariance*kern$variance) %*% gX[,j] )/sqrt(1-arg*arg)
   }
-  
+
   return (gX)
 }
 
@@ -152,15 +146,15 @@ mlpKernDiagGradXpoint <- function (kern, x) {
 mlpKernGradX <- function (kern, X, X2) {
   gX <- array(0, dim=c(dim(as.matrix(X2)), dim(X)[1]))
   for ( i in seq(length=dim(X)[1]) ) {
-    gX[,,i] <- mlpKernGradXpoint(kern, as.matrix(X)[i,], X2)
+    gX[,,i] <- .mlpKernGradXpoint(kern, as.matrix(X)[i,], X2)
   }
-  
+
   return (gX)
 }
 
 
 
-mlpKernGradXpoint <- function (kern, x, X2) {
+.mlpKernGradXpoint <- function (kern, x, X2) {
   x <- as.matrix(x)
   X2 <- as.matrix(X2)
   innerProd <- X2 %*% t(x)
@@ -174,6 +168,6 @@ mlpKernGradXpoint <- function (kern, x, X2) {
     gX[,j] <- X2[,j]/demon - vec2*x[,j]*numer/demon^3
     gX[,j] <- kern$weightVariance*kern$variance*gX[,j]/sqrt(1-arg*arg)
   }
-  
+
   return (gX)
 }

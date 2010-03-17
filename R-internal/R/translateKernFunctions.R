@@ -7,20 +7,17 @@ translateKernDiagCompute <- function (kern, x) {
 
 
 
-translateKernExtractParam <- function (kern, option=1) {
+translateKernExtractParam <- function (kern, only.values=TRUE) {
   kern$nParams <- kern$nParams - kern$inputDimension
   
-  if ( option==1 ) {
-    params <- cmpndKernExtractParam(kern)
-    params <- c(params, kern$centre)
-  } else {
-    params <- cmpndKernExtractParam(kern, 2)
-    nameLengh <- length(params[[2]])
+  params <- cmpndKernExtractParam(kern, only.values=only.values)
+  centre <- c(kern$centre)
+  if ( !only.values ) {
     for ( i in seq(length=kern$inputDimension) ) {
-      params[[2]] <- c(params[[2]], paste("Centre", i, sep=""))
+      names(centre)[i] <- paste("Centre", i, sep="")
     }
-    params[[1]] <- c(params[[1]], kern$centre)
   }
+  params <- c(params, centre)
 
   return (params)
 }
@@ -110,14 +107,3 @@ translateKernGradient <- function (kern, x, x2, covGrad) {
 
   return (g)
 }
-
-
-
-
-
-
-
-
-
-
-

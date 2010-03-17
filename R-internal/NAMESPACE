@@ -1,4 +1,14 @@
-useDynLib("gpsim", ClnDiffErfs)
+import(methods)
+import(AnnotationDbi)
 
-##export everything that does not start with a .
-exportPattern("^[^\\.]")
+useDynLib("tiger", "_ClnDiffErfs")
+
+importClassesFrom(Biobase, AnnotatedDataFrame, AssayData, eSet, ExpressionSet,
+                  MIAME, Versioned, VersionedBiobase, Versions)
+
+importFrom("Biobase", "contents")
+
+importFrom("gplots", "plotCI")
+
+##export everything that does not start with a . or an _
+exportPattern("^[^\\._]")

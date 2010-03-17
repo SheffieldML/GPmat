@@ -1,11 +1,18 @@
-Package: gpsim
-Version: 0.0-1
-Date: 2009-08-06
-Title: GPSIM
-Author: Pei Gao <pg349@medschl.cam.ac.uk>, Antti Honkela <antti.honkela@tkk.fi>, Jonatan Ropponen <jroppone@cc.hut.fi>
+Package: tiger
+Version: 0.9.0
+Date: 2010-03-16
+Title: Transcription factor Inference through Gaussian process Expression Reconstruction
+Author: Antti Honkela, Pei Gao, Jonatan Ropponen, Magnus Rattray, Neil D. Lawrence
 Maintainer: Antti Honkela <antti.honkela@tkk.fi>
-Depends: R (>= 2.5.0)
-Imports: gplots, Biobase, puma
-Description: GP Single Input Motif modelling in R
+Depends: R (>= 2.8.0)
+Imports: Biobase, methods, AnnotationDbi, gplots
+Suggests: puma, drosgenome1.db
+Description: The tiger package implements our methodology of Gaussian
+ process differential equation models for analysis of gene expression
+ time series from single input motif networks. The package can be used
+ for inferring unobserved transcription factor (TF) protein concentrations
+ from expression measurements of known target genes, or for ranking
+ candidate targets of a TF.
 License: AGPL-3
+biocViews: Microarray, OneChannel, Bioinformatics, TimeCourse, GeneExpression, Transcription
 URL: http://www.cs.man.ac.uk/~neill/gpsim/
