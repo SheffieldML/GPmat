@@ -11,6 +11,11 @@ processData <- function(data, times = NULL, experiments = NULL, do.normalisation
   numberOfRows <- length(genes)
   numberOfColumns <- length(colnames(exprs(data)))
 
+  if (numberOfRows < 100) {
+    warning('processData: few genes in data set, turning off normalisation')
+    do.normalisation <- FALSE
+  }
+  
   if (is.null(experiments))
     experiments <- rep(1, numberOfColumns)
   

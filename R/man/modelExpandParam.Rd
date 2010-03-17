@@ -14,44 +14,47 @@
 \alias{simKernExpandParam}
 \alias{translateKernExpandParam}
 \alias{whiteKernExpandParam}
-\title{Update a model structure with parameters.}
+\alias{modelUpdateProcesses}
+\alias{cgpdisimUpdateProcesses}
+\alias{gpdisimUpdateProcesses}
+\alias{cgpsimUpdateProcesses}
+\alias{gpsimUpdateProcesses}
+
+\title{Update a model structure with new parameters or update the
+  posterior processes.}
 \description{
-  returns a model structure filled with the parameters in the given vector. This is used as a helper function to enable parameters to be optimised in, for example, the NETLAB optimisation functions.
+  
 }
 \usage{
 model <- modelExpandParam(model, param)
+model <- modelUpdateProcesses(model)
 }
 \arguments{
-  \item{model}{the model structure in which the parameters are to be placed.}
-  \item{param}{vector of parameters which are to be placed in the model structure.}
+  \item{model}{the model structure to be updated.}
+  \item{param}{vector of parameters.}
 }
 \value{
-  \item{model}{model structure with the given parameters in the relevant locations.}
+  \item{model}{updated model structure.}
+}
+\details{
+  \code{model <- modelExpandParam(model, param)}
+  returns a model structure filled with the parameters in the given
+  vector. This is used as a helper function to enable parameters to be
+  optimised in, for example, the optimisation functions.
+  
+  \code{model <- modelUpdateProcesses(model)}
+  updates posterior processes of the given model.
 }
 \seealso{
-\code{\link{modelExtractParam}}
+\code{\link{GPLearn}, \link{modelExtractParam}}
 }
 \examples{
   ## Commented out to speed up package check
-  ## Load a mmgmos preprocessed fragment of the Drosophila developmental
-  ## time series
-  #data(drosophila_gpsim_fragment)
-
-  ## Get the target probe names
-  #library(annotate)
-  #aliasMapping <- getAnnMap("ALIAS2PROBE",
-  #                  annotation(drosophila_gpsim_fragment))
-  #twi <- get('twi', env=aliasMapping)
-  #fbgnMapping <- getAnnMap("FLYBASE2PROBE",
-  #                 annotation(drosophila_gpsim_fragment))
-  #targetProbe <- get('FBgn0035257', env=fbgnMapping)
-
   ## Learn the model
-  #model <- GPLearn(drosophila_gpsim_fragment,
-  #                 TF=twi, targets=targetProbe,
-  #                 useGpdisim=TRUE, quiet=TRUE)
+  #model <- GPLearn(...)
   #params <- modelExtractParam(model, only.values=TRUE)
   #params[1] <- 0
   #new_model <- modelExpandParam(model, params)
+  #new_model <- modelUpdateProcesses(new_model)
 }
 \keyword{model}

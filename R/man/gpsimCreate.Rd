@@ -24,10 +24,13 @@ model <- gpdisimCreate(numGenes, numProteins, times, geneVals,
 \value{
   \item{model}{model structure containing default parameterisation.}
 }
+\details{
+  These functions are meant to be used through \code{\link{GPLearn}}.
+}
 \seealso{
-\code{\link{modelExtractParam}, \link{modelOptimise}}.
+\code{\link{modelExtractParam}, \link{modelOptimise}, \link{GPLearn}}.
 }
 \examples{
-## missing
+## missing, see GPLearn
 }
 \keyword{model}

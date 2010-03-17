@@ -19,7 +19,7 @@ boundedTransform(x, transform, bounds)
   transformed space (i.e. makes it positive). 'xtoa' maps the parameter
   back from transformed space to the original space. 'gradfact' gives
   the factor needed to correct gradients with respect to the transformed
-  parameter. }
+  parameter.}
   \item{bounds}{a 2-vector of bounds of allowed values in boundedTransform}
 }
 \value{
@@ -29,6 +29,10 @@ boundedTransform(x, transform, bounds)
 \code{\link{modelOptimise}}
 }
 \examples{
-## missing
+  # Transform unconstrained parameter -4 to a positive value
+  expTransform(-4, 'atox')
+
+  # Transform a bounded parameter in (1,3) to an unconstrained one
+  boundedTransform(2, 'xtoa', c(1, 3))
 }
 \keyword{model}

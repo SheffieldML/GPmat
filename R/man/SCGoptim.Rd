@@ -40,6 +40,9 @@
 \code{\link{modelObjective}, \link{modelGradient}}
 }
 \examples{
-## missing
+## Not run to speed up package checks
+# model <- GPLearn(..., dontOptimise=TRUE)
+# options <- optimiDefaultOptions()
+# model <- modelOptimise(model, options)
 }
 \keyword{model}

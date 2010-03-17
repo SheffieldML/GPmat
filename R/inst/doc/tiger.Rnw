@@ -62,11 +62,12 @@ paper~\citep{Honkela2010PNAS}\footnote{Note that the results reported
 
 To install the tiger software, unpack the software and run
 \begin{verbatim}
-R CMD INSTALL tiger-0.9
+R CMD INSTALL tiger
 \end{verbatim}
 
-<<echo=FALSE>>=
-library(tiger, lib.loc='~/R-public')
+To load the package start R and run
+<<>>=
+library(tiger)
 @ 
 
 \subsection{Loading the data}

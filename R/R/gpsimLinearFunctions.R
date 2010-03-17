@@ -251,7 +251,7 @@ gpsimExpandParam <- function (model, params) {
 
   model$mu <- model$B/model$D
 
-  model <- gpsimUpdateKernels(model)
+  model <- .gpsimUpdateKernels(model)
 
   if ( "proteinPrior" %in% names(model) ) {
     yInd <- seq(1, simMultiKern$diagBlockDim[2])
@@ -276,7 +276,7 @@ gpsimExpandParam <- function (model, params) {
 
 
 
-gpsimUpdateKernels <- function (model) {
+.gpsimUpdateKernels <- function (model) {
   eps <-  1e-6
 
   if ( ("proteinPrior" %in% names(model)) && ("timesCell" %in% names(model)) ) {

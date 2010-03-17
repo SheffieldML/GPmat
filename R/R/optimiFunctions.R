@@ -26,6 +26,13 @@ optimiDefaultOptions <- function() {
 
 
 modelOptimise <- function (model, options, ...) {
+  if (is.GPModel(model)) {
+    haveGPModel <- TRUE
+    model <- modelStruct(model)
+  }
+  else
+    haveGPModel <- FALSE
+
   funcName <- paste(model$type, "Optimise", sep="")
   if ( exists(funcName, mode="function") ) {
     func <- get(funcName, mode="function")
@@ -45,7 +52,10 @@ modelOptimise <- function (model, options, ...) {
     model$llscore <- newParams$objective
   }
 
-  return (model)
+  if (haveGPModel)
+    return (new("GPModel", model))
+  else
+    return (model)
 }
 
 

@@ -44,6 +44,27 @@ g <- modelGradient(params, model, ...)
 \code{\link{modelOptimise}}.
 }
 \examples{
-## missing
+  ## Commented out to speed up package check
+  ## Load a mmgmos preprocessed fragment of the Drosophila developmental
+  ## time series
+  #data(drosophila_gpsim_fragment)
+
+  ## Get the target probe names
+  #library(annotate)
+  #aliasMapping <- getAnnMap("ALIAS2PROBE",
+  #                  annotation(drosophila_gpsim_fragment))
+  #twi <- get('twi', env=aliasMapping)
+  #fbgnMapping <- getAnnMap("FLYBASE2PROBE",
+  #                 annotation(drosophila_gpsim_fragment))
+  #targetProbe <- get('FBgn0035257', env=fbgnMapping)
+
+  ## Learn the model
+  #model <- GPLearn(drosophila_gpsim_fragment,
+  #                 TF=twi, targets=targetProbe,
+  #                 useGpdisim=TRUE, quiet=TRUE)
+  #params <- modelExtractParam(model, only.values=FALSE)
+  #ll <- modelLogLikelihood(model)
+  #paramValues <- modelExtractParam(model, only.values=TRUE)
+  #modelGradient(paramValues, model)
 }
 \keyword{model}
