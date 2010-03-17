@@ -2,7 +2,7 @@
 
 
 extern void
-ClnDiffErfs(double *in1, double *in2, int *dim1, int *dim2, double *out, int *signs);
+_ClnDiffErfs(double *in1, double *in2, int *dim1, int *dim2, double *out, int *signs);
 
 /*
  * This function is based on cleaning up f2c translation of Fortran
@@ -243,7 +243,7 @@ double calerf(double x, int jint)
 
 
 void
-ClnDiffErfs(double *in1, double *in2, int *dim1, int *dim2, double *out, int *signs) {
+_ClnDiffErfs(double *in1, double *in2, int *dim1, int *dim2, double *out, int *signs) {
   const double xsmall = 2.2204e-16;
 
   int inc1, inc2, i;

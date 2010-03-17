@@ -1,40 +1,66 @@
 \name{processData}
 \Rdversion{1.0}
 \alias{processData}
-\title{Processing further data preprocessed by mmgmos}
+\alias{processRawData}
+\title{Processing expression time series}
 \description{
-  'processData' processes further data preprocessed by mmgmos in 'preprocess_affy'. The resulting data can then be used as input for the function 'GPrank'.
+  \code{processData} further processes time series data preprocessed
+  by \code{mmgmos}.
+  
+  \code{processData} further processes time series data preprocessed
+  by \code{mmgmos}.
+
+  Both functions return \code{\linkS4class{ExpressionTimeSeries}}
+  objects that can be used as input for the functions
+  \code{\link{GPLearn}} and \code{\link{GPRankTargets}}.
 }
 \usage{
-preprocData <- processData(data, replicates = NULL, searchedGenes = NULL)
+preprocData <- processData(data, times = NULL, experiments = NULL,
+  do.normalisation = TRUE)
+preprocData <- processRawData(rawData, times, experiments = NULL,
+  is.logged = TRUE)
 }
 \arguments{
-  \item{data}{The preprocessed data from mmgMOS to be used.}
-  \item{replicates}{The replicate structure of the data indicating
-    which expression data points belong to which replicates.
-    By default all the data points
-    are assumed to be from same replicate.}
-  \item{searchedGenes}{If set, an array of the genes to be include in
-    the result.}
+  \item{data}{The preprocessed data (\code{\linkS4class{exprsReslt}})
+    from mmgMOS to be used.}
+  \item{rawData}{Raw data matrix to be used. Each row corresponds to
+    a gene and each column to a data point.}
+  \item{times}{Observation times of each data point.
+    If unspecified or NULL, \code{processData} attempts to infer this
+    from phenoData(data) field containing 'time' in the name.}
+  \item{experiments}{The replicate structure of the data indicating
+    which expression data points arise from which experiments.
+    This should be an array in integers from 1 to N with length
+    equal to the number of data points.
+    By default all the data points are assumed to be from same
+    replicate.}
+  \item{is.logged}{Indicates whether the expression values are on
+    log scale or not.}
+  \item{do.normalisation}{Indicates whether to perform the
+    normalisation.}
 }
 \details{
-  The expression data and percentiles are normalized. A normal
-  distribution is then fitted into the data with distfit. The expression
-  data is then rescaled so that average standard deviation of curves is
-  1. The ratio of the average to the standard deviation of each value in
-  the expression data is also included, as well as a mean and median for
-  each gene, to be used for filtering genes.
+  The expression data (and percentiles, if available) are normalized
+  by equalising the mean. In \code{processData}, a normal
+  distribution is then fitted into the data with distfit.
 }
 \value{
-  'processData' returns the new processed data containing the expression data, variances, time points, genes and scale values.
+  An \code{\linkS4class{ExpressionTimeSeries}}
+  object containing all provided information.
 }
 \author{
-  Jonatan Ropponen, Antti Honkela
+  Antti Honkela, Jonatan Ropponen
 }
 \seealso{
-  \code{\link{GPLearn}, \link{GPrankTargets}}.
+  \code{\link{GPLearn}, \link{GPRankTargets}}.
 }
 \examples{
-## missing
+  ## Load a mmgmos preprocessed fragment of the Drosophila developmental
+  ## time series
+  data(drosophila_mmgmos_fragment)
+
+  ## Process the data (3 experiments containing 12 time points each)
+  drosophila_gpsim_fragment <- processData(drosophila_mmgmos_fragment,
+    experiments=rep(1:3, each=12))
 }
 \keyword{model}

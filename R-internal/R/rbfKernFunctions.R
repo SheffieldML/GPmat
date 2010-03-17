@@ -16,6 +16,7 @@ rbfKernParamInit <- function (kern) {
                             list(index=2, type="positive"))
     kern$transformArgs <- list()
     kern$transformArgs[[1]] <- kern$options$inverseWidthBounds
+    kern$inverseWidth <- mean(kern$options$inverseWidthBounds)
   }
   else {
     kern$transforms <- list(list(index=c(1,2), type="positive"))
@@ -26,14 +27,11 @@ rbfKernParamInit <- function (kern) {
 
 
 
-rbfKernExtractParam <- function (kern, option=1) {
+rbfKernExtractParam <- function (kern, only.values=TRUE) {
+  params <- c(kern$inverseWidth, kern$variance)
 
-  if ( option == 1 ) {
-    params <- c(kern$inverseWidth, kern$variance)
-    
-  } else {
-    params <- list(values=c(kern$inverseWidth, kern$variance), names=c("inverseWidth", "variance"))    
-  }
+  if ( !only.values )
+    names(params) <- c("inverseWidth", "variance")
 
   return (params)
 }
@@ -66,9 +64,9 @@ rbfKernDisplay <- function (kern, spaceNum=0) {
 
 rbfKernCompute <- function (kern, x, x2=NULL) {
   if ( nargs() < 3 ) {
-    n2 <- dist2(x,x)
+    n2 <- .dist2(x,x)
   } else {
-    n2 <- dist2(x,x2)
+    n2 <- .dist2(x,x2)
   }
 
   wi2 <- 0.5*kern$inverseWidth
@@ -85,11 +83,11 @@ rbfKernCompute <- function (kern, x, x2=NULL) {
 rbfKernGradient <- function (kern, x, x2, covGrad) {
   if ( nargs()==3 ) {
     k <- rbfKernCompute(kern, x)
-    dist2xx <- dist2(x, x)
+    dist2xx <- .dist2(x, x)
     covGrad <- x2
   } else if ( nargs()==4 ) {
     k <- rbfKernCompute(kern, x, x2)
-    dist2xx <- dist2(x, x2)
+    dist2xx <- .dist2(x, x2)
   }
 
   g <- array()

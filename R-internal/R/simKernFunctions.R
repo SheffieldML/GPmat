@@ -40,6 +40,7 @@ simKernParamInit <- function (kern) {
     kern$transforms[[2]] <- list(index=2, type="bounded")
     kern$transformArgs <- list()
     kern$transformArgs[[2]] <- kern$options$inverseWidthBounds
+    kern$inverseWidth <- mean(kern$options$inverseWidthBounds)
   }
 
   kern$isStationary <- FALSE
@@ -98,12 +99,12 @@ simXsimKernCompute <- function (simKern1, simKern2, t1, t2=t1) {
     stop("Both the SIM kernels have to be either normalised or not.")
 
   sigma <- sqrt(2/simKern1$inverseWidth)
-  h1 <- simComputeH(t1, t2, simKern1$decay, simKern2$decay, simKern1$delay, simKern2$delay, sigma)
-  h2 <- simComputeH(t2, t1, simKern2$decay, simKern1$decay, simKern2$delay, simKern1$delay, sigma)
+  h1 <- .simComputeH(t1, t2, simKern1$decay, simKern2$decay, simKern1$delay, simKern2$delay, sigma)
+  h2 <- .simComputeH(t2, t1, simKern2$decay, simKern1$decay, simKern2$delay, simKern1$delay, sigma)
   K <- h1 + t(h2)
   K <- 0.5*simKern1$sensitivity*simKern2$sensitivity*K
 
-  if (!simkern1$isNormalised)
+  if (!simKern1$isNormalised)
     K <- K*sigma*sqrt(pi)
 
   return (K)
@@ -111,40 +112,23 @@ simXsimKernCompute <- function (simKern1, simKern2, t1, t2=t1) {
 
 
 
-simKernExtractParam <- function (kern, option=1) {
+simKernExtractParam <- function (kern, only.values=TRUE) {
 
   if (kern$gaussianInitial) {
-    if (kern$isNegativeS) {
-      if ( option == 1 ) {
-        params <- c(kern$decay, kern$inverseWidth, kern$sensitivity, kern$initialVariance)
-      } else {
-        params <- list(values=c(kern$decay, kern$inverseWidth, kern$sensitivity, kern$initialVariance), names=kern$paramNames)
-      }
-    }
-    else {
-      if ( option == 1 ) {
-        params <- c(kern$decay, kern$inverseWidth, kern$variance, kern$initialVariance)
-      } else {
-        params <- list(values=c(kern$decay, kern$inverseWidth, kern$variance, kern$initialVariance), names=kern$paramNames)
-      }
-    }
+    if (kern$isNegativeS)
+      params <- c(kern$decay, kern$inverseWidth, kern$sensitivity, kern$initialVariance)
+    else
+      params <- c(kern$decay, kern$inverseWidth, kern$variance, kern$initialVariance)
   }
   else {
-    if (kern$isNegativeS) {
-      if ( option == 1 ) {
-        params <- c(kern$decay, kern$inverseWidth, kern$sensitivity)
-      } else {
-        params <- list(values=c(kern$decay, kern$inverseWidth, kern$sensitivity), names=kern$paramNames)
-      }
-    }
-    else {
-      if ( option == 1 ) {
-        params <- c(kern$decay, kern$inverseWidth, kern$variance)
-      } else {
-        params <- list(values=c(kern$decay, kern$inverseWidth, kern$variance), names=kern$paramNames)
-      }
-    }
+    if (kern$isNegativeS)
+      params <- c(kern$decay, kern$inverseWidth, kern$sensitivity)
+    else
+      params <- c(kern$decay, kern$inverseWidth, kern$variance)
   }
+  if (! only.values)
+    names(params) <- kern$paramNames
+
   return (params)
 }
 
@@ -214,12 +198,12 @@ simKernCompute <- function (kern, t, t2=t) {
 
   sigma <- sqrt(2/kern$inverseWidth)
 
-  h <- simComputeH(t, t2, kern$decay, kern$decay, kern$delay, kern$delay, sigma)
+  h <- .simComputeH(t, t2, kern$decay, kern$decay, kern$delay, kern$delay, sigma)
 
   if ( nargs() < 3 ) {
     k <- h + t(h)
   } else {
-    h2 <- simComputeH(t2, t, kern$decay, kern$decay, kern$delay, kern$delay, sigma)
+    h2 <- .simComputeH(t2, t, kern$decay, kern$decay, kern$delay, kern$delay, sigma)
     k <- h + t(h2)
   }
 
@@ -242,7 +226,7 @@ simKernCompute <- function (kern, t, t2=t) {
 
 
 
-simComputeH <-  function (t1, t2, Di, Dj, deltai, deltaj, sigma, option=1) {
+.simComputeH <-  function (t1, t2, Di, Dj, deltai, deltaj, sigma, option=1) {
   if ( ( dim(as.matrix(t1))[2] > 1 ) | ( dim(as.matrix(t2))[2] > 1 ) )
     stop("Input can only have one column.")
 
@@ -328,13 +312,13 @@ simXsimKernGradient <- function (simKern1, simKern2, t1, t2, covGrad) {
 
   option <- 2
   sigma <- sqrt(2/simKern1$inverseWidth)
-  simH1 <- simComputeH(t1, t2, simKern1$decay, simKern2$decay, simKern1$delay, simKern2$delay, sigma, option)
+  simH1 <- .simComputeH(t1, t2, simKern1$decay, simKern2$decay, simKern1$delay, simKern2$delay, sigma, option)
   h1 <- simH1$h
   dh1dD1 <- simH1$dhdDi
   dh1dD2 <- simH1$dhdDj
   dh1dsigma <- simH1$dhdsigma
 
-  simH2 <- simComputeH(t2, t1, simKern2$decay, simKern1$decay, simKern2$delay, simKern1$delay, sigma, option)
+  simH2 <- .simComputeH(t2, t1, simKern2$decay, simKern1$decay, simKern2$delay, simKern1$delay, sigma, option)
   h2 <- simH2$h
   dh2dD2 <- simH2$dhdDi
   dh2dD1 <- simH2$dhdDj

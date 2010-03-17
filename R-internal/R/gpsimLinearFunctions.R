@@ -33,6 +33,10 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
     isNegativeS = TRUE
   else
     isNegativeS = FALSE
+
+  if ("debug" %in% names(options))
+    model$debug <- options$debug
+
   ## proteinPrior encodes observation of the latent function.
   if ( "proteinPrior" %in% names(options) ) {
     model$proteinPrior <- options$proteinPrior
@@ -48,7 +52,8 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
     for ( i in 1:Ngenes ) {
       kernType1$comp[[i+1]] <- list(type="parametric", realType="sim",
                                     options=list(isNormalised=TRUE,
-                                      inverseWidthBounds=invWidthBounds))
+                                      inverseWidthBounds=invWidthBounds,
+                                      isNegativeS=isNegativeS))
       timesCell <- c(timesCell, list(mRNA=times))
     }
 
@@ -60,8 +65,18 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
     for ( i in 1:Ngenes ) {
       kernType1$comp[[i]] <- list(type="parametric", realType="sim",
                                   options=list(isNormalised=TRUE,
-                                    inverseWidthBounds=invWidthBounds))
+                                    inverseWidthBounds=invWidthBounds,
+                                    isNegativeS=isNegativeS))
     }
+  }
+
+  if ("fixedBlocks" %in% names(options))
+    kernType1 <- list(type="parametric", realType=kernType1,
+                      options=list(fixedBlocks=options$fixedBlocks))
+
+  if (model$isHierarchical) {
+    model$hierkern <- kernCreate(timesCell, kernType1)
+    model$hierkern <- modelTieParam(model$hierkern, tieParam)
   }
 
   model$includeNoise <- options$includeNoise
@@ -88,11 +103,12 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
     model$kern <- kernCreate(timesCell,
                              list(type="cmpnd", comp=list(kernType1, kernType2)))
     simMultiKernName <- 'model$kern$comp[[1]]'
+    simMultiKern <- model$kern$comp[[1]]
   } else {
     model$kern <- kernCreate(timesCell, kernType1)
     simMultiKernName <- 'model$kern'
+    simMultiKern <- model$kern
   }
-  eval(parse(text=paste("simMultiKern <-", simMultiKernName)))
 
   ## This is if we need to place priors on parameters ...
   ## ...
@@ -101,12 +117,12 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
   model$kern <- modelTieParam(model$kern, tieParam)
 
   if ( "proteinPrior" %in% names(options) ) {
-    for ( i in seq(2,model$kern$numBlocks,length.out=model$kern$numBlocks-1) ) {
+    for ( i in seq(2,simMultiKern$numBlocks,length.out=simMultiKern$numBlocks-1) ) {
       model$D[i-1] <- simMultiKern$comp[[i]]$decay
       model$S[i-1] <- simMultiKern$comp[[i]]$sensitivity
     }
   } else {
-    for ( i in seq(length.out=model$kern$numBlocks) ) {
+    for ( i in seq(along=simMultiKern$comp) ) {
       model$D[i] <- simMultiKern$comp[[i]]$decay
       model$S[i] <- simMultiKern$comp[[i]]$sensitivity
     }
@@ -140,11 +156,11 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
   }
 
   if ( "fix" %in% names(options) ) {
-    params <- modelExtractParam(model, 2)
+    params <- modelExtractParam(model, only.values=FALSE)
     model$fix <- options$fix
     if (! "index" %in% names(model$fix)) {
       for ( i in seq(along=model$fix$names) ) {
-        J <- grep(model$fix$names[[i]], params$names)
+        J <- grep(model$fix$names[i], names(params))
         if (length(J) != 1) {
           stop("gpsimCreate: inconsistent fixed parameter specification")
         }
@@ -157,8 +173,8 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
   model <- gpsimExpandParam(model, params)
   
   return (model)
- 
 }
+
 
 gpsimDisplay <- function(model, spaceNum=0)  {
   spacing = matrix("", spaceNum+1)
@@ -187,50 +203,40 @@ gpsimDisplay <- function(model, spaceNum=0)  {
 }
   
 
-gpsimExtractParam <- function (model, option=1) {
-  ## option=1: only return parameter values;
-  ## option=2: return both parameter values and names.
-
+gpsimExtractParam <- function (model, only.values=TRUE) {
   funcName <- optimiDefaultConstraint(model$bTransform)
   func <- get(funcName$func, mode="function")
 
-  if ( option == 1 ) {
+  if ( only.values ) {
     params <- kernExtractParam(model$kern)
     # Note: ignores funcName$hasArgs
     params <- c(params, func(model$B, "xtoa"))
-
     if (model$isHierarchical) {
       hparams <- kernExtractParam(model$hierkern)
       params <- c(params, hparams[2])
     }
-    
-    if ( "fix" %in% names(model) ) 
-      for ( i in seq(along=model$fix$index) )
-        params[model$fix$index[i]] <- model$fix$value[i]
-
-    params <- Re(params)        
-
   } else {
-    params <- kernExtractParam(model$kern, option)
+    params <- kernExtractParam(model$kern, only.values=only.values)
     # Note: ignores funcName$hasArgs
-    params$values <- c(params$values, func(model$B, "xtoa"))
-    for ( i in seq(along=model$mu) ) {
-      params$names <- c(params$names, paste("Basal", i, sep=""))
+    Bparams <- func(model$B, "xtoa")
+    for ( i in seq(along=Bparams) ) {
+      names(Bparams)[i] <- paste("Basal", i, sep="")
     }
+    params <- c(params, Bparams)
 
     if (model$isHierarchical) {
-      hparams <- kernExtractParam(model$hierkern, option)
-      params$values <- c(params$values, hparams$values[2])
-      params$names <- c(params$names, "hier_rbf_variance")
+      hparams <- kernExtractParam(model$hierkern, only.values=only.values)
+      hparams <- hparams[2]
+      names(hparams)[1] <- "hier_rbf_variance"
+      params <- c(params, hparams)
     }
-
-    if ( "fix" %in% names(model) ) 
-      for ( i in seq(along=model$fix$index) )
-        params$values[model$fix$index[i]] <- model$fix$value[i]
-
-    params$values <- Re(params$values)    
-    
   }
+
+  if ( "fix" %in% names(model) ) 
+    for ( i in seq(along=model$fix$index) )
+      params[model$fix$index[i]] <- model$fix$value[i]
+
+  params <- Re(params)        
 
   return (params)
 }
@@ -283,7 +289,7 @@ gpsimExpandParam <- function (model, params) {
 
   model$mu <- model$B/model$D
 
-  model <- gpsimUpdateKernels(model)
+  model <- .gpsimUpdateKernels(model)
 
   if ( "proteinPrior" %in% names(model) ) {
     yInd <- seq(1, simMultiKern$diagBlockDim[2])
@@ -308,7 +314,7 @@ gpsimExpandParam <- function (model, params) {
 
 
 
-gpsimUpdateKernels <- function (model) {
+.gpsimUpdateKernels <- function (model) {
   eps <-  1e-6
 
   if ( ("proteinPrior" %in% names(model)) && ("timesCell" %in% names(model)) ) {
@@ -331,22 +337,23 @@ gpsimUpdateKernels <- function (model) {
     model$K <- k+hierk+diag(as.array(noiseVar))
   else
     model$K <- k+diag(as.array(noiseVar))
-  invK <- jitCholInv(model$K)
+  invK <- .jitCholInv(model$K, silent=TRUE)
 
-  if ( is.nan(invK[1]) ) { 
-    cat("kern$decay = \n", model$D, "\n")
-    cat("\n")
-    cat("kern$sensitivity = \n", model$S, "\n")
-    cat("\n")
-    cat("kern$flength = \n", model$kern$comp[1]$flength, "\n")
-    cat("\n")
-				
+  if ( is.nan(invK[1]) ) {
+    if ("debug" %in% names(model) && model$debug) {
+      cat("kern$decay = \n", model$D, "\n")
+      cat("\n")
+      cat("kern$sensitivity = \n", model$S, "\n")
+      cat("\n")
+      cat("kern$flength = \n", model$kern$comp[1]$flength, "\n")
+      cat("\n")
+    }
     stop("Singular chol(K) matrix!")
   }
   
   model$invK <- invK$invM
 
-  if ( invK$jitter > 1e-4 )
+  if ( invK$jitter > 1e-4 && "debug" %in% names(model) && model$debug )
     warning(paste("Warning: gpsimUpdateKernels added jitter of", signif(invK$jitter, digits=4)))
 
   model$logDetK <- 2* sum( log ( diag(invK$chol) ) )
@@ -413,10 +420,10 @@ gpsimLogLikelihood <- function (model) {
   ll <- 0.5*ll
 
   ## prior contributions
-  if ( "bprior" %in% names(model) ) {
-    ll <- ll + kernPriorLogProb(model$kern)
-    ll <- ll + priorLogProb(model$bprior, model$B)
-  }
+  #if ( "bprior" %in% names(model) ) {
+  #  ll <- ll + kernPriorLogProb(model$kern)
+  #  ll <- ll + priorLogProb(model$bprior, model$B)
+  #}
   return (ll)
 }
 
@@ -436,9 +443,9 @@ gpsimLogLikeGradients <- function (model) {
       gh <- kernGradient(model$hierkern, model$t, covGrad * model$experimentMask)
   }
 
-  if ( "bprior" %in% names(model) ) {
-    g <- g + kernPriorGradient(model$kern)
-  }
+  #if ( "bprior" %in% names(model) ) {
+  #  g <- g + kernPriorGradient(model$kern)
+  #}
   
   gmuFull <- t(model$m) %*% model$invK
 
@@ -476,9 +483,9 @@ gpsimLogLikeGradients <- function (model) {
   func <- get(funcName$func, mode="function")
 
   ## prior contribution
-  if ( "bprior" %in% names(model) ) {
-    gb <- gb + priorGradient(model$bprior, model$B)
-  }
+  #if ( "bprior" %in% names(model) ) {
+  #  gb <- gb + priorGradient(model$bprior, model$B)
+  #}
 
   # Note: ignores funcName$hasArgs
   gb <- gb*func(model$B, "gradfact")
@@ -537,17 +544,8 @@ cgpsimLogLikelihood <- function (model) {
 
 
 
-cgpsimExtractParam <- function (model, option=1) {
-  ## option=1: only return parameter values;
-  ## option=2: return both parameter values and names.
-
-  if ( option == 1 ) {
-    params <- gpsimExtractParam(model$comp[[1]])
-  } else {
-    params <- gpsimExtractParam(model$comp[[1]], option)
-  }
-
-  return (params)
+cgpsimExtractParam <- function (model, only.values=TRUE) {
+  return (gpsimExtractParam(model$comp[[1]], only.values=only.values))
 }
 
 
@@ -582,9 +580,9 @@ cgpsimGradient <- function (params, model, ...) {
 
 
 
-cgpsimUpdateProcesses <- function (model) {
+cgpsimUpdateProcesses <- function (model, predt=NULL) {
   for ( i in seq(along=model$comp) )
-    model$comp[[i]] <- gpsimUpdateProcesses(model$comp[[i]])
+    model$comp[[i]] <- gpsimUpdateProcesses(model$comp[[i]], predt=predt)
 
   return (model)
 }
@@ -599,8 +597,7 @@ gpsimGradient <- function (params, model, ...) {
 }
 
 
-# FIXME: isHierarchical not handled (?)
-gpsimUpdateProcesses <- function (model) {
+gpsimUpdateProcesses <- function (model, predt=NULL) {
   if ( "proteinPrior" %in% names(model) ) {
     t <- model$timesCell[[2]]
   } else {
@@ -608,7 +605,8 @@ gpsimUpdateProcesses <- function (model) {
   }
 
   ##numData <- length(t)
-  predt <- c(seq(min(t), max(t), length=100), t)
+  if (is.null(predt))
+    predt <- c(seq(min(t), max(t), length=100), t)
   ## ymean <- t(matrix(model$y[1,], model$numGenes, numData))
 
   if (model$includeNoise)
@@ -683,154 +681,4 @@ gpsimUpdateProcesses <- function (model) {
   model$ypredVar <- abs(varExprs)
 
   return (model)
-}
-
-
-
-gpsimBarencoResults <- function (model, scale, expType, expNo, option=1) {
-  geneNames <- c("DDB2", "hPA26", "TNFRSF10b", "p21", "BIK")
-  order <- c(1,5,3,4,2)
-
-  modelB <- model$comp[[1]]$B*scale
-  scaleModelB <- modelB/mean(modelB)
-  modelS <- model$comp[[1]]$S*scale
-  modelS <- modelS/modelS[4]
-  
-  ## Display the result
-  if ( option==1 ) {
-    for ( i in seq(along=model$comp) ) {
-      plot(model$comp[[i]]$predt, model$comp[[i]]$predF, ylim=c(-1,3), type="l", lwd=3, xlab="Time",ylab="")
-      title("Predicted Protein Concentration for p53")
-      lines(model$comp[[i]]$predt, model$comp[[i]]$predF+2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
-      lines(model$comp[[i]]$predt, model$comp[[i]]$predF-2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
-
-      for ( j in seq(length=model$comp[[i]]$numGenes) ) {
-        x11()
-        plot(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j], ylim=c(0,4), type="l", lwd=3, xlab="Time",ylab="")
-##        title(paste("mRNA", geneNames[order[j]]))
-        points(model$comp[[i]]$timesCell[[2]], model$comp[[i]]$y[,j], lwd=3, col=3) 
-        lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]+2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
-        lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]-2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
-      }
-    }
-
-    x11()
-    barplot(modelB[order], names.arg=geneNames, mfg=c(3,1))
-    title("Basal Transcription Rates")
-    x11()
-    barplot(model$comp[[1]]$D[order], names.arg=geneNames, mfg=c(2,1))
-    title("Decay rate of the mRNA")
-    x11()
-    barplot(modelS[order], names.arg=geneNames, mfg=c(1,1))
-    title("Sensitivities to the Transcription Factor")
-    
-  } else {
-    postscript(paste(expType, expNo, ".ps", sep=""), horizontal=FALSE, width=8.0, height=6.0)
-    for ( i in seq(along=model$comp) ) {
-      plot(model$comp[[i]]$predt, model$comp[[i]]$predF, ylim=c(-1,3), type="l", lwd=3, xlab="Time",ylab="")
-      title("Predicted Protein Concentration for p53 using a Linear Response Model")
-      lines(model$comp[[i]]$predt, model$comp[[i]]$predF+2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
-      lines(model$comp[[i]]$predt, model$comp[[i]]$predF-2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
-
-      for ( j in seq(length=model$comp[[i]]$numGenes) ) {
-        plot(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j], ylim=c(0,4), type="l", lwd=3, xlab="Time",ylab="")
-        title(paste("mRNA", geneNames[order[j]]))
-        points(model$comp[[i]]$timesCell[[2]], model$comp[[i]]$y[,j], lwd=3, col=3)       
-        lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]+2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
-        lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]-2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
-      }
-
-    }
-
-    barplot(modelB[order], names.arg=geneNames, mfg=c(3,1))
-    title("Basal Transcription Rates")
-    barplot(model$comp[[1]]$D[order], names.arg=geneNames, mfg=c(2,1))
-    title("Decay rate of the mRNA")
-    barplot(modelS[order], names.arg=geneNames, mfg=c(1,1))
-    title("Sensitivities to the Transcription Factor")
-    
-    dev.off()
-  }
-
-}
-
-
-
-gpsimElkResults <- function (model, scale, genes, expType, expNo, option=1) {
-  ## Display the result
-  if ( option==1 ) {
-    for ( i in seq(along=model$comp) ) {
-      ymin <- min(model$comp[[i]]$predF-2*sqrt(model$comp[[i]]$varF))
-      ymax <- max(model$comp[[i]]$predF+2*sqrt(model$comp[[i]]$varF))
-      plot(model$comp[[i]]$predt, model$comp[[i]]$predF, type="l", lwd=3, ylim=c(ymin, ymax), xlab="Time",ylab="")
-      title("Predicted Protein Concentration")
-      lines(model$comp[[i]]$predt, model$comp[[i]]$predF+2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
-      lines(model$comp[[i]]$predt, model$comp[[i]]$predF-2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
-      
-      for ( j in seq(length=model$comp[[i]]$numGenes) ) {
-        x11()
-        ymin <- min(c(model$comp[[i]]$ypred[,j]-2*sqrt(model$comp[[i]]$ypredVar[,j]), model$comp[[i]]$y[,j]))
-        ymax <- max(c(model$comp[[i]]$ypred[,j]+2*sqrt(model$comp[[i]]$ypredVar[,j]), model$comp[[i]]$y[,j]))
-        plot(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j], type="l", lwd=3, ylim=c(ymin, ymax), xlab="Time",ylab="")
-        title(paste("mRNA", genes[j]))
-        if ( "proteinPrior" %in% names(options) ) {
-          points(model$comp[[i]]$timesCell[[2]], model$comp[[i]]$y[,j], lwd=3, col=3)
-        } else {
-          points(model$comp[[i]]$t, model$comp[[i]]$y[,j], lwd=3, col=3)
-        }
-        lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]+2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
-        lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]-2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
-      }
-    }
-
-    x11()
-    barplot(model$comp[[1]]$B, mfg=c(3,1))
-    title("Basal Transcription Rates")
-    x11()
-    barplot(model$comp[[1]]$D, mfg=c(2,1))
-    title("Decay rate of the mRNA")
-    x11()
-    barplot(model$comp[[1]]$S, mfg=c(1,1))
-    title("Sensitivities to the Transcription Factor")
-    
-  } else {
-    postscript(paste(expType, expNo, ".ps", sep=""), horizontal=FALSE, width=8.0, height=6.0)
-    for ( i in seq(along=model$comp) ) {
-      ymin <- min(model$comp[[i]]$predF-2*sqrt(model$comp[[i]]$varF))
-      ymax <- max(model$comp[[i]]$predF+2*sqrt(model$comp[[i]]$varF))
-      
-      plot(model$comp[[i]]$predt, model$comp[[i]]$predF, type="l", lwd=3, ylim=c(ymin, ymax), xlab="Time",ylab="")
-      title("Predicted Protein Concentration using a Linear Response Model")
-      lines(model$comp[[i]]$predt, model$comp[[i]]$predF+2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
-      lines(model$comp[[i]]$predt, model$comp[[i]]$predF-2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
-      
-      for ( j in seq(length=model$comp[[i]]$numGenes) ) {
-        ymin <- min(c(model$comp[[i]]$ypred[,j]-2*sqrt(model$comp[[i]]$ypredVar[,j]), model$comp[[i]]$y[,j]))
-        ymax <- max(c(model$comp[[i]]$ypred[,j]+2*sqrt(model$comp[[i]]$ypredVar[,j]), model$comp[[i]]$y[,j]))
-     
-        plot(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j], type="l", lwd=3, ylim=c(ymin, ymax), xlab="Time",ylab="")
-        title(paste("mRNA", genes[j]))
-        if ( "proteinPrior" %in% names(options) ) {
-          points(model$comp[[i]]$timesCell[[2]], model$comp[[i]]$y[,j], lwd=3, col=3)
-        } else {
-          points(model$comp[[i]]$t, model$comp[[i]]$y[,j], lwd=3, col=3)
-        }
-        lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]+2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
-        lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]-2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
-      }
-
-    }
-
-    barplot(model$comp[[1]]$B, mfg=c(3,1))
-    title("Basal Transcription Rates")
-
-    barplot(model$comp[[1]]$D, mfg=c(2,1))
-    title("Decay rate of the mRNA")
-
-    barplot(model$comp[[1]]$S, mfg=c(1,1))
-    title("Sensitivities to the Transcription Factor")
-    
-    dev.off()
-  }
-
 }

@@ -22,6 +22,9 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL,
   else
     model$gaussianInitial <- FALSE
 
+  if ("debug" %in% names(options))
+    model$debug <- options$debug
+
   if ("timeSkew" %in% names(options)) {
     model$timeSkew <- options$timeSkew
     times <- times + model$timeSkew
@@ -65,6 +68,10 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL,
   tieParam <- list(tieDelta="di_decay", tieWidth="inverseWidth",
                    tieSigma="di_variance", tieRBFVariance="rbf.?_variance")
 
+  if ("fixedBlocks" %in% names(options))
+    kernType1 <- list(type="parametric", realType=kernType1,
+                      options=list(fixedBlocks=options$fixedBlocks))
+
   if (model$isHierarchical) {
     model$hierkern <- kernCreate(times, kernType1)
     model$hierkern <- modelTieParam(model$hierkern, tieParam)
@@ -82,11 +89,12 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL,
     model$kern <- kernCreate(times,
                              list(type="cmpnd", comp=list(kernType1, kernType2)))
     simMultiKernName <- 'model$kern$comp[[1]]'
+    simMultiKern <- model$kern$comp[[1]]
   } else {
     model$kern <- kernCreate(times, kernType1)
     simMultiKernName <- 'model$kern'
+    simMultiKern <- model$kern
   }
-  eval(parse(text=paste("simMultiKern <-", simMultiKernName)))
   
   model$kern <- modelTieParam(model$kern, tieParam)
 
@@ -137,11 +145,11 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL,
   }
 
   if ( "fix" %in% names(options) ) {
-    params <- gpdisimExtractParam(model, 2)
+    params <- gpdisimExtractParam(model, only.values=FALSE)
     model$fix <- options$fix
     if (! "index" %in% names(model$fix)) {
       for ( i in seq(along=model$fix$names) ) {
-        J <- grep(model$fix$names[[i]], params$names)
+        J <- grep(model$fix$names[i], names(params))
         if (length(J) != 1) {
           stop("gpdisimCreate: inconsistent fixed parameter specification")
         }
@@ -190,9 +198,8 @@ gpdisimDisplay <- function(model, spaceNum=0)  {
 }
   
 
-gpdisimExtractParam <- function (model, option=1) {
-  params <- gpsimExtractParam(model, option)
-  return (params)
+gpdisimExtractParam <- function (model, only.values=TRUE) {
+  return (gpsimExtractParam(model, only.values=only.values))
 }
 
 
@@ -239,7 +246,7 @@ gpdisimExpandParam <- function (model, params) {
   }
 
   model$mu <- model$B/model$D
-  model <- gpsimUpdateKernels(model)
+  model <- .gpsimUpdateKernels(model)
 
   ind <- seq(along=model$t)
   lengthObs <- length(ind)
@@ -271,10 +278,10 @@ gpdisimLogLikelihood <- function (model) {
   ll <- 0.5*ll
 
   ## prior contributions
-  if ( "bprior" %in% names(model) ) {
-    ll <- ll + kernPriorLogProb(model$kern)
-    ll <- ll + priorLogProb(model$bprior, model$B)
-  }
+  #if ( "bprior" %in% names(model) ) {
+  #  ll <- ll + kernPriorLogProb(model$kern)
+  #  ll <- ll + priorLogProb(model$bprior, model$B)
+  #}
   return (ll)
 }
 
@@ -304,9 +311,9 @@ gpdisimLogLikeGradients <- function (model) {
       gh <- kernGradient(model$hierkern, model$t, covGrad * model$experimentMask)
   }
 
-  if ( "bprior" %in% names(model) ) {
-    g <- g + kernPriorGradient(model$kern)
-  }
+  #if ( "bprior" %in% names(model) ) {
+  #  g <- g + kernPriorGradient(model$kern)
+  #}
 
   gmuFull <- t(model$m) %*% model$invK
 
@@ -346,9 +353,9 @@ gpdisimLogLikeGradients <- function (model) {
   func <- get(funcName$func, mode="function")
 
   ## prior contribution
-  if ( "bprior" %in% names(model) ) {
-    gb <- gb + priorGradient(model$bprior, model$B)
-  }
+  #if ( "bprior" %in% names(model) ) {
+  #  gb <- gb + priorGradient(model$bprior, model$B)
+  #}
 
   gb <- gb*func(model$B, "gradfact")
 
@@ -402,17 +409,8 @@ cgpdisimLogLikelihood <- function (model) {
 
 
 
-cgpdisimExtractParam <- function (model, option=1) {
-  ## option=1: only return parameter values;
-  ## option=2: return both parameter values and names.
-
-  if ( option == 1 ) {
-    params <- gpdisimExtractParam(model$comp[[1]])
-  } else {
-    params <- gpdisimExtractParam(model$comp[[1]], option)
-  }
-
-  return (params)
+cgpdisimExtractParam <- function (model, only.values=TRUE) {
+  return (gpdisimExtractParam(model$comp[[1]], only.values=only.values))
 }
 
 
@@ -447,9 +445,9 @@ cgpdisimGradient <- function (params, model, ...) {
 
 
 
-cgpdisimUpdateProcesses <- function (model) {
+cgpdisimUpdateProcesses <- function (model, predt=NULL) {
   for ( i in seq(along=model$comp) )
-    model$comp[[i]] <- gpdisimUpdateProcesses(model$comp[[i]])
+    model$comp[[i]] <- gpdisimUpdateProcesses(model$comp[[i]], predt=predt)
 
   return (model)
 }
@@ -535,60 +533,3 @@ gpdisimUpdateProcesses <- function (model, predt=NULL) {
 
   return (model)
 }
-
-
-
-
-
-
-gpdisimMef2Results <- function (model, scale, expType, expNo, option=1) {
-  geneNames <- c("gene1", "Rya-r44F", "gene3 ", "ttk", "gene5", "gene6")
-
-  ## Display the result
-  if ( option==1 ) {
-    for ( i in seq(along=model$comp) ) {
-      plot(model$comp[[i]]$predt, model$comp[[i]]$predF, type="l", lwd=3, xlab="Time",ylab="")
-      title("Inferred Mef2 Protein Concentration")
-      lines(model$comp[[i]]$predt, model$comp[[i]]$predF+2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
-      lines(model$comp[[i]]$predt, model$comp[[i]]$predF-2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
-
-      for ( j in seq(length=model$comp[[i]]$numGenes+1) ) {
-        x11()
-        plot(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j], ylim=c(0,4), type="l", lwd=3, xlab="Time",ylab="")
-        if ( j==1 ) {
-          title(paste("Driving Input mRNA"))
-        } else {
-          title(paste("mRNA", geneNames[j]))
-        }
-        points(model$comp[[i]]$t, model$comp[[i]]$y[,j], lwd=3, col=3)
-        lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]+2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
-        lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]-2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
-      }
-    }
-
-  } else {
-    postscript(paste(expType, expNo, ".ps", sep=""), horizontal=FALSE, width=8.0, height=6.0)
-    for ( i in seq(along=model$comp) ) {
-      plot(model$comp[[i]]$predt, model$comp[[i]]$predF, type="l", lwd=3, xlab="Time",ylab="")
-      title("Inferred Mef2 Protein Concentration")
-      lines(model$comp[[i]]$predt, model$comp[[i]]$predF+2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
-      lines(model$comp[[i]]$predt, model$comp[[i]]$predF-2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
-
-      for ( j in seq(length=model$comp[[i]]$numGenes) ) {
-        plot(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j], ylim=c(0,4), type="l", lwd=3, xlab="Time",ylab="")
-        if ( j==1 ) {
-          title(paste("Driving Input mRNA"))
-        } else {
-          title(paste("mRNA", geneNames[j]))
-        }
-        points(model$comp[[i]]$t, model$comp[[i]]$y[,j], lwd=3, col=3)
-        lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]+2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
-        lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]-2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
-      }
-    }
-
-    dev.off()
-  }
-
-}
-
