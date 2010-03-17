@@ -51,6 +51,7 @@ g <- kernGradient(kern, x1, x2, partial_)
 \code{\link{kernCompute}}, \code{\link{kernExtractParam}}.
 }
 \examples{
-## missing
+kern <- kernCreate(1, 'rbf')
+g <- kernGradient(kern, as.matrix(c(1, 4)), array(1, c(2, 2)))
 }
 \keyword{model}

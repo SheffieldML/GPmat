@@ -219,7 +219,7 @@ gpdisimExpandParam <- function (model, params) {
   }
 
   model$mu <- model$B/model$D
-  model <- gpsimUpdateKernels(model)
+  model <- .gpsimUpdateKernels(model)
 
   ind <- seq(along=model$t)
   lengthObs <- length(ind)

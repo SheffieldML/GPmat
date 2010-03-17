@@ -1,6 +1,16 @@
 \name{kernCreate}
 \Rdversion{1.0}
 \alias{kernCreate}
+\alias{kernParamInit}
+\alias{cmpndKernParamInit}
+\alias{disimKernParamInit}
+\alias{mlpKernParamInit}
+\alias{multiKernParamInit}
+\alias{rbfKernParamInit}
+\alias{simKernParamInit}
+\alias{translateKernParamInit}
+\alias{whiteKernParamInit}
+
 \title{Initialise a kernel structure.}
 \description{
   Initialise a kernel structure.
@@ -32,14 +42,27 @@ kern <- kernCreate(dim, type)
   \code{kern <- kernCreate(dim, type)}
   creates a kernel matrix structure given the dimensions of the design matrix and the kernel type.
 
+  The *KernParamInit functions perform initialisation specific to
+  different types of kernels. They should not be called directly.
 }
 \value{
   \item{kern}{The kernel structure.}
 }
 \seealso{
-\code{\link{kernParamInit}}.
+\code{\link{kernDisplay}, \link{modelTieParam}}.
 }
 \examples{
-## missing
+# Create a multi kernel with two rbf blocks with bounded inverse widths
+invWidthBounds <- c(0.5, 2)
+kernType <- list(type="multi", comp=list())
+for (i in 1:2)
+  kernType$comp[[i]] <- list(type="parametric", realType="rbf",
+                              options=list(isNormalised=TRUE,
+                                inverseWidthBounds=invWidthBounds))
+kern <- kernCreate(1, kernType)
+
+# Tie the inverse with parameters of the component RBF kernels
+kern <- modelTieParam(kern, list(tieWidth="inverseWidth"))
+kernDisplay(kern)
 }
 \keyword{model}

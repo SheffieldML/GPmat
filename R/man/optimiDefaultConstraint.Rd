@@ -7,18 +7,21 @@
   parameter.
 }
 \usage{
-str <- optimiDefaultConstraint(constraint)
+val <- optimiDefaultConstraint(constraint)
 }
 \arguments{
   \item{constraint}{the type of constraint you want to place on the parameter, options include 'positive' (gives an 'exp' constraint) and 'zeroone' (gives a 'sigmoid' constraint).}
 }
 \value{
-  \item{str}{the type of function used to apply the constraint from the 'optimi' toolbox.}
+  \item{val}{a list with two components: 'func' for the name of function
+    used to apply the constraint, and 'hasArgs' for a boolean flag if
+    the function requires additional arguments.}
 }
 \seealso{
 \code{\link{expTransform}, \link{sigmoidTransform}}.
 }
 \examples{
-## missing
+  optimiDefaultConstraint('positive')
+  optimiDefaultConstraint('bounded')
 }
 \keyword{model}

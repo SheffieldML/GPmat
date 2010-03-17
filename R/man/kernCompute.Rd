@@ -60,6 +60,7 @@ Kd <- kernDiagCompute(kern, X)
 \code{\link{kernCreate}}
 }
 \examples{
-## missing
+kern <- kernCreate(1, 'rbf')
+K <- kernCompute(kern, as.matrix(3:8))
 }
 \keyword{model}

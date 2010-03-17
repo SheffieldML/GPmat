@@ -12,7 +12,7 @@
 
   Both functions return \code{\linkS4class{ExpressionTimeSeries}}
   objects that can be used as input for the functions
-  \code{\link{GPLearn}} and {\link{GPRankTargets}}.
+  \code{\link{GPLearn}} and \code{\link{GPRankTargets}}.
 }
 \usage{
 preprocData <- processData(data, times = NULL, experiments = NULL,

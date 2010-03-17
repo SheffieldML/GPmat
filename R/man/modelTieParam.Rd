@@ -29,6 +29,17 @@ model <- modelTieParam(model, paramsList)
 \code{\link{modelExtractParam}, \link{modelExpandParam}, \link{modelGradient}}.
 }
 \examples{
-## missing
+# Create a multi kernel with two rbf blocks with bounded inverse widths
+invWidthBounds <- c(0.5, 2)
+kernType <- list(type="multi", comp=list())
+for (i in 1:2)
+  kernType$comp[[i]] <- list(type="parametric", realType="rbf",
+                              options=list(isNormalised=TRUE,
+                                inverseWidthBounds=invWidthBounds))
+kern <- kernCreate(1, kernType)
+
+# Tie the inverse with parameters of the component RBF kernels
+kern <- modelTieParam(kern, list(tieWidth="inverseWidth"))
+kernDisplay(kern)
 }
 \keyword{model}
