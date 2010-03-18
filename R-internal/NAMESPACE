@@ -6,9 +6,17 @@ useDynLib("tiger", "_ClnDiffErfs")
 importClassesFrom(Biobase, AnnotatedDataFrame, AssayData, eSet, ExpressionSet,
                   MIAME, Versioned, VersionedBiobase, Versions)
 
+importMethodsFrom(Biobase, exprs, assayData, sampleNames,
+                  featureNames, phenoData, varLabels, varMetadata, pData,
+                  experimentData, pubMedIds, abstract, annotation)
+
 importFrom("Biobase", "contents")
 
 importFrom("gplots", "plotCI")
+
+exportMethods(exprs, assayData, sampleNames, featureNames, phenoData,
+              varLabels, varMetadata, pData, experimentData, pubMedIds,
+              abstract, annotation)
 
 ##export everything that does not start with a . or an _
 exportPattern("^[^\\._]")
