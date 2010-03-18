@@ -1,5 +1,5 @@
 Package: tiger
-Version: 0.9.0
+Version: 0.11.0
 Date: 2010-03-16
 Title: Transcription factor Inference through Gaussian process Expression Reconstruction
 Author: Antti Honkela, Pei Gao, Jonatan Ropponen, Magnus Rattray, Neil D. Lawrence
