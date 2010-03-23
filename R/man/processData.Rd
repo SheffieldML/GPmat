@@ -18,7 +18,7 @@
 preprocData <- processData(data, times = NULL, experiments = NULL,
   do.normalisation = TRUE)
 preprocData <- processRawData(rawData, times, experiments = NULL,
-  is.logged = TRUE)
+  is.logged = TRUE, do.normalisation = ifelse(is.logged, TRUE, FALSE))
 }
 \arguments{
   \item{data}{The preprocessed data (\code{\linkS4class{exprsReslt}})
@@ -35,7 +35,7 @@ preprocData <- processRawData(rawData, times, experiments = NULL,
     By default all the data points are assumed to be from same
     replicate.}
   \item{is.logged}{Indicates whether the expression values are on
-    log scale or not.}
+    log scale or not. Normalisation of non-logged data is unsupported.}
   \item{do.normalisation}{Indicates whether to perform the
     normalisation.}
 }

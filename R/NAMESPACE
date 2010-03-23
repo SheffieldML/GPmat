@@ -6,7 +6,7 @@ useDynLib("tiger", "_ClnDiffErfs")
 importClassesFrom(Biobase, AnnotatedDataFrame, AssayData, eSet, ExpressionSet,
                   MIAME, Versioned, VersionedBiobase, Versions)
 
-importFrom("Biobase", "contents")
+importFrom("Biobase", "contents", "assayDataNew")
 
 importFrom("gplots", "plotCI")
 
