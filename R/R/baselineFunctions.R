@@ -6,9 +6,12 @@
     sigma <- 0
     while (abs(sigma - oldsigma) > 1e-10) {
       oldsigma <- sigma
-      grad <- .baselineLogLikeGradient(sigma, y, yvar)
-      sigma <- sigma - grad$d1 / grad$d2
+      grad <- .baselineLogLikeGradient(expTransform(sigma, 'atox'), y, yvar)
+      sigma <- sigma - expTransform(sigma, 'atox') * grad$d1 /
+        (expTransform(2*sigma, 'atox') * grad$d2
+         + expTransform(sigma, 'atox') * grad$d1)
     }
+    sigma <- expTransform(sigma, 'atox')
   }
   else
     sigma <- 0

@@ -1,3 +1,5 @@
+require(Biobase)
+
 processData <- function(data, times = NULL, experiments = NULL, do.normalisation=TRUE) {
   require(puma)
 
@@ -72,7 +74,8 @@ processData <- function(data, times = NULL, experiments = NULL, do.normalisation
 }
 
 
-processRawData <- function(rawData, times, experiments=NULL, is.logged=TRUE) {
+processRawData <- function(rawData, times, experiments=NULL, is.logged=TRUE,
+                           do.normalisation=ifelse(is.logged, TRUE, FALSE)) {
   data <- rawData
   yFull <- as.matrix(data)
   genes <- rownames(data)
@@ -83,14 +86,22 @@ processRawData <- function(rawData, times, experiments=NULL, is.logged=TRUE) {
   if (is.null(experiments))
     experiments <- rep(1, numberOfColumns)
   
-  normalisation <- colMeans(yFull) - mean(yFull)
-  zeroArray <- array(0, dim=c(numberOfRows, numberOfColumns))
+  # No normalisation for non-logged values for now
+  if (is.logged) {
+    if (do.normalisation) {
+      normalisation <- colMeans(yFull) - mean(yFull)
+      zeroArray <- array(0, dim=c(numberOfRows, numberOfColumns))
 
-  # The default operation of sweep is "-".
-  yFull <- yFull + sweep(zeroArray, 2, normalisation)
+      # The default operation of sweep is "-".
+      yFull <- yFull + sweep(zeroArray, 2, normalisation)
+    }
 
-  if (is.logged)
     yFull <- exp(yFull)
+  }
+  else {
+    if (do.normalisation)
+      warning('normalisation of non-logged data unsupported')
+  }
 
   pData <- data.frame(experiments=experiments, modeltime=times)
   rownames(pData) <- colnames(data)

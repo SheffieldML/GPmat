@@ -1,10 +1,10 @@
 Package: tiger
-Version: 0.9.0
-Date: 2010-03-16
+Version: 0.9.1
+Date: 2010-03-23
 Title: Transcription factor Inference through Gaussian process Expression Reconstruction
 Author: Antti Honkela, Pei Gao, Jonatan Ropponen, Magnus Rattray, Neil D. Lawrence
 Maintainer: Antti Honkela <antti.honkela@tkk.fi>
-Depends: R (>= 2.8.0)
+Depends: R (>= 2.8.0), Biobase
 Imports: Biobase, methods, AnnotationDbi, gplots
 Suggests: puma, drosgenome1.db
 Description: The tiger package implements our methodology of Gaussian
