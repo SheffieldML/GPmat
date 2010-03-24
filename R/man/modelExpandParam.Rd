@@ -23,7 +23,8 @@
 \title{Update a model structure with new parameters or update the
   posterior processes.}
 \description{
-  
+  Update a model structure or component with new parameters,
+  or update the posterior processes.
 }
 \usage{
 model <- modelExpandParam(model, param)

@@ -1,5 +1,0 @@
-library("gpsim", lib.loc = "~/R/Rlibs")
-library(mgu74av2.db)
-regulators <- readPMIDRegulators("~/R/GPanalysis/GPanalysis1.2/tfcat_mouse_tf_pmids.txt")
-regulators <- removeDuplicates(regulators)
-writeGenes(regulators, "~/R/GPanalysis/GPanalysis1.2/probeRegulators.txt")
