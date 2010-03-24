@@ -1,6 +1,6 @@
 %\VignetteIndexEntry{tiger User Guide}
 %\VignetteKeywords{TimeCourse, GeneExpression, Transcription}
-%\VignetteDepends{Biobase, puma}
+%\VignetteDepends{Biobase, annotate, puma}
 %\VignettePackage{tiger}
 \documentclass[a4paper]{article}
 \usepackage{url}
@@ -8,7 +8,7 @@
 
 \title{tiger User Guide}
 \author{Antti Honkela, Pei Gao, Jonatan Ropponen, \\
-  Neil D. Lawrence, and Magnus Rattray}
+  Magnus Rattray, and Neil D. Lawrence}
 
 \newcommand{\Rfunction}[1]{{\texttt{#1}}}
 \newcommand{\Robject}[1]{{\texttt{#1}}}
@@ -50,20 +50,20 @@ paper~\citep{Honkela2010PNAS}\footnote{Note that the results reported
 
 \subsection{Installing the \tiger{} package}
 
-% The recommended way to install \tiger{} is to use the
-% \Rfunction{biocLite} function available from the bioconductor
-% website. Installing in this way shoul d ensure that all appropriate
-% dependencies are met.
+The recommended way to install \tiger{} is to use the
+\Rfunction{biocLite} function available from the bioconductor
+website. Installing in this way should ensure that all appropriate
+dependencies are met.
 
-% << eval=FALSE >>==
-% source("http://www.bioconductor.org/biocLite.R")
-% biocLite("tiger")
-% @
+<< eval=FALSE >>==
+source("http://www.bioconductor.org/biocLite.R")
+biocLite("tiger")
+@
 
-To install the tiger software, unpack the software and run
-\begin{verbatim}
-R CMD INSTALL tiger
-\end{verbatim}
+% To install the tiger software, unpack the software and run
+% \begin{verbatim}
+% R CMD INSTALL tiger
+% \end{verbatim}
 
 To load the package start R and run
 <<>>=

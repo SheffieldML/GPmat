@@ -15,7 +15,7 @@
     fixedParams = FALSE, initParams = NULL, initialZero = TRUE,
     fixComps = NULL, dontOptimise = FALSE,
     allowNegativeSensitivities = FALSE, quiet = FALSE,
-    gpsimOptions = NULL, allArgs = NULL)
+    stdoutOutput = FALSE, gpsimOptions = NULL, allArgs = NULL)
 }
 \arguments{
   \item{preprocData}{The preprocessed data to be used.}
@@ -42,6 +42,8 @@
     This is an experimental feature, and the negative values have no
     physical interpretation.}
   \item{quiet}{Suppress optimiser output.}
+  \item{stdoutOutput}{Write progress indicator to stdout instead of
+    stderr.}
   \item{gpsimOptions}{Internal: additional options to pass to
     gp[di]simCreate.}
   \item{allArgs}{A list of arguments that can be used to override
@@ -50,29 +52,29 @@
 \value{
   Returns the optimized model.
 }
-\author{
-  Jonatan Ropponen, Antti Honkela
-}
+\author{Antti Honkela, Pei Gao, Jonatan Ropponen, Magnus Rattray, Neil D. Lawrence}
 \seealso{
   \code{\link{GPRankTargets}, \link{GPRankTFs}}.
 }
 \examples{
+  ## Commented out to speed up package check
+  ##
   ## Load a mmgmos preprocessed fragment of the Drosophila developmental
   ## time series
-  data(drosophila_gpsim_fragment)
+  #data(drosophila_gpsim_fragment)
 
   ## Get the target probe names
-  library(annotate)
-  aliasMapping <- getAnnMap("ALIAS2PROBE",
-                    annotation(drosophila_gpsim_fragment))
-  twi <- get('twi', env=aliasMapping)
-  fbgnMapping <- getAnnMap("FLYBASE2PROBE",
-                   annotation(drosophila_gpsim_fragment))
-  targetProbe <- get('FBgn0035257', env=fbgnMapping)
+  #library(annotate)
+  #aliasMapping <- getAnnMap("ALIAS2PROBE",
+  #                  annotation(drosophila_gpsim_fragment))
+  #twi <- get('twi', env=aliasMapping)
+  #fbgnMapping <- getAnnMap("FLYBASE2PROBE",
+  #                 annotation(drosophila_gpsim_fragment))
+  #targetProbe <- get('FBgn0035257', env=fbgnMapping)
 
   ## Learn the model
-  model <- GPLearn(drosophila_gpsim_fragment,
-                   TF=twi, targets=targetProbe,
-                   useGpdisim=TRUE, quiet=TRUE)
+  #model <- GPLearn(drosophila_gpsim_fragment,
+  #                 TF=twi, targets=targetProbe,
+  #                 useGpdisim=TRUE, quiet=TRUE)
 }
 \keyword{model}

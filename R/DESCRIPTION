@@ -4,9 +4,9 @@ Date: 2010-03-23
 Title: Transcription factor Inference through Gaussian process Expression Reconstruction
 Author: Antti Honkela, Pei Gao, Jonatan Ropponen, Magnus Rattray, Neil D. Lawrence
 Maintainer: Antti Honkela <antti.honkela@tkk.fi>
-Depends: R (>= 2.8.0), Biobase
-Imports: Biobase, methods, AnnotationDbi, gplots
-Suggests: puma, drosgenome1.db
+Depends: R (>= 2.11.0), Biobase
+Imports: Biobase, methods, AnnotationDbi, gplots, graphics, puma, stats, utils
+Suggests: puma, drosgenome1.db, annotate
 Description: The tiger package implements our methodology of Gaussian
  process differential equation models for analysis of gene expression
  time series from single input motif networks. The package can be used
@@ -14,5 +14,5 @@ Description: The tiger package implements our methodology of Gaussian
  from expression measurements of known target genes, or for ranking
  candidate targets of a TF.
 License: AGPL-3
-biocViews: Microarray, OneChannel, Bioinformatics, TimeCourse, GeneExpression, Transcription
-URL: http://www.cs.man.ac.uk/~neill/gpsim/
+biocViews: Microarray, Bioinformatics, TimeCourse, GeneExpression, Transcription
+URL: http://users.ics.tkk.fi/ahonkela/tiger/

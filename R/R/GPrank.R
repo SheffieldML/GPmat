@@ -4,7 +4,7 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
                     initParams = NULL, initialZero = TRUE,
                     fixComps = NULL, dontOptimise = FALSE,
                     allowNegativeSensitivities = FALSE, quiet = FALSE,
-                    gpsimOptions = NULL, allArgs = NULL) {
+                    stdoutOutput = FALSE, gpsimOptions = NULL, allArgs = NULL) {
 
   if (!is.null(allArgs)) {
     for (i in seq(along=allArgs))
@@ -143,11 +143,15 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
 
   optOptions$maxit <- 3000
   optOptions$optimiser <- "SCG"
+  optOptions$stdoutOutput <- stdoutOutput
   if (quiet)
     optOptions$display <- FALSE
 
   if (!dontOptimise) {
-    cat (c("Optimizing genes", genes, sep=" "), "\n")
+    if (stdoutOutput)
+      cat(c("Optimising genes", genes, "\n"), sep=" ")
+    else
+      message(c("Optimising genes", genes, "\n"), sep=" ")
     model <- modelOptimise(model, optOptions)
   }
 
@@ -167,7 +171,7 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
 GPRankTargets <- function(preprocData, TF = NULL, knownTargets = NULL,
                           testTargets = NULL, filterLimit = 1.8,
                           returnModels = FALSE, options = NULL,
-                          scoreSaveFile = NULL) {
+                          stdoutOutput = FALSE, scoreSaveFile = NULL) {
 
   if (is.null(testTargets))
     testTargets <- featureNames(preprocData)
@@ -213,7 +217,9 @@ GPRankTargets <- function(preprocData, TF = NULL, knownTargets = NULL,
   }
   else
     allArgs <- list(useGpdisim=useGpdisim)
-  
+
+  allArgs$stdoutOutput <- stdoutOutput
+
   if (!is.null(knownTargets) && length(knownTargets) > 0) {
     baselineModel <- .formModel(preprocData, TF, knownTargets, allArgs=allArgs)
     baselineParameters <- modelExtractParam(baselineModel$model,
@@ -281,10 +287,10 @@ GPRankTargets <- function(preprocData, TF = NULL, knownTargets = NULL,
 
 
 
-GPRankTFs <- function(preprocData, TFs = NULL, targets,
-                      filterLimit = 1.8, returnScoreList = TRUE,
+GPRankTFs <- function(preprocData, TFs, targets,
+                      filterLimit = 1.8, 
                       returnModels = FALSE, options = NULL,
-                      scoreSaveFile = NULL) {
+                      stdoutOutput = FALSE, scoreSaveFile = NULL) {
   if (is.null(targets)) stop("No targets specified.")
 
   if (is.list(testTargets))
@@ -318,6 +324,8 @@ GPRankTFs <- function(preprocData, TFs = NULL, targets,
   }
   else
     allArgs <- list(useGpdisim=TRUE)
+
+  allArgs$stdoutOutput <- stdoutOutput
 
   numberOfTargets <- length(targets)
 
@@ -363,7 +371,8 @@ GPRankTFs <- function(preprocData, TFs = NULL, targets,
 
 
 
-.formModel <- function(preprocData, TF = NULL, knownTargets = NULL, testTarget = NULL, allArgs = NULL) {
+.formModel <- function(preprocData, TF = NULL, knownTargets = NULL,
+                       testTarget = NULL, allArgs = NULL) {
 
   if (!is.null(testTarget))
     targets <- append(knownTargets, testTarget)
@@ -377,7 +386,7 @@ GPRankTFs <- function(preprocData, TFs = NULL, targets,
     model <- GPLearn(preprocData, TF, targets, allArgs = allArgs)
     error1 <- FALSE
   }, error = function(ex) {
-    cat("Stopped due to an error.\n")
+    warning("Stopped due to an error.\n")
   })
 
   if (error1) {
@@ -386,12 +395,12 @@ GPRankTFs <- function(preprocData, TFs = NULL, targets,
     allArgs$randomize <- TRUE
     while (!success && i < 10) {
       tryCatch({
-        cat("Trying again with different parameters.\n")
+        message("Trying again with different parameters.\n")
         model <- GPLearn(preprocData, TF, targets, allArgs = allArgs)
         success <- TRUE
         error2 <- FALSE
       }, error = function(ex) {
-        cat("Stopped due to an error.\n")
+        warning("Stopped due to an error.\n")
       })
       i <- i + 1
     }

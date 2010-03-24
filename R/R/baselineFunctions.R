@@ -4,12 +4,24 @@
   if (options$includeNoise) {
     oldsigma <- 10
     sigma <- 0
-    while (abs(sigma - oldsigma) > 1e-10) {
+    oldval <- .baselineLogLikelihood(expTransform(sigma, 'atox'), y, yvar)
+    l <- 0
+    while ((abs(sigma - oldsigma) > 1e-10) && l < 1000) {
       oldsigma <- sigma
       grad <- .baselineLogLikeGradient(expTransform(sigma, 'atox'), y, yvar)
-      sigma <- sigma - expTransform(sigma, 'atox') * grad$d1 /
+      step <- expTransform(sigma, 'atox') * grad$d1 /
         (expTransform(2*sigma, 'atox') * grad$d2
          + expTransform(sigma, 'atox') * grad$d1)
+      k <- 0
+      newval <- oldval - 10
+      while (newval < (oldval - 1e-10) && k < 20) {
+        newsigma <- sigma - step
+        newval <- .baselineLogLikelihood(expTransform(newsigma, 'atox'), y, yvar)
+        step <- step / 2
+        k <- k+1
+      }
+      oldval <- newval
+      l <- l+1
     }
     sigma <- expTransform(sigma, 'atox')
   }
