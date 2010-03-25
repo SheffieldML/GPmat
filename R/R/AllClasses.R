@@ -203,7 +203,7 @@ setGeneric("write.scores", function(x, ...) standardGeneric("write.scores"))
 setMethod("write.scores", signature(x="scoreList"), 
           function(x, ...) {
             v <- cbind(loglikelihoods(x), baseloglikelihoods(x))
-            colnames(v) <- c('log-likelihood', 'null log-likelihood')
+            colnames(v) <- c('log-likelihood', 'null_log-likelihood')
             write.table(v, ...)
           })
 

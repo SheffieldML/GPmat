@@ -1,6 +1,6 @@
 require(Biobase)
 
-processData <- function(data, times = NULL, experiments = NULL, do.normalisation=TRUE, stdoutOutput=FALSE) {
+processData <- function(data, times = NULL, experiments = NULL, do.normalisation=TRUE) {
   require(puma)
 
   yFull <- exprs(data)
@@ -14,7 +14,7 @@ processData <- function(data, times = NULL, experiments = NULL, do.normalisation
   numberOfColumns <- length(colnames(exprs(data)))
 
   if (numberOfRows < 100) {
-    warning('processData: few genes in data set, turning off normalisation')
+    warning('processData: < 100 genes in data set, turning off normalisation')
     do.normalisation <- FALSE
   }
   
@@ -50,10 +50,7 @@ processData <- function(data, times = NULL, experiments = NULL, do.normalisation
   yFullVar <- array(dim = c(numberOfRows, numberOfColumns))
 
   for (i in 1:numberOfRows) {
-    if (stdoutOutput)
-      cat("Processing gene ", i, "/", numberOfRows, "\r", sep="")
-    else
-      message(".")
+    cat("Processing gene ", i, "/", numberOfRows, "\r", sep="")
     prof <- pcts[i,,]
     for (j in 1:numberOfColumns) {
       t <- .distfit(exp(prof[j, ]), 'normal')
@@ -61,10 +58,7 @@ processData <- function(data, times = NULL, experiments = NULL, do.normalisation
       yFullVar[i, j] <- t$par[2] ^ 2
     }
   }
-  if (stdoutOutput)
-    cat("\n")
-  else
-    message("\n")
+  cat("\n")
   
   rownames(yFullVar) <- rownames(yFull)
   colnames(yFullVar) <- colnames(yFull)

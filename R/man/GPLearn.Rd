@@ -15,7 +15,7 @@
     fixedParams = FALSE, initParams = NULL, initialZero = TRUE,
     fixComps = NULL, dontOptimise = FALSE,
     allowNegativeSensitivities = FALSE, quiet = FALSE,
-    stdoutOutput = FALSE, gpsimOptions = NULL, allArgs = NULL)
+    gpsimOptions = NULL, allArgs = NULL)
 }
 \arguments{
   \item{preprocData}{The preprocessed data to be used.}
@@ -42,8 +42,6 @@
     This is an experimental feature, and the negative values have no
     physical interpretation.}
   \item{quiet}{Suppress optimiser output.}
-  \item{stdoutOutput}{Write progress indicator to stdout instead of
-    stderr.}
   \item{gpsimOptions}{Internal: additional options to pass to
     gp[di]simCreate.}
   \item{allArgs}{A list of arguments that can be used to override

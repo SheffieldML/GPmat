@@ -15,11 +15,12 @@
 }
 \usage{
 scores <- GPRankTargets(preprocData, TF = NULL, knownTargets = NULL,
-testTargets = NULL, filterLimit = 1.8, returnModels = FALSE, options =
-NULL, stdoutOutput = FALSE, scoreSaveFile = NULL)
+                        testTargets = NULL, filterLimit = 1.8,
+                        returnModels = FALSE, options = NULL,
+                        scoreSaveFile = NULL)
 scores <- GPRankTFs(preprocData, TFs, targets,
                     filterLimit = 1.8, returnModels = FALSE, options = NULL,
-                    stdoutOutput = FALSE, scoreSaveFile = NULL)
+                    scoreSaveFile = NULL)
 }
 \arguments{
   \item{preprocData}{The preprocessed data to be used.}
@@ -34,8 +35,6 @@ scores <- GPRankTFs(preprocData, TFs, targets,
   \item{returnModels}{A logical value determining whether the function
     returns the calculated models.}
   \item{options}{A list of additional arguments to pass to GPLearn.}
-  \item{stdoutOutput}{Write progress indicator to stdout instead of
-    stderr.}
   \item{scoreSaveFile}{Name of file to save the scores to after processing
     each gene.}
   \item{TFs}{The transcription factors that are tested by

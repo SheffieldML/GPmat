@@ -4,7 +4,7 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
                     initParams = NULL, initialZero = TRUE,
                     fixComps = NULL, dontOptimise = FALSE,
                     allowNegativeSensitivities = FALSE, quiet = FALSE,
-                    stdoutOutput = FALSE, gpsimOptions = NULL, allArgs = NULL) {
+                    gpsimOptions = NULL, allArgs = NULL) {
 
   if (!is.null(allArgs)) {
     for (i in seq(along=allArgs))
@@ -143,15 +143,11 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
 
   optOptions$maxit <- 3000
   optOptions$optimiser <- "SCG"
-  optOptions$stdoutOutput <- stdoutOutput
   if (quiet)
     optOptions$display <- FALSE
 
   if (!dontOptimise) {
-    if (stdoutOutput)
-      cat(c("Optimising genes", genes, "\n"), sep=" ")
-    else
-      message(c("Optimising genes", genes, "\n"), sep=" ")
+    message(c("Optimising genes", genes, "\n"), sep=" ")
     model <- modelOptimise(model, optOptions)
   }
 
@@ -171,7 +167,7 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
 GPRankTargets <- function(preprocData, TF = NULL, knownTargets = NULL,
                           testTargets = NULL, filterLimit = 1.8,
                           returnModels = FALSE, options = NULL,
-                          stdoutOutput = FALSE, scoreSaveFile = NULL) {
+                          scoreSaveFile = NULL) {
 
   if (is.null(testTargets))
     testTargets <- featureNames(preprocData)
@@ -217,8 +213,6 @@ GPRankTargets <- function(preprocData, TF = NULL, knownTargets = NULL,
   }
   else
     allArgs <- list(useGpdisim=useGpdisim)
-
-  allArgs$stdoutOutput <- stdoutOutput
 
   if (!is.null(knownTargets) && length(knownTargets) > 0) {
     baselineModel <- .formModel(preprocData, TF, knownTargets, allArgs=allArgs)
@@ -290,7 +284,7 @@ GPRankTargets <- function(preprocData, TF = NULL, knownTargets = NULL,
 GPRankTFs <- function(preprocData, TFs, targets,
                       filterLimit = 1.8, 
                       returnModels = FALSE, options = NULL,
-                      stdoutOutput = FALSE, scoreSaveFile = NULL) {
+                      scoreSaveFile = NULL) {
   if (is.null(targets)) stop("No targets specified.")
 
   if (is.list(testTargets))
@@ -324,8 +318,6 @@ GPRankTFs <- function(preprocData, TFs, targets,
   }
   else
     allArgs <- list(useGpdisim=TRUE)
-
-  allArgs$stdoutOutput <- stdoutOutput
 
   numberOfTargets <- length(targets)
 
