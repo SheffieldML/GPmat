@@ -16,7 +16,7 @@
 }
 \usage{
 preprocData <- processData(data, times = NULL, experiments = NULL,
-  do.normalisation = TRUE, stdoutOutput = FALSE)
+  do.normalisation = TRUE)
 preprocData <- processRawData(rawData, times, experiments = NULL,
   is.logged = TRUE, do.normalisation = ifelse(is.logged, TRUE, FALSE))
 }
@@ -38,8 +38,6 @@ preprocData <- processRawData(rawData, times, experiments = NULL,
     log scale or not. Normalisation of non-logged data is unsupported.}
   \item{do.normalisation}{Indicates whether to perform the
     normalisation.}
-  \item{stdoutOutput}{Write progress indicator to stdout instead of
-    stderr.}
 }
 \details{
   The expression data (and percentiles, if available) are normalized

@@ -1,6 +1,6 @@
 Package: tiger
 Version: 0.9.1
-Date: 2010-03-23
+Date: 2010-03-25
 Title: Transcription factor Inference through Gaussian process Expression Reconstruction
 Author: Antti Honkela, Pei Gao, Jonatan Ropponen, Magnus Rattray, Neil D. Lawrence
 Maintainer: Antti Honkela <antti.honkela@tkk.fi>
@@ -15,4 +15,4 @@ Description: The tiger package implements our methodology of Gaussian
  candidate targets of a TF.
 License: AGPL-3
 biocViews: Microarray, Bioinformatics, TimeCourse, GeneExpression, Transcription
-URL: http://users.ics.tkk.fi/ahonkela/tiger/
+URL: http://www.bioinf.manchester.ac.uk/resources/tiger/

@@ -84,12 +84,17 @@ To start from scratch on Affymetrix data, the .CEL files from
 \url{ftp://ftp.fruitfly.org/pub/embryo_tc_array_data/} may be
 processed using:
 <<eval=FALSE>>=
-expfiles <- paste(rep(paste("embryo_tc", 2*2:4, sep="_"),
-                      each=12), "_", 1:12, ".CEL", sep="")
+# Names of CEL files
+expfiles <- c(paste("embryo_tc_4_", 1:12, ".CEL", sep=""),
+              paste("embryo_tc_6_", 1:12, ".CEL", sep=""),
+              paste("embryo_tc_8_", 1:12, ".CEL", sep=""))
+# Load the CEL files
 expdata <- ReadAffy(filenames=expfiles,
                     celfile.path="embryo_tc_array_data")
+# Setup experimental data (observation times)
 pData(expdata) <- data.frame("time.h" = rep(1:12, 3),
                              row.names=rownames(pData(expdata)))
+# Run mmgMOS processing (requires several minutes to complete)
 drosophila_mmgmos_exprs <- mmgmos(expdata)
 drosophila_mmgmos_fragment <- drosophila_mmgmos_exprs
 @ 
@@ -102,6 +107,9 @@ drosophila_gpsim_fragment <-
               experiments=rep(1:3, each=12))
 @ 
 
+Here the last argument specifies that we have three independent time
+series of measurements.
+
 In order to save time with the demos, a part of the result of this is
 included in this package and can be loaded using
 <<>>=
@@ -110,31 +118,36 @@ data(drosophila_gpsim_fragment)
 
 \subsection{Learning individual models}
 
-Here the last argument specifies that we have three independent time
-series of measurements.
-
 Let us now recreate some the models shown in the plots of the PNAS
 paper~\citep{Honkela2010PNAS}:
 <<>>=
+# FBgn names of target genes
 targets <- c('FBgn0003486', 'FBgn0033188', 'FBgn0035257')
 
+# Load gene annotations
 library(annotate)
 aliasMapping <- getAnnMap("ALIAS2PROBE",
                   annotation(drosophila_gpsim_fragment))
+# Get the probe identifier for TF 'twi'
 twi <- get('twi', env=aliasMapping)
+# Load alternative gene annotations
 fbgnMapping <- getAnnMap("FLYBASE2PROBE",
                  annotation(drosophila_gpsim_fragment))
+# Get the probe identifiers for target genes
 targetProbes <- mget(targets, env=fbgnMapping)
 
 st_models <- list()
+# Learn single-target models for each gene individually
 for (i in seq(along=targetProbes)) {
   st_models[[i]] <- GPLearn(drosophila_gpsim_fragment,
                             TF=twi, targets=targetProbes[i],
                             useGpdisim=TRUE, quiet=TRUE)
 }
+# Learn a joint model for all targets
 mt_model <- GPLearn(drosophila_gpsim_fragment, TF=twi,
                     targets=targetProbes,
                     useGpdisim=TRUE, quiet=TRUE)
+# Display the joint model parameters
 show(mt_model)
 @ 
 

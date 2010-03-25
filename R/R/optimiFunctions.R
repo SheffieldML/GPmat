@@ -20,7 +20,7 @@ optimiDefaultConstraint <- function (constraint) {
 optimiDefaultOptions <- function() {
   ## options: trace, maximum iteration, fnscale, reltol, default optimiser
   ## return (list(trace=TRUE, maxit=1000, fnscale=1e1, reltol=1e-4, optimiser="CG", gradcheck=FALSE, hessian=FALSE))
-  return (list(maxit=3000, ln=c(0,2), xtol=1e-4, fnTol=1e-4, optimiser="SCG", gradcheck=FALSE, display=TRUE, stdoutOutput=FALSE))
+  return (list(maxit=3000, ln=c(0,2), xtol=1e-4, fnTol=1e-4, optimiser="SCG", gradcheck=FALSE, display=TRUE))
 }
 
 
@@ -148,12 +148,8 @@ CGoptim <- function (x, fn, grad, options, ...) {
     eta <- ( t(grad_new-grad_old) %*% grad_new ) / grad2
     direction <- direction * eta - grad_new
 
-    if ( options$display ) {
-      if (options$stdoutOutput)
-        cat(ind, "-th objective = :", fn_new, "\t max xi: ", max(abs(x-x_old)), "\n")
-      else
-        message(ind, "-th objective = :", fn_new, "\t max xi: ", max(abs(x-x_old)), "\n")
-    }
+    if ( options$display )
+      cat(ind, "-th objective = :", fn_new, "\t max xi: ", max(abs(x-x_old)), "\n")
   }
 
   warning("Maximum iteration reached! \n")
@@ -179,7 +175,6 @@ SCGoptim <- function (x, fn, grad, options, ...) {
   }
 
   display <- options$display
-  stdoutOutput <- options$stdoutOutput
   gradcheck <- options$gradcheck
   
   ## y = fn (x)
@@ -263,12 +258,8 @@ SCGoptim <- function (x, fn, grad, options, ...) {
       success <- 0
       fnow <- fold
     }
-    if (display) {
-      if (stdoutOutput)
-        cat("Cycle ", j, "Error ", round(fnow, digits=4), "Scale ", beta, "\n")
-      else
-        message("Cycle ", j, "Error ", round(fnow, digits=4), "Scale ", beta, "\n")
-    }
+    if (display)
+      cat("Cycle ", j, "Error ", round(fnow, digits=4), "Scale ", beta, "\n")
 
     if ( success == 1 )
       if ( (max(abs(alpha*d))<options$xtol) & (max(abs(fnew-fold))<options$fnTol) ) {
