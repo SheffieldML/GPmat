@@ -49,13 +49,12 @@ model <- modelUpdateProcesses(model)
 \seealso{
 \code{\link{GPLearn}, \link{modelExtractParam}}
 }
-\examples{
-  ## Commented out to speed up package check
-  ## Learn the model
-  #model <- GPLearn(...)
-  #params <- modelExtractParam(model, only.values=TRUE)
-  #params[1] <- 0
-  #new_model <- modelExpandParam(model, params)
-  #new_model <- modelUpdateProcesses(new_model)
-}
+\examples{\dontrun{
+  # Learn the model
+  model <- GPLearn(...)
+  params <- modelExtractParam(model, only.values=TRUE)
+  params[1] <- 0
+  new_model <- modelExpandParam(model, params)
+  new_model <- modelUpdateProcesses(new_model)
+}}
 \keyword{model}

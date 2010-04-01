@@ -55,24 +55,28 @@
   \code{\link{GPRankTargets}, \link{GPRankTFs}}.
 }
 \examples{
-  ## Commented out to speed up package check
-  ##
-  ## Load a mmgmos preprocessed fragment of the Drosophila developmental
-  ## time series
-  #data(drosophila_gpsim_fragment)
+  # Load a mmgmos preprocessed fragment of the Drosophila developmental
+  # time series
+  data(drosophila_gpsim_fragment)
 
-  ## Get the target probe names
-  #library(annotate)
-  #aliasMapping <- getAnnMap("ALIAS2PROBE",
-  #                  annotation(drosophila_gpsim_fragment))
-  #twi <- get('twi', env=aliasMapping)
-  #fbgnMapping <- getAnnMap("FLYBASE2PROBE",
-  #                 annotation(drosophila_gpsim_fragment))
-  #targetProbe <- get('FBgn0035257', env=fbgnMapping)
+  # Get the target probe names
+  library(annotate)
+  aliasMapping <- getAnnMap("ALIAS2PROBE",
+                    annotation(drosophila_gpsim_fragment))
+  twi <- get('twi', env=aliasMapping)
+  fbgnMapping <- getAnnMap("FLYBASE2PROBE",
+                   annotation(drosophila_gpsim_fragment))
+  targetProbe <- get('FBgn0035257', env=fbgnMapping)
 
-  ## Learn the model
-  #model <- GPLearn(drosophila_gpsim_fragment,
-  #                 TF=twi, targets=targetProbe,
-  #                 useGpdisim=TRUE, quiet=TRUE)
-}
+  # Create the model but do not optimise (rarely needed...)
+  model <- GPLearn(drosophila_gpsim_fragment,
+                   TF=twi, targets=targetProbe,
+                   useGpdisim=TRUE, quiet=TRUE,
+                   dontOptimise=TRUE)
+\dontrun{
+  # Create and learn the model
+  model <- GPLearn(drosophila_gpsim_fragment,
+                   TF=twi, targets=targetProbe,
+                   useGpdisim=TRUE, quiet=TRUE)
+}}
 \keyword{model}
