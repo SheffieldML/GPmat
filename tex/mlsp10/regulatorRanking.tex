@@ -1,12 +1,13 @@
 \documentclass{article}
 \usepackage{spconf,amsmath,graphicx}
 
+\input{../definitions.tex}
 
 
 \title{Ranking of Gene Regulators through Differential Equations and Gaussian Processes}
 
 \name{Author(s) Name(s)\thanks{Thanks to XYZ for funding.}}
-\adddress{Author Affiliation(s)}
+\address{Author Affiliation(s)}
 
 \begin{document}
 
@@ -40,9 +41,11 @@ coregulated.  Confirmation  experiments  may then  involve  ``knocking
 out'' the  regulating gene and looking  for a resulting  change in the
 gene expression of the hypothesized targets.
 
+\subsection{Model Based Ranking}
+
 Recently a  model based  approach to ranking  of targets  was proposed
 that extends  this idea to  include an explicit  differential equation
-model of  the gene expression \cite{Barenco:}. This  allows ranking of
+model of  the gene expression \cite{Barenco:ranked06}. This  allows ranking of
 coregulated genes  even when the expression profiles  are not strongly
 correlated due to  low decay rates. The basic form of  the model is as
 follows
@@ -56,7 +59,7 @@ $b_i$  is a  basal rate  of transcription.  Solution of  this equation
 gives
 \[
 m_i(t) = a_i e^{-d_it} \frac{b_i}{d_i} + s_i
-e^{-d_it}\int_0^tf(u)e^{d_i u}\mathrm{d} u
+e^{-d_it}\int_0^tf(u)e^{d_i u}\mathrm{d} u \label{eq:linearOperator}
 \]
 and the initial condition is given by $m_i(0)=a_i + \frac{b_i}{d_i}$. 
 
@@ -71,13 +74,13 @@ TFs  don't act  in tandem  and  that the  response to  the TF  doesn't
 saturate. However,  the model is  richer than the  standard genomewide
 analysis   techniques  of  seeking   correlation  or   clustering  the
 data. This model based approach to gene regulation was also considered
-by \cite{Gao:}. They used  Gaussian process priors over the unobserved
-TF activity to create a  fully probabilistic model for the coregulated
-genes.   Likelihoods  can  then  be  used to  rank  these  models  and
-determined which genes are likely to be coregulated.
+by  \cite{Gao:latent08}. They  used Gaussian  process priors  over the
+unobserved TF activity  to create a fully probabilistic  model for the
+coregulated genes.  Likelihoods can then  be used to rank these models
+and determined which genes are likely to be coregulated.
 
-Also in \cite{Gao:} this framework  was extend by introducing a simple
-model  of  translation.   Let's   represent  the  mRNA  governing  the
+Also in \cite{Gao:latent08} this framework was extend by introducing a
+simple model  of translation.  Let's represent the  mRNA governing the
 transcription factor by $m_0(t)$. Let's assume that this is translated
 to  $p(t)$ through a  process that  can be  modelled by  the following
 differential equation
@@ -116,20 +119,70 @@ approach to modelling transcriptional regulation and demonstrate our
 ideas on a real world biological problem. Despite the simplifying
 assumptions we make, we show very promising results.
 
-\section{Gaussian Process Modeling}
+\section{Gaussian Process Modelling}
 
-A Gaussian process (GP) is a probabilistic prior over functions\cite{Williams:}. They are a nonparametric approach to modelling data. The basic idea is that observations of a function of interest, $p(t)$, given by $\mathbf{p} = \left[p_1, \dots, p_T\right]^\top$, where $p_i=p(t_i)$ are jointly Gaussian distributed,
+A  Gaussian  process (GP)  is  a  probabilistic  prior over  functions
+\cite{Rasmussen:book06}.  A GP  provides a  nonparametric  approach to
+modelling data. The  basic idea is that observations  of a function of
+interest,   $p(t)$,   given  by   $\mathbf{p}   =  \left[p_1,   \dots,
+  p_T\right]^\top$,   where    $p_i=p(t_i)$   are   jointly   Gaussian
+distributed,
 \[
 \mathbf{p} \sim \mathcal{N}(\mathbf{0}, \mathbf{K}).
 \]
-where the elements of the covariance matrix are given by a covariance function. This may be any function that leads to a positive definite matrix, but a common choice is the Gaussian covariance,
+where the elements of the  covariance matrix are given by a covariance
+function. This may  be any function that leads  to a positive definite
+matrix, but a common choice is the Gaussian covariance,
 \[
-k(t_i, t_j) = \frac{1}{\sqrt{2\pi \ell^2}}\exp\left(-\frac{(t_i -t_j)^2}{2\ell^2}\right).
+k(t_i,   t_j)   =  \frac{1}{\sqrt{2\pi   \ell^2}}\exp\left(-\frac{(t_i
+    -t_j)^2}{2\ell^2}\right).
 \]
-Whilst we usually think of Gaussian's as being densities over finite length vectors, the process perspective allows us to think of them as distributions over infinite length vectors. The important idea is that the other possible things that could be happening are all been marginalized, and we only deal with the observations $\mathbf{p}$. If we need to query a new observation time, $p_*$, we express the joint distribution over the augmented variable as
+Whilst we usually  think of Gaussian's as being  densities over finite
+length vectors, the process perspective  allows us to think of them as
+distributions over infinite length vectors. The important idea is that
+the  other  possible things  that  could  be  happening are  all  been
+marginalized, and we only  deal with the observations $\mathbf{p}$. If
+we need to  query a new observation time, $p_*$,  we express the joint
+distribution over the augmented variable set as
 \[
+\left[\begin{matrix}
+  \mathbf{p}\\
+\mathbf{p}_*
+\end{matrix}\right]
+\sim \mathcal{N}\left(\mathbf{0}, \left[\begin{matrix}
+      \mathbf{K} & \mathbf{K}_{:,*}\\
+      \mathbf{K}_{*,:} & \mathbf{K}_{*,*}
+      \end{matrix}
+\right]\right),
+\]
+where $\mathbf{K}_{:,*}$  is the covariance  function computed between
+the training  times, $\mathbf{t}$, and the  test times, $\mathbf{t}_*$
+and $\mathbf{K}_{*,*}$ is the covariance function computed between the
+test times.
+
+Simple  manipulation of  this joint  Gaussian  density, $p(\mathbf{p},
+\mathbf{p_*}|\mathbf{t},  \mathbf{t}_*)$,  allows  us to  compute  the
+conditional density of the test data given the training data,
+\[
+p(\mathbf{p}_* | \mathbf{p}, \mathbf{t}, \mathbf{t}_*) = \mathcal{N}\left(\mathbf{p}_*|\boldsymbol{\mu}, \boldsymbol{\Sigma}\right)
+\]
+where
+\[
+\boldsymbol{\mu} = \mathbf{K}_{*,:}\mathbf{K}^{-1}\mathbf{p}
+\]
+and 
+\[
+\boldsymbol{\Sigma} = \mathbf{K}_{*,*} - \mathbf{K}_{*,:}\mathbf{K}^{-1}\mathbf{K}_{:,*}.
 \]
 
+The simple translation/transcription model we described in the last section gives a deterministic relationship between the TF activity, $p(t)$ and the gene expression levels, $m_0(t)$ and $m_i(t)$. This deterministic relationship can be encoded within a Gaussian process by noting that it is given by a \emph{linear operator}. The linear operator in question is the convolution of the function with an exponential (see \refeq{eq:linearOperator}). A convolution of a Gaussian process with a deterministic function leads to another Gaussian process: this results from two properties, a Gaussian process multiplied by a deterministic function is also a Gaussian process and the integral of a Gaussian process is also a Gaussian process. The other effect of \refeq{eq:linearOperator} is to introduce a new mean function through the addition of $\frac{b_i}{d_i}$ and $a_i e^{-d_i t}$. Details are given in \cite{Lawrence:,Gao:,Honkela:} but the main result is that the cross covariances between the TF concentration and the mRNA concentrations can be computed:
+\[
+.
+\]
+where $k_{p,i}(t, t^\prime)$ gives the covariance between the TF concentration and the mRNA associated with the $i$th gene at times $t$ and $t^\prime$. This suggests a model for the gene expression which is jointly Gaussian and has the form
+\[
+.
+\]
 
 \bibliographystyle{IEEEbib}
 \bibliography{lawrence,other,zbooks}
