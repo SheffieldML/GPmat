@@ -287,12 +287,9 @@ GPRankTFs <- function(preprocData, TFs, targets,
                       scoreSaveFile = NULL) {
   if (is.null(targets)) stop("No targets specified.")
 
-  if (is.list(testTargets))
-    testTargets <- unlist(testTargets) 
+  if (is.list(targets))
+    targets <- unlist(targets) 
 
-  if (is.list(knownTargets))
-    knownTargets <- unlist(knownTargets)
-  
   numberOfTargets <- length(targets)
 
   genes = c(TFs, targets)
@@ -339,13 +336,13 @@ GPRankTFs <- function(preprocData, TFs, targets,
       if (returnModels)
         rankedModels[[i]] <- returnData$model
     }
-    genes[[i]] <- testTargets[[i]]
+    genes[[i]] <- TFs[[i]]
 
     if (!is.null(scoreSaveFile)) {
       scoreList <- new("scoreList", params = modelParams,
                        loglikelihoods = logLikelihoods,
                        genes = genes, modelArgs = modelArgs,
-                       knownTargets = knownTargets, TF = TF)
+                       knownTargets = targets, TF = '(see genes)')
       save(scoreList, file=scoreSaveFile)
     }
   }
@@ -353,7 +350,7 @@ GPRankTFs <- function(preprocData, TFs, targets,
   scoreList <- new("scoreList", params = modelParams,
                    loglikelihoods = logLikelihoods,
                    genes = genes, modelArgs = modelArgs,
-                   knownTargets = knownTargets, TF = TF)
+                   knownTargets = targets, TF = '(see genes)')
 
   if (returnModels)
     return (list(scores=scoreList, models=rankedModels))

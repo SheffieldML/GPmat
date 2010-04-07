@@ -68,7 +68,7 @@ setMethod("show", "scoreList",
 setGeneric("loglikelihoods",    function(object) standardGeneric("loglikelihoods"))
 setGeneric("loglikelihoods<-",  function(object, value) standardGeneric("loglikelihoods<-"))
 setMethod("loglikelihoods", "scoreList", function(object) object@loglikelihoods)
-setReplaceMethod("loglikelihoods", c("scoreList", "ANY"),
+setReplaceMethod("loglikelihoods", c("scoreList", "numeric"),
                  function(object, value) {
                    if (length(value) != length(object@loglikelihoods))
                      stop(paste("the length of replacement (",
@@ -82,7 +82,7 @@ setReplaceMethod("loglikelihoods", c("scoreList", "ANY"),
 setGeneric("baseloglikelihoods",    function(object) standardGeneric("baseloglikelihoods"))
 setGeneric("baseloglikelihoods<-",  function(object, value) standardGeneric("baseloglikelihoods<-"))
 setMethod("baseloglikelihoods", "scoreList", function(object) object@baseloglikelihoods)
-setReplaceMethod("baseloglikelihoods", c("scoreList", "ANY"),
+setReplaceMethod("baseloglikelihoods", c("scoreList", "numeric"),
                  function(object, value) {
                    if (length(value) != length(object@baseloglikelihoods))
                      stop(paste("the length of replacement (",
@@ -96,7 +96,7 @@ setReplaceMethod("baseloglikelihoods", c("scoreList", "ANY"),
 setGeneric("params",    function(object) standardGeneric("params"))
 setGeneric("params<-",  function(object, value) standardGeneric("params<-"))
 setMethod("params", "scoreList", function(object) object@params)
-setReplaceMethod("params", c("scoreList", "ANY"),
+setReplaceMethod("params", c("scoreList", "list"),
                  function(object, value) {
                    if (length(value) != length(object@params))
                      stop(paste("the length of replacement (",
@@ -110,7 +110,7 @@ setReplaceMethod("params", c("scoreList", "ANY"),
 setGeneric("genes",    function(object) standardGeneric("genes"))
 setGeneric("genes<-",  function(object, value) standardGeneric("genes<-"))
 setMethod("genes", "scoreList", function(object) object@genes)
-setReplaceMethod("genes", c("scoreList", "ANY"),
+setReplaceMethod("genes", c("scoreList", "list"),
                  function(object, value) {
                    if (length(value) != length(object@genes))
                      stop(paste("the length of replacement (",
@@ -124,7 +124,7 @@ setReplaceMethod("genes", c("scoreList", "ANY"),
 setGeneric("modelArgs",    function(object) standardGeneric("modelArgs"))
 setGeneric("modelArgs<-",  function(object, value) standardGeneric("modelArgs<-"))
 setMethod("modelArgs", "scoreList", function(object) object@modelArgs)
-setReplaceMethod("modelArgs", c("scoreList", "ANY"),
+setReplaceMethod("modelArgs", c("scoreList", "list"),
                  function(object, value) {
                    if (length(value) != length(object@modelArgs))
                      stop(paste("the length of replacement (",
@@ -138,7 +138,7 @@ setReplaceMethod("modelArgs", c("scoreList", "ANY"),
 setGeneric("knownTargets",    function(object) standardGeneric("knownTargets"))
 setGeneric("knownTargets<-",  function(object, value) standardGeneric("knownTargets<-"))
 setMethod("knownTargets", "scoreList", function(object) object@knownTargets)
-setReplaceMethod("knownTargets", c("scoreList", "ANY"),
+setReplaceMethod("knownTargets", c("scoreList", "character"),
                  function(object, value) {
                    object@knownTargets <- value
                    object
@@ -147,7 +147,7 @@ setReplaceMethod("knownTargets", c("scoreList", "ANY"),
 setGeneric("TF",    function(object) standardGeneric("TF"))
 setGeneric("TF<-",  function(object, value) standardGeneric("TF<-"))
 setMethod("TF", "scoreList", function(object) object@TF)
-setReplaceMethod("TF", c("scoreList", "ANY"),
+setReplaceMethod("TF", c("scoreList", "character"),
                  function(object, value) {
                    object@TF <- value
                    object
@@ -156,7 +156,7 @@ setReplaceMethod("TF", c("scoreList", "ANY"),
 setGeneric("sharedModel",    function(object) standardGeneric("sharedModel"))
 setGeneric("sharedModel<-",  function(object, value) standardGeneric("sharedModel<-"))
 setMethod("sharedModel", "scoreList", function(object) object@sharedModel)
-setReplaceMethod("sharedModel", c("scoreList", "ANY"),
+setReplaceMethod("sharedModel", c("scoreList", "list"),
                  function(object, value) {
                    object@sharedModel <- value
                    object
@@ -234,7 +234,7 @@ setMethod("show", "GPModel",
 setGeneric("modelStruct",    function(object) standardGeneric("modelStruct"))
 setGeneric("modelStruct<-",  function(object, value) standardGeneric("modelStruct<-"))
 setMethod("modelStruct", "GPModel", function(object) object@model)
-setReplaceMethod("modelStruct", signature(object="GPModel",value="matrix"),
+setReplaceMethod("modelStruct", signature(object="GPModel",value="list"),
                  function(object, value) {
                    object@model <- value
                    object@type <- value$type

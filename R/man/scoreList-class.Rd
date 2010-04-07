@@ -23,24 +23,24 @@
 \alias{c,scoreList-method}
 \alias{write.scores,scoreList-method}
 \alias{genes,scoreList-method}
-\alias{genes<-,scoreList-method}
+\alias{genes<-,scoreList,list-method}
 \alias{knownTargets,scoreList-method}
-\alias{knownTargets<-,scoreList-method}
+\alias{knownTargets<-,scoreList,character-method}
 \alias{length,scoreList-method}
 \alias{loglikelihoods,scoreList-method}
-\alias{loglikelihoods<-,scoreList-method}
+\alias{loglikelihoods<-,scoreList,numeric-method}
 \alias{baseloglikelihoods,scoreList-method}
-\alias{baseloglikelihoods<-,scoreList-method}
+\alias{baseloglikelihoods<-,scoreList,numeric-method}
 \alias{modelArgs,scoreList-method}
-\alias{modelArgs<-,scoreList-method}
+\alias{modelArgs<-,scoreList,list-method}
 \alias{params,scoreList-method}
-\alias{params<-,scoreList-method}
+\alias{params<-,scoreList,list-method}
 \alias{sharedModel,scoreList-method}
-\alias{sharedModel<-,scoreList-method}
+\alias{sharedModel<-,scoreList,list-method}
 \alias{show,scoreList-method}
 \alias{sort,scoreList-method}
 \alias{TF,scoreList-method}
-\alias{TF<-,scoreList-method}
+\alias{TF<-,scoreList,character-method}
 
 \title{Class "scoreList"}
 \description{  'scoreList' is an object which contain the genes, parameters,

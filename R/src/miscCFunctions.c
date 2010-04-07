@@ -48,7 +48,6 @@ double calerf(double x, int jint)
 		       2.33520497626869185E-3};
 
   /* Local variables */
-  double r__1, r__2;
   double xden;
   double xnum;
   double y, del, ysq;

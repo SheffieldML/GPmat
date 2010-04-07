@@ -42,9 +42,12 @@ GPPlot <- function(data, savepath = '',
   }
   model <- modelUpdateProcesses(model, predt=predt)
   for ( i in seq(along=model$comp) ) {
-    if (any(model$comp[[i]]$varF < 0) || any(model$comp[[i]]$ypredVar < 0)) {
-      warning('Negative variances in GPPlot')
-      return()
+    while (any(model$comp[[i]]$varF < 0) || any(model$comp[[i]]$ypredVar < 0)) {
+      warning('Negative variances in GPPlot, adding jitter to fix')
+      if (any(model$comp[[i]]$varF < 0))
+        model$comp[[i]]$varF <- model$comp[[i]]$varF - 2*min(model$comp[[i]]$varF)
+      if (any(model$comp[[i]]$ypredVar < 0))
+        model$comp[[i]]$ypredVar <- model$comp[[i]]$ypredVar - 2*min(model$comp[[i]]$ypredVar)
     }
 
     if (!singlePlot)
