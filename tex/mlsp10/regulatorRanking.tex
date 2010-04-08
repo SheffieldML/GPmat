@@ -6,8 +6,21 @@
 
 \title{Ranking of Gene Regulators through Differential Equations and Gaussian Processes}
 
-\name{Author(s) Name(s)\thanks{Thanks to XYZ for funding.}}
-\address{Author Affiliation(s)}
+\name{Antti Honkela$^1$, Matthew Holley$^2$, Marta Milo$^2$, Magnus
+  Rattray$^3$, and Neil D. Lawrence$^3$\thanks{A.H. was supported by
+    Postdoctoral Researcher's Project No 121179 of the Academy of
+    Finland.  M.R. and N.D.L acknowledge support from EPSRC Grant No
+    EP/F005687/1 "Gaussian Processes for Systems Identification with
+    Applications in Systems Biology".  This work was supported in part
+    by the IST Programme of the European Community, under the PASCAL2
+    Network of Excellence, IST-2007-216886. This publication only
+    reflects the authors' views.}}
+\address{$^1$ Department of Information and Computer
+    Science,\\ Aalto University School of Science and Technology,
+    Helsinki, Finland\\
+  $^2$ Department of ???, University of Sheffield, UK \\
+  $^3$ School of Computer Science, University of
+    Manchester, UK}
 
 \begin{document}
 
@@ -49,18 +62,18 @@ model of  the gene expression \cite{Barenco:ranked06}. This  allows ranking of
 coregulated genes  even when the expression profiles  are not strongly
 correlated due to  low decay rates. The basic form of  the model is as
 follows
-\[
-\diff{m_i(t)}{t} = b_i + s_i p(t) - d_i m_i(t)
-\]
+\begin{equation}
+  \diff{m_i(t)}{t} = b_i + s_i p(t) - d_i m_i(t)
+\end{equation}
 where the mRNA concentration of the $i$th gene, $m_i(t)$ is assumed to
 be  regulated by  the TF  of interest,  $p(t)$, through  a sensitivity
 parameter $s_i$.  The decay  rate of  the mRNA is  given by  $d_i$ and
 $b_i$  is a  basal rate  of transcription.  Solution of  this equation
 gives
-\[
-m_i(t) = a_i e^{-d_it} \frac{b_i}{d_i} + s_i
-e^{-d_it}\int_0^tf(u)e^{d_i u}\mathrm{d} u \label{eq:linearOperator}
-\]
+\begin{equation}
+  m_i(t) = a_i e^{-d_it} \frac{b_i}{d_i} + s_i
+  e^{-d_it}\int_0^tp(u)e^{d_i u}\mathrm{d} u \label{eq:linearOperator}
+\end{equation}
 and the initial condition is given by $m_i(0)=a_i + \frac{b_i}{d_i}$. 
 
 If coregulated targets have similar decay rates, they will be strongly
@@ -84,9 +97,9 @@ simple model  of translation.  Let's represent the  mRNA governing the
 transcription factor by $m_0(t)$. Let's assume that this is translated
 to  $p(t)$ through a  process that  can be  modelled by  the following
 differential equation
-\[
-\diff{p(t)}{t} = \sigma m_0(t) - \delta p(t).
-\]
+\begin{equation}
+  \diff{p(t)}{t} = \sigma m_0(t) - \delta p(t).
+\end{equation}
 Once again this  is a significant simplification. It  assumes that the
 TF  protein is  produced from  only one  mRNA and  ignores potentially
 important post translational  modifications such as phosphorylation or
@@ -98,7 +111,8 @@ likelihood can be constructed  and maximized with respect to $\delta$,
 $\sigma$,  $a_i$,  $b_i$,  $s_i$  and  $d_i$.  For  a  given  TF  this
 likelihood can be measured for all potential target genes and they can
 then  be  ranked as  putative  targets.  This  idea was  exploited  by
-\cite{Honkela:} who  validated their results using ChIP  data and were
+\cite{Honkela:modelbased10} who  validated their results using ChIP
+data and were
 able to  show that model  based approaches can do  considerably better
 than simple correlation based approaches.
 
@@ -127,16 +141,16 @@ modelling data. The  basic idea is that observations  of a function of
 interest,   $p(t)$,   given  by   $\mathbf{p}   =  \left[p_1,   \dots,
   p_T\right]^\top$,   where    $p_i=p(t_i)$   are   jointly   Gaussian
 distributed,
-\[
-\mathbf{p} \sim \mathcal{N}(\mathbf{0}, \mathbf{K}).
-\]
+\begin{equation}
+  \mathbf{p} \sim \mathcal{N}(\mathbf{0}, \mathbf{K}).
+\end{equation}
 where the elements of the  covariance matrix are given by a covariance
 function. This may  be any function that leads  to a positive definite
 matrix, but a common choice is the Gaussian covariance,
-\[
-k(t_i,   t_j)   =  \frac{1}{\sqrt{2\pi   \ell^2}}\exp\left(-\frac{(t_i
-    -t_j)^2}{2\ell^2}\right).
-\]
+\begin{equation}
+  k(t_i,   t_j)   =  \frac{1}{\sqrt{2\pi   \ell^2}}\exp\left(-\frac{(t_i
+      -t_j)^2}{2\ell^2}\right).
+\end{equation}
 Whilst we usually  think of Gaussian's as being  densities over finite
 length vectors, the process perspective  allows us to think of them as
 distributions over infinite length vectors. The important idea is that
@@ -144,17 +158,17 @@ the  other  possible things  that  could  be  happening are  all  been
 marginalized, and we only  deal with the observations $\mathbf{p}$. If
 we need to  query a new observation time, $p_*$,  we express the joint
 distribution over the augmented variable set as
-\[
-\left[\begin{matrix}
-  \mathbf{p}\\
-\mathbf{p}_*
-\end{matrix}\right]
-\sim \mathcal{N}\left(\mathbf{0}, \left[\begin{matrix}
-      \mathbf{K} & \mathbf{K}_{:,*}\\
-      \mathbf{K}_{*,:} & \mathbf{K}_{*,*}
+\begin{equation}
+  \left[\begin{matrix}
+      \mathbf{p}\\
+      \mathbf{p}_*
+    \end{matrix}\right]
+  \sim \mathcal{N}\left(\mathbf{0}, \left[\begin{matrix}
+        \mathbf{K} & \mathbf{K}_{:,*}\\
+        \mathbf{K}_{*,:} & \mathbf{K}_{*,*}
       \end{matrix}
-\right]\right),
-\]
+    \right]\right),
+\end{equation}
 where $\mathbf{K}_{:,*}$  is the covariance  function computed between
 the training  times, $\mathbf{t}$, and the  test times, $\mathbf{t}_*$
 and $\mathbf{K}_{*,*}$ is the covariance function computed between the
@@ -163,26 +177,144 @@ test times.
 Simple  manipulation of  this joint  Gaussian  density, $p(\mathbf{p},
 \mathbf{p_*}|\mathbf{t},  \mathbf{t}_*)$,  allows  us to  compute  the
 conditional density of the test data given the training data,
-\[
-p(\mathbf{p}_* | \mathbf{p}, \mathbf{t}, \mathbf{t}_*) = \mathcal{N}\left(\mathbf{p}_*|\boldsymbol{\mu}, \boldsymbol{\Sigma}\right)
-\]
+\begin{equation}
+  p(\mathbf{p}_* | \mathbf{p}, \mathbf{t}, \mathbf{t}_*) = \mathcal{N}\left(\mathbf{p}_*|\boldsymbol{\mu}, \boldsymbol{\Sigma}\right)
+\end{equation}
 where
-\[
-\boldsymbol{\mu} = \mathbf{K}_{*,:}\mathbf{K}^{-1}\mathbf{p}
-\]
+\begin{equation}
+  \boldsymbol{\mu} = \mathbf{K}_{*,:}\mathbf{K}^{-1}\mathbf{p}
+\end{equation}
 and 
-\[
-\boldsymbol{\Sigma} = \mathbf{K}_{*,*} - \mathbf{K}_{*,:}\mathbf{K}^{-1}\mathbf{K}_{:,*}.
-\]
+\begin{equation}
+  \boldsymbol{\Sigma} = \mathbf{K}_{*,*} - \mathbf{K}_{*,:}\mathbf{K}^{-1}\mathbf{K}_{:,*}.
+\end{equation}
 
-The simple translation/transcription model we described in the last section gives a deterministic relationship between the TF activity, $p(t)$ and the gene expression levels, $m_0(t)$ and $m_i(t)$. This deterministic relationship can be encoded within a Gaussian process by noting that it is given by a \emph{linear operator}. The linear operator in question is the convolution of the function with an exponential (see \refeq{eq:linearOperator}). A convolution of a Gaussian process with a deterministic function leads to another Gaussian process: this results from two properties, a Gaussian process multiplied by a deterministic function is also a Gaussian process and the integral of a Gaussian process is also a Gaussian process. The other effect of \refeq{eq:linearOperator} is to introduce a new mean function through the addition of $\frac{b_i}{d_i}$ and $a_i e^{-d_i t}$. Details are given in \cite{Lawrence:,Gao:,Honkela:} but the main result is that the cross covariances between the TF concentration and the mRNA concentrations can be computed:
-\[
-.
-\]
-where $k_{p,i}(t, t^\prime)$ gives the covariance between the TF concentration and the mRNA associated with the $i$th gene at times $t$ and $t^\prime$. This suggests a model for the gene expression which is jointly Gaussian and has the form
-\[
-.
-\]
+The simple translation/transcription model we described in the last
+section gives a deterministic relationship between the TF activity,
+$p(t)$ and the gene expression levels, $m_0(t)$ and $m_i(t)$. This
+deterministic relationship can be encoded within a Gaussian process by
+noting that it is given by a \emph{linear operator}. The linear
+operator in question is the convolution of the function with an
+exponential (see \refeq{eq:linearOperator}). A convolution of a
+Gaussian process with a deterministic function leads to another
+Gaussian process: this results from two properties, a Gaussian process
+multiplied by a deterministic function is also a Gaussian process and
+the integral of a Gaussian process is also a Gaussian process. The
+other effect of \refeq{eq:linearOperator} is to introduce a new mean
+function through the addition of $\frac{b_i}{d_i}$ and $a_i e^{-d_i
+  t}$. Details are given in
+\cite{Lawrence:transcriptionalGP06,Gao:latent08,Honkela:modelbased10}
+but the
+main result is that the cross covariances between the TF concentration
+and the mRNA concentrations can be computed:
+\begin{equation}
+  .
+\end{equation}
+where $k_{p,i}(t, t^\prime)$ gives the covariance between the TF
+concentration and the mRNA associated with the $i$th gene at times $t$
+and $t^\prime$. This suggests a model for the gene expression which is
+jointly Gaussian and has the form
+\begin{equation}
+  .
+\end{equation}
+
+\section{Experiments}
+
+We tested the method by looking for candidate regulators of Gata3 gene
+in mouse.  Gata3 is itself a transcription factor with many important
+functions~\cite{Chou2010}.  It is, for example, critical in the
+development of hair cells in the inner ear.  Mice and humans with just
+one of the usual two copies of the Gata3 gene disabled are
+deaf~\cite{Esch2000}.  Because of its many roles, Gata3 regulation is
+very complex and its details are relatively poorly
+understood~\cite{Burch2005}.
+
+The expression data consisted of two time series from a cell line
+model of mouse inner ear development~\cite{Helyer2007}.  Both time series
+consisted of 6 time points, sampled at 0, 1, 2, 4, 7, and 14 days
+after the cells are moved to a temperature that stimulates their
+development.  In one of the time series the cells are untreated while
+in the other they are exposed to retinoic acid, which focuses the
+differentiation toward one of several possible cell types.  The
+retinoic acid treatment does not affect the expression of Gata3 so we
+used these two time series as if they were two repeated experiments.
+This should automatically suppress genes with significant differential
+expression under the two different conditions.  The expression data
+was processed using the mmgMOS algorithm from the \emph{puma} R
+package~\cite{Liu:tractable04,Pearson:puma09} from Bioconductor.  The
+inferred posterior expression levels from mmgMOS were utilised to
+obtain individual noise variances for each observation as described
+in~\cite{Honkela:modelbased10} using the \emph{tiger} Bioconductor
+package~\cite{Honkela:tigerpackage10}.
+
+We first extracted a set of mouse TFs and probable TFs from the TFCat
+database~\cite{Fulton2009}.  This yielded a list of 511 genes.  Out of
+these, 365 were mappable on the array used in the expression
+measurements.  These genes were represented by 493 independent probe
+sets on the array.
+
+Next, we fitted the GP models independently using each of these 493 TF
+gene probes as the input and Gata3 as the output.  This was also
+performed in R/Bioconductor using the \emph{tiger} package.  The genes
+with the largest likelihood values are listed in
+Table~\ref{tab:results}.
+
+\begin{table}[htb]
+  \centering
+  \begin{tabular}{lll}
+    Gene & log-likelihood & z-score \\
+    \hline
+    Prrx2 & -0.37 & 3.6 \\
+    Tle3 & -0.47 & 4.5 \\
+    Ctbp2 & -0.67 & 11.8 \\
+    Esr2 & -1.37 & 1.1 \\
+    Smarcd2 & -1.37 & 6.1 \\
+    Six1 & -1.57 & 6.5 \\
+    Runx2 & -2.16 & 3.9 \\
+    Mtf2 & -2.56 & 6.2 \\
+    Klf13 & -2.92 & 1.6 \\
+    Six4 & -3.05 & 4.7 \\
+  \end{tabular}
+  \caption{Top-ranking genes in the experiment}
+  \label{tab:results}
+\end{table}
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=\columnwidth]{gpdisim_Prrx2_Gata3}
+  \caption{Top-ranking models}
+  \label{fig:model1}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=\columnwidth]{gpdisim_Tle3_Gata3}
+  \caption{Top-ranking models}
+  \label{fig:model2}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=\columnwidth]{gpdisim_Ctbp2_Gata3}
+  \caption{Top-ranking models}
+  \label{fig:model3}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=\columnwidth]{gpdisim_Esr2_Gata3}
+  \caption{Top-ranking models}
+  \label{fig:model4}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=\columnwidth]{gpdisim_Smarcd2_Gata3}
+  \caption{Top-ranking models}
+  \label{fig:model5}
+\end{figure}
+
+\section{Discussion}
 
 \bibliographystyle{IEEEbib}
 \bibliography{lawrence,other,zbooks}
