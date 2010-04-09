@@ -1,12 +1,12 @@
 \documentclass{article}
-\usepackage{spconf,amsmath,graphicx}
+\usepackage{spconf,amsmath,graphicx,tabularx}
 
 \input{../definitions.tex}
 
 
 \title{Ranking of Gene Regulators through Differential Equations and Gaussian Processes}
 
-\name{Antti Honkela$^1$, Matthew Holley$^2$, Marta Milo$^2$, Magnus
+\name{Antti Honkela$^1$, Marta Milo$^2$, Matthew Holley$^2$, Magnus
   Rattray$^3$, and Neil D. Lawrence$^3$\thanks{A.H. was supported by
     Postdoctoral Researcher's Project No 121179 of the Academy of
     Finland.  M.R. and N.D.L acknowledge support from EPSRC Grant No
@@ -18,7 +18,7 @@
 \address{$^1$ Department of Information and Computer
     Science,\\ Aalto University School of Science and Technology,
     Helsinki, Finland\\
-  $^2$ Department of ???, University of Sheffield, UK \\
+  $^2$ Department of Biomedical Science, University of Sheffield, UK \\
   $^3$ School of Computer Science, University of
     Manchester, UK}
 
@@ -32,8 +32,8 @@
 \section{INTRODUCTION}
 
 Gene regulation is at the heart of how cells operate. In transcription
-genes  whoch are  encoded in  the  DNA are  transcritbed to  messenger
-RNA.  The  quantity of  RNA  transcribed  can  be measured  genomewide
+genes  which are  encoded in  the  DNA are  transcribed to  messenger
+RNA.  The  quantity of  RNA  transcribed  can  be measured  genome-wide
 through the  well established approach of gene  expression arrays. The
 mechanisms  by   which  transcription  is  controlled   are  of  great
 importance for medicine and biology.  Expression of a gene is switched
@@ -71,7 +71,7 @@ parameter $s_i$.  The decay  rate of  the mRNA is  given by  $d_i$ and
 $b_i$  is a  basal rate  of transcription.  Solution of  this equation
 gives
 \begin{equation}
-  m_i(t) = a_i e^{-d_it} \frac{b_i}{d_i} + s_i
+  m_i(t) = a_i e^{-d_it} + \frac{b_i}{d_i} + s_i
   e^{-d_it}\int_0^tp(u)e^{d_i u}\mathrm{d} u \label{eq:linearOperator}
 \end{equation}
 and the initial condition is given by $m_i(0)=a_i + \frac{b_i}{d_i}$. 
@@ -84,7 +84,7 @@ equation. Thus  we see  a TF activity,  $p(t)$, that  explains targets
 simultaneously through  a range of different decay  rates.  Clearly we
 are also making further assumptions  here: for example we are assuming
 TFs  don't act  in tandem  and  that the  response to  the TF  doesn't
-saturate. However,  the model is  richer than the  standard genomewide
+saturate. However,  the model is  richer than the  standard genome-wide
 analysis   techniques  of  seeking   correlation  or   clustering  the
 data. This model based approach to gene regulation was also considered
 by  \cite{Gao:latent08}. They  used Gaussian  process priors  over the
@@ -151,7 +151,7 @@ matrix, but a common choice is the Gaussian covariance,
   k(t_i,   t_j)   =  \frac{1}{\sqrt{2\pi   \ell^2}}\exp\left(-\frac{(t_i
       -t_j)^2}{2\ell^2}\right).
 \end{equation}
-Whilst we usually  think of Gaussian's as being  densities over finite
+Whilst we usually  think of Gaussians as being  densities over finite
 length vectors, the process perspective  allows us to think of them as
 distributions over infinite length vectors. The important idea is that
 the  other  possible things  that  could  be  happening are  all  been
@@ -245,7 +245,7 @@ package~\cite{Liu:tractable04,Pearson:puma09} from Bioconductor.  The
 inferred posterior expression levels from mmgMOS were utilised to
 obtain individual noise variances for each observation as described
 in~\cite{Honkela:modelbased10} using the \emph{tiger} Bioconductor
-package~\cite{Honkela:tigerpackage10}.
+package. %~\cite{Honkela:tigerpackage10}.
 
 We first extracted a set of mouse TFs and probable TFs from the TFCat
 database~\cite{Fulton2009}.  This yielded a list of 511 genes.  Out of
@@ -253,31 +253,86 @@ these, 365 were mappable on the array used in the expression
 measurements.  These genes were represented by 493 independent probe
 sets on the array.
 
-Next, we fitted the GP models independently using each of these 493 TF
+For some genes the signal from the expression measurements is too weak
+for reasonable modelling as they can often be described perfectly with
+a flat profile.  Such genes may nevertheless fit the model well, but
+that tells nothing because they would fit equally well as regulators
+of any other gene.  These genes were filtered by z-scores of the
+expression data using the cut-off $1.8$ as
+in~\cite{Honkela:modelbased10}.  This filtering left 268 active probes
+sets.
+
+Next, we fitted the GP models independently using each of these 268 TF
 gene probes as the input and Gata3 as the output.  This was also
-performed in R/Bioconductor using the \emph{tiger} package.  The genes
-with the largest likelihood values are listed in
-Table~\ref{tab:results}.
+performed in R/Bioconductor using the \emph{tiger} package.
+
+From the pathway analysis, performed using a classification system
+called PANTHER (Protein ANalysis THrough Evolutionary Relationships),
+http://www.pantherdb.org/, ( you can add more about it if you have
+space, but I think adding the ref to the web site is OK) we can see
+that the pathways that score a p-value grater than 0.05, using a
+Bonferroni-correction test, are highly relevant to the development of
+the mammalian inner ear.
+
+Patways like Wnt signaling, TGF-beta signaling and PDGF signaling are
+involved in pattering of sensory patch, development and neuronal
+differentiations as well as modulation of cell fate. All these
+processes are highly represented in this particular cell line, which
+is derived from a murine sensory epithelial cells at embryonic age
+E9.5~\cite{Milo2009}.
+
+[Tables of most relavant pathways can be extracted from the file.]
+
+We also have selected 50 genes highest ranking TFs
+as candidates of Gata3 regulator. This is list is
+higly enriched for genes belonging to thh Wnt signling pathway and
+particularly intering are Six1, for its relation to a defective otic
+development known as brachio-oto-renal syndrome and promoting hair
+cell fate in the inner ear~\cite{Fritzsch2007,Bosman2009}.
+Other related TF like Six4 is also in the list. The Wnt
+signaling related gene Tbx6 and the notch signaling related gene Tle3
+are also of great interest in this particular contest. More detailed
+functional assays are required to properly asses the biological
+property of these relationships as well as the direct or indirect
+effect that these TFs might have on Gata3.
 
 \begin{table}[htb]
   \centering
-  \begin{tabular}{lll}
-    Gene & log-likelihood & z-score \\
+  \begin{tabularx}{\columnwidth}{Xl}
+    Pathway & $p$-value \\
     \hline
-    Prrx2 & -0.37 & 3.6 \\
-    Tle3 & -0.47 & 4.5 \\
-    Ctbp2 & -0.67 & 11.8 \\
-    Esr2 & -1.37 & 1.1 \\
-    Smarcd2 & -1.37 & 6.1 \\
-    Six1 & -1.57 & 6.5 \\
-    Runx2 & -2.16 & 3.9 \\
-    Mtf2 & -2.56 & 6.2 \\
-    Klf13 & -2.92 & 1.6 \\
-    Six4 & -3.05 & 4.7 \\
-  \end{tabular}
-  \caption{Top-ranking genes in the experiment}
-  \label{tab:results}
+Wnt signaling pathway &	4.10E-06 \\
+TGF-beta signaling pathway & 2.22E-02 \\
+Inflammation mediated by chemokine and cytokine signaling pathway & 4.18E-02 \\
+Interleukin signaling pathway & 4.81E-01 \\
+%Wnt signaling pathway	408	9	.68	+	4.10E-06
+%TGF-beta signaling pathway	154	4	.26	+	2.22E-02
+%Inflammation mediated by chemokine and cytokine signaling pathway	337	5	.56	+	4.18E-02
+%Interleukin signaling pathway	169	3	.28	+	4.81E-01
+  \end{tabularx}
+  \caption{Enriched pathways among 50 top-ranking candidate regulators}
+  \label{tab:pathways}
 \end{table}
+
+% \begin{table}[htb]
+%   \centering
+%   \begin{tabular}{lll}
+%     Gene & log-likelihood & z-score \\
+%     \hline
+%     Prrx2 & -0.37 & 3.6 \\
+%     Tle3 & -0.47 & 4.5 \\
+%     Ctbp2 & -0.67 & 11.8 \\
+%     Esr2 & -1.37 & 1.1 \\
+%     Smarcd2 & -1.37 & 6.1 \\
+%     Six1 & -1.57 & 6.5 \\
+%     Runx2 & -2.16 & 3.9 \\
+%     Mtf2 & -2.56 & 6.2 \\
+%     Klf13 & -2.92 & 1.6 \\
+%     Six4 & -3.05 & 4.7 \\
+%   \end{tabular}
+%   \caption{Top-ranking genes in the experiment}
+%   \label{tab:results}
+% \end{table}
 
 \begin{figure}[htb]
   \centering
@@ -302,19 +357,24 @@ Table~\ref{tab:results}.
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=\columnwidth]{gpdisim_Esr2_Gata3}
-  \caption{Top-ranking models}
-  \label{fig:model4}
-\end{figure}
-
-\begin{figure}[htb]
-  \centering
   \includegraphics[width=\columnwidth]{gpdisim_Smarcd2_Gata3}
   \caption{Top-ranking models}
   \label{fig:model5}
 \end{figure}
 
 \section{Discussion}
+
+While the presented preliminary results seem very promising, further
+biological verification is needed to validate the predictions.  Even
+in time series data like the one used here it may in certain
+situations be impossible, for example, to detect whether gene A
+activates gene B or gene B represses gene A.  Disambiguating such
+situations requires acquiring more data from different experimental
+perturbations of the system, such as knocking out one of the genes.
+The proposed method can be very helpful in directing such further
+experiments to a set of genes that is sufficiently small to process
+using less expensive low-throughput techniques.
+
 
 \bibliographystyle{IEEEbib}
 \bibliography{lawrence,other,zbooks}
