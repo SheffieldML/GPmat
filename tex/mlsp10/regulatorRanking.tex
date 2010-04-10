@@ -71,10 +71,10 @@ gene expression of the hypothesized targets.
 
 Recently a  model based  approach to ranking  of targets  was proposed
 that extends  this idea to  include an explicit  differential equation
-model of  the gene expression \cite{Barenco:ranked06}. This  allows ranking of
-coregulated genes  even when the expression profiles  are not strongly
-correlated due to  low decay rates. The basic form of  the model is as
-follows
+model  of  the gene  expression  \cite{Barenco:ranked06}. This  allows
+ranking of coregulated genes even when the expression profiles are not
+strongly  correlated due to  low decay  rates. The  basic form  of the
+model is as follows
 \begin{equation}
   \diff{m_i(t)}{t} = b_i + s_i p(t) - d_i m_i(t)
 \end{equation}
@@ -97,7 +97,7 @@ equation. Thus  we see  a TF activity,  $p(t)$, that  explains targets
 simultaneously through  a range of different decay  rates.  Clearly we
 are also making further assumptions  here: for example we are assuming
 TFs  don't act  in tandem  and  that the  response to  the TF  doesn't
-saturate. However,  the model is  richer than the  standard genome-wide
+saturate. However,  the model is richer than  the standard genome-wide
 analysis   techniques  of  seeking   correlation  or   clustering  the
 data. This model based approach to gene regulation was also considered
 by  \cite{Gao:latent08}. They  used Gaussian  process priors  over the
@@ -244,21 +244,21 @@ relatively poorly understood~\cite{Burch2005}.
 
 We considered a gene expression data set consisting of two time series
 from     a    cell     line     model    of     mouse    inner     ear
-development~\cite{Helyer:model07}.  Both time  series had $6$ time points,
-sampled at $0$, $1$, $2$, $4$, $7$ and $14$ days after development was
-stimulated  (through temperature change).  The gene  expression levels
-were measured  using the  Affymetrix GeneChip system.   In one  of the
-time  series the  cells  are untreated  while  in the  other they  are
-exposed to retinoic acid, which focuses the differentiation toward one
-of several possible cell types.   The retinoic acid treatment does not
-affect the expression of Gata3 so  we used these two time series as if
-they  were  two   repeated  experiments.   This  should  automatically
-suppress genes with significant  differential expression under the two
-different  conditions.  The  expression data  was processed  using the
-mmgMOS       algorithm        from       the       \emph{puma}       R
+development~\cite{Helyer:model07}.   Both  time  series had  $6$  time
+points,  sampled  at $0$,  $1$,  $2$, $4$,  $7$  and  $14$ days  after
+development  was stimulated  (through temperature  change).   The gene
+expression levels were measured  using the Affymetrix GeneChip system.
+In one of  the time series the cells are untreated  while in the other
+they are  exposed to retinoic acid, which  focuses the differentiation
+toward  one  of  several  possible  cell  types.   The  retinoic  acid
+treatment does not affect the expression of Gata3 so we used these two
+time series  as if  they were two  repeated experiments.   This should
+automatically suppress genes  with significant differential expression
+under the two different conditions.  The expression data was processed
+using    the    mmgMOS    algorithm    from    the    \emph{puma}    R
 package~\cite{Liu:tractable04,Pearson:puma09}  from Bioconductor.  The
-inferred  posterior expression  levels  from mmgMOS  were used  to
-obtain individual  noise variances  for each observation  as described
+inferred posterior  expression levels from mmgMOS were  used to obtain
+individual   noise  variances  for   each  observation   as  described
 in~\cite{Honkela:modelbased10}  using  the  \emph{tiger}  Bioconductor
 package. %~\cite{Honkela:tigerpackage10}.
 
