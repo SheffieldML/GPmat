@@ -48,21 +48,7 @@ yLim = [min(model.Y(:, 2)) max(model.Y(:, 2))]*1.1;
 set(ax, 'xLim', xLim);
 set(ax, 'yLim', yLim);
 set(gca, 'fontsize', 20);
-print('-depsc', ['../tex/diagrams/' fileName])
-print('-deps', ['../tex/diagrams/' fileName 'NoColour'])
-
-% make smaller for PNG plot.
-pos = get(gcf, 'paperposition')
-origpos = pos;
-pos(3) = pos(3)/2;
-pos(4) = pos(4)/2;
-set(gcf, 'paperposition', pos);
-fontsize = get(gca, 'fontsize');
-set(gca, 'fontsize', fontsize/2);
-lineWidth = get(gca, 'lineWidth');
-set(gca, 'lineWidth', lineWidth*2);
-print('-dpng', ['../html/' fileName])
-set(gcf, 'paperposition', origpos);
+printPlot(fileName, '../tex/diagrams/', '../html/')
 
 figure
 clf
@@ -79,7 +65,6 @@ end
 set(ax, 'xLim', xLim);
 set(ax, 'yLim', yLim);
 
-set(ax, 'fontname', 'arial');
+%set(ax, 'fontname', 'arial');
 set(ax, 'fontsize', 20);
-print('-depsc', ['../tex/diagrams/' fileName 'NoOvals'])
-print('-deps', ['../tex/diagrams/' fileName 'NoOvalsNoColour'])
+printPlot([fileName 'NoOvals'], '../tex/diagrams/', '../html/')
