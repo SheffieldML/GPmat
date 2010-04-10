@@ -1,8 +1,8 @@
 \documentclass{article}
-\usepackage{spconf,amsmath,graphicx,tabularx}
+\usepackage{spconf,amsmath,graphicx,tabularx,color,url}
 
 \input{../definitions.tex}
-
+\global\long\def\neil#1{{\color{red} \textbf{#1}}}
 
 \title{Ranking of Gene Regulators through Differential Equations and Gaussian Processes}
 
@@ -27,6 +27,19 @@
 \maketitle
 
 \begin{abstract}
+  Gene regulation is controlled by transcription factor proteins which
+  themselves are encoded as genes. This gives a network of interacting
+  genes which  control the functioning of  a cell. With  the advent of
+  genome   wide   expression  measurements   the   targets  of   given
+  transcription  factor have  been sought  through techniques  such as
+  clustering. In this paper we  consider the harder problem of finding
+  a  genes regulator instead  of its  targets.  We  use a  model based
+  differential  equation  approach combined  with  a Gaussian  process
+  prior distribution for unobserved protein concentrations. This idea,
+  that  we refer  to as  ranked  regulator prediction  (RRP), is  then
+  applied   to  finding   the  regulators   of  Gata3,   an  important
+  developmental transcription  factor, in the development  of ear hair
+  cells.
 \end{abstract}
 
 \section{INTRODUCTION}
@@ -110,27 +123,26 @@ observations  from the  governing TFs  mRNA a  joint  Gaussian process
 likelihood can be constructed  and maximized with respect to $\delta$,
 $\sigma$,  $a_i$,  $b_i$,  $s_i$  and  $d_i$.  For  a  given  TF  this
 likelihood can be measured for all potential target genes and they can
-then  be  ranked as  putative  targets.  This  idea was  exploited  by
-\cite{Honkela:modelbased10} who  validated their results using ChIP
-data and were
-able to  show that model  based approaches can do  considerably better
-than simple correlation based approaches.
+then  be ranked  as  putative  targets.  This  idea  was exploited  by
+\cite{Honkela:modelbased10}  who validated  their  results using  ChIP
+data  and  were  able to  show  that  model  based approaches  can  do
+considerably better than simple correlation based approaches.
 
-In this  paper we want to turn  this idea on its  head. An alternative
-question a biologist may ask is  given a particular gene, what are the
-likely regulators  of that gene. In  other words we  are interested in
+In this paper we want to turn this idea on its head. Instead of asking
+what  the targets are  of a  particular TF  we wish  to know  what the
+regulator of a particular gene is. In other words we are interested in
 ranked regulator prediction instead  of ranked target prediction. This
 problem will generally  be harder than target prediction  as there are
-likely  to  be  many  targets   of  a  particular  TF,  but  only  few
-regulators.  However, we  can  restrict ourselves  to  known TFs  when
-searching for regulators and this  reduces the number of genes we have
-to  search  through  from  thousands  to  hundreds.  Ranked  regulator
-prediction (RRP)  has the potential  to provide biologists with  a new
-tool for probing their regulatory networks.
+likely to be many targets of a particular TF, but only few regulators.
+However, we  can restrict  ourselves to known  TFs when  searching for
+regulators  and this reduces  the number  of genes  we have  to search
+through from thousands to hundreds.  Ranked regulator prediction (RRP)
+has the  potential to provide biologists  with a new  tool for probing
+their regulatory networks.
 
-In the remainder of this paper we will review the Gaussian process
-approach to modelling transcriptional regulation and demonstrate our
-ideas on a real world biological problem. Despite the simplifying
+In the  remainder of  this paper we  will review the  Gaussian process
+approach to  modelling transcriptional regulation  and demonstrate our
+ideas  on a  real world  biological problem.  Despite  the simplifying
 assumptions we make, we show very promising results.
 
 \section{Gaussian Process Modelling}
@@ -189,28 +201,27 @@ and
   \boldsymbol{\Sigma} = \mathbf{K}_{*,*} - \mathbf{K}_{*,:}\mathbf{K}^{-1}\mathbf{K}_{:,*}.
 \end{equation}
 
-The simple translation/transcription model we described in the last
-section gives a deterministic relationship between the TF activity,
-$p(t)$ and the gene expression levels, $m_0(t)$ and $m_i(t)$. This
+The simple  translation/transcription model  we described in  the last
+section gives  a deterministic  relationship between the  TF activity,
+$p(t)$  and the gene  expression levels,  $m_0(t)$ and  $m_i(t)$. This
 deterministic relationship can be encoded within a Gaussian process by
-noting that it is given by a \emph{linear operator}. The linear
-operator in question is the convolution of the function with an
-exponential (see \refeq{eq:linearOperator}). A convolution of a
-Gaussian process with a deterministic function leads to another
+noting  that it  is  given  by a  \emph{linear  operator}. The  linear
+operator  in question  is  the  convolution of  the  function with  an
+exponential  (see  \refeq{eq:linearOperator}).   A  convolution  of  a
+Gaussian  process  with  a  deterministic function  leads  to  another
 Gaussian process: this results from two properties, a Gaussian process
-multiplied by a deterministic function is also a Gaussian process and
-the integral of a Gaussian process is also a Gaussian process. The
-other effect of \refeq{eq:linearOperator} is to introduce a new mean
-function through the addition of $\frac{b_i}{d_i}$ and $a_i e^{-d_i
-  t}$. Details are given in
+multiplied by a deterministic function  is also a Gaussian process and
+the integral  of a  Gaussian process is  also a Gaussian  process. The
+other effect  of \refeq{eq:linearOperator} is to introduce  a new mean
+function through  the addition  of $\frac{b_i}{d_i}$ and  $a_i e^{-d_i
+  t}$.            Details            are           given            in
 \cite{Lawrence:transcriptionalGP06,Gao:latent08,Honkela:modelbased10}
-but the
-main result is that the cross covariances between the TF concentration
-and the mRNA concentrations can be computed:
+but  the main  result is  that the  cross covariances  between  the TF
+concentration and the mRNA concentrations can be computed:
 \begin{equation}
   .
 \end{equation}
-where $k_{p,i}(t, t^\prime)$ gives the covariance between the TF
+where  $k_{p,i}(t,  t^\prime)$ gives  the  covariance  between the  TF
 concentration and the mRNA associated with the $i$th gene at times $t$
 and $t^\prime$. This suggests a model for the gene expression which is
 jointly Gaussian and has the form
@@ -220,99 +231,103 @@ jointly Gaussian and has the form
 
 \section{Experiments}
 
-We tested the method by looking for candidate regulators of Gata3 gene
-in mouse.  Gata3 is itself a transcription factor with many important
-functions~\cite{Chou2010}.  It is, for example, critical in the
-development of hair cells in the inner ear.  Mice and humans with just
-one of the usual two copies of the Gata3 gene disabled are
-deaf~\cite{Esch2000}.  Because of its many roles, Gata3 regulation is
-very complex and its details are relatively poorly
-understood~\cite{Burch2005}.
+\neil{We need more specifics on the quality of these results. Currently we are being very wishy washy.}
 
-The expression data consisted of two time series from a cell line
-model of mouse inner ear development~\cite{Helyer2007}.  Both time series
-consisted of 6 time points, sampled at 0, 1, 2, 4, 7, and 14 days
-after the cells are moved to a temperature that stimulates their
-development.  In one of the time series the cells are untreated while
-in the other they are exposed to retinoic acid, which focuses the
-differentiation toward one of several possible cell types.  The
-retinoic acid treatment does not affect the expression of Gata3 so we
-used these two time series as if they were two repeated experiments.
-This should automatically suppress genes with significant differential
-expression under the two different conditions.  The expression data
-was processed using the mmgMOS algorithm from the \emph{puma} R
-package~\cite{Liu:tractable04,Pearson:puma09} from Bioconductor.  The
-inferred posterior expression levels from mmgMOS were utilised to
-obtain individual noise variances for each observation as described
-in~\cite{Honkela:modelbased10} using the \emph{tiger} Bioconductor
+We tested the method by looking for candidate regulators of Gata3 gene
+in  mouse.   Gata3  is  itself  a transcription  factor  with  several
+important  functions~\cite{Chou2010}.  For example  it is  critical in
+the development of hair cells in  the inner ear.  Mice and humans with
+just  one of  the usual  two  copies of  the Gata3  gene disabled  are
+deaf~\cite{Esch2000}.  Gata3 has many  roles causing its regulation to
+be  very  complex.  The  details  of  this  regulation  are  currently
+relatively poorly understood~\cite{Burch2005}.
+
+We considered a gene expression data set consisting of two time series
+from     a    cell     line     model    of     mouse    inner     ear
+development~\cite{Helyer:model07}.  Both time  series had $6$ time points,
+sampled at $0$, $1$, $2$, $4$, $7$ and $14$ days after development was
+stimulated  (through temperature change).  The gene  expression levels
+were measured  using the  Affymetrix GeneChip system.   In one  of the
+time  series the  cells  are untreated  while  in the  other they  are
+exposed to retinoic acid, which focuses the differentiation toward one
+of several possible cell types.   The retinoic acid treatment does not
+affect the expression of Gata3 so  we used these two time series as if
+they  were  two   repeated  experiments.   This  should  automatically
+suppress genes with significant  differential expression under the two
+different  conditions.  The  expression data  was processed  using the
+mmgMOS       algorithm        from       the       \emph{puma}       R
+package~\cite{Liu:tractable04,Pearson:puma09}  from Bioconductor.  The
+inferred  posterior expression  levels  from mmgMOS  were used  to
+obtain individual  noise variances  for each observation  as described
+in~\cite{Honkela:modelbased10}  using  the  \emph{tiger}  Bioconductor
 package. %~\cite{Honkela:tigerpackage10}.
 
-We first extracted a set of mouse TFs and probable TFs from the TFCat
+We first extracted a set of  mouse TFs and probable TFs from the TFCat
 database~\cite{Fulton2009}.  This yielded a list of 511 genes.  Out of
-these, 365 were mappable on the array used in the expression
-measurements.  These genes were represented by 493 independent probe
+these,  365  were  mappable  on  the  array  used  in  the  expression
+measurements.  These  genes were represented by  493 independent probe
 sets on the array.
 
 For some genes the signal from the expression measurements is too weak
-for reasonable modelling as they can often be described perfectly with
-a flat profile.  Such genes may nevertheless fit the model well, but
-that tells nothing because they would fit equally well as regulators
-of any other gene.  These genes were filtered by z-scores of the
-expression data using the cut-off $1.8$ as
+for reasonable modelling: they can  be described perfectly with a flat
+profile.  Such genes may nevertheless  fit the model well, but this is
+non-informative because  they would fit equally well  as regulators of
+any  other  gene.   These  genes  were filtered  by  z-scores  of  the
+expression      data     using      the      cut-off     $1.8$      as
 in~\cite{Honkela:modelbased10}.  This filtering left 268 active probes
 sets.
 
 Next, we fitted the GP models independently using each of these 268 TF
-gene probes as the input and Gata3 as the output.  This was also
+gene  probes as  the input  and Gata3  as the  output.  This  was also
 performed in R/Bioconductor using the \emph{tiger} package.
 
-From the pathway analysis, performed using a classification system
-called PANTHER (Protein ANalysis THrough Evolutionary Relationships),
-http://www.pantherdb.org/, ( you can add more about it if you have
-space, but I think adding the ref to the web site is OK) we can see
-that the pathways that score a p-value grater than 0.05, using a
-Bonferroni-correction test, are highly relevant to the development of
+We performed a pathway  analysis, using a classification system called
+PANTHER   (Protein  ANalysis   THrough   Evolutionary  Relationships),
+\url{http://www.pantherdb.org/}.  We  assessed proposed pathways using
+a  Bonferroni-correction  test.    Those  having  p-values  that  were
+significant    at    the    5\%    level   are    shown    in    Table
+\ref{tab:pathways}. They are all highly relevant to the development of
 the mammalian inner ear.
 
-Patways like Wnt signaling, TGF-beta signaling and PDGF signaling are
-involved in pattering of sensory patch, development and neuronal
-differentiations as well as modulation of cell fate. All these
-processes are highly represented in this particular cell line, which
-is derived from a murine sensory epithelial cells at embryonic age
-E9.5~\cite{Milo2009}.
+Pathways like Wnt signaling, TGF-beta signaling and PDGF signaling are
+involved  in  pattering of  sensory  patch,  development and  neuronal
+differentiation  as  well  as  modulation  of  cell  fate.  All  these
+processes  are expected to  be highly  represented in  this particular
+cell line, which is derived  from a murine sensory epithelial cells at
+embryonic age E9.5~\cite{Milo2009}.
 
 [Tables of most relavant pathways can be extracted from the file.]
 
-We also have selected 50 genes highest ranking TFs
-as candidates of Gata3 regulator. This is list is
-higly enriched for genes belonging to thh Wnt signling pathway and
-particularly intering are Six1, for its relation to a defective otic
-development known as brachio-oto-renal syndrome and promoting hair
-cell fate in the inner ear~\cite{Fritzsch2007,Bosman2009}.
-Other related TF like Six4 is also in the list. The Wnt
-signaling related gene Tbx6 and the notch signaling related gene Tle3
-are also of great interest in this particular contest. More detailed
-functional assays are required to properly asses the biological
-property of these relationships as well as the direct or indirect
-effect that these TFs might have on Gata3.
+We  selected the  50 highest  ranking TFs  as candidate  regulators of
+Gata3.  This list turns out  to be highly enriched for genes belonging
+to the Wnt signaling pathway.  Transcription factors that stand out in
+this  list include  Six1,  known to  be  related to  a defective  otic
+development  known  as  brachio-oto-renal syndrome  ??and  promoting??
+\neil{This   bit  isn't   clear}   hair  cell   fate   in  the   inner
+ear~\cite{Fritzsch2007,Bosman2009}.  Other  related TFs like  Six4 are
+also in  the list. The Wnt  signaling related gene Tbx6  and the notch
+signaling related gene Tle3 are also of interest in this context. More
+detailed  functional  assays  are  required  to  properly  assess  the
+biological property  of these relationships  as well as the  direct or
+indirect effect that these TFs might have on Gata3.
 
 \begin{table}[htb]
-  \centering
+  \caption{Enriched pathways among 50 top-ranking candidate regulators. \neil{How were these selected? Are they the only ones? How highly ranked were they?}}
+  \label{tab:pathways}
+ \centering
   \begin{tabularx}{\columnwidth}{Xl}
     Pathway & $p$-value \\
     \hline
-Wnt signaling pathway &	4.10E-06 \\
-TGF-beta signaling pathway & 2.22E-02 \\
-Inflammation mediated by chemokine and cytokine signaling pathway & 4.18E-02 \\
-Interleukin signaling pathway & 4.81E-01 \\
-%Wnt signaling pathway	408	9	.68	+	4.10E-06
-%TGF-beta signaling pathway	154	4	.26	+	2.22E-02
-%Inflammation mediated by chemokine and cytokine signaling pathway	337	5	.56	+	4.18E-02
-%Interleukin signaling pathway	169	3	.28	+	4.81E-01
+    Wnt signaling pathway &	$4.10\times 10^{-6}$ \\
+    TGF-beta signaling pathway & $2.22\times 10^{-2}$ \\
+    Inflammation mediated by chemokine and cytokine signaling pathway & $4.18\times 10^{-2}$ \\
+    Interleukin signaling pathway & $4.81\times 10^{-1}$\\
+    % Wnt signaling pathway	408	9	.68	+	$4.10\times 10^{-6$}
+    % TGF-beta signaling pathway	154	4	.26	+	$2.22\times 10^{-2}$
+    % Inflammation mediated by chemokine and cytokine signaling pathway	337	5	.56	+	$4.18\times 10^{-2}$
+    % Interleukin signaling pathway	169	3	.28	+	$4.81\times 10^{-1}$
   \end{tabularx}
-  \caption{Enriched pathways among 50 top-ranking candidate regulators}
-  \label{tab:pathways}
-\end{table}
+ \end{table}
 
 % \begin{table}[htb]
 %   \centering
@@ -364,16 +379,18 @@ Interleukin signaling pathway & 4.81E-01 \\
 
 \section{Discussion}
 
-While the presented preliminary results seem very promising, further
-biological verification is needed to validate the predictions.  Even
-in time series data like the one used here it may in certain
-situations be impossible, for example, to detect whether gene A
-activates gene B or gene B represses gene A.  Disambiguating such
-situations requires acquiring more data from different experimental
-perturbations of the system, such as knocking out one of the genes.
-The proposed method can be very helpful in directing such further
-experiments to a set of genes that is sufficiently small to process
-using less expensive low-throughput techniques.
+While the  presented preliminary results seem  very promising, further
+biological verification  is needed to confirm  the predictions.  Given
+only the time  series data we have here it  will impossible to predict
+with certainty a given relationship. For example the profile that will
+emerge if gene A activates  gene B could be indistinguishable from the
+profile that arises  if gene B represses gene  A. To disambiguate more
+data from  different perturbations  (such as knocking  out one  of the
+genes) of  the system  is required. However,  our approach  makes some
+preliminary predictions  that could be  used to update  hypotheses and
+design  new  experiments.  The  set  of  candidate  regulators is  now
+sufficiently  small that  they could  be sifted  using  less expensive
+low-throughput techniques.
 
 
 \bibliographystyle{IEEEbib}
