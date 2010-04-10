@@ -244,14 +244,13 @@ relatively poorly understood~\cite{Burch2005}.
 
 We considered a gene expression data set consisting of two time series
 from     a    cell     line     model    of     mouse    inner     ear
-development~\cite{Helyer:model07}.   Both  time  series had  $6$  time
-points,  sampled  at $0$,  $1$,  $2$, $4$,  $7$  and  $14$ days  after
-development  was stimulated  (through temperature  change).   The gene
-expression levels were measured  using the Affymetrix GeneChip system.
+development~\cite{Helyer:model07}.   The cell line is derived from sensory epithelial cells from the ventral part of the otic vesicle at E10.5 and cultured in serum-free media. It was produced from 12 hybridisations to the Affymetrix GeneChip® Mg_U74Av2. The cells for both time series are cultured for a period of 14 days to mimic development of the otic vesicle and sampled in  $6$  time
+points, at $0$,  $1$,  $2$, $4$,  $7$  and  $14$ days  after
+differentiation  was stimulated  (through temperature  change).
 In one of  the time series the cells are untreated  while in the other
 they are  exposed to retinoic acid, which  focuses the differentiation
 toward  one  of  several  possible  cell  types.   The  retinoic  acid
-treatment does not affect the expression of Gata3 so we used these two
+treatment does not affect the expression profile of Gata3 so we used these two
 time series  as if  they were two  repeated experiments.   This should
 automatically suppress genes  with significant differential expression
 under the two different conditions.  The expression data was processed
@@ -281,10 +280,9 @@ Next, we fitted the GP models independently using each of these 268 TF
 gene  probes as  the input  and Gata3  as the  output.  This  was also
 performed in R/Bioconductor using the \emph{tiger} package.
 
-We performed a pathway  analysis, using a classification system called
+To gain a preliminary functional insight in the list of the top ranked genes, we performed a pathway  analysis, using a classification system called
 PANTHER   (Protein  ANalysis   THrough   Evolutionary  Relationships),
-\url{http://www.pantherdb.org/}.  We  assessed proposed pathways using
-a  Bonferroni-correction  test.    Those  having  p-values  that  were
+\url{http://www.pantherdb.org/}.  PANTHER uses in-built HMMs on protein families and sub-families to create categories of biological processes, molecular processes and pathways. PANTHER then uses a binomial statistics tool to compare classifications of multiple clusters of lists to a reference list. This allows it to statistically determine over- or under- representation of the defined categories. Each list is compared to the reference list. To determine statistical significance $p$-values are also calculated using the Benferroni-correction test. The $p$-values are the probabilities that the number of genes observed in a category occurred by chance, as determined by the reference list. A small $p$-value indicates that the category selected is significant and potentially interesting.  We used as a reference list the NCBI:Mus Musculus genome. The selected list of genes is compared against this baseline and for each PANTHER pathway an estimated number of genes are calculated with their relative $p$-values. Those  having  $p$-values  that  were
 significant    at    the    5\%    level   are    shown    in    Table
 \ref{tab:pathways}. They are all highly relevant to the development of
 the mammalian inner ear.
@@ -302,14 +300,25 @@ We  selected the  50 highest  ranking TFs  as candidate  regulators of
 Gata3.  This list turns out  to be highly enriched for genes belonging
 to the Wnt signaling pathway.  Transcription factors that stand out in
 this  list include  Six1,  known to  be  related to  a defective  otic
-development  known  as  brachio-oto-renal syndrome  ??and  promoting??
-\neil{This   bit  isn't   clear}   hair  cell   fate   in  the   inner
-ear~\cite{Fritzsch2007,Bosman2009}.  Other  related TFs like  Six4 are
-also in  the list. The Wnt  signaling related gene Tbx6  and the notch
-signaling related gene Tle3 are also of interest in this context. More
-detailed  functional  assays  are  required  to  properly  assess  the
-biological property  of these relationships  as well as the  direct or
-indirect effect that these TFs might have on Gata3.
+development  known  as brachio-oto-renal  syndrome.  This syndrome  is
+autosomal dominant disorder  characterized by syndromic association of
+branchial cysts or fistulae along  with external, middle and inner ear
+malformations and  renal anomalies. Only one copy  of functional Gata3
+in  human, causes  a  syndrome that  presents  similar phenotype,  HDR
+syndrome (hypoparathyroidism, deafness, renal dysplasia). Further more
+Six1 as well  as Gata3 promote differentiation and  regulation of cell
+fate in the  inner ear~\cite{Fritzsch2007,Bosman2009}, which reinforce
+the  possible functional  relationship between  the two  genes.  Other
+related TFs like Six4 are also  in the list. The Wnt signaling related
+gene  Tbx6 and  the  notch signaling  related  gene Tle3  are also  of
+interest in this context, since  modulation of Notch signaling and Wnt
+signaling is crucial for a  normal inner ear development. Based on the
+known  protein annotation,  ontologies and  published  literature, the
+model   has  identified  several   interesting  candidates   as  Gata3
+regulators. However,  more detailed functional assays  are required to
+properly assess the biological property of these relationships in this
+particular  biological system, as  well as  general effect  that these
+targets can have on the modulation of Gata3 expression levels.
 
 \begin{table}[htb]
   \caption{Enriched pathways among 50 top-ranking candidate regulators. \neil{How were these selected? Are they the only ones? How highly ranked were they?}}
