@@ -116,10 +116,10 @@ differential equation
 Once again this  is a significant simplification. It  assumes that the
 TF  protein is  produced from  only one  mRNA and  ignores potentially
 important post translational  modifications such as phosphorylation or
-ubiquitination (spelling!).
+ubiquitination.
 
 Given  observations  from the  potential  target  mRNA, $m_i(t)$,  and
-observations  from the  governing TFs  mRNA a  joint  Gaussian process
+observations  from the  governing TF's  mRNA a  joint  Gaussian process
 likelihood can be constructed  and maximized with respect to $\delta$,
 $\sigma$,  $a_i$,  $b_i$,  $s_i$  and  $d_i$.  For  a  given  TF  this
 likelihood can be measured for all potential target genes and they can
@@ -218,16 +218,81 @@ function through  the addition  of $\frac{b_i}{d_i}$ and  $a_i e^{-d_i
 \cite{Lawrence:transcriptionalGP06,Gao:latent08,Honkela:modelbased10}
 but  the main  result is  that the  cross covariances  between  the TF
 concentration and the mRNA concentrations can be computed:
+\begin{align*}
+  k_{m_0, m_i}(t, t^\prime) = & s_i e^{-d_i t^\prime} \int_0^{t^\prime}
+  e^{(d_i - \delta) u} \int_0^u e^{\delta v} k(t, v)\, \mathrm{d}v\, \mathrm{d}u \\
+  = & \frac{s_i \sigma^2e^{-(d_i+\delta) t^\prime}}{\sqrt{8}(\delta - d_i)} \\
+  &\times\bigg( e^{\left(\frac{d_i \ell}{2}\right)^2 + d_i t +
+    \delta t^\prime }
+  \big[\erf(d_i \ell / 2 + t/\ell) \\
+  &\quad - \erf(d_i \ell / 2 + (t-t^\prime)/\ell)\big] \\
+  &-e^{\left(\frac{\delta \ell}{2}\right)^2 + \delta t + d_i
+    t^\prime} \big[\erf(\delta \ell / 2 + t/\ell) \\
+  &\quad- \erf(\delta \ell / 2 +
+  (t-t^\prime)/\ell)\big] \bigg).
+\end{align*}
+where $k_{m_0,m_i}(t, t^\prime)$ gives the covariance between the mRNA
+of the TF and the mRNA associated with the $i$th gene at times $t$ and
+$t^\prime$.  The covariance function between a target gene and itself is given by
+\begin{align*}
+  k_{m_j, m_k}(t, t^\prime) = &s_j s_k e^{-d_j t - d_k t^\prime}\\
+  &\times\int_0^t e^{(d_j - \delta) u}
+  \int_0^{t^\prime} e^{(d_k - \delta) u'} \\
+  &\times
+  \int_0^u e^{\delta v} \int_0^{u'} e^{\delta v'} k(v, v') \, \mathrm{v}'\, \mathrm{d}v\, \mathrm{d}u'\, \mathrm{d}u \\
+  = &\frac{\sigma^2 s_j s_k}{\sqrt{8}} \bigg(
+  h_{jk}(t, t^\prime, \delta) + h_{kj}(t^\prime, t, \delta) \\
+  &- h_{jk}(t, t^\prime, d_j) - h_{kj}(t^\prime, t, d_k)
+  \bigg)
+\end{align*}
+where
+\begin{align*}
+  h_{jk}(t, t^\prime,& d_x) =  e^{\left(\frac{d_x \ell}{2}\right)^2}
+  \frac{e^{-d_x t - d_k t^\prime}}{(d_x + \delta) (d_j - \delta)} \\
+  &\times\Bigg\{
+   %\frac{(d_k + \delta)\exp((d_k-\delta) t^\prime) - 2\delta}{(d_k^2-\delta^2)}
+  \left(\frac{e^{(d_k-\delta) t^\prime} - 1}{d_k-\delta} +
+    \frac{1}{d_k + d_x} \right)\\
+  &\times \left[\erf\left(\frac{d_x \ell}{2} - \frac{t}{\ell}\right) - \erf\left(\frac{d_x \ell}{2}\right)\right]
+  \\
+  &+ \frac{e^{(d_k+d_x)t^\prime}}{d_k+d_x}\\
+  &\times\left[\erf\left(\frac{d_x \ell}{2} + \frac{t^\prime}{\ell})
+  - \erf(\frac{d_x \ell}{2} - \frac{(t-t^\prime)}{\ell}\right)\right]
+  \bigg\}.
+\end{align*}
+If we  observe a Gaussian noise corrupted  version of the
+true   profiles,   where   the    noise   covariance   is   given   by
+$\boldsymbol{\Sigma}$ (which  typically would  be constrained to  be a
+diagonal  or spherical  matrix) this  suggests  a model  for the  gene
+expression which is jointly Gaussian and has the form
 \begin{equation}
-  .
+  \left[\begin{matrix}
+      \mathbf{m}_0\\
+      \mathbf{m}_i
+    \end{matrix}\right]
+  \sim \mathcal{N}\left(\left[\begin{matrix}\mathbf{0}\\\boldsymbol{\mu}\end{matrix}\right], \left[\begin{matrix}
+        \mathbf{K}_{0,0} & \mathbf{K}_{0,i}\\
+        \mathbf{K}_{i,0} & \mathbf{K}_{i,i}
+      \end{matrix}
+    \right] + \boldsymbol{\Sigma}\right),
 \end{equation}
-where  $k_{p,i}(t,  t^\prime)$ gives  the  covariance  between the  TF
-concentration and the mRNA associated with the $i$th gene at times $t$
-and $t^\prime$. This suggests a model for the gene expression which is
-jointly Gaussian and has the form
-\begin{equation}
-  .
-\end{equation}
+where the $m$, $n$th element of the matrix $\mathbf{K}_{0,0}$ is given
+by   $k(t_m,t_n)$,    for   $\mathbf{K}_{0,i}$   it    is   given   by
+$k_{m_0,m_i}(t_m,  t_n)$ and for  $\mathbf{K}_{i, i}$  it is  given by
+$k_{m_i, m_i}(t_m,  t_n)$. Here $t_m$ and $t_n$  are observation times
+from the time  series data. The mean values are  derived from the mean
+functions.   So  we  have  the  $j$th  element  of  the  mean  vector,
+$\mu_j=\frac{b_i}{d_i}  +  a_ie^{-d_it_j}$.   Since  these  covariance
+functions and  mean functions are  all dependent on the  parameters of
+the differential equations, $\sigma$, $\delta$, $a_i$, $s_i$ and $d_i$
+we can fit these parameters  by gradient based maximization of the log
+likelihood of a given pairing  of regulator and target gene (using the
+scaled conjugate gradient  algorithm of \cite{Moller:scg93}). This can
+be done in turn for each  potential regulator of the target gene.  The
+regulator genes  can the be  ranked according to which  model achieves
+the highest likelihood.
+
+
 
 \section{Experiments}
 
@@ -244,22 +309,27 @@ relatively poorly understood~\cite{Burch2005}.
 
 We considered a gene expression data set consisting of two time series
 from     a    cell     line     model    of     mouse    inner     ear
-development~\cite{Helyer:model07}.   The cell line is derived from sensory epithelial cells from the ventral part of the otic vesicle at E10.5 and cultured in serum-free media. It was produced from 12 hybridisations to the Affymetrix GeneChip® Mg_U74Av2. The cells for both time series are cultured for a period of 14 days to mimic development of the otic vesicle and sampled in  $6$  time
-points, at $0$,  $1$,  $2$, $4$,  $7$  and  $14$ days  after
-differentiation  was stimulated  (through temperature  change).
-In one of  the time series the cells are untreated  while in the other
-they are  exposed to retinoic acid, which  focuses the differentiation
-toward  one  of  several  possible  cell  types.   The  retinoic  acid
-treatment does not affect the expression profile of Gata3 so we used these two
-time series  as if  they were two  repeated experiments.   This should
-automatically suppress genes  with significant differential expression
-under the two different conditions.  The expression data was processed
-using    the    mmgMOS    algorithm    from    the    \emph{puma}    R
+development~\cite{Helyer:model07}.   The  cell  line is  derived  from
+sensory epithelial cells from the  ventral part of the otic vesicle at
+E10.5  and cultured  in  serum-free  media. It  was  produced from  12
+hybridisations to  the Affymetrix GeneChip® Mg\_U74Av2.  The cells for
+both  time series  are  cultured for  a  period of  14  days to  mimic
+development of  the otic  vesicle and sampled  in $6$ time  points, at
+$0$,  $1$, $2$,  $4$,  $7$  and $14$  days  after differentiation  was
+stimulated (through  temperature change).  In  one of the  time series
+the  cells  are untreated  while  in the  other  they  are exposed  to
+retinoic acid, which focuses the differentiation toward one of several
+possible cell types.  The retinoic  acid treatment does not affect the
+expression profile  of Gata3 so  we used these  two time series  as if
+they  were  two   repeated  experiments.   This  should  automatically
+suppress genes with significant  differential expression under the two
+different  conditions.  The  expression data  was processed  using the
+mmgMOS       algorithm        from       the       \emph{puma}       R
 package~\cite{Liu:tractable04,Pearson:puma09}  from Bioconductor.  The
 inferred posterior  expression levels from mmgMOS were  used to obtain
 individual   noise  variances  for   each  observation   as  described
-in~\cite{Honkela:modelbased10}  using  the  \emph{tiger}  Bioconductor
-package. %~\cite{Honkela:tigerpackage10}.
+in~\cite{Honkela:modelbased10}  using  the  \emph{tigre}  Bioconductor
+package. %~\cite{Honkela:tigrepackage10}.
 
 We first extracted a set of  mouse TFs and probable TFs from the TFCat
 database~\cite{Fulton2009}.  This yielded a list of 511 genes.  Out of
@@ -278,14 +348,7 @@ sets.
 
 Next, we fitted the GP models independently using each of these 268 TF
 gene  probes as  the input  and Gata3  as the  output.  This  was also
-performed in R/Bioconductor using the \emph{tiger} package.
-
-To gain a preliminary functional insight in the list of the top ranked genes, we performed a pathway  analysis, using a classification system called
-PANTHER   (Protein  ANalysis   THrough   Evolutionary  Relationships),
-\url{http://www.pantherdb.org/}.  PANTHER uses in-built HMMs on protein families and sub-families to create categories of biological processes, molecular processes and pathways. PANTHER then uses a binomial statistics tool to compare classifications of multiple clusters of lists to a reference list. This allows it to statistically determine over- or under- representation of the defined categories. Each list is compared to the reference list. To determine statistical significance $p$-values are also calculated using the Benferroni-correction test. The $p$-values are the probabilities that the number of genes observed in a category occurred by chance, as determined by the reference list. A small $p$-value indicates that the category selected is significant and potentially interesting.  We used as a reference list the NCBI:Mus Musculus genome. The selected list of genes is compared against this baseline and for each PANTHER pathway an estimated number of genes are calculated with their relative $p$-values. Those  having  $p$-values  that  were
-significant    at    the    5\%    level   are    shown    in    Table
-\ref{tab:pathways}. They are all highly relevant to the development of
-the mammalian inner ear.
+performed in R/Bioconductor using the \emph{tigre} package. We considered the top ranked 50 genes in this list. 
 
 Pathways like Wnt signaling, TGF-beta signaling and PDGF signaling are
 involved  in  pattering of  sensory  patch,  development and  neuronal
@@ -294,31 +357,79 @@ processes  are expected to  be highly  represented in  this particular
 cell line, which is derived  from a murine sensory epithelial cells at
 embryonic age E9.5~\cite{Milo2009}.
 
-[Tables of most relavant pathways can be extracted from the file.]
 
-We  selected the  50 highest  ranking TFs  as candidate  regulators of
-Gata3.  This list turns out  to be highly enriched for genes belonging
-to the Wnt signaling pathway.  Transcription factors that stand out in
-this  list include  Six1,  known to  be  related to  a defective  otic
-development  known  as brachio-oto-renal  syndrome.  This syndrome  is
-autosomal dominant disorder  characterized by syndromic association of
-branchial cysts or fistulae along  with external, middle and inner ear
-malformations and  renal anomalies. Only one copy  of functional Gata3
-in  human, causes  a  syndrome that  presents  similar phenotype,  HDR
-syndrome (hypoparathyroidism, deafness, renal dysplasia). Further more
-Six1 as well  as Gata3 promote differentiation and  regulation of cell
-fate in the  inner ear~\cite{Fritzsch2007,Bosman2009}, which reinforce
-the  possible functional  relationship between  the two  genes.  Other
-related TFs like Six4 are also  in the list. The Wnt signaling related
-gene  Tbx6 and  the  notch signaling  related  gene Tle3  are also  of
-interest in this context, since  modulation of Notch signaling and Wnt
-signaling is crucial for a  normal inner ear development. Based on the
-known  protein annotation,  ontologies and  published  literature, the
-model   has  identified  several   interesting  candidates   as  Gata3
-regulators. However,  more detailed functional assays  are required to
-properly assess the biological property of these relationships in this
-particular  biological system, as  well as  general effect  that these
-targets can have on the modulation of Gata3 expression levels.
+The top ranked 10 potential regulators of Gata3 from our model were
+(in order): Prrx2 \textbf{Tle3}, Ctbp2, Smarcd2, \textbf{Six1}, Runx2,
+Mtf2, Six4, Arntl and \textbf{Tbx6}.
+
+To truly validate our  predictions biological assays are required, but
+we can get  a preliminary insight in the validity of  the ranking by a
+protein  analysis using  the  classification system  known as  PANTHER
+(Protein     ANalysis     THrough     Evolutionary     Relationships),
+\url{http://www.pantherdb.org/}.   PANTHER uses hidden  Markov models,
+knowledge of  existing protein families and  sub-families classify the
+role of a given protein.  PANTHER then uses a binomial statistics tool
+to  compare  classifications  of  multiple  clusters  of  lists  to  a
+reference  list. This allows  it to  statistically determine  over- or
+under- representation of the defined categories. Each list is compared
+to   the  reference  list.   To  determine   statistical  significance
+$p$-values  are   also  calculated  using   the  Benferroni-correction
+test. The  $p$-values are the  probabilities that the number  of genes
+observed  in a  category  occurred  by chance,  as  determined by  the
+reference list. A small $p$-value indicates that the category selected
+is significant  and potentially interesting.   We used as  a reference
+list  the NCBI:Mus  Musculus genome.  The  selected list  of genes  is
+compared  against  this  baseline  and  for each  PANTHER  pathway  an
+estimated  number   of  genes  are  calculated   with  their  relative
+$p$-values. Those  having $p$-values that were significant  at the 5\%
+level  are shown  in  Table \ref{tab:pathways}.  They  are all  highly
+relevant to the development of the mammalian inner ear.
+
+
+\neil{What is this bit? [Tables of most relavant pathways can be extracted from the file.]}
+
+Looking at the 50 highest ranking TFs as candidate regulators of Gata3
+we find  that the list is  highly enriched for genes  belonging to the
+Wnt signaling  pathway.  From the top  10 ranked TFs we  note that the
+list includes  Six1. Sine  oculis homeobox (SIX)  protein family  is a
+group of  evolutionarily conserved  transcription factors that  play a
+key role in development. Particularly,  Six1 is known to be related to
+a  defective  otic development  known  as brachio-oto-renal  syndrome.
+This  syndrome   is  autosomal  dominant   disorder  characterized  by
+syndromic  association  of  branchial  cysts or  fistulae  along  with
+external, middle and inner ear malformations and renal anomalies. Mice
+without Six1 show sever malformation  of the middle and inner ear with
+cochleae completely  lacking of hair  cells \cite{Bosman2009}. Further
+Six1 promotes differentiation and regulation of cell fate in the inner
+ear~\cite{Fritzsch2007,Bosman2009}.  Gata3  is  a  key player  in  the
+development  of the inner  ear, it  promotes cell  differentiation and
+patterning in the inner ear  and regulates the development of the otic
+neurons.  In addition,  only one  copy of  functional Gata3  in human,
+causes HDR syndrome (hypoparathyroidism, deafness, renal dysplasia), a
+syndrome  that  presents similar  phenotype  to the  brachio-oto-renal
+syndrome.   This   evidence   reinforces   the   possible   functional
+relationship between  the two  genes and therefore  makes Six1  a very
+interesting  candidate  for  further  investigation.  Note  also  that
+another TF that is known to act together with Six1 is also ranked very
+high in the in the list: Six4. The Wnt signaling related gene Tbx6 and
+the notch  signaling related  gene Tle3 are  also of interest  in this
+context,  since modulation  of Notch  signaling and  Wnt  signaling is
+crucial for normal patterning during embryogenesis. The inner ear is a
+very  complex  organ in  which  patterning  play  a crucial  role  for
+ensuring  the mechanotransduction  properties of  the organ.  Both the
+T-box  and Groucho/Tle  gene families  are highly  conserved  and many
+studies  in  fish  and  flies  have revealed  their  crucial  role  in
+development of  sensory organ. The  connection of Gata3 with  both Wnt
+and     Notch    signaling    is     known    in     the    literature
+\cite{Rivolta2002,Kelly2009}, Tbx6  and Tle3 are  potentially two very
+interesting modulators  of the effect of  Gata3 on both  these two key
+signalling pathways. Based on the known protein annotation, ontologies
+and published literature, the model has identified several interesting
+candidates  as  Gata3 regulators.  However,  more detailed  functional
+assays  are required  to properly  assess the  biological  property of
+these relationships  in this particular biological system,  as well as
+general effect that these targets  can have on the modulation of Gata3
+expression levels.
 
 \begin{table}[htb]
   \caption{Enriched pathways among 50 top-ranking candidate regulators. \neil{How were these selected? Are they the only ones? How highly ranked were they?}}
@@ -361,7 +472,7 @@ targets can have on the modulation of Gata3 expression levels.
 \begin{figure}[htb]
   \centering
   \includegraphics[width=\columnwidth]{gpdisim_Prrx2_Gata3}
-  \caption{Top-ranking models}
+  \caption{Top-ranking models \neil{What was the log likelihood? What is on the left and the right? i.e. which is the retanoic acid?}}
   \label{fig:model1}
 \end{figure}
 
