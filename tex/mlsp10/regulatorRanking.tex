@@ -1,13 +1,13 @@
 \documentclass{article}
-\usepackage{spconf,amsmath,graphicx,tabularx,color,url}
+\usepackage{spconf,amsmath,graphicx,tabularx,color,url,subfigure}
 
 \input{../definitions.tex}
 \global\long\def\neil#1{{\color{red} \textbf{#1}}}
 
 \title{Ranking of Gene Regulators through Differential Equations and Gaussian Processes}
 
-\name{Antti Honkela$^1$, Marta Milo$^2$, Matthew Holley$^2$, Magnus
-  Rattray$^3$, and Neil D. Lawrence$^3$\thanks{A.H. was supported by
+\name{Antti Honkela$^1$, Marta Milo$^2$, Matthew Holley$^3$, Magnus
+  Rattray$^4$, and Neil D. Lawrence$^4$\thanks{A.H. was supported by
     Postdoctoral Researcher's Project No 121179 of the Academy of
     Finland.  M.R. and N.D.L acknowledge support from EPSRC Grant No
     EP/F005687/1 "Gaussian Processes for Systems Identification with
@@ -18,8 +18,11 @@
 \address{$^1$ Department of Information and Computer
     Science,\\ Aalto University School of Science and Technology,
     Helsinki, Finland\\
-  $^2$ Department of Biomedical Science, University of Sheffield, UK \\
-  $^3$ School of Computer Science, University of
+  $^2$ School of Medicine and Biomedical Science,
+    NIHR Cardiovascular Biomedical Research Unit,\\
+    Sheffield Teaching Hospitals NHS Trust, Sheffield, UK \\
+  $^3$ Department of Biomedical Science, University of Sheffield, UK \\
+  $^4$ School of Computer Science, University of
     Manchester, UK}
 
 \begin{document}
@@ -41,6 +44,8 @@
   developmental transcription  factor, in the development  of ear hair
   cells.
 \end{abstract}
+
+\sloppy
 
 \section{INTRODUCTION}
 
@@ -296,7 +301,7 @@ the highest likelihood.
 
 \section{Experiments}
 
-\neil{We need more specifics on the quality of these results. Currently we are being very wishy washy.}
+%\neil{We need more specifics on the quality of these results. Currently we are being very wishy washy.}
 
 We tested the method by looking for candidate regulators of Gata3 gene
 in  mouse.   Gata3  is  itself  a transcription  factor  with  several
@@ -357,9 +362,8 @@ processes  are expected to  be highly  represented in  this particular
 cell line, which is derived  from a murine sensory epithelial cells at
 embryonic age E9.5~\cite{Milo2009}.
 
-
 The top ranked 10 potential regulators of Gata3 from our model were
-(in order): Prrx2 \textbf{Tle3}, Ctbp2, Smarcd2, \textbf{Six1}, Runx2,
+(in order): Prrx2, \textbf{Tle3}, Ctbp2, Smarcd2, \textbf{Six1}, Runx2,
 Mtf2, Six4, Arntl and \textbf{Tbx6}.
 
 To truly validate our  predictions biological assays are required, but
@@ -373,7 +377,7 @@ to  compare  classifications  of  multiple  clusters  of  lists  to  a
 reference  list. This allows  it to  statistically determine  over- or
 under- representation of the defined categories. Each list is compared
 to   the  reference  list.   To  determine   statistical  significance
-$p$-values  are   also  calculated  using   the  Benferroni-correction
+$p$-values  are   also  calculated  using   the   Benferroni-corrected
 test. The  $p$-values are the  probabilities that the number  of genes
 observed  in a  category  occurred  by chance,  as  determined by  the
 reference list. A small $p$-value indicates that the category selected
@@ -385,8 +389,26 @@ $p$-values. Those  having $p$-values that were significant  at the 5\%
 level  are shown  in  Table \ref{tab:pathways}.  They  are all  highly
 relevant to the development of the mammalian inner ear.
 
+\begin{table}[tb]
+  \caption{Enriched pathways among 50 top-ranking candidate regulators.}
+  % \neil{How were these selected? Are they the only ones? How highly ranked were they?}}
+  \label{tab:pathways}
+ \centering
+  \begin{tabularx}{\columnwidth}{Xl}
+    Pathway & $p$-value \\
+    \hline
+    Wnt signaling pathway &	$4.10\times 10^{-6}$ \\
+    TGF-beta signaling pathway & $2.22\times 10^{-2}$ \\
+    Inflammation mediated by chemokine and cytokine signaling pathway & $4.18\times 10^{-2}$ \\
+    Interleukin signaling pathway & $4.81\times 10^{-1}$\\
+    % Wnt signaling pathway	408	9	.68	+	$4.10\times 10^{-6$}
+    % TGF-beta signaling pathway	154	4	.26	+	$2.22\times 10^{-2}$
+    % Inflammation mediated by chemokine and cytokine signaling pathway	337	5	.56	+	$4.18\times 10^{-2}$
+    % Interleukin signaling pathway	169	3	.28	+	$4.81\times 10^{-1}$
+  \end{tabularx}
+\end{table}
 
-\neil{What is this bit? [Tables of most relavant pathways can be extracted from the file.]}
+%\neil{What is this bit? [Tables of most relavant pathways can be extracted from the file.]}
 
 Looking at the 50 highest ranking TFs as candidate regulators of Gata3
 we find  that the list is  highly enriched for genes  belonging to the
@@ -431,24 +453,6 @@ these relationships  in this particular biological system,  as well as
 general effect that these targets  can have on the modulation of Gata3
 expression levels.
 
-\begin{table}[htb]
-  \caption{Enriched pathways among 50 top-ranking candidate regulators. \neil{How were these selected? Are they the only ones? How highly ranked were they?}}
-  \label{tab:pathways}
- \centering
-  \begin{tabularx}{\columnwidth}{Xl}
-    Pathway & $p$-value \\
-    \hline
-    Wnt signaling pathway &	$4.10\times 10^{-6}$ \\
-    TGF-beta signaling pathway & $2.22\times 10^{-2}$ \\
-    Inflammation mediated by chemokine and cytokine signaling pathway & $4.18\times 10^{-2}$ \\
-    Interleukin signaling pathway & $4.81\times 10^{-1}$\\
-    % Wnt signaling pathway	408	9	.68	+	$4.10\times 10^{-6$}
-    % TGF-beta signaling pathway	154	4	.26	+	$2.22\times 10^{-2}$
-    % Inflammation mediated by chemokine and cytokine signaling pathway	337	5	.56	+	$4.18\times 10^{-2}$
-    % Interleukin signaling pathway	169	3	.28	+	$4.81\times 10^{-1}$
-  \end{tabularx}
- \end{table}
-
 % \begin{table}[htb]
 %   \centering
 %   \begin{tabular}{lll}
@@ -469,33 +473,39 @@ expression levels.
 %   \label{tab:results}
 % \end{table}
 
-\begin{figure}[htb]
+\begin{figure*}[htb]
   \centering
-  \includegraphics[width=\columnwidth]{gpdisim_Prrx2_Gata3}
-  \caption{Top-ranking models \neil{What was the log likelihood? What is on the left and the right? i.e. which is the retanoic acid?}}
+  \subfigure[Prrx2 gene: log-likelihood $-0.37$]{\includegraphics[width=\columnwidth]{gpdisim_Prrx2_Gata3}}
+  \subfigure[Tle3 gene: log-likelihood $-0.47$]{\includegraphics[width=\columnwidth]{gpdisim_Tle3_Gata3}}
+  \subfigure[Ctbp2 gene: log-likelihood $-0.67$]{\includegraphics[width=\columnwidth]{gpdisim_Ctbp2_Gata3}}
+  \subfigure[Smarcd2 gene: log-likelihood $-1.37$]{\includegraphics[width=\columnwidth]{gpdisim_Smarcd2_Gata3}}
+  \caption{Top-ranking models. In each subplot, the left column shows
+    the model for the data from the non-treated experiment and the
+    right column for the retinoic acid treated experiment.}
+  % \neil{What was the log likelihood? What is on the left and the right? i.e. which is the retanoic acid?}}
   \label{fig:model1}
-\end{figure}
+\end{figure*}
 
-\begin{figure}[htb]
-  \centering
-  \includegraphics[width=\columnwidth]{gpdisim_Tle3_Gata3}
-  \caption{Top-ranking models}
-  \label{fig:model2}
-\end{figure}
+% \begin{figure}[htb]
+%   \centering
+%   \includegraphics[width=\columnwidth]{gpdisim_Tle3_Gata3}
+%   \caption{Top-ranking models}
+%   \label{fig:model2}
+% \end{figure}
 
-\begin{figure}[htb]
-  \centering
-  \includegraphics[width=\columnwidth]{gpdisim_Ctbp2_Gata3}
-  \caption{Top-ranking models}
-  \label{fig:model3}
-\end{figure}
+% \begin{figure}[htb]
+%   \centering
+%   \includegraphics[width=\columnwidth]{gpdisim_Ctbp2_Gata3}
+%   \caption{Top-ranking models}
+%   \label{fig:model3}
+% \end{figure}
 
-\begin{figure}[htb]
-  \centering
-  \includegraphics[width=\columnwidth]{gpdisim_Smarcd2_Gata3}
-  \caption{Top-ranking models}
-  \label{fig:model5}
-\end{figure}
+% \begin{figure}[htb]
+%   \centering
+%   \includegraphics[width=\columnwidth]{gpdisim_Smarcd2_Gata3}
+%   \caption{Top-ranking models}
+%   \label{fig:model5}
+% \end{figure}
 
 \section{Discussion}
 
@@ -513,7 +523,7 @@ sufficiently  small that  they could  be sifted  using  less expensive
 low-throughput techniques.
 
 
-\bibliographystyle{IEEEbib}
+\bibliographystyle{IEEEabrv}
 \bibliography{lawrence,other,zbooks}
 
 
