@@ -36,7 +36,7 @@
   genome   wide   expression  measurements   the   targets  of   given
   transcription  factor have  been sought  through techniques  such as
   clustering. In this paper we  consider the harder problem of finding
-  a  genes regulator instead  of its  targets.  We  use a  model based
+  a  gene's regulator instead  of its  targets.  We  use a  model-based
   differential  equation  approach combined  with  a Gaussian  process
   prior distribution for unobserved protein concentrations. This idea,
   that  we refer  to as  ranked  regulator prediction  (RRP), is  then
@@ -55,11 +55,11 @@ RNA.  The  quantity of  RNA  transcribed  can  be measured  genome-wide
 through the  well established approach of gene  expression arrays. The
 mechanisms  by   which  transcription  is  controlled   are  of  great
 importance for medicine and biology.  Expression of a gene is switched
-on  and off through  transcription factors  (TFs). These  are proteins
+on  and off by  transcription factors  (TF), proteins
 which bind to the DNA. The  TF proteins are produced by translation of
-mRNA  to  protein.  The  mRNA  of the  transcription  factor  is  also
+TF mRNA  that  is  also
 transcribed from  the genome.  This implies that  at the heart  of the
-cell there is a network of TFs controlling the regulation of genes and
+cell there is a network of TFs controlling the regulation of target genes and
 governing  the function  of  the  cell. Unpicking  this  network is  a
 central  aim of  computational systems  biology. High  throughput gene
 expression experiments allow the expression  level of many genes to be
@@ -72,13 +72,13 @@ coregulated.  Confirmation  experiments  may then  involve  ``knocking
 out'' the  regulating gene and looking  for a resulting  change in the
 gene expression of the hypothesized targets.
 
-\subsection{Model Based Ranking}
+\subsection{Model-Based Ranking}
 
-Recently a  model based  approach to ranking  of targets  was proposed
+Recently a  model-based  approach to ranking  of targets  was proposed
 that extends  this idea to  include an explicit  differential equation
-model  of  the gene  expression  \cite{Barenco:ranked06}. This  allows
+model  of   gene  expression  \cite{Barenco:ranked06}. This  allows
 ranking of coregulated genes even when the expression profiles are not
-strongly  correlated due to  low decay  rates. The  basic form  of the
+strongly  correlated due to different decay  rates. The  basic form  of the
 model is as follows
 \begin{equation}
   \diff{m_i(t)}{t} = b_i + s_i p(t) - d_i m_i(t)
@@ -96,23 +96,23 @@ and the initial condition is given by $m_i(0)=a_i + \frac{b_i}{d_i}$.
 
 If coregulated targets have similar decay rates, they will be strongly
 correlated, but  if decay  rates differ then  targets can  become more
-weakly correlated.  The  idea behind a ``model based  approach'' is to
+weakly correlated.  The  idea behind the model-based  approach is to
 consider that  coregulated targets should conform  to the differential
 equation. Thus  we see  a TF activity,  $p(t)$, that  explains targets
 simultaneously through  a range of different decay  rates.  Clearly we
 are also making further assumptions  here: for example we are assuming
-TFs  don't act  in tandem  and  that the  response to  the TF  doesn't
+TFs  do not act  in tandem  and  that the  response to  the TF  does not
 saturate. However,  the model is richer than  the standard genome-wide
 analysis   techniques  of  seeking   correlation  or   clustering  the
-data. This model based approach to gene regulation was also considered
+data. This model-based approach to gene regulation was also considered
 by  \cite{Gao:latent08}. They  used Gaussian  process priors  over the
 unobserved TF activity  to create a fully probabilistic  model for the
 coregulated genes.  Likelihoods can then  be used to rank these models
 and determined which genes are likely to be coregulated.
 
 Also in \cite{Gao:latent08} this framework was extend by introducing a
-simple model  of translation.  Let's represent the  mRNA governing the
-transcription factor by $m_0(t)$. Let's assume that this is translated
+simple model  of translation.  Let us represent the  mRNA governing the
+transcription factor by $m_0(t)$. Let us assume that this is translated
 to  $p(t)$ through a  process that  can be  modelled by  the following
 differential equation
 \begin{equation}
@@ -130,8 +130,8 @@ $\sigma$,  $a_i$,  $b_i$,  $s_i$  and  $d_i$.  For  a  given  TF  this
 likelihood can be measured for all potential target genes and they can
 then  be ranked  as  putative  targets.  This  idea  was exploited  by
 \cite{Honkela:modelbased10}  who validated  their  results using  ChIP
-data  and  were  able to  show  that  model  based approaches  can  do
-considerably better than simple correlation based approaches.
+data  and  were  able to  show  that  model-based approaches  can  do
+considerably better than simple correlation-based approaches.
 
 In this paper we want to turn this idea on its head. Instead of asking
 what  the targets are  of a  particular TF  we wish  to know  what the
@@ -290,7 +290,7 @@ functions.   So  we  have  the  $j$th  element  of  the  mean  vector,
 $\mu_j=\frac{b_i}{d_i}  +  a_ie^{-d_it_j}$.   Since  these  covariance
 functions and  mean functions are  all dependent on the  parameters of
 the differential equations, $\sigma$, $\delta$, $a_i$, $s_i$ and $d_i$
-we can fit these parameters  by gradient based maximization of the log
+we can fit these parameters  by gradient-based maximization of the log
 likelihood of a given pairing  of regulator and target gene (using the
 scaled conjugate gradient  algorithm of \cite{Moller:scg93}). This can
 be done in turn for each  potential regulator of the target gene.  The
@@ -362,16 +362,19 @@ processes  are expected to  be highly  represented in  this particular
 cell line, which is derived  from a murine sensory epithelial cells at
 embryonic age E9.5~\cite{Milo2009}.
 
+%The top ranked 10 potential regulators of Gata3 from our model were
+%(in order): Prrx2, \textbf{Tle3}, Ctbp2, Smarcd2, \textbf{Six1}, Runx2,
+%Mtf2, Six4, Arntl and \textbf{Tbx6}.
 The top ranked 10 potential regulators of Gata3 from our model were
-(in order): Prrx2, \textbf{Tle3}, Ctbp2, Smarcd2, \textbf{Six1}, Runx2,
-Mtf2, Six4, Arntl and \textbf{Tbx6}.
+(in order): Prrx2, Tle3, Ctbp2, Smarcd2, Six1, Runx2,
+Mtf2, Six4, Arntl and Tbx6.
 
 To truly validate our  predictions biological assays are required, but
 we can get  a preliminary insight in the validity of  the ranking by a
 protein  analysis using  the  classification system  known as  PANTHER
 (Protein     ANalysis     THrough     Evolutionary     Relationships),
 \url{http://www.pantherdb.org/}.   PANTHER uses hidden  Markov models,
-knowledge of  existing protein families and  sub-families classify the
+knowledge of  existing protein families and  sub-families to classify the
 role of a given protein.  PANTHER then uses a binomial statistics tool
 to  compare  classifications  of  multiple  clusters  of  lists  to  a
 reference  list. This allows  it to  statistically determine  over- or
