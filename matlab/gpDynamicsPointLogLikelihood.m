@@ -14,6 +14,12 @@ function ll = gpDynamicsPointLogLikelihood(model, x, y)
 % SEEALSO : gpDynamicsCreate, gpDynamicsLogLikelihood, gpPointLogLikelihood
 % 
 
+% MODIFICATION: Carl Henrik Ek, 2009
+
 % FGPLVM
 
+if(isfield(model,'indexIn'))
+  x = x(:,model.indexIn);
+  y = y(:,model.indexIn);
+end
 ll = gpPointLogLikelihood(model, x, y);

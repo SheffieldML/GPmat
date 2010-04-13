@@ -1,4 +1,4 @@
-function ll = gpDynamicsSequenceLogLikelihood(model, Xraw)
+function ll = gpDynamicsSequenceLogLikelihood(model, Xraw, varargin)
 
 % GPDYNAMICSSEQUENCELOGLIKELIHOOD Return the log likelihood of a given latent sequence.
 % FORMAT

@@ -30,6 +30,11 @@ else
   params = gpExtractParam(model);
 end
 if isfield(model, 'back') & ~isempty(model.back)
+  
+  
+
+
+
   if returnNames
     [backParams, backNames] = modelExtractParam(model.back);
     for i = 1:length(backNames)

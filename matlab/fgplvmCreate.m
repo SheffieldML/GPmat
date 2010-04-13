@@ -15,6 +15,8 @@ function model = fgplvmCreate(q, d, Y, options)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 %
+% MODIFICATIONS : Carl Henrik Ek, 2010
+%
 % SEEALSO : modelCreate, fgplvmOptions
 
 % FGPLVM
@@ -61,15 +63,20 @@ if isfield(options, 'back') & ~isempty(options.back)
     model.back = options.back;
   else
     if ~isempty(options.back)
-      model.back = modelCreate(options.back, model.d, model.q, options.backOptions);
+      model.back = modelCreate(options.back, model.d, model.q,options.backOptions);
+      if(isfield(options.backOptions,'indexOut')&&~isempty(options.backOptions.indexOut))
+        model.back.indexOut = options.backOptions.indexOut;
+      else
+        model.back.indexOut = 1:1:model.q;
+      end
     end
   end
   if options.optimiseInitBack
     % Match back model to initialisation.
-    model.back = mappingOptimise(model.back, model.y, model.X);
+    model.back = mappingOptimise(model.back, model.y, model.X(:,model.back.indexOut));
   end
   % Now update latent positions with the back constraints output.
-  model.X = modelOut(model.back, model.y);
+  model.X(:,model.back.indexOut) = modelOut(model.back, model.y);
 else
   model.back = [];
 end

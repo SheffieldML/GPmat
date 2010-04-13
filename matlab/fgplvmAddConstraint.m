@@ -18,7 +18,7 @@ function model = fgplvmAddConstraint(model,options)
 %
 if(isfield(model,'constraints')&&~isempty(model.constraints))
   % constraints init
-  model = constraintCreate(model,options);
+  model = constraintCreate(model,[],options);
 else
   % no constraints
   model.constraints = [];
@@ -27,9 +27,19 @@ else
   model.constraints.id = [];
   model.constraints.numConstraints = 0;
   model.constraints.comp = {};
-  model = constraintCreate(model,options);
+  model = constraintCreate(model,[],options);
 end
 
 model.constraints.numConstraints = model.constraints.numConstraints + 1;
 model.constraints.id = [model.constraints.id; false*ones(1,model.q)];
-model.constraints.id(end,options.dim) = true;
+if(~isempty(options.dim))
+  model.constraints.id(end,options.dim) = true;
+else
+  warning('No Dimensions set for constraints, applying to full latent space');
+  model.constraints.id(end,:) = true;
+end
+
+% update constraints
+for(i = 1:1:model.constraints.numConstraints)
+  model.constraints.comp{i} = constraintExpandParam(model.constraints.comp{i},model.X);
+end

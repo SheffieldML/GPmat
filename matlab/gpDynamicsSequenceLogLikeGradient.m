@@ -1,4 +1,4 @@
-function gX = gpDynamicsSequenceLogLikeGradient(model, Xraw)
+function gX = gpDynamicsSequenceLogLikeGradient(model, Xraw,varargin)
 
 % GPDYNAMICSSEQUENCELOGLIKEGRADIENT Log-likelihood gradient for of a sequence of the GP-LVM dynamics.
 % FORMAT
@@ -55,3 +55,9 @@ gX(ind_in,:) = gX(ind_in,:) + gDynX;
 if isfield(model, 'prior') &  ~isempty(model.prior)
   gX(1,:) = gX(1,:) + priorGradient(model.prior, model.X(1,:));
 end
+
+tmp = zeros(size(gX,1),length(model.indexAll));
+tmp(:,model.indexOut) = gX;
+gX = tmp;
+
+return
