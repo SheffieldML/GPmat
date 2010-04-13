@@ -15,13 +15,12 @@ function handle = xyzankurModify(handle,pos)
 % MOCAP
 
 
-  joint = xyzankur2joint(pos);
-  
-  if(iscell(handle))
-    for(i = 1:1:length(handle))
-      xyzankurDraw(joint,handle{i}); 
-    end
-  else
-    xyzankurDraw(joint,handle);
+joint = xyzankur2joint(pos);
+
+if(iscell(handle))
+  for(i = 1:1:length(handle))
+    xyzankurDraw(joint,handle{i}); 
   end
+else
+  xyzankurDraw(joint,handle);
 end
