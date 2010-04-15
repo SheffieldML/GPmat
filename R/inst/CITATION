@@ -1,16 +1,16 @@
-citHeader("The tiger package is based on a body of methodological
-research.  Citing tiger in publications will usually involve citing
+citHeader("The tigre package is based on a body of methodological
+research.  Citing tigre in publications will usually involve citing
 one or more of the methodology papers that the software is based on:")
 
 citEntry(entry="Article",
   author =       "Antti Honkela and Charles Girardot and E. Hilary Gustafson and Ya-Hsin Liu and Eileen E.M. Furlong and Neil D. Lawrence and Magnus Rattray",
-  title =        "A model-based method for transcription factor target identification with limited data",
+  title =        "Model-based method for transcription factor target identification with limited data",
   journal =      "Proc Natl Acad Sci U S A",
   year =         "2010",
   note =         "In press",
   textVersion = paste(
     "Antti Honkela, Charles Girardot, E. Hilary Gustafson, Ya-Hsin Liu, Eileen E. M. Furlong, Neil D. Lawrence, and Magnus Rattray.",
-    "A model-based method for transcription factor target identification with limited data.",
+    "Model-based method for transcription factor target identification with limited data.",
     "Proc Natl Acad Sci U S A, 2010.",
     "In press."
   )
