@@ -1,4 +1,4 @@
-useDynLib("tiger", "_ClnDiffErfs")
+useDynLib("tigre", "_ClnDiffErfs")
 
 importClassesFrom(Biobase, AnnotatedDataFrame, AssayData, eSet, ExpressionSet,
                   MIAME, Versioned, VersionedBiobase, Versions)

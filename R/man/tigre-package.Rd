@@ -1,9 +1,10 @@
-\name{tiger-package}
-\alias{tiger-package}
-\alias{tiger}
+\name{tigre-package}
+\alias{tigre-package}
+\alias{tigre}
 \docType{package}
 \title{
-  tiger - Transcription factor Inference through Gaussian process Expression Reconstruction
+  tigre - Transcription factor Inference through Gaussian process
+  Reconstruction of Expression
 }
 \description{
   This package implements the method of Gao et al. (2008) and Honkela et
@@ -14,10 +15,10 @@
 }
 \details{
   \tabular{ll}{
-    Package: \tab tiger\cr
+    Package: \tab tigre\cr
     Type: \tab Package\cr
-    Version: \tab 0.9.1\cr
-    Date: \tab 2010-03-23\cr
+    Version: \tab 0.9.4\cr
+    Date: \tab 2010-04-12\cr
     License: \tab A-GPL Version 3\cr
   }
   For details of using the package please refer to the Vignette.
@@ -35,7 +36,7 @@
 
   A.~Honkela, C.~Girardot, E.~H. Gustafson, Y.-H. Liu,
   E.~E.~M. Furlong, N.~D. Lawrence, and M.~Rattray.
-  A model-based method for transcription factor target
+  Model-based method for transcription factor target
   identification with limited data.
   \emph{Proceedings of the National Academy of Sciences of the USA}
   (2010). In press.

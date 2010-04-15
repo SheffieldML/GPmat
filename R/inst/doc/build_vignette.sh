@@ -6,7 +6,7 @@ else
     Rbinary="$1" ;
 fi
 
-ln -s tiger.Rnw.ignore tiger.Rnw
-$Rbinary CMD Sweave tiger.Rnw
-rm tiger.Rnw
-mv tiger.tex tiger.Rnw
+ln -s tigre.Rnw.real_source tigre.Rnw
+$Rbinary CMD Sweave tigre.Rnw
+rm tigre.Rnw
+mv tigre.tex tigre.Rnw

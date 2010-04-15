@@ -1,19 +1,19 @@
-%\VignetteIndexEntry{tiger User Guide}
+%\VignetteIndexEntry{tigre User Guide}
 %\VignetteKeywords{TimeCourse, GeneExpression, Transcription}
 %\VignetteDepends{Biobase, annotate, puma}
-%\VignettePackage{tiger}
+%\VignettePackage{tigre}
 \documentclass[a4paper]{article}
 \usepackage{url}
 \usepackage[authoryear,round]{natbib}
 
-\title{tiger User Guide}
+\title{tigre User Guide}
 \author{Antti Honkela, Pei Gao, Jonatan Ropponen, \\
   Magnus Rattray, and Neil D. Lawrence}
 
 \newcommand{\Rfunction}[1]{{\texttt{#1}}}
 \newcommand{\Robject}[1]{{\texttt{#1}}}
 \newcommand{\Rpackage}[1]{{\textit{#1}}}
-\newcommand{\tiger}{\Rpackage{tiger}}
+\newcommand{\tigre}{\Rpackage{tigre}}
 
 \usepackage{Sweave}
 \begin{document}
@@ -22,17 +22,17 @@
 
 \section{Abstract}
 
-The \tiger{} package implements our methodology of Gaussian process
+The \tigre{} package implements our methodology of Gaussian process
 differential equation models for analysis of gene expression time
 series from single input motif networks.  The package can be used for
 inferring unobserved transcription factor (TF) protein concentrations
 from expression measurements of known target genes, or for ranking
 candidate targets of a TF.
 
-\section{Citing \tiger{}}
+\section{Citing \tigre{}}
 
-The \tiger{} package is based on a body of methodological research.
-Citing \tiger{} in publications will usually involve citing one or more
+The \tigre{} package is based on a body of methodological research.
+Citing \tigre{} in publications will usually involve citing one or more
 of the methodology papers \citep{Lawrence2007,Gao2008,Honkela2010PNAS} that the
 software is based on as well as citing the software package itself.
 
@@ -46,9 +46,9 @@ paper~\citep{Honkela2010PNAS}\footnote{Note that the results reported
   in the paper were run using an earlier version of this package for
   MATLAB, so there can be minor differences.}.
 
-\subsection{Installing the \tiger{} package}
+\subsection{Installing the \tigre{} package}
 
-The recommended way to install \tiger{} is to use the
+The recommended way to install \tigre{} is to use the
 \Rfunction{biocLite} function available from the bioconductor
 website. Installing in this way should ensure that all appropriate
 dependencies are met.
@@ -56,19 +56,19 @@ dependencies are met.
 \begin{Schunk}
 \begin{Sinput}
 > source("http://www.bioconductor.org/biocLite.R")
-> biocLite("tiger")
+> biocLite("tigre")
 \end{Sinput}
 \end{Schunk}
 
-% To install the tiger software, unpack the software and run
+% To install the tigre software, unpack the software and run
 % \begin{verbatim}
-% R CMD INSTALL tiger
+% R CMD INSTALL tigre
 % \end{verbatim}
 
 To load the package start R and run
 \begin{Schunk}
 \begin{Sinput}
-> library(tiger)
+> library(tigre)
 \end{Sinput}
 \end{Schunk}
 
@@ -217,7 +217,7 @@ The models can be plotted using commands like
 
 \begin{figure}
   \begin{center}
-\includegraphics{tiger-009}
+\includegraphics{tigre-009}
 \end{center}
 \caption{Single target models for the gene FBgn0003486. The models for
   each repeated time series are shown in different columns.}
@@ -225,7 +225,7 @@ The models can be plotted using commands like
 
 \begin{figure}
   \begin{center}
-\includegraphics{tiger-010}
+\includegraphics{tigre-010}
 \end{center}
 \caption{Multiple-target model for all the example genes.  The
   call creates independent figures for each repeated time series.}
