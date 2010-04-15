@@ -20,6 +20,10 @@ href="http://users.ics.tkk.fi/ahonkela/">Antti Honkela</a>.
 
 RELEASEINFORMATION
 
+<p>Minor fix to demPlotMef2Models.m.
+
+<h3>Version 0.1</h3>
+
 <p>This version includes scripts used to run the experiments in the
 PNAS paper.
 

@@ -10,17 +10,11 @@ drosLoadData;
 
 tf = 'mef2';
 
-myrank = corrrank.mef2;
-
 plottargets0 = {'FBgn0010434', 'FBgn0030955', 'FBgn0035767'};
 plottargets = {};
 for k=1:length(plottargets0),
   plottargets{k} = drosexp.probes{strcmp(drosexp.genes, plottargets0{k})};
 end
-%clear m;
-%I = (1:10) + offset;
-%I = I(chip_validation.mef2(myrank(I))~= 0);
-%plottargets = drosexp.probes(myrank(I));
 close all;
 if ~exist('m'),
   for k=1:length(plottargets),
@@ -34,6 +28,3 @@ figure(3);
 set(gcf, 'PaperUnits', 'centimeters')
 set(gcf, 'PaperPosition', [0, 0, 10, 6])
 % print -depsc2 dros_gpdisim_singletarget_models
-
-
-% 2, 7, 27
