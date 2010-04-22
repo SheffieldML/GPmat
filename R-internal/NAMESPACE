@@ -10,7 +10,7 @@ importMethodsFrom(Biobase, exprs, assayData, sampleNames,
                   featureNames, phenoData, varLabels, varMetadata, pData,
                   experimentData, pubMedIds, abstract, annotation)
 
-importFrom("Biobase", "contents")
+importFrom("Biobase", "contents", "assayDataNew")
 
 importFrom("gplots", "plotCI")
 

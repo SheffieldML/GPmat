@@ -265,7 +265,7 @@ gpsimExpandParam <- function (model, params) {
   # Note: ignores funcName$hasArgs
   if (model$isHierarchical) {
     model$B <- func(params[(endVal+1):(length(params)-1)], "atox")
-    model$hierkern <- kernExpandParam(model$hierkern, params[c(1, length(params), 3:endVal)])
+    model$hierkern <- kernExpandParam(model$hierkern, params[c(1, length(params), 3:model$hierkern$nParams)])
   }
   else
     model$B <- func(params[(endVal+1):length(params)], "atox")
@@ -510,7 +510,7 @@ gpsimLogLikeGradients <- function (model) {
 
   g <- c(g, gb)
   if (model$isHierarchical) {
-    sharedIndices <- c(1, 3:model$kern$nParams)
+    sharedIndices <- c(1, 3:model$hierkern$nParams)
     g[sharedIndices] <- g[sharedIndices] + gh[sharedIndices]
     g <- c(g, gh[2])
   }
