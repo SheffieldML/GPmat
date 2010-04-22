@@ -1,6 +1,6 @@
 Package: tigre
-Version: 0.9.4
-Date: 2010-04-12
+Version: 1.0.0
+Date: 2010-04-22
 Title: Transcription factor Inference through Gaussian process Reconstruction of Expression
 Author: Antti Honkela, Pei Gao, Jonatan Ropponen, Magnus Rattray, Neil D. Lawrence
 Maintainer: Antti Honkela <antti.honkela@tkk.fi>

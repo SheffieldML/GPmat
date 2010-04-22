@@ -7,12 +7,15 @@ citEntry(entry="Article",
   title =        "Model-based method for transcription factor target identification with limited data",
   journal =      "Proc Natl Acad Sci U S A",
   year =         "2010",
-  note =         "In press",
+  doi =          "10.1073/pnas.0914285107",
+  url =          "http://dx.doi.org/10.1073/pnas.0914285107",
   textVersion = paste(
-    "Antti Honkela, Charles Girardot, E. Hilary Gustafson, Ya-Hsin Liu, Eileen E. M. Furlong, Neil D. Lawrence, and Magnus Rattray.",
-    "Model-based method for transcription factor target identification with limited data.",
-    "Proc Natl Acad Sci U S A, 2010.",
-    "In press."
+    "Antti Honkela, Charles Girardot, E. Hilary Gustafson, Ya-Hsin Liu,
+    Eileen E. M. Furlong, Neil D. Lawrence, and Magnus Rattray.",
+    "Model-based method for transcription factor target identification
+    with limited data.",
+    "Proc Natl Acad Sci U S A, Apr 2010.",
+    "DOI: 10.1073/pnas.0914285107."
   )
 )
 
