@@ -33,7 +33,7 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
     options$timeSkew <- 1000.0
   #options$gaussianInitial <- TRUE
 
-  if (length(unique(preprocData$experiments)) > 1) {
+  if (length(unique(preprocData$experiments)) == length(preprocData$experiments)) {
     options$structuredExperiments <- TRUE
     options$experiments <- preprocData$experiments
     newData <- .getProcessedData(preprocData[genes,], returnJustOne=TRUE)

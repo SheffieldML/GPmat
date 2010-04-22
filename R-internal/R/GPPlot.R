@@ -1,7 +1,7 @@
 require(gplots)
 
-GPPlot <- function(data, savepath = '', 
-                   nameMapping = NULL, predt = NULL, fileOutput=FALSE) {
+GPPlot <- function(data, savepath = '', nameMapping = NULL,
+                   predt = NULL, fileOutput=FALSE, plotTime=NULL) {
   FONTSIZE <- 10;
   LINEWIDTH <- 1;
   MARKERSIZE <- 10;
@@ -81,12 +81,15 @@ GPPlot <- function(data, savepath = '',
       } else {
         title(paste(genename, "mRNA"))
       }
-      if ("realt" %in% names(model$comp[[i]]))
-        plotTime <- model$comp[[i]]$realt
-      else if ("timesCell" %in% names(model$comp[[i]]))
-        plotTime <- model$comp[[i]]$timesCell$mRNA
-      else
-        plotTime <- model$comp[[i]]$t
+
+      if (is.null(plotTime)) {
+        if ("realt" %in% names(model$comp[[i]]))
+          plotTime <- model$comp[[i]]$realt
+        else if ("timesCell" %in% names(model$comp[[i]]))
+          plotTime <- model$comp[[i]]$timesCell$mRNA
+        else
+          plotTime <- model$comp[[i]]$t
+      }
 
       # plotCI seems to generate a lot of spurious warnings
       warnOption <- getOption('warn')
