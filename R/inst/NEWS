@@ -1,6 +1,9 @@
 Package: tigre
 ==============
 
+Version: 1.0.0 [2010-04-22]
+* Documentation and citation information updates.
+
 Version: 0.9.4 [2010-04-12]
 * Rename the package to tigre to avoid a clash with a package in CRAN.
 

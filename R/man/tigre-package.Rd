@@ -17,8 +17,8 @@
   \tabular{ll}{
     Package: \tab tigre\cr
     Type: \tab Package\cr
-    Version: \tab 0.9.4\cr
-    Date: \tab 2010-04-12\cr
+    Version: \tab 1.0.0\cr
+    Date: \tab 2010-04-22\cr
     License: \tab A-GPL Version 3\cr
   }
   For details of using the package please refer to the Vignette.
@@ -33,13 +33,14 @@
   Gaussian process modelling of latent chemical species:
   applications to inferring transcription factor activities.
   \emph{Bioinformatics} 24(16):i70--i75, 2008.
+  DOI: 10.1093/bioinformatics/btn278.
 
   A.~Honkela, C.~Girardot, E.~H. Gustafson, Y.-H. Liu,
   E.~E.~M. Furlong, N.~D. Lawrence, and M.~Rattray.
   Model-based method for transcription factor target
   identification with limited data.
-  \emph{Proceedings of the National Academy of Sciences of the USA}
-  (2010). In press.
+  \emph{Proc Natl Acad Sci U S A}, Apr 2010.
+  DOI: 10.1073/pnas.0914285107.
 }
 \keyword{ package }
 \seealso{
