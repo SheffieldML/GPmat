@@ -50,18 +50,16 @@
 \value{
   Returns the optimized model.
 }
-\author{
-  Jonatan Ropponen, Antti Honkela
-}
+\author{Antti Honkela, Pei Gao, Jonatan Ropponen, Magnus Rattray, Neil D. Lawrence}
 \seealso{
   \code{\link{GPRankTargets}, \link{GPRankTFs}}.
 }
 \examples{
-  ## Load a mmgmos preprocessed fragment of the Drosophila developmental
-  ## time series
+  # Load a mmgmos preprocessed fragment of the Drosophila developmental
+  # time series
   data(drosophila_gpsim_fragment)
 
-  ## Get the target probe names
+  # Get the target probe names
   library(annotate)
   aliasMapping <- getAnnMap("ALIAS2PROBE",
                     annotation(drosophila_gpsim_fragment))
@@ -70,9 +68,15 @@
                    annotation(drosophila_gpsim_fragment))
   targetProbe <- get('FBgn0035257', env=fbgnMapping)
 
-  ## Learn the model
+  # Create the model but do not optimise (rarely needed...)
+  model <- GPLearn(drosophila_gpsim_fragment,
+                   TF=twi, targets=targetProbe,
+                   useGpdisim=TRUE, quiet=TRUE,
+                   dontOptimise=TRUE)
+\dontrun{
+  # Create and learn the model
   model <- GPLearn(drosophila_gpsim_fragment,
                    TF=twi, targets=targetProbe,
                    useGpdisim=TRUE, quiet=TRUE)
-}
+}}
 \keyword{model}

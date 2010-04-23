@@ -29,7 +29,6 @@ gX2 <- kernGradX(kern, X1, X2)
 \code{\link{kernGradient}}
 }
 \examples{
-## Commented to save time in package checks
 kern <- kernCreate(1, 'mlp')
 g <- kernDiagGradX(kern, as.matrix(3:8))
 }

@@ -24,18 +24,16 @@ GPPlot(data, savepath = '', nameMapping = NULL, predt = NULL, fileOutput=FALSE)
   the inferred activity of the transcription factor,
   and the fitted expression level of the target(s).
 }
-\author{
-  Antti Honkela
-}
+\author{Antti Honkela}
 \seealso{
   \code{\link{GPLearn}}.
 }
-\examples{
-  ## Load a mmgmos preprocessed fragment of the Drosophila developmental
-  ## time series
+\examples{\dontrun{
+  # Load a mmgmos preprocessed fragment of the Drosophila developmental
+  # time series
   data(drosophila_gpsim_fragment)
 
-  ## Get the target probe names
+  # Get the target probe names
   library(annotate)
   aliasMapping <- getAnnMap("ALIAS2PROBE",
                     annotation(drosophila_gpsim_fragment))
@@ -44,13 +42,13 @@ GPPlot(data, savepath = '', nameMapping = NULL, predt = NULL, fileOutput=FALSE)
                    annotation(drosophila_gpsim_fragment))
   targetProbe <- get('FBgn0035257', env=fbgnMapping)
 
-  ## Learn the model
+  # Learn the model
   model <- GPLearn(drosophila_gpsim_fragment,
                    TF=twi, targets=targetProbe,
                    useGpdisim=TRUE, quiet=TRUE)
 
-  ## Plot it
+  # Plot it
   GPPlot(model, nameMapping=getAnnMap("FLYBASE",
          annotation(drosophila_gpsim_fragment)))
-}
+}}
 \keyword{model}

@@ -1,22 +1,32 @@
-import(methods)
-import(AnnotationDbi)
-
-useDynLib("tiger", "_ClnDiffErfs")
+useDynLib("tigre", "_ClnDiffErfs")
 
 importClassesFrom(Biobase, AnnotatedDataFrame, AssayData, eSet, ExpressionSet,
                   MIAME, Versioned, VersionedBiobase, Versions)
 
-importMethodsFrom(Biobase, exprs, assayData, sampleNames,
-                  featureNames, phenoData, varLabels, varMetadata, pData,
-                  experimentData, pubMedIds, abstract, annotation)
+importClassesFrom(methods, character, list, matrix, numeric)
 
-importFrom("Biobase", "contents", "assayDataNew")
+importMethodsFrom(AnnotationDbi, colnames, exists, get, ncol, tail)
 
-importFrom("gplots", "plotCI")
+importMethodsFrom(Biobase, annotation, experimentData, exprs,
+                 featureData, featureNames, phenoData)
 
-exportMethods(exprs, assayData, sampleNames, featureNames, phenoData,
-              varLabels, varMetadata, pData, experimentData, pubMedIds,
-              abstract, annotation)
+importMethodsFrom(methods, initialize, show)
+
+importMethodsFrom(puma, prcfifty, prcfive, prcninfive, prcsevfive,
+                 prctwfive)
+
+importFrom(Biobase, assayDataElement, assayDataElementNames,
+          assayDataElementReplace, assayDataNew, contents)
+
+importFrom(gplots, plotCI)
+
+importFrom(graphics, layout, lines, par, plot, title)
+
+importFrom(methods, "@<-", callNextMethod, new)
+
+importFrom(stats, optim, optimize, qgamma, qnorm, rnorm, sd)
+
+importFrom(utils, write.table)
 
 ##export everything that does not start with a . or an _
 exportPattern("^[^\\._]")

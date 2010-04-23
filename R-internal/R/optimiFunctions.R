@@ -20,7 +20,7 @@ optimiDefaultConstraint <- function (constraint) {
 optimiDefaultOptions <- function() {
   ## options: trace, maximum iteration, fnscale, reltol, default optimiser
   ## return (list(trace=TRUE, maxit=1000, fnscale=1e1, reltol=1e-4, optimiser="CG", gradcheck=FALSE, hessian=FALSE))
-  return (list(maxit=3000, ln=c(0,2), xtol=1e-4, fnTol=1e-4, optimiser="CG", gradcheck=FALSE, display=TRUE))
+  return (list(maxit=3000, ln=c(0,2), xtol=1e-4, fnTol=1e-4, optimiser="SCG", gradcheck=FALSE, display=TRUE))
 }
 
 
@@ -79,12 +79,6 @@ CGoptim <- function (x, fn, grad, options, ...) {
   ## option[4] : tolerence for fn to terminate the loop
   ## option$display : option of showing the details of optimisaton
 
-  ##if ( options$display ) {
-  ##  cat ("\n CG Optimisation begins! \n")
-  ##} else {
-  ##  cat ("\n")
-  ##}
-  
   ## y = fn (x)
   func <- function(x, ...) fn(x, ...)
       
@@ -92,12 +86,12 @@ CGoptim <- function (x, fn, grad, options, ...) {
   gradfunc <- function(x, ...) grad(x, ...)
 	
   fn_new <- func(x, ...)
-  if ( options$display ) 
-    cat ("fn0 :",fn_new, "\n")
+  #if ( display ) 
+  #  cat ("fn0 :",fn_new, "\n")
 
   grad_new <- gradfunc(x, ...)
-  if ( options$display )  
-    cat ("grad0 :",grad_new, "\n\n")
+  #if ( options$display )  
+  #  cat ("grad0 :",grad_new, "\n\n")
 	
   direction <- -grad_new
   lnSchFail <- FALSE
@@ -131,7 +125,7 @@ CGoptim <- function (x, fn, grad, options, ...) {
         xnmin <- x_old
       }
     } else {
-      cat("Line search failed! \n")
+      warning("Line search failed! \n")
       x <- xnmin
       fn_new <- fnmin
       lnSchFail <- TRUE
@@ -139,8 +133,6 @@ CGoptim <- function (x, fn, grad, options, ...) {
       xmin <- xnmin
       objective <- fnmin
       ans <- list(xmin=xmin, objective=objective, lnSchFail=lnSchFail)
-      ##if ( options$display ) 
-      ##  cat("\n Optimisation ends! \n")
       return (ans)
     }
     
@@ -148,8 +140,6 @@ CGoptim <- function (x, fn, grad, options, ...) {
       xmin <- x
       objective <- fn_new
       ans <- list(xmin=xmin, objective=objective, lnSchFail=lnSchFail)
-      ##if ( options$display ) 
-      ##  cat("\n Optimisation ends! \n")
       return (ans)
     }
     
@@ -158,14 +148,11 @@ CGoptim <- function (x, fn, grad, options, ...) {
     eta <- ( t(grad_new-grad_old) %*% grad_new ) / grad2
     direction <- direction * eta - grad_new
 
-    if ( options$display ) {
-      cat (ind, "-th objective = :", fn_new, "\t max xi: ", max(abs(x-x_old)), "\n")
-    } else {
-      cat (".")
-    }
+    if ( options$display )
+      cat(ind, "-th objective = :", fn_new, "\t max xi: ", max(abs(x-x_old)), "\n")
   }
 
-  cat("Maximum iteration reached! \n")
+  warning("Maximum iteration reached! \n")
   xmin <- x
   objective <- fn_new
   
@@ -245,9 +232,9 @@ SCGoptim <- function (x, fn, grad, options, ...) {
     while ( !is.finite(fnew) ) {
       if (display) {
         if ( fi==1 ) {   
-	  cat("\t function evaluation failed in SCG!")      
+	  message("\t function evaluation failed in SCG.")      
         } else {      
-          cat(".")
+          message(".")
         }
       }
       alpha <- alpha/2
@@ -256,7 +243,7 @@ SCGoptim <- function (x, fn, grad, options, ...) {
       fi <- fi+1
       if ( is.finite(fnew) ) {
         if (display)
-          cat("\n")
+          message("\n")
         fi <- 0
       }
     }
@@ -271,7 +258,7 @@ SCGoptim <- function (x, fn, grad, options, ...) {
       success <- 0
       fnow <- fold
     }
-    if(display)
+    if (display)
       cat("Cycle ", j, "Error ", round(fnow, digits=4), "Scale ", beta, "\n")
 
     if ( success == 1 )
@@ -314,13 +301,6 @@ SCGoptim <- function (x, fn, grad, options, ...) {
   xmin <- x
   objective <- fold
   ans <- list(xmin=xmin, objective=objective)
-  cat("Maximum number of iterations has been exceeded.\n")
+  warning("Maximum number of iterations has been exceeded.\n")
   return (ans)
 }
-  
-
-          
-        
-              
-        
- 

@@ -153,7 +153,7 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
     optOptions$display <- FALSE
 
   if (!dontOptimise) {
-    cat (c("Optimizing genes", genes, sep=" "), "\n")
+    message(c("Optimising genes", genes, "\n"), sep=" ")
     model <- modelOptimise(model, optOptions)
   }
 
@@ -219,7 +219,7 @@ GPRankTargets <- function(preprocData, TF = NULL, knownTargets = NULL,
   }
   else
     allArgs <- list(useGpdisim=useGpdisim)
-  
+
   if (!is.null(knownTargets) && length(knownTargets) > 0) {
     baselineModel <- .formModel(preprocData, TF, knownTargets, allArgs=allArgs)
     baselineParameters <- modelExtractParam(baselineModel$model,
@@ -287,18 +287,15 @@ GPRankTargets <- function(preprocData, TF = NULL, knownTargets = NULL,
 
 
 
-GPRankTFs <- function(preprocData, TFs = NULL, targets,
-                      filterLimit = 1.8, returnScoreList = TRUE,
+GPRankTFs <- function(preprocData, TFs, targets,
+                      filterLimit = 1.8, 
                       returnModels = FALSE, options = NULL,
                       scoreSaveFile = NULL) {
   if (is.null(targets)) stop("No targets specified.")
 
-  if (is.list(testTargets))
-    testTargets <- unlist(testTargets) 
+  if (is.list(targets))
+    targets <- unlist(targets) 
 
-  if (is.list(knownTargets))
-    knownTargets <- unlist(knownTargets)
-  
   numberOfTargets <- length(targets)
 
   genes = c(TFs, targets)
@@ -345,13 +342,13 @@ GPRankTFs <- function(preprocData, TFs = NULL, targets,
       if (returnModels)
         rankedModels[[i]] <- returnData$model
     }
-    genes[[i]] <- testTargets[[i]]
+    genes[[i]] <- TFs[[i]]
 
     if (!is.null(scoreSaveFile)) {
       scoreList <- new("scoreList", params = modelParams,
                        loglikelihoods = logLikelihoods,
                        genes = genes, modelArgs = modelArgs,
-                       knownTargets = knownTargets, TF = TF)
+                       knownTargets = targets, TF = '(see genes)')
       save(scoreList, file=scoreSaveFile)
     }
   }
@@ -359,7 +356,7 @@ GPRankTFs <- function(preprocData, TFs = NULL, targets,
   scoreList <- new("scoreList", params = modelParams,
                    loglikelihoods = logLikelihoods,
                    genes = genes, modelArgs = modelArgs,
-                   knownTargets = knownTargets, TF = TF)
+                   knownTargets = targets, TF = '(see genes)')
 
   if (returnModels)
     return (list(scores=scoreList, models=rankedModels))
@@ -369,7 +366,8 @@ GPRankTFs <- function(preprocData, TFs = NULL, targets,
 
 
 
-.formModel <- function(preprocData, TF = NULL, knownTargets = NULL, testTarget = NULL, allArgs = NULL) {
+.formModel <- function(preprocData, TF = NULL, knownTargets = NULL,
+                       testTarget = NULL, allArgs = NULL) {
 
   if (!is.null(testTarget))
     targets <- append(knownTargets, testTarget)
@@ -383,7 +381,7 @@ GPRankTFs <- function(preprocData, TFs = NULL, targets,
     model <- GPLearn(preprocData, TF, targets, allArgs = allArgs)
     error1 <- FALSE
   }, error = function(ex) {
-    cat("Stopped due to an error.\n")
+    warning("Stopped due to an error.\n")
   })
 
   if (error1) {
@@ -392,12 +390,12 @@ GPRankTFs <- function(preprocData, TFs = NULL, targets,
     allArgs$randomize <- TRUE
     while (!success && i < 10) {
       tryCatch({
-        cat("Trying again with different parameters.\n")
+        message("Trying again with different parameters.\n")
         model <- GPLearn(preprocData, TF, targets, allArgs = allArgs)
         success <- TRUE
         error2 <- FALSE
       }, error = function(ex) {
-        cat("Stopped due to an error.\n")
+        warning("Stopped due to an error.\n")
       })
       i <- i + 1
     }

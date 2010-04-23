@@ -1,9 +1,10 @@
-\name{tiger-package}
-\alias{tiger-package}
-\alias{tiger}
+\name{tigre-package}
+\alias{tigre-package}
+\alias{tigre}
 \docType{package}
 \title{
-  tiger - Transcription factor Inference through Gaussian process Expression Reconstruction
+  tigre - Transcription factor Inference through Gaussian process
+  Reconstruction of Expression
 }
 \description{
   This package implements the method of Gao et al. (2008) and Honkela et
@@ -14,10 +15,10 @@
 }
 \details{
   \tabular{ll}{
-    Package: \tab tiger\cr
+    Package: \tab tigre\cr
     Type: \tab Package\cr
-    Version: \tab 1.0\cr
-    Date: \tab 2010-03-15\cr
+    Version: \tab 1.0.0\cr
+    Date: \tab 2010-04-22\cr
     License: \tab A-GPL Version 3\cr
   }
   For details of using the package please refer to the Vignette.
@@ -32,24 +33,25 @@
   Gaussian process modelling of latent chemical species:
   applications to inferring transcription factor activities.
   \emph{Bioinformatics} 24(16):i70--i75, 2008.
+  DOI: 10.1093/bioinformatics/btn278.
 
   A.~Honkela, C.~Girardot, E.~H. Gustafson, Y.-H. Liu,
   E.~E.~M. Furlong, N.~D. Lawrence, and M.~Rattray.
-  A model-based method for transcription factor target
+  Model-based method for transcription factor target
   identification with limited data.
-  \emph{Proceedings of the National Academy of Sciences of the USA}
-  (2010). In press.
+  \emph{Proc Natl Acad Sci U S A}, Apr 2010.
+  DOI: 10.1073/pnas.0914285107.
 }
 \keyword{ package }
 \seealso{
   \code{\link[puma:puma-package]{puma}}
 }
-\examples{
-  ## Load a mmgmos preprocessed fragment of the Drosophila developmental
-  ## time series
+\examples{\dontrun{
+  # Load a mmgmos preprocessed fragment of the Drosophila developmental
+  # time series
   data(drosophila_gpsim_fragment)
 
-  ## Get the target probe names
+  # Get the target probe names
   library(annotate)
   aliasMapping <- getAnnMap("ALIAS2PROBE",
                     annotation(drosophila_gpsim_fragment))
@@ -58,12 +60,12 @@
                    annotation(drosophila_gpsim_fragment))
   targetProbe <- get('FBgn0035257', env=fbgnMapping)
 
-  ## Learn the model
+  # Learn the model
   model <- GPLearn(drosophila_gpsim_fragment,
                    TF=twi, targets=targetProbe,
                    useGpdisim=TRUE, quiet=TRUE)
 
-  ## Plot it
+  # Plot it
   GPPlot(model, nameMapping=getAnnMap("FLYBASE",
                    annotation(drosophila_gpsim_fragment)))
-}
+}}
