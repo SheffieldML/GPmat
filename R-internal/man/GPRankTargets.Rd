@@ -1,21 +1,26 @@
 \name{GPRankTargets}
 \Rdversion{1.0}
 \alias{GPRankTargets}
-\title{Ranking possible target genes by forming optimized models}
+\alias{GPRankTFs}
+\title{Ranking possible target genes or regulators}
 \description{
-  Ranks possible target genes by forming optimized models with a fixed
+  \code{GPRankTargets} ranks possible target genes by forming
+  optimized models with a fixed
   transcription factor, a set of known target genes and targets to be
   tested. The transcription factor and the known targets are always
   included in the models while the tested targets are tested by
   including them in the models one at a time. The function determines
-  itself whether to use GPsim or GPdisim based on the input
-  arguments. Finally, the formed models are sorted based on the
-  logarithmic value of their marginal likelihood.
+  itself whether to use GPSIM or GPDISIM based on the input
+  arguments.
 }
 \usage{
 scores <- GPRankTargets(preprocData, TF = NULL, knownTargets = NULL,
-testTargets = NULL, filterLimit = 1.8, returnModels = FALSE, options =
-NULL, scoreSaveFile = NULL)
+                        testTargets = NULL, filterLimit = 1.8,
+                        returnModels = FALSE, options = NULL,
+                        scoreSaveFile = NULL)
+scores <- GPRankTFs(preprocData, TFs, targets,
+                    filterLimit = 1.8, returnModels = FALSE, options = NULL,
+                    scoreSaveFile = NULL)
 }
 \arguments{
   \item{preprocData}{The preprocessed data to be used.}
@@ -32,15 +37,21 @@ NULL, scoreSaveFile = NULL)
   \item{options}{A list of additional arguments to pass to GPLearn.}
   \item{scoreSaveFile}{Name of file to save the scores to after processing
     each gene.}
+  \item{TFs}{The transcription factors that are tested by
+    including them in the models one at a time.}
+  \item{targets}{The target genes present in all models.}
 }
 
-\details{The models are formed by calling the function formModel, which
-  in turn calls GPLearn. If there is no value given to the transcription
+\details{The models are formed by calling \code{\link{GPLearn}}.
+  If there is no value given to the transcription
   factor, GPSIM is used. Otherwise, GPDISIM is used. GPSIM needs some
   known targets. If known
   targets are given, a model is first created with only the transcription
   factor and the known targets. The parameters extracted from this model
   are used as initial parameters of the models with test targets.
+  
+  \code{GPRankTFs} is very similar to \code{GPRankTargets}, except
+  it loops over candidate regulators, not candidate targets.
 }
 
 \value{
@@ -49,18 +60,16 @@ NULL, scoreSaveFile = NULL)
   If returnModels is true,
   the function returns a list of the calculated models.
 }
-\author{
-  Jonatan Ropponen, Antti Honkela
-}
+\author{Antti Honkela, Jonatan Ropponen, Magnus Rattray, Neil D. Lawrence}
 \seealso{
-  \code{\link{GPLearn}, \link{GPRankTFs}, \linkS4class{scoreList}, \link{generateModels}}.
+  \code{\link{GPLearn}, \linkS4class{scoreList}, \link{generateModels}}.
 }
-\examples{
-  ## Load a mmgmos preprocessed fragment of the Drosophila developmental
-  ## time series
+\examples{\dontrun{
+  # Load a mmgmos preprocessed fragment of the Drosophila developmental
+  # time series
   data(drosophila_gpsim_fragment)
 
-  ## Get the target probe names
+  # Get the target probe names
   targets <- c('FBgn0003486', 'FBgn0033188', 'FBgn0035257')
   library(annotate)
   aliasMapping <- getAnnMap("ALIAS2PROBE",
@@ -74,5 +83,5 @@ NULL, scoreSaveFile = NULL)
                           testTargets=targetProbes,
                           options=list(quiet=TRUE),
                           filterLimit=1.8)
-}
+}}
 \keyword{model}

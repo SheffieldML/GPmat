@@ -9,7 +9,7 @@
 \alias{initialize,GPModel-method}
 \alias{is.GPModel,GPModel-method}
 \alias{modelStruct,GPModel-method}
-\alias{modelStruct<-,GPModel,matrix-method}
+\alias{modelStruct<-,GPModel,list-method}
 \alias{modelType,GPModel-method}
 \alias{show,GPModel-method}
 
