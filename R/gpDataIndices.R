@@ -1,6 +1,5 @@
 gpDataIndices <- function(model, dimNo, blockNo) {
-
-  if (nargs > 2) {
+  if (nargs() > 2) {
     if (model$approx != "pitc")
       stop("Block number only relevant for pitc approximation.")
     else {
