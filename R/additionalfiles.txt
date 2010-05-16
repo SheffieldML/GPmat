@@ -5,9 +5,14 @@ Copy:
 ~/mlprojects/gpsim/R/R/whiteKernFunctions.R
 ~/mlprojects/gpsim/R/R/cmpndKernFunctions.R
 ~/mlprojects/gpsim/R/R/miscFunctions.R
+~/mlprojects/gpsim/R/R/optimiFunctions.R
 
 # These should probably be moved to other folders in ~/mlprojects/:
 Move:
-~/mlprojects/gp/R/modelOut.R		=>	~/mlprojects/mltools/R/
-~/mlprojects/gp/R/noiseOut.R		=>	~/mlprojects/noise/R/
-~/mlprojects/gp/R/gaussianNoiseOut.R	=>	~/mlprojects/noise/R/
+~/mlprojects/gp/R/modelOut.R			=>	~/mlprojects/mltools/R/
+~/mlprojects/gp/R/noiseOut.R			=>	~/mlprojects/noise/R/
+~/mlprojects/gp/R/gaussianNoiseOut.R		=>	~/mlprojects/noise/R/
+~/mlprojects/gp/R/noiseCreate.R			=>	~/mlprojects/noise/R/
+~/mlprojects/gp/R/noiseParamInit.R		=>	~/mlprojects/noise/R/
+~/mlprojects/gp/R/gaussianNoiseParamInit.R	=>	~/mlprojects/noise/R/
+~/mlprojects/gp/R/cmpndNoiseParamInit.R		=>	~/mlprojects/noise/R/
