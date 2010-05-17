@@ -6,7 +6,7 @@ gpOptions function (approx) {
     options$approx = approx
   
   ## Select type of optimiser.
-  options$optimiser = "scg"
+  options$optimiser = "SCG"
 
   ## Set to true to learn output scales.
   options$learnScales = FALSE
