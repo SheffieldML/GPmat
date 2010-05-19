@@ -11,6 +11,9 @@ Software (GP).
 
 RELEASEINFORMATION
 
+Modifications by Carl Henrik Ek for compatability with the SGPLVM toolbox.
+
+<h4>Version 0.134</h4>
 
 <p>Updates to allow deconstruction of model files when writing to disk (gpWriteResult, gpLoadResult, gpDeconstruct, gpReconstruct).
 
