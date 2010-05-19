@@ -123,15 +123,26 @@ function [Y, lbls, Ytest, lblstest] = lvmLoadData(dataset, seedVal)
     Y = data./repmat(sum(data, 2), 1, size(data, 2));
     
    case 'spellman'
-    fileName = ([baseDir 'combined.txt']);
-    [geneName, ...
-     y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, y12, ...
-     y13, y14, y15, y16, y17, y18, y19, y20, y21, y22, y23, y24] = ...
-        textread(fileName, '%q %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f', ...
-                 'headerlines', 1, 'whitespace', '', 'delimiter', '\t');
-    
-    Y = [y1 y2 y3 y4 y5 y6 y7 y8 y9 y10 y11 y12 y13 y14 y15 y16 y17 y18 y19 y20 y21 y22 y23 y24]';
-    
+    try 
+      load([baseDir 'spellman.mat']);
+    catch
+      [void, errid] = lasterr;
+      if strcmp(errid, 'MATLAB:load:couldNotReadFile');
+        fileName = ([baseDir 'combined.txt']);
+        [geneName, ...
+         y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, y12, ...
+         y13, y14, y15, y16, y17, y18, y19, y20, y21, y22, y23, y24] = ...
+            textread(fileName, '%q %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f', ...
+                     'headerlines', 1, 'whitespace', '', 'delimiter', '\t');
+        
+        Y = [y1 y2 y3 y4 y5 y6 y7 y8 y9 y10 ...
+             y11 y12 y13 y14 y15 y16 y17 y18 y19 y20 ...
+             y21 y22 y23 y24]';
+        save([baseDir 'spellman.mat'], 'Y');
+      else
+        error(lasterr);
+      end
+    end
    case 'robotWireless'
     Ydat = parseWirelessData([baseDir 'uw-floor.txt']);
     Ydat = (Ydat + 85)/15;
