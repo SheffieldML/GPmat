@@ -8,10 +8,13 @@
 
 <h1>Fast GP-LVM Software</h1>
 
-<p>This page describes examples of how to use the fast Gaussian process latent variable model Software (FGPLVM).
+<p>This page describes examples of how to use the fast Gaussian process latent variable model Software (FGPLVM). This toolbox allows for larger GP-LVM models through using the sparse approximations suggested in papers by authors including Titsias, Snelson, Ghahramani, Seeger, and Lawrence.
 
 RELEASEINFORMATION
 
+<p>Changes for compatibility with new SGPLVM toolbox by Carl Henrik Ek.
+
+<h4>Version 0.162</h4>
 
 <p>Added new files fgplvmWriteResults fgplvmLoadResults for saving smaller model files.
 
