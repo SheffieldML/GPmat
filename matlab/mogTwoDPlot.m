@@ -61,6 +61,6 @@ else
     returnVal = plot(mod2.Y(:, 1), mod2.Y(:, 2), 'rx');
   end
 end
-set(returnVal, 'markersize', 10);
-set(returnVal, 'linewidth', 2);
+%set(returnVal, 'markersize', 10);
+%set(returnVal, 'linewidth', 2);
 
