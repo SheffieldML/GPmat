@@ -1,4 +1,5 @@
-function safeSave(fname, varargin),
+function safeSave(fname, varargin)
+
 % SAFESAVE Safe save
 % FORMAT
 % DESC Saves given variables in such a way that existing files are
@@ -12,28 +13,31 @@ function safeSave(fname, varargin),
 %
 % COPYRIGHT : Antti Honkela, 2010
 
-saveargs = cell(size(varargin));
-for k=1:length(varargin),
-  if isempty(inputname(k+1)),
-    saveargs{k} = varargin{k};
-  else
-    saveargs{k} = inputname(k+1);
+% NDLUTIL
+
+  saveargs = cell(size(varargin));
+  for k=1:length(varargin),
+    if isempty(inputname(k+1)),
+      saveargs{k} = varargin{k};
+    else
+      saveargs{k} = inputname(k+1);
+    end
   end
-end
-argstring = sprintf(', ''%s''', saveargs{:});
-
-% First time saving to this file
-if ~exist(fname, 'file'),
-  callstr = sprintf('save(''%s''%s)', fname, argstring);
+  argstring = sprintf(', ''%s''', saveargs{:});
+  
+  % First time saving to this file
+  if ~exist(fname, 'file'),
+    callstr = sprintf('save(''%s''%s)', fname, argstring);
+    evalin('caller', callstr);
+    return;
+  end
+  
+  % If file exists, first write to a different name
+  [pathstr, name, ext, versn] = fileparts(fname);
+  tmpfname = fullfile(pathstr,[name '_tmp' ext versn]);
+  callstr = sprintf('save(''%s''%s)', tmpfname, argstring);
   evalin('caller', callstr);
-  return;
+  
+  % Then move to overwrite the original
+  movefile(tmpfname, fname);
 end
-
-% If file exists, first write to a different name
-[pathstr, name, ext, versn] = fileparts(fname);
-tmpfname = fullfile(pathstr,[name '_tmp' ext versn]);
-callstr = sprintf('save(''%s''%s)', tmpfname, argstring);
-evalin('caller', callstr);
-
-% Then move to overwrite the original
-movefile(tmpfname, fname);
