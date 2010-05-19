@@ -1,5 +1,17 @@
 function Trans = gpComputeTranslationLogLikelihood(model,Xlabel,verbose);
 
+% GPCOMPUTETRANSLATIONLOGLIKELIHOOD  
+% FORMAT
+% DESC  
+% ARG model : 
+% ARG Xlabel : 
+% ARG verbose :
+% RETURN Trans :
+%
+% COPYRIGHT : Carl Henrik Ek, 2010
+
+% GP
+
 
 if(iscell(Xlabel)&&size(Xlabel{1},1)==1)
   Xlabel = cell2mat(Xlabel);

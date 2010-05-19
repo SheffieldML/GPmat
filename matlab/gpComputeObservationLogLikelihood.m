@@ -1,35 +1,47 @@
-function Obs = gpComputeObservationLogLikelihood(model,X,Y,verbose)
+function Obs = gpComputeObservationLogLikelihood(model, X, Y, verbose)
 
-% X label set
+% GPCOMPUTEOBSERVATIONLOGLIKELIHOOD  
+% FORMAT
+% DESC 
+% ARG model : the model
+% ARG X :
+% ARG Y : 
+% ARG verbose :
+% RETURN Obs :
+%
+% COPYRIGHT : Carl Henrik Ek, 2010
 
-if(verbose)
-  handle_waitbar = waitbar(0,'Computing Observation Loglikelihood');
-end
-if(~iscell(X))
-  % stationary label set
-  Obs = zeros(size(X,1),size(Y,1));
-  for(label = 1:1:size(X,1))
-    for(observation = 1:1:size(Y,1))
-      Obs(label,observation) = gpPointLogLikelihood(model,X(label,:),Y(observation,:));
+% GP
+  
+  if(verbose)
+    handle_waitbar = waitbar(0,'Computing Observation Loglikelihood');
+  end
+  if(~iscell(X))
+    % stationary label set
+    Obs = zeros(size(X,1),size(Y,1));
+    for(label = 1:1:size(X,1))
+      for(observation = 1:1:size(Y,1))
+        Obs(label,observation) = gpPointLogLikelihood(model,X(label,:),Y(observation,:));
+      end
+      if(verbose)
+        waitbar(label/size(X,1));
+      end
     end
-    if(verbose)
-      waitbar(label/size(X,1));
+  else
+    % non-stationary label set
+    Obs = zeros(size(X{1},1),size(Y,1));
+    for(label = 1:1:size(X{1},1))
+      for(observation = 1:1:size(Y,1))
+        Obs(label,observation) = gpPointLogLikelihood(model,X{observation}(label,:),Y(observation,:));
+      end
+      if(verbose)
+        waitbar(label/size(X{1},1));
+      end
     end
   end
-else
-  % non-stationary label set
-  Obs = zeros(size(X{1},1),size(Y,1));
-  for(label = 1:1:size(X{1},1))
-    for(observation = 1:1:size(Y,1))
-      Obs(label,observation) = gpPointLogLikelihood(model,X{observation}(label,:),Y(observation,:));
-    end
-    if(verbose)
-      waitbar(label/size(X{1},1));
-    end
+  if(verbose)
+    close(handle_waitbar);
   end
-end
-if(verbose)
-  close(handle_waitbar);
-end
 
-return;
+  return;
+end
