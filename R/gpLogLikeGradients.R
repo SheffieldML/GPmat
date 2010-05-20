@@ -19,10 +19,10 @@ gpLogLikeGradients <- function(model, X, M, X_u, gX_u.return=FALSE, gX.return=FA
 
   g_scaleBias = gpScaleBiasGradient(model)
   g_meanFunc = list()
-  if ("meanFunction" %in% names(model) && !is.null(model$meanFunction))
+  if ("meanFunction" %in% names(model) && length(model$meanFunction)>0)
     g_meanFunc = gpMeanFunctionGradient(model)    
 
-  if (model.approx == "ftc") {
+  if (model$approx == "ftc") {
     ## Full training conditional.
     if (gX_u.return && gX.return) {
 #       ## Prepare to Compute Gradients with respect to X
@@ -87,7 +87,7 @@ gpLogLikeGradients <- function(model, X, M, X_u, gX_u.return=FALSE, gX.return=FA
 #           stop("Unusual dimensions for model.beta.")
       }
     }
-  } else if (model.approx %in% c("dtc", "dtcvar", "fitc", "pitc")) {
+  } else if (model$approx %in% c("dtc", "dtcvar", "fitc", "pitc")) {
 #     ## Sparse approximations.
 #     ## [gK_u, gK_uf, gK_star, g_beta] = gpCovGrads(model, M) ## !!!
 #     gK = gpCovGrads(model, M) ## !!!
@@ -141,11 +141,11 @@ gpLogLikeGradients <- function(model, X, M, X_u, gX_u.return=FALSE, gX.return=FA
   } else
     stop("Unknown model approximation.")
 
-  if (model.approx == "ftc") {
+  if (model$approx == "ftc") {
     ## Full training conditional. Nothing required here.
-  } else if (model.approx == "dtc") {
+  } else if (model$approx == "dtc") {
     ## Deterministic training conditional.  
-  } else if (model.approx %in% c("fitc","dtcvar")) {
+  } else if (model$approx %in% c("fitc","dtcvar")) {
 #     ## Fully independent training conditional.
 #     ## Variational sparse approximation.
 #     
@@ -158,7 +158,7 @@ gpLogLikeGradients <- function(model, X, M, X_u, gX_u.return=FALSE, gX.return=FA
 #     
 #     ## deal with diagonal term's affect on kernel parameters.
 #     g_param = g_param + kernDiagGradient(model$kern, X, gK_star) ## !!!
-  } else if (model.approx == "pitc") {
+  } else if (model$approx == "pitc") {
 #     ## Partially independent training conditional.    
 #     if (gX_u.return && gX.return) { #nargout > 2
 #       ## deal with block diagonal term's effect on X gradients.
@@ -193,7 +193,7 @@ gpLogLikeGradients <- function(model, X, M, X_u, gX_u.return=FALSE, gX.return=FA
     stop("Unrecognised model approximation")
   
   if (!(gX_u.return && gX.return && g_beta.return)) { #if (nargout < 4)
-    if ((!"optimiseBeta" %in% names(model) && model.approx!="ftc") || model$optimiseBeta)
+    if ((!"optimiseBeta" %in% names(model) && model$approx!="ftc") || model$optimiseBeta)
       ## append beta gradient to end of parameters
       gParam = c(g_param, g_meanFunc, g_scaleBias, g_beta)
     else

@@ -1,6 +1,6 @@
 gpLogLikelihood <- function(model) {
 
-  if (model.approx == "ftc") {
+  if (model$approx == "ftc") {
     ## No approximation, just do a full computation on K.
     ## For very high D, we use the matrix S which is M*M'
     if ("S" %in% names(model)) {
@@ -52,7 +52,7 @@ gpLogLikelihood <- function(model) {
 	  stop("Not implemented variable length beta yet.")
       }
     }
-  } else if (model.approx == "fitc") {
+  } else if (model$approx == "fitc") {
     ## Fully independent training conditional.
     if ((!"isSpherical" %in% names(model)) || model$isSpherical) {
       if (length(model$beta)==1) {
@@ -105,7 +105,7 @@ gpLogLikelihood <- function(model) {
       } else
 	stop("Variable length Beta not implemented yet.")
     }
-  } else if (model.approx == "pitc") {
+  } else if (model$approx == "pitc") {
     ## Partially independent training conditional.
     if ((!"isSpherical" %in% names(model)) || model$isSpherical) {
       if (length(model$beta)==1) {

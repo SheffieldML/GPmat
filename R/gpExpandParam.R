@@ -1,6 +1,6 @@
 gpExpandParam <- function (model, params) {
   
-  if (model$approx == "ftc" || model.fixInducing)
+  if (model$approx == "ftc" || model$fixInducing)
     endVal = 0
   else {
     startVal = 1
@@ -12,7 +12,7 @@ gpExpandParam <- function (model, params) {
   model$kern = kernExpandParam(model$kern, params[startVal:endVal])
 
   ## Check if there is a mean function.
-  if ("meanFunction" %in% names(model) && !is.null(model$meanFunction)) {
+  if ("meanFunction" %in% names(model) && length(model$meanFunction)>0) {
     startVal = endVal + 1
     endVal = endVal + model$meanFunction$numParams
     model$meanFunction = modelExpandParam(model$meanFunction, params[startVal:endVal])
@@ -39,7 +39,7 @@ gpExpandParam <- function (model, params) {
   model$nParams = endVal
 
   ## Update the kernel representations.
-  if (model.approx == "ftc") {
+  if (model$approx == "ftc") {
     model = gpUpdateKernels(model, model$X, model$X_u)
   } else if (model$approx %in% c("dtc", "dtcvar", "fitc", "pitc")) {
     model = gpUpdateKernels(model, model$X, model$X_u)

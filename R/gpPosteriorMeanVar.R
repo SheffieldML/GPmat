@@ -74,7 +74,7 @@ gpPosteriorMeanVar <- function(model, X, varsigma.return=FALSE) {
     ## Add the bias back in.
     mu[indices,] = mu[indices,] + kronecker(matrix(1,length(indices),1), model$bias)
     ## If the mean function is present, add it it.
-    if (("meanFunction" %in% names(model)) && !is.null(model$meanFunction)) {
+    if (("meanFunction" %in% names(model)) && length(model$meanFunction)>0) {
       mu[indices,] = mu[indices,] + modelOut(model$meanFunction, X[indices,])
     }
     ## rescale the variances

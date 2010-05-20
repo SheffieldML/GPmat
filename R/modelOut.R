@@ -8,7 +8,7 @@ modelOut <- function(model, X, Phi.return=FALSE, ...) {
   } else
     Y = fhandle(model, X, ...)
   
-  if ("indexOut" %in% names(model) && !is.null(model$indexOut))
+  if ("indexOut" %in% names(model) && length(model$indexOut)>0)
     Y[,setdiff(c(1:dim(Y)[2]),model$indexOut)] = NaN
 
   if (Phi.return)

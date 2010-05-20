@@ -3,16 +3,18 @@ gpUpdateAD <- function (model, X) {
   if (nargs() < 2)
     X = model$X
 
-  if (model.approx == "ftc") {
+  if (model$approx == "ftc") {
     ## Compute the inner product values.
     if (!"S" %in% names(model)) {
       if ((!"isSpherical" %in% names(model)) || model$isSpherical) {
-	for (i in 1:model$d)
-	  model$innerProducts[1, i] = model$m[, i] %*% model$invK_uu %*% model$m[, i]
+	for (i in 1:model$d) {
+	  # allocate memory for innerProducts
+	  model$innerProducts[1, i] = t(model$m[, i])%*%model$invK_uu%*%model$m[, i]
+	}
       } else {
 	for (i in 1:model$d) {
 	  ind = gpDataIndices(model, i)
-	  model$innerProducts[1, i] = model$m[, i] %*% model$invK_uu[[i]] %*% model$m[, i]
+	  model$innerProducts[1, i] = t(model$m[ind, i])%*%model$invK_uu[[i]]%*%model$m[ind, i]
 	}
       }
     }
@@ -30,7 +32,7 @@ gpUpdateAD <- function (model, X) {
       for (i in 1:model$d) {
 	E = model$K_uf %*% model$m[, i]
 	model$innerProducts[1, i] = model$beta %*%
-	  (model$m[:, i]%*%model$m[, i] - E%*%model$Ainv%*%E)
+	  (model$m[, i]%*%model$m[, i] - E%*%model$Ainv%*%E)
       }
 
       if (model$approx == "dtcvar") {
@@ -61,7 +63,7 @@ gpUpdateAD <- function (model, X) {
       if (model$approx == "dtcvar")
 	stop("Non spherical implementation for dtcvar not yet done.")
     }
-  } else if (model.approx == "fitc") {
+  } else if (model$approx == "fitc") {
     if ((!"isSpherical" %in% names(model)) || model$isSpherical) {
       model$A = 1/model$beta%*%model$K_uu
       K_ufDinvm = matrix(0,model$k, model$d)
@@ -74,7 +76,7 @@ gpUpdateAD <- function (model, X) {
 	model$logDetD[i] = 2* sum( log ( diag(invD$chol) ) )
 	K_ufDinvK_uf = model.$K_uf[, ind]%*%model$Dinv[[i]]%*%model$K_uf[, ind]
 	model$A = model$A + K_ufDinvK_uf
-	Dinvm[[i]] = model$Dinv{i}%*%model$m[ind, ]
+	Dinvm[[i]] = model$Dinv[[i]]%*%model$m[ind ,]
 	K_ufDinvm = K_ufDinvm + model$K_uf[, ind]%*%Dinvm[[i]]
       }
       ## This can become unstable when K_ufDinvK_uf is low rank.
@@ -83,8 +85,8 @@ gpUpdateAD <- function (model, X) {
       model$logDetA = 2* sum( log ( diag(invA$chol) ) )
       ## compute inner products
       for (i in 1:model$d)
-	model$innerProducts[1, i] = - model$beta%*%K_ufDinvm[, i]%*%model$Ainv
-	  %*%K_ufDinvm[, i]
+	model$innerProducts[1, i] = - model$beta%*%K_ufDinvm[, i]%*%model$Ainv%*%
+	  K_ufDinvm[, i]
 
       for (i in 1:length(model$blockEnd)) {
 	ind = gpBlockIndices(model, i)
@@ -115,9 +117,9 @@ gpUpdateAD <- function (model, X) {
       }
       
       ## compute inner products
-      for (j = 1:model$d)
-	model$innerProducts[1, j] = - model$beta%*%K_ufDinvm[, j]%*%model$Ainv[[j]]
-	  %*%K_ufDinvm[, j]
+      for (j in 1:model$d)
+	model$innerProducts[1, j] = - model$beta%*%K_ufDinvm[, j]%*%model$Ainv[[j]]%*%
+	  K_ufDinvm[, j]
 
       for (i in 1:length(model$blockEnd)) {
 	for (j in 1:model$d) {

@@ -6,18 +6,18 @@ gpMeanFunctionGradient <- function(model) {
     if (model$isMissingData)
       stop("Currently not implemented for missing data.")
     
-  if ("meanFunction" %in% names(model) && !is.null(model$meanFunction)) {
+  if ("meanFunction" %in% names(model) && length(model$meanFunction)>0) {
     g = matrix(0, 1, model$meanFunction$numParams)
     ## compute gradients here.
-    if (model.approx == "ftc")
+    if (model$approx == "ftc")
       gmu = model$invK_uu%*%model$m
-    else if (model.approx %in% c("dtc", "dtcvar"))
+    else if (model$approx %in% c("dtc", "dtcvar"))
       gmu = (model$m - model$K_uf%*%model$Ainv%*%(model$K_uf%*%model$m))%*%model$beta
-    else if (model.approx == "fitc") {
+    else if (model$approx == "fitc") {
       Dinvm = model$Dinv%*%model$m
       gmu = (Dinvm-(model$Dinv%*%model$K_uf)
 	      %*%(model$Ainv%*%model$K_uf)%*%Dinvm)%*%model$beta
-    } else if (model.approx == "pitc") {
+    } else if (model$approx == "pitc") {
       ## Loop through the blocks computing each part to be added.
       gmu = matrix(0, model$N, model$d)
       K_ufDinvm = matrix(0,model$k, model$d)

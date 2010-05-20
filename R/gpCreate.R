@@ -10,37 +10,33 @@ gpCreate <- function(q, d, X, y, options) {
   if (options$isMissingData && options$isSpherical)
     stop("If there is missing data, spherical flag cannot be set.")
 
-#   y <- as.matrix(y)
+  y = as.matrix(y); X = as.matrix(X)
 
-  model <- list(type="gp", y=as.array(y), X=X, approx=options$approx,
+  model <- list(type="gp", y=y, X=X, approx=options$approx,
     learnScales=options$learnScales, scaleTransform=optimiDefaultConstraint("positive"),
     optimiseBeta=options$optimiseBeta, betaTransform=optimiDefaultConstraint("positive"),
     q=dim(X)[2], d=dim(y)[2], N=dim(y)[1])
 
   ## Set up a mean function if one is given.
-  if (("meanFunction" %in% names(options)) && !is.null(options$meanFunction)) {
-    if is.list(options$meanFunction)
-      model$meanFunction = options$meanFunction
-    else if !is.null(options$meanFunction)
-      model$meanFunction = modelCreate(options$meanFunction, model$q, model$d, options$meanFunctionOptions)
+  if (("meanFunction" %in% names(options)) && length(options$meanFunction)>0) {
+#     if (is.list(options$meanFunction))
+#       model$meanFunction = options$meanFunction
+#     else
+      model$meanFunction = modelCreate(options$meanFunction,
+	model$q, model$d, options$meanFunctionOptions)
   }
 
   model$optimiser = options$optimiser
-  
-  model$isMissingData = options$isMissingData
-  if (model$isMissingData) {
-    for (i in 1:model$d)
-      model$indexPresent[[i]] = which(!is.nan(y[,i]))
-  }
-
   model$isSpherical = options$isSpherical
+  model$isMissingData = options$isMissingData
 
   if (!model$isMissingData) {
     model$bias = mean(y)
     model$scale = matrix(1,1,model$d) # ones(1,d)
   } else {
     for (i in 1:model$d) {
-      if is.null(model$indexPresent[[i]]) {
+      model$indexPresent[[i]] = which(!is.nan(y[,i]))
+      if (length(model$indexPresent[[i]])==0) {
 	model$bias[i] = 0
 	model$scale[i] = 1
       } else {
@@ -106,7 +102,7 @@ gpCreate <- function(q, d, X, y, options) {
     model$X_u = list()
     if (model$optimiseBeta) {
       model$beta = options$beta
-      if (is.null(options$beta))
+      if (length(options$beta)==0)
 	stop("options.beta cannot be empty if it is being optimised.")
     }
   } else if (options$approx %in% c("dtc", "dtcvar", "fitc", "pitc")) {

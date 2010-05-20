@@ -1,7 +1,7 @@
-gpOptions function (approx) {
+gpOptions <- function (approx="ftc") {
+
   options = list()
 
-  options$approx = "ftc"
   if (nargs() > 0)
     options$approx = approx
   
