@@ -137,15 +137,15 @@ gpLogLikelihood <- function(model) {
 	  K_ufDinvm = matrix(0, model$k, 1)
 	  for (i in 1:length(model$blockEnd)) {
 	    ind = gpDataIndices(model, j, i)
-	    Dinvm[[i, j]] = model$Dinv[[i, j]]%*%model$m[ind, j]
-	    K_ufDinvm = K_ufDinvm + model$K_uf[, ind]%*%Dinvm[[i, j]]
+	    Dinvm[[i]][[j]] = model$Dinv[[i]][[j]]%*%model$m[ind, j]
+	    K_ufDinvm = K_ufDinvm + model$K_uf[, ind]%*%Dinvm[[i]][[j]]
 	  }
 	  ll = ll - model$beta%*%sum((model$Ainv[[i]]%*%K_ufDinvm) * K_ufDinvm)
 
 	  for (i in 1:length(model$blockEnd)) {
 	    ind = gpDataIndices(model, j, i)
 	    ll = ll + model$logDetD(i, j) - length(ind)*log(model$beta)
-		    + model$beta%*%sum(Dinvm[[i, j]] * model$m[ind, j])
+		    + model$beta%*%sum(Dinvm[[i]][[j]] * model$m[ind, j])
 	    ll = ll + length(ind)*log(2*pi)
 	  }
 	}

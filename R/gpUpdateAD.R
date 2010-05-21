@@ -66,7 +66,7 @@ gpUpdateAD <- function (model, X) {
 	stop("Non spherical implementation for dtcvar not yet done.")
     }
   } else if (model$approx == "fitc") {
-    model$L = t(.jitChol(model$K_uu))
+    model$L = t(.jitChol(model$K_uu)$chol)
 
     if ((!"isSpherical" %in% names(model)) || model$isSpherical) {
       model$diagD = 1 + model$beta%*%model$diagK
@@ -94,7 +94,7 @@ gpUpdateAD <- function (model, X) {
       model$V = solve(model$L, model$K_uf) #model$L \ model$K_uf
       model$V = model$V / kronecker(matrix(1,model$k,1), t(sqrt(model$diagD))) #repmat(sqrt(model$diagD)', model$k, 1)
       model$Am = 1/model$beta%*%diag(model$k) + model$V%*%model$V
-      model$Lm = t(.jitChol(model$.Am))
+      model$Lm = t(.jitChol(model$.Am)$chol)
       model$invLmV = solve(model$Lm, model$V)
       model$scaledM = model$m / kronecker(matrix(1,1,model$k), sqrt(model$diagD))
       model$bet = model$invLmV%*%model$scaledM
@@ -123,7 +123,7 @@ gpUpdateAD <- function (model, X) {
 	model$V[[i]] = solve(model$L, model$K_uf[, ind])
 	model$V[[i]] = model$V[[i]] / kronecker(matrix(1,model$k,1), t(sqrt(model$diagD[[i]])))
 	model$Am[[i]] = 1/model$beta%*%diag(model$k) + model$V[[i]]%*%model$V[[i]]
-	model$Lm[[i]] = t(.jitChol(model$Am[[i]]))
+	model$Lm[[i]] = t(.jitChol(model$Am[[i]])$chol)
 	model$invLmV[[i]] = solve(model$Lm[[i]], model$V[[i]])
 	model$scaledM[[i]] = model$m[ind, i] / sqrt(model$diagD[[i]])
 	model$bet[i] = model$invLmV[[i]]%*%model$scaledM[[i]]
@@ -167,14 +167,14 @@ gpUpdateAD <- function (model, X) {
 	K_ufDinvm = matrix(0, model$k, model$d)
 	for (i in 1:length(model$blockEnd)) {
 	  ind = gpDataIndices(model, j, i)
-	  model$D[[i, j]] = diag(length(ind)) + model$beta%*%model$K[[i, j]] -
+	  model$D[[i]][[j]] = diag(length(ind)) + model$beta%*%model$K[[i]][[j]] -
 	      model$beta%*%model$K_uf[, ind]%*%model$invK_uu%*%model$K_uf[, ind]
-	  invD = .jitCholInv(model$D[[i,j]], silent=TRUE)
-	  model$Dinv[[i,j]] = invD$invM
+	  invD = .jitCholInv(model$D[[i]][[j]], silent=TRUE)
+	  model$Dinv[[i]][[j]] = invD$invM
 	  model$logDetD[i,j] = 2* sum( log ( diag(invD$chol) ) )
-	  K_ufDinvK_uf = model$K_uf[, ind]%*%model$Dinv[[i, j]]%*%model$K_uf[, ind]
+	  K_ufDinvK_uf = model$K_uf[, ind]%*%model$Dinv[[i]][[j]]%*%model$K_uf[, ind]
 	  model$A[[j]] = model$A[[j]] + K_ufDinvK_uf
-	  Dinvm[[i]][ind, j] = model$Dinv[[i, j]]%*%model$m[ind, j]
+	  Dinvm[[i]][ind, j] = model$Dinv[[i]][[j]]%*%model$m[ind, j]
 	  K_ufDinvm[, j] = K_ufDinvm[, j] + model$K_uf[, ind]%*%Dinvm[[i]][ind, j]
 	}
 	## This can become unstable when K_ufDinvK_uf is low rank.

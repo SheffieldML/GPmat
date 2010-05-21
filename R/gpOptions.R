@@ -2,8 +2,7 @@ gpOptions <- function (approx="ftc") {
 
   options = list()
 
-  if (nargs() > 0)
-    options$approx = approx
+  options$approx = approx
   
   ## Select type of optimiser.
   options$optimiser = "SCG"
@@ -39,7 +38,7 @@ gpOptions <- function (approx="ftc") {
   } else if (options$approx %in% c('fitc', 'pitc', 'dtc', 'dtcvar')) {
     options$kern = list(type="cmpnd",comp=list("rbf", "bias", "white"))
     options$numActive = 100
-    options$beta = 1e3
+    options$beta = 1e+3
     ## Option to fix the inducing variables to other latent points.
     options$fixInducing = 0
     options$fixIndices = list()

@@ -57,7 +57,7 @@ gpUpdateKernels <- function (model, X, X_u) {
       for (j in 1:model$d) {
 	for (i in 1:length(model$blockEnd)) {
 	  ind = gpDataIndices(model, j, i)
-	  model$K[[i, j]] = kernCompute(model$kern, X[ind, ])
+	  model$K[[i]][[j]] = kernCompute(model$kern, X[ind, ])
 	}
       }
     }

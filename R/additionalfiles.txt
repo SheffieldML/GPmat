@@ -1,5 +1,5 @@
 # These linked R files should be included in the final package in ~/mlprojects/gp/R/:
-Copy:
+
 ~/mlprojects/gpsim/R/R/kernFunctions.R
 ~/mlprojects/gpsim/R/R/rbfKernFunctions.R
 ~/mlprojects/gpsim/R/R/whiteKernFunctions.R
@@ -8,10 +8,11 @@ Copy:
 ~/mlprojects/gpsim/R/R/optimiFunctions.R
 ~/mlprojects/gpsim/R/R/AllClasses.R
 
-# These should probably be moved to other folders in ~/mlprojects/:
-Move:
+# These should probably be moved to other folders in ~/mlprojects/ or incorporated into ~/mlprojects/gpsim/R/R/miscFunctions.R
+
 ~/mlprojects/gp/R/modelOut.R			=>	~/mlprojects/mltools/R/
 ~/mlprojects/gp/R/modelOutputGrad.R		=>	~/mlprojects/mltools/R/
+~/mlprojects/gp/R/modelGradientCheck.R		=>	~/mlprojects/mltools/R/
 ~/mlprojects/gp/R/noiseOut.R			=>	~/mlprojects/noise/R/
 ~/mlprojects/gp/R/gaussianNoiseOut.R		=>	~/mlprojects/noise/R/
 ~/mlprojects/gp/R/noiseCreate.R			=>	~/mlprojects/noise/R/
