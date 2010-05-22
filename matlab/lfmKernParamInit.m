@@ -47,7 +47,7 @@ kern.delay = 0;
 kern.mass = 1;
 kern.spring = 1;
 kern.damper = 1;
-kern.sensitivity = 1;
+kern.sensitivity = 0;
 
 kern.initVal = 1;
 kern.inverseWidth = 1;

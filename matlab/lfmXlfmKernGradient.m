@@ -66,21 +66,34 @@ if nargin == 4
     covGrad = t2;
     t2 = t1;
 elseif nargin == 6
-    subComponent = true;
-    if size(meanVector,1) ==1,
-        if size(meanVector, 2)~=size(covGrad, 2)
-            error('The dimensions of meanVector don''t correspond to the dimensions of covGrad')
+    subComponent = true; 
+    if numel(meanVector)>1
+        if size(meanVector,1) == 1,
+            if size(meanVector, 2)~=size(covGrad, 2)
+                error('The dimensions of meanVector don''t correspond to the dimensions of covGrad')
+            end
+        else
+            if size((meanVector'), 2)~=size(covGrad,2)
+                error('The dimensions of meanVector don''t correspond to the dimensions of covGrad')
+            end
         end
     else
-        if size((meanVector'), 2)~=size(covGrad,2)
-            error('The dimensions of meanVector don''t correspond to the dimensions of covGrad')
+        if numel(t1)==1 && numel(t2)>1
+            % matGrad will be row vector and so should be covGrad
+            dimcovGrad = length(covGrad);
+            covGrad = reshape(covGrad, [1 dimcovGrad]);
+        elseif numel(t1)>1 && numel(t2)==1
+            % matGrad will be column vector and sp should be covGrad
+            dimcovGrad = length(covGrad);
+            covGrad = reshape(covGrad, [dimcovGrad 1]);
         end
     end
 end
-    
+
 if size(t1, 2) > 1 || size(t2, 2) > 1
     error('Input can only have one column');
 end
+
 if lfmKern1.inverseWidth ~= lfmKern2.inverseWidth
     error('Kernels cannot be cross combined if they have different inverse widths.')
 end
@@ -186,9 +199,9 @@ end
 % Gradient with respect to m, D and C
 for ind_theta = 1:3 % Parameter (m, D or C)
     for ind_par = 0:1 % System (1 or 2)
-
+        
         % Choosing the right gradients for m, omega, gamma1 and gamma2
-
+        
         switch ind_theta
             case 1  % Gradient wrt m
                 gradThetaM = [1-ind_par ind_par];
@@ -203,20 +216,20 @@ for ind_theta = 1:3 % Parameter (m, D or C)
                 gradThetaAlpha = 1./(2*m);
                 gradThetaOmega = -C./(2*m.*sqrt(4*m.*D-C.^2));
         end
-
+        
         gradThetaGamma1 = gradThetaAlpha + j*gradThetaOmega;
         gradThetaGamma2 = gradThetaAlpha - j*gradThetaOmega;
-
+        
         % Gradient evaluation
-
+        
         if isreal(omega)
-
+            
             gradThetaGamma2 = gradThetaGamma1(2);
             gradThetaGamma1 = [gradThetaGamma1(1) conj(gradThetaGamma1(1))];
-
+            
             %  gradThetaGamma1 =  gradThetaGamma11;
-
-
+            
+            
             if ~ind_par
                 matGrad = (sigma*prod(S)*sqrt(pi)/(4*prod(m)*prod(omega))) ...
                     * real( lfmGradientH31( preConst, preConst2, gradThetaGamma1, ...
@@ -248,7 +261,7 @@ for ind_theta = 1:3 % Parameter (m, D or C)
             gradThetaGamma11 = [gradThetaGamma1(1) gradThetaGamma2(1)];
             gradThetaGamma2 = [gradThetaGamma1(2) gradThetaGamma2(2)];
             gradThetaGamma1 = gradThetaGamma11;
-
+            
             if ~ind_par % ind_par = k
                 matGrad = (sigma*prod(S)*sqrt(pi)/(8*prod(m)*prod(omega))) ...
                     * ( lfmGradientH31( preFactors([1 2]), preFactors2([1 2]), gradThetaGamma1, ...
@@ -264,7 +277,7 @@ for ind_theta = 1:3 % Parameter (m, D or C)
                     - (gradThetaM(1+ind_par)/m(1+ind_par) ...
                     + gradThetaOmega(1+ind_par)/omega(1+ind_par)) ...
                     *preKernel);
-
+                
             else % ind_par = r
                 matGrad = (sigma*prod(S)*sqrt(pi)/(8*prod(m)*prod(omega))) ...
                     * ( lfmGradientH31( preFactors([3 4]), preFactors2([3 4]), gradThetaGamma2, ...
@@ -349,12 +362,9 @@ end
 g1(5) = sum(sum(S(2)*matGrad.*covGrad));
 g2(5) = sum(sum(S(1)*matGrad.*covGrad));
 
-g2(4) = 0; % Otherwise is counted twice, temporarly changed by Mauricio Alvarez
-
+g2(4) = 0; % Otherwise is counted twice
 
 g1 = real(g1);
 g2 = real(g2);
-
-
 
 return
