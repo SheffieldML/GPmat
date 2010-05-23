@@ -52,19 +52,22 @@ omega = sqrt(lfmKern.spring./lfmKern.mass - alpha.*alpha);
 % Kernel evaluation
 if isreal(omega)
     gamma = alpha + j*omega;
-%     K = -(sqrt(pi)*sigma*lfmKern.sensitivity/(2*lfmKern.mass*omega)) ...
-%         *imag(lfmComputeUpsilon(gamma,sigma2,t1, t2, 2));
-    
-    K = -(sqrt(pi)*sigma*lfmKern.sensitivity/(2*lfmKern.mass*omega)) ...
-        *imag(lfmComputeUpsilonMatrix(gamma,sigma2, t1,t2));    
+    sK = imag(lfmComputeUpsilonMatrix(gamma,sigma2, t1,t2));
+    if lfmKern.isNormalised 
+        K0 = (lfmKern.sensitivity/(2*sqrt(2)*lfmKern.mass*omega));
+    else
+        K0 = (sqrt(pi)*sigma*lfmKern.sensitivity/(2*lfmKern.mass*omega));
+    end    
+    K = -K0*sK;    
 else
     gamma1 = alpha + j*omega;
     gamma2 = alpha - j*omega;
-%     K(:,:) = (sqrt(pi)*sigma*lfmKern.sensitivity/(j*4*lfmKern.mass*omega)) ...
-%         *(lfmComputeUpsilon(gamma2,sigma2,t1, t2, 2 ) - ...
-%           lfmComputeUpsilon(gamma1,sigma2,t1, t2, 2));
-      
-   K(:,:) = (sqrt(pi)*sigma*lfmKern.sensitivity/(j*4*lfmKern.mass*omega)) ...
-        *(lfmComputeUpsilonMatrix(gamma2,sigma2,t1, t2) - ...
-          lfmComputeUpsilonMatrix(gamma1,sigma2,t1, t2));        
+    sK = lfmComputeUpsilonMatrix(gamma2,sigma2,t1, t2) - ...
+          lfmComputeUpsilonMatrix(gamma1,sigma2,t1, t2);
+    if lfmKern.isNormalised
+        K0 = lfmKern.sensitivity/(j*4*sqrt(2)*lfmKern.mass*omega);
+    else
+        K0 = sqrt(pi)*sigma*lfmKern.sensitivity/(j*4*lfmKern.mass*omega);
+    end
+    K = K0*sK;
 end

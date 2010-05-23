@@ -87,15 +87,6 @@ elseif nargin == 6
             covGrad = reshape(covGrad, [dimcovGrad 1]);
         end
     end  
-%     if size(meanVector,1) ==1,
-%         if size(meanVector, 2)~=size(covGrad, 2)
-%             error('The dimensions of meanVector don''t correspond to the dimensions of covGrad')
-%         end
-%     else
-%         if size(meanVector, 1)~=size(covGrad,2)
-%             error('The dimensions of meanVector don''t correspond to the dimensions of covGrad')
-%         end
-%     end
 end
 
 if size(t1, 2) > 1 || size(t2, 2) > 1
@@ -187,6 +178,14 @@ gradientUpsilonVector{2} = lfmapGradientUpsilonVector(gamma1_m,sigma2,t1, comput
 gradientUpsilonVector{3} = lfmapGradientUpsilonVector(gamma2_p,sigma2,t2, computeUpsilonVectorLocal{2}{1});
 gradientUpsilonVector{4} = lfmapGradientUpsilonVector(gamma2_m,sigma2,t2, computeUpsilonVectorLocal{2}{2});
 
+if lfmKern1.isNormalised
+    K0 =  lfmKern1.sensitivity*lfmKern2.sensitivity/(8*sqrt(2)*lfmKern1.mass*lfmKern2.mass*prod(omega));
+    K02 = 1/(8*sqrt(2)*prod(m)*prod(omega));
+else
+    K0 =  sigma*sqrt(pi)*lfmKern1.sensitivity*lfmKern2.sensitivity/(8*lfmKern1.mass*lfmKern2.mass*prod(omega)); 
+    K02 = sigma*sqrt(pi)/(8*prod(m)*prod(omega));
+end
+
 % Gradient with respect to m, D and C
 for ind_theta = 1:3 % Parameter (m, D or C)
     for ind_par = 0:1 % System (1 or 2)
@@ -213,7 +212,7 @@ for ind_theta = 1:3 % Parameter (m, D or C)
         gradThetaGamma1 = gradThetaGamma11;
 
         if ~ind_par % ind_par = k or d
-            matGrad = (sigma*prod(S)*sqrt(pi)/(8*prod(m)*prod(omega))) ...
+            matGrad = K0 ...
                 * ( lfmGradientH31( preFactors([1 2]), preFactors2([1 2]), gradThetaGamma1, ...
                 gradientUpsilonMatrix{1}, gradientUpsilonMatrix{2}, computeUpsilonMatrix{1}{1}, ...
                 computeUpsilonMatrix{1}{2}, 1) + ...
@@ -228,7 +227,7 @@ for ind_theta = 1:3 % Parameter (m, D or C)
                 + gradThetaOmega(1+ind_par)/omega(1+ind_par)) ...
                 *preKernel);
         else % ind_par = r or d'
-            matGrad = (sigma*prod(S)*sqrt(pi)/(8*prod(m)*prod(omega))) ...
+            matGrad = K0 ...
                 * ( lfmGradientH31( preFactors([3 4]), preFactors2([3 4]), gradThetaGamma2, ...
                 gradientUpsilonMatrix{3}, gradientUpsilonMatrix{4}, computeUpsilonMatrix{2}{1}, ...
                 computeUpsilonMatrix{2}{2}, 1).' + ...
@@ -262,12 +261,19 @@ for ind_theta = 1:3 % Parameter (m, D or C)
 end
 
 % Gradients with respect to sigma
-matGrad = (prod(S)*sqrt(pi)/(8*prod(m)*prod(omega))) ...
-    * (preKernel ...
-    + sigma*(lfmGradientSigmaH3AA(gamma1_p, gamma1_m, sigma2, t1, t2, preFactors([1 2]), 0)...
-    +  lfmGradientSigmaH3AA(gamma2_p, gamma2_m, sigma2, t2, t1, preFactors([3 4]), 1).'...
-    +  lfmGradientSigmaH4AA(gamma1_p, gamma1_m, sigma2, t1, preGamma([1 2 4 3]), preExpgg2)...
-    +  lfmGradientSigmaH4AA(gamma2_p, gamma2_m, sigma2, t2, preGamma([1 3 4 2]), preExpgg1).' ));
+if lfmKern1.isNormalised
+    matGrad = K0*(lfmGradientSigmaH3AA(gamma1_p, gamma1_m, sigma2, t1, t2, preFactors([1 2]), 0)...
+        +  lfmGradientSigmaH3AA(gamma2_p, gamma2_m, sigma2, t2, t1, preFactors([3 4]), 1).'...
+        +  lfmGradientSigmaH4AA(gamma1_p, gamma1_m, sigma2, t1, preGamma([1 2 4 3]), preExpgg2)...
+        +  lfmGradientSigmaH4AA(gamma2_p, gamma2_m, sigma2, t2, preGamma([1 3 4 2]), preExpgg1).');
+else
+    matGrad = (prod(S)*sqrt(pi)/(8*prod(m)*prod(omega))) ...
+        * (preKernel ...
+        + sigma*(lfmGradientSigmaH3AA(gamma1_p, gamma1_m, sigma2, t1, t2, preFactors([1 2]), 0)...
+        +  lfmGradientSigmaH3AA(gamma2_p, gamma2_m, sigma2, t2, t1, preFactors([3 4]), 1).'...
+        +  lfmGradientSigmaH4AA(gamma1_p, gamma1_m, sigma2, t1, preGamma([1 2 4 3]), preExpgg2)...
+        +  lfmGradientSigmaH4AA(gamma2_p, gamma2_m, sigma2, t2, preGamma([1 3 4 2]), preExpgg1).' ));
+end
 
 if subComponent
     if size(meanVector,1) ==1,
@@ -283,8 +289,7 @@ g2(4) = g1(4);
 % Gradients with respect to S
 
 
-matGrad = (sigma*sqrt(pi)/(8*prod(m)*prod(omega))) ...
-    * (preKernel);
+matGrad = K02*preKernel;
 
 if subComponent
     if size(meanVector,1) ==1,

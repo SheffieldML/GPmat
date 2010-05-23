@@ -47,7 +47,7 @@ kern.delay = 0;
 kern.mass = 1;
 kern.spring = 1;
 kern.damper = 1;
-kern.sensitivity = 0;
+kern.sensitivity = 1;
 
 kern.initVal = 1;
 kern.inverseWidth = 1;
@@ -59,6 +59,14 @@ kern.transforms.type = optimiDefaultConstraint('positive');
 
 kern.isStationary = false;
 kern.positiveTime = true;
+
+if isfield(kern, 'options') ...
+        && isfield(kern.options, 'isNormalised') ...
+        && kern.options.isNormalised,
+    kern.isNormalised = true;    
+else
+    kern.isNormalised = false;
+end
 
 % Serial number used to distinguish LFM kernels
 maxSerial = double(intmax('uint64'));

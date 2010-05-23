@@ -68,12 +68,16 @@ preExp1(:,2) = (gamma1_m^3).*exp(-gamma1_m*t1);
 preExp2(:,1) = gamma2_p*exp(-gamma2_p*t2);
 preExp2(:,2) = gamma2_m*exp(-gamma2_m*t2);
 % Actual computation of the kernel
-K = sigma*lfmKern1.sensitivity*lfmKern2.sensitivity* ...
-    (  lfmComputeH3JV(gamma1_p, gamma1_m, sigma2, t1,t2,preFactors([1 2]), 0) + ...
+sK = lfmComputeH3JV(gamma1_p, gamma1_m, sigma2, t1,t2,preFactors([1 2]), 0) + ...
     lfmComputeH3JV(gamma2_p, gamma2_m, sigma2, t2,t1,preFactors([3 4]), 1).' + ...
     lfmComputeH4JV(gamma1_p, gamma1_m, sigma2, t1, preGamma([1 2 4 3]), preExp2, 0 ) + ...
-    lfmComputeH4JV(gamma2_p, gamma2_m, sigma2, t2, preGamma([1 3 4 2]), preExp1, 1 ).');
-K = K*sqrt(pi)/(8*lfmKern1.mass*lfmKern2.mass*prod(omega));
+    lfmComputeH4JV(gamma2_p, gamma2_m, sigma2, t2, preGamma([1 3 4 2]), preExp1, 1 ).';
 
+if lfmKern1.isNormalised
+    K0 =  lfmKern1.sensitivity*lfmKern2.sensitivity/(8*sqrt(2)*lfmKern1.mass*lfmKern2.mass*prod(omega));
+else
+    K0 =  sigma*sqrt(pi)*lfmKern1.sensitivity*lfmKern2.sensitivity/(8*lfmKern1.mass*lfmKern2.mass*prod(omega));    
+end
 
+K = K0*sK;
 

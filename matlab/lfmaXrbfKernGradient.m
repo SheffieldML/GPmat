@@ -107,6 +107,14 @@ gamma2 = alpha - j*omega;
 GradientUpsilon1 = lfmapGradientUpsilonMatrix(gamma2,sigma2, t1, t2, 0, ComputeUpsilon1Local);
 GradientUpsilon2 = lfmapGradientUpsilonMatrix(gamma1,sigma2, t1, t2, 0, ComputeUpsilon2Local);
 
+if lfmKern.isNormalised
+   K0 = lfmKern.sensitivity/(j*4*sqrt(2)*lfmKern.mass*omega);
+   K02 = 1/(j*4*sqrt(2)*lfmKern.mass*omega);
+else
+   K0 = sqrt(pi)*sigma*lfmKern.sensitivity/(j*4*lfmKern.mass*omega);
+   K02 = sqrt(pi)*sigma/(j*4*lfmKern.mass*omega);
+end
+
 g1 = zeros(1,5);
 
 % Gradient with respect to m, C and D
@@ -131,8 +139,7 @@ for ind = 1:3 % Parameter (m, D or C)
     gradThetaGamma1 = gradThetaAlpha + j*gradThetaOmega;
     gradThetaGamma2 = gradThetaAlpha - j*gradThetaOmega;
 
-    matGrad = (sigma*sqrt(pi)*S/(j*4*m*omega)) ...
-        * (GradientUpsilon1*gradThetaGamma2 -  GradientUpsilon2*gradThetaGamma1 ...
+    matGrad = K0*(GradientUpsilon1*gradThetaGamma2 -  GradientUpsilon2*gradThetaGamma1 ...
         - (gradThetaM/lfmKern.mass + gradThetaOmega/omega) ...
         * (ComputeUpsilon1 - ComputeUpsilon2));
 
@@ -148,14 +155,18 @@ for ind = 1:3 % Parameter (m, D or C)
 end
 
 % Gradient with respect to sigma
-
-
 gamma1 = alpha + j*omega;
 gamma2 = alpha - j*omega;
-matGrad = (sqrt(pi)*S/(j*4*m*omega)) ...
-    *(ComputeUpsilon1 - ComputeUpsilon2 ...
-    + sigma*(lfmapGradientSigmaUpsilonMatrix(gamma2,sigma2,t1,t2,0) ...
-    - lfmapGradientSigmaUpsilonMatrix(gamma1,sigma2,t1,t2,0)));
+
+if lfmKern.isNormalised
+    matGrad = K0*(lfmapGradientSigmaUpsilonMatrix(gamma2,sigma2,t1,t2,0) ...
+        - lfmapGradientSigmaUpsilonMatrix(gamma1,sigma2,t1,t2,0));
+else
+    matGrad = (sqrt(pi)*S/(j*4*m*omega)) ...
+        *(ComputeUpsilon1 - ComputeUpsilon2 ...
+        + sigma*(lfmapGradientSigmaUpsilonMatrix(gamma2,sigma2,t1,t2,0) ...
+        - lfmapGradientSigmaUpsilonMatrix(gamma1,sigma2,t1,t2,0)));
+end
 
 if subComponent
     if size(meanVector,1) ==1,
@@ -170,8 +181,7 @@ g2(1) = g1(4);
 
 % Gradient with respect to S
 
-matGrad = (sqrt(pi)*sigma/(j*4*m*omega)) ...
-    *(ComputeUpsilon1 - ComputeUpsilon2);
+matGrad = K02*(ComputeUpsilon1 - ComputeUpsilon2);
 
 if subComponent
     if size(meanVector,1) ==1,

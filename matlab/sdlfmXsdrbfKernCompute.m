@@ -107,6 +107,8 @@ for i =1:sdlfmKern.nIntervals
         rbfKern(i,j).inverseWidth = sdrbfKern.inverseWidth(j,i);
         lfmKern(i,j).limit = spVector(i+1) - spVector(i);
         rbfKern(i,j).limit = spVector(i+1) - spVector(i);
+        lfmKern(i,j).isNormalised = sdlfmKern.isNormalised;
+        rbfKern(i,j).isNormalised = sdrbfKern.isNormalised;
     end
     newt1 = t1(t1> spVector(i) & t1<spVector(i+1));
     newt2 = t2(t2> spVector(i) & t2<spVector(i+1));

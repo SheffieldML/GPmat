@@ -102,17 +102,27 @@ S = lfmKern.sensitivity;
 alpha = C/(2*m);
 omega = sqrt(D/m-alpha^2);
 
-sigma2 = 2/lfmKern.inverseWidth;% Tamporarly changed by MA
+sigma2 = 2/lfmKern.inverseWidth;
 sigma = sqrt(sigma2);
 
 if isreal(omega)
     gamma = alpha + j*omega;
     ComputeUpsilon1 = lfmComputeUpsilonMatrix(gamma,sigma2,t1, t2);
+    if lfmKern.isNormalised
+        K0 = S/(2*sqrt(2)*m*omega);
+    else
+        K0 = sigma*sqrt(pi)*S/(2*m*omega);        
+    end
 else
     gamma1 = alpha + j*omega;
     gamma2 = alpha - j*omega;
     ComputeUpsilon1 = lfmComputeUpsilonMatrix(gamma2,sigma2,t1, t2);
     ComputeUpsilon2 = lfmComputeUpsilonMatrix(gamma1,sigma2,t1, t2);
+    if lfmKern.isNormalised
+        K0 = (S/(j*4*sqrt(2)*m*omega)); 
+    else
+        K0 = sigma*sqrt(pi)*S/(j*4*m*omega); 
+    end
 end
 
 g1 = zeros(1,5);
@@ -140,8 +150,7 @@ for ind = 1:3 % Parameter (m, D or C)
   if isreal(omega)
       gamma = alpha + j*omega;
       gradThetaGamma = gradThetaAlpha + j*gradThetaOmega;
-      matGrad = -(sigma*sqrt(pi)*S/(2*m*omega)) ...
-          * imag(lfmGradientUpsilonMatrix(gamma,sigma2,t1, t2)*gradThetaGamma ...
+      matGrad = -K0*imag(lfmGradientUpsilonMatrix(gamma,sigma2,t1, t2)*gradThetaGamma ...
           - (gradThetaM/m + gradThetaOmega/omega) ...
           * ComputeUpsilon1);
   else
@@ -149,8 +158,7 @@ for ind = 1:3 % Parameter (m, D or C)
       gamma2 = alpha - j*omega;
       gradThetaGamma1 = gradThetaAlpha + j*gradThetaOmega;
       gradThetaGamma2 = gradThetaAlpha - j*gradThetaOmega;
-      matGrad = (sigma*sqrt(pi)*S/(j*4*m*omega)) ...
-          * (lfmGradientUpsilonMatrix(gamma2,sigma2, t1, t2)*gradThetaGamma2 ...
+      matGrad = K0*(lfmGradientUpsilonMatrix(gamma2,sigma2, t1, t2)*gradThetaGamma2 ...
           -  lfmGradientUpsilonMatrix(gamma1,sigma2, t1, t2)*gradThetaGamma1 ...
           - (gradThetaM/lfmKern.mass + gradThetaOmega/omega) ...
           * (ComputeUpsilon1 - ComputeUpsilon2));
@@ -169,17 +177,26 @@ end
 % Gradient with respect to sigma
 
 if isreal(omega)
-    gamma = alpha + j*omega;    
-    matGrad = -(sqrt(pi)*S/(2*m*omega)) ...
-        * imag(ComputeUpsilon1 ...
-        + sigma*lfmGradientSigmaUpsilonMatrix(gamma,sigma2,t1, t2));    
+    gamma = alpha + j*omega;
+    if lfmKern.isNormalised
+        matGrad = -K0*imag(lfmGradientSigmaUpsilonMatrix(gamma,sigma2,t1, t2));        
+    else
+        matGrad = -(sqrt(pi)*S/(2*m*omega)) ...
+            * imag(ComputeUpsilon1 ...
+            + sigma*lfmGradientSigmaUpsilonMatrix(gamma,sigma2,t1, t2));
+    end
 else
     gamma1 = alpha + j*omega;
     gamma2 = alpha - j*omega;
-    matGrad = (sqrt(pi)*S/(j*4*m*omega)) ...
-        *(ComputeUpsilon1 - ComputeUpsilon2 ...
-        + sigma*(lfmGradientSigmaUpsilonMatrix(gamma2,sigma2,t1,t2) ...
-        - lfmGradientSigmaUpsilonMatrix(gamma1,sigma2,t1,t2)));
+    if lfmKern.isNormalised
+        matGrad = K0*(lfmGradientSigmaUpsilonMatrix(gamma2,sigma2,t1,t2) ...
+            - lfmGradientSigmaUpsilonMatrix(gamma1,sigma2,t1,t2));
+    else
+        matGrad = (sqrt(pi)*S/(j*4*m*omega)) ...
+            *(ComputeUpsilon1 - ComputeUpsilon2 ...
+            + sigma*(lfmGradientSigmaUpsilonMatrix(gamma2,sigma2,t1,t2) ...
+            - lfmGradientSigmaUpsilonMatrix(gamma1,sigma2,t1,t2)));
+    end
 end;
 
 if subComponent
@@ -196,11 +213,17 @@ g2(1) = g1(4);
 % Gradient with respect to S
 
 if isreal(omega)
-    matGrad = -(sqrt(pi)*sigma/(2*m*omega)) ...
-        * imag(ComputeUpsilon1);
+    if lfmKern.isNormalised
+        matGrad = -(1/(2*sqrt(2)*m*omega))* imag(ComputeUpsilon1);
+    else
+        matGrad = -(sqrt(pi)*sigma/(2*m*omega))* imag(ComputeUpsilon1);        
+    end
 else
-    matGrad = (sqrt(pi)*sigma/(j*4*m*omega)) ...
-        *(ComputeUpsilon1 - ComputeUpsilon2);
+    if lfmKern.isNormalised
+        matGrad = (1/(j*4*sqrt(2)*m*omega))*(ComputeUpsilon1 - ComputeUpsilon2);
+    else
+        matGrad = (sqrt(pi)*sigma/(j*4*m*omega))*(ComputeUpsilon1 - ComputeUpsilon2);
+    end
 end;
 
 if subComponent

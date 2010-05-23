@@ -40,7 +40,7 @@ end
 if lfmKern1.inverseWidth ~= lfmKern2.inverseWidth
     error('Kernels cannot be cross combined if they have different inverse widths.')
 end
-
+    
 % Get length scale out.
 sigma2 = 2/lfmKern1.inverseWidth;
 sigma = sqrt(sigma2);
@@ -64,13 +64,16 @@ if isreal(omega)
     preExp1 = exp(-gamma1*t1);
     preExp2 = exp(-gamma2*t2);
     % Actual computation of the kernel
-    K = sigma*lfmKern1.sensitivity*lfmKern2.sensitivity* ...
-        real(lfmComputeH3(gamma1, gamma2, sigma2, t1,t2,preConst, 0, 1) + ...
+    sK = real(lfmComputeH3(gamma1, gamma2, sigma2, t1,t2,preConst, 0, 1) + ...
         lfmComputeH3(gamma2, gamma1, sigma2, t2,t1,preConst(2) - preConst(1), 0, 0).' + ...
         lfmComputeH4(gamma1, gamma2, sigma2, t1, preGamma, preExp2, 0, 1  ) + ...
         lfmComputeH4(gamma2, gamma1, sigma2, t2, preGamma, preExp1,0, 0 ).');
-    K = K*sqrt(pi)/(4*lfmKern1.mass*lfmKern2.mass*prod(omega));
-
+    if lfmKern1.isNormalised
+        K0 = (lfmKern1.sensitivity*lfmKern2.sensitivity)/(4*sqrt(2)*lfmKern1.mass*lfmKern2.mass*prod(omega));
+    else
+        K0 = (sigma*sqrt(pi)*lfmKern1.sensitivity*lfmKern2.sensitivity)/(4*lfmKern1.mass*lfmKern2.mass*prod(omega));
+    end
+    K = K0*sK;    
 else
     % Precomputations to increase the speed
     preExp1 = zeros(length(t1),2);
@@ -93,10 +96,14 @@ else
     preExp2(:,1) = exp(-gamma2_p*t2);
     preExp2(:,2) = exp(-gamma2_m*t2);
     % Actual computation of the kernel
-    K = sigma*lfmKern1.sensitivity*lfmKern2.sensitivity* ...
-        (  lfmComputeH3(gamma1_p, gamma1_m, sigma2, t1,t2,preFactors([1 2]), 1) + ...
+    sK = (  lfmComputeH3(gamma1_p, gamma1_m, sigma2, t1,t2,preFactors([1 2]), 1) + ...
         lfmComputeH3(gamma2_p, gamma2_m, sigma2, t2,t1,preFactors([3 4]), 1).' + ...
         lfmComputeH4(gamma1_p, gamma1_m, sigma2, t1, preGamma([1 2 4 3]), preExp2, 1 ) + ...
         lfmComputeH4(gamma2_p, gamma2_m, sigma2, t2, preGamma([1 3 4 2]), preExp1, 1 ).');
-    K = K*sqrt(pi)/(8*lfmKern1.mass*lfmKern2.mass*prod(omega));
+    if lfmKern1.isNormalised
+        K0 = (lfmKern1.sensitivity*lfmKern2.sensitivity)/(8*sqrt(2)*lfmKern1.mass*lfmKern2.mass*prod(omega));
+    else
+        K0 = (sigma*sqrt(pi)*lfmKern1.sensitivity*lfmKern2.sensitivity)/(8*lfmKern1.mass*lfmKern2.mass*prod(omega));
+    end
+    K = K0*sK;
 end

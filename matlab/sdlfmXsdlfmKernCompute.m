@@ -109,6 +109,8 @@ for i=1:sdlfmKern1.nIntervals
         lfmKern2(i,j).sensitivity = sdlfmKern2.sensitivity(j,i);
         lfmKern1(i,j).limit = spVector(i+1) - spVector(i);
         lfmKern2(i,j).limit = spVector(i+1) - spVector(i);
+        lfmKern1(i,j).isNormalised = sdlfmKern1.isNormalised;
+        lfmKern2(i,j).isNormalised = sdlfmKern2.isNormalised;
     end
     newt1 = t1(t1> spVector(i) & t1<spVector(i+1));
     newt2 = t2(t2> spVector(i) & t2<spVector(i+1));

@@ -53,6 +53,14 @@ omega = sqrt(lfmKern.spring./lfmKern.mass - alpha.*alpha);
 
 gamma1 = alpha + j*omega;
 gamma2 = alpha - j*omega;
-K(:,:) = (sqrt(pi)*sigma*lfmKern.sensitivity/(j*4*lfmKern.mass*omega)) ...
-    *(lfmvpComputeUpsilonMatrix(gamma2,sigma2,t1, t2,1) - ...
-    lfmvpComputeUpsilonMatrix(gamma1,sigma2,t1, t2,1));
+
+sK = lfmvpComputeUpsilonMatrix(gamma2,sigma2,t1, t2,1) - ...
+    lfmvpComputeUpsilonMatrix(gamma1,sigma2,t1, t2,1);
+
+if lfmKern.isNormalised
+   K0 = lfmKern.sensitivity/(j*4*sqrt(2)*lfmKern.mass*omega);
+else
+   K0 = sqrt(pi)*sigma*lfmKern.sensitivity/(j*4*lfmKern.mass*omega);
+end
+    
+K = K0*sK;
