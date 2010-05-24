@@ -1,17 +1,16 @@
-gpLogLikeGradients <- function(model, X, M, X_u, gX_u.return=FALSE, gX.return=FALSE,
+gpLogLikeGradients <- function(model, X=model$X, M, X_u, gX_u.return=FALSE, gX.return=FALSE,
   g_beta.return=FALSE) {
 
   if (nargs() < 4) {
+    X_u = list()
     if ("X_u" %in% names(model))
       X_u = model$X_u
-    else
-      X_u = list()
 
     if (nargs()< 3 && (!"S" %in% names(model)))
       M = model$m
 
-    if (nargs() < 2)
-      X = model$X
+#     if (nargs() < 2)
+#       X = model$X
   }
 
   gX_u = list()
@@ -50,7 +49,7 @@ gpLogLikeGradients <- function(model, X, M, X_u, gX_u.return=FALSE, gX.return=FA
 #         for (i in 1:model$N) {
 #           counter = counter + 1
 #           for (j in 1:model$q)
-#             gX[i, j] = gX[i, j] + gKX[, j, i] %*% gK[, counter]
+#             gX[i, j] = gX[i, j] + t(gKX[, j, i]) %*% gK[, counter]
 #         }
 #       }
 #       ## Compute Gradients of Kernel Parameters
@@ -65,14 +64,14 @@ gpLogLikeGradients <- function(model, X, M, X_u, gX_u.return=FALSE, gX.return=FA
 #           for (i in ind) {
 #             counter = counter + 1
 #             for (j in 1:model$q)
-#               gX[i, j] = gX[i, j] + gKX[ind, j, i]%*%gK[, counter]
+#               gX[i, j] = gX[i, j] + gKX[ind, j, i]*gK[, counter]
 #           }
         }
         ## Compute Gradients of Kernel Parameters
-        if (model$isMissingData)
+        if (model$isMissingData){
 #           g_param = g_param
 # 		+ kernGradient(model$kern, X[model$indexPresent[[k]], ], gK) ## !!!
-        else
+	} else
           g_param = g_param + kernGradient(model$kern, X, gK)
       }
 
@@ -114,14 +113,14 @@ gpLogLikeGradients <- function(model, X, M, X_u, gX_u.return=FALSE, gX.return=FA
 #       ## Compute portion associated with gK_u
 #       for (i in 1:model$k) {
 #         for (j in 1:model$q)
-#           gX_u[i, j] = gKX[, j, i]%*%gK_u[, i]
+#           gX_u[i, j] = t(gKX[, j, i]) %*% gK_u[, i]
 #       }
 #       
 #       ## Compute portion associated with gK_uf
 #       gKX_uf = kernGradX(model$kern, X_u, X) ## !!!
 #       for (i in 1:model$k) {
 #         for (j in 1:model$q)
-#           gX_u[i, j] = gX_u[i, j] + gKX_uf[, j, i]%*%gK_uf[i, ]
+#           gX_u[i, j] = gX_u[i, j] + t(gKX_uf[, j, i]) %*% t(gK_uf[i, ])
 #       }
 #     }
 # 
@@ -135,7 +134,7 @@ gpLogLikeGradients <- function(model, X, M, X_u, gX_u.return=FALSE, gX.return=FA
 #       
 #       for (i in 1:model$N) {
 #         for (j in 1:model$q)
-#           gX[i, j] = gKX_uf[, j, i]%*%gK_uf[, i]
+#           gX[i, j] = t(gKX_uf[, j, i]) %*% gK_uf[, i]
 #       }
 #     }
   } else
@@ -178,7 +177,7 @@ gpLogLikeGradients <- function(model, X, M, X_u, gX_u.return=FALSE, gX.return=FA
 #         for (j in ind) {
 #           for (k in 1:model$q) {
 #             subInd = j - startVal + 1
-#             gX[j, k] = gX[j, k] + gKXblock[, k, subInd]%*%gK_star[[i]][, subInd]
+#             gX[j, k] = gX[j, k] + t(gKXblock[, k, subInd]) %*% gK_star[[i]][, subInd]
 #           }
 #         }
 #         startVal = endVal + 1
@@ -199,13 +198,13 @@ gpLogLikeGradients <- function(model, X, M, X_u, gX_u.return=FALSE, gX.return=FA
     else
       gParam = c(g_param, g_meanFunc, g_scaleBias)
   } else
-    gParam = c(g_param, g_meanFunc g_scaleBias)
+    gParam = c(g_param, g_meanFunc, g_scaleBias)
 
   ## if there is only one output argument, pack gX_u and gParam into it.
-  if (!(gX_u.return || gX.return || g_beta.return)) { #(nargout == 1)
+  if (!(gX_u.return || gX.return || g_beta.return)) #(nargout == 1)
     gParam = c(gX_u, gParam)
 
-  return (gParam)
+  return (as.numeric(gParam))
 } # function
 
 
@@ -214,7 +213,7 @@ gpLogLikeGradients <- function(model, X, M, X_u, gX_u.return=FALSE, gX.return=FA
 localCovarianceGradients <- function(model, y, dimension) {
   if (!"isSpherical" %in% names(model) || model$isSpherical) {
     invKy = model$invK_uu %*% y
-    gK = -model$invK_uu + invKy%*%invKy
+    gK = -model$invK_uu + invKy%*%t(invKy)
   } else {
     if (model$isMissingData)
       m = y[model$indexPresent[[dimension]]]
@@ -222,14 +221,14 @@ localCovarianceGradients <- function(model, y, dimension) {
       m = y
 
     invKy = model$invK_uu[[dimension]] %*% m
-    gK = -model$invK_uu[[dimension]] + invKy%*%invKy
+    gK = -model$invK_uu[[dimension]] + invKy%*%t(invKy)
   }
   gK = gK * .5
   return (gK)
 }
 
-function gK = localSCovarianceGradients(model) {
-  gK = -model$d%*%model$invK_uu + model$invK_uu%*%model$S%*%model$invK_uu
+localSCovarianceGradients <- function(model) {
+  gK = -model$d*model$invK_uu + model$invK_uu%*%model$S%*%model$invK_uu
   gK = gK * .5
   return (gK)
 }

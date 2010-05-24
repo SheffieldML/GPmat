@@ -10,7 +10,7 @@ gpComputeAlpha <- function(model, m) {
     else {
       for (i in 1:model$d) {
 	ind = gpDataIndices(model, i)
-	model$alpha[ind, i] = model$invK_uu[[i]] %*% m[ind, i]
+	model$alpha[ind, i] = model$invK_uu[[i]] * m[ind, i]
       }
     }
   }
@@ -20,7 +20,7 @@ gpComputeAlpha <- function(model, m) {
     else {
       for (i in 1:model$d) {
 	ind = gpDataIndices(model, i)
-	model$alpha[,i] = model$Ainv[[i]] %*% model$K_uf[,ind] %*% m[ind,i]
+	model$alpha[,i] = model$Ainv[[i]] %*% model$K_uf[,ind] * m[ind,i]
       }
     }
   }
@@ -30,11 +30,11 @@ gpComputeAlpha <- function(model, m) {
     else {
       for (i in 1:model$d) {
 	ind = gpDataIndices(model, i)
-	model$alpha[,i] = model$Ainv[[i]]
-	    %*% model$K_uf[,ind] %*% model$Dinv[[i]] %*% m[ind,i]
+	model$alpha[,i] = model$Ainv[[i]] %*%
+			    model$K_uf[,ind] %*% model$Dinv[[i]] * m[ind,i]
       }
     }
-  else if (model$approx == "pitc") {
+  } else if (model$approx == "pitc") {
     if (!("isSpherical" %in% names(model)) || model$isSpherical)
       for (i in seq(along=model$blockEnd)) {
 	ind = gpBlockIndices(model, i)
@@ -45,7 +45,7 @@ gpComputeAlpha <- function(model, m) {
 	for (j in 1:model$d) {
 	  ind = gpDataIndices(model, j, i)
 	  model$alpha[,j] = model$alpha[,j] + model$Ainv[[j]]%*%model$K_uf[,ind]%*%
-	      model$Dinv[[i]][[j]]%*%m[ind,j]
+	      model$Dinv[[i]][[j]]*m[ind,j]
 	}
       }
     }

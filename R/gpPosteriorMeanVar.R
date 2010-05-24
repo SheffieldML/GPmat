@@ -30,11 +30,11 @@ gpPosteriorMeanVar <- function(model, X, varsigma.return=FALSE) {
     
     ## Compute mean, using precomputed alpha vector.
     if ((!"isMissingData" %in% names(model)) || !model$isMissingData || model$approx != "ftc")
-      mu[indices,] = KX_star %*% model$alpha
+      mu[indices,] = t(KX_star) %*% model$alpha
     else {
       for (i in 1:model$d)
-	mu[indices, i] = KX_star[model$indexPresent[[i]],]
-	    %*% model$alpha[model$indexPresent[[i]], i]
+	mu[indices, i] = t(KX_star[model$indexPresent[[i]],]) %*%
+			    model$alpha[model$indexPresent[[i]], i]
     }
     
     ## Compute variances if requried.
@@ -46,7 +46,7 @@ gpPosteriorMeanVar <- function(model, X, varsigma.return=FALSE) {
 	if (model$approx == "ftc")
 	  Kinvk = model$invK_uu %*% KX_star
 	else if (model$approx %in% c("dtc", "dtcvar", "fitc", "pitc")) {
-	  Kinvk = (model$invK_uu - (1/model$beta)%*%model$Ainv) %*% KX_star
+	  Kinvk = (model$invK_uu - (1/model$beta)*model$Ainv) %*% KX_star
 	}
 	varsig = diagK - t(colSums(KX_star * Kinvk, 1))
 	if ("beta"  %in% names(model)) {
@@ -58,7 +58,7 @@ gpPosteriorMeanVar <- function(model, X, varsigma.return=FALSE) {
 	for (i in 1:model$d) {
 	  ind = model$indexPresent[[i]]
 	  if (model$approx == "ftc")
-	    Kinvk = model$invK_uu[[i]] %*% KX_star[ind,]
+	    Kinvk = model$invK_uu[[i]] %*% KX_star[ind, ]
 	  else {
 	    stop(c("Non-spherical not yet implemented for any approximation",
 		  "other than 'ftc'."))

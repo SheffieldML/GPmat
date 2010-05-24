@@ -63,7 +63,7 @@ gpCreate <- function(q, d, X, y, options) {
   model$computeS = FALSE
   if (options$computeS) {
     model$computeS = TRUE
-    model$S = model$m %*% model$m
+    model$S = model$m %*% t(model$m)
     if (model$approx != "ftc") # !strcmp(model.approx, 'ftc')
       stop("If compute S is set, approximation type must be 'ftc'.")
   }
