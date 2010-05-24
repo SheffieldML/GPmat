@@ -25,16 +25,18 @@ gpOptimise <- function(model, display=TRUE, iters=2000, gradcheck=FALSE) {
   else
     optim = get("CGoptim", mode="function")
 
+  fn = get('gpObjective', mode="function")
+  grad = get('gpGradient', mode="function")
+
 #   strcmp(func2str(optim), 'optimiMinimize')
 #     ## Carl Rasmussen's minimize function 
 #     params = optim('gpObjectiveGradient', params, options, model);
 #   else
   ## R version of NETLAB function
-  SCGoptim(x, fn, grad, options, ...)
   ## only necessary parts from gpGradient implemented!
-  params = optim(params, "gpObjective", "gpGradient", options, model) ## !!!
+  params = optim(params, fn, grad, options, model) ## !!!
 
-  model = gpExpandParam(model, params)
+  model = gpExpandParam(model, params$xmin)
 
   return (model)
 }
