@@ -1,4 +1,4 @@
-function model = fgplvmOptimise(model, display, iters);
+function model = fgplvmOptimise(model, display, iters, g_check);
 
 % FGPLVMOPTIMISE Optimise the FGPLVM.
 % FORMAT
@@ -18,21 +18,22 @@ function model = fgplvmOptimise(model, display, iters);
 
 % FGPLVM
 
-
-if nargin < 3
-  iters = 2000;
-  if nargin < 2
-    display = 1;
+if(nargin<4)
+  g_check = false;
+  if nargin < 3
+    iters = 2000;
+    if nargin < 2
+      display = 1;
+    end
   end
 end
-
 
 params = fgplvmExtractParam(model);
 
 options = optOptions;
-if display
+if(display)
   options(1) = 1;
-  if length(params) <= 100
+  if(length(params) <= 100||g_check)
     options(9) = 1;
   end
 end

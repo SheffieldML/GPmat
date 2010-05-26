@@ -1,4 +1,4 @@
-function model = fgplvmAddConstraint(model,options)
+function model = fgplvmAddConstraint(model,options,varargin)
 
 % FGPLVMADDCONSTRAINT Add latent constraints to FGPLVM model
 % FORMAT
@@ -18,7 +18,7 @@ function model = fgplvmAddConstraint(model,options)
 %
 if(isfield(model,'constraints')&&~isempty(model.constraints))
   % constraints init
-  model = constraintCreate(model,[],options);
+  model = constraintCreate(model,[],options,varargin{:});
 else
   % no constraints
   model.constraints = [];
@@ -27,7 +27,7 @@ else
   model.constraints.id = [];
   model.constraints.numConstraints = 0;
   model.constraints.comp = {};
-  model = constraintCreate(model,[],options);
+  model = constraintCreate(model,[],options,varargin{:});
 end
 
 model.constraints.numConstraints = model.constraints.numConstraints + 1;
