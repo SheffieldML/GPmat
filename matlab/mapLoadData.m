@@ -1444,7 +1444,196 @@ switch dataset
   XTest = data.XTest;
   yTest = data.yTest;
      
-  
+ case 'toySdlfm1'
+        try
+            load([baseDir 'toySdlfm1.mat']);
+        catch
+            Xbase = linspace(0, 20, 200)';
+            numOut = 1; 
+            nSamples = 10;
+            X = cell(1, numOut);
+            for i=1:numOut
+                X{i} = Xbase;
+            end
+            options.nIntervals = 3;
+            options.nlfPerInt = 1;
+            options.approx = 'ftc';
+            options.includeVel = false;
+            options.includeAccel = false;
+            options.kernType = 'sdlfm';
+            options.kern.includeVel = options.includeVel;
+            options.kern.includeAccel = options.includeAccel;
+            options.kern.nIntervals = options.nIntervals;
+            options.kern.isNormalised = true;
+            kernType = cell(1);
+            F = cell(1, nSamples);
+            Y = cell(1, nSamples);            
+            for q=1:nSamples              
+                options.kern.switchingTimes = [-1  6+0.1*randn 7+0.1*randn];
+                options.kern.nlfPerInt = options.nlfPerInt;
+                kernType{1} = sdlfmgpKernComposer(options.kernType, numOut, 'ftc', options);
+                kern = kernCreate(X, {'cmpnd', kernType{:}});
+                kern = sdmultiKernParamInit(kern, options);
+                params = kernExtractParam(kern);
+                ind = paramNameRegularExpressionLookup(kern, '.* inverse width .*', true);
+                params(ind) = log([1e-3 1e-3 1e-3]);
+                ind = paramNameRegularExpressionLookup(kern, '.* mass', true);
+                params(ind) = log(0.1);
+                ind = paramNameRegularExpressionLookup(kern, '.* damper', true);
+                params(ind) = log(0.4);
+                ind = paramNameRegularExpressionLookup(kern, '.* spring', true);
+                params(ind) = log(5);
+                ind = paramNameRegularExpressionLookup(kern, '.* sensitivity .*', true);
+                params(ind) =  [10 20 10];               
+                kern = kernExpandParam(kern, params);
+                %%% Pass the parameters to the sdrbf kernel
+                % We need first to create the SDRBF kernel and pass the parameters
+                % to it.
+                sdrbfKern = kernCreate(Xbase, {'parametric', options.kern, 'sdrbf'});
+                indxIW = paramNameRegularExpressionLookup(kern, '.* inverse width .*',1);
+                indxSP = paramNameRegularExpressionLookup(kern, '.* switching point .*',1);
+                indxIW1 = paramNameRegularExpressionLookup(sdrbfKern, 'inverse width .*',1);
+                indxSP1 = paramNameRegularExpressionLookup(sdrbfKern, 'switching point .*',1);
+                params = kernExtractParam(kern);
+                params1 = kernExtractParam(sdrbfKern);
+                params1(indxIW1) = params(indxIW);
+                params1(indxSP1) = params(indxSP);
+                sdrbfKern = kernExpandParam(sdrbfKern, params1);
+                Kfu = zeros(numOut*length(Xbase), options.nlfPerInt*length(Xbase));
+                startVal = 1;
+                endVal = 0;
+                for i=1:numOut
+                    endVal = endVal + length(X{i});
+                    KTemp = sdlfmXsdrbfKernCompute(kern.comp{1}.comp{i}, sdrbfKern, X{i}, Xbase);
+                    Kfu(startVal:endVal, :) = cell2mat(KTemp);
+                    startVal = endVal + 1;
+                end
+                KuuTemp = sdrbfKernCompute(sdrbfKern, Xbase);
+                KuuM = zeros(options.nlfPerInt*length(Xbase));
+                startVal = 1;
+                endVal = 0;
+                for i=1:options.nlfPerInt
+                    endVal = endVal + length(Xbase);
+                    KuuM(startVal:endVal, startVal:endVal) = KuuTemp{i};
+                    startVal = endVal + 1;
+                end
+                Kff = kernCompute(kern, X);
+                K = [KuuM  Kfu';Kfu Kff];                
+                f = real(gsamp(zeros(size(K,1),1), K, 1))';
+                f = f(length(Xbase)+1:end,:);
+                F{q} = f;
+                Y{q} = f + 0.1*sqrt(var(f))*randn(length(Xbase),1);
+            end
+            XTest = X;
+            y = Y;            
+            yTest = F;
+            save([baseDir 'toySdlfm1.mat'], 'X', 'y', 'XTest', 'yTest');
+        end
+    case 'toySdlfm2'
+        try
+            load([baseDir 'toySdlfm2.mat']);
+        catch
+            Xbase = linspace(0, 20, 500)';
+            numOut = 2; 
+            nSamples = 10;
+            X = cell(1, numOut);
+            for i=1:numOut
+                X{i} = Xbase;
+            end
+            options.nIntervals = 3;
+            options.nlfPerInt = 1;
+            options.approx = 'ftc';
+            options.includeVel = false;
+            options.includeAccel = false;
+            options.kernType = 'sdlfm';
+            options.kern.includeVel = options.includeVel;
+            options.kern.includeAccel = options.includeAccel;
+            options.kern.nIntervals = options.nIntervals;
+            options.kern.isNormalised = true;
+            mass = 0.1;
+            damper = [0.4 1];
+            spring = [2 3];
+            inverseWidth = 1e-3*ones(1,options.nIntervals);
+            sensitivity = [10 1 10 5 -10 1];
+            meanSwitching = [6 7];
+            numberTraining = 200;
+            kernType = cell(1);
+            F = cell(1, nSamples);
+            Y = cell(1, nSamples);
+            Ytest = cell(1, nSamples);
+            Ytrain = cell(1, nSamples);
+            Xtest = cell(1, nSamples);
+            Xtrain = cell(1, nSamples);
+            for q=1:nSamples              
+                options.kern.switchingTimes = [-1  meanSwitching(1)+0.1*randn meanSwitching(1)+0.1*randn];
+                options.kern.nlfPerInt = options.nlfPerInt;
+                kernType{1} = sdlfmgpKernComposer(options.kernType, numOut, 'ftc', options);
+                kern = kernCreate(X, {'cmpnd', kernType{:}});
+                kern = sdmultiKernParamInit(kern, options);
+                params = kernExtractParam(kern);
+                ind = paramNameRegularExpressionLookup(kern, '.* mass', true);
+                params(ind) = log(mass);
+                ind = paramNameRegularExpressionLookup(kern, '.* damper', true);
+                params(ind) = log(damper);
+                ind = paramNameRegularExpressionLookup(kern, '.* spring', true);
+                params(ind) = log(spring);
+                ind = paramNameRegularExpressionLookup(kern, '.* sensitivity .*', true);
+                params(ind) =  sensitivity;               
+                kern = kernExpandParam(kern, params);
+                for i=1:numOut
+                    kern.comp{1}.comp{i}.inverseWidth = inverseWidth;
+                end
+                %%% Pass the parameters to the sdrbf kernel
+                % We need first to create the SDRBF kernel and pass the parameters
+                % to it.
+                sdrbfKern = kernCreate(Xbase, {'parametric', options.kern, 'sdrbf'});
+                sdrbfKern.inverseWidth = inverseWidth;
+                Kfu = zeros(numOut*length(Xbase), options.nlfPerInt*length(Xbase));
+                startVal = 1;
+                endVal = 0;
+                for i=1:numOut
+                    endVal = endVal + length(X{i});
+                    KTemp = sdlfmXsdrbfKernCompute(kern.comp{1}.comp{i}, sdrbfKern, X{i}, Xbase);
+                    Kfu(startVal:endVal, :) = cell2mat(KTemp);
+                    startVal = endVal + 1;
+                end
+                KuuTemp = sdrbfKernCompute(sdrbfKern, Xbase);
+                KuuM = zeros(options.nlfPerInt*length(Xbase));
+                startVal = 1;
+                endVal = 0;
+                for i=1:options.nlfPerInt
+                    endVal = endVal + length(Xbase);
+                    KuuM(startVal:endVal, startVal:endVal) = KuuTemp{i};
+                    startVal = endVal + 1;
+                end
+                Kff = kernCompute(kern, X);
+                K = [KuuM  Kfu';Kfu Kff];                
+                f = real(gsamp(zeros(size(K,1),1), K, 1))';
+                f = f(length(Xbase)+1:end,:);
+                startVal = 1;
+                endVal = 0;
+                indexShuffled = randperm(length(Xbase));
+                indexTrain = sort(indexShuffled(1:numberTraining));
+                indexTest = sort(indexShuffled(numberTraining+1:end));
+                for i=1:numOut
+                    endVal = endVal + length(Xbase);                    
+                    F{q}{i} = f(startVal:endVal);                    
+                    Y{q}{i} = F{q}{i} + 0.05*sqrt(var(F{q}{i}))*randn(length(Xbase),1);
+                    Ytrain{q}{i} = Y{q}{i}(indexTrain);
+                    Ytest{q}{i} = Y{q}{i}(indexTest);
+                    Xtrain{q}{i} = Xbase(indexTrain);
+                    Xtest{q}{i} = Xbase(indexTest);
+                    startVal = endVal + 1;
+                end
+            end
+            y = Ytrain;
+            X = Xtrain;
+            XTest = Xtest;
+            XTest{end+1} = Xbase';
+            yTest = Ytest;
+            yTest{end+1} = F;
+            save([baseDir 'toySdlfm2.mat'], 'X', 'y', 'XTest', 'yTest');
+        end
  otherwise
   error('Unknown data set requested.')
 
