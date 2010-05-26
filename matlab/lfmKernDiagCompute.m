@@ -36,7 +36,7 @@ if isreal(omega)
     % Actual computation of the kernel
     sk = real(lfmDiagComputeH3(-gamma, sigma2, t, [2*alpha gamma], preExp, 0) + ...
         lfmDiagComputeH4( gamma, sigma2, t, [gamma 2*alpha], preExp ,0));
-    if lfmKern1.isNormalised
+    if  kern.isNormalised
         k0 = kern.sensitivity^2/(4*sqrt(2)*kern.mass^2*omega^2);
     else
         k0 = sqrt(pi)*sigma*kern.sensitivity^2/(4*kern.mass^2*omega^2);
@@ -57,7 +57,7 @@ else
          lfmDiagComputeH4( gamma_m, sigma2, t, [gamma_m  (gamma_p + gamma_m)], [preExp(:,2) preExp(:,1)] , 1) + ...
          lfmDiagComputeH4( gamma_p, sigma2, t, [gamma_p  (gamma_p + gamma_m)], preExp , 1);
 
-    if lfmKern1.isNormalised
+    if kern.isNormalised
         k0 = kern.sensitivity^2/(8*sqrt(2)*kern.mass^2*omega^2);
     else
         k0 = sqrt(pi)*sigma*kern.sensitivity^2/(8*kern.mass^2*omega^2);

@@ -52,6 +52,7 @@ for i=1:sdlfmKern.nIntervals
         lfmKern(i,j).inverseWidth = sdlfmKern.inverseWidth(i);
         lfmKern(i,j).sensitivity = sdlfmKern.sensitivity(i);
         lfmKern(i,j).limit = spVector(i+1) - spVector(i);
+        lfmKern(i,j).isNormalised = sdlfmKern.isNormalised;
     end
     newt = t(t> spVector(i) & t<spVector(i+1));
     dim(i) = length(newt);

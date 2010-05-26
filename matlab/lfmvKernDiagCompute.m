@@ -42,10 +42,10 @@ sk =lfmDiagComputeH3VV(gamma1_p, gamma1_m, sigma2, t, preFactors([1 2]), 1) + ..
     lfmDiagComputeH4VV(gamma1_p, gamma1_m, sigma2, t, preGamma([1 2 4 3]), preExp1 ) + ...
     lfmDiagComputeH4VV(gamma1_p, gamma1_m, sigma2, t, preGamma([1 3 4 2]), preExp1 );
 
-if lfmKern1.isNormalised
-    k0 = kern.sensitivity^2/(8*sqrt(2)*kern.mass^2*omega^2);
+if lfmKern.isNormalised
+    k0 = lfmKern.sensitivity^2/(8*sqrt(2)*lfmKern.mass^2*omega^2);
 else
-    k0 = sqrt(pi)*sigma*kern.sensitivity^2/(8*kern.mass^2*omega^2);
+    k0 = sqrt(pi)*sigma*lfmKern.sensitivity^2/(8*lfmKern.mass^2*omega^2);
 end
 k = k0*sk;
 
