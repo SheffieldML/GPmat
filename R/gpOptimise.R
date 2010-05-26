@@ -36,7 +36,7 @@ gpOptimise <- function(model, display=TRUE, iters=2000, gradcheck=FALSE) {
   ## only necessary parts from gpGradient implemented!
   params = optim(params, fn, grad, options, model) ## !!!
 
-  model = gpExpandParam(model, params$xmin)
+  model = gpExpandParam(model, params)
 
   return (model)
 }

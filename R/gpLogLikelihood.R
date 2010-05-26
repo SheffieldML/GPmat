@@ -2,7 +2,7 @@ gpLogLikelihood <- function(model) {
 
   if (model$approx == "ftc") {
     ## No approximation, just do a full computation on K.
-    ## For very high D, we use the matrix S which is M*M'
+    ## For very high D, we use the matrix S which is M%*%M'
     if ("S" %in% names(model)) {
       ll = -0.5*(model$d*model$logDetK_uu + sum(model$invK_uu * model$S))
       return (ll)
@@ -27,21 +27,21 @@ gpLogLikelihood <- function(model) {
       EET = E %*% t(E)
       if (length(model$beta)==1) {
 	ll =  -0.5*(model$d*(-(model$N-model$k)*log(model$beta)
-	      - model$logDetK_uu + model$logdetA) - (sum(model$Ainv*EET)
+	      - model$logDetK_uu + model$logDetA) - (sum(model$Ainv*EET)
 	      -sum(model$m * model$m))*model$beta)
 	if (model$approx == "dtcvar")
-	  ll = ll - model$d * 0.5*colSums(model$diagD)
+	  ll = ll - model$d * 0.5*sum(model$diagD)
       } else
 	stop("Not implemented variable length beta yet.")
     } else {
       ll = 0
       for (i in 1:model$d) {
 	ind = gpDataIndices(model, i)
-	e = model$K_uf[, ind]*model$m[ind, i]
+	e = model$K_uf[, ind]%*%model$m[ind, i]
 	if (length(model$beta)==1) {
 	  ll = ll - 0.5*((-(model$N-model$k)*log(model$beta)
-		  - model$logDetK_uu + model$logdetA[i]) - (t(e)%*%model$Ainv[[i]]%*%e
-		  - t(model$m[ind, i])*model$m[ind, i])*model$beta)
+		  - model$logDetK_uu + model$logDetA[i]) - (t(e)%*%model$Ainv[[i]]%*%e
+		  - t(model$m[ind, i])%*%model$m[ind, i])*model$beta)
 	  if(is.nan(ll))
 	    stop("Log likelihood is NaN")
 
@@ -60,16 +60,16 @@ gpLogLikelihood <- function(model) {
 	  ## This is the original objective
 	  Dinvm = model$Dinv %*% model$m
 	  K_ufDinvm = model$K_uf %*% Dinvm
-	  ll = -0.5*(model$d * (colSums(log(model$diagD))
+	  ll = -0.5*(model$d * (sum(log(model$diagD))
 		-(model$N-model$k)*log(model$beta) + model$detDiff)
 		+ (sum(Dinvm * model$m)
 		- sum((model$Ainv%*%K_ufDinvm) * K_ufDinvm))*model$beta)
 	  ll = ll - 0.5*model$N*model$d*log(2*pi)
 	} else {
 	  ## This is objective to match Ed Snelson's code
-	  ll =  - model$d*(colSums(log(diag(model$Lm)))
+	  ll =  - model$d*(sum(log(diag(model$Lm)))
 		+ 0.5*(-(model$N - model$k)*log(model$beta)
-		+(model$N*log(2*pi) + colSums(log(model$diagD)))))
+		+(model$N*log(2*pi) + sum(log(model$diagD)))))
 	  for (i in 1:model$d)
 	    ll = ll - 0.5*model$beta*(t(model$scaledM[, i])%*%model$scaledM[, i]
 		    - t(model$bet[, i])%*%model$bet[, i])
@@ -82,9 +82,9 @@ gpLogLikelihood <- function(model) {
 	  ll = 0
 	  for (i in 1:model$d) {
 	    ind = gpDataIndices(model, i)
-	    Dinvm = model$Dinv[[i]]*model$m[ind, i]
+	    Dinvm = model$Dinv[[i]]%*%model$m[ind, i]
 	    K_ufDinvm = model$K_uf[, ind]%*%Dinvm
-	    ll = ll -0.5*(colSums(log(model$diagD[[i]]))
+	    ll = ll -0.5*(sum(log(model$diagD[[i]]))
 		    - (length(ind) - model$k)*log(model$beta)
 		    + model$detDiff[i] + (sum(Dinvm * model$m[ind, i])
 		    - sum((model$Ainv[[i]]%*%K_ufDinvm) * K_ufDinvm))*model$beta
@@ -95,9 +95,9 @@ gpLogLikelihood <- function(model) {
 	  ll = 0
 	  for (i in 1:model$d) {
 	    ind = gpDataIndices(model, i)
-	    ll =  ll - (colSums(log(diag(model$Lm[[i]])))
+	    ll =  ll - (sum(log(diag(model$Lm[[i]])))
 		      + 0.5*(-(length(ind) - model$k)*log(model$beta)
-		      +(length(ind)*log(2*pi)+colSums(log(model$diagD[[i]])))))
+		      +(length(ind)*log(2*pi)+sum(log(model$diagD[[i]])))))
 	    ll = ll - 0.5*model$beta*(t(model$scaledM[[i]])%*%model$scaledM[[i]]
 		    - t(model$bet[[i]])%*%model$bet[[i]])
 	  }
@@ -112,6 +112,7 @@ gpLogLikelihood <- function(model) {
 	ll = model$d*(model$logDetA-model$logDetK_uu + model$k*log(model$beta))
 	## Loop through the blocks computing each part to be added.
 	K_ufDinvm = zeros(model$k, model$d)
+	Dinvm = list()
 	for (i in 1:length(model$blockEnd)) {
 	  ind = gpBlockIndices(model, i)
 	  Dinvm[[i]] = model$Dinv[[i]]%*%model$m[ind, ]
@@ -131,13 +132,18 @@ gpLogLikelihood <- function(model) {
     } else {
       if (length(model$beta)==1) {
 	ll = 0
-	for (j in 1$model.d) {
+	Dinvm = matrix(0, model$blockEnd, model$d)
+	Dinvm = lapply(split(Dinvm,row(Dinvm)), split, 1:model$d)
+# 	Dinvm = as.list(matrix(0,1,model$blockEnd)) ## alternative way
+# 	Dinvm = lapply(Dinvm, function(x,l=model$d) x=as.list(matrix(0,1,l)))
+	for (j in 1:model$d) {
 	  ll = ll + model$logDetA[j]-model$logDetK_uu + model$k*log(model$beta)
 	  ## Loop through the blocks computing each part to be added.
 	  K_ufDinvm = matrix(0, model$k, 1)
+	  Dinvm
 	  for (i in 1:length(model$blockEnd)) {
 	    ind = gpDataIndices(model, j, i)
-	    Dinvm[[i]][[j]] = model$Dinv[[i]][[j]]*model$m[ind, j]
+	    Dinvm[[i]][[j]] = model$Dinv[[i]][[j]]%*%model$m[ind, j]
 	    K_ufDinvm = K_ufDinvm + model$K_uf[, ind]%*%Dinvm[[i]][[j]]
 	  }
 	  ll = ll - model$beta*sum((model$Ainv[[i]]%*%K_ufDinvm) * K_ufDinvm)
@@ -154,8 +160,9 @@ gpLogLikelihood <- function(model) {
 	stop("Variable Length Beta not implemented yet.")
     }
   }
+
   if (model$learnScales)
-    ll = ll - colSums(log(model$scale))
+    ll = ll - sum(log(model$scale))
 
   ll = ll - model$d * model$N/2 * log(2*pi)
     

@@ -22,8 +22,8 @@ gpCreate <- function(q, d, X, y, options) {
 #     if (is.list(options$meanFunction))
 #       model$meanFunction = options$meanFunction
 #     else
-      model$meanFunction = modelCreate(options$meanFunction,
-	model$q, model$d, options$meanFunctionOptions)
+      model$meanFunction = modelCreate(options$meanFunction, model$q, model$d,
+			      options$meanFunctionOptions)
   }
 
   model$optimiser = options$optimiser
@@ -31,8 +31,8 @@ gpCreate <- function(q, d, X, y, options) {
   model$isMissingData = options$isMissingData
 
   if (!model$isMissingData) {
-    model$bias = mean(y)
-    model$scale = matrix(1,1,model$d) # ones(1,d)
+    model$bias = colMeans(y)
+    model$scale = matrix(1, 1, model$d)
   } else {
     for (i in 1:model$d) {
       model$indexPresent[[i]] = which(!is.nan(y[,i]))

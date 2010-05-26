@@ -24,7 +24,7 @@ gpPosteriorMeanVar <- function(model, X, varsigma.return=FALSE) {
 
     ## Compute kernel for new point.
     if (model$approx == "ftc")
-      KX_star = kernCompute(model$kern, model$X, X[indices,]) #in kernFunctions.R
+      KX_star = kernCompute(model$kern, model$X, X[indices, ]) #in kernFunctions.R
     else if (model$approx %in% c("dtc", "dtcvar", "fitc", "pitc"))
       KX_star = kernCompute(model$kern, model$X_u, X[indices,]) #in kernFunctions.R
     
@@ -48,7 +48,7 @@ gpPosteriorMeanVar <- function(model, X, varsigma.return=FALSE) {
 	else if (model$approx %in% c("dtc", "dtcvar", "fitc", "pitc")) {
 	  Kinvk = (model$invK_uu - (1/model$beta)*model$Ainv) %*% KX_star
 	}
-	varsig = diagK - t(colSums(KX_star * Kinvk, 1))
+	varsig = diagK - colSums(KX_star * Kinvk)
 	if ("beta"  %in% names(model)) {
 	  varsig = varsig + (1/model$beta)
 	}
@@ -63,7 +63,7 @@ gpPosteriorMeanVar <- function(model, X, varsigma.return=FALSE) {
 	    stop(c("Non-spherical not yet implemented for any approximation",
 		  "other than 'ftc'."))
 	  }
-	  varsigma[indices, i] = diagK - t(colSums(KX_star[ind,] * Kinvk, 1))
+	  varsigma[indices, i] = diagK - colSums(KX_star[ind,] * Kinvk)
 	}
       }
     }
@@ -80,7 +80,7 @@ gpPosteriorMeanVar <- function(model, X, varsigma.return=FALSE) {
     ## rescale the variances
     if (varsigma.return) { #if (nargout > 1)
       varsigma[indices,] = varsigma[indices,] *
-	kronecker(matrix(1,length(indices),1), model$scale*model$scale)
+	kronecker(matrix(1,length(indices),1), model$scale * model$scale)
     }
 
     ## Prepare for the next chunk.

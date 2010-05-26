@@ -4,9 +4,9 @@ gpExtractParam <- function(model, only.values=TRUE) {
   scaleParams = list()
   scaleParamNames = list()
   if (model$learnScales) {
-    fhandle <- get(paste(model$scaleTransform, "Transform", sep=""), mode="function")
+    fhandle <- get(model$scaleTransform$func, mode="function")
     scaleParams = fhandle(model$scale, "xtoa")
-    if (returnNames)
+    if (!only.values)
       for (i in 1:length(scaleParams))
 	scaleParamNames[[i]] = paste("Output Scale ", as.character(i), sep="")
   }
@@ -22,14 +22,14 @@ gpExtractParam <- function(model, only.values=TRUE) {
     params = unlist(c(kernParams, meanFuncParams, scaleParams))
     
     if (model$optimiseBeta) {
-      fhandle <- get(paste(model$betaTransform, "Transform", sep=""), mode="function")
+      fhandle <- get(model$betaTransform$func, mode="function")
       betaParam = fhandle(model$beta, "xtoa")
       params = c(params, betaParam)
     }
   } else if (model$approx %in% c("dtc", "dtcvar", "fitc", "pitc")) {
     paramPart = unlist(c(kernParams, meanFuncParams, scaleParams))
     if (model$optimiseBeta) {
-      fhandle <- get(paste(model$betaTransform, "Transform", sep=""), mode="function")
+      fhandle <- get(model$betaTransform$func, mode="function")
       betaParam = fhandle(model$beta, "xtoa")
       paramPart = c(paramPart, betaParam)
     }

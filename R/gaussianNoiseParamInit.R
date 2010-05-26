@@ -1,6 +1,6 @@
 gaussianNoiseParamInit <- function(noise, y) {
   if (nargs() > 1) {
-    noise$bias = mean(y)
+    noise$bias = colMeans(y)
     noise$numProcess = dim(y)[2]
   } else {
     noise$bias = matrix(0, 1, noise$numProcess)
@@ -10,7 +10,7 @@ gaussianNoiseParamInit <- function(noise, y) {
 
   noise$transforms <- list(list(index=c(noise$numProcess+1), type="positive"))
   #noise.transforms.index = noise.numProcess+1;
-  noise.nParams = 1 + noise$numProcess
+  noise$nParams = 1 + noise$numProcess
 
   ## Can handle missing values?
   noise$missing = 0;

@@ -40,7 +40,7 @@ gpLogLikeGradients <- function(model, X=model$X, M, X_u, gX_u.return=FALSE, gX.r
     if ("beta" %in% names(model))
       g_beta = 0
 
-    ## For very high D, we use the matrix S which is M*M'
+    ## For very high D, we use the matrix S which is M%*%M'
     if ("S" %in% names(model)) {
 #       gK = localSCovarianceGradients(model) ## !!!
 #       if (gX_u.return && gX.return) {
@@ -64,7 +64,7 @@ gpLogLikeGradients <- function(model, X=model$X, M, X_u, gX_u.return=FALSE, gX.r
 #           for (i in ind) {
 #             counter = counter + 1
 #             for (j in 1:model$q)
-#               gX[i, j] = gX[i, j] + gKX[ind, j, i]*gK[, counter]
+#               gX[i, j] = gX[i, j] + gKX[ind, j, i]%*%gK[, counter]
 #           }
         }
         ## Compute Gradients of Kernel Parameters

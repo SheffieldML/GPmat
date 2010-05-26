@@ -24,10 +24,10 @@ gpOptions <- function (approx="ftc") {
   options$meanFunctionOptions = list()
 
   ## Set to 1 if output processes have a shared variance.
-  options$isSpherical = 1
+  options$isSpherical = TRUE
 
   ## Set to 1 if there is data missing in the target matrix.
-  options$isMissingData = 0
+  options$isMissingData = FALSE
 
   if (options$approx == "ftc") {
     ## bog-standard kernel.

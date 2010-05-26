@@ -1,22 +1,29 @@
 gpTest <- function(q=2, d=3, N=10, Nseq=4, k=5) {
   
   modelRet = list()
-  kernType = list("rbf", "lin", "rbfard", "mlp", "mlpard", "white")
-  kernType = "rbf"
-  meanFunctionType = "gp" #"mlp"
+  kernType = list('rbf', 'lin', 'rbfard', 'mlp', 'mlpard', 'white')
+  kernType = 'rbf' #list('rbf', 'white')
+  meanFunctionType = 'mlp'
   learnScales = TRUE ## test learning of output scales.
-  X = matrix(rnorm(N*q), N, q) #randn(N, q)
-  Yorig = matrix(rnorm(N*d), N, d) #randn(N, d)
+  learnScales = FALSE
+  X = matrix(rnorm(N*q), N, q)
+  Yorig = matrix(rnorm(N*d), N, d)
   indMissing = which(matrix(rnorm(N*q), N, q) > 0.7)
-  ##approxType = list("ftc", "dtc", "dtcvar", "fitc", "pitc")
+  approxType = list("ftc", "dtc", "dtcvar", "fitc", "pitc")
   approxType = list("dtcvar")
+  approxType = list("ftc")
   counter = 0
-  for (optimiseBeta in FALSE:TRUE) {
-    for (meanFunction in FALSE:TRUE) {
-      ##  for (missing in FALSE:TRUE) {
+
+# for (optimiseBeta in FALSE:TRUE) {
+  for (optimiseBeta in FALSE) {
+#   for (meanFunction in FALSE:TRUE) {
+    for (meanFunction in FALSE) {
+#     for (missing in FALSE:TRUE) {
       for (missing in FALSE) {
-	for (fixInducing in FALSE:TRUE) {
+# 	for (fixInducing in FALSE:TRUE) {
+	for (fixInducing in FALSE) {
 	  Y = Yorig
+
 	  if (missing)
 	    Y[indMissing] = NaN
 
@@ -60,8 +67,10 @@ gpTest <- function(q=2, d=3, N=10, Nseq=4, k=5) {
 
 	    initParams = gpExtractParam(model)
 	    ## this creates some nasty parameters.
-	    initParams=matrix(rnorm(prod(dim(initParams))), dim(initParams)[1], dim(initParams)[2])
-	    # / (100*matrix(rnorm(prod(dim(initParams))), dim(initParams)[1], dim(initParams)[2]))
+	    initParams=matrix(rnorm(prod(dim(as.matrix(initParams)))),
+			dim(as.matrix(initParams))[1], dim(as.matrix(initParams))[2])
+	    # / (100*matrix(rnorm(prod(dim(as.matrix(initParams)))),
+	    # 		dim(as.matrix(initParams))[1], dim(as.matrix(initParams))[2])
 
 	    ## This forces kernel computation.
 	    model = gpExpandParam(model, initParams)

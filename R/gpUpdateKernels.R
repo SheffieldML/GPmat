@@ -34,7 +34,7 @@ gpUpdateKernels <- function (model, X, X_u) {
   } else if (model$approx %in% c("dtc", "dtcvar", "fitc", "pitc")) {
     model$K_uu = kernCompute(model$kern, X_u)
     
-    if ((!"whiteVariance" %in% names(model.kern)) || model$kern$whiteVariance == 0) {
+    if ((!"whiteVariance" %in% names(model$kern)) || model$kern$whiteVariance == 0) {
       ## There is no white noise term so add some jitter.
       model$K_uu = model$K_uu + diag.spam(jitter, dim(model$K_uu)[1]) ## need 'spam'
       #sparseDiag(matrix(jitter, dim(model$K_uu)[1], 1))

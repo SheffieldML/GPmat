@@ -1,8 +1,9 @@
-modelGradientCheck <- function(model, varargin) {
+modelGradientCheck <- function(model, ...) {
 
   params = modelExtractParam(model, only.values=FALSE)
+  names = names(params)
   if (length(names) == 0) {
-    for (i in 1:model$numParams)
+    for (i in 1:model$nParams)
       names[[i]] = paste('Param ', i, sep="")
   }
 
@@ -12,6 +13,7 @@ modelGradientCheck <- function(model, varargin) {
   L = 0
   change = 1e-6
   origParams = params
+  diff = matrix(0, 1, length(params))
   for (i in 1:length(params)) {
     params[i] = origParams[i] + change
     Lplus = modelObjective(params, model, ...)
