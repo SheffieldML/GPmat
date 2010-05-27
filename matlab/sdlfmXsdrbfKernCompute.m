@@ -63,10 +63,10 @@ if size(t1, 2) > 1 || size(t2, 2) > 1
     error('Input can only have one column');
 end
 
-compareInverseWidth = sdlfmKern.inverseWidth == sdrbfKern.inverseWidth;
-if sum(sum(compareInverseWidth))~=(sdlfmKern.nIntervals*sdlfmKern.nlfPerInt)
-    error('Kernels cannot be cross combined if they have different inverse widths.')
-end
+% compareInverseWidth = sdlfmKern.inverseWidth == sdrbfKern.inverseWidth;
+% if sum(sum(compareInverseWidth))~=(sdlfmKern.nIntervals*sdlfmKern.nlfPerInt)
+%     error('Kernels cannot be cross combined if they have different inverse widths.')
+% end
 % compareSwitchingTimes = sdlfmKern.switchingTimes == sdrbfKern.switchingTimes;
 % if sum(sum(compareSwitchingTimes))~=sdlfmKern.nIntervals
 %     error('Kernels cannot be cross combined if they have different switching points.')

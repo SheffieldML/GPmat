@@ -68,12 +68,12 @@ for k=1:length(lfmKern1)
 end
 % Assign derivatives wrt first system
 g1{1} = g1Mean + sum(g1Kern(:,1:3), 1); % mass 1, spring 1, damper 1
-g1{2} = g1Kern(:,4)';                   % inverse widths
-g1{3} = g1Kern(:,5)';                   % sensitivities 1
+g1{2} = g1Kern(:,4).';                   % inverse widths
+g1{3} = g1Kern(:,5).';                   % sensitivities 1
 % Assign derivatives wrt second system
 g2{1} = g2Mean + sum(g2Kern(:,1:3), 1); % mass 2, spring 2, damper 2
-g2{2} = g2Kern(:,4)';                   % inverse widths
-g2{3} = g2Kern(:,5)';                   % sensitivities 2
+g2{2} = g2Kern(:,4).';                   % inverse widths
+g2{3} = g2Kern(:,5).';                   % sensitivities 2
 
 g3 = gsp1Mean + sum(gsp1Kern) + gsp2Mean + sum(gsp2Kern); % All these are the same switching point.
 

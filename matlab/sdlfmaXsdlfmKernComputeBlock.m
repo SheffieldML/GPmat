@@ -37,7 +37,7 @@ b1 = sdlfmaMeanCompute(lfmKern1(1), t1, 'Vel');
 c2 = sdlfmMeanCompute(lfmKern2(1), t2, 'Pos');
 e2 = sdlfmMeanCompute(lfmKern2(1), t2, 'Vel');
 
-K = kyy*a1*c2' + kyv*a1*e2' + kvy*b1*c2' + kvv*b1*e2';
+K = kyy*a1*c2.' + kyv*a1*e2.' + kvy*b1*c2.' + kvv*b1*e2.';
 
 if i==j
     for k=1:length(lfmKern1)
@@ -66,10 +66,10 @@ else
             AccelVel = AccelVel + lfmaXlfmvKernCompute(lfmKern1(k), lfmKern2(k), t1, lfmKern1(k).limit);
         end
         if isempty(generalConst{i,j})
-            K = K + AccelPos*c2' + AccelVel*e2';
+            K = K + AccelPos*c2.' + AccelVel*e2.';
         else
-            K = K + AccelPos*(generalConst{i,j}(1,1)*c2' + generalConst{i,j}(2,1)*e2') + ...
-                AccelVel*(generalConst{i,j}(1,2)*c2' + generalConst{i,j}(2,2)*e2');
+            K = K + AccelPos*(generalConst{i,j}(1,1)*c2.' + generalConst{i,j}(2,1)*e2.') + ...
+                AccelVel*(generalConst{i,j}(1,2)*c2.' + generalConst{i,j}(2,2)*e2.');
         end
     end
 end

@@ -31,3 +31,5 @@ kern.sensitivity = reshape(params(kern.sensitivityIndx), kern.nlfPerInt, kern.nI
 kern.alpha = kern.damper/(2*kern.mass);
 kern.omega = sqrt((4*kern.mass*kern.spring - kern.damper^2)/(4*kern.mass^2));
 kern.gamma = kern.alpha + j*kern.omega;
+kern.zeta = kern.damper./(2*sqrt(kern.mass*kern.spring));
+kern.omega_0 = sqrt(kern.spring./kern.mass);

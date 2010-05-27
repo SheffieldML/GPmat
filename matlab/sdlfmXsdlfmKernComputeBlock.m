@@ -37,7 +37,7 @@ e1 = sdlfmMeanCompute(lfmKern1(1), t1, 'Vel');
 c2 = sdlfmMeanCompute(lfmKern2(1), t2, 'Pos');
 e2 = sdlfmMeanCompute(lfmKern2(1), t2, 'Vel');
 
-K = kyy*c1*c2' + kyv*c1*e2' + kvy*e1*c2' + kvv*e1*e2';
+K = kyy*c1*c2.' + kyv*c1*e2.' + kvy*e1*c2.' + kvv*e1*e2.';
 
 if i==j
     for k=1:length(lfmKern1)
@@ -64,13 +64,13 @@ else
         PosVel = zeros(length(t1),1);
         for k=1:length(lfmKern1)
             PosPos = PosPos + lfmXlfmKernCompute(lfmKern1(k), lfmKern2(k), t1, lfmKern1(k).limit);
-            PosVel = PosVel + lfmvXlfmKernCompute(lfmKern2(k), lfmKern1(k), lfmKern1(k).limit, t1)';
+            PosVel = PosVel + lfmvXlfmKernCompute(lfmKern2(k), lfmKern1(k), lfmKern1(k).limit, t1).';
         end        
          if isempty(generalConst{i,j})
-             K = K + PosPos*c2' + PosVel*e2';               
+             K = K + PosPos*c2.' + PosVel*e2.';               
          else
-             K = K + PosPos*(generalConst{i,j}(1,1)*c2' + generalConst{i,j}(2,1)*e2') + ...
-                 PosVel*(generalConst{i,j}(1,2)*c2' + generalConst{i,j}(2,2)*e2');
+             K = K + PosPos*(generalConst{i,j}(1,1)*c2.' + generalConst{i,j}(2,1)*e2.') + ...
+                 PosVel*(generalConst{i,j}(1,2)*c2.' + generalConst{i,j}(2,2)*e2.');
          end
     end
 end

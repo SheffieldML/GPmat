@@ -37,7 +37,7 @@ e1 = sdlfmMeanCompute(lfmKern1(1), t1, 'Vel');
 g2 = sdlfmvMeanCompute(lfmKern2(1), t2, 'Pos');
 h2 = sdlfmvMeanCompute(lfmKern2(1), t2, 'Vel');
 
-K = kyy*c1*g2' + kyv*c1*h2' + kvy*e1*g2' + kvv*e1*h2';
+K = kyy*c1*g2.' + kyv*c1*h2.' + kvy*e1*g2.' + kvv*e1*h2.';
 
 if i==j
     for k=1:length(lfmKern1)
@@ -66,10 +66,10 @@ else
             
         end        
          if isempty(generalConst{i,j})
-             K = K + PosVel*g2' + VelVel*h2';               
+             K = K + PosVel*g2.' + VelVel*h2.';               
          else
-             K = K + PosVel*(generalConst{i,j}(1,1)*g2' + generalConst{i,j}(2,1)*h2') + ...
-                 VelVel*(generalConst{i,j}(1,2)*g2' + generalConst{i,j}(2,2)*h2');
+             K = K + PosVel*(generalConst{i,j}(1,1)*g2.' + generalConst{i,j}(2,1)*h2.') + ...
+                 VelVel*(generalConst{i,j}(1,2)*g2.' + generalConst{i,j}(2,2)*h2.');
          end
     end
 end

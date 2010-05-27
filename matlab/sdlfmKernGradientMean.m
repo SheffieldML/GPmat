@@ -77,22 +77,22 @@ fhandle4 = str2func([typeParam{2} 'MeanGradient']);
 
 % Derivative with respect to Alpha1 and Omega1
 
-matGradAlpha = kyy*gc1Alpha*c2' + kyv*gc1Alpha*e2' + kvy*ge1Alpha*c2' + ...
-    kvv*ge1Alpha*e2';
+matGradAlpha = kyy*gc1Alpha*c2.' + kyv*gc1Alpha*e2.' + kvy*ge1Alpha*c2.' + ...
+    kvv*ge1Alpha*e2.';
 
-matGradOmega = kyy*gc1Omega*c2' + kyv*gc1Omega*e2' + kvy*ge1Omega*c2' + ...
-    kvv*ge1Omega*e2';
+matGradOmega = kyy*gc1Omega*c2.' + kyv*gc1Omega*e2.' + kvy*ge1Omega*c2.' + ...
+    kvv*ge1Omega*e2.';
 
 grad1 = gradAlphaParams1*(sum(sum(matGradAlpha.*covGrad))) + ...
     gradOmegaParams1*(sum(sum(matGradOmega.*covGrad)));
 
 % Derivatives with respect to Alpha2 and Omega2
 
-matGradAlpha = kyy*c1*gc2Alpha' + kyv*c1*ge2Alpha' + kvy*e1*gc2Alpha' + ...
-    kvv*e1*ge2Alpha';
+matGradAlpha = kyy*c1*gc2Alpha.' + kyv*c1*ge2Alpha.' + kvy*e1*gc2Alpha.' + ...
+    kvv*e1*ge2Alpha.';
 
-matGradOmega = kyy*c1*gc2Omega' + kyv*c1*ge2Omega' + kvy*e1*gc2Omega' + ...
-    kvv*e1*ge2Omega';
+matGradOmega = kyy*c1*gc2Omega.' + kyv*c1*ge2Omega.' + kvy*e1*gc2Omega.' + ...
+    kvv*e1*ge2Omega.';
 
 grad2 = gradAlphaParams2*(sum(sum(matGradAlpha.*covGrad))) + ...
     gradOmegaParams2*(sum(sum(matGradOmega.*covGrad)));
@@ -109,13 +109,13 @@ h2 = fhandle6(lfmKern2, t2, 'Vel');
 
 % Derivative of switching point 1
 
-matGradSp1 = kyy*g1*c2' + kyv*g1*e2' + kvy*h1*c2' + kvv*h1*e2';
+matGradSp1 = kyy*g1*c2.' + kyv*g1*e2.' + kvy*h1*c2.' + kvv*h1*e2.';
 
 gsp1 = - sum(sum(matGradSp1.*covGrad));
 
 % Derivative of switching point 2
 
-matGradSp2 = kyy*c1*g2' + kyv*c1*h2' + kvy*e1*g2' + kvv*e1*h2';
+matGradSp2 = kyy*c1*g2.' + kyv*c1*h2.' + kvy*e1*g2.' + kvv*e1*h2.';
 
 gsp2 = - sum(sum(matGradSp2.*covGrad));
 

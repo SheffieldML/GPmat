@@ -50,4 +50,15 @@ for i=1:kern.nlfPerInt
            i,j, kern.sensitivity(i,j));        
     end
 end
-
+fprintf(spacing);
+fprintf('System Characteristics:\n')
+fprintf(spacing);
+fprintf('SDLFM omega: %2.4f\n', kern.omega)
+fprintf(spacing);
+fprintf('SDLFM alpha: %2.4f\n', kern.alpha)
+fprintf(spacing);
+fprintf('SDLFM gamma: %2.4f\n', kern.gamma)
+fprintf(spacing);
+fprintf('SDLFM Damping Ratio: %2.4f\n', kern.zeta)
+fprintf(spacing);
+fprintf('SDLFM Undamped Natural Frequency: %2.4f\n', kern.omega_0)

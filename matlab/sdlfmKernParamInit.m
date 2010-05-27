@@ -19,7 +19,7 @@ function  kern = sdlfmKernParamInit(kern)
 kern = lfmKernParamInit(kern);
 
 % Remove unnecessary fields from the LFM structure
-kern = rmfield(kern, {'delay','initVal','variance', 'serialNumber', 'zeta', 'omega_0'});
+kern = rmfield(kern, {'delay','initVal','variance', 'serialNumber'});
 
 if isfield(kern, 'options') && isfield(kern.options, 'nIntervals')
     kern.nIntervals = kern.options.nIntervals;

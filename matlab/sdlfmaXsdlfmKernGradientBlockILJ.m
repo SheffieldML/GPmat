@@ -88,7 +88,7 @@ for k=1:length(lfmKern1)
     PosPos = PosPos + fhandleKernPosPos(lfmKern1(k), lfmKern2(k), t1,...
         lfmKern1(k).limit);
     [g1KLocal, g2KLocal] = fhandleKernGradPosPos(lfmKern1(k), lfmKern2(k), ...
-        t1, lfmKern1(k).limit, covGrad, coeffPosPos');
+        t1, lfmKern1(k).limit, covGrad, coeffPosPos.');
     g1Kern(k,:) = g1Kern(k, :) + g1KLocal;
     g2Kern(k,:) = g2Kern(k, :) + g2KLocal;
     PosVel = PosVel + fhandleKernVelPos(lfmKern1(k), lfmKern2(k), ...
@@ -111,23 +111,23 @@ gsp2Kern = zeros(1, length(lfmKern1));
 % and e1(t - t1)
 for k=1:length(lfmKern1)
     temp = fhandleKernGradSwitchingPosPos1(lfmKern1(k), lfmKern2(k), t1, lfmKern1(k).limit);
-    gsp1Kern(k) = gsp1Kern(k) - sum(sum((temp*coeffPosPos').*covGrad));
+    gsp1Kern(k) = gsp1Kern(k) - sum(sum((temp*coeffPosPos.').*covGrad));
     %temp = fhandleKernGradSwitchingPosPos2(lfmKern2(k), lfmKern1(k), lfmKern1(k).limit, t1)';
     temp = fhandleKernGradSwitchingPosPos2(lfmKern1(k), lfmKern2(k), t1, lfmKern1(k).limit);
-    gsp1Kern(k) = gsp1Kern(k) - sum(sum((temp*coeffPosPos').*covGrad));
-    gsp2Kern(k) = gsp2Kern(k) + sum(sum((temp*coeffPosPos').*covGrad));
+    gsp1Kern(k) = gsp1Kern(k) - sum(sum((temp*coeffPosPos.').*covGrad));
+    gsp2Kern(k) = gsp2Kern(k) + sum(sum((temp*coeffPosPos.').*covGrad));
     temp = fhandleKernGradSwitchingVelPos1(lfmKern1(k), lfmKern2(k), t1, lfmKern1(k).limit);
-    gsp1Kern(k) = gsp1Kern(k) - sum(sum((temp*coeffPosVel').*covGrad));
-    temp = fhandleKernGradSwitchingVelPos2(lfmKern2(k), lfmKern1(k), lfmKern1(k).limit, t1)';
-    gsp1Kern(k) = gsp1Kern(k) - sum(sum((temp*coeffPosVel').*covGrad));
-    gsp2Kern(k) = gsp2Kern(k) + sum(sum((temp*coeffPosVel').*covGrad));
+    gsp1Kern(k) = gsp1Kern(k) - sum(sum((temp*coeffPosVel.').*covGrad));
+    temp = fhandleKernGradSwitchingVelPos2(lfmKern2(k), lfmKern1(k), lfmKern1(k).limit, t1).';
+    gsp1Kern(k) = gsp1Kern(k) - sum(sum((temp*coeffPosVel.').*covGrad));
+    gsp2Kern(k) = gsp2Kern(k) + sum(sum((temp*coeffPosVel.').*covGrad));
 end
 if isempty(generalConst{i,j})
-    matGradAlpha = PosPos*gcAlpha' + PosVel*geAlpha';
-    matGradOmega = PosPos*gcOmega' + PosVel*geOmega';
+    matGradAlpha = PosPos*gcAlpha.' + PosVel*geAlpha.';
+    matGradOmega = PosPos*gcOmega.' + PosVel*geOmega.';
     gCoeff = gradAlpha*sum(sum(matGradAlpha.*covGrad)) + ...
         gradOmega*(sum(sum(matGradOmega.*covGrad)));
-    matGradSp2 = PosPos*g2Pos' + PosVel*h2Vel';
+    matGradSp2 = PosPos*g2Pos.' + PosVel*h2Vel.';
     gsp2 = - sum(sum(matGradSp2.*covGrad));
     g3(i) = gsp1Mean + sum(gsp1Kern);                % switching points 1
     g3(j) = gsp2Mean + sum(gsp2Kern) + gsp2;         % switching points 2
@@ -136,15 +136,15 @@ else
     constGradOmega = generalConstGrad{2}{i,j};
     constVal = generalConst{i,j};
     % Derivative wrt parameters
-    matGradAlpha = PosPos*((constVal(1,1)*gcAlpha' + constGradAlpha(1,1)*c2') ...
-        + constVal(2,1)*geAlpha' + constGradAlpha(2,1)*e2') ...
-        + PosVel*((constVal(1,2)*gcAlpha' + constGradAlpha(1,2)*c2') ...
-        + constVal(2,2)*geAlpha' + constGradAlpha(2,2)*e2');
+    matGradAlpha = PosPos*((constVal(1,1)*gcAlpha.' + constGradAlpha(1,1)*c2.') ...
+        + constVal(2,1)*geAlpha.' + constGradAlpha(2,1)*e2.') ...
+        + PosVel*((constVal(1,2)*gcAlpha.' + constGradAlpha(1,2)*c2.') ...
+        + constVal(2,2)*geAlpha.' + constGradAlpha(2,2)*e2.');
 
-    matGradOmega = PosPos*((constVal(1,1)*gcOmega' + constGradOmega(1,1)*c2') ...
-        + constVal(2,1)*geOmega' + constGradOmega(2,1)*e2') ...
-        + PosVel*((constVal(1,2)*gcOmega' + constGradOmega(1,2)*c2') ...
-        + constVal(2,2)*geOmega' + constGradOmega(2,2)*e2');
+    matGradOmega = PosPos*((constVal(1,1)*gcOmega.' + constGradOmega(1,1)*c2.') ...
+        + constVal(2,1)*geOmega.' + constGradOmega(2,1)*e2.') ...
+        + PosVel*((constVal(1,2)*gcOmega.' + constGradOmega(1,2)*c2.') ...
+        + constVal(2,2)*geOmega.' + constGradOmega(2,2)*e2.');
 
     gCoeff = gradAlpha*sum(sum(matGradAlpha.*covGrad)) + ...
         gradOmega*(sum(sum(matGradOmega.*covGrad)));
@@ -156,8 +156,8 @@ else
     gspInt = sum(gsp2Kern);
     % Compute the derivative of the swicthing point j, not appearing in the
     % constant
-    matGradSp2 = PosPos*(constVal(1,1)*g2Pos' + constVal(2,1)*h2Vel') + ...
-        PosVel*(constVal(1,2)*g2Pos' + constVal(2,2)*h2Vel');
+    matGradSp2 = PosPos*(constVal(1,1)*g2Pos.' + constVal(2,1)*h2Vel.') + ...
+        PosVel*(constVal(1,2)*g2Pos.' + constVal(2,2)*h2Vel.');
     gsp2 = - sum(sum(matGradSp2.*covGrad));
     % Compute the derivatives for all the switching points apearing in the
     % constant
@@ -165,8 +165,8 @@ else
     numberSP = size(constGradSPoint,2);
     gspInBetween = zeros(1, numberSP);
     for k=1:numberSP
-        temp = PosPos*(constGradSPoint(1,k)*c2' + constGradSPoint(3,k)*e2') + ...
-            PosVel*(constGradSPoint(2,k)*c2' + constGradSPoint(4,k)*e2');
+        temp = PosPos*(constGradSPoint(1,k)*c2.' + constGradSPoint(3,k)*e2.') + ...
+            PosVel*(constGradSPoint(2,k)*c2.' + constGradSPoint(4,k)*e2.');
         gspInBetween(k) = sum(sum(temp.*covGrad));
     end
     % Assign derivatives wrt all other switching points, with a correction
@@ -178,9 +178,9 @@ else
 end
 % Assign derivatives wrt first system
 g1{1} = g1Mean + sum(g1Kern(:,1:3), 1);          % mass 1, spring 1, damper 1
-g1{2} = g1Kern(:,4)';                            % inverse widths
-g1{3} = g1Kern(:,5)';                            % sensitivities 1
+g1{2} = g1Kern(:,4).';                            % inverse widths
+g1{3} = g1Kern(:,5).';                            % sensitivities 1
 % Assign derivatives wrt second system
 g2{1} = g2Mean + sum(g2Kern(:,1:3), 1) + gCoeff; % mass 2, spring 2, damper 2
-g2{2} = g2Kern(:,4)';                            % inverse widths
-g2{3} = g2Kern(:,5)';                            % sensitivities 2
+g2{2} = g2Kern(:,4).';                            % inverse widths
+g2{3} = g2Kern(:,5).';                            % sensitivities 2

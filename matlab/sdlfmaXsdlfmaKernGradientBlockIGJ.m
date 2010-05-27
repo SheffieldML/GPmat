@@ -89,13 +89,13 @@ for k=1:length(lfmKern1)
     PosPos = PosPos + fhandleKernPosPos(lfmKern2(k), lfmKern1(k), t2, ...
         lfmKern2(k).limit).';
     [g2KLocal, g1KLocal] = fhandleKernGradPosPos(lfmKern2(k), lfmKern1(k), ...
-        t2, lfmKern2(k).limit, covGrad', coeffPosPos');
+        t2, lfmKern2(k).limit, covGrad.', coeffPosPos.');
     g1Kern(k,:) = g1Kern(k, :) + g1KLocal;
     g2Kern(k,:) = g2Kern(k, :) + g2KLocal;
     VelPos = VelPos + fhandleKernVelPos(lfmKern2(k), lfmKern1(k), ...
         t2, lfmKern2(k).limit).';
     [g2KLocal, g1KLocal] = fhandleKernGradVelPos(lfmKern2(k), lfmKern1(k), ...
-        t2, lfmKern2(k).limit, covGrad', coeffVelPos');
+        t2, lfmKern2(k).limit, covGrad.', coeffVelPos.');
     g1Kern(k,:) = g1Kern(k, :) + g1KLocal;
     g2Kern(k,:) = g2Kern(k, :) + g2KLocal;
 end
@@ -176,9 +176,9 @@ else
 end
 % Assign derivatives wrt first system
 g1{1} = g1Mean + sum(g1Kern(:,1:3), 1) + gCoeff; % mass 1, spring 1, damper 1
-g1{2} = g1Kern(:,4)';                            % inverse widths
-g1{3} = g1Kern(:,5)';                            % seinsitivities 1
+g1{2} = g1Kern(:,4).';                            % inverse widths
+g1{3} = g1Kern(:,5).';                            % seinsitivities 1
 % Assign derivatives wrt second system
 g2{1} = g2Mean + sum(g2Kern(:,1:3), 1); % mass 2, spring 2, damper 2
-g2{2} = g2Kern(:,4)';                   % inverse widths
-g2{3} = g2Kern(:,5)';
+g2{2} = g2Kern(:,4).';                   % inverse widths
+g2{3} = g2Kern(:,5).';

@@ -46,10 +46,10 @@ end
 
 PosRbf = lfmXrbfKernCompute(lfmKern, rbfKern, rbfKern.limit, t2);
 [g1Kern, g2Kern] = lfmXrbfKernGradient(lfmKern, rbfKern, ...
-        rbfKern.limit, t2, covGrad', coeffPosRbf);
+        rbfKern.limit, t2, covGrad.', coeffPosRbf);
 VelRbf = lfmvXrbfKernCompute(lfmKern, rbfKern, rbfKern.limit, t2);
 [g1KLocal, g2KLocal] = lfmvXrbfKernGradient(lfmKern, rbfKern, ...
-        rbfKern.limit, t2, covGrad', coeffVelRbf);
+        rbfKern.limit, t2, covGrad.', coeffVelRbf);
 g1Kern = g1Kern + g1KLocal;
 g2Kern = g2Kern + g2KLocal;
 
