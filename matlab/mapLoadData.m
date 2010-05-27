@@ -1565,7 +1565,7 @@ switch dataset
             Xtest = cell(1, nSamples);
             Xtrain = cell(1, nSamples);
             for q=1:nSamples              
-                options.kern.switchingTimes = [-1  meanSwitching(1)+0.1*randn meanSwitching(1)+0.1*randn];
+                options.kern.switchingTimes = [-1  meanSwitching(1)+0.1*randn meanSwitching(2)+0.1*randn];
                 options.kern.nlfPerInt = options.nlfPerInt;
                 kernType{1} = sdlfmgpKernComposer(options.kernType, numOut, 'ftc', options);
                 kern = kernCreate(X, {'cmpnd', kernType{:}});
