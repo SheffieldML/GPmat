@@ -43,5 +43,5 @@ modelGradientCheck <- function(model, ...) {
       }
     }
   }
-  print('Param max diff: ', round(paramMaxDiff,6))
+  print(paste('Param max diff: ', round(paramMaxDiff,6), sep=''))
 }

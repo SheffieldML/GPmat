@@ -69,8 +69,8 @@ gpLogLikeGradients <- function(model, X=model$X, M, X_u, gX_u.return=FALSE, gX.r
         }
         ## Compute Gradients of Kernel Parameters
         if (model$isMissingData){
-#           g_param = g_param
-# 		+ kernGradient(model$kern, X[model$indexPresent[[k]], ], gK) ## !!!
+	  g_param = g_param
+	    + kernGradient(model$kern, X[model$indexPresent[[k]], ], gK)
 	} else
           g_param = g_param + kernGradient(model$kern, X, gK)
       }
@@ -194,11 +194,11 @@ gpLogLikeGradients <- function(model, X=model$X, M, X_u, gX_u.return=FALSE, gX.r
   if (!(gX_u.return && gX.return && g_beta.return)) { #if (nargout < 4)
     if ((!"optimiseBeta" %in% names(model) && model$approx!="ftc") || model$optimiseBeta)
       ## append beta gradient to end of parameters
-      gParam = c(g_param, g_meanFunc, g_scaleBias, g_beta)
+      gParam = unlist(c(g_param, g_meanFunc, g_scaleBias, g_beta))
     else
-      gParam = c(g_param, g_meanFunc, g_scaleBias)
+      gParam = unlist(c(g_param, g_meanFunc, g_scaleBias))
   } else
-    gParam = c(g_param, g_meanFunc, g_scaleBias)
+    gParam = unlist(c(g_param, g_meanFunc, g_scaleBias))
 
   ## if there is only one output argument, pack gX_u and gParam into it.
   if (!(gX_u.return || gX.return || g_beta.return)) #(nargout == 1)
