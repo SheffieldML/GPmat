@@ -19,19 +19,8 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
   else
     genes <- targets
 
-  # The preprocessed data is searched for the data of the specified genes.
-  newData <- .getProcessedData(preprocData[genes,])
-  y <- newData$y
-  yvar <- newData$yvar
-  times <- newData$times
-
-  Nrep <- length(y)
-
   options <- list(includeNoise=0, optimiser="SCG")
 
-  if (any(yvar[[1]] == 0))
-    options$includeNoise = 1
-  
   if (!is.null(gpsimOptions)) {
     for (i in seq(along=gpsimOptions))
       options[[names(gpsimOptions)[[i]]]] <- gpsimOptions[[i]]
@@ -44,6 +33,23 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
     options$timeSkew <- 1000.0
   #options$gaussianInitial <- TRUE
 
+  if (length(unique(preprocData$experiments)) == length(preprocData$experiments)) {
+    options$structuredExperiments <- TRUE
+    options$experiments <- preprocData$experiments
+    newData <- .getProcessedData(preprocData[genes,], returnJustOne=TRUE)
+  }
+  else
+    newData <- .getProcessedData(preprocData[genes,])
+
+  y <- newData$y
+  yvar <- newData$yvar
+  times <- newData$times
+
+  Nrep <- length(y)
+
+  if (any(yvar[[1]] == 0))
+    options$includeNoise = 1
+  
   if (useGpdisim) {
     Ngenes <- length(genes) - 1
     options$fix$names <- "di_variance"
@@ -428,7 +434,7 @@ generateModels <- function(preprocData, scores) {
 }
 
 
-.getProcessedData <- function(data) {
+.getProcessedData <- function(data, returnJustOne=FALSE) {
   times <- data$modeltime
   experiments <- data$experiments
 
@@ -446,12 +452,18 @@ generateModels <- function(preprocData, scores) {
   ylist <- list()
   yvarlist <- list()
 
-  expids <- unique(experiments)
-  for (i in seq(along=expids)) {
-    ylist[[i]] <- y[,experiments==expids[i]]
-    yvarlist[[i]] <- yvar[,experiments==expids[i]]
+  if (returnJustOne) {
+    ylist[[1]] <- y
+    yvarlist[[1]] <- yvar
   }
-  times <- times[experiments==expids[1]]
+  else {
+    expids <- unique(experiments)
+    for (i in seq(along=expids)) {
+      ylist[[i]] <- y[,experiments==expids[i]]
+      yvarlist[[i]] <- yvar[,experiments==expids[i]]
+    }
+    times <- times[experiments==expids[1]]
+  }
 
   genes <- featureNames(data)
 

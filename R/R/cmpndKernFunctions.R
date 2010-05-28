@@ -112,7 +112,7 @@ cmpndKernExpandParam <- function (kern, params) {
     kern$comp[[i]] <- kernExpandParam(kern$comp[[i]], params[startVal:endVal])
     startVal <- endVal+1
     if ( "white" %in% kern$comp[[i]]$type ) {
-      kern$whiteVariance <- kern$whiteVairance+kern$comp[[i]]$variance
+      kern$whiteVariance <- kern$whiteVariance+kern$comp[[i]]$variance
     } else if ( "whiteVariance" %in% names(kern$comp[[i]]) ) {
       kern$whiteVariance <- kern$whiteVariance+kern$comp[[i]]$whiteVariance
     }
@@ -222,7 +222,8 @@ cmpndKernGradX <- function (kern, X, X2) {
   func <- get(funcName, mode="function")
 
   if ( !is.na(kern$comp[[i]]$index) ) {
-    gX <- array(0, dim=c(length(X2), length(X2), length(X)))
+    gX <- array(0, dim=c(dim(as.array(X2))[1], dim(as.array(X2))[1],
+                     dim(as.array(X))[1]))
     gX[,kern$comp[[i]]$index,] <- func(kern$comp[[i]], X[,kern$comp[[i]]$index], X2[,kern$comp[[i]]$index])
   } else {
     gX <- func(kern$comp[[i]], X, X2)

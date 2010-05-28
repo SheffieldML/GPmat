@@ -426,6 +426,18 @@ modelLogLikelihood <- function (model) {
 }
 
 
+gpsimExperimentMask <- function(Ngenes, experiments) {
+  mask <- diag(1, nrow=Ngenes*length(experiments))
+
+  expids <- unique(experiments)
+  for (i in seq(along=expids)) {
+    mask[experiments==expids[i],experiments==expids[i]] <- 1
+  }
+
+  return(mask)
+}
+
+
 # Adapted from selectSomeIndex for AnnotatedDataFrame in Biobase
 # Original (c) R. Gentleman, V. Carey, M. Morgan, S. Falcon
 .listSelectSomeIndex <- function(object, maxToShow=5) {
