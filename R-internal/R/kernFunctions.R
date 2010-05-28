@@ -43,7 +43,7 @@ kernCreate <- function(x, kernType) {
         
         if ( is.list(x) ) {
           kern$comp[[i-start+1]] <- kernCreate(x[[i-start+1]], iType)
-          kern$diagBlockDim[i-start+1] <- length(x[[i-start+1]])
+          kern$diagBlockDim[i-start+1] <- dim(as.array(x[[i-start+1]]))[1]
         } else {
           kern$comp[[i-start+1]] <- kernCreate(x, iType)
         }
@@ -51,7 +51,8 @@ kernCreate <- function(x, kernType) {
         kern$comp[[i-start+1]]$index = array()
       }
       
-    } else if ( kern$type %in% c("cmpnd", "tensor", "translate") )  {
+    } else if ( kern$type %in% c("cmpnd", "tensor", "translate",
+                                 "selproj") )  {
       for ( i in start:length(kernType$comp) ) {
         if ( is.list(kernType$comp) ) {
           iType <- kernType$comp[[i]]
@@ -162,7 +163,6 @@ kernDisplay <- function (kern, ...) {
   }
 
 }
-
 
 kernCompute <- function (kern, x, x2) {
 
@@ -345,11 +345,11 @@ multiKernCompute <- function (kern, x, x2=x) {
     dim2 <- array(0, dim=length(x))
     
     for ( i in seq(length=kern$numBlocks) ) {
-      dim1[i] <- length(x[[i]])
+      dim1[i] <- dim(as.array(x[[i]]))[1]
       if ( nargs()>2 ) {
         if ( length(x) != length(x2) )
           stop ("Time information is not matched within the block!")
-        dim2[i] <- length(x2[[i]])
+        dim2[i] <- dim(as.array(x2[[i]]))[1]
       } else {
         dim2[i] <- dim1[i]
       }
@@ -387,10 +387,10 @@ multiKernCompute <- function (kern, x, x2=x) {
     }
   } else {
                                         # non-cell part
-    dim1 = length(x)
+    dim1 = dim(as.array(x))[1]
     
     if ( nargs() > 2 ) {
-      dim2 = length(x2)
+      dim2 = dim(as.array(x2))[1]
     } else {
       dim2 = dim1;
     }
@@ -431,8 +431,6 @@ multiKernCompute <- function (kern, x, x2=x) {
 
   return (K)
 }
-
-
 
 .multiKernComputeBlock <- function (kern, i, j, x1, x2=NULL) {
   if ( i==j ) {
@@ -494,10 +492,10 @@ multiKernGradient <- function (kern, x, x2, covGrad) {
     dim1 <- array()
     dim2 <- array()
     for ( i in seq(length=kern$numBlocks) ) {
-      dim1[i] <- length(x[[i]])
+      dim1[i] <- dim(as.array(x[[i]]))[1]
       arg1[[i]] <- x[[i]]
       if ( nargs()>3 ) {
-        dim2[i] <- length(x2[[i]])
+        dim2[i] <- dim(as.array(x2[[i]]))[1]
         arg2[[i]] <- x2[[i]]
       } else {
         dim2[i] <- dim1[i]
@@ -542,11 +540,11 @@ multiKernGradient <- function (kern, x, x2, covGrad) {
       startVal <- endVal + 1
     }
 
-  } else {
-    dim1 <- length(x)
+  } else {   # non-list x
+    dim1 <- dim(as.array(x))[1]
     arg1 <- x
     if ( nargs() > 3 ) {
-      dim2 <- length(x2)
+      dim2 <- dim(as.array(x2))[1]
       arg2 <- x2
     } else {
       dim2 <- dim1
@@ -690,28 +688,29 @@ multiKernGradient <- function (kern, x, x2, covGrad) {
 
 multiKernDiagCompute <- function (kern, x) {
   if ( is.list(x) ) {
-    dim <- 0
-    for ( i in seq(along=x) )
-      dim <- dim + length(x[[i]])
+    xdim <- 0
+    for ( i in seq_along(x) )
+      xdim <- xdim + dim(as.array(x[[i]]))[1]
 
-    k <- matrix(0, dim, 1)
+    k <- matrix(0, xdim, 1)
     startVal <- 1
-    endVal <- length(x[[1]])
+    endVal <- dim(as.array(x[[1]]))[1]
     for ( i in seq(along=kern$comp) ) {
 
       k[startVal:endVal] <- kernDiagCompute(kern$comp[[i]], x[[i]])
       startVal <- endVal + 1
       if ( (i+1)<=length(kern$comp) )
-        endVal <- endVal + length(x[[i+1]])
+        endVal <- endVal + dim(as.array(x[[i+1]]))[1]
     }
   } else {
-    k <- array(0, length(x)*kern$numBlocks)
+    xdim <- dim(as.array(x))[1]
+    k <- array(0, xdim*kern$numBlocks)
     startVal <- 1
-    endVal <- length(x)
+    endVal <- xdim
     for ( i in seq(along=kern$comp) ) {
       k[startVal:endVal] <- kernDiagCompute(kern$comp[[i]], x)
       startVal <- endVal + 1
-      endVal <- endVal + length(x)
+      endVal <- endVal + xdim
     }
   }
 

@@ -1,5 +1,5 @@
 translateKernDiagCompute <- function (kern, x) {
-  x <- x - array(kern$centre, length(x))
+  x <- x - array(kern$centre, dim(as.array(x))[1])
   k <- cmpndKernDiagCompute(kern, x)
        
   return (k)
@@ -41,11 +41,11 @@ translateKernExpandParam <- function (kern, params) {
 
 translateKernCompute <- function (kern, x, x2) {
   if ( nargs()>2 ) {
-    x <- x - array(kern$centre, length(x))
-    x2 <- x2 - array(kern$centre, length(x2))
+    x <- x - array(kern$centre, dim(as.array(x))[1])
+    x2 <- x2 - array(kern$centre, dim(as.array(x2))[1])
     k <- cmpndKernCompute(kern, x, x2)
   } else {
-    x <- x - array(kern$centre, length(x))
+    x <- x - array(kern$centre, dim(as.array(x))[1])
     k <- cmpndKernCompute(kern, x)
   }
   return (k)  
@@ -68,7 +68,7 @@ translateKernGradient <- function (kern, x, x2, covGrad) {
 
   if ( nargs()<4 ) {
     covGrad <- x2
-    x <- x - array(kern$centre, length(x))
+    x <- x - array(kern$centre, dim(as.array(x))[1])
     g <- cmpndKernGradient(kern, x, covGrad)
 
     gKX <- cmpndKernGradX(kern, x, x)
@@ -78,8 +78,8 @@ translateKernGradient <- function (kern, x, x2, covGrad) {
       gKX[i,,i] <- dgKX[i,]
    
   } else {
-    x <- x - array(kern$centre, length(x))
-    x2 <- x2 - array(kern$centre, length(x2))
+    x <- x - array(kern$centre, dim(as.array(x))[1])
+    x2 <- x2 - array(kern$centre, dim(as.array(x2))[1])
     g <- cmpndKernGradient(kern, x, x2, covGrad)
 
     gKX12 <- cmpndKernGradX(kern, x, x2)
@@ -88,16 +88,16 @@ translateKernGradient <- function (kern, x, x2, covGrad) {
 
   gcentre <- array(0, kern$inputDimension)
   if ( nargs()<4 ) {
-    for ( i in seq(length=length(x)) ) {
+    for ( i in seq(length=dim(as.array(x))[1]) ) {
       for ( j in seq(length=kern$inputDimension) ) 
         gcentre[j] <- gcentre[j] - t(gKX[,j,i]) %*% covGrad[,i]
     }
   } else {
-    for ( i in seq(length=length(x)) ) {
+    for ( i in seq(length=dim(as.array(x))[1]) ) {
       for ( j in seq(length=kern$inputDimension) ) 
         gcentre[j] <- gcentre[j] - sum(gKX12[,j,i]*t(covGrad[i,]))
     }
-    for ( i in seq(length=length(x2)) ) {
+    for ( i in seq(length=dim(as.array(x2))[1]) ) {
       for ( j in seq(length=kern$inputDimension) ) 
         gcentre[j] <- gcentre[j] - sum(gKX21[,j,i]*t(covGrad[,i]))
     }
