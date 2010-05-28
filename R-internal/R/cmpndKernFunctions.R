@@ -112,7 +112,7 @@ cmpndKernExpandParam <- function (kern, params) {
     kern$comp[[i]] <- kernExpandParam(kern$comp[[i]], params[startVal:endVal])
     startVal <- endVal+1
     if ( "white" %in% kern$comp[[i]]$type ) {
-      kern$whiteVariance <- kern$whiteVairance+kern$comp[[i]]$variance
+      kern$whiteVariance <- kern$whiteVariance+kern$comp[[i]]$variance
     } else if ( "whiteVariance" %in% names(kern$comp[[i]]) ) {
       kern$whiteVariance <- kern$whiteVariance+kern$comp[[i]]$whiteVariance
     }
