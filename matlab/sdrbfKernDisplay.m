@@ -32,7 +32,6 @@ for i=1:kern.nlfPerInt
            i,j, kern.inverseWidth(i,j), 1/sqrt(kern.inverseWidth(i,j)));        
     end
 end
-fprintf(spacing);
 for j=1:kern.nIntervals
     fprintf(spacing);
     fprintf('SDLFM switching point interval %d: %2.4f \n', ...

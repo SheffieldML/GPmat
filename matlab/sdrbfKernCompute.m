@@ -56,6 +56,7 @@ for i =1:sdrbfKern.nIntervals
     for j=1:sdrbfKern.nlfPerInt
         rbfKern(i,j).variance = sdrbfKern.variance;
         rbfKern(i,j).inverseWidth = sdrbfKern.inverseWidth(j,i);
+        rbfKern(i,j).isNormalised = sdrbfKern.isNormalised;
     end
     newt1 = t1(t1> spVector(i) & t1<spVector(i+1));
     newt2 = t2(t2> spVector(i) & t2<spVector(i+1));

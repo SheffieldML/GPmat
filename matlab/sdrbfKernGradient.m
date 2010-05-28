@@ -57,7 +57,7 @@ rbfKern = struct();
 % Create structures that will make easy the computation of the kernels
 % spVector = [sdrbfKern.switchingTimes t1(end)+0.1]; % For the last interval include the last point
 
-spVector = [cumsum(sdrbfKern.switchingTimes) t1(end)+0.1];
+spVector = [cumsum(sdrbfKern.switchingTimes) t1(end)+100];
 
 dim1 = zeros(1, sdrbfKern.nIntervals); 
 dim2 = zeros(1, sdrbfKern.nIntervals);
@@ -66,6 +66,7 @@ for i =1:sdrbfKern.nIntervals
     for j=1:sdrbfKern.nlfPerInt
         rbfKern(i,j).variance = sdrbfKern.variance;
         rbfKern(i,j).inverseWidth = sdrbfKern.inverseWidth(j,i);
+        rbfKern(i,j).isNormalised = sdrbfKern.isNormalised;
     end
     newt1 = t1(t1> spVector(i) & t1<spVector(i+1));
     newt2 = t2(t2> spVector(i) & t2<spVector(i+1));

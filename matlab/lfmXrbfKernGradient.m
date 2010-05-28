@@ -4,7 +4,7 @@ function [g1, g2] = lfmXrbfKernGradient(lfmKern, rbfKern, t1, t2, covGrad, meanV
 % FORMAT
 % DESC computes the gradient of an objective function with respect
 % to cross kernel terms between LFM and RBF kernels for
-% the multiple output kernel. 
+% the multiple output kernel.
 % ARG lfmKern : the kernel structure associated with the LFM
 % kernel.
 % ARG rbfKern : the kernel structure associated with the RBF
@@ -18,7 +18,7 @@ function [g1, g2] = lfmXrbfKernGradient(lfmKern, rbfKern, t1, t2, covGrad, meanV
 % FORMAT
 % DESC computes the gradient of an objective function with respect
 % to cross kernel terms between LFM and RBF kernels for
-% the multiple output kernel. 
+% the multiple output kernel.
 % ARG lfmKern : the kernel structure associated with the LFM
 % kernel.
 % ARG rbfKern : the kernel structure associated with the RBF
@@ -33,7 +33,7 @@ function [g1, g2] = lfmXrbfKernGradient(lfmKern, rbfKern, t1, t2, covGrad, meanV
 % FORMAT
 % DESC computes the gradient of an objective function with respect
 % to cross kernel terms between LFM and RBF kernels for
-% the multiple output kernel. 
+% the multiple output kernel.
 % ARG lfmKern : the kernel structure associated with the LFM
 % kernel.
 % ARG rbfKern : the kernel structure associated with the RBF
@@ -88,10 +88,14 @@ elseif nargin == 6
 end
 
 if size(t1, 2) > 1 || size(t2, 2) > 1
-  error('Input can only have one column');
+    error('Input can only have one column');
 end
 if lfmKern.inverseWidth ~= rbfKern.inverseWidth
-  error('Kernels cannot be cross combined if they have different inverse widths.')
+    error('Kernels cannot be cross combined if they have different inverse widths.')
+end
+
+if lfmKern.isNormalised ~= rbfKern.isNormalised
+  error('Kernels cannot be cross combined if they have different normalization settings.')
 end
 
 m = lfmKern.mass;
@@ -111,7 +115,7 @@ if isreal(omega)
     if lfmKern.isNormalised
         K0 = S/(2*sqrt(2)*m*omega);
     else
-        K0 = sigma*sqrt(pi)*S/(2*m*omega);        
+        K0 = sigma*sqrt(pi)*S/(2*m*omega);
     end
 else
     gamma1 = alpha + j*omega;
@@ -119,9 +123,9 @@ else
     ComputeUpsilon1 = lfmComputeUpsilonMatrix(gamma2,sigma2,t1, t2);
     ComputeUpsilon2 = lfmComputeUpsilonMatrix(gamma1,sigma2,t1, t2);
     if lfmKern.isNormalised
-        K0 = (S/(j*4*sqrt(2)*m*omega)); 
+        K0 = (S/(j*4*sqrt(2)*m*omega));
     else
-        K0 = sigma*sqrt(pi)*S/(j*4*m*omega); 
+        K0 = sigma*sqrt(pi)*S/(j*4*m*omega);
     end
 end
 
@@ -130,48 +134,48 @@ g1 = zeros(1,5);
 % Gradient with respect to m, C and D
 
 for ind = 1:3 % Parameter (m, D or C)
-  switch ind
-   case 1  % Gradient wrt m
-    gradThetaM = 1;
-    gradThetaAlpha = -C/(2*(m^2));
-    gradThetaOmega = (C^2-2*m*D)/(2*(m^2)*sqrt(4*m*D-C^2));
-   case 2  % Gradient wrt D
-    gradThetaM = 0;
-    gradThetaAlpha = 0;
-    gradThetaOmega = 1/sqrt(4*m*D-C^2);
-   case 3  % Gradient wrt C
-    gradThetaM = 0;
-    gradThetaAlpha = 1/(2*m);
-    gradThetaOmega = -C/(2*m*sqrt(4*m*D-C^2));
-  end
+    switch ind
+        case 1  % Gradient wrt m
+            gradThetaM = 1;
+            gradThetaAlpha = -C/(2*(m^2));
+            gradThetaOmega = (C^2-2*m*D)/(2*(m^2)*sqrt(4*m*D-C^2));
+        case 2  % Gradient wrt D
+            gradThetaM = 0;
+            gradThetaAlpha = 0;
+            gradThetaOmega = 1/sqrt(4*m*D-C^2);
+        case 3  % Gradient wrt C
+            gradThetaM = 0;
+            gradThetaAlpha = 1/(2*m);
+            gradThetaOmega = -C/(2*m*sqrt(4*m*D-C^2));
+    end
     
-  % Gradient evaluation
-  
-  if isreal(omega)
-      gamma = alpha + j*omega;
-      gradThetaGamma = gradThetaAlpha + j*gradThetaOmega;
-      matGrad = -K0*imag(lfmGradientUpsilonMatrix(gamma,sigma2,t1, t2)*gradThetaGamma ...
-          - (gradThetaM/m + gradThetaOmega/omega) ...
-          * ComputeUpsilon1);
-  else
-      gamma1 = alpha + j*omega;
-      gamma2 = alpha - j*omega;
-      gradThetaGamma1 = gradThetaAlpha + j*gradThetaOmega;
-      gradThetaGamma2 = gradThetaAlpha - j*gradThetaOmega;
-      matGrad = K0*(lfmGradientUpsilonMatrix(gamma2,sigma2, t1, t2)*gradThetaGamma2 ...
-          -  lfmGradientUpsilonMatrix(gamma1,sigma2, t1, t2)*gradThetaGamma1 ...
-          - (gradThetaM/lfmKern.mass + gradThetaOmega/omega) ...
-          * (ComputeUpsilon1 - ComputeUpsilon2));
-
-  end
-  if subComponent
-      if size(meanVector,1) ==1,
-          matGrad = matGrad*meanVector;
-      else
-          matGrad = (meanVector*matGrad).';
-      end
-  end
-  g1(ind) = sum(sum(matGrad.*covGrad));
+    % Gradient evaluation
+    
+    if isreal(omega)
+        gamma = alpha + j*omega;
+        gradThetaGamma = gradThetaAlpha + j*gradThetaOmega;
+        matGrad = -K0*imag(lfmGradientUpsilonMatrix(gamma,sigma2,t1, t2)*gradThetaGamma ...
+            - (gradThetaM/m + gradThetaOmega/omega) ...
+            * ComputeUpsilon1);
+    else
+        gamma1 = alpha + j*omega;
+        gamma2 = alpha - j*omega;
+        gradThetaGamma1 = gradThetaAlpha + j*gradThetaOmega;
+        gradThetaGamma2 = gradThetaAlpha - j*gradThetaOmega;
+        matGrad = K0*(lfmGradientUpsilonMatrix(gamma2,sigma2, t1, t2)*gradThetaGamma2 ...
+            -  lfmGradientUpsilonMatrix(gamma1,sigma2, t1, t2)*gradThetaGamma1 ...
+            - (gradThetaM/lfmKern.mass + gradThetaOmega/omega) ...
+            * (ComputeUpsilon1 - ComputeUpsilon2));
+        
+    end
+    if subComponent
+        if size(meanVector,1) ==1,
+            matGrad = matGrad*meanVector;
+        else
+            matGrad = (meanVector*matGrad).';
+        end
+    end
+    g1(ind) = sum(sum(matGrad.*covGrad));
 end
 
 % Gradient with respect to sigma
@@ -179,7 +183,7 @@ end
 if isreal(omega)
     gamma = alpha + j*omega;
     if lfmKern.isNormalised
-        matGrad = -K0*imag(lfmGradientSigmaUpsilonMatrix(gamma,sigma2,t1, t2));        
+        matGrad = -K0*imag(lfmGradientSigmaUpsilonMatrix(gamma,sigma2,t1, t2));
     else
         matGrad = -(sqrt(pi)*S/(2*m*omega)) ...
             * imag(ComputeUpsilon1 ...
@@ -216,7 +220,7 @@ if isreal(omega)
     if lfmKern.isNormalised
         matGrad = -(1/(2*sqrt(2)*m*omega))* imag(ComputeUpsilon1);
     else
-        matGrad = -(sqrt(pi)*sigma/(2*m*omega))* imag(ComputeUpsilon1);        
+        matGrad = -(sqrt(pi)*sigma/(2*m*omega))* imag(ComputeUpsilon1);
     end
 else
     if lfmKern.isNormalised

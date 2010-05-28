@@ -37,10 +37,14 @@ end
 if size(t1, 2) > 1 | size(t2, 2) > 1
   error('Input can only have one column');
 end
-% if lfmKern.inverseWidth ~= rbfKern.inverseWidth
-%   error('Kernels cannot be cross combined if they have different inverse widths.')
-% end
+if lfmKern.inverseWidth ~= rbfKern.inverseWidth
+  error('Kernels cannot be cross combined if they have different inverse widths.')
+end
   
+if lfmKern.isNormalised ~= rbfKern.isNormalised
+  error('Kernels cannot be cross combined if they have different normalization settings.')
+end
+
 % Get length scale out.
 sigma2 = 2/lfmKern.inverseWidth;
 sigma = sqrt(sigma2);
@@ -71,3 +75,5 @@ else
     end
     K = K0*sK;
 end
+
+

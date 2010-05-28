@@ -41,7 +41,9 @@ if ~mode
     end
 else
     g = (preFactor(1)*gradUpsilon1 + preFactorGrad(1)*compUpsilon1)*gradThetaGamma(1) +...
-        (preFactor(2)*gradUpsilon2 + preFactorGrad(2)*compUpsilon2)*gradThetaGamma(2);
+        (preFactor(2)*gradUpsilon2 + preFactorGrad(2)*compUpsilon2)*gradThetaGamma(2);    
+    %g = (preFactor(2)*gradUpsilon2 + preFactorGrad(2)*compUpsilon2)*gradThetaGamma(2);    
+    %g = (gradUpsilon2)*gradThetaGamma(2);    
 end
 
 

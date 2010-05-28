@@ -25,5 +25,21 @@ if nargout>1
     h = preFactor(1)*compUpVV{1} + preFactor(2)*compUpVV{2};
 else
     h = preFactor(1)*lfmvvComputeUpsilonMatrix(gamma1_p,sigma2, t1,t2, mode) ...
-        + preFactor(2)*lfmvvComputeUpsilonMatrix(gamma1_m,sigma2, t1,t2, mode);
+        + preFactor(2)*lfmvvComputeUpsilonMatrix(gamma1_m,sigma2, t1,t2, mode);  
+    
+%     %h = preFactor(2)*lfmvvComputeUpsilonMatrix(gamma1_m,sigma2, t1,t2, mode);  
+%     
+%      h = lfmvvComputeUpsilonMatrix(gamma1_m,sigma2, t1,t2, mode);
+% 
+%      epsilon = 1e-6;
+%      valg = gamma1_m;
+%      gamma1_m = valg + epsilon;
+%      h1 = lfmvvComputeUpsilonMatrix(gamma1_m,sigma2, t1,t2, mode);
+%      gamma1_m = valg - epsilon;
+%      h2 = lfmvvComputeUpsilonMatrix(gamma1_m,sigma2, t1,t2, mode);
+%      gamma1_m = valg;
+%      numerics = 0.5*(h1-h2)/epsilon;
+%      theo = lfmvvGradientUpsilonMatrix(gamma1_m,sigma2, t1,t2, mode);
+     
+     
 end

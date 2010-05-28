@@ -18,6 +18,12 @@ function  kern = sdrbfKernParamInit(kern)
 % Create the basic structure based on the lfm kernel.
 kern = rbfKernParamInit(kern);
 
+
+if isfield(kern, 'options') && isfield(kern.options, 'isNormalised') && ...
+        kern.options.isNormalised,
+    kern.isNormalised = 1;
+end
+
 if isfield(kern, 'options') && isfield(kern.options, 'nIntervals')
     kern.nIntervals = kern.options.nIntervals;
     if isfield(kern.options, 'nlfPerInt')

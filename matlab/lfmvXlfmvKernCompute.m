@@ -68,6 +68,7 @@ preExp1(:,2) = gamma1_m.*exp(-gamma1_m*t1);
 preExp2(:,1) = gamma2_p.*exp(-gamma2_p*t2);
 preExp2(:,2) = gamma2_m.*exp(-gamma2_m*t2);
 % Actual computation of the kernel
+
 sK = lfmComputeH3VV(gamma1_p, gamma1_m, sigma2, t1,t2,preFactors([1 2]), 1) + ...
     lfmComputeH3VV(gamma2_p, gamma2_m, sigma2, t2,t1,preFactors([3 4]), 0).' + ...
     lfmComputeH4VV(gamma1_p, gamma1_m, sigma2, t1, preGamma([1 2 4 3]), preExp2 ) + ...
@@ -80,6 +81,7 @@ else
 end
 
 K = K0*sK;
+
 
 
 

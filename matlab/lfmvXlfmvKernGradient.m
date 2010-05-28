@@ -85,17 +85,6 @@ elseif nargin == 6
             covGrad = reshape(covGrad, [dimcovGrad 1]);
         end
     end
-    
-    
-%     if size(meanVector,1) ==1,
-%         if size(meanVector, 2)~=size(covGrad, 2)
-%             error('The dimensions of meanVector don''t correspond to the dimensions of covGrad')
-%         end
-%     else
-%         if size((meanVector'), 2)~=size(covGrad,2)
-%             error('The dimensions of meanVector don''t correspond to the dimensions of covGrad')
-%         end
-%     end
 end
    
 if size(t1, 2) > 1 || size(t2, 2) > 1
@@ -171,6 +160,8 @@ preExpt2(:,2) = t2.*preExpg2(:,2);
 [computeH{4}, computeUpsilonVector{2}, computeUpsilonVectorLocal{2}] = lfmComputeH4VV(gamma2_p, gamma2_m, sigma2, t2, preGamma([1 3 4 2]), preExpg1 );
 preKernel = ( computeH{1} + computeH{2}.' + computeH{3} + computeH{4}.');
 
+
+
 % Precompute derivatives
 gradientUpsilonMatrix{1} = lfmvvGradientUpsilonMatrix(gamma1_p,sigma2,t1, t2, 1, computeUpsilonMatrixLocal{1}{1});
 gradientUpsilonMatrix{2} = lfmvvGradientUpsilonMatrix(gamma1_m,sigma2,t1, t2, 1, computeUpsilonMatrixLocal{1}{2});
@@ -180,6 +171,8 @@ gradientUpsilonVector{1} = lfmvpGradientUpsilonVector(gamma1_p,sigma2,t1, comput
 gradientUpsilonVector{2} = lfmvpGradientUpsilonVector(gamma1_m,sigma2,t1, computeUpsilonVectorLocal{1}{2});
 gradientUpsilonVector{3} = lfmvpGradientUpsilonVector(gamma2_p,sigma2,t2, computeUpsilonVectorLocal{2}{1});
 gradientUpsilonVector{4} = lfmvpGradientUpsilonVector(gamma2_m,sigma2,t2, computeUpsilonVectorLocal{2}{2});
+
+
 
 if lfmKern1.isNormalised
     K0 =  lfmKern1.sensitivity*lfmKern2.sensitivity/(8*sqrt(2)*lfmKern1.mass*lfmKern2.mass*prod(omega));
@@ -229,6 +222,13 @@ for ind_theta = 1:3 % Parameter (m, D or C)
                 - (gradThetaM(1+ind_par)/m(1+ind_par) ...
                 + gradThetaOmega(1+ind_par)/omega(1+ind_par)) ...
                 *preKernel);
+            
+            
+%             matGrad = 1 ...
+%                 * ( lfmGradientH31( preFactors([1 2]), preFactors2([1 2]), gradThetaGamma1, ...
+%                 gradientUpsilonMatrix{1}, gradientUpsilonMatrix{2}, computeUpsilonMatrix{1}{1}, ...
+%                 computeUpsilonMatrix{1}{2}, 1));
+            
         else % ind_par = r or d'
             matGrad = K0 ...
                 * ( lfmGradientH31( preFactors([3 4]), preFactors2([3 4]), gradThetaGamma2, ...
@@ -243,7 +243,14 @@ for ind_theta = 1:3 % Parameter (m, D or C)
                 computeUpsilonVector{1}{1}, computeUpsilonVector{1}{2})...
                 - (gradThetaM(1+ind_par)/m(1+ind_par) ...
                 + gradThetaOmega(1+ind_par)/omega(1+ind_par)) ...
-                *preKernel);
+                *preKernel);            
+%             matGrad = K0 ...
+%                 * ( lfmGradientH31( preFactors([3 4]), preFactors2([3 4]), gradThetaGamma2, ...
+%                 gradientUpsilonMatrix{3}, gradientUpsilonMatrix{4}, computeUpsilonMatrix{2}{1}, ...
+%                 computeUpsilonMatrix{2}{2}, 1).' + ...                         
+%                 - (gradThetaM(1+ind_par)/m(1+ind_par) ...
+%                 + gradThetaOmega(1+ind_par)/omega(1+ind_par)) ...
+%                 *preKernel);
         end
         if subComponent
             if size(meanVector,1) ==1,
