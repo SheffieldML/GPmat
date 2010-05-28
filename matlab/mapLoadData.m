@@ -1565,7 +1565,7 @@ switch dataset
             Xtest = cell(1, nSamples);
             Xtrain = cell(1, nSamples);
             for q=1:nSamples              
-                options.kern.switchingTimes = [-1  meanSwitching(1)+0.1*randn meanSwitching(2)+0.1*randn];
+                options.kern.switchingTimes = [-1  meanSwitching(1) meanSwitching(2)];
                 options.kern.nlfPerInt = options.nlfPerInt;
                 kernType{1} = sdlfmgpKernComposer(options.kernType, numOut, 'ftc', options);
                 kern = kernCreate(X, {'cmpnd', kernType{:}});
@@ -1640,7 +1640,7 @@ switch dataset
         catch
             Xbase = linspace(0, 20, 500)';
             numOut = 3; 
-            nSamples = 5;
+            nSamples = 10;
             X = cell(1, numOut);
             for i=1:numOut
                 X{i} = Xbase;
@@ -1658,9 +1658,9 @@ switch dataset
             mass = 0.1;
             damper = [0.4 1 1];
             spring = [2 3 0.5];
-            inverseWidth = [0.1 1];
+            inverseWidth = [1e-3 1];
             sensitivity = [1 5 5 1 1 1];
-            meanSwitching = 8;
+            meanSwitching = 10;
             numberTraining = 200;
             kernType = cell(1);
             F = cell(1, nSamples);
@@ -1670,7 +1670,7 @@ switch dataset
             Xtest = cell(1, nSamples);
             Xtrain = cell(1, nSamples);
             for q=1:nSamples              
-                options.kern.switchingTimes = [-1  meanSwitching(1)];
+                options.kern.switchingTimes = [-2  meanSwitching(1)];
                 options.kern.nlfPerInt = options.nlfPerInt;
                 kernType{1} = sdlfmgpKernComposer(options.kernType, numOut, 'ftc', options);
                 kern = kernCreate(X, {'cmpnd', kernType{:}});
