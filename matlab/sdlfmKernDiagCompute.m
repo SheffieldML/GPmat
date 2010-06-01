@@ -49,8 +49,8 @@ for i=1:sdlfmKern.nIntervals
         lfmKern(i,j).mass = sdlfmKern.mass;
         lfmKern(i,j).spring = sdlfmKern.spring;
         lfmKern(i,j).damper = sdlfmKern.damper;
-        lfmKern(i,j).inverseWidth = sdlfmKern.inverseWidth(i);
-        lfmKern(i,j).sensitivity = sdlfmKern.sensitivity(i);
+        lfmKern(i,j).inverseWidth = sdlfmKern.inverseWidth(j,i);
+        lfmKern(i,j).sensitivity = sdlfmKern.sensitivity(j,i);
         lfmKern(i,j).limit = spVector(i+1) - spVector(i);
         lfmKern(i,j).isNormalised = sdlfmKern.isNormalised;
     end
