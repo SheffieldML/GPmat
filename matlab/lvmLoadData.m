@@ -240,7 +240,68 @@ function [Y, lbls, Ytest, lblstest] = lvmLoadData(dataset, seedVal)
         error(lasterr);
       end
     end
-
+   
+   case 'cmu07WalkFeet'
+    [Y, lbls, Ytest, lblstest] = lvmLoadData('cmu07Walk');
+    % Extract left arm only 
+    ind = [7:12 14:19];
+    Y = Y(:, ind);  
+    Ytest = Ytest(:, ind);
+    
+   case 'cmu07Walk'
+    
+    try 
+      load([baseDir 'cmu07Walk.mat']);
+    catch
+      [void, errid] = lasterr;
+      if strcmp(errid, 'MATLAB:load:couldNotReadFile');
+        sampleEvery = 4;
+        skel = acclaimReadSkel([baseDir 'mocap' dirSep 'cmu' dirSep '07' dirSep '07.asf']);
+        examples = {'01', '02'};
+        testExamples = {'03'};
+        % Label differently for each sequence
+        exlbls = eye(length(examples));
+        testexlbls = eye(length(testExamples));
+        totLength = 0;
+        totTestLength = 0;
+        for i = 1:length(examples)
+          [tmpchan, skel] = acclaimLoadChannels([baseDir 'mocap' dirSep 'cmu' dirSep '07' dirSep '07_' ...
+                              examples{i} '.amc'], skel);
+          tY{i} = tmpchan(1:sampleEvery:end, :);
+          tlbls{i} = repmat(exlbls(i, :), size(tY{i}, 1), 1);
+          totLength = totLength + size(tY{i}, 1);
+        end
+        Y = zeros(totLength, size(tY{1}, 2));
+        lbls = zeros(totLength, size(tlbls{1}, 2));
+        endInd = 0;
+        for i = 1:length(tY)
+          startInd = endInd + 1;
+          endInd = endInd + size(tY{i}, 1);
+          Y(startInd:endInd, :) = tY{i};
+          lbls(startInd:endInd, :) = tlbls{i};
+        end
+        for i = 1:length(testExamples)
+          [tmpchan, skel] = acclaimLoadChannels([baseDir 'mocap' dirSep 'cmu' dirSep '07' dirSep '07_' ...
+                              testExamples{i} '.amc'], skel);
+          tYtest{i} = tmpchan(1:sampleEvery:end, :);
+          tlblstest{i} = repmat(testexlbls(i, :), size(tYtest{i}, 1), 1);
+          totTestLength = totTestLength + size(tYtest{i}, 1);
+        end
+        Ytest = zeros(totTestLength, size(tYtest{1}, 2));
+        lblstest = zeros(totTestLength, size(tlblstest{1}, 2));
+        endInd = 0;
+        for i = 1:length(tYtest)
+          startInd = endInd + 1;
+          endInd = endInd + size(tYtest{i}, 1);
+          Ytest(startInd:endInd, :) = tYtest{i};
+          lblstest(startInd:endInd, :) = tlblstest{i};
+        end
+        save([baseDir 'cmu07Walk.mat'], 'Y', 'lbls', 'Ytest', 'lblstest');
+      else
+        error(lasterr);
+      end
+    end 
+    
     
    case 'cmu35gplvm'
     [Y, lbls, Ytest, lblstest] = lvmLoadData('cmu35WalkJog');
