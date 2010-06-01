@@ -51,7 +51,7 @@ else
   options(14) = iters;
   options(9) = 0;
   options(1) = display;
-  
+  options(2) = 1e-6;
   
   
   params = modelExtractParam(model);
