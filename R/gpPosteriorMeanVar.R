@@ -33,8 +33,8 @@ gpPosteriorMeanVar <- function(model, X, varsigma.return=FALSE) {
       mu[indices,] = t(KX_star) %*% model$alpha
     else {
       for (i in 1:model$d)
-	mu[indices, i] = t(KX_star[model$indexPresent[[i]],]) %*%
-			    model$alpha[model$indexPresent[[i]], i]
+	mu[indices, i] = t(KX_star[model$indexPresent[[i]], ,drop=F]) %*%
+			    model$alpha[model$indexPresent[[i]], i,drop=F]
     }
     
     ## Compute variances if requried.
@@ -58,28 +58,28 @@ gpPosteriorMeanVar <- function(model, X, varsigma.return=FALSE) {
 	for (i in 1:model$d) {
 	  ind = model$indexPresent[[i]]
 	  if (model$approx == "ftc")
-	    Kinvk = model$invK_uu[[i]] %*% KX_star[ind, ]
+	    Kinvk = model$invK_uu[[i]] %*% KX_star[ind, ,drop=F]
 	  else {
 	    stop(c("Non-spherical not yet implemented for any approximation",
 		  "other than 'ftc'."))
 	  }
-	  varsigma[indices, i] = diagK - colSums(KX_star[ind,] * Kinvk)
+	  varsigma[indices, i] = diagK - colSums(KX_star[ind, ,drop=F] * Kinvk)
 	}
       }
     }
     
     
     ## Rescale the mean
-    mu[indices,] = mu[indices,] * kronecker(matrix(1,length(indices),1), model$scale)
+    mu[indices,] = mu[indices, ,drop=F] * kronecker(matrix(1,length(indices),1), model$scale)
     ## Add the bias back in.
-    mu[indices,] = mu[indices,] + kronecker(matrix(1,length(indices),1), model$bias)
+    mu[indices,] = mu[indices, ,drop=F] + kronecker(matrix(1,length(indices),1), model$bias)
     ## If the mean function is present, add it it.
     if (("meanFunction" %in% names(model)) && length(model$meanFunction)>0) {
-      mu[indices,] = mu[indices,] + modelOut(model$meanFunction, X[indices,])
+      mu[indices,] = mu[indices, ,drop=F] + modelOut(model$meanFunction, X[indices, ,drop=F])
     }
     ## rescale the variances
     if (varsigma.return) { #if (nargout > 1)
-      varsigma[indices,] = varsigma[indices,] *
+      varsigma[indices,] = varsigma[indices, ,drop=F] *
 	kronecker(matrix(1,length(indices),1), model$scale * model$scale)
     }
 

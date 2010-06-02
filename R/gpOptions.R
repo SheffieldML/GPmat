@@ -31,7 +31,7 @@ gpOptions <- function (approx="ftc") {
 
   if (options$approx == "ftc") {
     ## bog-standard kernel.
-    ## The R version of kern is a bit more structured from the MATLAB version.
+    ## The R version of the kern field is a bit more structured than the MATLAB version.
     options$kern = list(type="cmpnd",comp=list("rbf", "bias", "white"))
     options$numActive = 0
     options$beta = list()

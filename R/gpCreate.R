@@ -12,7 +12,7 @@ gpCreate <- function(q, d, X, y, options) {
 
   y = as.matrix(y); X = as.matrix(X)
 
-  model <- list(type="gp", y=y, X=X, approx=options$approx,
+  model <- list(type="gp", y=y, X=X, approx=options$approx, beta = options$beta,
     learnScales=options$learnScales, scaleTransform=optimiDefaultConstraint("positive"),
     optimiseBeta=options$optimiseBeta, betaTransform=optimiDefaultConstraint("positive"),
     q=dim(X)[2], d=dim(y)[2], N=dim(y)[1])
@@ -30,18 +30,18 @@ gpCreate <- function(q, d, X, y, options) {
   model$isSpherical = options$isSpherical
   model$isMissingData = options$isMissingData
 
+  model$scale = matrix(1, 1, model$d)
   if (!model$isMissingData) {
     model$bias = colMeans(y)
-    model$scale = matrix(1, 1, model$d)
   } else {
     for (i in 1:model$d) {
       model$indexPresent[[i]] = which(!is.nan(y[,i]))
       if (length(model$indexPresent[[i]])==0) {
 	model$bias[i] = 0
-	model$scale[i] = 1
+# 	model$scale[i] = 1
       } else {
 	model$bias[i] = mean(model$y[model$indexPresent[[i]], i])
-	model$scale[i] = 1
+# 	model$scale[i] = 1
       }
     }
   }
@@ -82,9 +82,9 @@ gpCreate <- function(q, d, X, y, options) {
       model$noise = noiseCreate(options$noise, y)
     
     ## Set up noise model gradient storage.
-    model$nu = matrix(0, dim(y)[1], dim(y)[2]) #zeros(size(y))
-    model$g = matrix(0, dim(y)[1], dim(y)[2]) #zeros(size(y))
-    model$gamma = matrix(0, dim(y)[1], dim(y)[2]) #zeros(size(y))
+    model$nu = matrix(0, dim(y)[1], dim(y)[2])
+    model$g = matrix(0, dim(y)[1], dim(y)[2])
+    model$gamma = matrix(0, dim(y)[1], dim(y)[2])
     
     ## Initate noise model
     model$noise = noiseCreate(noiseType, y) ## bug: noiseType has no value
@@ -100,11 +100,8 @@ gpCreate <- function(q, d, X, y, options) {
   if (options$approx == "ftc") {
     model$k = 0
     model$X_u = list()
-    if (model$optimiseBeta) {
-      model$beta = options$beta
-      if (length(options$beta)==0)
+    if (model$optimiseBeta && length(options$beta)==0) 
 	stop("options.beta cannot be empty if it is being optimised.")
-    }
   } else if (options$approx %in% c("dtc", "dtcvar", "fitc", "pitc")) {
     ## Sub-sample inducing variables.
     model$k = options$numActive
@@ -119,9 +116,8 @@ gpCreate <- function(q, d, X, y, options) {
     } else {
       ind = sample(1:model$N, size=model$N) #randperm(model$N)
       ind = ind[1:model$k]
-      model$X_u = model$X[ind, ]
+      model$X_u = model$X[ind, ,drop=F]
     }
-    model$beta = options$beta
   }
 
   if (model$k > model$N)

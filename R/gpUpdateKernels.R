@@ -15,9 +15,10 @@ gpUpdateKernels <- function (model, X, X_u) {
       model$invK_uu = invK$invM
       model$logDetK_uu = 2* sum( log ( diag(invK$chol) ) )
     } else {
+      model$invK_uu=list(); model$logDetK_uu=matrix(0,1,model$d)
       for (i in 1:model$d) {
 	if ("beta" %in% names(model) && length(model$beta)>0) {
-	  if (dim(model$beta)[2] == model$d)
+	  if (dim(as.matrix(model$beta))[2] == model$d)
 	    betaAdd = model$beta[, i]
 	  else
 	    betaAdd = model$beta
@@ -33,7 +34,7 @@ gpUpdateKernels <- function (model, X, X_u) {
     }
   } else if (model$approx %in% c("dtc", "dtcvar", "fitc", "pitc")) {
     model$K_uu = kernCompute(model$kern, X_u)
-    
+
     if ((!"whiteVariance" %in% names(model$kern)) || model$kern$whiteVariance == 0) {
       ## There is no white noise term so add some jitter.
       model$K_uu = model$K_uu + diag.spam(jitter, dim(model$K_uu)[1]) ## need 'spam'
@@ -49,15 +50,18 @@ gpUpdateKernels <- function (model, X, X_u) {
     model$diagK = kernDiagCompute(model$kern, X)
   else if (model$approx == "pitc") {
     if ((!"isSpherical" %in% names(model)) || model$isSpherical) {
+      model$K=list()
       for (i in 1:length(model$blockEnd)) {
 	ind = gpBlockIndices(model, i)
-	model$K[[i]] = kernCompute(model$kern, X[ind, ])
+	model$K[[i]] = kernCompute(model$kern, X[ind, ,drop=F])
       }
     } else {
+      model$K = matrix(0, length(model$blockEnd), model$d)
+      model$K = lapply(split(model$K,row(model$K)), split, 1:model$d)
       for (j in 1:model$d) {
 	for (i in 1:length(model$blockEnd)) {
 	  ind = gpDataIndices(model, j, i)
-	  model$K[[i]][[j]] = kernCompute(model$kern, X[ind, ])
+	  model$K[[i]][[j]] = kernCompute(model$kern, X[ind, ,drop=F])
 	}
       }
     }

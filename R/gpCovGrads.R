@@ -41,20 +41,20 @@ gpCovGrads <- function(model, M) {
       gBeta = 0
       for (i in 1:model$d) {
 	ind = gpDataIndices(model, i)
-	e = model$K_uf[, ind]%*%M[ind, i]
+	e = model$K_uf[, ind,drop=F]%*%M[ind, i,drop=F]
 	Ainve = model$Ainv[[i]]%*%e
 	AinveeT = Ainve%*%t(e)      
 	AinveeTAinv = Ainve%*%t(Ainve)
 	gK_uu = gK_uu + 0.5*((model$invK_uu - (1/model$beta)*model$Ainv[[i]]) - AinveeTAinv)
 
-	AinvK_uf = model$Ainv[[i]]%*%model$K_uf[, ind]
-	gK_uf[, ind] = gK_uf[, ind] - AinvK_uf
-	    - model$beta*(AinveeT%*%AinvK_uf - (Ainve%*%t(M[ind, i])))
+	AinvK_uf = model$Ainv[[i]]%*%model$K_uf[, ind,drop=F]
+	gK_uf[, ind] = gK_uf[, ind,drop=F] - AinvK_uf
+	    - model$beta*(AinveeT%*%AinvK_uf - (Ainve%*%t(M[ind, i, drop=F])))
 
 	gBeta = gBeta + 0.5*(((model$N - model$k)/model$beta
 		  +sum(model$Ainv[[i]] * model$K_uu)/(model$beta*model$beta))
 		  +sum(AinveeTAinv * model$K_uu)/model$beta
-		  +(sum(diag(AinveeT))-sum(M[ind, i] * M[ind, i])))
+		  +(sum(diag(AinveeT))-sum(M[ind, i,drop=F] * M[ind, i,drop=F])))
       }
       fhandle = get(model$betaTransform$func, mode="function")
       gBeta = gBeta*fhandle(model$beta, 'gradfact')
@@ -66,7 +66,7 @@ gpCovGrads <- function(model, M) {
       E = model$K_uf %*% model$Dinv %*% M
       EET = E%*%t(E)
       AinvE = model$Ainv%*%E
-      diagK_fuAinvEMT = colSums(model$K_uf * (model$Ainv%*%E%*%t(M)))
+      diagK_fuAinvEMT = t(colSums(model$K_uf * (model$Ainv%*%E%*%t(M))))
       AinvEETAinv = AinvE%*%t(AinvE)
       diagK_ufdAinvplusAinvEETAinvK_fu =
 	t(colSums(model$K_uf * ((model$d*model$Ainv + model$beta*AinvEETAinv)%*%model$K_uf)))
@@ -80,8 +80,8 @@ gpCovGrads <- function(model, M) {
       diagQ = - model$d*model$diagD + model$beta*diagMMT
 	      + diagK_ufdAinvplusAinvEETAinvK_fu - 2*model$beta*diagK_fuAinvEMT
       gK_uu = 0.5*(model$d*(model$invK_uu - model$Ainv/model$beta) - AinvEETAinv
-	      + model$beta*invK_uuK_ufDinv%*%diag.spam(as.array(diagQ))%*%t(invK_uuK_ufDinv))
-      gK_uf = -model$beta*invK_uuK_ufDinv%*%diag.spam(as.array(diagQ))%*%model$Dinv
+	      + model$beta*invK_uuK_ufDinv%*%diag.spam(drop(diagQ))%*%t(invK_uuK_ufDinv))
+      gK_uf = -model$beta*invK_uuK_ufDinv%*%diag.spam(drop(diagQ))%*%model$Dinv
 	      -model$d*model$Ainv%*%model$K_uf%*%model$Dinv
 	      -model$beta*AinvEETAinv%*%model$K_uf%*%model$Dinv
 	      +model$beta*model$Ainv%*%E%*%t(M)%*%model$Dinv
@@ -96,26 +96,26 @@ gpCovGrads <- function(model, M) {
       gBeta = 0
       for (i in 1:model$d) {
 	ind = gpDataIndices(model, i)
-	K_ufDinvK_uf = model$K_uf[, ind]%*%model$Dinv[[i]]%*%t(model$K_uf[, ind])
-	e = model$K_uf[, ind]%*%model$Dinv[[i]]%*%M[ind, i]
+	K_ufDinvK_uf = model$K_uf[, ind,drop=F]%*%model$Dinv[[i]]%*%t(model$K_uf[, ind,drop=F])
+	e = model$K_uf[, ind,drop=F]%*%model$Dinv[[i]]%*%M[ind, i,drop=F]
 	Ainve = model$Ainv[[i]]%*%e
 	AinveeTAinv = Ainve%*%t(Ainve)
-	diagK_fuAinveyT = colSums(model$K_uf[, ind] %*% (Ainve%*%t(M[ind, i])))
+	diagK_fuAinveyT = t(colSums(model$K_uf[, ind,drop=F] * (Ainve%*%t(M[ind, i,drop=F]))))
 	diagK_ufdAinvplusAinveeTAinvK_fu =
-	    colSums(model$K_uf[,ind]%*%((model$Ainv[[i]]
-	      + model$beta*AinveeTAinv)%*%model$K_uf[, ind]))
-	invK_uuK_uf = model$invK_uu%*%model$K_uf[, ind]
+	    t(colSums(model$K_uf[,ind,drop=F] * ((model$Ainv[[i]]
+	      + model$beta*AinveeTAinv)%*%model$K_uf[, ind,drop=F])))
+	invK_uuK_uf = model$invK_uu%*%model$K_uf[, ind,drop=F]
 	invK_uuK_ufDinv = invK_uuK_uf%*%model$Dinv[[i]]
-	diagyyT = M[ind, i] * M[ind, i]
+	diagyyT = M[ind, i,drop=F] * M[ind, i,drop=F]
 	diagQ = -model$diagD[[i]] + model$beta*diagyyT
 		+ diagK_ufdAinvplusAinveeTAinvK_fu - 2*model$beta*diagK_fuAinveyT
 	gK_uu = gK_uu + 0.5*(model$invK_uu - model$Ainv[[i]]/model$beta - AinveeTAinv
-	  + model$beta*invK_uuK_ufDinv%*%diag.spam(as.array(diagQ))%*%t(invK_uuK_ufDinv))
-	gK_uf[, ind] = gK_uf[, ind]
-		-model$beta*invK_uuK_ufDinv%*%diag.spam(as.array(diagQ))%*%model$Dinv[[i]]
-		-model$Ainv[[i]]%*%model$K_uf[, ind]%*%model$Dinv[[i]]
-		-model$beta*AinveeTAinv%*%model$K_uf[, ind]%*%model$Dinv[[i]]
-		+model$beta*Ainve%*%t(M[ind, i])%*%model$Dinv[[i]]
+	  + model$beta*invK_uuK_ufDinv%*%diag.spam(drop(diagQ))%*%t(invK_uuK_ufDinv))
+	gK_uf[, ind] = gK_uf[, ind,drop=F]
+		-model$beta*invK_uuK_ufDinv%*%diag.spam(drop(diagQ))%*%model$Dinv[[i]]
+		-model$Ainv[[i]]%*%model$K_uf[, ind,drop=F]%*%model$Dinv[[i]]
+		-model$beta*AinveeTAinv%*%model$K_uf[, ind,drop=F]%*%model$Dinv[[i]]
+		+model$beta*Ainve%*%t(M[ind, i,drop=F])%*%model$Dinv[[i]]
 	g_Lambda[ind] = g_Lambda[ind]
 	    + 0.5*model$beta*diagQ / (model$diagD[[i]] * model$diagD[[i]])
       }
@@ -129,7 +129,7 @@ gpCovGrads <- function(model, M) {
       E = matrix(0, model$k, model$d)
       for (i in 1:length(model$blockEnd)) {
 	ind = gpBlockIndices(model, i)
-	E = E + model$K_uf[, ind]%*%model$Dinv[[i]]%*%M[ind, ]
+	E = E + model$K_uf[, ind,drop=F]%*%model$Dinv[[i]]%*%M[ind, ,drop=F]
       }
       AinvE = model$Ainv%*%E
       AinvEET = AinvE%*%t(E)
@@ -137,23 +137,24 @@ gpCovGrads <- function(model, M) {
       blockQ = list()
       for (i in 1:length(model$blockEnd)) {
 	ind = gpBlockIndices(model, i)
-	K_fuAinvEMT = model$beta*t(model$K_uf[, ind])%*%AinvE%*%t(M[ind, ])
-	blockQ[[i]] = -model$d*model$D[[i]] + model$beta*M[ind, ]%*%t(M[ind, ])
-	    + t(model$K_uf[, ind])%*%(model$d*model$Ainv + model$beta*AinvEETAinv)%*%
-	    model$K_uf[, ind] - K_fuAinvEMT - t(K_fuAinvEMT)
+	K_fuAinvEMT = model$beta*t(model$K_uf[, ind,drop=F])%*%AinvE%*%t(M[ind, ,drop=F])
+	blockQ[[i]] = -model$d*model$D[[i]] + model$beta*M[ind, ,drop=F]%*%t(M[ind, ,drop=F])
+	    + t(model$K_uf[, ind,drop=F])%*%(model$d*model$Ainv + model$beta*AinvEETAinv)%*%
+	    model$K_uf[, ind,drop=F] - K_fuAinvEMT - t(K_fuAinvEMT)
       }
       gK_uu = model$d*model$invK_uu - model$d*model$Ainv/model$beta - AinvEETAinv
       gBeta = 0
-      gK_ufBase = -(model$d*model$Ainv + model$beta*AinvEETAinv)$model$K_uf
+      gK_ufBase = -(model$d*model$Ainv + model$beta*AinvEETAinv)%*%model$K_uf
 	  + model$beta*AinvE%*%t(M)
 
       g_Lambda = list()
+      gK_uf = matrix(0, dim(gK_ufBase)[1], model$N)
       for (i in 1:length(model$blockEnd)) {
 	ind = gpBlockIndices(model, i)
-	invK_uuK_ufDinv = model$invK_uu%*%model$K_uf[, ind]%*%model$Dinv[[i]]
+	invK_uuK_ufDinv = model$invK_uu%*%model$K_uf[, ind,drop=F]%*%model$Dinv[[i]]
 	gK_uu = gK_uu + model$beta*invK_uuK_ufDinv%*%blockQ[[i]]%*%t(invK_uuK_ufDinv)
 
-	gK_uf[, ind] = (gK_ufBase[,ind]-model$beta*invK_uuK_ufDinv%*%blockQ[[i]])%*%model$Dinv[[i]]
+	gK_uf[, ind] = (gK_ufBase[,ind,drop=F]-model$beta*invK_uuK_ufDinv%*%blockQ[[i]])%*%model$Dinv[[i]]
 
 	g_Lambda[[i]] = 0.5*model$Dinv[[i]]%*%blockQ[[i]]%*%model$Dinv[[i]]*model$beta
 	gBeta = gBeta - sum(diag((g_Lambda[[i]]))) / (model$beta*model$beta)
@@ -178,7 +179,7 @@ gpCovGrads <- function(model, M) {
 	e = matrix(0, model$k, 1)
 	for (i in 1:length(model$blockEnd)) {
 	  ind = gpDataIndices(model, j, i)
-	  e = e + model$K_uf[, ind]%*%model$Dinv[[i]][[j]]%*%M[ind, j]
+	  e = e + model$K_uf[, ind,drop=F]%*%model$Dinv[[i]][[j]]%*%M[ind, j,drop=F]
 	}
 	Ainve = model$Ainv[[j]]%*%e
 	AinveeT = Ainve%*%t(e)
@@ -186,21 +187,21 @@ gpCovGrads <- function(model, M) {
 	blockQ = list()
 	for (i in 1:length(model$blockEnd)) {
 	  ind = gpDataIndices(model, j, i)
-	  K_fuAinveyT = model$beta*t(model$K_uf[, ind])%*%Ainve%*%t(M[ind, j])
-	  blockQ[[i]] = -model$D[[i]][[j]] + model$beta*M[ind, j]%*%t(M[ind, j])
-	      + t(model$K_uf[, ind])%*%(model$Ainv[[j]] + model$beta*AinveeTAinv)%*%
-		model$K_uf[, ind] - K_fuAinveyT - t(K_fuAinveyT)
+	  K_fuAinveyT = model$beta*t(model$K_uf[, ind,drop=F])%*%Ainve%*%t(M[ind, j,drop=F])
+	  blockQ[[i]] = -model$D[[i]][[j]] + model$beta*M[ind, j,drop=F]%*%t(M[ind, j,drop=F])
+	      + t(model$K_uf[, ind,drop=F])%*%(model$Ainv[[j]] + model$beta*AinveeTAinv)%*%
+		model$K_uf[, ind,drop=F] - K_fuAinveyT - t(K_fuAinveyT)
 	}
 	gK_uu = gK_uu + model$invK_uu - model$Ainv[[j]]/model$beta - AinveeTAinv
 
 	for (i in 1:length(model$blockEnd)) {
 	  ind = gpDataIndices(model, j, i)
-	  gK_ufBase = -(model$Ainv[[i]] + model$beta*AinveeTAinv)%*%model$K_uf[, ind]
-	      + model$beta*Ainve%*%t(M[ind, j])
-	  invK_uuK_ufDinv = model$invK_uu%*%model$K_uf[, ind]%*%model$Dinv[[i]][[j]]
+	  gK_ufBase = -(model$Ainv[[i]] + model$beta*AinveeTAinv)%*%model$K_uf[, ind,drop=F]
+	      + model$beta*Ainve%*%t(M[ind, j,drop=F])
+	  invK_uuK_ufDinv = model$invK_uu%*%model$K_uf[, ind,drop=F]%*%model$Dinv[[i]][[j]]
 	  gK_uu = gK_uu + model$beta*invK_uuK_ufDinv%*%blockQ[[i]]%*%t(invK_uuK_ufDinv)
 
-	  gK_uf[, ind] = gK_uf[, ind] + (gK_ufBase
+	  gK_uf[, ind] = gK_uf[, ind,drop=F] + (gK_ufBase
 			  -model$beta*invK_uuK_ufDinv%*%blockQ[[i]])%*%model$Dinv[[i]][[j]]
 
 	  if (i == 1)

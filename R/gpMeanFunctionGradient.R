@@ -24,13 +24,13 @@ gpMeanFunctionGradient <- function(model) {
       K_ufDinv = matrix(0,model$k, model$N)
       for (i in 1:length(model$blockEnd)) {
 	ind = gpBlockIndices(model, i)
-	Dinvm[[i]] = model$Dinv[[i]]%*%model$m[ind, ]
-	K_ufDinvm = K_ufDinvm + model$K_uf[, ind]%*%Dinvm[[i]]
+	Dinvm[[i]] = model$Dinv[[i]]%*%model$m[ind, ,drop=F]
+	K_ufDinvm = K_ufDinvm + model$K_uf[, ind,drop=F]%*%Dinvm[[i]]
       }
       for (i in 1:length(model$blockEnd)) {
 	ind = gpBlockIndices(model, i)
 	gmu[ind, ] = (Dinvm[[i]] - model$Dinv[[i]]
-		      %*%t(model$K_uf[, ind])%*%(model$Ainv%*%K_ufDinvm))*model$beta
+		      %*%t(model$K_uf[, ind,drop=F])%*%(model$Ainv%*%K_ufDinvm))*model$beta
       }
     }
     

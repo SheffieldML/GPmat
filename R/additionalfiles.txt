@@ -8,7 +8,7 @@
 ~/mlprojects/gpsim/R/R/optimiFunctions.R
 ~/mlprojects/gpsim/R/R/AllClasses.R
 
-# These should probably be moved to other folders in ~/mlprojects/ or incorporated into ~/mlprojects/gpsim/R/R/miscFunctions.R
+# These should probably be moved to other folders in ~/mlprojects/ or incorporated into ~/mlprojects/gpsim/R/R/*Functions.R
 
 ~/mlprojects/gp/R/modelOut.R			=>	~/mlprojects/mltools/R/
 ~/mlprojects/gp/R/modelOutputGrad.R		=>	~/mlprojects/mltools/R/
@@ -19,3 +19,6 @@
 ~/mlprojects/gp/R/noiseParamInit.R		=>	~/mlprojects/noise/R/
 ~/mlprojects/gp/R/gaussianNoiseParamInit.R	=>	~/mlprojects/noise/R/
 ~/mlprojects/gp/R/cmpndNoiseParamInit.R		=>	~/mlprojects/noise/R/
+~/mlprojects/gp/R/rbfKernGradX.R		=>	~/mlprojects/gpsim/R/R/rbfKernFunctions.R
+~/mlprojects/gp/R/whiteKernGradX.R		=>	~/mlprojects/gpsim/R/R/whiteKernFunctions.R
+~/mlprojects/gp/R/kernDiagGradient.R		=>	~/mlprojects/gpsim/R/R/kernFunctions.R

@@ -8,8 +8,9 @@ gpComputeM <- function(model) {
   ## Remove bias and apply scale.
   for (i in 1:model$d) {
     m[,i] = m[,i] - model$bias[i]
-    if (model$scale[i])
+    if (model$scale[i]>0) {
       m[,i] = m[,i]/model$scale[i]
+    }
   }
 
   return(m)
