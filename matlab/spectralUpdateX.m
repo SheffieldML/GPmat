@@ -10,7 +10,7 @@ function model = spectralUpdateX(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 %
-% SEEALSO : leOptimise, lleOptimsie, mvuOptimise
+% SEEALSO : leOptimise, lleOptimise, mvuOptimise
 
 % MLTOOLS
   
@@ -30,7 +30,11 @@ function model = spectralUpdateX(model)
     [m, v] = eigs_r11(model.L, model.q+1, 'sm', options);
   end
   v = diag(v);
-  [void, ind] = min(v);
+  if ~isfield(model, 'discardLowest') || model.discardLowest
+    [void, ind] = min(v);
+  else
+    [void, ind] = max(v);
+  end
 
   % Multiplying by square root ensures latent covariance of identity.
   model.X = m(:, [1:(ind-1) (ind+1):end])*sqrt(model.N);

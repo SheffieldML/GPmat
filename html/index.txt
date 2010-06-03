@@ -10,6 +10,10 @@
 
 RELEASEINFORMATION
 
+Minor mods.
+
+<h4>Version 0.134</h4>
+
 Added pmvu model.
 
 <h4>Version 0.133</h4>

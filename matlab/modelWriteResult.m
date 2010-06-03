@@ -18,7 +18,9 @@ function fileName = modelWriteResult(model, dataset, number)
   type = model.type;
   type(1) = upper(type(1));
   fileName = ['dem' dataset type num2str(number)];
-
+  if isoctave
+    fileName = [fileName '.mat'];
+  end
   fhandle = [model.type 'WriteResult'];
   if exist(fhandle)==2
     % There is write file code, use it.
