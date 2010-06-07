@@ -1,4 +1,4 @@
-function Trans = gpComputeTranslationLogLikelihood(model,Xlabel,verbose);
+function Trans = gpComputeTranslationLogLikelihood(model, Xlabel, verbose);
 
 % GPCOMPUTETRANSLATIONLOGLIKELIHOOD  
 % FORMAT
