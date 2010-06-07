@@ -8,19 +8,23 @@
 
 RELEASEINFORMATION
 
-Updates by Antti to lnDiffErf. Added readBinaryDoubles and printPlot.
+<p>Added files for printing to latex plots from Octave.
+
+<h4>Version 0.161</h4>
+
+<p>Updates by Antti to lnDiffErf. Added readBinaryDoubles and printPlot.
 
 <h4>Version 0.16</h4>
 
-Release for ICML tutorial. Added cumGamma and gammaPdf. Also added isoctave and several matlab helper files for reading from file IDs.
+<p>Release for ICML tutorial. Added cumGamma and gammaPdf. Also added isoctave and several matlab helper files for reading from file IDs.
 
 <h4>Version 0.159</h4>
 
-Minor release for dimensional reduction demos. Added centeringMatrix.m.
+<p>Minor release for dimensional reduction demos. Added centeringMatrix.m.
 
 <h4>Version 0.158</h4>
 
-Antti Honkela provided the files lnDiffErfs and gradLnDiffErfs to assist in computing the DISIM kernel from the kernel toolbox stably.
+<p>Antti Honkela provided the files lnDiffErfs and gradLnDiffErfs to assist in computing the DISIM kernel from the kernel toolbox stably.
 
 <h4>Version 0.157</h4>
 
