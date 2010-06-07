@@ -10,11 +10,15 @@
 
 RELEASEINFORMATION
 
-Added loaders for speech grid corpus data.
+Minor mods to lvmLoadData for Spellman data.
+
+<h4>Version 0.137</h4>
+
+<p>Added loaders for speech grid corpus data.
 
 <h4>Version 0.136</h4>
 
-Added loader for  Agarwal and Triggs silhouette data back in, slight modifications of robot wireless datasets.
+<p>Added loader for  Agarwal and Triggs silhouette data back in, slight modifications of robot wireless datasets.
 
 <h4>Version 0.135</h4>
 
@@ -62,4 +66,5 @@ Added loader for  Agarwal and Triggs silhouette data back in, slight modificatio
 <p>First release of the toolbox.
 
 <p>The toolbox currently contains two different files for loading datasets into matlab and a collection of matlab data sets.
-</div></body>
+</div>
+</body>

@@ -1,5 +1,10 @@
 This toolbox stores datasets and gives commands for accessing them.
 
+Version 0.1371
+--------------
+
+Minor mods to lvmLoadData for Spellman data.
+
 Version 0.137
 -------------
 
