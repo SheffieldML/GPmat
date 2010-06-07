@@ -1,18 +1,10 @@
 gpOptimise <- function(model, display=TRUE, iters=2000, gradcheck=FALSE) {
 
-#   if (nargs() < 4) {
-#     gradcheck = FALSE
-#     if (nargs() < 3) {
-#       iters = 2000
-#       if (nargs() < 2)
-# 	display = TRUE
-#     }
-#   }
-
   params = gpExtractParam(model)
   ## options = list(maxit=3000, ln=c(0,2), xtol=1e-4, fnTol=1e-4, optimiser="SCG",
   ##	gradcheck=FALSE, display=TRUE)
-  options = optimiDefaultOptions() #optOptions
+  options = optimiDefaultOptions()
+  options$display = FALSE
   if (display) {
     options$display = TRUE
     if ((length(params) <= 100) && gradcheck)
@@ -33,8 +25,7 @@ gpOptimise <- function(model, display=TRUE, iters=2000, gradcheck=FALSE) {
 #     params = optim('gpObjectiveGradient', params, options, model);
 #   else
   ## R version of NETLAB function
-  ## only necessary parts from gpGradient implemented!
-  params = optim(params, fn, grad, options, model) ## !!!
+  params = optim(params, fn, grad, options, model)
 
   model = gpExpandParam(model, params)
 

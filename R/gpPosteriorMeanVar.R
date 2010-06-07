@@ -24,13 +24,13 @@ gpPosteriorMeanVar <- function(model, X, varsigma.return=FALSE) {
 
     ## Compute kernel for new point.
     if (model$approx == "ftc")
-      KX_star = kernCompute(model$kern, model$X, X[indices, ]) #in kernFunctions.R
+      KX_star = kernCompute(model$kern, model$X, X[indices, ,drop=F])
     else if (model$approx %in% c("dtc", "dtcvar", "fitc", "pitc"))
-      KX_star = kernCompute(model$kern, model$X_u, X[indices,]) #in kernFunctions.R
+      KX_star = kernCompute(model$kern, model$X_u, X[indices, ,drop=F])
     
     ## Compute mean, using precomputed alpha vector.
     if ((!"isMissingData" %in% names(model)) || !model$isMissingData || model$approx != "ftc")
-      mu[indices,] = t(KX_star) %*% model$alpha
+      mu[indices, ] = t(KX_star) %*% model$alpha
     else {
       for (i in 1:model$d)
 	mu[indices, i] = t(KX_star[model$indexPresent[[i]], ,drop=F]) %*%
@@ -42,19 +42,18 @@ gpPosteriorMeanVar <- function(model, X, varsigma.return=FALSE) {
       varsigma = matrix(0, dim(X)[1], model$d)
       if (!("isSpherical" %in% names(model)) || model$isSpherical) {
 	## Compute diagonal of kernel for new point.
-	diagK = kernDiagCompute(model$kern, X[indices,])
+	diagK = kernDiagCompute(model$kern, X[indices, ,drop=F])
 	if (model$approx == "ftc")
 	  Kinvk = model$invK_uu %*% KX_star
-	else if (model$approx %in% c("dtc", "dtcvar", "fitc", "pitc")) {
-	  Kinvk = (model$invK_uu - (1/model$beta)*model$Ainv) %*% KX_star
-	}
+	else if (model$approx %in% c("dtc", "dtcvar", "fitc", "pitc"))
+	  Kinvk = (model$invK_uu - drop(1/model$beta)*model$Ainv) %*% KX_star
 	varsig = diagK - colSums(KX_star * Kinvk)
-	if ("beta"  %in% names(model)) {
-	  varsig = varsig + (1/model$beta)
+	if ("beta"  %in% names(model) && length(model$beta)>0) {
+	  varsig = varsig + drop(1/model$beta)
 	}
-	varsigma[indices,] = kronecker(matrix(1,1,model$d), varsig)
+	varsigma[indices, ] = kronecker(matrix(1,1,model$d), varsig)
       } else {
-	diagK = kernDiagCompute(model$kern, X[indices,])
+	diagK = kernDiagCompute(model$kern, X[indices, ,drop=F])
 	for (i in 1:model$d) {
 	  ind = model$indexPresent[[i]]
 	  if (model$approx == "ftc")

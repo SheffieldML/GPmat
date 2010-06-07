@@ -10,20 +10,20 @@ gpTest <- function(q=2, d=3, N=10, Nseq=4, k=5) {
   Yorig = matrix(rnorm(N*d), N, d)
   indMissing = which(matrix(rnorm(N*q), N, q) > 0.7)
   approxType = list("ftc", "dtc", "dtcvar", "fitc", "pitc")
-#   approxType = list("pitc")
+  approxType = list("ftc")
   counter = 0
 
-  for (optimiseBeta in FALSE:TRUE) {
-#   for (optimiseBeta in FALSE) {
+#   for (optimiseBeta in FALSE:TRUE) {
+  for (optimiseBeta in FALSE) {
 
 #   for (meanFunction in FALSE:TRUE) {
     for (meanFunction in FALSE) {
 
-      for (missing in FALSE:TRUE) {
-#       for (missing in FALSE) {
+#       for (missing in FALSE:TRUE) {
+      for (missing in FALSE) {
 
-	for (fixInducing in FALSE:TRUE) {
-# 	for (fixInducing in FALSE) {
+# 	for (fixInducing in FALSE:TRUE) {
+	for (fixInducing in FALSE) {
 
 	  Y = Yorig
 
