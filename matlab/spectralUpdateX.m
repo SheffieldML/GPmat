@@ -38,6 +38,5 @@ function model = spectralUpdateX(model)
 
   % Multiplying by square root ensures latent covariance of identity.
   model.X = m(:, [1:(ind-1) (ind+1):end])*sqrt(model.N);
-  model.lambda = sqrt(1./(v([1:(ind-1) (ind+1):end])*model.d));
   
 end
