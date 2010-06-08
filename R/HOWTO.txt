@@ -1,0 +1,16 @@
+The following is a list of packages necessary to run the gpToolkit in R, indented by dependency level, eg. bitops should be installed first. Make sure to install the latest version of each package:
+
+spam
+tigre
+ mclust
+ gplots
+  gdata
+   gtools
+  caTools
+   bitops
+
+Then inside an R session enter the following:
+
+source("~/mlprojects/gp/R/gpLoadToolkit.R")
+gpLoadToolkit()
+gpTest() # run some tests

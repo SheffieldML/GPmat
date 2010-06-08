@@ -19,6 +19,7 @@
 ~/mlprojects/gp/R/noiseParamInit.R		=>	~/mlprojects/noise/R/
 ~/mlprojects/gp/R/gaussianNoiseParamInit.R	=>	~/mlprojects/noise/R/
 ~/mlprojects/gp/R/cmpndNoiseParamInit.R		=>	~/mlprojects/noise/R/
+~/mlprojects/gp/R/gaussSamp.R			=>	~/mlprojects/ndlutil/R/
 ~/mlprojects/gp/R/rbfKernGradX.R		=>	~/mlprojects/gpsim/R/R/rbfKernFunctions.R
 ~/mlprojects/gp/R/whiteKernGradX.R		=>	~/mlprojects/gpsim/R/R/whiteKernFunctions.R
 ~/mlprojects/gp/R/kernDiagGradient.R		=>	~/mlprojects/gpsim/R/R/kernFunctions.R
