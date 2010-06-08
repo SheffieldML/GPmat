@@ -11,6 +11,10 @@ Software (GP).
 
 RELEASEINFORMATION
 
+Changes to gpReadFromFID for compatibility with C++ code.
+
+<h4>Version 0.135</h4>
+
 Modifications by Carl Henrik Ek for compatability with the SGPLVM toolbox.
 
 <h4>Version 0.134</h4>
