@@ -13,6 +13,30 @@ function model = gpReadFromFID(FID, varargin)
 
 % GP
 
+try
+  version = readVersionFromFID(FID);
+catch
+  if strcmp(lasterr, 'Incorrect file format')
+    version = readDoubleFromFID(FID, 'gplvmVersion');
+  else
+    error(lasterr)
+  end
+end
+
+if version > 0.2 
+  error('Incorrect file version.')
+end
+
+if version>0.11
+  baseType = readStringFromFID(FID, 'baseType')
+  if ~strcmp(baseType, 'mapmodel')
+    error('Incorrect base type in file.')
+  end
+  type = readStringFromFID(FID, 'type')
+  if ~strcmp(type, 'gp')
+    error('Incorrect type in file.')
+  end
+end
 numData = readIntFromFID(FID, 'numData');
 dataDim = readIntFromFID(FID, 'outputDim');
 inputDim = readIntFromFID(FID, 'inputDim');
@@ -32,6 +56,7 @@ kern = modelReadFromFID(FID);
 noise = modelReadFromFID(FID);
 
 if sparseApprox
+  fixInducing = readBoolFromFID(FID, 'fixInducing');
   X_u = modelReadFromFID(FID);
 end
 
@@ -57,10 +82,13 @@ end
 options = gpOptions(approxType);
 options.numActive = numActive;
 options.kern = kern;
+if sparseApprox
+  options.fixInducing = fixInducing;
+end
 model = gpCreate(inputDim, size(y, 2), X, y, options);
 model.X = X;
-model.X_u = X_u;
 if sparseApprox
+  model.X_u = X_u;
   model.beta = beta;
 end
 model.scale = scale;

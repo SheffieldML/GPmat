@@ -80,6 +80,8 @@ public:
   virtual void getOptParams(CMatrix& param) const;
   virtual void setOptParams(const CMatrix& param);
 
+  virtual string getNoiseType() const;
+
 #ifdef _NDLMATLAB
   mxArray* toMxArray() const;
   void fromMxArray(const mxArray* matlabArray);
@@ -138,7 +140,7 @@ public:
   void setOutputScaleLearnt(const bool val) {
     outputScaleLearnt=val;
   }
-   bool isOutputBiasLearnt() const 
+  bool isOutputBiasLearnt() const 
   {
     return outputBiasLearnt;
   }

@@ -29,9 +29,9 @@ switch model.approx
   % Long term should allow different kernels in each dimension here.
   model.K_uu = kernCompute(model.kern, X);
     
-  if ~isfield(model, 'isSpherical') | model.isSpherical
+  if ~isfield(model, 'isSpherical') || model.isSpherical
     % Add inverse beta to diagonal if it exists.
-    if isfield(model, 'beta') & ~isempty(model.beta)
+    if isfield(model, 'beta') && ~isempty(model.beta)
       model.K_uu(1:size(model.K_uu, 1)+1:end) = ...
           model.K_uu(1:size(model.K_uu, 1)+1:end) + 1./model.beta';
     end
@@ -39,13 +39,13 @@ switch model.approx
     model.logDetK_uu = logdet(model.K_uu, U);
   else   
     for i = 1:model.d
-      if isfield(model, 'beta') & ~isempty(model.beta)
+      if isfield(model, 'beta') && ~isempty(model.beta)
         if size(model.beta, 2) == model.d
           betaAdd = model.beta(:, i)';
         else
           betaAdd = model.beta;
         end
-        if isfield(model, 'beta') & ~isempty(model.beta)
+        if isfield(model, 'beta') && ~isempty(model.beta)
           model.K_uu(1:size(model.K_uu, 1)+1:end) = ...
               model.K_uu(1:size(model.K_uu, 1)+1:end) + 1./betaAdd;
         end
@@ -58,7 +58,7 @@ switch model.approx
  case {'dtc', 'dtcvar', 'fitc', 'pitc'}
   model.K_uu = kernCompute(model.kern, X_u);
   
-  if ~isfield(model.kern, 'whiteVariance') | model.kern.whiteVariance == 0
+  if ~isfield(model.kern, 'whiteVariance') || model.kern.whiteVariance == 0
     % There is no white noise term so add some jitter.
     model.K_uu = model.K_uu ...
         + sparseDiag(repmat(jitter, size(model.K_uu, 1), 1));
@@ -73,7 +73,7 @@ switch model.approx
  case {'dtcvar', 'fitc'}
   model.diagK = kernDiagCompute(model.kern, X);
  case {'pitc'}
-  if ~isfield(model, 'isSpherical') | model.isSpherical
+  if ~isfield(model, 'isSpherical') || model.isSpherical
     for i = 1:length(model.blockEnd)
       ind = gpBlockIndices(model, i);
       model.K{i} = kernCompute(model.kern, X(ind, :));

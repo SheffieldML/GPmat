@@ -20,7 +20,7 @@ function model = gpExpandParam(model, params)
 % GP
 
 
-if strcmp(model.approx, 'ftc') | model.fixInducing
+if strcmp(model.approx, 'ftc') || model.fixInducing
   endVal = 0;
 else
   startVal = 1;

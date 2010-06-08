@@ -288,6 +288,10 @@ void CGp::updateX()
 {
   setKupToDate(false);
 }
+string CGp::getNoiseType() const
+{
+  return pnoise->getType();
+}
 
 unsigned int CGp::getOptNumParams() const
 {
@@ -1590,24 +1594,33 @@ void CGp::display(ostream& os) const
   cout << "Scale: " << scale << endl;
   pnoise->display(os);
   pkern->display(os);
-  if(isSparseApproximation())
+  if(isSparseApproximation()) {
+    cout << "Inducing fixed: " << isInducingFixed() << endl;
     cout << "Beta Value: " << getBetaVal() << endl;
-  cout << "Log likelihood: " << logLikelihood() << endl;
+  }
+  if(py && pX)
+    cout << "Log likelihood: " << logLikelihood() << endl;
 }
 
 void CGp::readParamsFromStream(istream& in)
 {
+  string tbaseType = getBaseTypeStream(in);
+  if(tbaseType != getBaseType())
+    throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
+  string ttype = getTypeStream(in);
+  if(ttype != getType())
+    throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
   setNumData(readIntFromStream(in, "numData"));
   setOutputDim(readIntFromStream(in, "outputDim"));
   setInputDim(readIntFromStream(in, "inputDim"));
-
-  setSparseApproximation(readIntFromStream(in, "sparseApproximation"));
+  setApproximationType(readIntFromStream(in, "sparseApproximation"));
   numActive = readIntFromStream(in, "numActive");
   // have all the info for resizing storage.
   initStoreage();
 
   if(isSparseApproximation()) 
   {
+    betaTransform = CTransform::defaultPositive();
     beta.fromStream(in);
   }
 
@@ -1621,17 +1634,21 @@ void CGp::readParamsFromStream(istream& in)
 
   // load kernel
   pkern = readKernFromStream(in);
+  initKernStoreage();
   // load noise
   pnoise = readNoiseFromStream(in);
 
 
   if(isSparseApproximation()) 
   {
+    setInducingFixed(readBoolFromStream(in, "fixInducing"));
     X_u.fromStream(in);
     if(X_u.getCols()!=getInputDim())
       throw ndlexceptions::StreamFormatError("inputDim", "X_u columns doesn't match input dimension.");
   }
-  updateM();
+  setMupToDate(false);
+  // Don't update M as you need py to be set for that.
+  //updateM();
 }
 
 
@@ -1655,8 +1672,12 @@ void CGp::writeParamsToStream(ostream& out) const
   pnoise->toStream(out);
   if(isSparseApproximation()) 
   {
+    writeToStream(out, "fixInducing", isInducingFixed());
     X_u.toStream(out);
   }
+  //py->toStream(out);
+  //pX->toStream(out);
+
 }
 // Functions which operate on the object
 void writeGpToStream(const CGp& model, ostream& out) 
@@ -1695,5 +1716,6 @@ CGp* readGpFromFile(const string modelFileName, int verbosity)
   if(verbosity>0)
     cout << "... done." << endl;
   in.close();
+  pmodel->setVerbosity(verbosity);
   return pmodel; 
 }
