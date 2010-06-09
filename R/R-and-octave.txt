@@ -787,6 +787,7 @@ sparseDiag(matrix(a.scalar, nrows, ncols))	diag.spam(a.scalar, nrows) # requires
 sparseDiag(a.vector)				diag.spam(drop(a.vector))
 speye(a.scalar)					diag.spam(a.scalar)
 A.mat \ B.mat					solve(A.mat, B.mat)
+pdinv(A.mat)					.jitCholInv(A.mat, silent=TRUE)
 randn(nrows, ncols)		     		matrix(rnorm(nrows*ncols), nrows, ncols)
 disp([a.string b.string c.scalar])		print(paste(a.string, b.string, c.scalar, sep=""))
 round(a.scalar)					round(a.scalar)
@@ -802,4 +803,5 @@ a.vector .* b.matrix(1,:)			a.vector * drop(b.matrix[1, ])
 zeros(size(X))					array(0, dim(as.array(X)))
 fill([x; flipdim(x,1)], [y; flipdim(y,1)])	polygon(c(x, rev(x)), c(y, rev(y)))
 figure(1); figure(2); figure(1); close		dev.new(); dev.new(); dev.set(1); dev.off()
+
 

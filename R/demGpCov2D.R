@@ -70,10 +70,10 @@ basePlot <- function (K, ind) {
 #   set(t, 'fontsize', 24)
 #   set(t, 'fontangle', 'italic')
 # 
-#   zeroAxes(gca, 0.025, 18, 'times')
-  abline(v = 0, h = 0) ## axes and co-centric circles
-  int = (max(xy[,1])-min(xy[,1]))/100
-  lines(int*cos(seq(0, 2*pi, l=100)), int*sin(seq(0, 2*pi, l=100)))
+  zeroAxes(xy)
+#   abline(v = 0, h = 0) ## axes and co-centric circles
+#   int = (max(xy[,1])-min(xy[,1]))/100
+#   lines(int*cos(seq(0, 2*pi, l=100)), int*sin(seq(0, 2*pi, l=100)))
 
 #   ax = gca
 

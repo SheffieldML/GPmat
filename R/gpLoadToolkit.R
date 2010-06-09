@@ -35,4 +35,6 @@ gpLoadToolkit <- function() {
   source("~/mlprojects/gp/R/whiteKernDiagGradX.R")
   source("~/mlprojects/gp/R/kernDiagGradient.R")
   source("~/mlprojects/gp/R/gpPlot.R")
+  source("~/mlprojects/gp/R/gaussSamp.R")
+  source("~/mlprojects/gp/R/zeroAxes.R")
 }
