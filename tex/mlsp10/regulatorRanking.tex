@@ -38,7 +38,9 @@
   clustering. In this paper we  consider the harder problem of finding
   a  gene's regulator instead  of its  targets.  We  use a  model-based
   differential  equation  approach combined  with  a Gaussian  process
-  prior distribution for unobserved protein concentrations. This idea,
+  prior distribution for unobserved continuous-time regulator expression
+  profile.  Candidate regulators can then be ranked according to model
+  likelihood.  This idea,
   that  we refer  to as  ranked  regulator prediction  (RRP), is  then
   applied   to  finding   the  regulators   of  Gata3,   an  important
   developmental transcription  factor, in the development  of ear hair
@@ -102,13 +104,16 @@ equation. Thus  we see  a TF activity,  $p(t)$, that  explains targets
 simultaneously through  a range of different decay  rates.  Clearly we
 are also making further assumptions  here: for example we are assuming
 TFs  do not act  in tandem  and  that the  response to  the TF  does not
-saturate. However,  the model is richer than  the standard genome-wide
+saturate. Other regulatory mechanisms, such as chromatin remodelling
+and non-coding RNAs are also ignored as they are typically unobserved.
+However,  the model is richer than  the standard genome-wide
 analysis   techniques  of  seeking   correlation  or   clustering  the
 data. This model-based approach to gene regulation was also considered
-by  \cite{Gao:latent08}. They  used Gaussian  process priors  over the
+in  \cite{Gao:latent08}. They  used Gaussian  process priors  over the
 unobserved TF activity  to create a fully probabilistic  model for the
-coregulated genes.  Likelihoods can then  be used to rank these models
-and determined which genes are likely to be coregulated.
+coregulated genes.
+%  Likelihoods can then  be used to rank these models
+%and determined which genes are likely to be coregulated.
 
 Also in \cite{Gao:latent08} this framework was extend by introducing a
 simple model  of translation.  Let us represent the  mRNA governing the
@@ -116,7 +121,7 @@ transcription factor by $m_0(t)$. Let us assume that this is translated
 to  $p(t)$ through a  process that  can be  modelled by  the following
 differential equation
 \begin{equation}
-  \diff{p(t)}{t} = \sigma m_0(t) - \delta p(t).
+  \diff{p(t)}{t} = m_0(t) - \delta p(t).
 \end{equation}
 Once again this  is a significant simplification. It  assumes that the
 TF  protein is  produced from  only one  mRNA and  ignores potentially
@@ -126,7 +131,7 @@ ubiquitination.
 Given  observations  from the  potential  target  mRNA, $m_i(t)$,  and
 observations  from the  governing TF's  mRNA a  joint  Gaussian process
 likelihood can be constructed  and maximized with respect to $\delta$,
-$\sigma$,  $a_i$,  $b_i$,  $s_i$  and  $d_i$.  For  a  given  TF  this
+$a_i$,  $b_i$,  $s_i$  and  $d_i$.  For  a  given  TF  this
 likelihood can be measured for all potential target genes and they can
 then  be ranked  as  putative  targets.  This  idea  was exploited  by
 \cite{Honkela:modelbased10}  who validated  their  results using  ChIP
@@ -136,12 +141,16 @@ considerably better than simple correlation-based approaches.
 In this paper we want to turn this idea on its head. Instead of asking
 what  the targets are  of a  particular TF  we wish  to know  what the
 regulator of a particular gene is. In other words we are interested in
-ranked regulator prediction instead  of ranked target prediction. This
+ranked regulator prediction instead  of ranked target prediction.
+The proposed approach is otherwise fairly similar with respect to the
+methods to that in~\cite{Honkela:modelbased10}.
+
+The ranked regulator prediction (RRP)
 problem will generally  be harder than target prediction  as there are
 likely to be many targets of a particular TF, but only few regulators.
 However, we  can restrict  ourselves to known  TFs when  searching for
 regulators  and this reduces  the number  of genes  we have  to search
-through from thousands to hundreds.  Ranked regulator prediction (RRP)
+through from thousands to hundreds.  RRP
 has the  potential to provide biologists  with a new  tool for probing
 their regulatory networks.
 
@@ -165,7 +174,7 @@ where the elements of the  covariance matrix are given by a covariance
 function. This may  be any function that leads  to a positive definite
 matrix, but a common choice is the Gaussian covariance,
 \begin{equation}
-  k(t_i,   t_j)   =  \frac{1}{\sqrt{2\pi   \ell^2}}\exp\left(-\frac{(t_i
+  k(t_i,   t_j)   =  \frac{\sigma^2}{\sqrt{2\pi   \ell^2}}\exp\left(-\frac{(t_i
       -t_j)^2}{2\ell^2}\right).
 \end{equation}
 Whilst we usually  think of Gaussians as being  densities over finite
@@ -209,14 +218,14 @@ and
 The simple  translation/transcription model  we described in  the last
 section gives  a deterministic  relationship between the  TF activity,
 $p(t)$  and the gene  expression levels,  $m_0(t)$ and  $m_i(t)$. This
-deterministic relationship can be encoded within a Gaussian process by
+deterministic relationship can be encoded within a GP by
 noting  that it  is  given  by a  \emph{linear  operator}. The  linear
 operator  in question  is  the  convolution of  the  function with  an
 exponential  (see  \refeq{eq:linearOperator}).   A  convolution  of  a
-Gaussian  process  with  a  deterministic function  leads  to  another
-Gaussian process: this results from two properties, a Gaussian process
-multiplied by a deterministic function  is also a Gaussian process and
-the integral  of a  Gaussian process is  also a Gaussian  process. The
+GP  with  a  deterministic function  leads  to  another
+GP: this results from two properties, a GP
+multiplied by a deterministic function  is also a GP and
+the integral  of a  GP is  also a GP. The
 other effect  of \refeq{eq:linearOperator} is to introduce  a new mean
 function through  the addition  of $\frac{b_i}{d_i}$ and  $a_i e^{-d_i
   t}$.            Details            are           given            in
@@ -244,7 +253,7 @@ $t^\prime$.  The covariance function between a target gene and itself is given b
   &\times\int_0^t e^{(d_j - \delta) u}
   \int_0^{t^\prime} e^{(d_k - \delta) u'} \\
   &\times
-  \int_0^u e^{\delta v} \int_0^{u'} e^{\delta v'} k(v, v') \, \mathrm{v}'\, \mathrm{d}v\, \mathrm{d}u'\, \mathrm{d}u \\
+  \int_0^u e^{\delta v} \int_0^{u'} e^{\delta v'} k(v, v') \, \mathrm{d}v'\, \mathrm{d}v\, \mathrm{d}u'\, \mathrm{d}u \\
   = &\frac{\sigma^2 s_j s_k}{\sqrt{8}} \bigg(
   h_{jk}(t, t^\prime, \delta) + h_{kj}(t^\prime, t, \delta) \\
   &- h_{jk}(t, t^\prime, d_j) - h_{kj}(t^\prime, t, d_k)
@@ -303,8 +312,17 @@ the highest likelihood.
 
 %\neil{We need more specifics on the quality of these results. Currently we are being very wishy washy.}
 
-We tested the method by looking for candidate regulators of Gata3 gene
-in  mouse.   Gata3  is  itself  a transcription  factor  with  several
+Careful experimental validation of the proposed method is very
+difficult as practically the only systems where the ground truth is
+known as synthetic.  These are, however, unrepresentative as the
+results are highly dependent on the details of the experimental setup
+and the degree of presence of confounding factors.  With these
+considerations in mind, we demonstrate the method in preliminary
+analysis of candidate regulators of Gata3 gene in  mouse.  More
+careful biological validation of the results is needed for full
+evaluation, but that is beyond the scope of the current work.
+
+Our example gene Gata3 is itself   a transcription factor with several
 important  functions~\cite{Chou2010}.  For example  it is  critical in
 the development of hair cells in  the inner ear.  Mice and humans with
 just  one of  the usual  two  copies of  the Gata3  gene disabled  are
@@ -525,6 +543,7 @@ design  new  experiments.  The  set  of  candidate  regulators is  now
 sufficiently  small that  they could  be sifted  using  less expensive
 low-throughput techniques.
 
+\small
 
 \bibliographystyle{IEEEabrv}
 \bibliography{lawrence,other,zbooks}
