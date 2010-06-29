@@ -26,11 +26,16 @@ function kern = gaussianKernParamInit(kern, isArd)
 if kern.inputDimension == 0
    kern.inputDimension = 1; 
 end
-switch nargin
-    case 1
-        kern.isArd = false;        
-    case 2
-        kern.isArd = isArd;
+
+if isfield(kern, 'options') && isfield(kern.options, 'isArd')
+    kern.isArd = kern.options.isArd;
+else
+    switch nargin
+        case 1
+            kern.isArd = false;
+        case 2
+            kern.isArd = isArd;
+    end
 end
 kern.sigma2Latent = 1;
 if kern.isArd

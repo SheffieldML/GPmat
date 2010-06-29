@@ -1,15 +1,12 @@
-function gX = ggXgaussianKernGradX(ggKern, gaussianKern, X, X2)
+function gX = ggXgaussianKernGradX(ggKern, gaussianKern, X, X2, covGrad)
 
 % GGXGAUSSIANKERNGRADX Compute gradient between the GG and GAUSSIAN
 % kernels wrt the input locations
 % FORMAT
-% DESC computes the gradient between the 
-%   GG and GAUSSIAN kernels with respect to the input positions where both
-%	the row positions and column positions are provided separately.
-% RETURN g : the returned gradients. The gradients are returned in a matrix
-%	   which is numData2 x numInputs x numData1. Where numData1 is the
-%	   number of data points in X1, numData2 is the number of data points
-%	   in X2 and numInputs is the number of input dimensions in X.
+% DESC computes the gradient between the GG and GAUSSIAN kernels with 
+% respect to the input positions where both the row positions and column 
+% positions are provided separately.
+% RETURN g : the returned gradients. 
 % ARG kern : kernel structure for which gradients are being computed.
 % ARG x1 : row locations against which gradients are being computed.
 % ARG x2 : column locations against which gradients are being computed.
@@ -18,11 +15,12 @@ function gX = ggXgaussianKernGradX(ggKern, gaussianKern, X, X2)
 %
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
 %
-% MODIFICATIONS : Mauricio A. Alvarez, 2009.
+% MODIFICATIONS : Mauricio A. Alvarez, 2009, 2010
 
 % KERN
 
-if nargin < 3,    
+if nargin < 5,
+    covGrad = X2;
     X2 = X;
 else
     U = X;
@@ -46,6 +44,17 @@ gX = zeros(size(X2, 1), size(X2, 2), size(X, 1));
 for i = 1:size(X, 1);
   gX(:, :, i) = gaussianKernGradXpoint(K(:,i), PX(i, :), PX2);
 end
+
+gX2 = zeros(size(X));
+for i=1:size(X,2),
+    mPX2 = PX2(:,i);
+    MPX2 = mPX2(:,ones(1,size(X,1)));
+    mPX = PX(:,i)';
+    MPX = mPX(ones(size(X2,1),1),:);
+    gX2(:,i) = sum((covGrad'.*K).*(MPX2-MPX),1)';
+end
+
+gX = gX2;
 
 
 function gX = gaussianKernGradXpoint(gaussianPart, x, X2)
