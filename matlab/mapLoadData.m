@@ -1391,6 +1391,55 @@ switch dataset
   y = data.Ytrain;
   XTest = data.Xtest;
   yTest = data.Ytest;
+  
+ case 'juraDataCdIsotopic'
+  try
+    load([baseDir 'juraDataCdIsotopic.mat']);
+  catch
+    fidP = fopen([baseDir 'prediction.dat'],'r');
+    if fidP ==-1
+      error('The file prediction.dat does not exist in this directory');
+    end
+    fidV = fopen([baseDir 'validation.dat'],'r');
+    if fidV ==-1
+      error('The file validation.dat does not exist in this directory');
+    end
+    xLoc = [1 2];
+    primaryLoc = 5; % Column location of Cd in file prediction.dat and file validation.dat
+    secondaryLoc = [9 11]; % Column location of Ni and Zn
+    fseek(fidP, 61,-1);
+    A = textscan(fidP, '%f%f%f%f%f%f%f%f%f%f%f');
+    predValues = cell2mat(A);
+    fseek(fidV, 61,-1);
+    A = textscan(fidV, '%f%f%f%f%f%f%f%f%f%f%f');
+    valValues = cell2mat(A);
+    X = cell(1, 1+length(secondaryLoc));
+    y = cell(1, 1+length(secondaryLoc));
+    XTest =  cell(1, 1+length(secondaryLoc));
+    yTest =  cell(1, 1+length(secondaryLoc));
+    X{1} = predValues(:, xLoc);
+    y{1} = predValues(:,primaryLoc);
+    for i=1:length(secondaryLoc);
+      X{1+i} = predValues(:, xLoc);
+      y{1+i} = predValues(:, secondaryLoc(i));
+    end
+%     % Append validation values to training data
+%     for i=1:length(secondaryLoc);
+%       X{1+i} = [X{1+i}; valValues(:, xLoc)];
+%       y{1+i} = [y{1+i}; valValues(:, secondaryLoc(i))];
+%     end
+    % Form the testting sets
+    XTest{1} = valValues(:, xLoc);
+    yTest{1} = valValues(:, primaryLoc);
+    for i=1:length(secondaryLoc);
+      XTest{1+i} = valValues(:, xLoc);
+      yTest{1+i} = valValues(:, secondaryLoc(i));
+    end
+    fclose(fidP);
+    fclose(fidV);
+    save([baseDir 'juraDataCdIsotopic.mat'], 'X', 'y', 'XTest', 'yTest');
+
+  end
 
  case 'demp53_5genes'
   data = load([baseDir 'dataBarencoOption_0_Genes_5']);
