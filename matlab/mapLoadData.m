@@ -953,6 +953,84 @@ switch dataset
   save([baseDir 'ggwhiteToyHighDimBatch.mat'], 'X', 'y', 'XTest', 'yTest')
   %end
 
+ case  'ggToyConvolution'  
+     try
+         load([baseDir 'toyMultigp1DConvExample.mat']);
+     catch
+         randn('seed', 1e5);
+         rand('seed', 1e5);
+         nout = 5;
+         nlf = 1;
+         d = nout + nlf;
+         precisionG = [10000 500 5000 100 1];
+         variance = 5+5*rand(1,nout);
+         precisionU = 500;
+         sigma2Latent = 1;
+         N = 500;
+         N2 = 100;
+         x = linspace(-1,1,N)';
+         x2 = linspace(-1,1,N2)';
+         XX = cell(1, d);
+         XX{1} = x2;
+         for i =1: nout;
+             XX{nlf+i} = x;
+         end
+         kernType{1} = multigpKernComposer('gg', d, nlf, 'ftc', 1);
+         kern = kernCreate(XX,  kernType{:});
+         kern.comp{1}.precisionU = precisionU;
+         kern.comp{1}.sigma2Latent = sigma2Latent;
+         for k = 1:nout,
+             kern.comp{1+k}.precisionU = precisionU;
+             kern.comp{1+k}.sigma2Latent = sigma2Latent;
+             kern.comp{1+k}.precisionG = precisionG(k);
+             kern.comp{1+k}.sensitivity = variance(k);
+         end
+         K = kernCompute(kern, XX);
+         yu = gsamp(zeros(size(K,1),1), K, 1);
+         y = yu(size(XX{1},1)+1:end);
+         Y = reshape(y,size(XX{2},1),nout);
+         F = reshape(y,size(XX{2},1),nout);
+         for k=1:nout,
+             F(:,k) = Y(:,k);
+             Y(:,k) = Y(:,k) + 0.1*sqrt(var(Y(:,k)))*randn(size(Y(:,k),1),1);
+         end
+         X = cell(1,nout);
+         y = cell(1,nout);
+         f = cell(1,nout);
+         for k =1:nout,
+             X{k} = XX{k+nlf};
+             y{k} = Y(:,k);
+             f{k} = F(:,k);
+         end
+         XTest = [];
+         yTest = f;
+         save([baseDir 'toyMultigp1DConvExample.mat'], 'X', 'y', 'XTest', 'yTest');
+     end
+ 
+ case 'ggToyConvolutionTrainTest'
+  try
+    load([baseDir 'toyMultigp1DConvExampleTrainTest.mat'], 'X', 'y', 'XTest', 'yTest')
+  catch
+    [XTemp, yTemp, XTestTemp, yTestTemp] = mapLoadData('ggToyConvolution');
+    nout = size(XTemp,2);
+    ntrainx = 200;
+    maxl = length(XTemp{1});
+    X = cell(1,nout);
+    y = cell(1,nout);
+    yTest = cell(1,nout);
+    indx = randperm(maxl);
+    pindx = sort(indx(1:ntrainx));
+    for k =1:nout,
+      X{k} = XTemp{k}(pindx,:);
+      y{k} = yTemp{k}(pindx,:);
+      yTest{k} = yTemp{k}(indx(ntrainx+1:end),:);
+    end
+    XTest = XTemp{1}(indx(ntrainx+1:end),:)';
+    yTest{end+1} = yTestTemp; %It has the groundtruth
+    save([baseDir 'toyMultigp1DConvExampleTrainTest.mat'], 'X', 'y', 'XTest', 'yTest')
+  end    
+     
+     
  case 'compilerData'
   data = load([baseDir 'data_compiler_org.mat']);
   X = cell(1,length(data.X));
