@@ -1029,6 +1029,80 @@ switch dataset
     yTest{end+1} = yTestTemp; %It has the groundtruth
     save([baseDir 'toyMultigp1DConvExampleTrainTest.mat'], 'X', 'y', 'XTest', 'yTest')
   end    
+  
+ case  'ggToyICM'  
+     try
+         load([baseDir 'toyMultigp1DICMExample.mat']);
+     catch
+         randn('seed', 1e5);
+         rand('seed', 1e5);
+         nout = 5;
+         nlf = 1;
+         d = nout + nlf;
+         rank = 5;
+         Am = rand(nout,rank);
+         precisionU = 50;
+         sigma2Latent = 1;
+         options.kern.nout = nout;
+         options.kern.rankCorregMatrix = rank;
+         N = 100;
+         x = linspace(-1,1,N)';
+         kernType{1} = multigpKernComposer('lmc', d, nlf, 'ftc', 1, options);
+         kern = kernCreate(x,  kernType{:});
+         kern.comp{1}.precisionU = precisionU;
+         kern.comp{1}.sigma2Latent = sigma2Latent;         
+         kern.comp{2}.precisionU = precisionU;
+         kern.comp{2}.sigma2Latent = sigma2Latent;         
+         kern.comp{2}.A = Am;
+         kern.comp{2}.B = kern.comp{2}.A*kern.comp{2}.A';         
+         K = kernCompute(kern.comp{2}, x);
+         y = gsamp(zeros(size(K,1),1), K, 1);
+         Y = reshape(y,size(x,1),nout);
+         F = reshape(y,size(x,1),nout);
+         for k=1:nout,
+             F(:,k) = Y(:,k);
+             Y(:,k) = Y(:,k) + 0.1*sqrt(var(Y(:,k)))*randn(size(Y(:,k),1),1);
+         end
+         X = cell(1,nout);
+         y = cell(1,nout);
+         f = cell(1,nout);
+         for k =1:nout,
+             X{k} = x;
+             y{k} = Y(:,k);
+             f{k} = F(:,k);
+         end
+         XTest = [];
+         yTest = f;
+         figure
+         for k=1:nout
+            subplot(nout,1,k);
+            plot(x,f{k})
+         end         
+         save([baseDir 'toyMultigp1DICMExample.mat'], 'X', 'y', 'XTest', 'yTest');
+     end
+ 
+ case 'ggToyICMTrainTest'
+  try
+    load([baseDir 'toyMultigp1DICMTrainTest.mat'], 'X', 'y', 'XTest', 'yTest')
+  catch
+    [XTemp, yTemp, XTestTemp, yTestTemp] = mapLoadData('ggToyICM');
+    nout = size(XTemp,2);
+    ntrainx = 200;
+    maxl = length(XTemp{1});
+    X = cell(1,nout);
+    y = cell(1,nout);
+    yTest = cell(1,nout);
+    indx = randperm(maxl);
+    pindx = sort(indx(1:ntrainx));
+    for k =1:nout,
+      X{k} = XTemp{k}(pindx,:);
+      y{k} = yTemp{k}(pindx,:);
+      yTest{k} = yTemp{k}(indx(ntrainx+1:end),:);
+    end
+    XTest = XTemp{1}(indx(ntrainx+1:end),:)';
+    yTest{end+1} = yTestTemp; %It has the groundtruth
+    save([baseDir 'toyMultigp1DICMTrainTest.mat'], 'X', 'y', 'XTest', 'yTest')
+  end     
      
      
  case 'compilerData'
