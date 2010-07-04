@@ -1104,8 +1104,30 @@ switch dataset
     save([baseDir 'toyMultigp1DICMTrainTest.mat'], 'X', 'y', 'XTest', 'yTest')
   end     
      
-     
- case 'compilerData'
+ case 'sarcosMultiGP'
+  dataTrain = load([baseDir 'sarcos_inv.mat']); 
+  dataTest = load([baseDir 'sarcos_inv_test.mat']);
+  trainD = dataTrain.sarcos_inv;
+  testD = dataTest.sarcos_inv_test;
+  sizeTrain = size(trainD);
+  sizeTest = size(testD);
+  Xmean = mean(trainD(:,1:21),1);
+  Xstd = std(trainD(:,1:21),1);
+  X = cell(1,7);
+  y = cell(1,7);
+  XTest = cell(1,7);
+  yTest = cell(1,7);
+  for i=1:7
+      X{i} = (trainD(:,1:21) - repmat(Xmean, sizeTrain(1),1 ))./ ...
+          repmat(Xstd, sizeTrain(1),1 );
+      y{i} = trainD(:,21+i);
+      XTest{i} = (testD(:,1:21) - repmat(Xmean, sizeTest(1),1 ))./ ...
+          repmat(Xstd, sizeTest(1),1 );
+      yTest{i} = testD(:,21+i);
+  end
+  save([baseDir 'sarcosData.mat'], 'X', 'y', 'XTest', 'yTest')
+
+  case 'compilerData'
   data = load([baseDir 'data_compiler_org.mat']);
   X = cell(1,length(data.X));
   y = cell(1,length(data.X));
