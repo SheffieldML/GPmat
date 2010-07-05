@@ -1045,7 +1045,7 @@ switch dataset
          sigma2Latent = 1;
          options.kern.nout = nout;
          options.kern.rankCorregMatrix = rank;
-         N = 100;
+         N = 500;
          x = linspace(-1,1,N)';
          kernType{1} = multigpKernComposer('lmc', d, nlf, 'ftc', 1, options);
          kern = kernCreate(x,  kernType{:});
@@ -1107,20 +1107,23 @@ switch dataset
  case 'sarcosMultiGP'
   dataTrain = load([baseDir 'sarcos_inv.mat']); 
   dataTest = load([baseDir 'sarcos_inv_test.mat']);
+  N = 1000;
   trainD = dataTrain.sarcos_inv;
   testD = dataTest.sarcos_inv_test;
   sizeTrain = size(trainD);
   sizeTest = size(testD);
   Xmean = mean(trainD(:,1:21),1);
   Xstd = std(trainD(:,1:21),1);
+  indexTraining = randperm(sizeTrain(1));
+  indexTraining = indexTraining(1:N);
   X = cell(1,7);
   y = cell(1,7);
   XTest = cell(1,7);
   yTest = cell(1,7);
   for i=1:7
-      X{i} = (trainD(:,1:21) - repmat(Xmean, sizeTrain(1),1 ))./ ...
-          repmat(Xstd, sizeTrain(1),1 );
-      y{i} = trainD(:,21+i);
+      X{i} = (trainD(indexTraining,1:21) - repmat(Xmean, N,1 ))./ ...
+          repmat(Xstd, N,1 );
+      y{i} = trainD(indexTraining,21+i);
       XTest{i} = (testD(:,1:21) - repmat(Xmean, sizeTest(1),1 ))./ ...
           repmat(Xstd, sizeTest(1),1 );
       yTest{i} = testD(:,21+i);
