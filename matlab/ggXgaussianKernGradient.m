@@ -46,15 +46,20 @@ matGradPqr = zeros(size(ggKern.precisionG));
 if ggKern.isArd
     [K, Kbase, Pqrinv, Prinv, P, fSigma2Noise, fSens1] = ...
         ggXgaussianKernCompute(ggKern, gaussianKern, x, x2);    
+    temp = 0.5*covGrad.*K;
     preFactorPqr = 1./(2*Pqrinv + Prinv);
     preFactorPr  = 1./Prinv + (1./(2*Pqrinv + Prinv));
     for i=1:ggKern.inputDimension
-        X = repmat(x(:,i),1, size(x2,1));
-        X2 = repmat(x2(:,i)',size(x,1),1);
+        pX = x(:,i);
+        X = pX(:, ones(1, size(x2,1)));
+        pX2 = x2(:,i)';
+        X2 = pX2(ones(size(x,1),1), :);
+        %X = repmat(x(:,i),1, size(x2,1));
+        %X2 = repmat(x2(:,i)',size(x,1),1);
         X_X2 = (X - X2).*(X - X2);
-        matGradPr(i) = sum(sum(0.5*covGrad.*K.*...
-            (Prinv(i)*(P(i) - 0.5*preFactorPr(i)- P(i)*X_X2*P(i))*Prinv(i))));
-        matGradPqr(i) = sum(sum(0.5*covGrad.*K.*...
+        matGradPr(i) = sum(sum(temp.*...
+            (Prinv(i)*(P(i) - 0.5*preFactorPr(i)- P(i)*X_X2*P(i))*Prinv(i))));   
+        matGradPqr(i) = sum(sum(temp.*...
             (Pqrinv(i)*(P(i) - preFactorPqr(i)- P(i)*X_X2*P(i))*Pqrinv(i))));
     end
 else

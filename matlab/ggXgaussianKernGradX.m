@@ -40,10 +40,7 @@ else
     PX2 = P*X2;
 end
 
-gX = zeros(size(X2, 1), size(X2, 2), size(X, 1));
-for i = 1:size(X, 1);
-  gX(:, :, i) = gaussianKernGradXpoint(K(:,i), PX(i, :), PX2);
-end
+temp = covGrad'.*K;
 
 gX2 = zeros(size(X));
 for i=1:size(X,2),
@@ -51,18 +48,9 @@ for i=1:size(X,2),
     MPX2 = mPX2(:,ones(1,size(X,1)));
     mPX = PX(:,i)';
     MPX = mPX(ones(size(X2,1),1),:);
-    gX2(:,i) = sum((covGrad'.*K).*(MPX2-MPX),1)';
+    gX2(:,i) = sum(temp.*(MPX2-MPX),1)';
 end
 
 gX = gX2;
 
-
-function gX = gaussianKernGradXpoint(gaussianPart, x, X2)
-
-% GAUSSIANKERNGRADXPOINT Gradient with respect to one point of x.
-
-gX = zeros(size(X2));
-for i = 1:size(x, 2)
-  gX(:, i) = (X2(:, i) - x(i)).*gaussianPart;
-end
 

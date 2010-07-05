@@ -55,12 +55,17 @@ if kern.isArd
     [K, Kbase, Prinv, Pqrinv, P] = ggKernCompute(kern, x, x2);
     matGradPqr = zeros(kern.inputDimension,1);
     matGradPr  = zeros(kern.inputDimension,1);
+    temp = covGrad.*K;
     for i=1:kern.inputDimension
-        X = repmat(x(:,i),1, size(x2,1));
-        X2 = repmat(x2(:,i)',size(x,1),1);
+        pX = x(:,i);
+        X = pX(:, ones(1, size(x2,1)));
+        pX2 = x2(:,i)';
+        X2 = pX2(ones(size(x,1),1), :);
+        %X = repmat(x(:,i),1, size(x2,1));
+        %X2 = repmat(x2(:,i)',size(x,1),1);
         X_X2 = (X - X2).*(X - X2);
-        matGradPqr(i) = -sum(sum(covGrad.*K.*(Pqrinv(i)*P(i)*X_X2*P(i)*Pqrinv(i))));
-        matGradPr(i) = -0.5*sum(sum(covGrad.*K.*(Prinv(i)*P(i)*X_X2*P(i)*Prinv(i))));
+        matGradPqr(i) = -sum(sum(temp.*(Pqrinv(i)*P(i)*X_X2*P(i)*Pqrinv(i))));
+        matGradPr(i) = -0.5*sum(sum(temp.*(Prinv(i)*P(i)*X_X2*P(i)*Prinv(i))));
     end
 else
     [K, Kbase, Prinv, Pqrinv, P, dist] = ggKernCompute(kern, x, x2);

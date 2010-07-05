@@ -34,12 +34,15 @@ else
     PX2 = P*X2;
 end
 gX = zeros(size(X));
+
+temp = (covGrad.*K)';
+
 for i=1:size(X,2),
     mPX2 = PX2(:,i);
     MPX2 = mPX2(:,ones(1,size(X,1)));
     mPX = PX(:,i)';
     MPX = mPX(ones(size(X2,1),1),:);
-    gX(:,i) = sum((covGrad.*K)'.*(MPX2-MPX),1)';
+    gX(:,i) = sum(temp.*(MPX2-MPX),1)';
 end
 
 if nargin <4,

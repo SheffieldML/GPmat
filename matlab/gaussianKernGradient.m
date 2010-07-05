@@ -57,10 +57,16 @@ end
 if kern.isArd
     [K, Kbase] = gaussianKernCompute(kern, x, x2);
     matGrad = zeros(kern.inputDimension,1);
+    temp = 0.5*covPar.*K;
     for i = 1:kern.inputDimension,
-        X = repmat(x(:,i),1, size(x2,1));
-        X2 = repmat(x2(:,i)',size(x,1),1);
-        matGrad(i) = -sum(sum(0.5*covPar.*K.*(X - X2).*(X - X2)));
+        pX = x(:,i);
+        X = pX(:, ones(1, size(x2,1)));
+        pX2 = x2(:,i)';
+        X2 = pX2(ones(size(x,1),1), :);
+%         X = repmat(x(:,i),1, size(x2,1));
+%         X2 = repmat(x2(:,i)',size(x,1),1);
+        X_X2 = X - X2;
+        matGrad(i) = -sum(sum(temp.*X_X2.*X_X2));
     end
 else
     [K, Kbase, n2] = gaussianKernCompute(kern, x, x2);   
