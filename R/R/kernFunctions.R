@@ -1,4 +1,4 @@
-kernCreate <- function(x, kernType) {
+kernCreate <- function(x, kernType, kernOptions=NULL) {
   if ( is.list(x) ) {
     dim <- array()
     for ( i in 1:length(x) ) {
@@ -16,8 +16,10 @@ kernCreate <- function(x, kernType) {
     kernOptions <- kernType$options
     kernType <- kernType$realType
   }
-  else
-    kernOptions <- NULL
+
+  if ( is.list(kernType) && ("options" %in% names(kernType)) ) {
+    kernOptions <- kernType$options
+  }
   
   if ( is.list(kernType) && ("complete" %in% names(kernType)) ) {
     if ( kernType$complete == 1 ) {
@@ -60,7 +62,16 @@ kernCreate <- function(x, kernType) {
           iType <- kernType$comp[i]
         }
         
-        kern$comp[[i-start+1]] <- kernCreate(x, iType)
+        if (kern$type == "selproj") {
+          if ( (dim(as.matrix(x))[2] == 1) && (dim(as.matrix(x))[1] == 1) )
+            x_proj <- x-1
+          else
+            x_proj <- x[,-1]
+            
+          kern$comp[[i-start+1]] <- kernCreate(x_proj, iType)
+        } else {
+          kern$comp[[i-start+1]] <- kernCreate(x, iType)
+        }
         kern$comp[[i-start+1]]$index = array()
       }
       
@@ -106,16 +117,17 @@ kernParamInit <- function (kern) {
 
 
 
-kernExtractParam <- function (kern, only.values=TRUE) {
+kernExtractParam <- function (kern, only.values=TRUE, untransformed.values=FALSE) {
   funcName <- paste(kern$type, "KernExtractParam", sep="")
   func <- get(funcName, mode="function")
 
-  params <- func(kern, only.values=only.values)
+  params <- func(kern, only.values=only.values, untransformed.values=untransformed.values)
 
   if ( any(is.nan(params)) )
     warning("Parameter has gone to NaN.")
 
-  if ( "transforms" %in% names(kern) && (length(kern$transforms) > 0) )
+  if ( "transforms" %in% names(kern) && (length(kern$transforms) > 0)
+      && !untransformed.values )
     for ( i in seq(along=kern$transforms) ) {
       index <- kern$transforms[[i]]$index
       funcName <- optimiDefaultConstraint(kern$transforms[[i]]$type)
@@ -131,11 +143,12 @@ kernExtractParam <- function (kern, only.values=TRUE) {
 
 
 
-kernExpandParam <- function (kern, params) {
+kernExpandParam <- function (kern, params, untransformed.values=FALSE) {
   if ( is.list(params) )
     params <- params$values
   
-  if ( "transforms" %in% names(kern) && (length(kern$transforms) > 0) )
+  if ( "transforms" %in% names(kern) && (length(kern$transforms) > 0)
+      && !untransformed.values )
     for ( i in seq(along=kern$transforms) ) {
       index <- kern$transforms[[i]]$index
       funcName <- optimiDefaultConstraint(kern$transforms[[i]]$type)
@@ -245,6 +258,20 @@ kernGradX <- function (kern, x, x2) {
 }
 
 
+.kernTestCombinationFunction <- function (kern1, kern2) {
+  if (kern1$type == "selproj" && kern2$type == "selproj")
+    funcName <- paste(kern1$comp[[1]]$type, "X", kern2$comp[[1]]$type, "KernCompute", sep="")
+  else
+    funcName <- paste(kern1$type, "X", kern2$type, "KernCompute", sep="")
+
+  if ( !exists(funcName, mode="function") ) {
+    return (FALSE)
+  } else {
+    return (TRUE)
+  }
+}
+
+
 
 multiKernParamInit <- function (kern) {
 
@@ -269,13 +296,11 @@ multiKernParamInit <- function (kern) {
     kern$block[[i]] <- list(cross=array(), transpose=array())
 
     for ( j in seq(length.out=i-1) ) {
-      func <- paste(kern$comp[[i]]$type, "X", kern$comp[[j]]$type, "KernCompute", sep="")
-      if ( exists(func, mode="function") ) {
+      if ( .kernTestCombinationFunction(kern$comp[[i]], kern$comp[[j]]) ) {
         kern$block[[i]]$cross[j] <- paste(kern$comp[[i]]$type, "X", kern$comp[[j]]$type, sep="")
         kern$block[[i]]$transpose[j] <- FALSE
       } else {
-        func <- paste(kern$comp[[j]]$type, "X", kern$comp[[i]]$type, "KernCompute", sep="")
-        if ( exists(func, mode="function") ) {
+        if ( .kernTestCombinationFunction(kern$comp[[j]], kern$comp[[i]]) ) {
           kern$block[[i]]$cross[j] <- paste(kern$comp[[j]]$type, "X", kern$comp[[i]]$type, sep="")
           kern$block[[i]]$transpose[j] <- TRUE
         } else {
@@ -302,8 +327,10 @@ multiKernParamInit <- function (kern) {
 
 
 
-multiKernExtractParam <- function (kern, only.values=TRUE) {
-  return (cmpndKernExtractParam(kern, only.values=only.values))
+multiKernExtractParam <- function (kern, only.values=TRUE,
+                                   untransformed.values=FALSE) {
+  return (cmpndKernExtractParam(kern, only.values=only.values,
+                                untransformed.values=untransformed.values))
 }
 
 
@@ -771,15 +798,25 @@ kernTest <- function(kernType, numIn=4, tieParamNames=list(), testindex=NULL) {
 ##       end
 ##     end
 ##   end
-  if ( 'positiveTime' %in% names(kern) && kern$positiveTime ) {
-    # For convolutional kernels starting at t=0 it does not make sense to use
-    # negative inputs...
-    x <- abs(matrix(rnorm(numData * numIn), numData))
-    x2 <- abs(matrix(rnorm(numData/2 * numIn), numData/2))
-  }
-  else {
-    x <- matrix(rnorm(numData * numIn), numData)
-    x2 <- matrix(rnorm(numData/2 * numIn), numData/2)
+  if (length(dim(numIn)) > 0) {
+    if (is.list(numIn)) {
+      x <- numIn[[1]]
+      x2 <- numIn[[2]]
+    } else {
+      x <- numIn
+      x2 <- numIn
+    }
+  } else {
+    if ( 'positiveTime' %in% names(kern) && kern$positiveTime ) {
+      # For convolutional kernels starting at t=0 it does not make sense to use
+      # negative inputs...
+      x <- abs(matrix(rnorm(numData * numIn), numData))
+      x2 <- abs(matrix(rnorm(numData/2 * numIn), numData/2))
+    }
+    else {
+      x <- matrix(rnorm(numData * numIn), numData)
+      x2 <- matrix(rnorm(numData/2 * numIn), numData/2)
+    }
   }
 
   kern <- modelTieParam(kern, tieParamNames)
@@ -796,6 +833,9 @@ kernTest <- function(kernType, numIn=4, tieParamNames=list(), testindex=NULL) {
     kernDisplay(kern)
     return(kern)
   }
+  else if (!all(is.numeric(e))) {
+    cat('Kernel has imaginary eigenvalues(!?!).\n')
+  }
   else if (min(e) > 0)
     cat('The kernel is positive definite.\n')
   else
@@ -805,6 +845,7 @@ kernTest <- function(kernType, numIn=4, tieParamNames=list(), testindex=NULL) {
   if (!is.null(testindex)) {
     covGrad <- array(0, dim(K))
     covGrad[testindex[1], testindex[2]] = 1
+    covGrad <- covGrad + t(covGrad)
   }
   else
     covGrad <- array(1, dim(K))
@@ -817,18 +858,10 @@ kernTest <- function(kernType, numIn=4, tieParamNames=list(), testindex=NULL) {
     params <- origParams
     params[i] <- origParams[i] + epsilon
     kern <- kernExpandParam(kern, params)
-    if (!is.null(testindex)) {
-      Lplus[i] <- sum(kernCompute(kern, x)[testindex[1], testindex[2]])
-    }
-    else
-      Lplus[i] <- sum(kernCompute(kern, x))
+    Lplus[i] <- sum(kernCompute(kern, x) * covGrad)
     params[i] <- origParams[i] - epsilon
     kern <- kernExpandParam(kern, params)
-    if (!is.null(testindex)) {
-      Lminus[i] <- sum(kernCompute(kern, x)[testindex[1], testindex[2]])
-    }
-    else
-      Lminus[i] <- sum(kernCompute(kern, x))
+    Lminus[i] <- sum(kernCompute(kern, x) * covGrad)
   }
   params <- origParams
   kern <- kernExpandParam(kern, params)

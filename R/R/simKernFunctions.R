@@ -112,8 +112,9 @@ simXsimKernCompute <- function (simKern1, simKern2, t1, t2=t1) {
 
 
 
-simKernExtractParam <- function (kern, only.values=TRUE) {
-
+# untransformed.values is ignored
+simKernExtractParam <- function (kern, only.values=TRUE,
+                                 untransformed.values=TRUE) {
   if (kern$gaussianInitial) {
     if (kern$isNegativeS)
       params <- c(kern$decay, kern$inverseWidth, kern$sensitivity, kern$initialVariance)

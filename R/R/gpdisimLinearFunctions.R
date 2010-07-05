@@ -43,38 +43,55 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL,
     model$isHierarchical <- TRUE
     model$experimentStructure <- options$experiments
     model$experimentMask <- gpsimExperimentMask(Ngenes+1, options$experiments)
+    model$expids <- unique(options$experiments)
   }
   else
     model$isHierarchical <- FALSE
   
-  kernType1 <- list(type="multi", comp=list())
-  tieWidth <- 1
-  tieRBFVariance <- 2
-  kernType1$comp[[1]] <- list(type="parametric", realType="rbf",
-                              options=list(isNormalised=TRUE,
-                                inverseWidthBounds=invWidthBounds))
-  #kernType1$comp[[1]] <- "rbf"
-  for ( i in seq(1, Ngenes) ) {
-    if (model$gaussianInitial)
-      kernType1$comp[[i+1]] <- list(type="parametric", realType="disim",
-                                    options=list(gaussianInitial=TRUE,
-                                      isNormalised=TRUE,
-                                      inverseWidthBounds=invWidthBounds))
-    else
-      kernType1$comp[[i+1]] <- list(type="parametric", realType="disim",
-                                    options=list(isNormalised=TRUE,
-                                      inverseWidthBounds=invWidthBounds))
+  if ("isSharedHierVariance" %in% names(options))
+    model$isSharedHierVariance <- options$isSharedHierVariance
+  else
+    model$isSharedHierVariance <- FALSE
+
+  if (model$gaussianInitial)
+    myopts <- list(gaussianInitial=TRUE, isNormalised=TRUE,
+                   inverseWidthBounds=invWidthBounds)
+  else
+    myopts <- list(isNormalised=TRUE, inverseWidthBounds=invWidthBounds)
+
+  if (!model$isHierarchical) {
+    kernType1 <- gpsimKernelSpec(c('rbf', rep('disim', Ngenes)),
+                                 myopts, exps=NULL)
+
+    tieParam <- list(tieDelta="di_decay", tieWidth="inverseWidth",
+                     tieSigma="di_variance", tieRBFVariance="rbf.?_variance")
+  } else {
+    kernType1 <- gpsimKernelSpec(c('rbf', rep('disim', Ngenes)),
+                                 myopts, exps=model$expids)
+
+    tieParam <- list(tieDelta="di_decay", tieWidth="inverseWidth",
+                     tieSigma="di_variance")
+    start <- length(tieParam)
+    for (k in seq(length(model$expids)+1)) {
+      tieParam[[k+start]] <- paste("multi", k, "_selproj\\d+(_disim)?_rbf\\d*_variance", sep="")
+    }
+    start <- length(tieParam)
+    for (k in seq(Ngenes)) {
+      tieParam[[2*k-1+start]] <- paste("multi\\d+_selproj", k+1, "_disim_decay", sep="")
+      tieParam[[2*k+start]] <- paste("multi\\d+_selproj", k+1, "_disim_variance", sep="")
+    }
   }
-  tieParam <- list(tieDelta="di_decay", tieWidth="inverseWidth",
-                   tieSigma="di_variance", tieRBFVariance="rbf.?_variance")
-
-  if ("fixedBlocks" %in% names(options))
-    kernType1 <- list(type="parametric", realType=kernType1,
-                      options=list(fixedBlocks=options$fixedBlocks))
-
-  if (model$isHierarchical) {
-    model$hierkern <- kernCreate(times, kernType1)
-    model$hierkern <- modelTieParam(model$hierkern, tieParam)
+  
+  if ("fixedBlocks" %in% names(options)) {
+    if (!model$isHierarchical) {
+      kernType1 <- list(type="parametric", realType=kernType1,
+                        options=list(fixedBlocks=options$fixedBlocks))
+    } else {
+      for (k in seq_along(kernType1$comp))
+        kernType1$comp[[k]] <-
+          list(type="parametric", realType=kernType1$comp[[k]],
+               options=list(fixedBlocks=options$fixedBlocks))
+    }
   }
 
   if (model$includeNoise) {
@@ -83,17 +100,20 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL,
       kernType2$comp[i] <- "white"        
 
     if ("singleNoise" %in% names(options) && options$singleNoise) {
-      tieParam$tieNoise <- "white._variance"
+      tieParam$tieNoise <- "white\\d+_variance"
     }
 
-    model$kern <- kernCreate(times,
-                             list(type="cmpnd", comp=list(kernType1, kernType2)))
-    simMultiKernName <- 'model$kern$comp[[1]]'
-    simMultiKern <- model$kern$comp[[1]]
+    if (!model$isHierarchical)
+      model$kern <- kernCreate(times,
+                               list(type="cmpnd", comp=list(kernType1, kernType2)))
+    else
+      model$kern <- kernCreate(2,
+                               list(type="cmpnd", comp=list(kernType1, kernType2)))
   } else {
-    model$kern <- kernCreate(times, kernType1)
-    simMultiKernName <- 'model$kern'
-    simMultiKern <- model$kern
+    if (!model$isHierarchical)
+      model$kern <- kernCreate(times, kernType1)
+    else
+      model$kern <- kernCreate(2, kernType1)
   }
   
   model$kern <- modelTieParam(model$kern, tieParam)
@@ -106,20 +126,22 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL,
   
   model$delta <- 10
   model$sigma <- 1
-  for ( i in seq(2, simMultiKern$numBlocks) ) {
-    eval(parse(text=paste(simMultiKernName, '$comp[[i]]$di_decay <- model$delta', sep="")))
-    eval(parse(text=paste(simMultiKernName, '$comp[[i]]$di_variance <- model$sigma^2', sep="")))
-    model$D[i-1] <- simMultiKern$comp[[i]]$decay
-    model$S[i-1] <- sqrt(simMultiKern$comp[[i]]$variance)
-  }
 
+  par <- kernExtractParam(model$kern, only.values=FALSE)
+  model$parameterNames <- names(par)
+  names(par) <- NULL
+  par[grep("di_decay", names(par))] <- log(model$delta)
+  par[grep("di_variance", names(par))] <- log(model$sigma)
+  model$kern <- kernExpandParam(model$kern, par)
+  par <- kernExtractParam(model$kern, untransformed.values=TRUE)
+  model$D <- par[grep("disim\\d*_decay", model$parameterNames)]
+  model$S <- par[grep("disim\\d*_variance", model$parameterNames)]
+  
   set.seed(1)
 
   yArray <- array(y[,2:(Ngenes+1)], dim = c(dim(y)[1], Ngenes))
 
   model$numParams <- Ngenes + model$kern$nParams
-  if (model$isHierarchical)
-    model$numParams <- model$numParams + 1
 
   model$numGenes <- Ngenes
   model$mu <- apply(yArray, 2, mean)
@@ -188,18 +210,16 @@ gpdisimDisplay <- function(model, spaceNum=0)  {
       cat(c("    Gene ", i, ": ", model$B[i], "\n"), sep="")
     }
   }
-  if (model$isHierarchical) {
-    cat(spacing)
-    cat(c("  Hierarchical kernel variance: ", model$hierkern$comp[[1]]$variance, "\n"), sep="")
-  }
   cat(spacing)
   cat("  Kernel:\n")
   kernDisplay(model$kern, 4+spaceNum)
 }
   
 
-gpdisimExtractParam <- function (model, only.values=TRUE) {
-  return (gpsimExtractParam(model, only.values=only.values))
+gpdisimExtractParam <- function (model, only.values=TRUE,
+                                 untransformed.values=FALSE) {
+  return (gpsimExtractParam(model, only.values=only.values,
+                            untransformed.values=untransformed.values))
 }
 
 
@@ -225,25 +245,13 @@ gpdisimExpandParam <- function (model, params) {
   # Note: ignores funcName$hasArgs
   func <- get(funcName$func, mode="function")
 
-  if (model$isHierarchical) {
-    model$B <- func(params[(endVal+1):(length(params)-1)], "atox")
-    model$hierkern <- kernExpandParam(model$hierkern, params[c(1, length(params), 3:model$hierkern$nParams)])
-  }
-  else
-    model$B <- func(params[(endVal+1):length(params)], "atox")
+  model$B <- func(params[(endVal+1):length(params)], "atox")
 
-  if (model$includeNoise)
-    simMultiKern <- model$kern$comp[[1]]
-  else
-    simMultiKern <- model$kern
-  
-  model$delta <- simMultiKern$comp[[2]]$di_decay
-  model$sigma <- simMultiKern$comp[[2]]$di_variance
-
-  for ( i in seq(2, simMultiKern$numBlocks) ) {
-    model$D[i-1] <- simMultiKern$comp[[i]]$decay
-    model$S[i-1] <- sqrt(simMultiKern$comp[[i]]$variance)
-  }
+  par <- kernExtractParam(model$kern, untransformed.values=TRUE)
+  model$delta <- par[grep("di_decay", model$parameterNames)]
+  model$sigma <- par[grep("di_variance", model$parameterNames)]
+  model$D <- par[grep("disim\\d*_decay", model$parameterNames)]
+  model$S <- par[grep("disim\\d*_variance", model$parameterNames)]
 
   model$mu <- model$B/model$D
   model <- .gpsimUpdateKernels(model)
@@ -303,12 +311,12 @@ gpdisimLogLikeGradients <- function (model) {
 
   if ( "proteinPrior" %in% names(model) ) {
     g <- kernGradient(model$kern, model$timesCell, covGrad)
-    if (model$isHierarchical)
-      gh <- kernGradient(model$hierkern, model$timesCell, covGrad * model$experimentMask)
   } else {
-    g <- kernGradient(model$kern, model$t, covGrad)
-    if (model$isHierarchical)
-      gh <- kernGradient(model$hierkern, model$t, covGrad * model$experimentMask)
+    if (!model$isHierarchical)
+      g <- kernGradient(model$kern, model$t, covGrad)
+    else
+      g <- kernGradient(model$kern, cbind(model$experimentStructure, model$t),
+                        covGrad)
   }
 
   #if ( "bprior" %in% names(model) ) {
@@ -361,24 +369,11 @@ gpdisimLogLikeGradients <- function (model) {
 
   ## gradient for D
   gd <- -gmu*model$B/(model$D*model$D)
-  decayIndices <- 5
-
-  if (model$includeNoise)
-    simMultiKern <- model$kern$comp[[1]]
-  else
-    simMultiKern <- model$kern
-
-  for ( i in seq(3, simMultiKern$numBlocks, length=(simMultiKern$numBlocks-2)) )
-    decayIndices <- c(decayIndices, tail(decayIndices, 1)+2)
+  decayIndices <- grep("disim\\d*_decay", model$parameterNames)
 
   g[decayIndices] <- g[decayIndices]+gd*expTransform(model$D, "gradfact")
 
   g <- c(g, gb)
-  if (model$isHierarchical) {
-    sharedIndices <- c(1, 3:model$hierkern$nParams)
-    g[sharedIndices] <- g[sharedIndices] + gh[sharedIndices]
-    g <- c(g, gh[2])
-  }
 
   if ( "fix" %in% names(model) )
     g[model$fix$index] <- 0
@@ -409,8 +404,10 @@ cgpdisimLogLikelihood <- function (model) {
 
 
 
-cgpdisimExtractParam <- function (model, only.values=TRUE) {
-  return (gpdisimExtractParam(model$comp[[1]], only.values=only.values))
+cgpdisimExtractParam <- function (model, only.values=TRUE,
+                                  untransformed.values=FALSE) {
+  return (gpdisimExtractParam(model$comp[[1]], only.values=only.values,
+                              untransformed.values=untransformed.values))
 }
 
 
@@ -471,43 +468,71 @@ gpdisimUpdateProcesses <- function (model, predt=NULL) {
     predt <- c(predt + model$timeSkew, t)
   }
 
+  par <- kernExtractParam(model$kern, untransformed.values=TRUE)
   if (model$includeNoise)
     simMultiKern <- model$kern$comp[[1]]
   else
     simMultiKern <- model$kern
+  if (model$isHierarchical)
+    simMultiKern <- simMultiKern$comp[[1]]
 
   if (model$gaussianInitial) {
     proteinKern <- kernCreate(model$t, list(type="parametric", realType="sim",
                                             options=list(gaussianInitial=TRUE,
                                               isNormalised=TRUE)))
-    proteinKern$initialVariance <- simMultiKern$comp[[2]]$initialVariance
+    proteinKern$initialVariance <-
+      par[grep("initialVariance", model$parameterNames)]
   }
   else
     proteinKern <- kernCreate(model$t, list(type="parametric", realType="sim",
                                             options=list(isNormalised=TRUE)))
-  #proteinKern <- kernCreate(model$t, "sim")
-  proteinKern$inverseWidth <- simMultiKern$comp[[1]]$inverseWidth
+
+  proteinKern$inverseWidth <-
+    par[grep("inverseWidth", model$parameterNames)]
   proteinKern$decay <- model$delta
-  proteinKern$variance <- simMultiKern$comp[[2]]$di_variance
+  proteinKern$variance <-
+    par[grep("di_variance", model$parameterNames)]
   inputKern <- kernCreate(model$t, list(type="parametric", realType="rbf",
                                         options=list(isNormalised=TRUE)))
-  inputKern$inverseWidth <- simMultiKern$comp[[1]]$inverseWidth
+  inputKern$inverseWidth <-
+    par[grep("inverseWidth", model$parameterNames)]
   inputKern$variance <- 1
+  rbfVariance <- par[grep("rbf_variance", model$parameterNames)[1]]
+
   K <- simXrbfKernCompute(proteinKern, inputKern, predt, model$t)
-  K <- K * simMultiKern$comp[[1]]$variance
-  for ( i in seq(2, length=(simMultiKern$numBlocks-1)) )
-    K <- cbind(K,t(disimXsimKernCompute(simMultiKern$comp[[i]], proteinKern, model$t, predt)))
+  K <- K * rbfVariance
+  if (!model$isHierarchical) {
+    for ( i in seq(2, length=(simMultiKern$numBlocks-1)) )
+      K <- cbind(K,t(disimXsimKernCompute(simMultiKern$comp[[i]], proteinKern, model$t, predt)))
+  } else {
+    proteinKern$complete <- TRUE
+    projproteinKern <- kernCreate(2, list(type="selproj",
+                                          comp=list(proteinKern),
+                                          options(expmask=0)))
+    projproteinKern$comp[[1]]$inverseWidth <- proteinKern$inverseWidth
+    projproteinKern$comp[[1]]$decay <- proteinKern$decay
+    projproteinKern$comp[[1]]$variance <- proteinKern$variance
+
+    for ( i in seq(2, length=(simMultiKern$numBlocks-1)) )
+      K <- cbind(K,t(selprojXselprojKernCompute(simMultiKern$comp[[i]], projproteinKern, cbind(0, model$t), cbind(0, predt))))
+  }
 
   ymean <- t(matrix(c(0, model$mu), model$numGenes+1, numData))
 
   predF <- K %*% model$invK %*% c(model$y-ymean)
-  #varF <- kernDiagCompute(proteinKern, predt) - apply(t(K)*(model$invK %*% t(K)), 2, sum)
-  varF <- simMultiKern$comp[[1]]$variance * kernDiagCompute(proteinKern, predt) - apply(t(K)*(model$invK %*% t(K)), 2, sum) + 1e-15
+  varF <- rbfVariance * kernDiagCompute(proteinKern, predt) - apply(t(K)*(model$invK %*% t(K)), 2, sum) + 1e-15
 
-  Kxx <- multiKernCompute(simMultiKern, predt, model$t)
+  if (!model$isHierarchical)
+    Kxx <- multiKernCompute(simMultiKern, predt, model$t)
+  else
+    Kxx <- multiKernCompute(simMultiKern, cbind(0, predt), cbind(0, model$t))
+
   meanPredX <- t(matrix(c(0, model$B/model$D), model$numGenes+1, length(predt)))
   predX <- c(meanPredX) + Re(Kxx %*% model$invK %*% c(model$y-ymean))
-  varX <- Re( kernDiagCompute(simMultiKern, predt)-apply(t(Kxx)*(model$invK%*%t(Kxx)), 2, sum) ) + 1e-13
+  if (!model$isHierarchical)
+    varX <- Re( kernDiagCompute(simMultiKern, predt)-apply(t(Kxx)*(model$invK%*%t(Kxx)), 2, sum) ) + 1e-13
+  else
+    varX <- Re( kernDiagCompute(simMultiKern, cbind(0, predt))-apply(t(Kxx)*(model$invK%*%t(Kxx)), 2, sum) ) + 1e-13
 
   predExprs <- matrix(predX, length(predt), model$numGenes+1)
   meanExprs <- t(matrix(apply(predExprs, 2, mean), model$numGenes+1, length(predt)))

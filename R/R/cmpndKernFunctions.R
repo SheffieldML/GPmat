@@ -50,7 +50,8 @@ cmpndKernParamInit <- function (kern) {
 
 
 
-cmpndKernExtractParam <- function (kern, only.values=TRUE) {
+cmpndKernExtractParam <- function (kern, only.values=TRUE,
+                                   untransformed.values=FALSE) {
 
   startVal <- 1
   endVal <- 0
@@ -59,7 +60,8 @@ cmpndKernExtractParam <- function (kern, only.values=TRUE) {
     params <- c()
 
     for ( i in seq(along=kern$comp) ) 
-      params <- c(params, kernExtractParam(kern$comp[[i]]))
+      params <- c(params, kernExtractParam(kern$comp[[i]],
+                                           untransformed.values=untransformed.values))
 
   } else {
     storedTypes <- c()
@@ -67,7 +69,8 @@ cmpndKernExtractParam <- function (kern, only.values=TRUE) {
     paramNames <- c()
     origNames <- c()
     for ( i in seq(along=kern$comp) ) {
-      paramsList <- kernExtractParam(kern$comp[[i]], only.values=only.values)
+      paramsList <- kernExtractParam(kern$comp[[i]], only.values=only.values,
+                                     untransformed.values=untransformed.values)
       params <- c(params, paramsList)
       kernName <- paste(kern$comp[[i]]$type, length(grep(kern$comp[[i]]$type, storedTypes))+1, sep="")
       paramName <- paste(kernName, names(paramsList), sep="_")

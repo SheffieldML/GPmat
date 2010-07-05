@@ -13,7 +13,9 @@ mlpKernParamInit <- function (kern) {
 
 
 
-mlpKernExtractParam <- function (kern, only.values=TRUE) {
+# untransformed.values is ignored
+mlpKernExtractParam <- function (kern, only.values=TRUE,
+                                 untransformed.values=TRUE) {
   params <- c(kern$weightVariance, kern$biasVariance, kern$variance)
 
   if ( !only.values )
