@@ -494,10 +494,14 @@ gpsimMapFunctionalUpdateW <- function (model) {
 
 
 
-gpsimMapExtractParam <- function (model, only.values=TRUE) {
+gpsimMapExtractParam <- function (model, only.values=TRUE,
+                                  untransformed.values=FALSE) {
   funcName <- paste(model$Transform, "Transform", sep="")
   func <- get(funcName, mode="function")
 
+  if (untransformed.values) {
+    error("unsupported argument untransformed.values")
+  }
   if ( only.values ) {
     params <- kernExtractParam(model$kern)
     for ( i in seq(length=model$numGenes) ) {

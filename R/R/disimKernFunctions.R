@@ -238,8 +238,9 @@ disimKernCompute <- function (kern, t1, t2=t1) {
 }
 
 
-
-disimKernExtractParam <- function (kern, only.values=TRUE) {
+# untransformed.values is ignored
+disimKernExtractParam <- function (kern, only.values=TRUE,
+                                   untransformed.values=TRUE) {
   if ( "gaussianInitial" %in% names(kern) && kern$gaussianInitial )
     params <- c(kern$di_decay, kern$inverseWidth, kern$di_variance, kern$decay, kern$variance, kern$rbf_variance, kern$initialVariance)
   else

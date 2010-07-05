@@ -25,14 +25,20 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
     model$isHierarchical <- TRUE
     model$experimentStructure <- options$experiments
     model$experimentMask <- gpsimExperimentMask(Ngenes+1, options$experiments)
+    model$expids <- unique(options$experiments)
   }
   else
     model$isHierarchical <- FALSE
-  
-  if ("isNegativeS" %in% names(options) && options$isNegativeS)
-    isNegativeS = TRUE
+
+  if ("isSharedHierVariance" %in% names(options))
+    model$isSharedHierVariance <- options$isSharedHierVariance
   else
-    isNegativeS = FALSE
+    model$isSharedHierVariance <- FALSE
+
+  if ("isNegativeS" %in% names(options) && options$isNegativeS)
+    isNegativeS <- TRUE
+  else
+    isNegativeS <- FALSE
 
   if ("debug" %in% names(options))
     model$debug <- options$debug
@@ -75,8 +81,28 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
                       options=list(fixedBlocks=options$fixedBlocks))
 
   if (model$isHierarchical) {
-    model$hierkern <- kernCreate(timesCell, kernType1)
-    model$hierkern <- modelTieParam(model$hierkern, tieParam)
+    if (model$isSharedHierVariance) {
+      model$hierkern <- kernCreate(timesCell, kernType1)
+      model$hierkern <- modelTieParam(model$hierkern, tieParam)
+    } else {
+      model$hierkern <- list()
+      for ( i in model$expids ) {
+        if ("fixedBlocks" %in% names(options))
+          hierKernType <- kernType1$realType
+        else
+          hierKernType <- kernType1
+        
+        for ( k in seq_along(hierKernType$comp) ) {
+          hierKernType$comp[[k]]$comp <- list(hierKernType$comp[[k]])
+          hierKernType$comp[[k]]$options$expmask <- model$expids[i]
+          hierKernType$comp[[k]]$realType <- "selproj"
+        }
+
+        if ("fixedBlocks" %in% names(options))
+          hierKernType <- list(type="parametric", realType=hierKernType,
+                               options=list(fixedBlocks=options$fixedBlocks))
+      }
+    }
   }
 
   model$includeNoise <- options$includeNoise
@@ -129,8 +155,12 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
   }
 
   model$numParams <- Ngenes + model$kern$nParams
-  if (model$isHierarchical)
-    model$numParams <- model$numParams + 1
+  if (model$isHierarchical) {
+    if (model$isSharedHierVariance)
+      model$numParams <- model$numParams + 1
+    else
+      model$numParams <- model$numParams + length(model$expids)
+  }
 
   model$numGenes <- Ngenes
   model$mu <- apply(y, 2, mean)
@@ -193,45 +223,42 @@ gpsimDisplay <- function(model, spaceNum=0)  {
       cat(c("    Gene ", i, ": ", model$B[i], "\n"), sep="")
     }
   }
-  if (model$isHierarchical) {
-    cat(spacing)
-    cat(c("  Hierarchical kernel variance: ", model$hierkern$comp[[1]]$variance, "\n"), sep="")
-  }
   cat(spacing)
   cat("  Kernel:\n")
   kernDisplay(model$kern, 4+spaceNum)
 }
   
 
-gpsimExtractParam <- function (model, only.values=TRUE) {
+gpsimExtractParam <- function (model, only.values=TRUE,
+                               untransformed.values=FALSE) {
   funcName <- optimiDefaultConstraint(model$bTransform)
   func <- get(funcName$func, mode="function")
 
   if ( only.values ) {
-    params <- kernExtractParam(model$kern)
-    # Note: ignores funcName$hasArgs
-    params <- c(params, func(model$B, "xtoa"))
-    if (model$isHierarchical) {
-      hparams <- kernExtractParam(model$hierkern)
-      params <- c(params, hparams[2])
+    params <- kernExtractParam(model$kern,
+                               untransformed.values=untransformed.values)
+    if (untransformed.values) {
+      params <- c(params, model$B)
+    } else {
+      # Note: ignores funcName$hasArgs
+      params <- c(params, func(model$B, "xtoa"))
     }
   } else {
-    params <- kernExtractParam(model$kern, only.values=only.values)
-    # Note: ignores funcName$hasArgs
-    Bparams <- func(model$B, "xtoa")
+    params <- kernExtractParam(model$kern, only.values=only.values,
+                               untransformed.values=untransformed.values)
+    if (untransformed.values) {
+      Bparams <- model$B
+    } else {
+      # Note: ignores funcName$hasArgs
+      Bparams <- func(model$B, "xtoa")
+    }
     for ( i in seq(along=Bparams) ) {
       names(Bparams)[i] <- paste("Basal", i, sep="")
     }
     params <- c(params, Bparams)
-
-    if (model$isHierarchical) {
-      hparams <- kernExtractParam(model$hierkern, only.values=only.values)
-      hparams <- hparams[2]
-      names(hparams)[1] <- "hier_rbf_variance"
-      params <- c(params, hparams)
-    }
   }
 
+  # FIXME: Does not work with untransformed.values!!!
   if ( "fix" %in% names(model) ) 
     for ( i in seq(along=model$fix$index) )
       params[model$fix$index[i]] <- model$fix$value[i]
@@ -263,12 +290,7 @@ gpsimExpandParam <- function (model, params) {
   func <- get(funcName$func, mode="function")
 
   # Note: ignores funcName$hasArgs
-  if (model$isHierarchical) {
-    model$B <- func(params[(endVal+1):(length(params)-1)], "atox")
-    model$hierkern <- kernExpandParam(model$hierkern, params[c(1, length(params), 3:model$hierkern$nParams)])
-  }
-  else
-    model$B <- func(params[(endVal+1):length(params)], "atox")
+  model$B <- func(params[(endVal+1):length(params)], "atox")
 
   if (model$includeNoise)
     simMultiKern <- model$kern$comp[[1]]
@@ -318,25 +340,28 @@ gpsimExpandParam <- function (model, params) {
   eps <-  1e-6
 
   if ( ("proteinPrior" %in% names(model)) && ("timesCell" %in% names(model)) ) {
-    k <- Re(kernCompute(model$kern, model$timesCell))
-    if (model$isHierarchical)
-      hierk <- Re(kernCompute(model$hierkern, model$timesCell)) * model$experimentMask
+    if (!model$isHierarchical) {
+      k <- Re(kernCompute(model$kern, model$timesCell))
+    } else {
+      error("not implemented")
+      k <- Re(kernCompute(model$kern, model$timesCell))
+    }
+
     if ( model$includeNoise ) {
       noiseVar <- c(array(0, model$kern$comp[[1]]$diagBlockDim[1], 1), model$yvar)
     } else {
       noiseVar <- c(array(eps, model$kern$comp[[1]]$diagBlockDim[1], 1), model$yvar)
     }
   } else {
-    k <- Re(kernCompute(model$kern, model$t))
-    if (model$isHierarchical)
-      hierk <- Re(kernCompute(model$hierkern, model$t)) * model$experimentMask
+    if (!model$isHierarchical) {
+      k <- Re(kernCompute(model$kern, model$t))
+    } else {
+      k <- Re(kernCompute(model$kern, cbind(model$experimentStructure, model$t)))
+    }
     noiseVar <- c(as.array(model$yvar))
   }
 
-  if (model$isHierarchical)
-    model$K <- k+hierk+diag(as.array(noiseVar))
-  else
-    model$K <- k+diag(as.array(noiseVar))
+  model$K <- k+diag(as.array(noiseVar))
   invK <- .jitCholInv(model$K, silent=TRUE)
 
   if ( is.nan(invK[1]) ) {
@@ -435,12 +460,8 @@ gpsimLogLikeGradients <- function (model) {
 
   if ( "proteinPrior" %in% names(model) ) {
     g <- kernGradient(model$kern, model$timesCell, covGrad)
-    if (model$isHierarchical)
-      gh <- kernGradient(model$hierkern, model$timesCell, covGrad * model$experimentMask)
   } else {
     g <- kernGradient(model$kern, model$t, covGrad)
-    if (model$isHierarchical)
-      gh <- kernGradient(model$hierkern, model$t, covGrad * model$experimentMask)
   }
 
   #if ( "bprior" %in% names(model) ) {
@@ -509,11 +530,6 @@ gpsimLogLikeGradients <- function (model) {
   g[decayIndices] <- g[decayIndices]+gd*expTransform(model$D, "gradfact")
 
   g <- c(g, gb)
-  if (model$isHierarchical) {
-    sharedIndices <- c(1, 3:model$hierkern$nParams)
-    g[sharedIndices] <- g[sharedIndices] + gh[sharedIndices]
-    g <- c(g, gh[2])
-  }
 
   if ( "fix" %in% names(model) ) 
     g[model$fix$index] <- 0
@@ -544,8 +560,10 @@ cgpsimLogLikelihood <- function (model) {
 
 
 
-cgpsimExtractParam <- function (model, only.values=TRUE) {
-  return (gpsimExtractParam(model$comp[[1]], only.values=only.values))
+cgpsimExtractParam <- function (model, only.values=TRUE,
+                                untransformed.values=FALSE) {
+  return (gpsimExtractParam(model$comp[[1]], only.values=only.values,
+                            untransformed.values=untransformed.values))
 }
 
 

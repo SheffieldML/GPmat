@@ -7,10 +7,12 @@ translateKernDiagCompute <- function (kern, x) {
 
 
 
-translateKernExtractParam <- function (kern, only.values=TRUE) {
+translateKernExtractParam <- function (kern, only.values=TRUE,
+                                       untransformed.values=FALSE) {
   kern$nParams <- kern$nParams - kern$inputDimension
   
-  params <- cmpndKernExtractParam(kern, only.values=only.values)
+  params <- cmpndKernExtractParam(kern, only.values=only.values,
+                                  untransformed.values=untransformed.values)
   centre <- c(kern$centre)
   if ( !only.values ) {
     for ( i in seq(length=kern$inputDimension) ) {

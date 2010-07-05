@@ -27,12 +27,14 @@
   or update the posterior processes.
 }
 \usage{
-model <- modelExpandParam(model, param)
+model <- modelExpandParam(model, param, untransformed.values=FALSE)
 model <- modelUpdateProcesses(model)
 }
 \arguments{
   \item{model}{the model structure to be updated.}
   \item{param}{vector of parameters.}
+  \item{untransformed.values}{vector contains actual values, not
+    transformed values used by the optimisers.}
 }
 \value{
   \item{model}{updated model structure.}

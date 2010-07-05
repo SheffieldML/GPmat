@@ -42,7 +42,9 @@ whiteKernCompute <- function (kern, x, x2) {
 
 
 
-whiteKernExtractParam <- function (kern, only.values=TRUE) {
+# untransformed.values is ignored
+whiteKernExtractParam <- function (kern, only.values=TRUE,
+                                   untransformed.values=TRUE) {
   params <- c(kern$variance)
 
   if ( !only.values ) {

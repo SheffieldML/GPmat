@@ -262,7 +262,7 @@ flatGradient <- function (params, model) {
 
 
 # only.values is ignored
-flatExtractParam <- function (model, only.values=TRUE) {
+flatExtractParam <- function (model, only.values=TRUE, untransformed.values=FALSE) {
   Nrep <- length(model$comp)
 
   params <- 0
