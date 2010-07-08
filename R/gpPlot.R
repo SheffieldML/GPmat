@@ -18,14 +18,17 @@ gpPlot <- function(model,Xstar,mu,S,simpose=NULL,xlim=NULL,ylim=NULL,col='blue',
   plot(0, type="n", xlim=xlim, ylim=ylim, xlab='', ylab='',main=title)
 
   f = c(mu+2*sqrt(abs(S)), rev(mu-2*sqrt(abs(S))))
-  polygon(c(Xstar, rev(Xstar)), f, col = "grey", border = NA)
-  lines(Xstar, mu, col=col, lwd=.5)
-  points(model$X, model$y, pch = 3, cex = 1.5, lwd=2, col = col)
+  if (col=='blue') shade = rgb(0,0,255,max=255,alpha=.1*255)
+  else if (col=='red') shade = rgb(255,0,0,max=255,alpha=.1*255)
+  else shade = 'gray'
+  polygon(c(Xstar, rev(Xstar)), f, col = shade, border = shade)
+  lines(Xstar, mu, col=col, lwd=2)
+  points(model$X, model$y, pch = 3, cex = .5, lwd=2, col = col)
 
   if (!is.null(simpose)) {
     y = mu[simpose] + rnorm(6, 0, exp(model$params$xmin[3]/2))
     points(simpose, y, pch = 4, cex = 1.5, lwd=3, col = col)
   }
 
-  zeroAxes(rbind(model$X,Xstar))
+  zeroAxes(cbind(model$X,model$y))
 }

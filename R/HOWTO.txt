@@ -1,4 +1,4 @@
-The following is a list of packages necessary to run the gpToolkit in R, indented by dependency level, eg. bitops should be installed first. Make sure to install the latest version of each package:
+The following is a list of packages necessary to run the gpToolkit in R, indented by dependency level, eg. bitops should be installed first. Make sure to have installed the latest version of each package from bottom to top (see instructions below):
 
 spam
 tigre
@@ -9,8 +9,20 @@ tigre
   caTools
    bitops
 
-Then inside an R session enter the following:
 
-source("~/mlprojects/gp/R/gpLoadToolkit.R")
-gpLoadToolkit()
-gpTest() # run some tests
+Open an R session with sudo priviledges:
+$ sudo R
+
+Then enter the following in the R session:
+
+> install.packages("spam", dependencies=TRUE)
+> source("http://bioconductor.org/biocLite.R")
+> biocLite("puma")
+> biocLite("tigre")
+
+No integrated package available for GP, so include the source code manually:
+> source("~/mlprojects/gp/R/gpLoadToolkit.R")
+> gpLoadToolkit()
+> gpTest() # run some tests
+> demInterpolation() # run demos
+> demRegression() # another demo
