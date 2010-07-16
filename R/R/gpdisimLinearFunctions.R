@@ -285,11 +285,11 @@ gpdisimLogLikelihood <- function (model) {
   ll <- -dim*log(2*pi) - model$logDetK - t(model$m) %*% model$invK %*% model$m
   ll <- 0.5*ll
 
-  ## prior contributions
-  #if ( "bprior" %in% names(model) ) {
-  #  ll <- ll + kernPriorLogProb(model$kern)
-  #  ll <- ll + priorLogProb(model$bprior, model$B)
-  #}
+  # prior contributions
+  ll <- ll + kernPriorLogProb(model$kern)
+  if ( "bprior" %in% names(model) ) {
+    ll <- ll + priorLogProb(model$bprior, model$B)
+  }
   return (ll)
 }
 
@@ -319,9 +319,8 @@ gpdisimLogLikeGradients <- function (model) {
                         covGrad)
   }
 
-  #if ( "bprior" %in% names(model) ) {
-  #  g <- g + kernPriorGradient(model$kern)
-  #}
+  # Prior contribution (will be zero if no prior)
+  g <- g + kernPriorGradient(model$kern)
 
   gmuFull <- t(model$m) %*% model$invK
 
@@ -361,9 +360,9 @@ gpdisimLogLikeGradients <- function (model) {
   func <- get(funcName$func, mode="function")
 
   ## prior contribution
-  #if ( "bprior" %in% names(model) ) {
-  #  gb <- gb + priorGradient(model$bprior, model$B)
-  #}
+  if ( "bprior" %in% names(model) ) {
+    gb <- gb + priorGradient(model$bprior, model$B)
+  }
 
   gb <- gb*func(model$B, "gradfact")
 

@@ -119,6 +119,24 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
     #}
   }
 
+  if (options$structuredExperiments) {
+    altopts <- options
+    altopts$structuredExperiments <- FALSE
+    altopts$experiments <- NULL
+    if (useGpdisim) {
+      altmodel <- gpdisimCreate(Ngenes, Ntf, times, t(y[[i]]), t(yvar[[i]]), altopts, genes = genes)
+    } else {
+      altmodel <- gpsimCreate(Ngenes, Ntf, times, t(y[[i]]), t(yvar[[i]]), altopts, genes = genes)
+    }
+  }
+
+  optOptions <- optimiDefaultOptions()
+
+  optOptions$maxit <- 3000
+  optOptions$optimiser <- "SCG"
+  if (quiet)
+    optOptions$display <- FALSE
+
   if (randomize) {
     a <- modelExtractParam(model)
     #I <- a==0
@@ -143,17 +161,22 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
       }
       model <- modelExpandParam(model, params)
     }
+  } else {
+    if (options$structuredExperiments && !dontOptimise) {
+      message(paste(c("Optimising a basic model for genes", paste(genes, collapse=' '), "\n"), sep=" "))
+      altmodel <- modelOptimise(altmodel, optOptions)
+      a <- modelExtractParam(model, only.values=FALSE)
+      alt_a <- modelExtractParam(altmodel, only.values=FALSE)
+      I <- grep('Basal', names(alt_a), invert=TRUE)
+      a[-I] <- -4
+      a[I] <- alt_a[I]
+      a[grep('Basal', names(a))] <- alt_a[grep('Basal', names(alt_a))]
+      model <- modelExpandParam(model, a)
+    }
   }
 
-  optOptions <- optimiDefaultOptions()
-
-  optOptions$maxit <- 3000
-  optOptions$optimiser <- "SCG"
-  if (quiet)
-    optOptions$display <- FALSE
-
   if (!dontOptimise) {
-    message(c("Optimising genes", genes, "\n"), sep=" ")
+    message(paste(c("Optimising genes", paste(genes, collapse=' '), "\n"), sep=" "))
     model <- modelOptimise(model, optOptions)
   }
 
