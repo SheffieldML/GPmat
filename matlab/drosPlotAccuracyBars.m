@@ -57,10 +57,13 @@ if ~isempty(filter),
   %M0 = sum(~isnan(validation));
   %K0 = nansum(validation);
 else
-  M = length(drosRemoveDuplicateGenes(drosexp, find(~isnan(validation))));
-  K = length(drosRemoveDuplicateGenes(drosexp, find(val2)));
-  %M = sum(~isnan(validation));
-  %K = nansum(validation);
+  if nargin > 5,
+    M = length(drosRemoveDuplicateGenes(drosexp, find(~isnan(validation))));
+    K = length(drosRemoveDuplicateGenes(drosexp, find(val2)));
+  else
+    M = sum(~isnan(validation));
+    K = nansum(validation);
+  end
 end
 
 for k=1:length(rankings),
