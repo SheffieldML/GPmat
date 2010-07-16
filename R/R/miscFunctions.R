@@ -450,6 +450,8 @@ gpsimKernelSpec <- function(comps, options, exps=NULL) {
       for (k in seq_along(exps)) {
         hierkern$comp[[k+1]]$comp[[i]] <- hierkern$comp[[1]]$comp[[i]]
         hierkern$comp[[k+1]]$comp[[i]]$options$expmask <- exps[k]
+        #if (i==1)
+        #  hierkern$comp[[k+1]]$comp[[i]]$options$priors <- list(list(type="invgamma", params=c(0.5, 0.5), index=2))
       }
     }
   }
