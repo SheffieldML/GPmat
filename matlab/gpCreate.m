@@ -94,7 +94,9 @@ else
 end
 if(isfield(options,'scale2var1'))
   if(options.scale2var1)
-    model.scale = std(model.y);
+    for i = 1:size(model.y, 2)
+      model.scale(i) = std(model.y(find(~isnan(model.y(:, i))), i));
+    end
     model.scale(find(model.scale==0)) = 1;
     if(model.learnScales)
       warning('Both learn scales and scale2var1 set for GP');
