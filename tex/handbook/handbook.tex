@@ -68,22 +68,25 @@ a basal rate of transcription, $\basalRate_j$, a sensitivity,
 $\sensitivity_j$ to the governing transcription factor concentration,
 $\tfConcentration(t)$ and a rate of decay, $\decayRate_j$. In this
 simple model each of the genes model is assumed to be governed by a
-single input transcription factor, this is known as a single input
+single input transcription factor and this is known as a single input
 module motif \citep{Alon:systems06}. Short of assuming that the mRNA
 concentration is linearly related to the transcription factor
 concentration\footnote{This would be equivalent to assuming very high
-  decay and sensitivity the simple model we describe. Models like this
+  decay in the simple model we describe. Models like this
   are widely used. One can see clustering to find coregulated targets
   as making this assumption. The assumption is made more explicitly in
-  some genomewide analysis models, for example
-  \citep{Sanguinetti:chipvar06,Sanguinetti:chipdyno06}).} this is
+  some genomewide analysis models~\citep{Sanguinetti:chipvar06,Sanguinetti:chipdyno06}.} this is
 perhaps the simplest model of transcriptional regulation that can be
 composed. It has a closed form solution for the mRNA concentration
 that depends on the TF concentration. If we assume that the system
 starts at $t=0$ then we have
-\[
-\mrnaConcentration_j(t) = a_je^{-\decayRate_{j}t} + \frac{\basalRate_j}{\decayRate_j} + \sensitivity_je^{-\decayRate_{j}t}\int_0^t e^{\decayRate_{j}u}\tfConcentration(u) \mathrm{d}u 
-\]
+\begin{equation}
+\mrnaConcentration_j(t) = a_je^{-\decayRate_{j}t} +
+\frac{\basalRate_j}{\decayRate_j} +
+\sensitivity_je^{-\decayRate_{j}t}\int_0^t
+e^{\decayRate_{j}u}\tfConcentration(u) \mathrm{d}u 
+\label{eq:differentialEquationSoln}
+\end{equation}
 where the initial value for the mRNA concentration is given by
 $\mrnaConcentration_j(0)=\frac{\basalRate_j}{\decayRate_j}+a_j$.
 
@@ -104,7 +107,7 @@ fitting polynomials to their time series and computing gradients at each time po
 
 \cite{Khanin:repression06} considered a similar equation with a
 nonlinear repression response. They and \cite{Rogers:model06b}, who
-considered single input motifs, dealt with the missing function
+also considered single input motifs, dealt with the missing function
 through fitting a piecewise constant approximation to the missing
 function. In this chapter our focus will be on an alternative
 approach: modeling the missing function with a generalized linear
@@ -167,15 +170,15 @@ Substituting this into the solution for $m_j(t)$ we have
 \begin{equation}
 \mrnaConcentration_j(t) = a_je^{-\decayRate_{j}t} + \frac{\basalRate_j}{\decayRate_j} + \sensitivity_j\sum_{k=1}^\numBasisFunc \weightScalar_k e^{-\decayRate_{j}t}\int_0^t e^{\decayRate_{j}u} \basisFunc_k(u) \mathrm{d}u \label{eq:basisFunctionSolution}
 \end{equation}
-\[
-\int_0^t \exp\left(\left(\decayRate_j+2\frac{\tau_k}{\lengthScale^2}\right)u-\frac{u^2}{\lengthScale^2} -\frac{\tau_k^2}{\lengthScale^2}\right)\mathrm{d}u
-\]
-\[
-\int_0^t \exp\left( -\frac{\left(u-\frac{\decayRate_j\lengthScale^2}{2}-\tau_k\right)^2}{\lengthScale^2}  -\frac{\tau_k^2}{\lengthScale^2} + \frac{\left(\frac{\decayRate_j\lengthScale^2}{2} + \tau_k\right)^2}{\lengthScale^2}\right)\mathrm{d}u
-\]
-\[
-\int_0^t \exp\left( -\frac{\left(u-\frac{\decayRate_j\lengthScale^2}{2}-\tau_k\right)^2}{\lengthScale^2}  + \decayRate_j\tau_k + \frac{\decayRate_j^2\lengthScale^2}{4} \right)\mathrm{d}u
-\]
+%\[
+%\int_0^t \exp\left(\left(\decayRate_j+2\frac{\tau_k}{\lengthScale^2}\right)u-\frac{u^2}{\lengthScale^2} -\frac{\tau_k^2}{\lengthScale^2}\right)\mathrm{d}u
+%\]
+%\[
+%\int_0^t \exp\left( -\frac{\left(u-\frac{\decayRate_j\lengthScale^2}{2}-\tau_k\right)^2}{\lengthScale^2}  -\frac{\tau_k^2}{\lengthScale^2} + \frac{\left(\frac{\decayRate_j\lengthScale^2}{2} + \tau_k\right)^2}{\lengthScale^2}\right)\mathrm{d}u
+%\]
+%\[
+%\int_0^t \exp\left( -\frac{\left(u-\frac{\decayRate_j\lengthScale^2}{2}-\tau_k\right)^2}{\lengthScale^2}  + \decayRate_j\tau_k + \frac{\decayRate_j^2\lengthScale^2}{4} \right)\mathrm{d}u
+%\]
 where we have been able to pull the weighted sum over the basis
 functions outside the integral. Our solution for the mRNA
 concentration is now also expressed as a generalized linear model. Now
@@ -221,7 +224,7 @@ differential equation for the different TF concentrations shown in
       \includegraphics[width=0.3\textwidth]{../../../gpsim/tex/diagrams/demBasisSample3_3}}
   \end{center}
 
-  \caption{The basis in \reffig{fig:basisFunctions} have been pushed
+  \caption{The bases in \reffig{fig:basisFunctions} have been pushed
     through the differential equation to give the convolved basis
     shown in (a). We took $a_j=0$, $\basalRate_j=0$ and
     $\sensitivity_j=1$ for $j=1, 2, 3$. Decays were then set to be
@@ -246,7 +249,17 @@ function is shown in the top row of
 
 \subsection{Fitting Basis Function Models}
 
-Given a basis set, $\left\{\phi_k(t)\right\}_{k=1}^\numBasisFunc$, a set of weights, $\left\{\weightScalar_k\right\}_{k=1}^\numBasisFunc$, and the parameters of the differential equation, $\{\basalRate_j, \decayRate_j, \sensitivity_j\}_{j=1}^\dataDim$, we can solve the differential equations for the mRNA concentrations, $\left\{\mrnaConcentration_j(t)\right\}_{j=1}^\dataDim$. We can determine all these parameters of the model (including the parameters of the basis functions) by fitting through maximum likelihood. If we assume Gaussian noise of variance $\dataStd^2$ we can compute the log likelihood of an observed data set of mRNA concentrations, perhaps obtained from gene expression microarray,
+Given a basis set, $\left\{\phi_k(t)\right\}_{k=1}^\numBasisFunc$, a
+set of weights, $\left\{\weightScalar_k\right\}_{k=1}^\numBasisFunc$,
+and the parameters of the differential equation, $\{\basalRate_j,
+\decayRate_j, \sensitivity_j\}_{j=1}^\dataDim$, we can solve the
+differential equations for the mRNA concentrations,
+$\left\{\mrnaConcentration_j(t)\right\}_{j=1}^\dataDim$. We can
+determine all these parameters of the model (including the parameters
+of the basis functions) by fitting through maximum likelihood. If we
+assume Gaussian noise of variance $\dataStd^2$ we can compute the log
+likelihood of an observed data set of mRNA concentrations, perhaps
+obtained from a gene expression microarray,
 \[
 \log p(\dataMatrix|\weightVector) = -\frac{\dataDim}{2}\log 2\pi\dataStd^2 -\frac{1}{2\dataStd^2}\sum_{j=1}^\dataDim \sum_{i=1}^\numData(\mrnaConcentration_j(t_i) - y_{i,j})^2
 \]
@@ -299,7 +312,7 @@ will not be invertible. A solution to this problem is to handle
 $\weightVector$ through Bayesian inference (see
 \citet{Lawrence:licsbbayes10} for a brief introduction). In Bayesian
 inference, parameters are treated with a prior distribution, in this
-case $p(\weightVector)$ and rather than being maximized, they are
+case $p(\weightVector)$, and rather than being maximized they are
 integrated out:
 \[
 p(\dataMatrix) =\int p(\dataMatrix|\weightVector)p(\weightVector)\mathrm{d}\weightVector.
@@ -313,7 +326,8 @@ If we place a zero mean Gaussian prior density over $\weightVector$,
 \[
 p(\weightVector)=\frac{1}{\sqrt{2\pi}\det{\covarianceMatrix}^{\frac{1}{2}}}\exp\left(-\frac{1}{2}\weightVector^\top \covarianceMatrix^{-1}\weightVector\right)
 \]
-we can compute the marginal likelihood of the data analytically, it is
+we can compute the marginal likelihood of the data analytically and we
+find that it is
 given by
 \[
 p(\dataMatrix) = \frac{1}{\sqrt{2\pi}\det{\kernelMatrix + \dataStd^2\eye}^\frac{1}{2}}\exp\left(-\frac{1}{2}\dataVector^\top \left(\kernelMatrix + \dataStd^2\eye\right)^{-1}\dataVector\right),
@@ -324,14 +338,14 @@ of one another. The matrix $\kernelMatrix$ gives the covariance
 between the different mRNA concentrations at different times. It is
 structured as a block matrix with $\dataDim\times\dataDim$ blocks,
 each block of size $\numData\times\numData$. The diagonal blocks give
-covariances of a single gene output, while off diagonal blocks give
+covariances of a single gene output, while off-diagonal blocks give
 \emph{cross covariances} between different outputs. In general we can define
 each element of $\kernelMatrix$ to be $\kernel_{i,j}(t, t^\prime) =
 \basisFuncVector^\prime_i(t)^\top\covarianceMatrix\basisFuncVector^\prime_j(t')$. This
 denotes the covariance between the $i$ and $j$th mRNA concentrations
 computed between times $t$ and $t^\prime$. We can depict the structure
 of this covariance function using a color map to represent the
-function values. This is shown in \reffig{fig:covarianceStructure}.
+function values as shown in \reffig{fig:covarianceStructure}.
 \begin{figure}
 
   \caption{Structure of $\kernelMatrix$ from the marginal likelihood's
@@ -342,7 +356,7 @@ function values. This is shown in \reffig{fig:covarianceStructure}.
 
 The model as we described is dependent on our choice of basis function
 for $\tfConcentration(t)$. An interesting feature is that we can
-represent all the elements of the marginal's covariance matrix through
+represent all the elements of the marginal likelihood's covariance matrix through
 the inner product of the basis, $\kernel_{0,0}(t,
 t^\prime)=\basisFuncVector(t)^\top\covarianceMatrix\basisFuncVector(t^\prime)$:
 \[
@@ -378,7 +392,7 @@ where we have set the location parameter of each $\basisFunc_k(t)$ to
 \]
 We showed that the marginal likelihood of the model is entirely
 dependent on the inner product between basis vectors at different
-times, for the basis at uniform intervals this can be written as
+times. For the basis at uniform intervals this can be written as
 % \[
 % \kernel_{0,0}\left(t,t^\prime\right) = \frac{\gamma}{2\pi\lengthScale{}^2}\sum_{k=1}^{\numBasisFunc} \exp\left(
 %   -\frac{t^2 + \left.t^\prime\right.^2 - 2\tau_k \left(t+t^\prime\right) +
@@ -399,7 +413,7 @@ $\Delta\tau$. However, to do this without increasing the expected
 variance of the resulting TF concentration we need to scale down the
 variance of the prior distribution for $\weightVector$. This can be
 done by setting the variance parameter to be proportional to the
-interval, so we take $\gamma = \alpha_p\Delta\tau$. Now we have basis
+interval, so we take $\gamma = \alpha\Delta\tau$. Now we have basis
 functions where the location of the leftmost basis function, $k=1$, is
 $\tau_1=a+\Delta\tau$ and the rightmost basis is
 $\tau_\numBasisFunc=b$ so that $b= a+
@@ -416,14 +430,14 @@ infinite basis functions. The inner product between the basis
 functions becomes
 
 \[
-\kernel_{0,0}\left(t,t^\prime\right) = \frac{\alpha_p}{\pi \lengthScale^2}
+\kernel_{0,0}\left(t,t^\prime\right) = \frac{\alpha}{\pi \lengthScale^2}
 \int_a^b \exp\left( -\frac{t^2 + \left.t^\prime\right.^2 - 2\tau
     \left(t+t^\prime\right) + 2\tau^2}{\lengthScale{}^2}
 \right)\mathrm{d}\tau,
 \]
 where we have used $\tau = a+\Delta\tau$. Completing the square gives
 \[
-\kernel_{0,0}\left(t,t^\prime\right) = \frac{\alpha_p}{\pi \lengthScale^2}
+\kernel_{0,0}\left(t,t^\prime\right) = \frac{\alpha}{\pi \lengthScale^2}
 \int_a^b \exp\left( -\frac{t^2 + \left.t^\prime\right.^2 + 2\left(\tau
       - \frac{1}{2}\left(t + t^\prime\right)\right)^2
     -\frac{1}{2}\left(t + t^\prime\right)^2}{\lengthScale{}^2}
@@ -433,7 +447,7 @@ where we have used $\tau = a+\Delta\tau$. Completing the square gives
 
 \[
 \kernel_{0,0}\left(t,t^\prime\right) =
-\frac{\alpha_p}{\sqrt{2\pi\lengthScale{}^2}} \exp\left(
+\frac{\alpha}{\sqrt{2\pi\lengthScale{}^2}} \exp\left(
   -\frac{(t-t^\prime)^2}{2\lengthScale{}^2}\right) \sqrt{\frac{2}{\pi
     \lengthScale{}^2}}\int_a^b
 \exp\left(-\frac{2}{\lengthScale^2}\left(\tau - \frac{t +
@@ -441,7 +455,7 @@ where we have used $\tau = a+\Delta\tau$. Completing the square gives
 \]
 \[
 \kernel_{0,0}\left(t,t^\prime\right) =
-\frac{\alpha_p}{\sqrt{2\pi\lengthScale{}^2}} \exp\left(
+\frac{\alpha}{\sqrt{2\pi\lengthScale{}^2}} \exp\left(
   -\frac{(t-t^\prime)^2}{2\lengthScale{}^2}\right)
 \frac{1}{2}\left[1+\mathrm{erf}\left(\sqrt{\frac{2}{\lengthScale^2}}\left(\tau
       - \frac{t + t^\prime}{2}\right) \right)\right]_a^b,
@@ -450,7 +464,7 @@ where we have used $\tau = a+\Delta\tau$. Completing the square gives
 Performing the integration leads to 
 \[
 \kernel_{0,0}\left(t,t^\prime\right) =
-\frac{\alpha_p}{\sqrt{2\pi\lengthScale{}^2}} \exp\left(
+\frac{\alpha}{\sqrt{2\pi\lengthScale{}^2}} \exp\left(
   -\frac{\left(t-t^\prime\right)^2}{2\lengthScale{}^2}\right)
 \frac{1}{2}\left[\mathrm{erf}\left(\sqrt{\frac{2}{\lengthScale^2}}\left(b
       - \frac{t + t^\prime}{2}\right) \right) -
@@ -462,14 +476,16 @@ $b\rightarrow \infty$ (i.e. we have infinite basis functions
 distributed across the entire real line) then the square bracketed
 term on the right becomes 2 and we have
 
-\[
+\begin{equation}
 \kernel_{0,0}\left(t,t^\prime\right) =
-\frac{\alpha_p}{\sqrt{2\pi\lengthScale^2}}\exp\left(
-  -\frac{\left(t-t^\prime\right)^2}{2\lengthScale{}^2}\right).
-\]
+\frac{\alpha}{\sqrt{2\pi\lengthScale^2}}\exp\left(
+  -\frac{\left(t-t^\prime\right)^2}{2\lengthScale{}^2}\right) \\lengthScale ,
+\label{eq:RBF}
+\end{equation}
 
+which is known as the squared exponential covariance function. 
 
-This analysis above shows that if we take a one dimensional fixed
+The analysis above shows that if we take a one dimensional fixed
 basis function model, we can increase the number of basis functions to
 infinity and distribute them evenly across the real line. In this way
 we loose the requirement to specify $\numBasisFunc$ location
@@ -486,10 +502,10 @@ function $\kernel_{0,0}(t, t^\prime)$.
 The procedure for moving from inner products,
 $\basisFuncVector(t)^\top\basisFuncVector(t^\prime)$, to covariance functions,
 $\kernel_{0,0}(t, t^\prime)$, is sometimes known as kernelization
-\cite{Scholkopf:learning01} due to the fact that the covariance
-function has the properties of a Mercer kernel. A function of two variables can bee seen as a Mercer kernel if when a
+\citep{Scholkopf:learning01} due to the fact that the covariance
+function has the properties of a Mercer kernel. A function of two variables can be seen as a Mercer kernel if when a
 symmetric matrix of values from $\kernel_{0,0}(t, t^\prime)$ is computed
-for a vector of times $\mathbf{t}$ it should always be positive
+for a vector of times $\mathbf{t}$ it is always positive
 semi-definite. In other words if $\kernel_{i,j} = \kernel_{0,0}(t_i,
 t_j)$ is the element from the $i$th row and $j$th column of
 $\kernelMatrix_{0,0}$ and $t_i$ is the $i$th element from $\mathbf{t}$, we
@@ -553,7 +569,7 @@ where $\epsilon$ is a corruptive noise term which would be drawn independently, 
 \[
 \dataScalar_0(t_i) =\tfConcentration(t_i) +\epsilon_{i,0}.
 \]
-An observation of the TF may be in the form of a constraint that the TF concentration is known to be zero at time zero: $\tfConcentration(0)=0, \quad \dataStd^2_0=0$.  Or in some cases it could be a direct measurement. This gives us the full data set which we place in a vector stacked vector storing all the values,
+An observation of the TF may be in the form of a constraint that the TF concentration is known to be zero at time zero: $\tfConcentration(0)=0, \quad \dataStd^2_0=0$.  Or in some cases it could be a direct measurement. This gives us the full data set which we place in a stacked vector storing all the values,
 \[
 \dataVector = \left[\dataVector_0^\top, \dataVector_1^\top, \dots, \dataVector_\dataDim^\top\right]^\top.
 \]
@@ -577,21 +593,27 @@ where
 $\delta_{i,j}$ is the Kronecker delta function\footnote{The Kronecker delta is defined as one if $i=j$ and zero otherwise.} and $\alpha_{a_j}$ and $\alpha_{\basalRate_j}$ are the variances of the priors over the $a_j$ and $\basalRate_j$ parameters respectively. These may be shared across all genes: $\alpha_{a_j}=\alpha_a$ and $\alpha_{\basalRate_j}=\alpha_\basalRate$. Similarly we can use a shared noise variance $\dataStd^2_j=\dataStd^2$. This reduces the number of parameters sought to $2\dataDim + 5$.  
 
 The parameters of the model can be found by minimizing the negative log likelihood, 
-\begin{align*}
-E\left(\parameterVector\right)& = -\frac{1}{2}\log p(\dataVector | \parameterVector)\\ & = \frac{1}{2}\log \det{\kernelMatrix}  + \frac{1}{2}\dataVector^\top\kernelMatrix^{-1}\dataVector + \mathrm{const.}
-\end{align*}
+\begin{align}
+E\left(\parameterVector\right)& = -\frac{1}{2}\log p(\dataVector |
+\parameterVector)\\ & = \frac{1}{2}\log \det{\kernelMatrix}  +
+\frac{1}{2}\dataVector^\top\kernelMatrix^{-1}\dataVector +
+\mathrm{const.}
+\label{eq:error}
+\end{align}
 with respect to the parameters $\parameterVector =
-\left\{\left\{\sensitivity_j, \decayRate_j\right\}, \alpha_p,
+\left\{\left\{\sensitivity_j, \decayRate_j\right\}, \alpha,
   \alpha_a, \alpha_b, \lengthScale, \dataStd^2 \right\}$. This
 requires us to compute the gradient of the covariance matrix with
 respect to each parameter, $\diff{\kernelMatrix}{\parameterScalar_i}$
 and combine it with the gradient of the negative log likelihood,
 \[
-\diff{E\left(\parameterVector\right)}{\kernelMatrix} = -\frac{1}{2}\kernelMatrix^{-1}  + \frac{1}{2}\kernelMatrix^{-1} \dataVector\dataVector^\top\kernelMatrix^{-1},
+\diff{E\left(\parameterVector\right)}{\kernelMatrix} =
+-\frac{1}{2}\kernelMatrix^{-1}  + \frac{1}{2}\kernelMatrix^{-1}
+\dataVector\dataVector^\top\kernelMatrix^{-1} \ .
 \]
-the resulting gradients of the negative log likelihood can be used in
+The resulting gradients of the negative log likelihood can be used in
 a gradient based minimizer to find a local minimum. We often make use
-of scaled conjugate gradients \cite{Moller:scg93}, but other
+of scaled conjugate gradients \citep{Moller:scg93}, but other
 optimizers such as quasi-Newton approaches \cite[see
 e.g.][]{Zhu:lbfgsb97} or conjugate gradients can also be used. If
 there are few points in the time series the parameters may be badly
@@ -640,7 +662,7 @@ also explored Laplace's approximation\footnote{Laplace's approximation
 \citep[see]{Lawrence:transcriptionalGP06,Gao:latent08,Lawrence:licsbgp10}
 and variational approximations could also be applicable.
 
-\section{Sampling Approximations}
+\subsection{Sampling Approximations}
 
 Regardless of how we specify the prior distribution for the TF
 concentration, for a given sample from this function,
@@ -673,12 +695,89 @@ the data $\dataMatrix$. With this task in mind a control point
 strategy for sampling from Gaussian processes was developed
 \citep{Titsias:efficient08,Titsias:timeseries10}.
 
-
-
 \section{Model Based Target Ranking}
 \label{sec:targetRanking}
 
-Review of the PNAS material 
+We used Gaussian process inference over the linear activation
+model in (\ref{eq:differentialEquation}) to identify targets of two
+TFs, Mef2 and Twist, regulating mesoderm and muscle development
+in Drosophila~\citep{Honkela:modelbased10}. These TFs are thought to
+be primarily regulated by differential
+expression at the mRNA level and therefore their measured mRNA
+expression levels are highly informative about their protein
+concentration in the nucleus. We therefore include a model of
+translation from the TF mRNA concentration $\tfMrnaConcentration(t)$ to the TF protein
+concentration $\tfConcentration(t)$:
+\begin{equation}
+\diff{\tfConcentration(t)}{t} = \tfMrnaConcentration(t) - \tfDecayRate
+\tfConcentration(t)
+\end{equation}
+where $\tfDecayRate$ is the decay rate of the TF protein. The
+differential equation can be solved to give,
+\[
+\tfConcentration(t) = \exp\left(-\tfDecayRate t\right) \int_0^t
+    \tfMrnaConcentration(v) \exp(\tfDecayRate v)  \mathrm{d}v
+\]
+and we see that the TF protein concentration  $\tfConcentration(t)$ is a linear function of the
+TF expression $\tfMrnaConcentration(t)$. There is also a linear relationship
+between the TF protein and the regulated target gene expression levels
+$\mrnaConcentration_j(t)$ under the linear
+activation model (recall
+(\ref{eq:differentialEquationSoln})) and therefore $\mrnaConcentration_j(t)$
+is also a linear function of both $\tfConcentration(t)$ and $\tfMrnaConcentration(t)$. We place a
+Gaussian process prior on $\tfMrnaConcentration(t)$ and the linear models of
+translation and activation define a related Gaussian process for
+$\mrnaConcentration_j(t)$ and $\tfConcentration(t)$. If we use the squared
+exponential covariance in (\ref{eq:RBF}) for $\tfMrnaConcentration(t)$
+then all the terms in the covariance function for the multivariate Gaussian process 
+$\{\tfMrnaConcentration,\tfConcentration,\mrnaConcentration_j\}$ can
+be calculated analytically~\citep{Honkela:modelbased10}.  
+
+The parameters of the TF mRNA
+covariance and the differential equation models parameterize the covariance function: $\parameterVector =
+[\tfDecayRate,\alpha,\lengthScale,\{\basalRate_j, \sensitivity_j,
+  \decayRate_j\}]$. These were estimated by maximising the likelihood by
+gradient-based optimisation (recall (\ref{eq:error})). After
+estimating the model parameters we used the likelihood as a score to
+rank genes according to their fit to the model. 
+
+In Figure~\ref{fig:gpdisim_models} we show examples of the model fit to
+the data for putative targets of the Twist TF. We fitted two different
+classes of model. Figure~\ref{fig:gpdisim_models}(a) shows examples
+where we fit a different model to three different genes. Since the
+model is fitted independently for each gene there is no reason for
+the models to infer a consistent TF protein concentration profile. We
+refer to this as the single-target model approach. In
+Figure~\ref{fig:gpdisim_models}(b) we fit one model to the same three
+genes by sharing the TF protein profile across target genes. This
+conforms more with our belief that the TF protein profile should be
+consistent across targets. The model is therefore less flexible as can
+be observed in the example where gene FBgn0003486 cannot be fitted by
+the multiple-target model. The multiple-target model relies on an assumption
+that the whole set of targets considered are genuine. We used the five
+top-ranked targets identified by the single-target models as a ``training set'' in the
+multiple-target approach, adding in each putative target one-by-one to
+the training set and using the likelihood of the resulting six-target model for
+ranking. In practice one mighht also use additional biological prior knowledge
+to choose a small set of confident targets. 
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=12cm]{../disim_pnas/fig1}
+  \caption{Examples of the model fit for two different classes of 
+    Gaussian process model fitted to potential targets of the TF Twist~\citep[from][]{Honkela:modelbased10}. (a) Three independent single-target models
+    for likely targets. Red marks denote observed expression
+    levels from~\cite{Tomancak2002} with 2 s.d.\ error bars.
+    The inferred posterior means of the functions are shown in blue
+    and the shaded regions denote 2 s.d.\ posterior confidence
+    intervals. (b) A joint multiple-target model for
+    the same set of target genes as in (a). Note that
+    the multiple-target models used in evaluation have more targets
+    than the one shown here.\label{fig:gpdisim_models}
+}
+  %\label{fig:gpdisim_models}
+\end{figure}
+
 
 \section{Something from Michalis}
 
@@ -686,7 +785,8 @@ An appropriate sampling experiment that doesn't undermine imminent journal submi
 
 \section{Conclusion}
 \bibliographystyle{plainnat}
-\bibliography{lawrence,other,zbooks}
+\bibliography{lawrence,other,zbooks,../disim_pnas/disim.bib}
+  
 
 \end{document}
 
