@@ -778,6 +778,59 @@ to choose a small set of confident targets.
   %\label{fig:gpdisim_models}
 \end{figure}
 
+Figure~\ref{fig:dros_global_evaluation} shows evaluation of the
+model-based ranking results using data from a genome-wide
+Chromatin-immunoprecipitation (ChIP-chip) experiment~\citep{Zinzen2009} to determine
+whether there is evidence of TF binding within 2000
+base-pairs of a putative target. As well as showing results for
+the single-target and multiple-target Gaussian process methods, we
+also show the performance obtained using evidence of differential
+expression in mutant embryos (knock-outs),
+correlation with TF expression (correlation) and an alternative
+maximum liklihood model-based approach~\citep[quadrature, see][for
+  details]{Honkela:modelbased10}. In the global validation we score
+all genes showing significant variability in the expression data. In
+the focussed evaluation we only consider genes with annotated
+expression in mesoderm or muscle tissue according to the {\em in situ}
+hybridization data~\citep{Tomancak2002}.
+
+\begin{figure*}[tb]
+  \centering
+  %\includegraphics[trim=0mm 18mm 0mm 0mm]{../disim_pnas/dros_global_evaluation}
+  \includegraphics[width=12cm]{../disim_pnas/fig3}
+  \caption{Evaluation results of different rankings
+    \citep[from][]{Honkela:modelbased10} as
+    discussed in the text showing the relative frequency of positive
+    predictions among $N$ top-ranking targets (``global'' evaluations)
+    or among $N$ top genes
+    with annotated expression in mesoderm or muscle tissue
+    (``focused'' evaluations).
+    The dashed line
+    denotes the frequency in the full population and the dash-dot
+    line within the population considered in focused evaluation.
+    The first row shows the frequency of targets with ChIP-chip
+    binding within 2000 base pairs of the gene
+    while the second row shows the frequency of
+    predicted targets with significant differential
+    expression in TF knock-outs.
+    $p$-values of results significantly different from random are
+    denoted by `***': $p <
+    0.001$, `**': $p < 0.01$, `*': $p < 0.05$.
+    Comparison to knock-out ranking is obviously omitted for knock-out
+    validation. \label{fig:dros_global_evaluation}
+  }
+ % \label{fig:dros_global_evaluation}
+\end{figure*}
+
+We find that the model-based approach provides a significant advantage
+over the simpler correlation-based approach for Twist, whose targets
+display a diverse range of temporal profiles
+(Figure~\ref{fig:gpdisim_models}). For Mef2 the correlation-based
+approach works well. We observe that most of the predicted Mef2
+targets have profiles very similar to Mef2 itself, in which case the
+model-based approach would not be expected to provide an advantage. The
+single-target Gaussian process approach is found to out-perform other
+methods in most cases~\citep{Honkela:modelbased10}.
 
 \section{Something from Michalis}
 
