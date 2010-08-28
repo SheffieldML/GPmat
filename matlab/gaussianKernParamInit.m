@@ -19,7 +19,7 @@ function kern = gaussianKernParamInit(kern, isArd)
 %
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
 %
-% MODIFICATIONS : Mauricio A. Alvarez, 2009
+% MODIFICATIONS : Mauricio A. Alvarez, 2009, 2010
 
 % KERN
   

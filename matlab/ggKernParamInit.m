@@ -28,15 +28,19 @@ function kern = ggKernParamInit(kern, isArd)
 %
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
 %
-% MODIFICATIONS : Mauricio A. Alvarez, 2009
+% MODIFICATIONS : Mauricio A. Alvarez, 2009, 2010
 
 % KERN
 
-switch nargin
-    case 1
-        kern.isArd = false;
-    case 2
-        kern.isArd = isArd;
+if isfield(kern, 'options') && isfield(kern.options, 'isArd')
+    kern.isArd = kern.options.isArd;
+else
+    switch nargin
+        case 1
+            kern.isArd = false;
+        case 2
+            kern.isArd = isArd;
+    end
 end
 
 if kern.isArd
