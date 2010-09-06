@@ -1107,7 +1107,8 @@ switch dataset
  case 'sarcosMultiGP'
   dataTrain = load([baseDir 'sarcos_inv.mat']); 
   dataTest = load([baseDir 'sarcos_inv_test.mat']);
-  N = 1000;
+  N = 2000;
+  Ntest = 1000;
   trainD = dataTrain.sarcos_inv;
   testD = dataTest.sarcos_inv_test;
   sizeTrain = size(trainD);
@@ -1116,18 +1117,31 @@ switch dataset
   Xstd = std(trainD(:,1:21),1);
   indexTraining = randperm(sizeTrain(1));
   indexTraining = indexTraining(1:N);
-  X = cell(1,7);
-  y = cell(1,7);
-  XTest = cell(1,7);
-  yTest = cell(1,7);
+  indexTesting = randperm(sizeTest(1));
+  indexTesting = indexTesting(1:Ntest);
+%   nTrainD = (trainD(:,1:21) - repmat(Xmean, sizeTrain(1),1 ))./ ...
+%           repmat(Xstd, sizeTrain(1),1);
+%   X = cell(1,7);
+%   y = cell(1,7);
+%   XTest = cell(1,7);
+%   yTest = cell(1,7);
   for i=1:7
-      X{i} = (trainD(indexTraining,1:21) - repmat(Xmean, N,1 ))./ ...
-          repmat(Xstd, N,1 );
-      y{i} = trainD(indexTraining,21+i);
-      XTest{i} = (testD(:,1:21) - repmat(Xmean, sizeTest(1),1 ))./ ...
-          repmat(Xstd, sizeTest(1),1 );
-      yTest{i} = testD(:,21+i);
+%       X{i} = (trainD(indexTraining,1:21) - repmat(Xmean, N,1 ))./ ...
+%           repmat(Xstd, N,1 );
+%       y{i} = trainD(indexTraining,21+i);
+%       XTest{i} = (testD(indexTesting,1:21) - repmat(Xmean, Ntest,1 ))./ ...
+%           repmat(Xstd, Ntest,1 );
+%       yTest{i} = testD(indexTesting,21+i);
+      X{i} = trainD(indexTraining,1:21);
+%       y{i} = trainD(indexTraining,21+i);
+      XTest{i} = testD(indexTesting,1:21);
+%       yTest{i} = testD(indexTesting,21+i);
   end
+  X{1} = trainD(indexTraining,1:21);
+  XTest{1} = testD(indexTesting,1:21);
+  y{1} = trainD(indexTraining,22);
+  yTest{1} = testD(indexTesting,22);
+  
   save([baseDir 'sarcosData.mat'], 'X', 'y', 'XTest', 'yTest')
 
   case 'compilerData'
@@ -1646,7 +1660,72 @@ switch dataset
   yTest = [cell2mat(data.data{1}.Yvar); cell2mat(data.data{2}.Yvar); cell2mat(data.data{3}.Yvar)];
   %~/
   
- case 'yeastSpellman'
+  case 'demp53_54genes'
+  data = load([baseDir 'dataBarencoOption_0_Genes_54']);
+  X = data.data{1}.Xtrain;
+  y = [cell2mat(data.data{1}.Ytrain); cell2mat(data.data{2}.Ytrain); cell2mat(data.data{3}.Ytrain)];
+  XTest = X;
+  %yTest = y;
+  % We use the variance
+  yTest = [cell2mat(data.data{1}.Yvar); cell2mat(data.data{2}.Yvar); cell2mat(data.data{3}.Yvar)];
+   
+  case 'demDrosOnlyTwiRed'
+  
+  load([baseDir 'drosOnlyTwist']);
+  nGenesRed = 50;
+  maxGenes = size(Genes, 2);
+  indexes = randperm(maxGenes);
+  X = timePoints;
+  y = Genes(:, indexes(1:nGenesRed));
+  XTest = X;
+  yTest = GenesVar(:, indexes(1:nGenesRed));
+  
+  case 'demDrosOnlyTwiRed100'
+  
+  load([baseDir 'drosOnlyTwist']);
+  nGenesRed = 100;
+  maxGenes = size(Genes, 2);
+  indexes = randperm(maxGenes);
+  X = timePoints;
+  y = Genes(:, indexes(1:nGenesRed));
+  XTest = X;
+  yTest = GenesVar(:, indexes(1:nGenesRed));
+  
+  
+  case 'demDrosOnlyTwiRed200'
+  
+  load([baseDir 'drosOnlyTwist']);
+  nGenesRed = 200;
+  maxGenes = size(Genes, 2);
+  indexes = randperm(maxGenes);
+  X = timePoints;
+  y = Genes(:, indexes(1:nGenesRed));
+  XTest = X;
+  yTest = GenesVar(:, indexes(1:nGenesRed));
+  
+  case 'demDrosOnlyTwi'
+  
+  load([baseDir 'drosOnlyTwist']);
+  nGenesRed = 1500;
+  maxGenes = size(Genes, 2);
+  indexes = randperm(maxGenes);
+  X = timePoints;
+  y = Genes(:, indexes(1:nGenesRed));
+  XTest = X;
+  yTest = GenesVar(:, indexes(1:nGenesRed));
+
+  case 'demDros92'
+  
+  load([baseDir 'dros92']);
+%   nGenesRed = 1500;
+%   maxGenes = size(Genes, 2);
+%   indexes = randperm(maxGenes);
+  X = timePoints;
+  y = Genes;
+  XTest = X;
+  yTest = GenesVar;
+  
+  case 'yeastSpellman'
   load([baseDir 'yeastSpellman']);
   yTest = X; % Connectivity matrix
   X = (1:size(data,2))';
