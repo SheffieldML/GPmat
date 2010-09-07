@@ -24,7 +24,8 @@ particularly challenging aspect of biological systems is the
 scarcity of the data. Some of the model components may be
 unobservable, and those that are observed are not normally
 sampled at a high rate, particularly not in the context of high
-throughput experiments such as gene expression microarray. This
+throughput experiments such as gene expression microarray and
+RNA-sequencing. This
 means that important sources of information are missing. In this
 chapter we consider a two pronged approach to dealing with this
 problem. In particular we look at modeling missing components of
@@ -36,7 +37,7 @@ increases, so does the number of parameters. We therefore
 consider Bayesian approaches to dealing with the increasing
 number of parameters. As we increase the complexity of the model
 further, we find that these generalized linear models converge on
-a particular probablistic process known as a Gaussian process. We
+a particular probabilistic process known as a Gaussian process. We
 then explore the use of Gaussian processes in biological modeling
 with a particular focus on transcriptional networks and gene
 expression data. We will review simple cascade models of
@@ -317,6 +318,9 @@ integrated out:
 \[
 p(\dataMatrix) =\int p(\dataMatrix|\weightVector)p(\weightVector)\mathrm{d}\weightVector.
 \]
+The quantity $p(\dataMatrix)$ is called the marginal likelihood,
+integrated likelihood or evidence of the model, which is important for
+model comparison~\citep{MacKay:information03}.
 % a posterior distribution for the weights can the be computed as
 % \[
 % p(\weightVector|\dataMatrix) = \frac{p(\dataMatrix|\weightVector)p(\weightVector)}{p(\dataMatrix)}
@@ -359,10 +363,11 @@ for $\tfConcentration(t)$. An interesting feature is that we can
 represent all the elements of the marginal likelihood's covariance matrix through
 the inner product of the basis, $\kernel_{0,0}(t,
 t^\prime)=\basisFuncVector(t)^\top\covarianceMatrix\basisFuncVector(t^\prime)$:
-\[
+\begin{equation}
+  \label{eq:convolution}
 \kernel_{i,j}(t,t^\prime) = \sensitivity_j\sensitivity_i e^{-\decayRate_{i}t-\decayRate_{j}t^\prime}\int_0^t
-e^{\decayRate_{i}u} \int_0^{t^\prime} e^{\decayRate_{j}u^\prime}\underbrace{\basisFuncVector(u)^\top \covarianceMatrix \basisFuncVector(u^\prime)}_{\kernel_{0,0}(u, u^\prime)}\mathrm{d}u^\prime \mathrm{d}u. \label{eq:convolution}
-\]
+e^{\decayRate_{i}u} \int_0^{t^\prime} e^{\decayRate_{j}u^\prime}\underbrace{\basisFuncVector(u)^\top \covarianceMatrix \basisFuncVector(u^\prime)}_{\kernel_{0,0}(u, u^\prime)}\mathrm{d}u^\prime \mathrm{d}u.
+\end{equation}
 In fact this equation holds in general: as long as $k_{0,0}(t,
 t^\prime)$ is a positive definite function, it represents an inner
 product of a basis set. If we consider a spherical prior for
@@ -375,7 +380,8 @@ parameters in the system by $\numBasisFunc-1$. A problem remains
 though, each basis function has a center, $\tau_k$, and these
 locations represent an additional $\numBasisFunc$ parameters that also
 need to be determined. We now show how these parameters can also be
-eliminated. Simultaneously we will consider a limit that allows us to effective take the number of basis functions, $\numBasisFunc\rightarrow\infty$.
+eliminated. Simultaneously we will consider a limit that allows us to
+effectively take the number of basis functions, $\numBasisFunc\rightarrow\infty$.
 
 \subsection{An Infinite Basis}
 
@@ -479,10 +485,11 @@ term on the right becomes 2 and we have
 \begin{equation}
 \kernel_{0,0}\left(t,t^\prime\right) =
 \frac{\alpha}{\sqrt{2\pi\lengthScale^2}}\exp\left(
-  -\frac{\left(t-t^\prime\right)^2}{2\lengthScale{}^2}\right) \\lengthScale ,
+  -\frac{\left(t-t^\prime\right)^2}{2\lengthScale{}^2}\right),
+  % Neil: What is this doing here: -AH
+  % \\lengthScale ,
 \label{eq:RBF}
 \end{equation}
-
 which is known as the squared exponential covariance function. 
 
 The analysis above shows that if we take a one dimensional fixed
@@ -503,9 +510,9 @@ The procedure for moving from inner products,
 $\basisFuncVector(t)^\top\basisFuncVector(t^\prime)$, to covariance functions,
 $\kernel_{0,0}(t, t^\prime)$, is sometimes known as kernelization
 \citep{Scholkopf:learning01} due to the fact that the covariance
-function has the properties of a Mercer kernel. A function of two variables can be seen as a Mercer kernel if when a
-symmetric matrix of values from $\kernel_{0,0}(t, t^\prime)$ is computed
-for a vector of times $\mathbf{t}$ it is always positive
+function has the properties of a Mercer kernel. A function of two variables can be seen as a Mercer kernel when a
+symmetric matrix of values from $\kernel_{0,0}(t, t^\prime)$ computed
+for a vector of times $\mathbf{t}$ is always positive
 semi-definite. In other words if $\kernel_{i,j} = \kernel_{0,0}(t_i,
 t_j)$ is the element from the $i$th row and $j$th column of
 $\kernelMatrix_{0,0}$ and $t_i$ is the $i$th element from $\mathbf{t}$, we
@@ -620,7 +627,8 @@ there are few points in the time series the parameters may be badly
 determined. As a diagnostic the curvature of the log likelihood can be
 computed or alternatively we can place appropriate prior distributions
 over the parameters and the gradients of the corresponding joint
-distribution can be used in a hybrid Monte Carlo algorithm \citep[see
+distribution can be used in a hybrid Monte Carlo, also known as
+Hamiltonian Monte Carlo, algorithm \citep[see
 e.g.][for details on hybrid Monte Carlo]{MacKay:information03} to obtain samples from the posterior
 distribution for $\parameterVector$.
 
@@ -638,7 +646,7 @@ approach. However, we may be interested in more general modeling
 formulations. For example, our current model: a generalized linear
 model with Gaussian prior on the weights, gives us a prior
 distribution for the TF concentration that can become
-negative. However, even the simple fix of modelling the TF as a
+negative. However, even the simple fix of modeling the TF as a
 Gaussian process in log space,
 \[
 \log \tfConcentration(t) \sim \mathcal{N}\left(\meanVector_0, \kernelMatrix_{0,0}\right)
@@ -679,10 +687,10 @@ given parameterization of the system $\parameterVector^{(i)}$.
 Whilst in practice we cannot sample the full function
 $\tfConcentration^{(i)}(t)$ we will assume that we can obtain points,
 $\tfVector$, from the function that are so closely spaced relative to
-the time scale of $\tfConcentration^{(i)}(t)$ that we are not loosing
+the time scale of $\tfConcentration^{(i)}(t)$ that we are not losing
 any information. However, because the prior over $\tfConcentration(t)$
-is smooth then elements of $\tfVector$ that are close neighbors in
-time will be very strongly correlated. This can prevent a serious
+is smooth then elements of the vector $\tfVector$ that are close neighbors in
+time will be very strongly correlated. This can present a serious
 obstacle to efficient sampling in these systems. Under Markov chain
 Monte Carlo, for such a sample to be accepted it must respect the
 smoothness constraints imposed by the prior. However, random draws
@@ -726,8 +734,9 @@ activation model (recall
 (\ref{eq:differentialEquationSoln})) and therefore $\mrnaConcentration_j(t)$
 is also a linear function of both $\tfConcentration(t)$ and $\tfMrnaConcentration(t)$. We place a
 Gaussian process prior on $\tfMrnaConcentration(t)$ and the linear models of
-translation and activation define a related Gaussian process for
-$\mrnaConcentration_j(t)$ and $\tfConcentration(t)$. If we use the squared
+translation and activation define a joint Gaussian process over
+$\mrnaConcentration_j(t)$ and $\tfConcentration(t)$ as well as
+$\tfMrnaConcentration(t)$. If we use the squared
 exponential covariance in (\ref{eq:RBF}) for $\tfMrnaConcentration(t)$
 then all the terms in the covariance function for the multivariate Gaussian process 
 $\{\tfMrnaConcentration,\tfConcentration,\mrnaConcentration_j\}$ can
@@ -736,29 +745,37 @@ be calculated analytically~\citep{Honkela:modelbased10}.
 The parameters of the TF mRNA
 covariance and the differential equation models parameterize the covariance function: $\parameterVector =
 [\tfDecayRate,\alpha,\lengthScale,\{\basalRate_j, \sensitivity_j,
-  \decayRate_j\}]$. These were estimated by maximising the likelihood by
-gradient-based optimisation (recall (\ref{eq:error})). After
-estimating the model parameters we used the likelihood as a score to
-rank genes according to their fit to the model. 
+  \decayRate_j\}]$. These are estimated by maximising the likelihood by
+gradient-based optimisation (recall (\ref{eq:error})).  In this
+example we assume that $a_j = 0$ for all genes. After
+estimating the model parameters we use the likelihood as a score to
+rank genes according to their fit to the model. Before the final
+ranking weakly expressed genes need to be filtered because they often
+attain high likelihoods from any TF with an uninformative model.
+This can be accomplished using average z-scores computed using the
+variance information from PUMA preprocessing.
 
 In Figure~\ref{fig:gpdisim_models} we show examples of the model fit to
-the data for putative targets of the Twist TF. We fitted two different
-classes of model. Figure~\ref{fig:gpdisim_models}(a) shows examples
-where we fit a different model to three different genes. Since the
-model is fitted independently for each gene there is no reason for
+the data for putative targets of the TF Twist. We fitted two different
+classes of models. Figure~\ref{fig:gpdisim_models}(a) shows examples
+where we fit independent models to three different genes. Since the
+models are fitted independently for each gene there is no reason for
 the models to infer a consistent TF protein concentration profile. We
-refer to this as the single-target model approach. In
+refer to this as the single-target model approach. While somewhat
+unrealistic, this approach is very attractive due to its computational
+advantage: fitting of independent models is thus trivially
+parallelisable. In
 Figure~\ref{fig:gpdisim_models}(b) we fit one model to the same three
 genes by sharing the TF protein profile across target genes. This
 conforms more with our belief that the TF protein profile should be
 consistent across targets. The model is therefore less flexible as can
 be observed in the example where gene FBgn0003486 cannot be fitted by
-the multiple-target model. The multiple-target model relies on an assumption
+the multiple-target model. The multiple-target model relies on the assumption
 that the whole set of targets considered are genuine. We used the five
 top-ranked targets identified by the single-target models as a ``training set'' in the
 multiple-target approach, adding in each putative target one-by-one to
 the training set and using the likelihood of the resulting six-target model for
-ranking. In practice one mighht also use additional biological prior knowledge
+ranking. In practice one might also use additional biological prior knowledge
 to choose a small set of confident targets. 
 
 \begin{figure}[tb]
@@ -787,10 +804,10 @@ the single-target and multiple-target Gaussian process methods, we
 also show the performance obtained using evidence of differential
 expression in mutant embryos (knock-outs),
 correlation with TF expression (correlation) and an alternative
-maximum liklihood model-based approach~\citep[quadrature, see][for
+maximum likelihood model-based approach~\citep[quadrature, see][for
   details]{Honkela:modelbased10}. In the global validation we score
 all genes showing significant variability in the expression data. In
-the focussed evaluation we only consider genes with annotated
+the focused evaluation we only consider genes with annotated
 expression in mesoderm or muscle tissue according to the {\em in situ}
 hybridization data~\citep{Tomancak2002}.
 
