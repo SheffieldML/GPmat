@@ -849,10 +849,92 @@ model-based approach would not be expected to provide an advantage. The
 single-target Gaussian process approach is found to out-perform other
 methods in most cases~\citep{Honkela:modelbased10}.
 
-\section{Something from Michalis}
 
-An appropriate sampling experiment that doesn't undermine imminent journal submissions!
+\section{Multiple Tanscription Factors}
 
+The models discussed in previous sections are based on the idealized 
+assumption that the gene regulation process is driven 
+by a single trascription factor. However, gene regulation 
+in complex biological systems can involve several TFs.
+For instance, to initiate trascription of a gene, it might 
+be the case that multiple TFs are required to simultanesouly 
+bind the related DNA sequence. 
+Therefore, to generalize the basic
+systems Biology model, we would like to incorporate multiple TFs. 
+Moreover, in order to account for  
+the non-negativity of the mRNA and protein TF functions,
+along with saturation effects that are naturally encountered in 
+their dynamics, it is essential to include biologically plausible 
+non-linearities. 
+   
+The basic single-TF trascription model from Equation 
+(\ref{eq:differentialEquation}) can be generalized
+to include multiple TFs according to  
+\begin{equation}
+\diff{\mrnaConcentration_j(t)}{t} = \basalRate_j + 
+\sensitivity_j G
+\left(\tfConcentration_1(t),\ldots,\tfConcentration_I(t);
+  \bfw_j, w_{j0}\right) -\decayRate_j \mrnaConcentration_j(t), \label{eq:multipleTFtranscription}
+\end{equation}
+where $\tfConcentration_i(t)$, $i=1,\ldots,I$, are the TF protein functions.
+The function $G(\cdot)$ represents a non-linear response
+that allows the TFs to competitively or co-operatively activate 
+or repress the transcription. A reasonable 
+assumption for this non-linear response is 
+to follow a sigmoidal form, similarly to the Michaelis-Menten
+and hill-climbing functions used in single input motifs (reference Alon's
+book). For instance, we can choose   
+\begin{equation} 
+G(\tfConcentration_1(t)(t),\ldots,\tfConcentration_1(t); \bfw_j, w_{j0})
+= \frac{1}{1 + e^{-w_{j0}  - \sum_{i=1}^I w_{ji} \log \tfConcentration_i(t)}},
+\label{eq:multipleTFhillFun}
+\end{equation}
+which is the standard sigmoid function that takes values in 
+$[0,1]$ and recieves as inputs the logarithm of the TF activities. 
+Here, $w_{j0}$ is a real-valued bias parameter and
+the $I$-dimensional real-valued vector 
+$\bfw_j = [w_{j1} \ldots w_{jI}]^T$ represents the
+interaction weights between the $j^{\text{th}}$ target gene and the
+$I$ TFs. These parameters quantify the relative strength 
+of the network links between TFs and genes in 
+the underlying regulatory network.
+Specifically, when $w_{ji}=0$ the link between the $j^{\text{th}}$ gene 
+and the $i^{\text{th}}$ TF is absent while when $w_{ji}$
+is negative or positive the TF acts as a repressor or activator respectively.
+Notice that by estimating the values of the interaction weights, we can infer the network links between 
+TFs and genes. This can lead to a very flexible
+framework for target identification which generalizes the 
+method described in section \ref{sec:targetRanking}.
+
+The multiple-TF model contains a much larger number 
+of unknown parameters and unobserved protein functions
+compared to the single input motif model. Given the scarcity 
+of the data, it is therefore essential 
+the inference to be carried out by a fully Bayesian approach using
+Markov chain Monte Carlo techniques.
+This poses significant computational challenges 
+since we need to sample all the unknown quantities which 
+are the protein functions and the remaining model parameters. 
+Despite the difficulties, we have developed a MCMC approach 
+that can infer the TF profiles from a moderate-sized network 
+and then consider genome-wide target identification 
+following the framework of section \ref{sec:targetRanking}. 
+This full Bayesian approach is based on placing 
+GP priors on the log-TFs and suitable priors on the
+remaining model parameters (i.e.\ interaction weights and kinetic parameters) 
+and then simulate from the posterior distribution  
+through Metropolis-Hastings updates.     
+
+When observations of the TF mRNAs are available, then the above framework
+can be combined with the protein translation
+ODE model presented in section \ref{sec:targetRanking}. 
+This can further facilitate the estimation of the TF 
+profiles and resolve identifiability problems caused by 
+the scarcity of the data and experimental 
+conditions.  
+
+Figure ?? gives an example .... 
+  
 \section{Conclusion}
 \bibliographystyle{plainnat}
 \bibliography{lawrence,other,zbooks,../disim_pnas/disim.bib}
