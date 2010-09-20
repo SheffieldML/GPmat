@@ -856,18 +856,18 @@ The models discussed in previous sections are based on the idealized
 assumption that the gene regulation process is driven 
 by a single trascription factor. However, gene regulation 
 in complex biological systems can involve several TFs.
-For instance, to initiate trascription of a gene, it might 
-be the case that multiple TFs are required to simultanesouly 
-bind the related DNA sequence. 
-Therefore, to generalize the basic
-systems Biology model, we would like to incorporate multiple TFs. 
-Moreover, in order to account for  
+More precisely, to initiate trascription of a gene, 
+multiple TFs may be required to simultaneously 
+bind the related DNA sequence. Thus,  
+in order to take into account the effect of 
+multiple TFs, we need to generalize the basic
+single-TF model described previously. Furthermore, to deal with   
 the non-negativity of the mRNA and protein TF functions,
 along with saturation effects that are naturally encountered in 
-their dynamics, it is essential to include biologically plausible 
+their dynamics, it is essential to assume biologically plausible 
 non-linearities. 
    
-The basic single-TF trascription model from Equation 
+The basic single-TF ODE model from Equation 
 (\ref{eq:differentialEquation}) can be generalized
 to include multiple TFs according to  
 \begin{equation}
@@ -882,10 +882,10 @@ that allows the TFs to competitively or co-operatively activate
 or repress the transcription. A reasonable 
 assumption for this non-linear response is 
 to follow a sigmoidal form, similarly to the Michaelis-Menten
-and hill-climbing functions used in single input motifs (reference Alon's
-book). For instance, we can choose   
+and hill-climbing functions used in single input motifs 
+\citep{Alon:systems06}. For instance, we can choose   
 \begin{equation} 
-G(\tfConcentration_1(t)(t),\ldots,\tfConcentration_1(t); \bfw_j, w_{j0})
+G(\tfConcentration_1(t),\ldots,\tfConcentration_1(t); \bfw_j, w_{j0})
 = \frac{1}{1 + e^{-w_{j0}  - \sum_{i=1}^I w_{ji} \log \tfConcentration_i(t)}},
 \label{eq:multipleTFhillFun}
 \end{equation}
@@ -895,7 +895,7 @@ Here, $w_{j0}$ is a real-valued bias parameter and
 the $I$-dimensional real-valued vector 
 $\bfw_j = [w_{j1} \ldots w_{jI}]^T$ represents the
 interaction weights between the $j^{\text{th}}$ target gene and the
-$I$ TFs. These parameters quantify the relative strength 
+$I$ TFs. These parameters quantify the strength 
 of the network links between TFs and genes in 
 the underlying regulatory network.
 Specifically, when $w_{ji}=0$ the link between the $j^{\text{th}}$ gene 
@@ -906,26 +906,68 @@ TFs and genes. This can lead to a very flexible
 framework for target identification which generalizes the 
 method described in section \ref{sec:targetRanking}.
 
-The multiple-TF model contains a much larger number 
+The multiple TF model can contain a much larger number 
 of unknown parameters and unobserved protein functions
 compared to the single input motif model. Given the scarcity 
 of the data, it is therefore essential 
 the inference to be carried out by a fully Bayesian approach using
-Markov chain Monte Carlo techniques.
+Markov chain Monte Carlo (MCMC).
 This poses significant computational challenges 
-since we need to sample all the unknown quantities which 
+since we need to infer via sampling all the unknown quantities which 
 are the protein functions and the remaining model parameters. 
-Despite the difficulties, we have developed a MCMC approach 
-that can infer the TF profiles from a moderate-sized network 
-and then consider genome-wide target identification 
-following the framework of section \ref{sec:targetRanking}. 
-This full Bayesian approach is based on placing 
+We have developed an MCMC approach 
+that infers the TF profiles from a small set of training data, associated with a moderate-sized network, 
+and then it performs target identification in a genome-wide scale. 
+%b yfollowing the framework of section \ref{sec:targetRanking}. 
+This Bayesian approach is based on placing 
 GP priors on the log-TFs and suitable priors on the
 remaining model parameters (i.e.\ interaction weights and kinetic parameters) 
 and then simulate from the posterior distribution  
-through Metropolis-Hastings updates.     
+by applying suitable Metropolis-Hastings updates.     
 
-When observations of the TF mRNAs are available, then the above framework
+
+ 
+
+\begin{figure}
+\begin{center}
+\begin{tabular}{ccc}
+      \includegraphics[width=0.3\textwidth]{./toyMarch25MCMC19-Sep-2010logOnePlusExpgenHillTFproteins_Rep1TF1} &
+      \includegraphics[width=0.3\textwidth]{./toyMarch25MCMC19-Sep-2010logOnePlusExpgenHillTFproteins_Rep1TF2} &      
+      \includegraphics[width=0.3\textwidth]{./toyMarch25MCMC19-Sep-2010logOnePlusExpgenHillReplica1GENEmRNA17}\\ 
+      (a) & (b) & (c) \\
+      \includegraphics[width=0.3\textwidth]{./toyMarch25MCMC19-Sep-2010logOnePlusExpgenHillReplica1GENEmRNA5} &
+      \includegraphics[width=0.3\textwidth]{./toyMarch25MCMC19-Sep-2010logOnePlusExpgenHillReplica1GENEmRNA16} &      
+      \includegraphics[width=0.3\textwidth]{./toyMarch25MCMC19-Sep-2010logOnePlusExpgenHillReplica2GENEmRNA10} \\
+      (d) & (e) & (f)
+ \end{tabular} 
+\end{center}
+ \caption{Panels (a) and (b) show the inferred TFs. The estimated
+   means are plotted as the blue solid lines and the shaded areas 
+   represent $95\%$ uncertainty around the estimated means. 
+    Panels (c)-(f) show several examples of how the multiple TF
+    model predicts gene mRNA functions. The red crosses denote
+    observed measurements, while blue lines and shaded areas represented 
+    noisy-free (without adding the observation noise from the likelihood) 
+    Bayesian model predictions of the mRNA functions. %All these examples are taken from the
+    %training set of the $20$ genes.  
+    }\label{fig:toyMultipleTFsFitting}
+\end{figure}
+
+
+ \begin{figure}
+  \begin{center}
+      \includegraphics[width=0.8\textwidth]{./dros_toy_evaluation.pdf}
+\end{center}
+  \caption{ROC curves for predicting the network connections in the 
+synthetic data. The left panel shows the performance when predicting
+the first TF, while the right panel shows performance for predicting the second TF. 
+Red curves show the results by using the multiple TF model
+and blue lines the results by using the linear single-TF model. 
+In both plots, random prediction is represented by the diagonal black
+line.}\label{fig:toyMultipleTFsROCs}
+\end{figure}
+
+When observations of the TF mRNAs are available, the above framework
 can be combined with the protein translation
 ODE model presented in section \ref{sec:targetRanking}. 
 This can further facilitate the estimation of the TF 
@@ -933,8 +975,30 @@ profiles and resolve identifiability problems caused by
 the scarcity of the data and experimental 
 conditions.  
 
-Figure ?? gives an example .... 
-  
+
+We applied the multiple TF dynamical model to an artifical dataset
+consisting of time-series mRNA mesearuments associated with
+$1000$ genes and two TFs. The network links between TFs and genes are
+unknown apart from a small set of $20$ genes which are assumed to have
+known connections. This small set of genes is used to infer the TF
+concentration functions. Figure \ref{fig:toyMultipleTFsFitting}(a) and
+(b) show the inferred TF profiles  where blue lines represent 
+the inferred means, shaded areas represent 
+$95\%$ uncertainty and the red lines are the actual profiles that generated
+the data. Figure \ref{fig:toyMultipleTFsFitting}(c)-(f) give
+several examples on how the model fits the mRNA expression data. 
+Specifically, the panel in (c) shows a gene that is activated only by the
+first TF while the second TF is inactive.  Panel (d) and (e) show two genes that are regulated 
+(activated in (d) and repressed in (e)) only by the second TF.  
+The last panel (f) shows a gene that is jointly regulated by the
+two TFs so that it is repressed by the first TF and activated by the
+second one.  Figure \ref{fig:toyMultipleTFsROCs} shows 
+ROC curves of predictive performance for identifying the network
+links between the two TFs and the $980$ test genes.  The performance of the
+a linear single-TF model is also displayed and is clearly much inferior than
+the performance of the multiple TF model.   
+
+
 \section{Conclusion}
 \bibliographystyle{plainnat}
 \bibliography{lawrence,other,zbooks,../disim_pnas/disim.bib}
