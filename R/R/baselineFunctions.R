@@ -2,20 +2,24 @@
 
 .baselineOptimise <- function(y, yvar, options) {
   if (options$includeNoise) {
+    # Check for special case of constant expression
+    if (sd(y) == 0) {
+      return (Inf);
+    }
     oldsigma <- 10
-    sigma <- 0
-    oldval <- .baselineLogLikelihood(expTransform(sigma, 'atox'), y, yvar)
+    newsigma <- 0
+    oldval <- .baselineLogLikelihood(expTransform(newsigma, 'atox'), y, yvar)
     l <- 0
-    while ((abs(sigma - oldsigma) > 1e-10) && l < 1000) {
-      oldsigma <- sigma
-      grad <- .baselineLogLikeGradient(expTransform(sigma, 'atox'), y, yvar)
-      step <- expTransform(sigma, 'atox') * grad$d1 /
-        (expTransform(2*sigma, 'atox') * grad$d2
-         + expTransform(sigma, 'atox') * grad$d1)
+    while ((abs(newsigma - oldsigma) > 1e-10) && l < 1000) {
+      oldsigma <- newsigma
+      grad <- .baselineLogLikeGradient(expTransform(oldsigma, 'atox'), y, yvar)
+      step <- expTransform(oldsigma, 'atox') * grad$d1 /
+        (expTransform(2*oldsigma, 'atox') * grad$d2
+         + expTransform(oldsigma, 'atox') * grad$d1)
       k <- 0
       newval <- oldval - 10
       while (newval < (oldval - 1e-10) && k < 20) {
-        newsigma <- sigma - step
+        newsigma <- oldsigma - step
         newval <- .baselineLogLikelihood(expTransform(newsigma, 'atox'), y, yvar)
         step <- step / 2
         k <- k+1
@@ -23,7 +27,7 @@
       oldval <- newval
       l <- l+1
     }
-    sigma <- expTransform(sigma, 'atox')
+    sigma <- expTransform(newsigma, 'atox')
   }
   else
     sigma <- 0

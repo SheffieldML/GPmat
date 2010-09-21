@@ -468,6 +468,7 @@ generateModels <- function(preprocData, scores) {
     yvar <- 0 * y
 
   scale <- sqrt(rowMeans(y^2))
+  scale[scale==0] <- 1
   scaleMat <- scale %*% array(1, dim = c(1, ncol(data)))
   y <- y / scaleMat
   yvar <- yvar / scaleMat^2

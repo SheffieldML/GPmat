@@ -7,6 +7,10 @@ citEntry(entry="Article",
   title =        "Model-based method for transcription factor target identification with limited data",
   journal =      "Proc Natl Acad Sci U S A",
   year =         "2010",
+  volume =       "107",
+  pages =        "7793-7798",
+  number =       "17",
+  month =        "Apr",
   doi =          "10.1073/pnas.0914285107",
   url =          "http://dx.doi.org/10.1073/pnas.0914285107",
   textVersion = paste(
@@ -14,7 +18,7 @@ citEntry(entry="Article",
     Eileen E. M. Furlong, Neil D. Lawrence, and Magnus Rattray.",
     "Model-based method for transcription factor target identification
     with limited data.",
-    "Proc Natl Acad Sci U S A, Apr 2010.",
+    "Proc Natl Acad Sci U S A 107(17):7793-7798, Apr 2010.",
     "DOI: 10.1073/pnas.0914285107."
   )
 )
