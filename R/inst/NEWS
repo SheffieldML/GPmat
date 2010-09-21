@@ -1,6 +1,15 @@
 Package: tigre
 ==============
 
+Version: 1.2.1 / 1.3.1 [2010-09-20]
+* Fix baseline log-likelihood computation
+* Robustify against genes with constant zero expression
+* Fix package name in data files
+* Documentation and citation information updates
+
+Version: 1.2.0 [2010-04-22]
+* Same as 1.0.0, due to version numbering glitch
+
 Version: 1.0.0 [2010-04-22]
 * Documentation and citation information updates.
 

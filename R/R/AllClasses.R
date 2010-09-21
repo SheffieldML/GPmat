@@ -62,6 +62,7 @@ setMethod("show", "scoreList",
             cat("  Genes: ", paste(itms, collapse=", "), sep="")
             if (length(object@genes)>length(itms))
               cat(" (",length(object@genes)," total)", sep="")
+            cat("\n")
           })
 
 

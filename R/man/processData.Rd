@@ -21,7 +21,7 @@ preprocData <- processRawData(rawData, times, experiments = NULL,
   is.logged = TRUE, do.normalisation = ifelse(is.logged, TRUE, FALSE))
 }
 \arguments{
-  \item{data}{The preprocessed data (\code{\linkS4class{exprsReslt}})
+  \item{data}{The preprocessed data (\code{\linkS4class{exprReslt}})
     from mmgMOS to be used.}
   \item{rawData}{Raw data matrix to be used. Each row corresponds to
     a gene and each column to a data point.}
