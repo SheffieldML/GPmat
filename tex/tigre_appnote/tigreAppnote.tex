@@ -1,0 +1,170 @@
+\documentclass{bioinfo}
+\copyrightyear{2010}
+\pubyear{2010}
+
+\newcommand{\tigre}{\emph{tigre}}
+
+\begin{document}
+\firstpage{1}
+
+\title[tigre]{tigre: Transcription factor Inference through Gaussian process Reconstruction of Expression for Bioconductor}
+\author[Honkela \textit{et~al.}]{Antti Honkela\,$^{1,*}$, Pei Gao\,$^{2}$, Jonatan Ropponen\,$^{1}$, Magnus Rattray\,$^{3,*}$ and Neil D.\ Lawrence\,$^3$\footnote{to whom correspondence should be addressed}}
+\address{$^{1}$Department of Information and Computer Science, Aalto
+  University School of Science and Technology, Helsinki, Finland\\
+  $^{2}$Department of of Public Health and Primary Care, University of
+  Cambridge, Cambridge, UK\\
+  $^{3}$Department of Computer Science, University of Sheffield,
+  Sheffield, UK}
+
+\history{Received on XXXXX; revised on XXXXX; accepted on XXXXX}
+
+\editor{Associate Editor: XXXXXXX}
+
+\maketitle
+
+\begin{abstract}
+
+\section{Summary:}
+\tigre{} is an R/Bioconductor package for inference of transcription
+factor activity and ranking candidate target genes from gene
+expression time series.  The underlying methodology is based on
+Gaussian process inference on a differential equation model that
+allows using short unevenly sampled time series.  The method has been
+designed with efficient parallel implementation in mind, and the
+package supports several alternative approaches for parallel operation
+on commodity hardware.
+
+\section{Availability:}
+The package is included in Bioconductor release 2.6 for R 2.11.
+
+\section{Contact:} \href{antti.honkela@tkk.fi}{antti.honkela@tkk.fi}
+\end{abstract}
+
+\section{Introduction}
+
+Understanding genome function through reverse engineering of gene
+regulatory relationships from experimental data is one of the key
+challenges in current biology~\citep{ENCODE2007,Bickel2009e}.  One
+popular technique is to use gene expression time series to infer these
+relationships.  Unfortunately most real world expression time series
+are short~\citep{Ernst2005} and contain insufficient information for
+any realistic reconstruction of the gene regulatory
+network~\citep{Smet2010}.
+
+Recognising this, the \tigre{} package aims at answering a much
+simpler question: given time series expression data where a
+transcription factor (TF) is changing its activity, is a gene
+plausibly regulated by that TF.  As a result, it provides a ranking of
+tested target genes according to their likelihood of being targets of
+the TF.
+
+The underlying methodology was presented by~\citet{Honkela2010PNAS},
+who showed that it can yield remarkably accurate predictions from very
+limited data, often attaining more accurate results based on the
+simple wild time series expression data than could be obtained using
+TF knock-out data.
+
+\begin{methods}
+\section{Methods}
+
+The \tigre{} package is an implementation of the Gaussian process
+single input motif framework of~\citet{Gao2008} and the related TF
+target ranking method of~\citet{Honkela2010PNAS}.  This framework is
+based on a linear ordinary differential equation model of TF protein
+translation and transcription regulation described by the equations
+\begin{align}
+  \frac{\mathrm{d}p(t)}{\mathrm{d}t} & = f(t) - \delta
+  p(t) \ , \label{eq:translation_ode} \\
+  \frac{\mathrm{d}m_j(t)}{\mathrm{d}t} & = B_j+S_j p(t)-D_j m_j(t) \ , \label{eq:transcription_ode}
+\end{align}
+where $p(t)$ is the TF protein and $m_j(t)$ is the $j$th target mRNA
+concentration at time $t$. The parameters $B_j$, $S_j$ and $D_j$ are the
+baseline transcription rate, sensitivity and decay rate respectively
+for the mRNA of the $j$th target (as described by \citet{Barenco2006a}).
+The parameter $\delta$ is the decay rate of the TF
+protein~\citep{Honkela2010PNAS}.
+
+Placing a Gaussian process prior on $f(t)$\footnote{If the TF protein
+  is under significant post-translational regulation,
+  Eq.~(\ref{eq:translation_ode}) may be omitted and the prior placed
+  directly on $p(t)$.  In this case multiple known targets are needed
+  to reliably infer $p(t)$.} leads to a joint Gaussian process over
+all continuous-time activity functions.  The parameters of the model
+as well as other parameters of the Gaussian process covariance are
+optimised by maximising the marginal likelihood.
+\end{methods}
+
+\section{Implementation}
+
+The \tigre{} package is tightly integrated into Bioconductor
+microarray data analysis framework, especially with the \emph{puma}
+package~\citep{Pearson2009}.
+
+Functions are provided for processing data to a format suitable for
+the method, including estimation of variances of absolute expression
+values for \emph{puma} processed data; fitting the models individually
+or in a batch; and plotting the models to assess the fit.  The models
+are fitted using scaled conjugate gradient
+optimisation~\citep{Moller:scg93}.  Fitted models can be stored very
+compactly by just storing their parameters.  They can also be easily
+recreated afterwards without rerunning the optimiser used in the
+fitting.
+
+\subsection{Parallelisation}
+
+The method implemented by \tigre{} includes no Monte Carlo simulations
+and is thus relatively fast, but still takes some time, ranging from
+seconds to up to a few minutes per gene depending on the data and the
+number of targets in the models.
+
+\tigre{} has been designed for efficient parallelisation.  In the
+ranking, each gene is handled completely independently.  This makes
+the code trivially parallelisable up to the level of running each gene
+in a separate machine.  This linear parallelisation to potentially
+several thousands of processes is impossible in more tightly coupled
+modelling methods.
+
+The easiest way to run \tigre{} in parallel is to simply split the
+task to a number of jobs that can be run independently, possibly by
+submitting them as independent jobs to a queuing system.  The package
+does not include integration with an MPI environment, because that
+matches its requirements poorly.  A number of independent jobs should
+also be easier to schedule than a single large MPI job.
+
+An alternative technique for running \tigre{} in parallel is based on
+MapReduce~\citep{Dean2008}.  The ranking approach fits this paradigm
+perfectly: the mapper fits models to each gene independently and the
+reducer forms the final ranking.  We have implemented this approach
+using Hadoop and RHIPE.  This approach also allows relatively easy
+running of the ranking in a highly parallelised fashion in a cloud
+computing setting.
+
+\section{Discussion}
+
+\tigre{} can provide useful results on very short time series.  We
+have successfully applied it to data sets with as few as 6 and 7 time
+points~\citep{Honkela2010PNAS,Honkela2010MLSP}.
+
+The linearity of the differential equation transcription model greatly
+simplifies the algorithm, but it may be too crude assumption for some
+situations.  We are working on an method based on a more realistic
+model.  However, it seems difficult to turn that framework into
+something as convenient as \tigre{}, which nicely captures the
+essential degrees of freedom in the transcription regulatory process.
+
+\section*{Acknowledgement}
+
+The authors wish to thank Jennifer Withers for useful comments on the
+package.
+
+\paragraph{Funding\textcolon}
+A.H. was supported by Postdoctoral Researcher's Project No 121179 of the Academy of Finland.
+M.R. and N.D.L acknowledge support from EPSRC Grant No EP/F005687/1 "Gaussian Processes for Systems Identification with Applications in Systems Biology". 
+This work was supported in part by the IST Programme of the European Community, under the PASCAL2 Network of Excellence, IST-2007-216886. This publication only reflects the authors' views.
+
+\small
+
+\bibliographystyle{myabbrvnat}
+\bibliography{tigre}
+
+\end{document}
