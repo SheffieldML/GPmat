@@ -77,32 +77,32 @@ translation and transcription regulation described by the equations
   p(t) \ , \label{eq:translation_ode} \\
   \frac{\mathrm{d}m_j(t)}{\mathrm{d}t} & = B_j+S_j p(t)-D_j m_j(t) \ , \label{eq:transcription_ode}
 \end{align}
-where $p(t)$ is the TF protein and $m_j(t)$ is the $j$th target mRNA
-concentration at time $t$. The parameters $B_j$, $S_j$ and $D_j$ are the
+where $p(t)$ is the TF protein at time $t$, $m_j(t)$ is the $j$th target mRNA
+concentration and $f(t)$ is the TF mRNA. The parameters $B_j$, $S_j$ and $D_j$ are the
 baseline transcription rate, sensitivity and decay rate respectively
-for the mRNA of the $j$th target (as described by \citet{Barenco2006a}).
+for the mRNA of the $j$th target \citep[as described by][]{Barenco2006a}.
 The parameter $\delta$ is the decay rate of the TF
-protein~\citep{Honkela2010PNAS}.
+protein~\citep{Honkela2010PNAS}. 
 
 Placing a Gaussian process prior on $f(t)$\footnote{If the TF protein
   is under significant post-translational regulation,
   Eq.~(\ref{eq:translation_ode}) may be omitted and the prior placed
   directly on $p(t)$.  In this case multiple known targets are needed
   to reliably infer $p(t)$.} leads to a joint Gaussian process over
-all continuous-time activity functions.  The parameters of the model
-as well as other parameters of the Gaussian process covariance are
+the three continuous-time functions $f(t),p(t)$ and $m_j(t)$.  Data are observations of the expression levels at arbitrary specific times (not necessarily evenly spaced) and we assume a Gaussian noise model: $\hat{m}_j(t_i) \sim N(m_j(t_i),\sigma_{i,m_j}^2)$ and $\hat{f}(t_i) \sim N(f(t_i),\sigma_{i,f}^2)$ with known (derived from \emph{puma}, see below) or estimated gene-specific noise variance parameters. The parameters of the model as well as other parameters of the Gaussian process covariance are
 optimised by maximising the marginal likelihood.
 \end{methods}
 
 \section{Implementation}
 
-The \tigre{} package is tightly integrated into Bioconductor
+The \tigre{} package is tightly integrated into the Bioconductor
 microarray data analysis framework, especially with the \emph{puma}
-package~\citep{Pearson2009}.
+package~\citep{Pearson2009} which associates expression levels derived from
+high-density microarray data with Bayesian confidence regions analogous to standard errors.
 
 Functions are provided for processing data to a format suitable for
-the method, including estimation of variances of absolute expression
-values for \emph{puma} processed data; fitting the models individually
+the method, including estimation of standard errors of unlogged expression
+values for \emph{puma} processed data (currently \emph{puma} standard errors are for logged expression); fitting the models individually
 or in a batch; and plotting the models to assess the fit.  The models
 are fitted using scaled conjugate gradient
 optimisation~\citep{Moller:scg93}.  Fitted models can be stored very
@@ -146,8 +146,8 @@ have successfully applied it to data sets with as few as 6 and 7 time
 points~\citep{Honkela2010PNAS,Honkela2010MLSP}.
 
 The linearity of the differential equation transcription model greatly
-simplifies the algorithm, but it may be too crude assumption for some
-situations.  We are working on an method based on a more realistic
+simplifies the algorithm, but it may be too crude an assumption for some
+situations.  We are working on a method based on a more realistic
 model.  However, it seems difficult to turn that framework into
 something as convenient as \tigre{}, which nicely captures the
 essential degrees of freedom in the transcription regulatory process.
@@ -159,7 +159,7 @@ package.
 
 \paragraph{Funding\textcolon}
 A.H. was supported by Postdoctoral Researcher's Project No 121179 of the Academy of Finland.
-M.R. and N.D.L acknowledge support from EPSRC Grant No EP/F005687/1 "Gaussian Processes for Systems Identification with Applications in Systems Biology". 
+M.R. and N.D.L acknowledge support from EPSRC Grant No EP/F005687/1 ``Gaussian Processes for Systems Identification with Applications in Systems Biology". 
 This work was supported in part by the IST Programme of the European Community, under the PASCAL2 Network of Excellence, IST-2007-216886. This publication only reflects the authors' views.
 
 \small
