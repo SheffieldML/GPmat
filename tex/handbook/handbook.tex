@@ -885,7 +885,7 @@ to follow a sigmoidal form, similarly to the Michaelis-Menten
 and hill-climbing functions used in single input motifs 
 \citep{Alon:systems06}. For instance, we can choose   
 \begin{equation} 
-G(\tfConcentration_1(t),\ldots,\tfConcentration_1(t); \bfw_j, w_{j0})
+G(\tfConcentration_1(t),\ldots,\tfConcentration_I(t); \bfw_j, w_{j0})
 = \frac{1}{1 + e^{-w_{j0}  - \sum_{i=1}^I w_{ji} \log \tfConcentration_i(t)}},
 \label{eq:multipleTFhillFun}
 \end{equation}
@@ -910,17 +910,17 @@ The multiple TF model can contain a much larger number
 of unknown parameters and unobserved protein functions
 compared to the single input motif model. Given the scarcity 
 of the data, it is therefore essential 
-the inference to be carried out by a fully Bayesian approach using
+that inference is carried out by a fully Bayesian approach using
 Markov chain Monte Carlo (MCMC).
 This poses significant computational challenges 
 since we need to infer via sampling all the unknown quantities which 
 are the protein functions and the remaining model parameters. 
 We have developed an MCMC approach 
 that infers the TF profiles from a small set of training data, associated with a moderate-sized network, 
-and then it performs target identification in a genome-wide scale. 
+and then it performs target identification at a genome-wide scale. 
 %b yfollowing the framework of section \ref{sec:targetRanking}. 
 This Bayesian approach is based on placing 
-GP priors on the log-TFs and suitable priors on the
+GP priors on the logged TF concentrations and suitable priors on the
 remaining model parameters (i.e.\ interaction weights and kinetic parameters) 
 and then simulate from the posterior distribution  
 by applying suitable Metropolis-Hastings updates.     
@@ -996,8 +996,8 @@ The last panel (f) shows a gene that is jointly regulated by the
 two TFs so that it is repressed by the first TF and activated by the
 second one.  Figure \ref{fig:toyMultipleTFsROCs} shows 
 ROC curves of predictive performance for identifying the network
-links between the two TFs and the $980$ test genes.  The performance of the
-a linear single-TF model is also displayed and is clearly much inferior than
+links between the two TFs and the $980$ test genes.  The performance of
+a linear single-TF model is also displayed and is clearly inferior to
 the performance of the multiple TF model.   
 
 
