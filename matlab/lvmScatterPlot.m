@@ -29,7 +29,7 @@ function [ax, data] = lvmScatterPlot(model, YLbls, ax, dims, defaultVals);
  
 % MLTOOLS
   if nargin < 5
-    defaultVals = zeros(1, model.q);
+    defaultVals = zeros(1, size(model.X, 2));
     
     if nargin < 4
       dims = [1, 2];
