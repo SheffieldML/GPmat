@@ -54,9 +54,8 @@ model = modelOptimise(model, [], [], 1, 3000);
 % basal rate and sensitivity parameters are all shared).
 
 % load PUMA variance
-var595 = importdata(['.' filesep 'data' filesep '5-95variance.txt']);
-%varExp = exp(var595.data);
-varExp = exp(var595);
+var595 = dlmread(['.' filesep 'data' filesep '5-95variance.txt'], ' ', 0, 1);
+varExp = exp(var595([1:5, 10:14], :));
 scaleMat = scale'*ones(1,21);
 varExp(1:5,:) = varExp(1:5,:)./scaleMat;
 varExp(6:10,:) = varExp(6:10,:)./scaleMat;
