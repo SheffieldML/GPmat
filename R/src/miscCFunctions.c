@@ -279,11 +279,11 @@ _ClnDiffErfs(double *in1, double *in2, int *dim1, int *dim2, double *out, int *s
     
     if (v1 * v2 < 0)
       *out++ = log(erf(v1) - erf(v2));
-    else if (fabs(v1-v2) < xsmall)
+    else if (fabs(v1-v2) < 3*xsmall)
       *out++ = -INFINITY;
     else if (v2 > 0)
-      *out++ = log(calerf(v2, 2) - calerf(v1, 2) * exp(v2*v2 - v1*v1) + 1e-100) - v2*v2;
+      *out++ = log(calerf(v2, 2) - calerf(v1, 2) * exp(v2*v2 - v1*v1) + 1e-30) - v2*v2;
     else
-      *out++ = log(calerf(-v1, 2) - calerf(-v2, 2) * exp(v1*v1 - v2*v2) + 1e-100) - v1*v1;
+      *out++ = log(calerf(-v1, 2) - calerf(-v2, 2) * exp(v1*v1 - v2*v2) + 1e-30) - v1*v1;
   }
 }

@@ -4,10 +4,12 @@
 %\VignettePackage{tigre}
 \documentclass[a4paper]{article}
 \usepackage{url}
+\usepackage{hyperref}
 \usepackage[authoryear,round]{natbib}
 
 \title{tigre User Guide}
-\author{Antti Honkela, Pei Gao, Jonatan Ropponen, \\
+\author{Antti Honkela, Pei Gao,\\
+  Jonatan Ropponen, Miika-Petteri Matikainen,\\
   Magnus Rattray, and Neil D. Lawrence}
 
 \newcommand{\Rfunction}[1]{{\texttt{#1}}}
@@ -87,7 +89,6 @@ To start from scratch on Affymetrix data, the .CEL files from
 processed using:
 \begin{Schunk}
 \begin{Sinput}
-> # Names of CEL files
 > expfiles <- c(paste("embryo_tc_4_", 1:12, ".CEL", sep=""),
 +               paste("embryo_tc_6_", 1:12, ".CEL", sep=""),
 +               paste("embryo_tc_8_", 1:12, ".CEL", sep=""))
@@ -130,7 +131,6 @@ Let us now recreate some the models shown in the plots of the PNAS
 paper~\citep{Honkela2010PNAS}:
 \begin{Schunk}
 \begin{Sinput}
-> # FBgn names of target genes
 > targets <- c('FBgn0003486', 'FBgn0033188', 'FBgn0035257')
 > # Load gene annotations
 > library(annotate)
@@ -166,40 +166,40 @@ Gaussian process driving input single input motif model:
     152715_at
     147995_at
   Basal transcription rate:
-    Gene 1: 31.4901487775542
-    Gene 2: 0.0077988721171123
-    Gene 3: 1.48241754617025e-06
+    Gene 1: 38.6975085329924
+    Gene 2: 0.00778721698069121
+    Gene 3: 7.57478615699329e-07
   Kernel:
     Multiple output block kernel:
     Block 1
     Normalised version of the kernel.
-    RBF inverse width: 0.7718466 (length scale 1.138242)
-    RBF variance: 1.754535
+    RBF inverse width: 0.7717748 (length scale 1.138295)
+    RBF variance: 1.754264
     Block 2
     Normalised version of the kernel
-    DISIM decay: 0.07285956
-    DISIM inverse width: 0.7718466 (length scale 1.138242)
+    DISIM decay: 0.07300767
+    DISIM inverse width: 0.7717748 (length scale 1.138295)
     DISIM Variance: 1
-    SIM decay: 2005.556
-    SIM Variance: 0.001472529
-    RBF Variance: 1.754535
+    SIM decay: 2463.444
+    SIM Variance: 0.001469411
+    RBF Variance: 1.754264
     Block 3
     Normalised version of the kernel
-    DISIM decay: 0.07285956
-    DISIM inverse width: 0.7718466 (length scale 1.138242)
+    DISIM decay: 0.07300767
+    DISIM inverse width: 0.7717748 (length scale 1.138295)
     DISIM Variance: 1
-    SIM decay: 0.4985881
-    SIM Variance: 0.03226757
-    RBF Variance: 1.754535
+    SIM decay: 0.4981127
+    SIM Variance: 0.03225457
+    RBF Variance: 1.754264
     Block 4
     Normalised version of the kernel
-    DISIM decay: 0.07285956
-    DISIM inverse width: 0.7718466 (length scale 1.138242)
+    DISIM decay: 0.07300767
+    DISIM inverse width: 0.7717748 (length scale 1.138295)
     DISIM Variance: 1
-    SIM decay: 0.0002446364
-    SIM Variance: 0.003265287
-    RBF Variance: 1.754535
-  Log-likelihood: -31.84288 
+    SIM decay: 0.0001251229
+    SIM Variance: 0.003265721
+    RBF Variance: 1.754264
+  Log-likelihood: -31.83748 
 \end{Soutput}
 \end{Schunk}
 
@@ -236,8 +236,6 @@ The models can be plotted using commands like
 Bulk ranking of candidate targets can be accomplished using
 \begin{Schunk}
 \begin{Sinput}
-> ## Rank the targets, filtering weakly expressed genes with average
-> ## expression z-score below 1.8
 > scores <- GPRankTargets(drosophila_gpsim_fragment, TF=twi,
 +                         testTargets=targetProbes,
 +                         options=list(quiet=TRUE),
@@ -248,9 +246,9 @@ Bulk ranking of candidate targets can be accomplished using
 \end{Sinput}
 \begin{Soutput}
 "log-likelihood" "null_log-likelihood"
-"147995_at" 6.75970270587137 -487.893231050121
-"152715_at" -1.51920691642152 -539.73619673943
-"148227_at" -1.52526566233162 -73.4806804255218
+"147995_at" 6.75970990320143 -487.893231050121
+"152715_at" -1.48249964194197 -539.73619673943
+"148227_at" -1.55674194211824 -73.4806804255218
 \end{Soutput}
 \end{Schunk}
 
@@ -272,22 +270,22 @@ Gaussian process driving input single input motif model:
   Target genes (1):
     147995_at
   Basal transcription rate:
-    Gene 1: 0.000135154902328578
+    Gene 1: 0.000134939004780641
   Kernel:
     Multiple output block kernel:
     Block 1
     Normalised version of the kernel.
-    RBF inverse width: 0.760276 (length scale 1.146870)
-    RBF variance: 1.804526
+    RBF inverse width: 0.7602656 (length scale 1.146878)
+    RBF variance: 1.804697
     Block 2
     Normalised version of the kernel
-    DISIM decay: 0.01789634
-    DISIM inverse width: 0.760276 (length scale 1.146870)
+    DISIM decay: 0.01796942
+    DISIM inverse width: 0.7602656 (length scale 1.146878)
     DISIM Variance: 1
-    SIM decay: 0.01952063
-    SIM Variance: 0.002722844
-    RBF Variance: 1.804526
-  Log-likelihood: 6.759703 
+    SIM decay: 0.01949134
+    SIM Variance: 0.002723638
+    RBF Variance: 1.804697
+  Log-likelihood: 6.75971 
 \end{Soutput}
 \end{Schunk}
 
@@ -297,8 +295,6 @@ Ranking using known targets with multiple-target models can be
 accomplished simply by adding the \texttt{knownTargets} argument
 \begin{Schunk}
 \begin{Sinput}
-> ## Rank the targets, filtering weakly expressed genes with average
-> ## expression z-score below 1.8
 > scores <- GPRankTargets(drosophila_gpsim_fragment, TF=twi,
 +                         knownTargets=targetProbes[1],
 +                         testTargets=targetProbes[2:3],
@@ -310,8 +306,8 @@ accomplished simply by adding the \texttt{knownTargets} argument
 \end{Sinput}
 \begin{Soutput}
 "log-likelihood" "null_log-likelihood"
-"152715_at" -28.0896855288335 -539.73619673943
-"147995_at" -206.238519107964 -487.893231050121
+"152715_at" -28.1301056131502 -539.73619673943
+"147995_at" -207.229260597104 -487.893231050121
 \end{Soutput}
 \end{Schunk}
 
@@ -381,6 +377,57 @@ Based on initial experiments, it seems possible to perform the
 filtering based on the statistic \texttt{loglikelihoods(scores) -
   baseloglikelihoods(scores)}, but selection of suitable threshold is
 highly dataset specific.
+
+\section{Exporting results to an SQLite database}
+
+The results of the analysis can be stored to an SQLite database. The
+database can then be browsed and queried using the
+\href{http://users.ics.tkk.fi/ahonkela/tigre/}{tigreBrowser}
+result browser. The data
+is inserted to the database by using \Rfunction{export.scores} function.
+
+An example of the usage of \Rfunction{export.scores} is given below
+\begin{Schunk}
+\begin{Sinput}
+> export.scores(scores, datasetName='Drosophila',
++               experimentSet='GPSIM/GPDISIM',
++               database='database.sqlite',
++               preprocData=drosophila_gpsim_fragment,
++               models=models,
++               aliasTypes=c('SYMBOL', 'GENENAME', 'FLYBASE', 'ENTREZID'))
+\end{Sinput}
+\end{Schunk}
+
+In this example, \texttt{scores} is the return value of
+\Rfunction{GPRankTargets}, \texttt{'Drosophila'} is the name of a dataset in
+database and \texttt{'GPSIM/GPDISIM'} is the name of an experiment set in
+database. In general, results with the same dataset name are considered to be
+part of same dataset. That is, if no results with a given dataset are already
+in the database, a new dataset entry is created.  On the other hand, if the
+database already contains results with the same dataset name, new results will
+be added to the old dataset.
+
+Also, results from different experiments can be combined into a set of
+experiments by giving them the same experiment set name. This is useful as a
+result browser may display results depending on the experiment set.
+
+\texttt{database.sqlite} is the filename of a database file. The file will
+be created if it does not exist already.
+
+The function will create model figures and add them to the database if
+preprocessed data is given. In this example, models are given to the
+function as a parameter. This is not necessary, however, as the function can
+create models if preprocessed data is supplied. Nevertheless, the function will
+finish faster if it does not have to (re-)create models.
+
+In addition to log likelihoods and z-scores, this function will also export
+different gene names and aliases to the database. By default, the function will
+read GENENAME, SYMBOL and ENTREZID datas from relevant annotations and insert
+those into the database. The function takes also \texttt{aliasTypes} argument
+which is used to define which annotation information is inserted. In the
+example above, FLYBASE gene numbers are also added to the genes in the
+database. The insertion of alias annotations and z-scores requires that the
+preprocessed data is supplied.
 
 \bibliographystyle{plainnat}
 \bibliography{gpsim}
