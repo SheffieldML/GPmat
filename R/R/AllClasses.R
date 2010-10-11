@@ -3,17 +3,20 @@ setClass("scoreList",
                        baseloglikelihoods = "numeric",
                        genes = "list", modelArgs = "list",
                        knownTargets = "character", TF = "character",
-                       sharedModel = "list"),
+                       sharedModel = "list", datasetName = "character",
+                       experimentSet = "character"),
          prototype(params=list(), loglikelihoods = numeric(),
                    baseloglikelihoods = numeric(),
                    genes=list(), modelArgs=list(), knownTargets="",
-                   TF="", sharedModel=list()))
+                   TF="", sharedModel=list(), datasetName="",
+                   experimentSet=""))
 
 
 setMethod("initialize", "scoreList",
           function(.Object, params, loglikelihoods,
                    baseloglikelihoods=numeric(), genes, modelArgs,
-                   knownTargets="", TF="", sharedModel=list()) {
+                   knownTargets="", TF="", sharedModel=list(),
+                   datasetName="", experimentSet="") {
             if (!is.list(sharedModel))
               sharedModel <- list(sharedModel)
 
@@ -37,6 +40,8 @@ setMethod("initialize", "scoreList",
             .Object@knownTargets <- knownTargets
             .Object@TF <- TF
             .Object@sharedModel <- sharedModel
+            .Object@datasetName <- datasetName
+            .Object@experimentSet <- experimentSet
             .Object
           })
 
@@ -163,11 +168,38 @@ setReplaceMethod("sharedModel", c("scoreList", "list"),
                    object
                  })
 
+setGeneric("datasetName",    function(object) standardGeneric("datasetName"))
+setGeneric("datasetName<-",  function(object, value) standardGeneric("datasetName<-"))
+setMethod("datasetName", "scoreList", function(object) object@datasetName)
+setReplaceMethod("datasetName", c("scoreList", "character"),
+                 function(object, value) {
+                   object@datasetName <- value
+                   object
+                 })
+
+setGeneric("experimentSet",    function(object) standardGeneric("experimentSet"))
+setGeneric("experimentSet<-",  function(object, value) standardGeneric("experimentSet<-"))
+setMethod("experimentSet", "scoreList", function(object) object@experimentSet)
+setReplaceMethod("experimentSet", c("scoreList", "character"),
+                 function(object, value) {
+                   object@experimentSet <- value
+                   object
+                 })
+
 setMethod("length", "scoreList", function(x) length(x@loglikelihoods))
+
+setMethod("updateObject", signature(object="scoreList"),
+          function(object, ..., verbose=FALSE) {
+            if (verbose) message("updateObject(object = 'scoreList')")
+            data <- getObjectSlots(object)
+            do.call(new, c(class(object), data))
+          })
 
 setMethod("[",
           signature(x="scoreList"),
           function(x, i, j, ..., drop) {
+            if (! "datasetName" %in% slotNames(x))
+              x <- updateObject(x)
             par <- x@params[i]
             ll <- x@loglikelihoods[i]
             bll <- x@baseloglikelihoods[i]
@@ -176,12 +208,16 @@ setMethod("[",
             new("scoreList", params=par, loglikelihoods=ll,
                 baseloglikelihoods=bll, genes=genes,
                 modelArgs=args, knownTargets=x@knownTargets, TF=x@TF,
-                sharedModel=x@sharedModel)
+                sharedModel=x@sharedModel,
+                datasetName=x@datasetName,
+                experimentSet=x@experimentSet)
           })
 
 setMethod("c", signature(x="scoreList"),
           function(x, ..., recursive=FALSE) {
             lists <- unlist(list(x, ...))
+            if (! "datasetName" %in% slotNames(lists[[1]]))
+              lists[[1]] <- updateObject(lists[[1]])
             params <- do.call(c, lapply(lists, function(y) y@params))
             loglikelihoods <- do.call(c, lapply(lists, function(y) y@loglikelihoods))
             baseloglikelihoods <- do.call(c, lapply(lists, function(y) y@baseloglikelihoods))
@@ -190,7 +226,9 @@ setMethod("c", signature(x="scoreList"),
             new("scoreList", params=params, loglikelihoods=loglikelihoods,
                 baseloglikelihoods=baseloglikelihoods, genes=genes,
                 modelArgs=modelArgs, knownTargets=lists[[1]]@knownTargets,
-                TF=lists[[1]]@TF, sharedModel=lists[[1]]@sharedModel)
+                TF=lists[[1]]@TF, sharedModel=lists[[1]]@sharedModel,
+                datasetName=lists[[1]]@datasetName,
+                experimentSet=lists[[1]]@experimentSet)
           })
 
 setGeneric("sort", function(x, decreasing=FALSE, ...) standardGeneric("sort"))

@@ -196,7 +196,8 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
 GPRankTargets <- function(preprocData, TF = NULL, knownTargets = NULL,
                           testTargets = NULL, filterLimit = 1.8,
                           returnModels = FALSE, options = NULL,
-                          scoreSaveFile = NULL) {
+                          scoreSaveFile = NULL,
+                          datasetName = "", experimentSet = "") {
 
   if (is.null(testTargets))
     testTargets <- featureNames(preprocData)
@@ -290,7 +291,9 @@ GPRankTargets <- function(preprocData, TF = NULL, knownTargets = NULL,
                        baseloglikelihoods = baselogLikelihoods,
                        genes = genes, modelArgs = modelArgs,
                        knownTargets = knownTargets, TF = TF,
-                       sharedModel = sharedModel)
+                       sharedModel = sharedModel,
+                       datasetName = datasetName,
+                       experimentSet = experimentSet)
       save(scoreList, file=scoreSaveFile)
     }
   }
@@ -300,7 +303,9 @@ GPRankTargets <- function(preprocData, TF = NULL, knownTargets = NULL,
                    baseloglikelihoods = baselogLikelihoods,
                    genes = genes, modelArgs = modelArgs,
                    knownTargets = knownTargets, TF = TF,
-                   sharedModel = sharedModel)
+                   sharedModel = sharedModel,
+                   datasetName = datasetName,
+                   experimentSet = experimentSet)
 
   if (returnModels)
     return (list(scores=scoreList, models=rankedModels))
@@ -313,7 +318,8 @@ GPRankTargets <- function(preprocData, TF = NULL, knownTargets = NULL,
 GPRankTFs <- function(preprocData, TFs, targets,
                       filterLimit = 1.8, 
                       returnModels = FALSE, options = NULL,
-                      scoreSaveFile = NULL) {
+                      scoreSaveFile = NULL,
+                      datasetName = "", experimentSet = "") {
   if (is.null(targets)) stop("No targets specified.")
 
   if (is.list(targets))
@@ -371,7 +377,9 @@ GPRankTFs <- function(preprocData, TFs, targets,
       scoreList <- new("scoreList", params = modelParams,
                        loglikelihoods = logLikelihoods,
                        genes = genes, modelArgs = modelArgs,
-                       knownTargets = targets, TF = '(see genes)')
+                       knownTargets = targets, TF = '(see genes)',
+                       datasetName = datasetName,
+                       experimentSet = experimentSet)
       save(scoreList, file=scoreSaveFile)
     }
   }
@@ -379,7 +387,9 @@ GPRankTFs <- function(preprocData, TFs, targets,
   scoreList <- new("scoreList", params = modelParams,
                    loglikelihoods = logLikelihoods,
                    genes = genes, modelArgs = modelArgs,
-                   knownTargets = targets, TF = '(see genes)')
+                   knownTargets = targets, TF = '(see genes)',
+                   datasetName = datasetName,
+                   experimentSet = experimentSet)
 
   if (returnModels)
     return (list(scores=scoreList, models=rankedModels))

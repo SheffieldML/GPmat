@@ -19,6 +19,10 @@
 \alias{sharedModel<-}
 \alias{TF}
 \alias{TF<-}
+\alias{datasetName}
+\alias{datasetName<-}
+\alias{experimentSet}
+\alias{experimentSet<-}
 \alias{[,scoreList-method}
 \alias{c,scoreList-method}
 \alias{write.scores,scoreList-method}
@@ -41,6 +45,10 @@
 \alias{sort,scoreList-method}
 \alias{TF,scoreList-method}
 \alias{TF<-,scoreList,character-method}
+\alias{datasetName,scoreList-method}
+\alias{datasetName<-,scoreList,character-method}
+\alias{experimentSet,scoreList-method}
+\alias{experimentSet<-,scoreList,character-method}
 
 \title{Class "scoreList"}
 \description{  'scoreList' is an object which contain the genes, parameters,
@@ -62,6 +70,8 @@ Objects can be created by calls of the form \code{scoreList(params, loglikelihoo
     \item{\code{knownTargets}:}{The list of known targets used in the ranking.}
     \item{\code{TF}:}{The TF used in the ranking.}
     \item{\code{sharedModel}:}{Shared model for known targets.}
+    \item{\code{datasetName}:}{Dataset name, used when exporting scores to a database.}
+    \item{\code{experimentSet}:}{Experiment set name, used when exporting scores to a database.}
   }
 }
 \section{Methods}{
@@ -77,6 +87,8 @@ Objects can be created by calls of the form \code{scoreList(params, loglikelihoo
     \item{\code{params(object)}, \code{params(object)<- value}}{Access and set \code{params}}
     \item{\code{sharedModel(object)}, \code{sharedModel(object)<- value}}{Access and set \code{sharedModel}}
     \item{\code{TF(object)}, \code{TF(object)<- value}}{Access and set \code{TF}}
+    \item{\code{datasetName(object)}, \code{datasetName(object)<- value}}{Access and set \code{datasetName}}
+    \item{\code{experimentSet(object)}, \code{experimentSet(object)<- value}}{Access and set \code{experimentSet}}
   }
 
   Standard generic methods:

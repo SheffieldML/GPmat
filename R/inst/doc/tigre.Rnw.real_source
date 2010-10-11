@@ -4,10 +4,12 @@
 %\VignettePackage{tigre}
 \documentclass[a4paper]{article}
 \usepackage{url}
+\usepackage{hyperref}
 \usepackage[authoryear,round]{natbib}
 
 \title{tigre User Guide}
-\author{Antti Honkela, Pei Gao, Jonatan Ropponen, \\
+\author{Antti Honkela, Pei Gao,\\
+  Jonatan Ropponen, Miika-Petteri Matikainen,\\
   Magnus Rattray, and Neil D. Lawrence}
 
 \newcommand{\Rfunction}[1]{{\texttt{#1}}}
@@ -288,6 +290,55 @@ Based on initial experiments, it seems possible to perform the
 filtering based on the statistic \texttt{loglikelihoods(scores) -
   baseloglikelihoods(scores)}, but selection of suitable threshold is
 highly dataset specific.
+
+\section{Exporting results to an SQLite database}
+
+The results of the analysis can be stored to an SQLite database. The
+database can then be browsed and queried using the
+\href{http://users.ics.tkk.fi/ahonkela/tigre/}{tigreBrowser}
+result browser. The data
+is inserted to the database by using \Rfunction{export.scores} function.
+
+An example of the usage of \Rfunction{export.scores} is given below
+<<eval=FALSE>>=
+export.scores(scores, datasetName='Drosophila',
+              experimentSet='GPSIM/GPDISIM',
+              database='database.sqlite',
+              preprocData=drosophila_gpsim_fragment,
+              models=models,
+              aliasTypes=c('SYMBOL', 'GENENAME', 'FLYBASE', 'ENTREZID'))
+@
+
+In this example, \texttt{scores} is the return value of
+\Rfunction{GPRankTargets}, \texttt{'Drosophila'} is the name of a dataset in
+database and \texttt{'GPSIM/GPDISIM'} is the name of an experiment set in
+database. In general, results with the same dataset name are considered to be
+part of same dataset. That is, if no results with a given dataset are already
+in the database, a new dataset entry is created.  On the other hand, if the
+database already contains results with the same dataset name, new results will
+be added to the old dataset.
+
+Also, results from different experiments can be combined into a set of
+experiments by giving them the same experiment set name. This is useful as a
+result browser may display results depending on the experiment set.
+
+\texttt{database.sqlite} is the filename of a database file. The file will
+be created if it does not exist already.
+
+The function will create model figures and add them to the database if
+preprocessed data is given. In this example, models are given to the
+function as a parameter. This is not necessary, however, as the function can
+create models if preprocessed data is supplied. Nevertheless, the function will
+finish faster if it does not have to (re-)create models.
+
+In addition to log likelihoods and z-scores, this function will also export
+different gene names and aliases to the database. By default, the function will
+read GENENAME, SYMBOL and ENTREZID datas from relevant annotations and insert
+those into the database. The function takes also \texttt{aliasTypes} argument
+which is used to define which annotation information is inserted. In the
+example above, FLYBASE gene numbers are also added to the genes in the
+database. The insertion of alias annotations and z-scores requires that the
+preprocessed data is supplied.
 
 \bibliographystyle{plainnat}
 \bibliography{gpsim}
