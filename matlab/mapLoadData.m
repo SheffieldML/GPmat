@@ -2186,6 +2186,49 @@ switch dataset
             save([baseDir 'drosMelPLOS.mat'], 'X', 'y', 'XTest', 'yTest');
         end
 
+    case 'demDrosMelInf'
+        try
+            load([baseDir 'drosMelPLOSInf.mat']);
+        catch
+            fidraw = fopen([baseDir 'journal.pcbi.0020051.sd007.txt'],'r');
+            fiddata = fopen([baseDir 'drosMelPLOS.txt'],'w');
+            indicator = feof(fidraw);
+            while ~indicator
+                currentLine = fgetl(fidraw);
+                index = regexp(currentLine, '\d');
+                if ~isempty(index)
+                    if length(index) > 5
+                        fprintf(fiddata, '%s\n', currentLine);
+                    end
+                end
+                indicator = feof(fidraw);
+            end
+            fclose(fidraw);
+            fclose(fiddata);
+            fiddata = fopen([baseDir 'drosMelPLOS.txt'],'r');
+            A = textscan(fiddata, '%f%f%f%f%f%f%f');
+            fclose(fiddata);
+            timePoints = [0;11;24;30;37;43;49;55;62;68];
+            spacePoints = 0.5*(0.35:0.01:0.92)';
+            y = cell(1, 7);
+            X = cell(1, 7);
+            yTest = cell(1, 7);
+            XTest = cell(1, 7);
+            % Create input space
+            XM = zeros(size(A{1},1),2);            
+            XM(1:length(timePoints), 1) = timePoints;
+            XM(1:length(spacePoints), 2) = spacePoints;
+            XM(length(timePoints)+1:580,1) = Inf;
+            XM(length(spacePoints)+1:580,2) = Inf;
+            for i=1:7
+                y{i} = A{i};
+                X{i} = XM;
+            end
+            yTest = y;
+            XTest = X;
+            save([baseDir 'drosMelPLOSInf.mat'], 'X', 'y', 'XTest', 'yTest');
+        end
+        
     case 'demDrosMelRed'
         try
             load([baseDir 'drosMelPLOSRed.mat']);
@@ -2242,6 +2285,58 @@ switch dataset
             yTest = y;
             XTest = X;
             save([baseDir 'drosMelPLOSRed.mat'], 'X', 'y', 'XTest', 'yTest');
+        end
+        
+    case 'demDrosMelRedInf'
+        try
+            load([baseDir 'drosMelPLOSRedInf.mat']);
+        catch
+            fidraw = fopen([baseDir 'journal.pcbi.0020051.sd007.txt'],'r');
+            fiddata = fopen([baseDir 'drosMelPLOS.txt'],'w');
+            indicator = feof(fidraw);
+            while ~indicator
+                currentLine = fgetl(fidraw);
+                index = regexp(currentLine, '\d');
+                if ~isempty(index)
+                    if length(index) > 5
+                        fprintf(fiddata, '%s\n', currentLine);
+                    end
+                end
+                indicator = feof(fidraw);
+            end
+            fclose(fidraw);
+            fclose(fiddata);
+            fiddata = fopen([baseDir 'drosMelPLOS.txt'],'r');
+            A = textscan(fiddata, '%f%f%f%f%f%f%f');
+            fclose(fiddata);
+            timePoints = [0;11;24;30;37;43;49;55;62;68];
+            spacePoints = 0.5*(0.35:0.01:0.92)';
+            lengthInit = size(A{1},1);
+            samplingRate = 4;
+            redA = cell(length(timePoints),1);
+            for i=1:7
+                vecA = mat2cell(A{i}, length(spacePoints)*ones(length(timePoints),1), 1);
+                for j=1:length(timePoints)
+                    redA{j} = vecA{j}(1:samplingRate:length(spacePoints));
+                end
+                A{i} = cell2mat(redA);
+            end
+            spacePoints = spacePoints(1:samplingRate:length(spacePoints));
+            y = cell(1, 7);
+            X = cell(1, 7);
+            % Create input space
+            XM = zeros(size(A{1},1),2);
+            XM(1:length(timePoints), 1) = timePoints;
+            XM(1:length(spacePoints), 2) = spacePoints;
+            XM(length(timePoints)+1:end,1) = Inf;
+            XM(length(spacePoints)+1:end,2) = Inf;
+            for i=1:7
+                y{i} = A{i};
+                X{i} = XM;
+            end
+            yTest = y;
+            XTest = X;
+            save([baseDir 'drosMelPLOSRedInf.mat'], 'X', 'y', 'XTest', 'yTest');
         end
     otherwise
         error('Unknown data set requested.')
