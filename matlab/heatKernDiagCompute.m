@@ -59,8 +59,8 @@ gamma = sqrt(-1)*w;
 beta = decay + diff*(w.^2);
 z1 = sigmax*gamma/2;
 z2 = lengthX/sigmax + z1;
-wz1 = wofzHui(sqrt(-1)*z1);
-wz2 = wofzHui(sqrt(-1)*z2);
+wz1 = wofzPoppe(sqrt(-1)*z1);
+wz2 = wofzPoppe(sqrt(-1)*z2);
 cK = 4/(lengthX^2);
 
 simLocal = heatKern.sim;
@@ -69,8 +69,8 @@ if heatKern.includeIC
     sigmah = sqrt(2/heatKern.inverseWidthSpaceIC);
     z1h = sigmah*gamma/2;
     z2h = lengthX/sigmah + z1h;
-    wz1h = wofzHui(sqrt(-1)*z1h);
-    wz2h = wofzHui(sqrt(-1)*z2h);
+    wz1h = wofzPoppe(sqrt(-1)*z1h);
+    wz2h = wofzPoppe(sqrt(-1)*z2h);
     if isPointwise
         for i=1:nterms
             heatKern.sim.decay = beta(i);
