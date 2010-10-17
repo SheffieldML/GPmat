@@ -1726,6 +1726,8 @@ switch dataset
         nGenesRed = 50;
         maxGenes = size(Genes, 2);
         indexes = randperm(maxGenes);
+        indexes = randperm(maxGenes);
+        indexes = randperm(maxGenes);
         yTemp = Genes(:, indexes(1:nGenesRed));
         indexR1 = 1:12;
         indexR3 = 25:36;
@@ -1776,6 +1778,42 @@ switch dataset
         for i=1:length(subIntersec13)
             y{i} = yTemp(indexR1, subIntersec13(i));
             yTest{i} = yTemp(indexR3, subIntersec13(i));
+            X{i} = timePoints;
+            XTest{i} = timePoints;
+        end
+
+    case 'demDrosA'
+
+        load([baseDir 'drosOnlyTwist']);
+        nGenesRed = 1000;
+        yTemp = Genes(:, 1:nGenesRed);
+        indexR1 = 1:12;
+        indexR3 = 25:36;
+        y = cell(nGenesRed,1);
+        yTest = cell(nGenesRed, 1);
+        X = cell(nGenesRed,1);
+        XTest = cell(nGenesRed, 1);
+        for i=1:nGenesRed
+            y{i} = yTemp(indexR1, i);
+            yTest{i} = yTemp(indexR3, i);
+            X{i} = timePoints;
+            XTest{i} = timePoints;
+        end
+
+    case 'demDrosAComplete'
+
+        load([baseDir 'drosOnlyTwist']);
+        nGenesRed = 1500;
+        yTemp = Genes(:, 1:nGenesRed);
+        indexR1 = 1:12;
+        indexR3 = 25:36;
+        y = cell(nGenesRed,1);
+        yTest = cell(nGenesRed, 1);
+        X = cell(nGenesRed,1);
+        XTest = cell(nGenesRed, 1);
+        for i=1:nGenesRed
+            y{i} = yTemp(indexR1, i);
+            yTest{i} = yTemp(indexR3, i);
             X{i} = timePoints;
             XTest{i} = timePoints;
         end
@@ -2099,6 +2137,111 @@ switch dataset
             yTest = Ytest;
             yTest{end+1} = F;
             save([baseDir 'toySdlfm3.mat'], 'X', 'y', 'XTest', 'yTest');
+        end
+
+    case 'demDrosMel'
+        try
+            load([baseDir 'drosMelPLOS.mat']);
+        catch
+            fidraw = fopen([baseDir 'journal.pcbi.0020051.sd007.txt'],'r');
+            fiddata = fopen([baseDir 'drosMelPLOS.txt'],'w');
+            indicator = feof(fidraw);
+            while ~indicator
+                currentLine = fgetl(fidraw);
+                index = regexp(currentLine, '\d');
+                if ~isempty(index)
+                    if length(index) > 5
+                        fprintf(fiddata, '%s\n', currentLine);
+                    end
+                end
+                indicator = feof(fidraw);
+            end
+            fclose(fidraw);
+            fclose(fiddata);
+            fiddata = fopen([baseDir 'drosMelPLOS.txt'],'r');
+            A = textscan(fiddata, '%f%f%f%f%f%f%f');
+            fclose(fiddata);
+            timePoints = [0;11;24;30;37;43;49;55;62;68];
+            spacePoints = 0.5*(0.35:0.01:0.92)';
+            y = cell(1, 7);
+            X = cell(1, 7);
+            yTest = cell(1, 7);
+            XTest = cell(1, 7);
+            % Create input space
+            XM = zeros(size(A{1},1),2);
+            startOne = 1;
+            endOne = 0;
+            for i=1:length(timePoints)
+                endOne = endOne + 58;
+                XM(startOne:endOne, 1) = timePoints(i);
+                XM(startOne:endOne, 2) = spacePoints;
+                startOne = endOne + 1;
+            end
+            for i=1:7
+                y{i} = A{i};
+                X{i} = XM;
+            end
+            yTest = y;
+            XTest = X;
+            save([baseDir 'drosMelPLOS.mat'], 'X', 'y', 'XTest', 'yTest');
+        end
+
+    case 'demDrosMelRed'
+        try
+            load([baseDir 'drosMelPLOSRed.mat']);
+        catch
+            fidraw = fopen([baseDir 'journal.pcbi.0020051.sd007.txt'],'r');
+            fiddata = fopen([baseDir 'drosMelPLOS.txt'],'w');
+            indicator = feof(fidraw);
+            while ~indicator
+                currentLine = fgetl(fidraw);
+                index = regexp(currentLine, '\d');
+                if ~isempty(index)
+                    if length(index) > 5
+                        fprintf(fiddata, '%s\n', currentLine);
+                    end
+                end
+                indicator = feof(fidraw);
+            end
+            fclose(fidraw);
+            fclose(fiddata);
+            fiddata = fopen([baseDir 'drosMelPLOS.txt'],'r');
+            A = textscan(fiddata, '%f%f%f%f%f%f%f');
+            fclose(fiddata);
+            timePoints = [0;11;24;30;37;43;49;55;62;68];
+            spacePoints = 0.5*(0.35:0.01:0.92)';
+            lengthInit = size(A{1},1);
+            samplingRate = 4;
+            redA = cell(length(timePoints),1);
+            for i=1:7
+                vecA = mat2cell(A{i}, length(spacePoints)*ones(length(timePoints),1), 1);
+                for j=1:length(timePoints)
+                    redA{j} = vecA{j}(1:samplingRate:length(spacePoints));                    
+                end
+                A{i} = cell2mat(redA);
+            end
+            spacePoints = spacePoints(1:samplingRate:length(spacePoints));
+            y = cell(1, 7);
+            X = cell(1, 7);
+            yTest = cell(1, 7);
+            XTest = cell(1, 7);
+            % Create input space
+            XM = zeros(size(A{1},1),2);
+            startOne = 1;
+            endOne = 0;
+            for i=1:length(timePoints)
+                endOne = endOne + length(spacePoints);
+                XM(startOne:endOne, 1) = timePoints(i);
+                XM(startOne:endOne, 2) = spacePoints;
+                startOne = endOne + 1;
+            end
+            for i=1:7
+                y{i} = A{i};
+                X{i} = XM;
+            end
+            yTest = y;
+            XTest = X;
+            save([baseDir 'drosMelPLOSRed.mat'], 'X', 'y', 'XTest', 'yTest');
         end
     otherwise
         error('Unknown data set requested.')
