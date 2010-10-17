@@ -125,7 +125,7 @@ if nargin < 3
                         KtIC = exp(-beta(i)*t1)*(exp(-beta(j)*t2)');
                         KsIC = sheatKernCompute(sigmah, lengthX, s1, s2, w, gamma, wz1h, wz2h, i, j);
                         tempo = kron(KtIC, KsIC);
-                        sKIC = sKIC + temp + tempo';
+                        sKIC = sKIC + tempo + tempo';
                         tempo = kron(Kt, Ks);
                         sK = sK + tempo + tempo';
                     end

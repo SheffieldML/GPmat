@@ -31,12 +31,12 @@ if kern.includeIC
     params = [kern.decay kern.diffusion kern.inverseWidthTime kern.inverseWidthSpace kern.sensitivity ...
         kern.inverseWidthSpaceIC kern.sensitivityIC];
     if nargout > 1
-        names = {'decay', 'diffusion rate', 'inverse width time', 'inverse width space', 'sensitivity', ...
-            'inverse width space IC', 'sensitivity IC'};
+        names = {'decay', 'diffusion rate', 'inverse width time', 'inverse width space.', 'sensitivity', ...
+            'inverse width space IC.', 'sensitivity IC'};
     end
 else
     params = [kern.decay kern.diffusion kern.inverseWidthTime kern.inverseWidthSpace kern.sensitivity];
     if nargout > 1
-        names = {'decay', 'diffusion rate', 'inverse width time', 'inverse width space', 'sensitivity'};
+        names = {'decay', 'diffusion rate', 'inverse width time', 'inverse width space.', 'sensitivity'};
     end
 end
