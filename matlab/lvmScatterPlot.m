@@ -75,7 +75,8 @@ function [ax, data] = lvmScatterPlot(model, YLbls, ax, dims, defaultVals);
     posteriorVarDefined = true;
   catch 
     [lastMsg, lastId] = lasterr;
-    if strcmp(lastId, 'MATLAB:UndefinedFunction')
+    disp(lastId)
+    if isoctave || strcmp(lastId, 'MATLAB:UndefinedFunction')
       posteriorVarDefined = false;
     else
       rethrow(lasterror);
