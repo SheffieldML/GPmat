@@ -16,7 +16,7 @@ function [mu, varsigma] = gpPosteriorMeanVar(model, X);
 
 % GP
 
-
+model.m = gpComputeM(model);
 if ~isfield(model, 'alpha')
   model = gpComputeAlpha(model);
 end

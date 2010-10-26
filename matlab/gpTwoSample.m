@@ -25,6 +25,7 @@ function [llratios, models] = gpTwoSample(t, y)
   diffs(find(~diffs)) = [];
   typDiff = min(diffs);
   invWidth = 1/(typDiff*typDiff);
+  %disp(1/invWidth)
   options = gpOptions('ftc');
   options.scale2var1 = true;
   tfull = [t{1}; t{2}];
@@ -63,7 +64,9 @@ function [llratios, models] = gpTwoSample(t, y)
 
     % Make sure we scale using variance of combined data
     multiModel.comp{1}.scale = model.scale;
+    multiModel.comp{1}.m = gpComputeM(multiModel.comp{1});
     multiModel.comp{2}.scale = model.scale;
+    multiModel.comp{2}.m = gpComputeM(multiModel.comp{2});
 
     % Optimise the model
     multiModel.optimiser = 'scg';
