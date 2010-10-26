@@ -92,5 +92,8 @@ function printLatexPlot(fileName, directory, width, options)
     fprintf(FID, fileStr);
     fclose(FID);
     
+  else
+    matfig2pgf('filename', [directory filesep backgroundFile '.tex'], ...
+               'figwidth', width)
   end
 end
