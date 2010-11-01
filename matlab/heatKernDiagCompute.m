@@ -29,10 +29,21 @@ t = x(x(:,1)~=Inf,1);
 s = x(x(:,2)~=Inf,2);
 
 if (length(t) == length(s))
-    isPointwise = true;
-    sk = zeros(length(t), 1);
-    if heatKern.includeIC      
-        skIC = zeros(length(t), 1);
+    ut = unique(t);
+    if (length(ut) == length(t))
+        isPointwise = true;
+        sk = zeros(length(t), 1);
+        if heatKern.includeIC
+            skIC = zeros(length(t), 1);
+        end
+    else
+        s = unique(s);
+        t = ut;
+        isPointwise = false;
+        sk = zeros(length(t)*length(s), 1);
+        if heatKern.includeIC
+            skIC = zeros(length(t)*length(s), 1);
+        end
     end
 else
     isPointwise = false;

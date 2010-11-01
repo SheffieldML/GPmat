@@ -27,8 +27,13 @@ end
 t = x(x(:,1)~=Inf,1);
 s = x(x(:,2)~=Inf,2);
 
-if (length(t) == length(s)) && (length(t) == length(s))
-    k = ones(length(t),1);    
+if (length(t) == length(s))
+    ut = unique(t);    
+    if (length(ut) == length(t))
+        k = ones(length(t),1);
+    else
+        k = ones(length(t)*length(s),1);        
+    end    
 else
     k = ones(length(t)*length(s),1);
 end

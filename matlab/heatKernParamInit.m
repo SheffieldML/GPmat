@@ -50,7 +50,7 @@ end
 
 kern.decay = 1;
 kern.diffusion = 1e-2;
-kern.inverseWidthTime = 1;
+kern.inverseWidthTime = 100;
 kern.inverseWidthSpace = 1000;
 kern.sensitivity = 1;
 % Create templates for th SIM kernel (used to compute the time part) and

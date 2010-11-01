@@ -38,12 +38,28 @@ if nargin < 3
     s1 = x1(x1(:,2)~=Inf,2);
     s2 = x2(x2(:,2)~=Inf,2);
 
+    
+    
+    
     if (length(t1) == length(s1)) && (length(t2) == length(s2))
-        isPointwise = true;
-        K = zeros(length(t1), length(t2));
-        if heatKern.includeIC
-            sK = zeros(length(t1), length(t2));
-            sKIC = zeros(length(t1), length(t2));
+        ut1 = unique(t1);
+        ut2 = unique(t2);
+        if (length(ut1) == length(t1)) || (length(ut2) == length(t2))
+            isPointwise = true;
+            K = zeros(length(t1), length(t2));
+            if heatKern.includeIC
+                sK = zeros(length(t1), length(t2));
+                sKIC = zeros(length(t1), length(t2));
+            end
+        else
+            us1 = unique(s1);us2 = unique(s2);
+            t1 = ut1; s1 = us1; t2 = ut2; s2 = us2;
+            isPointwise = false;
+            K = zeros(length(t1)*length(s1), length(t2)*length(s2));
+            if heatKern.includeIC
+                sK = zeros(length(t1)*length(s1), length(t2)*length(s2));
+                sKIC = zeros(length(t1)*length(s1), length(t2)*length(s2));
+            end            
         end
     else
         isPointwise = false;
