@@ -16,6 +16,44 @@
 % multiKernExtractParam.
 %
 % SEEALSO : multiKernParamInit, kernDiagGradient, multiKernExtractParam, multiKernGradient
+%
+% COPYRIGHT : Mauricio A. Alvarez, 2010
 
 % KERN
+
+if iscell(x)
+    dim1 = zeros(1, kern.numBlocks);
+    % Collate arguments.
+    for i=1:kern.numBlocks
+        dim1(i) = size(x{i}, 1);
+    end
+    g = zeros(1, size(kern.paramGroups, 1));
+    startVal = 1;
+    endVal = 0;
+    for i = 1:kern.numBlocks
+        endVal = endVal + kern.comp{i}.nParams;
+        startOne = sum(dim1(1:(i-1)))+1;
+        endOne = sum(dim1(1:i));        
+        g(1, startVal:endVal) = multiKernDiagGradientBlock(kern, x{i}, covDiag(startOne:endOne), i);
+        startVal = endVal + 1;
+    end
+else
+    % Collate arguments.
+    dim1 = size(x, 1);
+    arg{1} = x;
+    g = zeros(1, size(kern.paramGroups, 1));
+    startVal = 1;
+    endVal = 0;
+    for i = 1:kern.numBlocks
+        endVal = endVal + kern.comp{i}.nParams;
+        startOne = (i-1)*dim1 + 1;
+        endOne = i*dim1;        
+        g(1, startVal:endVal) = multiKernDiagGradientBlock(kern, arg{1}, covDiag(startOne:endOne), i);        
+        startVal = endVal + 1;
+    end
+
+end
+
+g = g*kern.paramGroups;
+
 
