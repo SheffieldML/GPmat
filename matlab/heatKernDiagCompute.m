@@ -95,7 +95,8 @@ if heatKern.includeIC
                 if (mod(i+j,2)==1)
                     heatKern.sim.decay = beta(i);
                     simLocal.decay = beta(j);
-                    kt = diag(simXsimKernCompute(heatKern.sim, simLocal, t, t));
+                    %kt = diag(simXsimKernCompute(heatKern.sim, simLocal, t, t));
+                    kt = simXsimKernDiagCompute(heatKern.sim, simLocal, t);
                     ks = sheatKernDiagCompute(sigmax, lengthX, s, w, gamma, wz1, wz2, i, j);
                     ktIC = exp(-(beta(i)+beta(j))*t);
                     ksIC = sheatKernDiagCompute(sigmah, lengthX, s, w, gamma, wz1h, wz2h, i, j);
@@ -117,7 +118,8 @@ if heatKern.includeIC
                 if (mod(i+j,2)==1)
                     heatKern.sim.decay = beta(i);
                     simLocal.decay = beta(j);
-                    kt = diag(simXsimKernCompute(heatKern.sim, simLocal, t, t));
+                    %kt = diag(simXsimKernCompute(heatKern.sim, simLocal, t, t));
+                    kt = simXsimKernDiagCompute(heatKern.sim, simLocal, t);
                     ks = sheatKernDiagCompute(sigmax, lengthX, s, w, gamma, wz1, wz2, i, j);
                     ktIC = exp(-(beta(i)+beta(j))*t);
                     ksIC = sheatKernDiagCompute(sigmah, lengthX, s, w, gamma, wz1h, wz2h, i, j);
@@ -141,7 +143,8 @@ else
                 if (mod(i+j,2)==1)
                     heatKern.sim.decay = beta(i);
                     simLocal.decay = beta(j);
-                    kt = diag(simXsimKernCompute(heatKern.sim, simLocal, t, t));
+                    %kt = diag(simXsimKernCompute(heatKern.sim, simLocal, t, t));
+                    kt = simXsimKernDiagCompute(heatKern.sim, simLocal, t);
                     ks = sheatKernDiagCompute(sigmax, lengthX, s, w, gamma, wz1, wz2, i, j);
                     sk = sk + 2*kt.*ks;
                 end
@@ -157,7 +160,8 @@ else
                 if (mod(i+j,2)==1)
                     heatKern.sim.decay = beta(i);
                     simLocal.decay = beta(j);
-                    kt = diag(simXsimKernCompute(heatKern.sim, simLocal, t, t));
+                    %kt = diag(simXsimKernCompute(heatKern.sim, simLocal, t, t));
+                    kt = simXsimKernDiagCompute(heatKern.sim, simLocal, t);
                     ks = sheatKernDiagCompute(sigmax, lengthX, s, w, gamma, wz1, wz2, i, j);
                     sk = sk + kron(2*kt, ks);
                 end
