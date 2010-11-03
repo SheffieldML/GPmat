@@ -88,7 +88,7 @@ modelTieParam <- function (model, paramsList) {
   }
 
   params <- try(modelExtractParam(model, only.values=FALSE), TRUE)
-  if (! is.list(params) )
+  if (!is.list(params))
     params <- kernExtractParam(model, only.values=FALSE)
   
   for ( i in seq(along=paramsList) ) {
@@ -253,13 +253,12 @@ lnDiffErfs <- function(x1, x2) {
 
 modelExtractParam <- function (model, only.values=TRUE,
                                untransformed.values=FALSE) {
-  if (is.GPModel(model))
+  if (any(.packages(all.available=T)=="tigre") && is.GPModel(model))
     model <- modelStruct(model)
   
   funcName <- paste(model$type, "ExtractParam", sep="")
   func <- get(funcName, mode="function")
-  params <- func(model, only.values=only.values,
-                 untransformed.values=untransformed.values)
+  params <- func(model, only.values=only.values, untransformed.values=untransformed.values)
 
   if ( !only.values ) {
     origNames <- names(params)
@@ -314,7 +313,7 @@ modelDisplay <- function(model, ...) {
 }
 
 modelObjective <- function (params, model, ...) {
-  if (is.GPModel(model))
+  if (any(.packages(all.available=T)=="tigre") && is.GPModel(model))
     model <- modelStruct(model)
 
   funcName <- paste(model$type, "Objective", sep="")
@@ -337,7 +336,7 @@ modelObjective <- function (params, model, ...) {
 
 
 modelGradient <- function (params, model, ...) {
-  if (is.GPModel(model))
+  if (any(.packages(all.available=T)=="tigre") && is.GPModel(model))
     model <- modelStruct(model)
 
   funcName <- paste(model$type, "Gradient", sep="")
