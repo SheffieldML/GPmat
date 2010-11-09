@@ -401,7 +401,7 @@ namespace ndlutil {
 
 }
 
-#ifdef _MSC_VER
+//#ifdef _MSC_VER
 extern "C" double rand_(const int &flag)
 {
   // Generate random numbers using MersenneTwister code from 
@@ -414,4 +414,4 @@ extern "C" double rand_(const int &flag)
   }
   return ndlutil::genrand_real2();
 }
-#endif
+//#endif

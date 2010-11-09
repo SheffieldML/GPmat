@@ -1,7 +1,10 @@
 #ifndef CNdlInterfaces_H
 #define CNdlInterfaces_H
 
+#include <string>
 #include <iostream>
+#include <sstream>
+
 #include "ndlexceptions.h"
 #include "ndlstrutil.h"
 
@@ -12,6 +15,21 @@
 
 const double MINVERSION=0.2;
 const double VERSION=0.2;
+
+#ifdef _HDF5
+    inline std::vector<std::string> tokenize( const std::string& in_path, const std::string& sep = "/" )
+    {    
+        std::string token;
+        std::istringstream iss(in_path);
+        std::vector<std::string> path_components;
+
+        while ( std::getline(iss, token, sep) )
+        {
+            path_components.push_back( token );
+        }
+        return path_components;
+    }
+#endif
 
 using namespace std;
 
@@ -178,7 +196,11 @@ public:
     } 
     in.close();
   }
-
+    
+    #ifdef _HDF5
+        virtual void writeToHdf5( const std::string& filename, const std::string& path_to_dataset ) const=0;
+        virtual void readFromHdf5( const std::string& filename, const std::string& path_to_dataset )=0;
+    #endif
 };
 
 #ifdef _NDLMATLAB
