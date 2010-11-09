@@ -16,21 +16,6 @@
 const double MINVERSION=0.2;
 const double VERSION=0.2;
 
-#ifdef _HDF5
-    inline std::vector<std::string> tokenize( const std::string& in_path, const std::string& sep = "/" )
-    {    
-        std::string token;
-        std::istringstream iss(in_path);
-        std::vector<std::string> path_components;
-
-        while ( std::getline(iss, token, sep) )
-        {
-            path_components.push_back( token );
-        }
-        return path_components;
-    }
-#endif
-
 using namespace std;
 
 class CStreamInterface 
