@@ -262,7 +262,7 @@ void CGp::initVals()
   setSpherical(true); // not implemented non-spherical stuff yet.
   maxTries = 10; // number of cholesky decompositions to be attempted (adding jitter each time)
   // TODO: this isn't being properly used ...
-  for(unsigned int i=0; i<getNumData(); i++) 
+  for(size_t i=0; i<getNumData(); i++) 
   {
     pnoise->updateSites(m, beta, i, nu, g, i);
   }
