@@ -34,6 +34,6 @@ end
 model.K = k + diag(noiseVar);
 [model.invK, U, jitter] = pdinv(model.K);
 if jitter>1e-4
-  fprintf('Warning: gpsimUpdateKernels added jitter of %2.4f\n', jitter)
+  warning('gpsimUpdateKernels added jitter of %2.4f\n', jitter)
 end
 model.logDetK = logdet(model.K, U);
