@@ -68,7 +68,7 @@ where the rate of production of the $j$th gene's mRNA is dependent on
 a basal rate of transcription, $\basalRate_j$, a sensitivity,
 $\sensitivity_j$ to the governing transcription factor concentration,
 $\tfConcentration(t)$ and a rate of decay, $\decayRate_j$. In this
-simple model each of the genes model is assumed to be governed by a
+simple model each of the genes is assumed to be governed by a
 single input transcription factor and this is known as a single input
 module motif \citep{Alon:systems06}. Short of assuming that the mRNA
 concentration is linearly related to the transcription factor
@@ -76,10 +76,10 @@ concentration\footnote{This would be equivalent to assuming very high
   decay in the simple model we describe. Models like this
   are widely used. One can see clustering to find coregulated targets
   as making this assumption. The assumption is made more explicitly in
-  some genomewide analysis models~\citep{Sanguinetti:chipvar06,Sanguinetti:chipdyno06}.} this is
+  some genomewide analysis models~\citep[e.g.][]{Sanguinetti:chipvar06,Sanguinetti:chipdyno06}.} this is
 perhaps the simplest model of transcriptional regulation that can be
 composed. It has a closed form solution for the mRNA concentration
-that depends on the TF concentration. If we assume that the system
+that depends on the transcription factor (TF) concentration. If we assume that the system
 starts at $t=0$ then we have
 \begin{equation}
 \mrnaConcentration_j(t) = a_je^{-\decayRate_{j}t} +
@@ -98,13 +98,20 @@ in this chapter. Namely, how do we deal with the fact that the
 transcription factor concentration, $\tfConcentration(t)$ may be
 unobservable? 
 
-Our preliminary studies in this area were inspired by
-the work of \cite{Barenco:ranked06} who reordered the equation so that for each observation time, $t_1, \dots, t_\numData$, they had
+Our preliminary studies in this area were inspired by the work of
+\cite{Barenco:ranked06} who (ignoring the transient term) reordered
+the equation so that for each observation time, $t_1, \dots,
+t_\numData$, they had
 \[
-\tfConcentration(t_k) = \sensitivity_j^{-1}\left(\diff{\mrnaConcentration_j(t_k)}{t} - \basalRate_j + \decayRate_j \mrnaConcentration_j(t_k)\right). 
+\tfConcentration(t_k) =
+\sensitivity_j^{-1}\left(\diff{\mrnaConcentration_j(t_k)}{t} -
+  \basalRate_j + \decayRate_j \mrnaConcentration_j(t_k)\right).
 \]
-They then created pseudo-observations of the production rates of the mRNA, $\diff{\mrnaConcentration_j(t_i)}{t}$, through
-fitting polynomials to their time series and computing gradients at each time point. This gave them an estimate for the TF concentration and they used Bayesian sampling to estimate the model parameters.
+They then created pseudo-observations of the production rates of the
+mRNA, $\diff{\mrnaConcentration_j(t_i)}{t}$, through fitting
+polynomials to their time series and computing gradients at each time
+point. This gave them an estimate for the TF concentration and they
+used Bayesian sampling to estimate the model parameters.
 
 \cite{Khanin:repression06} considered a similar equation with a
 nonlinear repression response. They and \cite{Rogers:model06b}, who
@@ -189,10 +196,10 @@ of convolutions of our original basis. For some choices for
 $\basisFunc_k(t)$ the integral in \refeq{eq:basisFunctionSolution}
 will be tractable. In particular if we use the Gaussian form shown in
 \refeq{eq:eqBasis} we can show that,
- \[
- e^{-\decayRate_{j}t}\int_0^t e^{\decayRate_{j}u} \basisFunc_k(u) \mathrm{d}u = e^{-\decayRate_j(t-\tau_k)}e^{\frac{\decayRate_j^2\lengthScale{}_k^2}{4}}
-\frac{1}{2}\left[\erf\left(\frac{t-\left(\tau_k+\frac{\decayRate_j\lengthScale{}_k^2}{2}\right)}{\lengthScale_k}\right)-\erf\left(-\frac{\tau_k+\frac{\decayRate_j\lengthScale{}_k^2}{2}}{\lengthScale_k}\right)\right]
-\]
+ \begin{array*}
+ e^{-\decayRate_{j}t}\int_0^t e^{\decayRate_{j}u} \basisFunc_k(u) \mathrm{d}u =& e^{-\decayRate_j(t-\tau_k)}e^{\frac{\decayRate_j^2\lengthScale{}_k^2}{4}}
+\frac{1}{2}\bigg[\erf\left(\frac{t-\left(\tau_k+\frac{\decayRate_j\lengthScale{}_k^2}{2}\right)}{\lengthScale_k}\right)\\&-\erf\left(-\frac{\tau_k+\frac{\decayRate_j\lengthScale{}_k^2}{2}}{\lengthScale_k}\right)\bigg]
+\end{array*}
 where $\erf(\cdot)$ is the error function defined as
 \[
 \erf(x) = \int_{0}^x \frac{2}{\sqrt{\pi}}\exp\left(-z^2\right) \mathrm{d}z.
@@ -262,7 +269,7 @@ assume Gaussian noise of variance $\dataStd^2$ we can compute the log
 likelihood of an observed data set of mRNA concentrations, perhaps
 obtained from a gene expression microarray,
 \[
-\log p(\dataMatrix|\weightVector) = -\frac{\dataDim}{2}\log 2\pi\dataStd^2 -\frac{1}{2\dataStd^2}\sum_{j=1}^\dataDim \sum_{i=1}^\numData(\mrnaConcentration_j(t_i) - y_{i,j})^2
+\log p(\dataMatrix|\weightVector) = -\frac{\dataDim}{2}\log 2\pi\dataStd^2 -\frac{1}{2\dataStd^2}\sum_{j=1}^\dataDim \sum_{i=1}^\numData(\mrnaConcentration_j(t_i) - y_{i,j})^2,
 \]
 where the gene expression data has been collected at times
 $\left\{t_i\right\}$ and has values given by $\left\{y_{i,j}\right\}$
@@ -347,14 +354,14 @@ covariances of a single gene output, while off-diagonal blocks give
 each element of $\kernelMatrix$ to be $\kernel_{i,j}(t, t^\prime) =
 \basisFuncVector^\prime_i(t)^\top\covarianceMatrix\basisFuncVector^\prime_j(t')$. This
 denotes the covariance between the $i$ and $j$th mRNA concentrations
-computed between times $t$ and $t^\prime$. We can depict the structure
-of this covariance function using a color map to represent the
-function values as shown in \reffig{fig:covarianceStructure}.
-\begin{figure}
+computed between times $t$ and $t^\prime$. % We can depict the structure
+% of this covariance function using a color map to represent the
+% function values as shown in \reffig{fig:covarianceStructure}.
+% \begin{figure}
 
-  \caption{Structure of $\kernelMatrix$ from the marginal likelihood's
-    covariance matrix.}\label{fig:covarianceStructure}
-\end{figure}
+%   \caption{Structure of $\kernelMatrix$ from the marginal likelihood's
+%     covariance matrix.}\label{fig:covarianceStructure}
+% \end{figure}
 
 \subsubsection{Relationship with Basis of $\tfConcentration(t)$}
 
@@ -380,7 +387,7 @@ parameters in the system by $\numBasisFunc-1$. A problem remains
 though, each basis function has a center, $\tau_k$, and these
 locations represent an additional $\numBasisFunc$ parameters that also
 need to be determined. We now show how these parameters can also be
-eliminated. Simultaneously we will consider a limit that allows us to
+eliminated. We will consider a limit that allows us to
 effectively take the number of basis functions, $\numBasisFunc\rightarrow\infty$.
 
 \subsection{An Infinite Basis}
@@ -439,9 +446,9 @@ functions becomes
 \kernel_{0,0}\left(t,t^\prime\right) = \frac{\alpha}{\pi \lengthScale^2}
 \int_a^b \exp\left( -\frac{t^2 + \left.t^\prime\right.^2 - 2\tau
     \left(t+t^\prime\right) + 2\tau^2}{\lengthScale{}^2}
-\right)\mathrm{d}\tau,
+\right)\mathrm{d}\tau.
 \]
-where we have used $\tau = a+\Delta\tau$. Completing the square gives
+Completing the square gives
 \[
 \kernel_{0,0}\left(t,t^\prime\right) = \frac{\alpha}{\pi \lengthScale^2}
 \int_a^b \exp\left( -\frac{t^2 + \left.t^\prime\right.^2 + 2\left(\tau
@@ -466,17 +473,16 @@ where we have used $\tau = a+\Delta\tau$. Completing the square gives
 \frac{1}{2}\left[1+\mathrm{erf}\left(\sqrt{\frac{2}{\lengthScale^2}}\left(\tau
       - \frac{t + t^\prime}{2}\right) \right)\right]_a^b,
 \]
-
 Performing the integration leads to 
-\[
-\kernel_{0,0}\left(t,t^\prime\right) =
+\begin{align*}
+\kernel_{0,0}\left(t,t^\prime\right) = &
 \frac{\alpha}{\sqrt{2\pi\lengthScale{}^2}} \exp\left(
   -\frac{\left(t-t^\prime\right)^2}{2\lengthScale{}^2}\right)
-\frac{1}{2}\left[\mathrm{erf}\left(\sqrt{\frac{2}{\lengthScale^2}}\left(b
-      - \frac{t + t^\prime}{2}\right) \right) -
+\frac{1}{2}\bigg[\mathrm{erf}\left(\sqrt{\frac{2}{\lengthScale^2}}\left(b
+      \\ & - \frac{t + t^\prime}{2}\right) \right) -
   \mathrm{erf}\left(\sqrt{\frac{2}{\lengthScale^2}}\left(a - \frac{t +
         t^\prime}{2}\right) \right)\right],
-\]
+\end{align*}
 Finally, if we take the limit as $a\rightarrow -\infty$ and
 $b\rightarrow \infty$ (i.e. we have infinite basis functions
 distributed across the entire real line) then the square bracketed
@@ -490,7 +496,7 @@ term on the right becomes 2 and we have
   % \\lengthScale ,
 \label{eq:RBF}
 \end{equation}
-which is known as the squared exponential covariance function. 
+which is known as the squared exponential covariance function (despite the fact that it is not a squared exponential, but an exponentiated quadratic). 
 
 The analysis above shows that if we take a one dimensional fixed
 basis function model, we can increase the number of basis functions to
@@ -547,7 +553,7 @@ model parameterized by $\weightVector$ can be understood as taking a
 Gaussian process perspective on the model for
 $\tfConcentration(t)$. Gaussian processes are powerful models for
 nonlinear functions. They allow us to specify the characteristics of a
-function through specifying its covariance function. Given a covariance function for the Gaussian process over $\tfConcentration$ the covariances between the target genes can also be computed from \refeq{eq:convolution}. Substituting $\kernel_{0,0}(t, t^\prime)=\basisFuncVector(t)^\top \covarianceMatrix \basisFuncVector(t^\prime)$ we have 
+function through specifying its covariance function. Given a covariance function for the Gaussian process over $\tfConcentration$, the covariances between the target genes can also be computed from \refeq{eq:convolution}. Substituting $\kernel_{0,0}(t, t^\prime)=\basisFuncVector(t)^\top \covarianceMatrix \basisFuncVector(t^\prime)$ we have 
 \[
 \kernel_{i,j}(t,t^\prime) = \sensitivity_j\sensitivity_i e^{-\decayRate_{i}t-\decayRate_{j}t^\prime}\int_0^t
 e^{\decayRate_{i}u} \int_0^{t^\prime} e^{\decayRate_{j}u^\prime}\kernel_{0,0}(u, u^\prime)\mathrm{d}u^\prime \mathrm{d}u.
@@ -649,7 +655,7 @@ distribution for the TF concentration that can become
 negative. However, even the simple fix of modeling the TF as a
 Gaussian process in log space,
 \[
-\log \tfConcentration(t) \sim \mathcal{N}\left(\meanVector_0, \kernelMatrix_{0,0}\right)
+\log \tfConcentration(t) \sim \mathcal{N}\left(\meanVector_0, \kernelMatrix_{0,0}\right),
 \]
 renders the elegant solution given above intractable. In the
 generalized linear model formulation the weights, $\weightVector$, now
@@ -663,11 +669,11 @@ convolving.
 Even such a simple modification forces us to seek approximations to
 deal with this intractability. In this review we focus on the sampling
 approximations we have considered
-\citep{Titsias:efficient08,Titsias:timeseries10}, although we have
-also explored Laplace's approximation\footnote{Laplace's approximation
+\citep{Titsias:efficient08,Titsias:mcmcgp11}, although we have also
+explored Laplace's approximation\footnote{Laplace's approximation
   involves second order Taylor expansion around the mode of the
   posterior distribution.}
-\citep[see]{Lawrence:transcriptionalGP06,Gao:latent08,Lawrence:licsbgp10}
+\citep[see][]{Lawrence:transcriptionalGP06,Gao:latent08,Lawrence:licsbgp10}
 and variational approximations could also be applicable.
 
 \subsection{Sampling Approximations}
@@ -678,9 +684,9 @@ $\tfConcentration^{(i)}(t)$ we should be able to solve the system of
 differential equations. For linear differential equations this
 requires solving the convolution integral, and for non-linear
 differential equations we need to apply numerical methods such as
-Runge-Kutta \citep{}. Irrespective of the manner in which we find the
-solution, the sample $\tfConcentration^{(i)}(t)$ is associated with a
-set of solutions
+Runge-Kutta. Irrespective of the manner in which we find the solution,
+the sample $\tfConcentration^{(i)}(t)$ is associated with a set of
+solutions
 $\left\{\mrnaConcentration_j^{(i)}(t)\right\}_{j=1}^\dataDim$ for a
 given parameterization of the system $\parameterVector^{(i)}$.
 
@@ -689,11 +695,11 @@ $\tfConcentration^{(i)}(t)$ we will assume that we can obtain points,
 $\tfVector$, from the function that are so closely spaced relative to
 the time scale of $\tfConcentration^{(i)}(t)$ that we are not losing
 any information. However, because the prior over $\tfConcentration(t)$
-is smooth then elements of the vector $\tfVector$ that are close neighbors in
-time will be very strongly correlated. This can present a serious
-obstacle to efficient sampling in these systems. Under Markov chain
-Monte Carlo, for such a sample to be accepted it must respect the
-smoothness constraints imposed by the prior. However, random draws
+is smooth then elements of the vector $\tfVector$ that are close
+neighbors in time will be very strongly correlated. This can present a
+serious obstacle to efficient sampling in these systems. Under Markov
+chain Monte Carlo, for such a sample to be accepted it must respect
+the smoothness constraints imposed by the prior. However, random draws
 from the prior are highly unlikely to be accepted as they will result
 in values for $\mrnaConcentration_j(t)$ that do not match the
 data. The key challenge is to develop a sampling approach that
@@ -701,21 +707,21 @@ respects the constraints imposed by the prior and can rapidly explore
 the space of values of $\tfConcentration(t)$ that are plausible under
 the data $\dataMatrix$. With this task in mind a control point
 strategy for sampling from Gaussian processes was developed
-\citep{Titsias:efficient08,Titsias:timeseries10}.
+\citep{Titsias:efficient08,Titsias:mcmcgp11}.
 
 \section{Model Based Target Ranking}
 \label{sec:targetRanking}
 
-We used Gaussian process inference over the linear activation
-model in (\ref{eq:differentialEquation}) to identify targets of two
-TFs, Mef2 and Twist, regulating mesoderm and muscle development
-in Drosophila~\citep{Honkela:modelbased10}. These TFs are thought to
-be primarily regulated by differential
-expression at the mRNA level and therefore their measured mRNA
-expression levels are highly informative about their protein
-concentration in the nucleus. We therefore include a model of
-translation from the TF mRNA concentration $\tfMrnaConcentration(t)$ to the TF protein
-concentration $\tfConcentration(t)$:
+We used Gaussian process inference over the linear activation model in
+(\ref{eq:differentialEquation}) to identify targets of two TFs, Mef2
+and Twist, regulating mesoderm and muscle development in
+Drosophila~\citep{Honkela:modelbased10}. These TFs are thought to be
+primarily regulated by differential expression at the mRNA level and
+therefore their measured mRNA expression levels are highly informative
+about their protein concentration in the nucleus. We therefore include
+a model of translation from the TF mRNA concentration
+$\tfMrnaConcentration(t)$ to the TF protein concentration
+$\tfConcentration(t)$:
 \begin{equation}
 \diff{\tfConcentration(t)}{t} = \tfMrnaConcentration(t) - \tfDecayRate
 \tfConcentration(t)
@@ -726,57 +732,59 @@ differential equation can be solved to give,
 \tfConcentration(t) = \exp\left(-\tfDecayRate t\right) \int_0^t
     \tfMrnaConcentration(v) \exp(\tfDecayRate v)  \mathrm{d}v
 \]
-and we see that the TF protein concentration  $\tfConcentration(t)$ is a linear function of the
-TF expression $\tfMrnaConcentration(t)$. There is also a linear relationship
-between the TF protein and the regulated target gene expression levels
-$\mrnaConcentration_j(t)$ under the linear
-activation model (recall
-(\ref{eq:differentialEquationSoln})) and therefore $\mrnaConcentration_j(t)$
-is also a linear function of both $\tfConcentration(t)$ and $\tfMrnaConcentration(t)$. We place a
-Gaussian process prior on $\tfMrnaConcentration(t)$ and the linear models of
-translation and activation define a joint Gaussian process over
-$\mrnaConcentration_j(t)$ and $\tfConcentration(t)$ as well as
-$\tfMrnaConcentration(t)$. If we use the squared
-exponential covariance in (\ref{eq:RBF}) for $\tfMrnaConcentration(t)$
-then all the terms in the covariance function for the multivariate Gaussian process 
+and we see that the TF protein concentration $\tfConcentration(t)$ is
+a linear function of the TF expression
+$\tfMrnaConcentration(t)$. There is also a linear relationship between
+the TF protein and the regulated target gene expression levels
+$\mrnaConcentration_j(t)$ under the linear activation model (recall
+(\ref{eq:differentialEquationSoln})) and therefore
+$\mrnaConcentration_j(t)$ is also a linear function of both
+$\tfConcentration(t)$ and $\tfMrnaConcentration(t)$. We place a
+Gaussian process prior on $\tfMrnaConcentration(t)$ and the linear
+models of translation and activation define a joint Gaussian process
+over $\mrnaConcentration_j(t)$ and $\tfConcentration(t)$ as well as
+$\tfMrnaConcentration(t)$. If we use the squared exponential
+covariance in (\ref{eq:RBF}) for $\tfMrnaConcentration(t)$ then all
+the terms in the covariance function for the multivariate Gaussian
+process
 $\{\tfMrnaConcentration,\tfConcentration,\mrnaConcentration_j\}$ can
-be calculated analytically~\citep{Honkela:modelbased10}.  
+be calculated analytically~\citep{Honkela:modelbased10}.
 
-The parameters of the TF mRNA
-covariance and the differential equation models parameterize the covariance function: $\parameterVector =
+The parameters of the TF mRNA covariance and the differential equation
+models parameterize the covariance function: $\parameterVector =
 [\tfDecayRate,\alpha,\lengthScale,\{\basalRate_j, \sensitivity_j,
-  \decayRate_j\}]$. These are estimated by maximising the likelihood by
+\decayRate_j\}]$. These are estimated by maximising the likelihood by
 gradient-based optimisation (recall (\ref{eq:error})).  In this
-example we assume that $a_j = 0$ for all genes. After
-estimating the model parameters we use the likelihood as a score to
-rank genes according to their fit to the model. Before the final
-ranking weakly expressed genes need to be filtered because they often
-attain high likelihoods from any TF with an uninformative model.
-This can be accomplished using average z-scores computed using the
-variance information from PUMA preprocessing.
+example we assume that $a_j = 0$ for all genes. After estimating the
+model parameters we use the likelihood as a score to rank genes
+according to their fit to the model. Before the final ranking weakly
+expressed genes need to be filtered because they often attain high
+likelihoods from any TF with an uninformative model.  This can be
+accomplished using average z-scores computed using the variance
+information from PUMA preprocessing.
 
-In Figure~\ref{fig:gpdisim_models} we show examples of the model fit to
-the data for putative targets of the TF Twist. We fitted two different
-classes of models. Figure~\ref{fig:gpdisim_models}(a) shows examples
-where we fit independent models to three different genes. Since the
-models are fitted independently for each gene there is no reason for
-the models to infer a consistent TF protein concentration profile. We
-refer to this as the single-target model approach. While somewhat
-unrealistic, this approach is very attractive due to its computational
-advantage: fitting of independent models is thus trivially
-parallelisable. In
-Figure~\ref{fig:gpdisim_models}(b) we fit one model to the same three
-genes by sharing the TF protein profile across target genes. This
-conforms more with our belief that the TF protein profile should be
-consistent across targets. The model is therefore less flexible as can
-be observed in the example where gene FBgn0003486 cannot be fitted by
-the multiple-target model. The multiple-target model relies on the assumption
-that the whole set of targets considered are genuine. We used the five
-top-ranked targets identified by the single-target models as a ``training set'' in the
+In Figure~\ref{fig:gpdisim_models} we show examples of the model fit
+to the data for putative targets of the TF Twist. We fitted two
+different classes of models. Figure~\ref{fig:gpdisim_models}(a) shows
+examples where we fit independent models to three different
+genes. Since the models are fitted independently for each gene there
+is no reason for the models to infer a consistent TF protein
+concentration profile. We refer to this as the single-target model
+approach. While somewhat unrealistic, this approach is very attractive
+due to its computational advantage: fitting of independent models is
+thus trivially parallelisable. In Figure~\ref{fig:gpdisim_models}(b)
+we fit one model to the same three genes by sharing the TF protein
+profile across target genes. This conforms more with our belief that
+the TF protein profile should be consistent across targets. The model
+is therefore less flexible as can be observed in the example where
+gene FBgn0003486 cannot be fitted by the multiple-target model. The
+multiple-target model relies on the assumption that the whole set of
+targets considered are genuine. We used the five top-ranked targets
+identified by the single-target models as a ``training set'' in the
 multiple-target approach, adding in each putative target one-by-one to
-the training set and using the likelihood of the resulting six-target model for
-ranking. In practice one might also use additional biological prior knowledge
-to choose a small set of confident targets. 
+the training set and using the likelihood of the resulting six-target
+model for ranking. In practice one might also use additional
+biological prior knowledge to choose a small set of confident targets.
 
 \begin{figure}[tb]
   \centering
@@ -784,7 +792,7 @@ to choose a small set of confident targets.
   \caption{Examples of the model fit for two different classes of 
     Gaussian process model fitted to potential targets of the TF Twist~\citep[from][]{Honkela:modelbased10}. (a) Three independent single-target models
     for likely targets. Red marks denote observed expression
-    levels from~\cite{Tomancak2002} with 2 s.d.\ error bars.
+    levels from~\cite{Tomancak:systematic02} with 2 s.d.\ error bars.
     The inferred posterior means of the functions are shown in blue
     and the shaded regions denote 2 s.d.\ posterior confidence
     intervals. (b) A joint multiple-target model for
@@ -797,19 +805,19 @@ to choose a small set of confident targets.
 
 Figure~\ref{fig:dros_global_evaluation} shows evaluation of the
 model-based ranking results using data from a genome-wide
-Chromatin-immunoprecipitation (ChIP-chip) experiment~\citep{Zinzen2009} to determine
-whether there is evidence of TF binding within 2000
-base-pairs of a putative target. As well as showing results for
-the single-target and multiple-target Gaussian process methods, we
-also show the performance obtained using evidence of differential
-expression in mutant embryos (knock-outs),
-correlation with TF expression (correlation) and an alternative
-maximum likelihood model-based approach~\citep[quadrature, see][for
-  details]{Honkela:modelbased10}. In the global validation we score
-all genes showing significant variability in the expression data. In
-the focused evaluation we only consider genes with annotated
-expression in mesoderm or muscle tissue according to the {\em in situ}
-hybridization data~\citep{Tomancak2002}.
+Chromatin-immunoprecipitation (ChIP-chip)
+experiment~\citep{Zinzen2009} to determine whether there is evidence
+of TF binding within 2000 base-pairs of a putative target. As well as
+showing results for the single-target and multiple-target Gaussian
+process methods, we also show the performance obtained using evidence
+of differential expression in mutant embryos (knock-outs), correlation
+with TF expression (correlation) and an alternative maximum likelihood
+model-based approach~\citep[quadrature, see][for
+details]{Honkela:modelbased10}. In the global validation we score all
+genes showing significant variability in the expression data. In the
+focused evaluation we only consider genes with annotated expression in
+mesoderm or muscle tissue according to the {\em in situ} hybridization
+data~\citep{Tomancak:systematic02}.
 
 \begin{figure*}[tb]
   \centering
@@ -845,27 +853,24 @@ display a diverse range of temporal profiles
 (Figure~\ref{fig:gpdisim_models}). For Mef2 the correlation-based
 approach works well. We observe that most of the predicted Mef2
 targets have profiles very similar to Mef2 itself, in which case the
-model-based approach would not be expected to provide an advantage. The
-single-target Gaussian process approach is found to out-perform other
-methods in most cases~\citep{Honkela:modelbased10}.
+model-based approach would not be expected to provide an
+advantage. The single-target Gaussian process approach is found to
+out-perform other methods in most cases~\citep{Honkela:modelbased10}.
 
 
 \section{Multiple Tanscription Factors}
 
-The models discussed in previous sections are based on the idealized 
-assumption that the gene regulation process is driven 
-by a single trascription factor. However, gene regulation 
-in complex biological systems can involve several TFs.
-More precisely, to initiate trascription of a gene, 
-multiple TFs may be required to simultaneously 
-bind the related DNA sequence. Thus,  
-in order to take into account the effect of 
-multiple TFs, we need to generalize the basic
-single-TF model described previously. Furthermore, to deal with   
-the non-negativity of the mRNA and protein TF functions,
-along with saturation effects that are naturally encountered in 
-their dynamics, it is essential to assume biologically plausible 
-non-linearities. 
+The models discussed in previous sections are based on the idealized
+assumption that the gene regulation process is driven by a single
+trascription factor. However, gene regulation in complex biological
+systems can involve several TFs.  More precisely, to initiate
+trascription of a gene, multiple TFs may be required to simultaneously
+bind the related DNA sequence. Thus, in order to take into account the
+effect of multiple TFs, we need to generalize the basic single-TF
+model described previously. Furthermore, to deal with the
+non-negativity of the mRNA and protein TF functions, along with
+saturation effects that are naturally encountered in their dynamics,
+it is essential to assume biologically plausible non-linearities.
    
 The basic single-TF ODE model from Equation 
 (\ref{eq:differentialEquation}) can be generalized
@@ -876,48 +881,44 @@ to include multiple TFs according to
 \left(\tfConcentration_1(t),\ldots,\tfConcentration_I(t);
   \bfw_j, w_{j0}\right) -\decayRate_j \mrnaConcentration_j(t), \label{eq:multipleTFtranscription}
 \end{equation}
-where $\tfConcentration_i(t)$, $i=1,\ldots,I$, are the TF protein functions.
-The function $G(\cdot)$ represents a non-linear response
-that allows the TFs to competitively or co-operatively activate 
-or repress the transcription. A reasonable 
-assumption for this non-linear response is 
-to follow a sigmoidal form, similarly to the Michaelis-Menten
-and hill-climbing functions used in single input motifs 
-\citep{Alon:systems06}. For instance, we can choose   
+where $\tfConcentration_i(t)$, $i=1,\ldots,I$, are the TF protein
+functions.  The function $G(\cdot)$ represents a non-linear response
+that allows the TFs to competitively or co-operatively activate or
+repress the transcription. A reasonable assumption for this non-linear
+response is to follow a sigmoidal form, similarly to the
+Michaelis-Menten and hill-climbing functions used in single input
+motifs \citep{Alon:systems06}. For instance, we can choose
 \begin{equation} 
 G(\tfConcentration_1(t),\ldots,\tfConcentration_I(t); \bfw_j, w_{j0})
 = \frac{1}{1 + e^{-w_{j0}  - \sum_{i=1}^I w_{ji} \log \tfConcentration_i(t)}},
 \label{eq:multipleTFhillFun}
 \end{equation}
-which is the standard sigmoid function that takes values in 
-$[0,1]$ and recieves as inputs the logarithm of the TF activities. 
-Here, $w_{j0}$ is a real-valued bias parameter and
-the $I$-dimensional real-valued vector 
-$\bfw_j = [w_{j1} \ldots w_{jI}]^T$ represents the
+which is the standard sigmoid function that takes values in $[0,1]$
+and recieves as inputs the logarithm of the TF activities.  Here,
+$w_{j0}$ is a real-valued bias parameter and the $I$-dimensional
+real-valued vector $\bfw_j = [w_{j1} \ldots w_{jI}]^T$ represents the
 interaction weights between the $j^{\text{th}}$ target gene and the
-$I$ TFs. These parameters quantify the strength 
-of the network links between TFs and genes in 
-the underlying regulatory network.
-Specifically, when $w_{ji}=0$ the link between the $j^{\text{th}}$ gene 
-and the $i^{\text{th}}$ TF is absent while when $w_{ji}$
-is negative or positive the TF acts as a repressor or activator respectively.
-Notice that by estimating the values of the interaction weights, we can infer the network links between 
-TFs and genes. This can lead to a very flexible
-framework for target identification which generalizes the 
-method described in section \ref{sec:targetRanking}.
+$I$ TFs. These parameters quantify the strength of the network links
+between TFs and genes in the underlying regulatory network.
+Specifically, when $w_{ji}=0$ the link between the $j^{\text{th}}$
+gene and the $i^{\text{th}}$ TF is absent while when $w_{ji}$ is
+negative or positive the TF acts as a repressor or activator
+respectively.  Notice that by estimating the values of the interaction
+weights, we can infer the network links between TFs and genes. This
+can lead to a very flexible framework for target identification which
+generalizes the method described in section \ref{sec:targetRanking}.
 
-The multiple TF model can contain a much larger number 
-of unknown parameters and unobserved protein functions
-compared to the single input motif model. Given the scarcity 
-of the data, it is therefore essential 
-that inference is carried out by a fully Bayesian approach using
-Markov chain Monte Carlo (MCMC).
-This poses significant computational challenges 
-since we need to infer via sampling all the unknown quantities which 
-are the protein functions and the remaining model parameters. 
-We have developed an MCMC approach 
-that infers the TF profiles from a small set of training data, associated with a moderate-sized network, 
-and then it performs target identification at a genome-wide scale. 
+The multiple TF model can contain a much larger number of unknown
+parameters and unobserved protein functions compared to the single
+input motif model. Given the scarcity of the data, it is therefore
+essential that inference is carried out by a fully Bayesian approach
+using Markov chain Monte Carlo (MCMC).  This poses significant
+computational challenges since we need to infer via sampling all the
+unknown quantities which are the protein functions and the remaining
+model parameters.  We have developed an MCMC approach that infers the
+TF profiles from a small set of training data, associated with a
+moderate-sized network, and then it performs target identification at
+a genome-wide scale.
 %b yfollowing the framework of section \ref{sec:targetRanking}. 
 This Bayesian approach is based on placing 
 GP priors on the logged TF concentrations and suitable priors on the
@@ -952,7 +953,7 @@ by applying suitable Metropolis-Hastings updates.
     noisy-free (without adding the observation noise from the likelihood) 
     Bayesian model predictions of the mRNA functions. %All these examples are taken from the
     %training set of the $20$ genes.  
-    }\label{fig:toyMultipleTFsFitting}
+  }\label{fig:toyMultipleTFsFitting}
 \end{figure}
 
 
@@ -960,50 +961,73 @@ by applying suitable Metropolis-Hastings updates.
   \begin{center}
       \includegraphics[width=0.8\textwidth]{./dros_toy_evaluation.pdf}
 \end{center}
-  \caption{ROC curves for predicting the network connections in the 
-synthetic data. The left panel shows the performance when predicting
-the first TF, while the right panel shows performance for predicting the second TF. 
-Red curves show the results by using the multiple TF model
-and blue lines the results by using the linear single-TF model. 
-In both plots, random prediction is represented by the diagonal black
-line.}\label{fig:toyMultipleTFsROCs}
+\caption{ROC curves for predicting the network connections in the
+  synthetic data. The left panel shows the performance when predicting
+  the first TF, while the right panel shows performance for predicting
+  the second TF.  Red curves show the results by using the multiple TF
+  model and blue lines the results by using the linear single-TF
+  model.  In both plots, random prediction is represented by the
+  diagonal black line.}\label{fig:toyMultipleTFsROCs}
 \end{figure}
 
 When observations of the TF mRNAs are available, the above framework
-can be combined with the protein translation
-ODE model presented in section \ref{sec:targetRanking}. 
-This can further facilitate the estimation of the TF 
-profiles and resolve identifiability problems caused by 
-the scarcity of the data and experimental 
-conditions.  
+can be combined with the protein translation ODE model presented in
+section \ref{sec:targetRanking}.  This can further facilitate the
+estimation of the TF profiles and resolve identifiability problems
+caused by the scarcity of the data and experimental conditions.
 
 
 We applied the multiple TF dynamical model to an artifical dataset
-consisting of time-series mRNA mesearuments associated with
-$1000$ genes and two TFs. The network links between TFs and genes are
-unknown apart from a small set of $20$ genes which are assumed to have
-known connections. This small set of genes is used to infer the TF
+consisting of time-series mRNA mesearuments associated with $1000$
+genes and two TFs. The network links between TFs and genes are unknown
+apart from a small set of $20$ genes which are assumed to have known
+connections. This small set of genes is used to infer the TF
 concentration functions. Figure \ref{fig:toyMultipleTFsFitting}(a) and
-(b) show the inferred TF profiles  where blue lines represent 
-the inferred means, shaded areas represent 
-$95\%$ uncertainty and the red lines are the actual profiles that generated
-the data. Figure \ref{fig:toyMultipleTFsFitting}(c)-(f) give
-several examples on how the model fits the mRNA expression data. 
-Specifically, the panel in (c) shows a gene that is activated only by the
-first TF while the second TF is inactive.  Panel (d) and (e) show two genes that are regulated 
-(activated in (d) and repressed in (e)) only by the second TF.  
-The last panel (f) shows a gene that is jointly regulated by the
+(b) show the inferred TF profiles where blue lines represent the
+inferred means, shaded areas represent $95\%$ uncertainty and the red
+lines are the actual profiles that generated the data. Figure
+\ref{fig:toyMultipleTFsFitting}(c)-(f) give several examples on how
+the model fits the mRNA expression data.  Specifically, the panel in
+(c) shows a gene that is activated only by the first TF while the
+second TF is inactive.  Panel (d) and (e) show two genes that are
+regulated (activated in (d) and repressed in (e)) only by the second
+TF.  The last panel (f) shows a gene that is jointly regulated by the
 two TFs so that it is repressed by the first TF and activated by the
-second one.  Figure \ref{fig:toyMultipleTFsROCs} shows 
-ROC curves of predictive performance for identifying the network
-links between the two TFs and the $980$ test genes.  The performance of
-a linear single-TF model is also displayed and is clearly inferior to
-the performance of the multiple TF model.   
+second one.  Figure \ref{fig:toyMultipleTFsROCs} shows ROC curves of
+predictive performance for identifying the network links between the
+two TFs and the $980$ test genes.  The performance of a linear
+single-TF model is also displayed and is clearly inferior to the
+performance of the multiple TF model.
 
 
 \section{Conclusion}
+
+The difficulty of measuring every biochemical species involved in
+cellular interaction networks will mean that we will often be faced
+with the problem of missing functions. In this chapter we have
+reviewed an elegant approach to dealing with such missing functions,
+we started with parameteric generalized linear models for dealing with
+the missing functions, and extended them through Bayesian treatments
+and considering the limit of infinite basis functions to arrive at
+sGaussian process models. We reviewed a simple model of transcription
+and translation and showed how it can be used to rank putative targets
+of transcription factors. The Gaussian process framework provides an
+elegant framework for analytically dealing with missing functions if
+the differential equation responds in a linear way to the driving
+function. However, if we consider nonlinear responses, which we must
+necessarily do if we wish to constrain the concentration of the
+missing functions to be positive, the analytic approach is no longer
+tractable. We reviewed an efficient sampling based approach that
+allows us to consider non linear responses and can be applied to the
+situation where there are multiple transcription factors regulating
+the targets of interest. Both approaches can be applied for genomewide
+ranking of putative targets.xs Together these approaches present a
+powerful set of diagnostic tools for unravelling the transcriptional
+interactions that underpin a biological time series.xs
+
+
 \bibliographystyle{plainnat}
-\bibliography{lawrence,other,zbooks,../disim_pnas/disim.bib}
+\bibliography{lawrence,other,zbooks}
   
 
 \end{document}
