@@ -774,13 +774,15 @@ will read octave files.  See the help page in the package for more
 information.
 
 
-ALFREDO'S NOTES (making my life infinitesimally easier hack by hack)
+FREDDIE'S NOTES (making my life infinitesimally easier hack by hack)
 
 MATRIX SLICE NOTE: R automatically converts any single column/row matrices to (column) vectors, unless *explicitly* specified with the 'drop=FALSE' argument. That way they should retain information about whether they were row or column vectors originally. Consequently, anything in MATLAB of the form A(i,:)' (transposed) should *not* be translated into R as t(A[i, ]), but instead as t(A[i, ,drop=FALSE]).
 
 MEMORY NOTICE: MATLAB automatically allocates extra memory for a vector that expands inside a loop. On the other hand R does not in specific cases, so to be on the safe side one must take care of preallocating memory for all objects enlarged inside a loop.
 
-LIST FIELD INDEXING NOTICE: R can access fields of a list by NAME SIMILARITY, e.g. list 'listA' has a field called 'someField'. The user can still access that field by 'listA$some'. In this example, one should take care not to assign values to a new field with the *intended* name 'some' by 'listA$some[1]=...' as this would write over the original values of the field 'someField'.
+LIST FIELD INDEXING NOTE: R can access fields of a list by NAME SIMILARITY, e.g. list 'listA' has a field called 'someField'. The user can still access that field by 'listA$some'. In this example, one should take care not to assign values to a new field with the *intended* name 'some' by 'listA$some[1]=...' as this would write over the original values of the field 'someField'.
+
+FORMATTED STRING NOTE: 'sprintf' has no output from within a function. Best work-around I can think of is to wrap with 'cat'.
 
 SPECIAL CODE CORRESPONDENCE:
 sparseDiag(matrix(a.scalar, nrows, ncols))	diag.spam(a.scalar, nrows) # requires spam package
@@ -796,12 +798,21 @@ mean(mean(a.matrix))				mean(a.matrix)
 a.cell = cell(1,ncols)				a = list()
 a.cell = cell(nrows, ncols)			a = as.list(matrix(0,1,nrows)) ## this is ridiculous
 						a = lapply(a, function(x) x=as.list(matrix(0,1,nrows)))
-## alternative way				a = matrix(0, nrows, ncols)
+## OR						a = matrix(0, nrows, ncols)
 						a = lapply(split(a,row(a)), split, 1:ncols)
 a.vector = [a.vector' b.list c.list]		a.vector = unlist(c(a.vector, b.list, c.list))
 a.vector .* b.matrix(1,:)			a.vector * drop(b.matrix[1, ])
 zeros(size(X))					array(0, dim(as.array(X)))
 fill([x; flipdim(x,1)], [y; flipdim(y,1)])	polygon(c(x, rev(x)), c(y, rev(y)))
 figure(1); figure(2); figure(1); close		dev.new(); dev.new(); dev.set(1); dev.off()
-
-
+## Plot will allow to plot points and lines and text in the empty space; frame() will not.
+clf						frame() ## OR
+						plot.new() ## OR
+						plot(1, type="n", axes=F, xlab="", ylab="")
+subplot(1, 3, 2)				split.screen(c(1,3)); screen(2)
+# 'clf' just for this subfigure/screen		erase.screen)
+hold on						par(new=T) # ONLY next plot is superimposed on existing
+num2str(5)					as.character(5)
+str2num('5')					as.numeric('5')
+find('abc d' == ' ')				grep(' ', strplit('abc d', split='')[[1]])
+upper('a')					toupper('a')
