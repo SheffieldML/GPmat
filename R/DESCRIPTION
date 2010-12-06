@@ -9,6 +9,6 @@ Imports:
 Suggests: spam
 Description: The gptk package implements a general-purpose toolkit for Gaussian
   process regression. This R version is based on a Matlab implementation originally
-  written by Neil D. Lawrence.
+  written by Neil D. Lawrence. See inst/doc/index.html for details.
 License: AGPL-3
 URL:

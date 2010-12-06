@@ -170,7 +170,8 @@ the data.
 
 <br><i>Left</i> Gaussian process regression applied to the data with an increasing length scale. The
 length scales used were 0.05, 0.1, 0.25, 0.5, 1, 2, 4, 8 and
-16. <i>Right</i> Log-log plot of the log likelihood of the data against the length scales. The log-likelihood
+16. <br> <i>Right</i> Log-log plot of
+the log likelihood of the data against the length scales. The log-likelihood
 is shown as a black line. The log-likelihood is made up of
 a data fit term (the quadratic form) shown by a green line and a
 complexity term (the log determinant) shown by a red line. The data

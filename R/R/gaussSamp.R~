@@ -1,4 +1,4 @@
-gaussSamp <- function(mu=matrix(0,ncol=dim(Sigma)[1]), Sigma, numSamps) {
+gaussSamp <- function(mu=matrix(0,nrow=dim(Sigma)[1]), Sigma, numSamps) {
 
 ## GAUSSSAMP Sample from a Gaussian with a given covariance.
 ## FORMAT 
@@ -9,17 +9,14 @@ gaussSamp <- function(mu=matrix(0,ncol=dim(Sigma)[1]), Sigma, numSamps) {
 ## ARG numSamps : the number of samples to take from Gaussian.
 ## RETURN y : the samples from the Gaussian
 ##
-## SEEALSO : randn, eig
+## SEEALSO : randn, eigen
 ##
-## COPYRIGHT : Neil D. Lawrence, 2005
-## MODIFICATIONS : Alfredo A. Kalaitzis, 2010
-
-## NDLUTIL
+## COPYRIGHT : Neil D. Lawrence 2005, Alfredo A. Kalaitzis 2010
 
   eigVecs = eigen(Sigma)
   U = eigVecs$vectors; V = eigVecs$values
   dims = dim(Sigma)[1]
-  y = matrix(rnorm(numSamps*dims), numSamps, dims) #randn(numSamps, dims)
+  y = matrix(rnorm(numSamps*dims), numSamps, dims)
 #   V[V<0] = as.complex(V[V<0])
   y =  matrix(1,nrow=numSamps)%*%t(mu) + y %*% diag(sqrt(abs(V))) %*% t(U)
 

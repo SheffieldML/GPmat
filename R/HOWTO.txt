@@ -14,17 +14,35 @@ tigre
 sudo R
 
 ## Then enter the following in the R session:
-
 install.packages("spam", dependencies=TRUE)
 source("http://bioconductor.org/biocLite.R")
 biocLite("puma")
 biocLite("tigre")
 
 ## No integrated package available for GP, so include the source code manually:
-
 source("~/mlprojects/gp/R/gpLoadToolkit.R")
 gpLoadToolkit()
 gpTest() # run some tests
 demInterpolation() # run demo
 demRegression() # another demo
 demOptimiseGp() # and another demo
+
+############################################################################
+########## To build the gptk R package from the 'mlprojects/gp/R' folder: ##########
+## - In an R session:
+  source('~/mlprojects/gp/R/R/gpLoadToolkit.R')
+  gpLoadToolkit() ## This will load up in memory all the package-related source files in 'mlprojects/gp/R/R/'.
+  ## The package skeleton folder [name] will be created in [path].
+  package.skeleton(name='gptk', path='~')
+## - Remove gpLoadTookit() from '~/gptk/R/'.
+## - Overwrite skeleton man folder '~/gptk/man/' with proper man folder 'mlprojects/gp/R/man/'.
+## - Place a copy of the folder 'mlprojects/gp/R/inst/'.
+## - Clean up '~/gptk/R/inst/doc': remove unnecessary .eps and .png files and update 'index.html'.
+## - Remove hidden files related to the svn (.svn/, etc.) from every copied folder.
+## - Update the DESCRIPTION file in 'mlprojects/gp/R' and copy it over to '~/gptk/'.
+## - See and remove '~/gptk/Read-and-delete-me.txt'.
+## - Remove the folder '~/gptk/data/'.
+## - In a terminal:
+  cd ~
+  R CMD build gptk ## Builds package.
+  R CMD check gptk ## Validates package.

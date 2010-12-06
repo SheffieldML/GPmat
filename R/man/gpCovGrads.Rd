@@ -19,7 +19,7 @@ values <- gpCovGrads(model, M)
   \item{gBeta}{the gradient with respect to the beta term in the covariance structure. }
 }
 \seealso{
-\code{\link{gpCreate}, \link{gpLogLikeGradient}}.
+\code{\link{gpCreate}, \link{gpLogLikeGradients}}.
 }
 \examples{
 ## missing

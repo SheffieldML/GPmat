@@ -16,7 +16,7 @@ y <- gaussSamp(Sigma, numSamps)
   \item{y}{the samples from the Gaussian}
 }
 \seealso{
-\code{\link{randn}, \link{eig}}.
+\code{\link{rnorm}, \link{eigen}}.
 }
 \examples{
 ## missing

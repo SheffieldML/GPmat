@@ -7,7 +7,7 @@
 }
 \usage{
 kern <- kernCreate(X, type)
-kern <- kernCreate(dim, type')
+kern <- kernCreate(dim, type)
 }
 \arguments{
   \item{X}{Input data values (from which kernel will later be computed).}
@@ -19,7 +19,7 @@ kern <- kernCreate(dim, type')
   \code{kern <- kernCreate(X, type)}
   input points and a kernel type.
 
-  \code{kern <- kernCreate(dim, type')}
+  \code{kern <- kernCreate(dim, type)}
   creates a kernel matrix structure given the dimensions of the design matrix and the kernel type.
 
 }

@@ -1,4 +1,9 @@
 gpPlot <- function(model,Xstar,mu,S,simpose=NULL,xlim=NULL,ylim=NULL,xlab='',ylab='',col='blue',title='') {
+## GPPLOT Plots the GP mean and variance.
+
+## COPYRIGHT : Alfredo A. Kalaitzis 2010
+
+## GP
 
   if (missing(model) || missing(Xstar)) {
     stop('Missing GP model or points of prediction Xstar.')
@@ -8,7 +13,6 @@ gpPlot <- function(model,Xstar,mu,S,simpose=NULL,xlim=NULL,ylim=NULL,xlab='',yla
       mu = meanVar$mu; S = meanVar$varsigma
     }
   }
-# browser()
 
 #   f = c(mu+2*sqrt(abs(S)), rev(mu-2*sqrt(abs(S))))
   f = c(mu+2*abs(S), rev(mu-2*abs(S)))

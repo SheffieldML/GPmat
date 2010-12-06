@@ -7,7 +7,7 @@
 }
 \usage{
 g <- modelOutputGrad(model, X)
-g <- modelOutputGrad(model, X', dim)
+g <- modelOutputGrad(model, X, dim)
 }
 \arguments{
   \item{model}{the model structure for which gradients are computed.}
@@ -19,7 +19,7 @@ g <- modelOutputGrad(model, X', dim)
   \code{g <- modelOutputGrad(model, X)}
   gives the gradients of the outputs from the model with respect to the parameters for a given set of inputs.
 
-  \code{g <- modelOutputGrad(model, X', dim)}
+  \code{g <- modelOutputGrad(model, X, dim)}
   gives the gradients of the outputs from the model with respect to the parameters for a given set of inputs.
 
 }

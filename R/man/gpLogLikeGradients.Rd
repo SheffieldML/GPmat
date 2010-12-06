@@ -6,13 +6,9 @@
   computes the gradients of the Gaussian process log likelihood with respect to the model parameters (and optionally, as above with respect to inducing variables and input data) given the target data, input data and inducing variable locations.
 }
 \usage{
-values <- gpLogLikeGradients(, , , , , ', ', ')
+values <- gpLogLikeGradients(, , , , , ', ', )
 }
 \arguments{
-  \item{}{model : the model structure for which gradients are computed.}
-  \item{}{model : the model structure for which gradients are computed.}
-  \item{}{model : the model structure for which gradients are computed.}
-  \item{}{model : the model structure for which gradients are computed.}
   \item{}{model : the model structure for which gradients are computed.}
   \item{'}{X : the input data locations for which gradients are computed.}
   \item{'}{M : the scaled and bias removed target data for which the gradients are computed.}
@@ -20,12 +16,8 @@ values <- gpLogLikeGradients(, , , , , ', ', ')
 }
 \value{
   \item{gParam}{the gradient of the log likelihood with respect to the model parameters.}
-  \item{gParam}{the gradient of the log likelihood with respect to the model parameters.}
   \item{gX_u}{the gradient of the log likelihood with respect to the inducing variables. If inducing variables aren't being used this returns zero.}
   \item{gParam}{the gradient of the log likelihood with respect to the model parameters (including any gradients with respect to beta).}
-  \item{gX_u}{the gradient of the log likelihood with respect to the inducing variables. If inducing variables aren't being used this returns zero.}
-  \item{gX}{the gradient of the log likelihood with respect to the input data locations.}
-  \item{gParam}{the gradient of the log likelihood with respect to the model parameters.}
   \item{gX_u}{the gradient of the log likelihood with respect to the inducing variables. If inducing variables aren't being used this returns zero.}
   \item{gX}{the gradient of the log likelihood with respect to the input data locations.}
   \item{gbeta}{the gradient of the log likelihood with respect to beta.}
