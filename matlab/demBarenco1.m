@@ -40,9 +40,12 @@ saveFigures = 0;
 model.type = 'cgpsim';  % This new model type is a hack to run
                         % the model in a hierarchical manner.
                         % need to do this more elegantly later.
+s = warning('query', 'multiKernParamInit:noCrossKernel');
+warning('off', 'multiKernParamInit:noCrossKernel');
 for i =1:3          %% 3 original
   model.comp{i} = gpsimCreate(5, 1, times, y{i}, yvar{i}, options);
 end
+warning(s.state, 'multiKernParamInit:noCrossKernel');
 
 % Learn the model.
 model = modelOptimise(model, [], [], 1, 3000);
@@ -82,6 +85,8 @@ for j = 1:length(model.comp)
   % (simXrbfKernCompute does this for us).
 
   if isfield(model.comp{j}, 'proteinPrior') && ~isempty(model.comp{j}.proteinPrior)
+    meanPredX = ones(length(predt),1)*(model.comp{j}.B./ ...
+				       model.comp{j}.D);
     if model.comp{j}.includeNoise
       for i=1:model.comp{j}.kern.comp{1}.numBlocks
         predTimeCell{i} = predt;
@@ -126,7 +131,7 @@ for j = 1:length(model.comp)
     predExprs = [];
     varExprs = [];
     for i = 1:model.comp{j}.numGenes
-      predExprs(:,i) = predFull{i+1};
+      predExprs(:,i) = predFull{i+1} + meanPredX(:, i);
       varExprs(:,i) = varFull{i+1};
     end
     predExprs(end-6:end,:) = [];   
@@ -156,6 +161,8 @@ for j = 1:length(model.comp)
     predF = real(K'*model.comp{j}.invK*model.comp{j}.y);
     varF = real(kernDiagCompute(proteinKern, predt) - sum(K.*(model.comp{j}.invK*K), ...
                                                    1)');
+    meanPredX = reshape(ones(length(predt),1)*(model.comp{j}.B./ ...
+      model.comp{j}.D), length(predt)*(numGenes), 1);
     
     if model.comp{j}.includeNoise
       Kxx = multiKernCompute(model.comp{j}.kern.comp{1}, predt, times);
@@ -170,6 +177,7 @@ for j = 1:length(model.comp)
                                                     (model.comp{j}.invK*Kxx'), ...
                                                     1)');
     end
+    predX = predX + meanPredX;
     numGenes = model.comp{j}.numGenes;
     numTimes = length(predX)/numGenes;
     predExprs = reshape(predX, numTimes, numGenes);
