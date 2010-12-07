@@ -20,7 +20,7 @@ function model = gpsimCreate(numGenes, numProteins, times, geneVals, ...
 % system.
 % ARG times : the time points where the data is to be modelled.
 % ARG geneVals : the values of each gene at the different time points.
-% ARG geneVars : the varuabces of each gene at the different time points.
+% ARG geneVars : the variances of each gene at the different time points.
 % ARG options : options structure, the default options can be
 % generated using gpsimOptions.
 % ARG annotation : annotation for the data (gene names, etc.) that
