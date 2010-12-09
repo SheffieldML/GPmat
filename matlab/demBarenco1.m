@@ -95,13 +95,12 @@ for j = 1:length(model.comp)
       Kxx = multiKernCompute(model.comp{j}.kern.comp{1}, predTimeCell, ...
                              model.comp{j}.timesCell);
       diagKxx = kernDiagCompute(model.comp{j}.kern.comp{1}, predTimeCell);     
-      x = [model.comp{j}.proteinPrior; model.comp{j}.y];
       
       ind = 1:length(predTimeCell{1});
       for indBlock=1:model.comp{j}.kern.comp{1}.numBlocks
         K = Kxx(ind, :);
         diagK = diagKxx(ind,:);
-        predFull{indBlock} = real(K*model.comp{j}.invK*x);
+        predFull{indBlock} = real(K*model.comp{j}.invK*model.comp{j}.m);
         varFull{indBlock} = real(diagK - sum(K'.*(model.comp{j}.invK*K'), 1)');
         ind = ind + length(predTimeCell{indBlock});
       end
@@ -113,14 +112,13 @@ for j = 1:length(model.comp)
       Kxx = multiKernCompute(model.comp{j}.kern, predTimeCell, ...
                              model.comp{j}.timesCell);
       diagKxx = kernDiagCompute(model.comp{j}.kern, predTimeCell);
-      x = [model.comp{j}.proteinPrior; model.comp{j}.y];
       
       ind = 1:length(predTimeCell{1});
       
       for indBlock=1:model.comp{j}.kern.numBlocks
         K = Kxx(ind, :);
         diagK = diagKxx(ind,:);
-        predFull{indBlock} = real(K*model.comp{j}.invK*x);
+        predFull{indBlock} = real(K*model.comp{j}.invK*model.comp{j}.m);
         varFull{indBlock} = real(diagK - sum(K'.*(model.comp{j}.invK*K'), 1)');
         ind = ind + length(predTimeCell{indBlock});
       end
@@ -158,7 +156,7 @@ for j = 1:length(model.comp)
       end
     end
   
-    predF = real(K'*model.comp{j}.invK*model.comp{j}.y);
+    predF = real(K'*model.comp{j}.invK*model.comp{j}.m);
     varF = real(kernDiagCompute(proteinKern, predt) - sum(K.*(model.comp{j}.invK*K), ...
                                                    1)');
     meanPredX = reshape(ones(length(predt),1)*(model.comp{j}.B./ ...
@@ -166,13 +164,13 @@ for j = 1:length(model.comp)
     
     if model.comp{j}.includeNoise
       Kxx = multiKernCompute(model.comp{j}.kern.comp{1}, predt, times);
-      predX = real(Kxx*model.comp{j}.invK*model.comp{j}.y);
+      predX = real(Kxx*model.comp{j}.invK*model.comp{j}.m);
       varX = real(kernDiagCompute(model.comp{j}.kern.comp{1}, predt) - sum(Kxx'.* ...
                                                     (model.comp{j}.invK*Kxx'), ...
                                                     1)');
     else
       Kxx = multiKernCompute(model.comp{j}.kern, predt, times);
-      predX = real(Kxx*model.comp{j}.invK*model.comp{j}.y);
+      predX = real(Kxx*model.comp{j}.invK*model.comp{j}.m);
       varX = real(kernDiagCompute(model.comp{j}.kern, predt) - sum(Kxx'.* ...
                                                     (model.comp{j}.invK*Kxx'), ...
                                                     1)');
