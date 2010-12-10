@@ -1,6 +1,7 @@
 \name{rbfKernGradX}
 \Rdversion{1.0}
 \alias{rbfKernGradX}
+\alias{rbfKernGradXpoint}
 \title{Gradient of RBF kernel with respect to input locations.}
 \description{
   computes the gradident of the radial basis function kernel with respect to the input positions where both the row positions and column positions are provided separately.

@@ -8,14 +8,12 @@
 \usage{
 model <- gpTest()
 }
-\arguments{
-}
 \value{
   \item{model}{a cell array of models used for testing.}
 }
-\seealso{
-\code{\link{modelTest}}.
-}
+% \seealso{
+% \code{\link{modelTest}}.
+% }
 \examples{
 ## missing
 }

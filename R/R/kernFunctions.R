@@ -98,11 +98,11 @@ kernCreate <- function(x, kernType, kernOptions=NULL) {
   kern$Kstore <- matrix()
   kern$diagK <- matrix()      
 
-  if (!is.null(kernOptions) && "priors" %in% names(kernOptions)) {
-    kern$priors <- list()
-    for (k in seq_along(kernOptions$prior))
-      kern$priors[[k]] <- priorCreate(kernOptions$prior[[k]])
-  }
+#   if (!is.null(kernOptions) && 'priors' %in% names(kernOptions)) {
+#     kern$priors <- list()
+#     for (k in seq_along(kernOptions$prior))
+#       kern$priors[[k]] <- priorCreate(kernOptions$prior[[k]])
+#   }
   
   return (kern)
   
@@ -213,57 +213,57 @@ kernGradient <- function (kern, x, ...) {
 }
 
 
-kernPriorLogProb <- function (kern) {
-  L <- 0
-  if (kern$type %in% c('cmpnd', 'multi', 'tensor')) {
-    for (i in seq_along(kern$comp)) {
-      L <- L + kernPriorLogProb(kern$comp[[i]])
-    }
-  } else {
-    if ("priors" %in% names(kern)) {
-      func <- get(paste(kern$type, 'KernExtractParam', sep=''), mode='function')
-      params <- func(kern)
-      for (i in seq_along(kern$priors)) {
-        index <- kern$priors[[i]]$index
-        L <- L + priorLogProb(kern$priors[[i]], params[index])
-      }
-    }
-  }
-  return (L)
-}
+# kernPriorLogProb <- function (kern) {
+#   L <- 0
+#   if (kern$type %in% c('cmpnd', 'multi', 'tensor')) {
+#     for (i in seq_along(kern$comp)) {
+#       L <- L + kernPriorLogProb(kern$comp[[i]])
+#     }
+#   } else {
+#     if ("priors" %in% names(kern)) {
+#       func <- get(paste(kern$type, 'KernExtractParam', sep=''), mode='function')
+#       params <- func(kern)
+#       for (i in seq_along(kern$priors)) {
+#         index <- kern$priors[[i]]$index
+#         L <- L + priorLogProb(kern$priors[[i]], params[index])
+#       }
+#     }
+#   }
+#   return (L)
+# }
 
 
-kernPriorGradient <- function (kern) {
-  g <- array(0, kern$nParams)
-
-  if (kern$type %in% c('cmpnd', 'multi', 'tensor')) {
-    startVal <- 1
-    endVal <- 0
-    for (i in seq_along(kern$comp)) {
-      endVal <- endVal + kern$comp[[i]]$nParams
-      g[startVal:endVal] <- kernPriorGradient(kern$comp[[i]])
-      startVal <- endVal + 1
-    }
-    g = (g %*% kern$paramGroups)[1,]
-  } else {
-    if ("priors" %in% names(kern)) {
-      func <- get(paste(kern$type, 'KernExtractParam', sep=''), mode='function')
-      params <- func(kern)
-      for (i in seq_along(kern$priors)) {
-        index <- kern$priors[[i]]$index
-        g[index] <- g[index] + priorGradient(kern$priors[[i]], params[index])
-      }
-      # Check if parameters are being optimised in a transformed space.
-      if ("transforms" %in% names(kern)) {
-        factors <- .kernFactors(kern, "gradfact")
-        for (i in seq_along(factors))
-          g[factors[[i]]$index] <- g[factors[[i]]$index]*factors[[i]]$val
-      }
-    }
-  }
-
-  return (g)
-}
+# kernPriorGradient <- function (kern) {
+#   g <- array(0, kern$nParams)
+# 
+#   if (kern$type %in% c('cmpnd', 'multi', 'tensor')) {
+#     startVal <- 1
+#     endVal <- 0
+#     for (i in seq_along(kern$comp)) {
+#       endVal <- endVal + kern$comp[[i]]$nParams
+#       g[startVal:endVal] <- kernPriorGradient(kern$comp[[i]])
+#       startVal <- endVal + 1
+#     }
+#     g = (g %*% kern$paramGroups)[1,]
+#   } else {
+#     if ("priors" %in% names(kern)) {
+#       func <- get(paste(kern$type, 'KernExtractParam', sep=''), mode='function')
+#       params <- func(kern)
+#       for (i in seq_along(kern$priors)) {
+#         index <- kern$priors[[i]]$index
+#         g[index] <- g[index] + priorGradient(kern$priors[[i]], params[index])
+#       }
+#       # Check if parameters are being optimised in a transformed space.
+#       if ("transforms" %in% names(kern)) {
+#         factors <- .kernFactors(kern, "gradfact")
+#         for (i in seq_along(factors))
+#           g[factors[[i]]$index] <- g[factors[[i]]$index]*factors[[i]]$val
+#       }
+#     }
+#   }
+# 
+#   return (g)
+# }
 
 
 .kernFactors <- function (kern, factorType) {
@@ -844,10 +844,10 @@ multiKernDiagCompute <- function (kern, x) {
 
 
 kernTest <- function(kernType, numIn=4, tieParamNames=list(), testindex=NULL) {
-  numData <- 20
+  numData = 20
 
   kern <- kernCreate(numIn, kernType)
-##   if exist([kern.type 'KernSetIndex'])==2 
+##   if exists([kern.type 'KernSetIndex'])==2 
 ##     for i = 1:length(kern.comp)
 ##       if rand(1)>0.5
 ##         indices = randperm(numIn);
@@ -877,7 +877,7 @@ kernTest <- function(kernType, numIn=4, tieParamNames=list(), testindex=NULL) {
     }
   }
 
-  kern <- modelTieParam(kern, tieParamNames)
+#   kern <- modelTieParam(kern, tieParamNames)
   # Set the parameters randomly.
   params <- kernExtractParam(kern)
   params <- rnorm(length(params))/sqrt(rnorm(length(params))^2)
@@ -1060,5 +1060,4 @@ kernTest <- function(kernType, numIn=4, tieParamNames=list(), testindex=NULL) {
   kernDisplay(kern)
   return(kern)
 # We don't test kernCompute(kern, x, x2) here at all!
-
 }

@@ -4,7 +4,7 @@ gpOut <- function(model, x) {
     mu = model$mu ## bug: values of mu, varsigma not used
     varsigma = model$varSigma
   } else {
-    if ("noise" %n% names(model)) {
+    if ('noise' %in% names(model)) {
       # [mu, varsigma] = gpPosteriorMeanVar(model, x)
       meanVar = gpPosteriorMeanVar(model, x, varsigma.return=TRUE)
       y = noiseOut(model$noise, meanVar$mu, meanVar$varsigma)

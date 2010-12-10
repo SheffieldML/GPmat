@@ -6,7 +6,7 @@ gpMeanFunctionGradient <- function(model) {
     if (model$isMissingData)
       stop("Currently not implemented for missing data.")
     
-  if ("meanFunction" %in% names(model) && length(model$meanFunction)>0) {
+  if ("meanunction" %in% names(model) && length(model$meanFunction)>0) {
     g = matrix(0, 1, model$meanFunction$numParams)
     ## compute gradients here.
     if (model$approx == "ftc")
@@ -24,13 +24,13 @@ gpMeanFunctionGradient <- function(model) {
       K_ufDinv = matrix(0,model$k, model$N)
       for (i in 1:length(model$blockEnd)) {
 	ind = gpBlockIndices(model, i)
-	Dinvm[[i]] = model$Dinv[[i]]%*%model$m[ind, ,drop=F]
-	K_ufDinvm = K_ufDinvm + model$K_uf[, ind,drop=F]%*%Dinvm[[i]]
+	Dinvm[[i]] = model$Dinv[[i]]%*%model$m[ind, ,drop=FALSE]
+	K_ufDinvm = K_ufDinvm + model$K_uf[, ind,drop=FALSE]%*%Dinvm[[i]]
       }
       for (i in 1:length(model$blockEnd)) {
 	ind = gpBlockIndices(model, i)
 	gmu[ind, ] = (Dinvm[[i]] - model$Dinv[[i]]
-		      %*%t(model$K_uf[, ind,drop=F])%*%(model$Ainv%*%K_ufDinvm))*model$beta
+		      %*%t(model$K_uf[, ind,drop=FALSE])%*%(model$Ainv%*%K_ufDinvm))*model$beta
       }
     }
     

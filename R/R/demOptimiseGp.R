@@ -22,7 +22,7 @@ demOptimiseGp <- function(path=getwd(), filename='demOptimiseGp') {
   kern = trueKern
   K = kernCompute(trueKern, x)
   y = t(gaussSamp(matrix(0,6,1), K, 1))
-  y = scale(y,scale=F)
+  y = scale(y,scale=FALSE)
   model = gpCreate(dim(x)[2], dim(y)[2], x, y, options)	
 
   graphics.off(); dev.new(); plot.new()

@@ -17,7 +17,8 @@ model <- gpOptimise(model, display, iters)
   \item{model}{the optimised model.}
 }
 \seealso{
-\code{\link{scg}, \link{conjgrad}, \link{gpCreate}, \link{gpGradient}, \link{gpObjective}}.
+\code{
+  \link{gpCreate}, \link{gpGradient}, \link{gpObjective}}.
 }
 \examples{
 ## missing

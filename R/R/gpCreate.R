@@ -17,14 +17,14 @@ gpCreate <- function(q, d, X, y, options) {
     optimiseBeta=options$optimiseBeta, betaTransform=optimiDefaultConstraint("positive"),
     q=dim(X)[2], d=dim(y)[2], N=dim(y)[1])
 
-  ## Set up a mean function if one is given.
-  if (("meanFunction" %in% names(options)) && length(options$meanFunction)>0) {
+#   ## Set up a mean function if one is given.
+#   if (("meanFunction" %in% names(options)) && length(options$meanFunction)>0) {
 #     if (is.list(options$meanFunction))
 #       model$meanFunction = options$meanFunction
 #     else
-      model$meanFunction = modelCreate(options$meanFunction, model$q, model$d,
-			      options$meanFunctionOptions)
-  }
+#       model$meanFunction = modelCreate(options$meanFunction, model$q, model$d,
+# 			      options$meanFunctionOptions)
+#   }
 
   model$optimiser = options$optimiser
   model$isSpherical = options$isSpherical
@@ -75,27 +75,27 @@ gpCreate <- function(q, d, X, y, options) {
     model$kern = kernCreate(model$X, options$kern)
 
 
-  if ("noise" %in% names(options)) {
-    if (is.list(options$noise)) #isstruct(options.noise)
-      model$noise = options$noise
-    else
-      model$noise = noiseCreate(options$noise, y)
-    
-    ## Set up noise model gradient storage.
-    model$nu = matrix(0, dim(y)[1], dim(y)[2])
-    model$g = matrix(0, dim(y)[1], dim(y)[2])
-    model$gamma = matrix(0, dim(y)[1], dim(y)[2])
-    
-    ## Initate noise model
-    model$noise = noiseCreate(noiseType, y) ## bug: noiseType has no value
-    
-    ## Set up storage for the expectations
-    model$expectations$f = model$y
-    model$expectations$ff = matrix(1, dim(model$y)[1], dim(model$y)[2])
-    model$expectations$fBar = matrix(1, dim(model$y)[1], dim(model$y)[2])
-    ## bug: numData has no value
-    model$expectations$fBarfBar = array(1,dim=(c(numData, numData, dim(model$y)[2])))
-  }
+#   if ("noise" %in% names(options)) {
+#     if (is.list(options$noise)) #isstruct(options.noise)
+#       model$noise = options$noise
+#     else
+#       model$noise = noiseCreate(options$noise, y)
+#     
+#     ## Set up noise model gradient storage.
+#     model$nu = matrix(0, dim(y)[1], dim(y)[2])
+#     model$g = matrix(0, dim(y)[1], dim(y)[2])
+#     model$gamma = matrix(0, dim(y)[1], dim(y)[2])
+#     
+#     ## Initate noise model
+#     model$noise = noiseCreate(noiseType, y) ## bug: noiseType has no value
+#     
+#     ## Set up storage for the expectations
+#     model$expectations$f = model$y
+#     model$expectations$ff = matrix(1, dim(model$y)[1], dim(model$y)[2])
+#     model$expectations$fBar = matrix(1, dim(model$y)[1], dim(model$y)[2])
+#     ## bug: numData has no value
+#     model$expectations$fBarfBar = array(1,dim=(c(numData, numData, dim(model$y)[2])))
+#   }
 
   if (options$approx == "ftc") {
     model$k = 0
@@ -116,7 +116,7 @@ gpCreate <- function(q, d, X, y, options) {
     } else {
       ind = sample(1:model$N, size=model$N) #randperm(model$N)
       ind = ind[1:model$k]
-      model$X_u = model$X[ind, ,drop=F]
+      model$X_u = model$X[ind, ,drop=FALSE]
     }
   }
 

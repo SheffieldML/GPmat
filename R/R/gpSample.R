@@ -1,4 +1,4 @@
-gpSample <- function (kernType, numSamps=10, params=NULL, lims=c(-3,3), seed=NULL, bw=FALSE, path=getwd()) {
+gpSample <- function (kernType, numSamps=10, params=NULL, lims=c(-3,3), path=getwd()) {
 ## GPSAMPLE Create a plot of samples from a GP.
 ## FORMAT
 ## DESC creates a plot of samples from a kernel with the given parameters and variance.

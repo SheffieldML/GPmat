@@ -1,5 +1,4 @@
-gpLogLikeGradients <- function(model, X=model$X, M, X_u, gX_u.return=FALSE, gX.return=FALSE,
-  g_beta.return=FALSE) {
+gpLogLikeGradients <- function(model, X=model$X, M, X_u, gX_u.return=FALSE, gX.return=FALSE, g_beta.return=FALSE) {
   
   if (missing(X_u)) { #if (nargs() < 4)
     X_u = list()
@@ -45,7 +44,7 @@ gpLogLikeGradients <- function(model, X=model$X, M, X_u, gX_u.return=FALSE, gX.r
         for (i in 1:model$N) {
           counter = counter + 1
           for (j in 1:model$q)
-            gX[i, j] = gX[i, j] + t(gKX[, j, i,drop=F]) %*% gK[, counter,drop=F]
+            gX[i, j] = gX[i, j] + t(gKX[, j, i,drop=FALSE]) %*% gK[, counter,drop=FALSE]
         }
       }
       ## Compute Gradients of Kernel Parameters
@@ -60,7 +59,7 @@ gpLogLikeGradients <- function(model, X=model$X, M, X_u, gX_u.return=FALSE, gX.r
           for (i in ind) {
             counter = counter + 1
             for (j in 1:model$q)
-              gX[i, j] = gX[i, j] + gKX[ind, j, i,drop=F]%*%gK[, counter,drop=F]
+              gX[i, j] = gX[i, j] + gKX[ind, j, i,drop=FALSE]%*%gK[, counter,drop=FALSE]
           }
         }
         ## Compute Gradients of Kernel Parameters
@@ -109,14 +108,14 @@ gpLogLikeGradients <- function(model, X=model$X, M, X_u, gX_u.return=FALSE, gX.r
       ## Compute portion associated with gK_uu
       for (i in 1:model$k) {
         for (j in 1:model$q)
-          gX_u[i, j] = t(gKX[, j, i]) %*% gK_uu[, i,drop=F]
+          gX_u[i, j] = t(gKX[, j, i]) %*% gK_uu[, i,drop=FALSE]
       }
 
       ## Compute portion associated with gK_uf
       gKX_uf = kernGradX(model$kern, X_u, X)
       for (i in 1:model$k) {
         for (j in 1:model$q)
-          gX_u[i, j] = gX_u[i, j] + t(gKX_uf[, j, i]) %*% t(gK_uf[i, ,drop=F])
+          gX_u[i, j] = gX_u[i, j] + t(gKX_uf[, j, i]) %*% t(gK_uf[i, ,drop=FALSE])
       }
     }
 
@@ -130,7 +129,7 @@ gpLogLikeGradients <- function(model, X=model$X, M, X_u, gX_u.return=FALSE, gX.r
 
       for (i in 1:model$N) {
         for (j in 1:model$q)
-          gX[i, j] = t(gKX_uf[, j, i,drop=F]) %*% gK_uf[, i,drop=F]
+          gX[i, j] = t(gKX_uf[, j, i,drop=FALSE]) %*% gK_uf[, i,drop=FALSE]
       }
     }
   } else
@@ -161,19 +160,19 @@ gpLogLikeGradients <- function(model, X=model$X, M, X_u, gX_u.return=FALSE, gX.r
       for (i in 1:length(model$blockEnd)) {
         endVal = model$blockEnd[i]
         ind = startVal:endVal
-        gKXblock = kernGradX(model$kern, X[ind, ,drop=F], X[ind, ,drop=F])
+        gKXblock = kernGradX(model$kern, X[ind, ,drop=FALSE], X[ind, ,drop=FALSE])
         ## The 2 accounts for the fact that covGrad is symmetric
         gKXblock = gKXblock*2
 
         ## fix diagonal
-        dgKXblock = kernDiagGradX(model$kern, X[ind, ,drop=F])
+        dgKXblock = kernDiagGradX(model$kern, X[ind, ,drop=FALSE])
         for (j in 1:length(ind))
           gKXblock[j, , j] = dgKXblock[j, ]
 
         for (j in ind) {
           for (k in 1:model$q) {
             subInd = j - startVal + 1
-            gX[j, k] = gX[j, k] + t(gKXblock[, k, subInd,drop=F]) %*% gK_star[[i]][, subInd,drop=F]
+            gX[j, k] = gX[j, k] + t(gKXblock[, k, subInd,drop=FALSE]) %*% gK_star[[i]][, subInd,drop=FALSE]
           }
         }
         startVal = endVal + 1
@@ -182,7 +181,7 @@ gpLogLikeGradients <- function(model, X=model$X, M, X_u, gX_u.return=FALSE, gX.r
     ## deal with block diagonal's effect on kernel parameters.
     for (i in 1:length(model$blockEnd)) {
       ind = gpBlockIndices(model, i)
-      g_param = g_param + kernGradient(model$kern, X[ind, ,drop=F], gK_star[[i]])
+      g_param = g_param + kernGradient(model$kern, X[ind, ,drop=FALSE], gK_star[[i]])
     }
   } else
     stop("Unrecognised model approximation")

@@ -7,12 +7,12 @@ gpUpdateAD <- function (model, X=model$X) {
       model$innerProducts = matrix(0, 1, model$d)
       if ((!"isSpherical" %in% names(model)) || model$isSpherical) {
 	for (i in 1:model$d) {
-	  model$innerProducts[1, i] = t(model$m[, i,drop=F])%*%model$invK_uu%*%model$m[, i,drop=F]
+	  model$innerProducts[1, i] = t(model$m[, i,drop=FALSE])%*%model$invK_uu%*%model$m[, i,drop=FALSE]
 	}
       } else {
 	for (i in 1:model$d) {
 	  ind = gpDataIndices(model, i)
-	  model$innerProducts[1, i] = t(model$m[ind, i,drop=F])%*%model$invK_uu[[i]]%*%model$m[ind, i,drop=F]
+	  model$innerProducts[1, i] = t(model$m[ind, i,drop=FALSE])%*%model$invK_uu[[i]]%*%model$m[ind, i,drop=FALSE]
 	}
       }
     }
@@ -31,7 +31,7 @@ gpUpdateAD <- function (model, X=model$X) {
       for (i in 1:model$d) {
 	E = model$K_uf %*% model$m[, i]
 	model$innerProducts[1, i] = model$beta *
-	  (t(model$m[, i,drop=F])%*%model$m[, i,drop=F] - t(E)%*%model$Ainv%*%E)
+	  (t(model$m[, i,drop=FALSE])%*%model$m[, i,drop=FALSE] - t(E)%*%model$Ainv%*%E)
       }
 
       if (model$approx == "dtcvar") {
@@ -48,7 +48,7 @@ gpUpdateAD <- function (model, X=model$X) {
 	ind = gpDataIndices(model, i)
 	## Compute A = invBetaK_uu + K_uf%*%K_uf'
 	if (model$isMissingData)
-	  K_uf2 = model$K_uf[, ind,drop=F]%*%t(model$K_uf[, ind,drop=F])
+	  K_uf2 = model$K_uf[, ind,drop=FALSE]%*%t(model$K_uf[, ind,drop=FALSE])
 
 	model$A[[i]]= (1/model$beta) * model$K_uu+K_uf2
 	## This can become unstable when K_uf2 is low rank.
@@ -56,9 +56,9 @@ gpUpdateAD <- function (model, X=model$X) {
 	model$Ainv[[i]] = invA$invM
 	model$logDetA[i] = 2* sum( log ( diag(invA$chol) ) )
 	## compute inner products
-	E = model$K_uf[, ind,drop=F]%*%model$m[ind, i,drop=F]
+	E = model$K_uf[, ind,drop=FALSE]%*%model$m[ind, i,drop=FALSE]
 	model$innerProducts[1, i] = (model$beta) * 
-	  (t(model$m[ind, i,drop=F])%*%model$m[ind, i,drop=F] - t(E)%*%model$Ainv[[i]]%*%E)
+	  (t(model$m[ind, i,drop=FALSE])%*%model$m[ind, i,drop=FALSE] - t(E)%*%model$Ainv[[i]]%*%E)
       }
 
       if (model$approx == "dtcvar")
@@ -86,7 +86,7 @@ gpUpdateAD <- function (model, X=model$X) {
 	Dinvm = model$Dinv %*% model$m[, i]
 	K_ufDinvm = model$K_uf%*%Dinvm
 	model$innerProducts[1, i] = model$beta *
-	    (t(Dinvm)%*%model$m[, i,drop=F] - t(K_ufDinvm)%*%model$Ainv%*%K_ufDinvm)
+	    (t(Dinvm)%*%model$m[, i,drop=FALSE] - t(K_ufDinvm)%*%model$Ainv%*%K_ufDinvm)
       }
     
       ## Computations from Ed's implementation.
@@ -106,9 +106,9 @@ gpUpdateAD <- function (model, X=model$X) {
       for (i in 1:model$d) {
 	ind = gpDataIndices(model, i)
 	model$diagD[[i]] = 1 + model$beta*model$diagK[ind]
-	  - model$beta*t(colSums(model$K_uf[, ind,drop=F] * (model$invK_uu%*%model$K_uf[, ind,drop=F])))
+	  - model$beta*t(colSums(model$K_uf[, ind,drop=FALSE] * (model$invK_uu%*%model$K_uf[, ind,drop=FALSE])))
 	model$Dinv[[i]] = diag.spam(drop(1/model$diagD[[i]]))
-	K_ufDinvK_uf = model$K_uf[, ind,drop=F]%*%model$Dinv[[i]]%*%t(model$K_uf[, ind,drop=F])
+	K_ufDinvK_uf = model$K_uf[, ind,drop=FALSE]%*%model$Dinv[[i]]%*%t(model$K_uf[, ind,drop=FALSE])
 	model$A[[i]] = 1 / model$beta*model$K_uu + K_ufDinvK_uf
 	## This can become unstable when K_ufDinvK_uf is low rank.
 	invA = .jitCholInv(model$A[[i]], silent=TRUE)
@@ -118,17 +118,17 @@ gpUpdateAD <- function (model, X=model$X) {
 	  + log(det(diag(model$k) + model$beta*K_ufDinvK_uf%*%model$invK_uu))
 
 	## compute inner products
-	Dinvm = model$Dinv[[i]]%*%model$m[ind, i,drop=F]
-	K_ufDinvm = model$K_uf[, ind,drop=F]%*%Dinvm
-	model$innerProducts[1, i] = model$beta*(t(Dinvm)%*%model$m[ind, i,drop=F] - t(K_ufDinvm)%*%model$Ainv[[i]]%*%K_ufDinvm)
+	Dinvm = model$Dinv[[i]]%*%model$m[ind, i,drop=FALSE]
+	K_ufDinvm = model$K_uf[, ind,drop=FALSE]%*%Dinvm
+	model$innerProducts[1, i] = model$beta*(t(Dinvm)%*%model$m[ind, i,drop=FALSE] - t(K_ufDinvm)%*%model$Ainv[[i]]%*%K_ufDinvm)
 
 	## Computations from Ed's implementation.
-	model$V[[i]] = solve(model$L, model$K_uf[, ind,drop=F])
+	model$V[[i]] = solve(model$L, model$K_uf[, ind,drop=FALSE])
 	model$V[[i]] = model$V[[i]] / kronecker(matrix(1,model$k,1), t(sqrt(model$diagD[[i]])))
 	model$Am[[i]] = 1/model$beta * diag(model$k) + model$V[[i]]%*%t(model$V[[i]])
 	model$Lm[[i]] = t(.jitChol(model$Am[[i]])$chol)
 	model$invLmV[[i]] = solve(model$Lm[[i]], model$V[[i]])
-	model$scaledM[[i]] = model$m[ind, i,drop=F] / sqrt(model$diagD[[i]])
+	model$scaledM[[i]] = model$m[ind, i,drop=FALSE] / sqrt(model$diagD[[i]])
 	model$bet[[i]] = model$invLmV[[i]]%*%model$scaledM[[i]]
       }
     }
@@ -141,14 +141,14 @@ gpUpdateAD <- function (model, X=model$X) {
       for (i in 1:length(model$blockEnd)) {
 	ind = gpBlockIndices(model, i)
 	model$D[[i]] = diag(length(ind)) + model$beta*model$K[[i]] -
-	  model$beta*t(model$K_uf[, ind,drop=F])%*%model$invK_uu%*%model$K_uf[, ind,drop=F]
+	  model$beta*t(model$K_uf[, ind,drop=FALSE])%*%model$invK_uu%*%model$K_uf[, ind,drop=FALSE]
 	invD = .jitCholInv(model$D[[i]], silent=TRUE)
 	model$Dinv[[i]] = invD$invM
 	model$logDetD[i] = 2* sum( log ( diag(invD$chol) ) )
-	K_ufDinvK_uf = model$K_uf[, ind,drop=F]%*%model$Dinv[[i]]%*%t(model$K_uf[, ind,drop=F])
+	K_ufDinvK_uf = model$K_uf[, ind,drop=FALSE]%*%model$Dinv[[i]]%*%t(model$K_uf[, ind,drop=FALSE])
 	model$A = model$A + K_ufDinvK_uf
-	Dinvm[[i]] = model$Dinv[[i]]%*%model$m[ind, ,drop=F]
-	K_ufDinvm = K_ufDinvm + model$K_uf[, ind,drop=F]%*%Dinvm[[i]]
+	Dinvm[[i]] = model$Dinv[[i]]%*%model$m[ind, ,drop=FALSE]
+	K_ufDinvm = K_ufDinvm + model$K_uf[, ind,drop=FALSE]%*%Dinvm[[i]]
       }
       ## This can become unstable when K_ufDinvK_uf is low rank.
       invA = .jitCholInv(model$A, silent=TRUE)
@@ -157,13 +157,13 @@ gpUpdateAD <- function (model, X=model$X) {
       ## compute inner products
       model$innerProducts = matrix(0, 1, model$d)
       for (i in 1:model$d)
-	model$innerProducts[1, i] = - model$beta*t(K_ufDinvm[, i,drop=F])%*%model$Ainv%*%K_ufDinvm[, i,drop=F]
+	model$innerProducts[1, i] = - model$beta*t(K_ufDinvm[, i,drop=FALSE])%*%model$Ainv%*%K_ufDinvm[, i,drop=FALSE]
 
       for (i in 1:length(model$blockEnd)) {
 	ind = gpBlockIndices(model, i)
 	for (j in 1:model$d)
 	  model$innerProducts[1, j] = model$innerProducts[1, j]
-	    + model$beta*t(Dinvm[[i]][, j,drop=F])%*%model$m[ind, j,drop=F]
+	    + model$beta*t(Dinvm[[i]][, j,drop=FALSE])%*%model$m[ind, j,drop=FALSE]
       }
     } else {
       model$A = list(); model$Ainv = list()
@@ -180,14 +180,14 @@ gpUpdateAD <- function (model, X=model$X) {
 	for (i in 1:length(model$blockEnd)) {
 	  ind = gpDataIndices(model, j, i)
 	  model$D[[i]][[j]] = diag(length(ind)) + model$beta*model$K[[i]][[j]] -
-	      model$beta*t(model$K_uf[, ind,drop=F])%*%model$invK_uu%*%model$K_uf[, ind,drop=F]
+	      model$beta*t(model$K_uf[, ind,drop=FALSE])%*%model$invK_uu%*%model$K_uf[, ind,drop=FALSE]
 	  invD = .jitCholInv(model$D[[i]][[j]], silent=TRUE)
 	  model$Dinv[[i]][[j]] = invD$invM
 	  model$logDetD[i,j] = 2* sum( log ( diag(invD$chol) ) )
-	  K_ufDinvK_uf = model$K_uf[, ind,drop=F]%*%model$Dinv[[i]][[j]]%*%t(model$K_uf[, ind,drop=F])
+	  K_ufDinvK_uf = model$K_uf[, ind,drop=FALSE]%*%model$Dinv[[i]][[j]]%*%t(model$K_uf[, ind,drop=FALSE])
 	  model$A[[j]] = model$A[[j]] + K_ufDinvK_uf
-	  Dinvm[[i]][ind, j] = model$Dinv[[i]][[j]]%*%model$m[ind, j,drop=F]
-	  K_ufDinvm[, j] = K_ufDinvm[, j,drop=F] + model$K_uf[, ind,drop=F]%*%Dinvm[[i]][ind, j,drop=F]
+	  Dinvm[[i]][ind, j] = model$Dinv[[i]][[j]]%*%model$m[ind, j,drop=FALSE]
+	  K_ufDinvm[, j] = K_ufDinvm[, j,drop=FALSE] + model$K_uf[, ind,drop=FALSE]%*%Dinvm[[i]][ind, j,drop=FALSE]
 	}
 	## This can become unstable when K_ufDinvK_uf is low rank.
 	invA = .jitCholInv(model$A[[j]], silent=TRUE)
@@ -198,13 +198,13 @@ gpUpdateAD <- function (model, X=model$X) {
       model$innerProducts = matrix(0, 1, model$d)
       ## compute inner products
       for (j in 1:model$d)
-	model$innerProducts[1, j] = - model$beta*t(K_ufDinvm[, j,drop=F])%*%model$Ainv[[j]]%*%K_ufDinvm[, j,drop=F]
+	model$innerProducts[1, j] = - model$beta*t(K_ufDinvm[, j,drop=FALSE])%*%model$Ainv[[j]]%*%K_ufDinvm[, j,drop=FALSE]
 
       for (i in 1:length(model$blockEnd)) {
 	for (j in 1:model$d) {
 	  ind = gpDataIndices(model, j, i)
 	  model$innerProducts[1, j] = model$innerProducts[1, j]
-				    + model$beta*t(Dinvm[[i]][ind, j,drop=F])%*%model$m[ind, j,drop=F]
+				    + model$beta*t(Dinvm[[i]][ind, j,drop=FALSE])%*%model$m[ind, j,drop=FALSE]
 	}
       }
     }

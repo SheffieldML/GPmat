@@ -25,9 +25,9 @@ values <- modelOut(model, X)
   \item{Y}{output location(s) corresponding to given input locations.}
   \item{Phi}{output basis function(s) corresponding to given input}
 }
-\seealso{
-\code{\link{modelCreate}}.
-}
+% \seealso{
+% \code{\link{modelCreate}}.
+% }
 \examples{
 ## missing
 }

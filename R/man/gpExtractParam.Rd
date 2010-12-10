@@ -10,10 +10,8 @@ values <- gpExtractParam(model, model)
 }
 \arguments{
   \item{model}{the model structure containing the information about the model.}
-  \item{model}{the model structure containing the information about the model.}
 }
 \value{
-  \item{params}{a vector of parameters from the model.}
   \item{params}{a vector of parameters from the model.}
   \item{names}{cell array of parameter names.}
 }

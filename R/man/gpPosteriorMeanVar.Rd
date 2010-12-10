@@ -17,7 +17,8 @@ values <- gpPosteriorMeanVar(model, x)
   \item{sigma}{the variances of the posterior distributions.}
 }
 \seealso{
-\code{\link{gpCreate}, \link{gpPosteriorMeanCovar}, \link{gpPosteriorGradMeanVar}}.
+\code{
+  \link{gpCreate}}.
 }
 \examples{
 ## missing

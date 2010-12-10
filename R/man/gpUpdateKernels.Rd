@@ -10,12 +10,10 @@ values <- gpUpdateKernels(model, model, X, X_u)
 }
 \arguments{
   \item{model}{the model structure for which kernels are being updated.}
-  \item{model}{the model structure for which kernels are being updated.}
   \item{X}{the input locations for update of kernels.}
   \item{X_u}{the inducing input locations.}
 }
 \value{
-  \item{model}{the model structure with the kernels updated.}
   \item{model}{the model structure with the kernels updated.}
 }
 \seealso{

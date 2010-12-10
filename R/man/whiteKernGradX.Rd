@@ -16,9 +16,6 @@ g <- whiteKernGradX(kern, x1, x2)
 \value{
   \item{g}{the returned gradients. The gradients are returned in a matrix which is numData2 x numInputs x numData1. Where numData1 is the number of data points in X1, numData2 is the number of data points in X2 and numInputs is the number of input dimensions in X.}
 }
-\seealso{
-\code{\link{}}.
-}
 \examples{
 ## missing
 }

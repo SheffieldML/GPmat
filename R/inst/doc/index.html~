@@ -166,7 +166,7 @@ corresponding plot of the log likelihood. The log likelihood peaks for
 a length scale equal to 1. This was the length scale used to generate
 the data.
 
-<p><center><img src="demOptimiseGp_1.gif" width ="30%"> <img src="demOptimiseGp_2.gif" width ="30%">
+<p><center><img src="demOptimiseGp1.gif" width ="30%"> <img src="demOptimiseGp2.gif" width ="30%">
 
 <br><i>Left</i> Gaussian process regression applied to the data with an increasing length scale. The
 length scales used were 0.05, 0.1, 0.25, 0.5, 1, 2, 4, 8 and

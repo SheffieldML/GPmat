@@ -6,13 +6,12 @@
   Compute derivatives with respect to params of model outputs.
 }
 \usage{
-g <- modelOutputGrad(model, X)
-g <- modelOutputGrad(model, X, dim)
+  g <- modelOutputGrad(model, X)
+  g <- modelOutputGrad(model, X, dim)
 }
 \arguments{
   \item{model}{the model structure for which gradients are computed.}
   \item{X}{input locations where gradients are to be computed.}
-  \item{X'}{input locations where gradients are to be comxfputed.}
   \item{dim}{the dimension of the model for which gradients are required.}
 }
 \details{
@@ -27,7 +26,8 @@ g <- modelOutputGrad(model, X, dim)
   \item{g}{gradients of the model output with respect to the model parameters for the given input locations. The size of the returned matrix is of dimension number of data x number of parameters x number of model outputs (which maintains compatability with NETLAB).}
 }
 \seealso{
-\code{\link{modelCreate}, \link{modelLogLikelihood}, \link{modelLogLikeGradients}, \link{mlpderiv}}.
+\code{
+  \link{modelLogLikelihood}}.
 }
 \examples{
 ## missing

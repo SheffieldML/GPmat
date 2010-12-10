@@ -10,7 +10,7 @@ gpLogLikelihood <- function(model) {
     ll = 0
     for (i in 1:dim(model$m)[2]) {
       if ((!"isSpherical" %in% names(model)) || model$isSpherical)
-	ll = ll -.5*model$logDetK_uu - .5*t(model$m[, i,drop=F])%*%model$invK_uu%*%model$m[, i,drop=F]
+	ll = ll -.5*model$logDetK_uu - .5*t(model$m[, i,drop=FALSE])%*%model$invK_uu%*%model$m[, i,drop=FALSE]
       else {
 	if (model$isMissingData)
 	  m = model$m[model$indexPresent[[i]], i]
@@ -37,11 +37,11 @@ gpLogLikelihood <- function(model) {
       ll = 0
       for (i in 1:model$d) {
 	ind = gpDataIndices(model, i)
-	e = model$K_uf[, ind,drop=F]%*%model$m[ind, i,drop=F]
+	e = model$K_uf[, ind,drop=FALSE]%*%model$m[ind, i,drop=FALSE]
 	if (length(model$beta)==1) {
 	  ll = ll - 0.5*((-(model$N-model$k)*log(model$beta)
 		  - model$logDetK_uu + model$logDetA[i]) - (t(e)%*%model$Ainv[[i]]%*%e
-		  - t(model$m[ind, i,drop=F])%*%model$m[ind, i,drop=F])*model$beta)
+		  - t(model$m[ind, i,drop=FALSE])%*%model$m[ind, i,drop=FALSE])*model$beta)
 	  if(is.nan(ll))
 	    stop("Log likelihood is NaN")
 
@@ -71,8 +71,8 @@ gpLogLikelihood <- function(model) {
 		+ 0.5*(-(model$N - model$k)*log(model$beta)
 		+(model$N*log(2*pi) + sum(log(model$diagD)))))
 	  for (i in 1:model$d)
-	    ll = ll - 0.5*model$beta*(t(model$scaledM[, i,drop=F])%*%model$scaledM[, i,drop=F]
-		    - t(model$bet[, i,drop=F])%*%model$bet[, i,drop=F])
+	    ll = ll - 0.5*model$beta*(t(model$scaledM[, i,drop=FALSE])%*%model$scaledM[, i,drop=FALSE]
+		    - t(model$bet[, i,drop=FALSE])%*%model$bet[, i,drop=FALSE])
 	}
       } else
 	stop("Variable length Beta not implemented yet.")
@@ -82,11 +82,11 @@ gpLogLikelihood <- function(model) {
 	  ll = 0
 	  for (i in 1:model$d) {
 	    ind = gpDataIndices(model, i)
-	    Dinvm = model$Dinv[[i]]%*%model$m[ind, i,drop=F]
-	    K_ufDinvm = model$K_uf[, ind,drop=F]%*%Dinvm
+	    Dinvm = model$Dinv[[i]]%*%model$m[ind, i,drop=FALSE]
+	    K_ufDinvm = model$K_uf[, ind,drop=FALSE]%*%Dinvm
 	    ll = ll -0.5*(sum(log(model$diagD[[i]]))
 		    - (length(ind) - model$k)*log(model$beta)
-		    + model$detDiff[i] + (sum(Dinvm * model$m[ind, i,drop=F])
+		    + model$detDiff[i] + (sum(Dinvm * model$m[ind, i,drop=FALSE])
 		    - sum((model$Ainv[[i]]%*%K_ufDinvm) * K_ufDinvm))*model$beta
 		    + length(ind)*log(2*pi))
 	  }
@@ -115,15 +115,15 @@ gpLogLikelihood <- function(model) {
 	Dinvm = list()
 	for (i in 1:length(model$blockEnd)) {
 	  ind = gpBlockIndices(model, i)
-	  Dinvm[[i]] = model$Dinv[[i]]%*%model$m[ind, ,drop=F]
-	  K_ufDinvm = K_ufDinvm + model$K_uf[, ind,drop=F]%*%Dinvm[[i]]
+	  Dinvm[[i]] = model$Dinv[[i]]%*%model$m[ind, ,drop=FALSE]
+	  K_ufDinvm = K_ufDinvm + model$K_uf[, ind,drop=FALSE]%*%Dinvm[[i]]
 	}
 	ll = ll - model$beta*sum((model$Ainv%*%K_ufDinvm) * K_ufDinvm)
 	
 	for (i in 1:length(model$blockEnd)) {
 	  ind = gpBlockIndices(model, i)
 	  ll = ll + model$d*(model$logDetD[i] - length(ind)*log(model$beta))
-		  + model$beta*sum(Dinvm[[i]] * model$m[ind, ,drop=F])
+		  + model$beta*sum(Dinvm[[i]] * model$m[ind, ,drop=FALSE])
 	}
 	ll = -0.5*ll
 	ll = ll - 0.5*model$N*model$d*log(2*pi)
@@ -140,7 +140,7 @@ gpLogLikelihood <- function(model) {
 	  K_ufDinvm = matrix(0, model$k, 1)
 	  for (i in 1:length(model$blockEnd)) {
 	    ind = gpDataIndices(model, j, i)
-	    Dinvm[[i]][[j]] = model$Dinv[[i]][[j]]%*%model$m[ind, j,drop=F]
+	    Dinvm[[i]][[j]] = model$Dinv[[i]][[j]]%*%model$m[ind, j,drop=FALSE]
 	    K_ufDinvm = K_ufDinvm + model$K_uf[, ind]%*%Dinvm[[i]][[j]]
 	  }
 	  ll = ll - model$beta*sum((model$Ainv[[i]]%*%K_ufDinvm) * K_ufDinvm)
@@ -148,7 +148,7 @@ gpLogLikelihood <- function(model) {
 	  for (i in 1:length(model$blockEnd)) {
 	    ind = gpDataIndices(model, j, i)
 	    ll = ll + model$logDetD[i, j] - length(ind)*log(model$beta)
-		    + model$beta*sum(Dinvm[[i]][[j]] * model$m[ind, j,drop=F])
+		    + model$beta*sum(Dinvm[[i]][[j]] * model$m[ind, j,drop=FALSE])
 	    ll = ll + length(ind)*log(2*pi)
 	  }
 	}

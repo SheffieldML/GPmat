@@ -27,22 +27,47 @@ demInterpolation() # run demo
 demRegression() # another demo
 demOptimiseGp() # and another demo
 
-############################################################################
+#####################################################################################
 ########## To build the gptk R package from the 'mlprojects/gp/R' folder: ##########
-## - In an R session:
+## First make sure documentation is complete. Antti's python function might help in that respect.
+## Edit '~/mlprojects/R/general/matlab_to_R_doc_converter.py' so that, for instance, BASEPATH='~/mlprojects/gp/matlab/.',
+## the base path of the matlab code you wish to translate documentation for and MANPATH='~/mlprojects/gp/R/man',
+## the target path you want for the translated R manuals.
+## - Then in a terminal, do for example:
+
+  python ~/mlprojects/R/general/matlab_to_R_doc_converter.py -o gpCreate
+
+## Make sure not to leave any latex-style comments in the .Rd files before package 'build'.
+## - Now, in an R session:
+
   source('~/mlprojects/gp/R/R/gpLoadToolkit.R')
   gpLoadToolkit() ## This will load up in memory all the package-related source files in 'mlprojects/gp/R/R/'.
-  ## The package skeleton folder [name] will be created in [path].
-  package.skeleton(name='gptk', path='~')
-## - Remove gpLoadTookit() from '~/gptk/R/'.
-## - Overwrite skeleton man folder '~/gptk/man/' with proper man folder 'mlprojects/gp/R/man/'.
-## - Place a copy of the folder 'mlprojects/gp/R/inst/'.
-## - Clean up '~/gptk/R/inst/doc': remove unnecessary .eps and .png files and update 'index.html'.
-## - Remove hidden files related to the svn (.svn/, etc.) from every copied folder.
-## - Update the DESCRIPTION file in 'mlprojects/gp/R' and copy it over to '~/gptk/'.
-## - See and remove '~/gptk/Read-and-delete-me.txt'.
-## - Remove the folder '~/gptk/data/'.
+  system('rm -R -f ~/gptk/') ## Remove '~/gptk/'.
+  package.skeleton(name='gptk', path='~') ## The package skeleton folder [name] will be created in [path].
+  system('rm ~/gptk/R/gpLoadToolkit.R') ## Remove gpLoadTookit() from '~/gptk/R/'.
+  system('rm -R -f ~/gptk/man/') ## Overwrite skeleton man '~/gptk/man/' with proper man 'man/'.
+  system('cp -R ~/mlprojects/gp/R/man/ ~/gptk/')
+  ## Make sure to keep 'index.html' up-to-date. Then place a copy of inst/.
+  system('cp -R ~/mlprojects/gp/R/inst/ ~/gptk/') 
+  system('rm -R -f ~/gptk/man/.svn/') ## Remove hidden files related to the svn (.svn/, etc.) from every copied folder.
+  system('rm -R -f ~/gptk/inst/.svn/')
+  system('rm -R -f ~/gptk/inst/doc/.svn/')
+  ## Clean up.
+  system('rm ~/gptk/R/*~')
+  system('rm ~/gptk/man/*~')
+  system('rm ~/gptk/inst/doc/*~')
+  ## Remove unnecessary .eps and .png files and make sure to update 'index.html'.
+  system('rm ~/gptk/inst/doc/*.eps')
+  ## Make sure to keep 'DESCRIPTION' up-to-date. Then copy it over to '~/gptk/'.
+  system('cp ~/mlprojects/gp/R/DESCRIPTION ~/gptk/')
+  ## Read, then remove 'Read-and-delete-me'.
+  system('rm ~/gptk/Read-and-delete-me')
+  system('rm -R ~/gptk/data/') ## Remove data/.
+  q('no')
+
 ## - In a terminal:
+
   cd ~
+  rm -R gptk.Rcheck/
   R CMD build gptk ## Builds package.
   R CMD check gptk ## Validates package.

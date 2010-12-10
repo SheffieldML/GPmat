@@ -1,6 +1,7 @@
 \name{gpOptions}
 \Rdversion{1.0}
 \alias{gpOptions}
+\alias{mlpOptions}
 \title{Return default options for GP model.}
 \description{
   returns the default options in a structure for a GP model.

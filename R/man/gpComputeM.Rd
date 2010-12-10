@@ -6,13 +6,13 @@
   computes the matrix m (the scaled, bias and mean function removed matrix of the targets), given the model.
 }
 \usage{
-gpComputeM(model, m)
+  gpComputeM(model)
 }
 \arguments{
   \item{model}{the model for which the values are to be computed.}
-  \item{m}{the scaled, bias and mean function removed values.}
 }
 \value{
+  \item{m}{the scaled, bias and mean function removed values.}
 }
 \seealso{
 \code{\link{gpCreate}, \link{gpComputeAlpha}, \link{gpUpdateAD}}.

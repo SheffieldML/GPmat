@@ -1,4 +1,4 @@
-gpLogLikelihood <- function(model, detailed=FALSE) {
+gpLogLikelihood <- function(model) {
 
   if (model$approx == "ftc") {
     ## No approximation, just do a full computation on K.

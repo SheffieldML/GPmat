@@ -1,4 +1,4 @@
-demGpCov2D <- function(ind=c(1,2), bw=FALSE, path = getwd(),
+demGpCov2D <- function(ind=c(1,2), path = getwd(),
   filename = paste('demGpCov2D', ind[1],'_', ind[2], sep='')) {
   require(fields)
 
@@ -23,14 +23,14 @@ demGpCov2D <- function(ind=c(1,2), bw=FALSE, path = getwd(),
 #   lo = layout(matrix(c(1:4),2,2,byrow=T)); layout.show(lo)
 
   dev.new(width=5,height=4) #   screen(1); erase.screen(1)
-  basePlot(K, ind)
+  basePlot(K)
 
   dev.new(width=5,height=4) #   screen(2); erase.screen(2)
-  basePlot(K, ind)
+  basePlot(K)
   cont2 = lines(c(f[1],f[1]), c(-1,1), col='green')
 
   dev.new(width=5,height=4) #   screen(3); erase.screen(3)
-  basePlot(K, ind)
+  basePlot(K)
   cont2 = lines(c(f[1],f[1]), c(-1,1), col='green')
   ## Compute conditional mean and variance
   f2Mean = K[1, 2]/K[1,1]*f[1]
@@ -54,9 +54,14 @@ demGpCov2D <- function(ind=c(1,2), bw=FALSE, path = getwd(),
 }
 
 
-basePlot <- function (K, ind) {
-  ## BASEPLOT Plot the contour of the covariance.
-  ## DESC creates the basic plot.
+basePlot <- function (K) {
+## BASEPLOT Plot a contour of the 2D Gaussian distribution with covariance matrix K.
+## FORMAT
+## DESC Creates the basic plot as an ellipse with major and minor radii as the
+## square root of the two eigenvalues respectively.
+## ARG K : the covariance matrix.
+##
+## COPYRIGHT : Neil D. Lawrence, 2008; Alfredo A. Kalaitzis, 2010
 
   eigVecs = eigen(K)
   U = eigVecs$vectors[ , 2:1] ## Reverse order of eigenvectors(columns).
@@ -66,8 +71,8 @@ basePlot <- function (K, ind) {
   theta = seq(0, 2*pi, length=200)
   xy = cbind(r[1]*sin(theta), r[2]*cos(theta))%*%U
   plot(0, type = "n", xlim=c(min(xy[,1]), max(xy[,1])),
-    ylim=c(min(xy[,2]), max(xy[,2])), xlab='', ylab='') ## 'lines' only works on existing plots.
-  cont = lines(xy[, 1], xy[, 2], col='blue')
+    ylim=c(min(xy[,2]), max(xy[,2])), xlab='', ylab='') 
+  cont = lines(xy[, 1], xy[, 2], col='blue') ## 'lines' only applies on existing plots.
 
   zeroAxes(xy)
 }

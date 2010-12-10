@@ -16,7 +16,8 @@ f <- gpObjective(params, model)
   \item{f}{the negative log likelihood of the GP model.}
 }
 \seealso{
-\code{\link{scg}, \link{conjgrad}, \link{gpCreate}, \link{gpGradient}, \link{gpLogLikelihood}, \link{gpOptimise}}.
+\code{
+  \link{gpCreate}, \link{gpGradient}, \link{gpLogLikelihood}, \link{gpOptimise}}.
 }
 \examples{
 ## missing

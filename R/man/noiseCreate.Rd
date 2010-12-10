@@ -12,8 +12,6 @@ noiseCreate(noiseType, y)
   \item{noiseType}{the type of noise to be created (e.g. 'gaussian', 'probit', 'ncnm').}
   \item{y}{the target vector.}
 }
-\value{
-}
 \seealso{
 \code{\link{noiseParamInit}}.
 }

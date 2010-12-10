@@ -24,7 +24,7 @@ gpPlot <- function(model,Xstar,mu,S,simpose=NULL,xlim=NULL,ylim=NULL,xlab='',yla
     ylim = range(ycomb) #c(min(ycomb), max(ycomb))
 
 #   par(pty="s") 
-  plot(0, type="n", xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=title, new=T) ## Empty plot basis.
+  plot(0, type="n", xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=title, new=TRUE) ## Empty plot basis.
 
   if (col=='blue') shade = rgb(0,0,255,max=255,alpha=.1*255)
   else if (col=='red') shade = rgb(255,0,0,max=255,alpha=.1*255)

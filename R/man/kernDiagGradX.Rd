@@ -11,9 +11,9 @@
   computes the gradient of the (diagonal of the) kernel matrix with respect to the elements of the design matrix given in X.
 }
 \usage{
-gX <- kernDiagGradX(kern, X)
-gX2 <- kernGradX(kern, X)
-gX2 <- kernGradX(kern, X1, X2)
+  gX <- kernDiagGradX(kern, X)
+  gX2 <- kernGradX(kern, X)
+  gX2 <- kernGradX(kern, X1, X2)
 }
 \arguments{
   \item{kern}{the kernel structure for which gradients are being computed.}
@@ -28,8 +28,8 @@ gX2 <- kernGradX(kern, X1, X2)
 \seealso{
 \code{\link{kernGradient}}
 }
-\examples{
-kern <- kernCreate(1, 'mlp')
-g <- kernDiagGradX(kern, as.matrix(3:8))
-}
+%\examples{
+%kern <- kernCreate(1, 'mlp')
+%g <- kernDiagGradX(kern, as.matrix(3:8))
+%}
 \keyword{model}

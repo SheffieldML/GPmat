@@ -1,4 +1,5 @@
 noiseCreate <- function(noiseType, y) {
+  noise=NULL
   if (is.array(noiseType)) #isstruct(noiseType)
     return (noiseType)
   else if (is.list(noiseType)) { #iscell(noiseType)
@@ -20,13 +21,15 @@ noiseCreate <- function(noiseType, y) {
 
   ## Check if the noise model has bespoke site update code
   noise$updateSites = 0
-  if (exists(paste(noise$type,"NoiseSites",sep="")))
+  if (exists(paste(noise$type,"NoiseSites",sep=""))) {
     noise$updateSites = 1
+  }
 
   ## Check if the model has bespoke nu and g update code.
   noise$updateNuG = 0
-  if (exist(paste(noise$type,"NoiseNuG",sep="")))
+  if (exists(paste(noise$type,"NoiseNuG",sep=""))) {
     noise$updateNuG = 1
+  }
 
   return (noise)
 }

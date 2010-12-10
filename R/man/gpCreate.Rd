@@ -3,7 +3,7 @@
 \alias{gpCreate}
 \title{Create a GP model with inducing varibles/pseudo-inputs.}
 \description{
-  creates a Gaussian process model structure with default parameter settings as specified by the options vector.
+  Creates a Gaussian process model structure with default parameter settings as specified by the options vector.
 }
 \usage{
 model <- gpCreate(q, d, X, y, options)
@@ -19,7 +19,8 @@ model <- gpCreate(q, d, X, y, options)
   \item{model}{model structure containing the Gaussian process.}
 }
 \seealso{
-\code{\link{gpOptions}, \link{modelCreate}}.
+\code{\link{gpOptions}.
+}
 }
 \examples{
 ## missing

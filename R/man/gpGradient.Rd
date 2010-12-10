@@ -16,7 +16,7 @@ g <- gpGradient(params, model)
   \item{g}{the returned gradient of the negative log likelihood for the given parameters.}
 }
 \seealso{
-\code{\link{scg}, \link{conjgrad}, \link{gpCreate}, \link{gpGradient}, \link{gpLogLikeGradients}, \link{gpOptimise}}.
+  \code{\link{gpCreate}, \link{gpGradient}, \link{gpLogLikeGradients}, \link{gpOptimise}}.
 }
 \examples{
 ## missing

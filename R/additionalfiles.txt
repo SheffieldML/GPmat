@@ -1,13 +1,5 @@
 # These linked R files should be included in the final package in ~/mlprojects/gp/R/:
 
-~/mlprojects/gpsim/R/R/kernFunctions.R
-~/mlprojects/gpsim/R/R/rbfKernFunctions.R
-~/mlprojects/gpsim/R/R/whiteKernFunctions.R
-~/mlprojects/gpsim/R/R/cmpndKernFunctions.R
-~/mlprojects/gpsim/R/R/miscFunctions.R
-~/mlprojects/gpsim/R/R/optimiFunctions.R
-~/mlprojects/gpsim/R/R/AllClasses.R
-
 # These should probably be moved to other folders in ~/mlprojects/
 
 ~/mlprojects/gp/R/modelOut.R			=>	~/mlprojects/mltools/R/

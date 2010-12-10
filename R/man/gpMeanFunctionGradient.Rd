@@ -1,21 +1,21 @@
-\name{gpScaleBiasGradient}
+\name{gpMeanFunctionGradient}
 \Rdversion{1.0}
-\alias{gpScaleBiasGradient}
+\alias{gpMeanFunctionGradient}
 \title{Compute the log likelihood gradient wrt the scales.}
 \description{
   computes the gradient of the log likelihood with respect to the scales. In the future the gradients with respect to the biases may also be included.
 }
 \usage{
-  values <- gpScaleBiasGradient(model)
+  values <- gpMeanFunctionGradient(model)
 }
 \arguments{
   \item{model}{the model for which the gradients are to be computed.}
 }
 \value{
-  \item{g}{the gradients of the likelihood with respect to the scales.}
+  \item{g}{the gradients of the likelihood with respect to the mean function's parameters.}
 }
 \seealso{
-\code{\link{gpCreate}, \link{gpLogLikeGradients}, \link{gpLogLikelihood}}.
+\code{\link{gpCreate}, \link{gpScaleBiasGradient}, \link{gpLogLikeGradients}, \link{gpLogLikelihood}}.
 }
 \examples{
 ## missing

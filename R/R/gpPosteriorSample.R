@@ -1,4 +1,4 @@
-gpPosteriorSample <- function(kernType, numSamps=10, params=NULL, lims=c(-3,3), bw=FALSE, path=getwd()) {
+gpPosteriorSample <- function(kernType, numSamps=10, params=NULL, lims=c(-3,3), path=getwd()) {
 ## GPPOSTERIORSAMPLE Create a plot of samples from a posterior covariance.
 ## FORMAT
 ## DESC creates a plot of samples from a kernel with the given parameters and variance.

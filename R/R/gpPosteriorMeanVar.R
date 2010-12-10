@@ -24,17 +24,17 @@ gpPosteriorMeanVar <- function(model, X, varsigma.return=FALSE) {
 
     ## Compute kernel for new point.
     if (model$approx == "ftc")
-      KX_star = kernCompute(model$kern, model$X, X[indices, ,drop=F])
+      KX_star = kernCompute(model$kern, model$X, X[indices, ,drop=FALSE])
     else if (model$approx %in% c("dtc", "dtcvar", "fitc", "pitc"))
-      KX_star = kernCompute(model$kern, model$X_u, X[indices, ,drop=F])
+      KX_star = kernCompute(model$kern, model$X_u, X[indices, ,drop=FALSE])
     
     ## Compute mean, using precomputed alpha vector.
     if ((!"isMissingData" %in% names(model)) || !model$isMissingData || model$approx != "ftc")
       mu[indices, ] = t(KX_star) %*% model$alpha
     else {
       for (i in 1:model$d)
-	mu[indices, i] = t(KX_star[model$indexPresent[[i]], ,drop=F]) %*%
-			    model$alpha[model$indexPresent[[i]], i,drop=F]
+	mu[indices, i] = t(KX_star[model$indexPresent[[i]], ,drop=FALSE]) %*%
+			    model$alpha[model$indexPresent[[i]], i,drop=FALSE]
     }
     
     ## Compute variances if requried.
@@ -42,7 +42,7 @@ gpPosteriorMeanVar <- function(model, X, varsigma.return=FALSE) {
       varsigma = matrix(0, dim(X)[1], model$d)
       if (!("isSpherical" %in% names(model)) || model$isSpherical) {
 	## Compute diagonal of kernel for new point.
-	diagK = kernDiagCompute(model$kern, X[indices, ,drop=F])
+	diagK = kernDiagCompute(model$kern, X[indices, ,drop=FALSE])
 	if (model$approx == "ftc")
 	  Kinvk = model$invK_uu %*% KX_star
 	else if (model$approx %in% c("dtc", "dtcvar", "fitc", "pitc"))
@@ -53,32 +53,32 @@ gpPosteriorMeanVar <- function(model, X, varsigma.return=FALSE) {
 	}
 	varsigma[indices, ] = kronecker(matrix(1,1,model$d), varsig)
       } else {
-	diagK = kernDiagCompute(model$kern, X[indices, ,drop=F])
+	diagK = kernDiagCompute(model$kern, X[indices, ,drop=FALSE])
 	for (i in 1:model$d) {
 	  ind = model$indexPresent[[i]]
 	  if (model$approx == "ftc")
-	    Kinvk = model$invK_uu[[i]] %*% KX_star[ind, ,drop=F]
+	    Kinvk = model$invK_uu[[i]] %*% KX_star[ind, ,drop=FALSE]
 	  else {
 	    stop(c("Non-spherical not yet implemented for any approximation",
 		  "other than 'ftc'."))
 	  }
-	  varsigma[indices, i] = diagK - colSums(KX_star[ind, ,drop=F] * Kinvk)
+	  varsigma[indices, i] = diagK - colSums(KX_star[ind, ,drop=FALSE] * Kinvk)
 	}
       }
     }
     
     
     ## Rescale the mean
-    mu[indices,] = mu[indices, ,drop=F] * kronecker(matrix(1,length(indices),1), model$scale)
+    mu[indices,] = mu[indices, ,drop=FALSE] * kronecker(matrix(1,length(indices),1), model$scale)
     ## Add the bias back in.
-    mu[indices,] = mu[indices, ,drop=F] + kronecker(matrix(1,length(indices),1), model$bias)
+    mu[indices,] = mu[indices, ,drop=FALSE] + kronecker(matrix(1,length(indices),1), model$bias)
     ## If the mean function is present, add it it.
     if (("meanFunction" %in% names(model)) && length(model$meanFunction)>0) {
-      mu[indices,] = mu[indices, ,drop=F] + modelOut(model$meanFunction, X[indices, ,drop=F])
+      mu[indices,] = mu[indices, ,drop=FALSE] + modelOut(model$meanFunction, X[indices, ,drop=FALSE])
     }
     ## rescale the variances
     if (varsigma.return) { #if (nargout > 1)
-      varsigma[indices,] = varsigma[indices, ,drop=F] *
+      varsigma[indices,] = varsigma[indices, ,drop=FALSE] *
 	kronecker(matrix(1,length(indices),1), model$scale * model$scale)
     }
 
