@@ -1,5 +1,5 @@
 demGpCov2D <- function(ind=c(1,2), path = getwd(),
-  filename = paste('demGpCov2D', ind[1],'_', ind[2], sep='')) {
+  filename = paste('demGpCov2D', ind[1],'_', ind[2], sep=''), png=FALSE, gif=FALSE) {
   require(fields)
 
 #   for (i in 1:length(.libPaths())) { ## Get gptk library location.
@@ -39,18 +39,21 @@ demGpCov2D <- function(ind=c(1,2), path = getwd(),
   pdfVal = 1/sqrt(2*pi*f2Var)*exp(-0.5*(yval-f2Mean)*(yval-f2Mean)/f2Var)
   pdf = lines(pdfVal*0.25, yval, col='red')
 
-  for (figNo in 1:3) {
-    dev.set(figNo+1) #screen(figNo)
-    pathfilename = paste(path,filename,'_', figNo, '.eps', sep='')
-    dev.copy2eps(file = pathfilename) ## Save plot as eps
-    ## Convert to png. Needs the 'eps2png' facility. If not already installed: 'sudo apt-get install eps2png'
-    system(paste('eps2png ', pathfilename, sep=''))
+  if (png) {
+    for (figNo in 1:3) {
+      dev.set(figNo+1) #screen(figNo)
+      pathfilename = paste(path,'/',filename,'_', figNo, '.eps', sep='')
+      dev.copy2eps(file = pathfilename) ## Save plot as eps
+      ## Convert to png. Needs the 'eps2png' facility. If not already installed: 'sudo apt-get install eps2png'
+      system(paste('eps2png ', pathfilename, sep=''))
+    }
   }
 
   ## Convert the .png files to one .gif file using ImageMagick. 
   ## The -delay flag sets the time between showing
   ## the frames, i.e. the speed of the animation.
-  system(paste('convert -delay 80 ',path,filename,'*.png ', path,filename,'.gif', sep=''))
+  if (gif)
+    system(paste('convert -delay 80 ',path,'/',filename,'*.png ', path,'/',filename,'.gif', sep=''))
 }
 
 
@@ -74,5 +77,5 @@ basePlot <- function (K) {
     ylim=c(min(xy[,2]), max(xy[,2])), xlab='', ylab='') 
   cont = lines(xy[, 1], xy[, 2], col='blue') ## 'lines' only applies on existing plots.
 
-  zeroAxes(xy)
+  zeroAxes()
 }

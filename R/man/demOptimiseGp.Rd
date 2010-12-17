@@ -9,11 +9,13 @@
   close to 1. This was the length scale used to generate the data.
 }
 \usage{
-  demOptimiseGp(path=getwd(), filename='demOptimiseGp')
+  demOptimiseGp(path=getwd(), filename='demOptimiseGp', png=FALSE, gif=FALSE)
 }
 \arguments{
   \item{path}{path where the plot images are saved.}
   \item{filename}{name of saved images.}
+  \item{png}{save image as png.}
+  \item{gif}{save series of images as animated gif.}
 }
 \seealso{
   \code{

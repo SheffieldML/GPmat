@@ -1,0 +1,19 @@
+importClassesFrom(Biobase, AnnotatedDataFrame, AssayData, eSet, ExpressionSet,
+                  MIAME, Versioned, VersionedBiobase, Versions)
+
+importClassesFrom(methods, character, list, matrix, numeric)
+
+importMethodsFrom(as.list, colnames, exists, get, ncol, revmap, tail)
+
+importMethodsFrom(methods, initialize, show)
+
+importFrom(graphics, layout, lines, par, plot, title)
+
+importFrom(methods, "@<-", callNextMethod, new)
+
+importFrom(stats, optim, optimize, qgamma, qnorm, rnorm, sd)
+
+importFrom(utils, sessionInfo, write.table)
+
+##export everything that does not start with a . or an _
+exportPattern("^[^\\._]")

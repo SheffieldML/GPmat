@@ -1,4 +1,4 @@
-gpSample <- function (kernType, numSamps=10, params=NULL, lims=c(-3,3), path=getwd()) {
+gpSample <- function (kernType, numSamps=10, params=NULL, lims=c(-3,3), path=getwd(), png=FALSE) {
 ## GPSAMPLE Create a plot of samples from a GP.
 ## FORMAT
 ## DESC creates a plot of samples from a kernel with the given parameters and variance.
@@ -43,11 +43,13 @@ gpSample <- function (kernType, numSamps=10, params=NULL, lims=c(-3,3), path=get
   matplot(t_star, t(fsamp), ylim=range(fsamp),type='l', xlab='x',ylab='f')
   zeroAxes()
 
-  KernType = strsplit(kernType, split='')[[1]]
-  KernType[1] = toupper(KernType[1])
-  KernType = paste(KernType, collapse='')
-  fileName = paste('gpSample', KernType, infoStr, paramStr, sep='')
-  dev.copy2eps(file = paste(path,fileName, '.eps', sep='')) ## Save plot as eps.
-  ## Convert to png. Needs the 'eps2png' facility. If not already installed: 'sudo apt-get install eps2png'
-  system(paste('eps2png ',path,fileName, '.eps',sep=''))
+  if (png) {
+    KernType = strsplit(kernType, split='')[[1]]
+    KernType[1] = toupper(KernType[1])
+    KernType = paste(KernType, collapse='')
+    fileName = paste('gpSample', KernType, infoStr, paramStr, sep='')
+    dev.copy2eps(file = paste(path,'/',fileName, '.eps', sep='')) ## Save plot as eps.
+    ## Convert to png. Needs the 'eps2png' facility. If not already installed: 'sudo apt-get install eps2png'
+    system(paste('eps2png ',path,'/',fileName, '.eps',sep=''))
+  }
 }

@@ -1,6 +1,5 @@
 gpLoadToolkit <- function(gppath=NULL) {
   library(spam)
-  #library(tigre)
 
   if (is.null(gppath)) {
     if (.Platform$OS.type == "unix") {

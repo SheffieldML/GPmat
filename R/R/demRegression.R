@@ -1,4 +1,4 @@
-demRegression <- function(path=getwd(), filename='demRegression') {
+demRegression <- function(path=getwd(), filename='demRegression', png=FALSE, gif=FALSE) {
 ## DEMREGRESSION Demonstrate Gaussian processes for regression.
 ## FORMAT
 ## DESC runs a simple one-D Gaussian process displaying errorbars.
@@ -24,7 +24,6 @@ demRegression <- function(path=getwd(), filename='demRegression') {
   indTrain = lapply(indTrain, function(x) x=(seq(1,l,by=steps[(s<<-s+1)]))) ## '<<-' transcends local scope
 #   n = ceiling(sqrt(2*length(steps)-1)); layout.show(layout(matrix(c(1:n^2), n, n, byrow=T)))
   graphics.off()
-  dev.new(); plot.new()
 
   figNo = 1
   for (i in 1:length(indTrain)) {
@@ -43,14 +42,18 @@ demRegression <- function(path=getwd(), filename='demRegression') {
       invKtrain = .jitCholInv(Ktrain + diag(dim(Ktrain)[1])*noiseVar, silent=TRUE)$invM
       yPred = Kx%*%invKtrain%*%yTrain
       yVar = kernDiagCompute(kern, xTest) - rowSums(Kx%*%invKtrain * Kx)
-
       model = gpCreate(dim(xTrain)[2], dim(yTrain)[2], xTrain, yTrain, options)
+
+      dev.new(); plot.new()
       gpPlot(model, xTest, yPred, yVar, ylim=c(-3,3), col='black')
+      zeroAxes()
       
-      pathfilename = paste(path,filename,'_', figNo, '.eps', sep='')
-      dev.copy2eps(file = pathfilename) ## Save plot as eps
-      ## Convert to png. Needs the 'eps2png' facility. If not already installed: 'sudo apt-get install eps2png'
-      system(paste('eps2png ', pathfilename, sep=''))
+      pathfilename = paste(path,'/',filename,'_', figNo, '.eps', sep='')
+      if (png) {
+	dev.copy2eps(file = pathfilename) ## Save plot as eps
+	## Convert to png. Needs the 'eps2png' facility. If not already installed: 'sudo apt-get install eps2png'
+	system(paste('eps2png ', pathfilename, sep=''))
+      }
 
       figNo = figNo + 1
     } else {
@@ -63,27 +66,32 @@ demRegression <- function(path=getwd(), filename='demRegression') {
       yVar = kernDiagCompute(kern, xTest)
 
       plot(xTest, yPred, col='blue', lwd=.5)
-      zeroAxes(xTest)
+      zeroAxes()
 
-      pathfilename = paste(path,filename,'_', figNo, '.eps', sep='')
-      dev.copy2eps(file = pathfilename) ## Save plot as eps.
-      ## Convert to png. Needs the 'eps2png' facility. If not already installed: 'sudo apt-get install eps2png'
-      system(paste('eps2png ', pathfilename, sep=''))
+      pathfilename = paste(path,'/',filename,'_', figNo, '.eps', sep='')
+      if (png) {
+	dev.copy2eps(file = pathfilename) ## Save plot as eps.
+	## Convert to png. Needs the 'eps2png' facility. If not already installed: 'sudo apt-get install eps2png'
+	system(paste('eps2png ', pathfilename, sep=''))
+      }
 
       figNo = figNo + 1
     }
 
     if (i < length(indTrain)) {
+      dev.new(); plot.new()
       gpPlot(model, xTest, yPred, yVar, ylim=c(-3,3), col='black')
       if (i < 1) diffs = indTrain[[i+1]]
       else diffs = setdiff(indTrain[[i+1]], indTrain[[i]])
       newx = x[diffs]; newy = yTrue[diffs]
       points(newx, newy, pch = 4, cex = 1.5, lwd=3, col='blue')
 
-      pathfilename = paste(path,filename,'_', figNo, '.eps', sep='')
-      dev.copy2eps(file = pathfilename) ## Save plot as eps.
-      ## Convert to png. Needs the 'eps2png' facility. If not already installed: 'sudo apt-get install eps2png'
-      system(paste('eps2png ', pathfilename, sep=''))
+      pathfilename = paste(path,'/',filename,'_', figNo, '.eps', sep='')
+      if (png) {
+	dev.copy2eps(file = pathfilename) ## Save plot as eps.
+	## Convert to png. Needs the 'eps2png' facility. If not already installed: 'sudo apt-get install eps2png'
+	system(paste('eps2png ', pathfilename, sep=''))
+      }
       figNo = figNo + 1
     }
   }
@@ -91,5 +99,6 @@ demRegression <- function(path=getwd(), filename='demRegression') {
   ## Convert the .png files to one .gif file using ImageMagick. 
   ## The -delay flag sets the time between showing
   ## the frames, i.e. the speed of the animation.
-  system(paste('convert -delay 80 ',path,filename,'*.png ', path,filename,'.gif', sep=''))
+  if (gif)
+    system(paste('convert -delay 80 ',path,'/',filename,'*.png ', path,'/',filename,'.gif', sep=''))
 }

@@ -1,4 +1,4 @@
-gpPosteriorSample <- function(kernType, numSamps=10, params=NULL, lims=c(-3,3), bw=FALSE, path=getwd()) {
+gpPosteriorSample <- function(kernType, numSamps=10, params=NULL, lims=c(-3,3), path=getwd(), png=FALSE) {
 ## GPPOSTERIORSAMPLE Create a plot of samples from a posterior covariance.
 ## FORMAT
 ## DESC creates a plot of samples from a kernel with the given parameters and variance.
@@ -62,25 +62,24 @@ gpPosteriorSample <- function(kernType, numSamps=10, params=NULL, lims=c(-3,3), 
   points(x, f)
   zeroAxes()
 
-  if (is.list(kernType)) {
-    KernType = NULL
-    for (i in seq(length(kernType),1,-1)) {
-      KernType = paste(kernType[[i]], KernType)
-      KernType = strsplit(KernType, split='')[[1]]
+  if (png) {
+    if (is.list(kernType)) {
+      KernType = NULL
+      for (i in seq(length(kernType),1,-1)) {
+	KernType = paste(kernType[[i]], KernType)
+	KernType = strsplit(KernType, split='')[[1]]
+	KernType[1] = toupper(KernType[1])
+	KernType = paste(KernType, collapse='')
+      }
+    }
+    else {
+      KernType = strsplit(kernType, split='')[[1]]
       KernType[1] = toupper(KernType[1])
       KernType = paste(KernType, collapse='')
     }
-  }
-  else {
-    KernType = strsplit(kernType, split='')[[1]]
-    KernType[1] = toupper(KernType[1])
-    KernType = paste(KernType, collapse='')
-  }
 
-  fileName = paste('gpPosteriorSample', KernType, infoStr, paramStr, sep='')
-  dev.copy2eps(file = paste(path,fileName, '.eps', sep='')) ## Save plot as eps.
-  ## Convert to png. Needs the 'eps2png' facility. If not already installed: 'sudo apt-get install eps2png'
-  system(paste('eps2png ',path,fileName, '.eps',sep=''))
-# 
-
+    fileName = paste('gpPosteriorSample', KernType, infoStr, paramStr, sep='')
+    dev.copy2eps(file = paste(path,'/',fileName, '.eps', sep='')) ## Save plot as eps.
+    ## Convert to png. Needs the 'eps2png' facility. If not already installed: 'sudo apt-get install eps2png'
+    system(paste('eps2png ',path,'/',fileName, '.eps',sep=''))
 }

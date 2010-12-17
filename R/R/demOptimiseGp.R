@@ -1,4 +1,4 @@
-demOptimiseGp <- function(path=getwd(), filename='demOptimiseGp') {
+demOptimiseGp <- function(path=getwd(), filename='demOptimiseGp', png=FALSE, gif=FALSE) {
 ## DEMOPTIMISEGP Shows that there is an optimum for the covariance function length scale.
 ## DESC shows that by varying the length scale an artificial data
 ## set has different likelihoods, yet there is an optimum for which
@@ -25,8 +25,7 @@ demOptimiseGp <- function(path=getwd(), filename='demOptimiseGp') {
   y = scale(y,scale=FALSE)
   model = gpCreate(dim(x)[2], dim(y)[2], x, y, options)	
 
-  graphics.off(); dev.new(); plot.new()
-  dev.new(); plot.new()
+  graphics.off();
 
   ll=c(); llLogDet=c(); llFit=c();
   for (i in 1:length(lengthScale)) {
@@ -53,24 +52,30 @@ demOptimiseGp <- function(path=getwd(), filename='demOptimiseGp') {
     # S = meanVar$varsigma
     # S = S - exp(2*inithypers[3]) ## subtract noise variance
 
-    dev.set(2)
+    dev.new(); plot.new() #dev.set(2)
     gpPlot(model, xtest, meanVar$mu, meanVar$varsigma, ylim=c(-2.5,2.5), xlim=range(xtest), col='black')
     figNo = figNo + 1
-    dev.copy2eps(file=paste(path,filename,'1_', as.character(figNo), '.eps', sep='') ) ## Save plot as eps
-    ## Convert to png. Needs the 'eps2png' facility. If not already installed: 'sudo apt-get install eps2png'
-    system(paste('eps2png ',path,filename,'1_',as.character(figNo),'.eps',sep=''))
+    if (png) {
+      dev.copy2eps(file=paste(path,'/',filename,'1_', as.character(figNo), '.eps', sep='') ) ## Save plot as eps
+      ## Convert to png. Needs the 'eps2png' facility. If not already installed: 'sudo apt-get install eps2png'
+      system(paste('eps2png ',path,'/',filename,'1_',as.character(figNo),'.eps',sep=''))
+    }
 
-    dev.set(3)
+    dev.new(); plot.new() #dev.set(3)
     matplot(lengthScale[1:i], cbind(ll[1:i], llLogDet[1:i],  llFit[1:i]), type="l", lty=c(1,2,3), log="x",
       xlab='length-scale', ylab='log-likelihood')
     legend(x='topleft',c('log-likelihood','complexity term','data-fit term'),
       lty=c(1,2,3),col=c('black','red','green'))
-    dev.copy2eps(file = paste(path,filename,'2_', as.character(figNo), '.eps', sep='')) ## Save plot as eps
-    system(paste('eps2png ',path,filename,'2_', as.character(figNo), '.eps',sep=''))
+    if (png) {
+      dev.copy2eps(file = paste(path,'/',filename,'2_', as.character(figNo), '.eps', sep='')) ## Save plot as eps
+      system(paste('eps2png ',path,'/',filename,'2_', as.character(figNo), '.eps',sep=''))
+    }
   }
 
   ## Convert the .png files to one .gif file using ImageMagick. The -delay flag sets the time between showing
   ## the frames, i.e. the speed of the animation.
-  system(paste('convert -delay 80 ',path,filename,'1_*.png ', path,filename,'1.gif', sep=''))
-  system(paste('convert -delay 80 ',path,filename,'2_*.png ', path,filename,'2.gif', sep=''))
+  if (gif) {
+    system(paste('convert -delay 80 ',path,'/',filename,'1_*.png ', path,'/',filename,'1.gif', sep=''))
+    system(paste('convert -delay 80 ',path,'/',filename,'2_*.png ', path,'/',filename,'2.gif', sep=''))
+  }
 }
