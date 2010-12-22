@@ -1,0 +1,14 @@
+Mining regulatory network connections by ranking transcription factor
+target genes using time series expression data
+
+
+Reverse engineering the gene regulatory network is challenging because
+the amount of available data is very limited compared to the
+complexity of the underlying network.  We present a technique
+addressing this problem through focussing on a more limited problem:
+inferring direct targets of a transcription factor from short
+expression time series.  The method is based on combining Gaussian
+process priors and ordinary differential equation models allowing
+inference on limited potentially unevenly sampled data.  The method is
+implemented as an R/Bioconductor package and it is demonstrated by
+ranking candidate targets of the p53 tumour suppressor.
