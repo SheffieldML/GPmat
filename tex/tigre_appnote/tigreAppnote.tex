@@ -8,12 +8,14 @@
 \firstpage{1}
 
 \title[tigre]{tigre: Transcription factor Inference through Gaussian process Reconstruction of Expression for Bioconductor}
-\author[Honkela \textit{et~al.}]{Antti Honkela\,$^{1,*}$, Pei Gao\,$^{2}$, Jonatan Ropponen\,$^{1}$, Magnus Rattray\,$^{3,*}$ and Neil D.\ Lawrence\,$^{3,}$\footnote{to whom correspondence should be addressed}}
+\author[Honkela \textit{et~al.}]{Antti Honkela\,$^{1,2,*}$, Pei Gao\,$^{3}$, Jonatan Ropponen\,$^{1}$, Magnus Rattray\,$^{4,*}$ and Neil D.\ Lawrence\,$^{4,}$\footnote{to whom correspondence should be addressed}}
 \address{$^{1}$Department of Information and Computer Science, Aalto
-  University School of Science and Technology, Helsinki, Finland\\
-  $^{2}$Department of of Public Health and Primary Care, University of
+  University, Helsinki, Finland\\
+  $^{2}$Helsinki Institute for Information Technology HIIT,
+  University of Helsinki, Helsinki, Finland\\
+  $^{3}$Department of of Public Health and Primary Care, University of
   Cambridge, Cambridge, UK\\
-  $^{3}$ Sheffield Institute for Translational Neuroscience and
+  $^{4}$ Sheffield Institute for Translational Neuroscience and
   Department of Computer Science, University of Sheffield, Sheffield, UK}
 
 \history{Received on XXXXX; revised on XXXXX; accepted on XXXXX}
@@ -31,13 +33,15 @@ expression time series.  The underlying methodology is based on
 Gaussian process inference on a differential equation model that
 allows using short unevenly sampled time series.  The method has been
 designed with efficient parallel implementation in mind, and the
-package supports several alternative approaches for parallel operation
-on commodity hardware.
+package supports parallel operation even without additional
+software.
 
 \section{Availability:}
-The package is included in Bioconductor since release 2.6 for R 2.11.
+The \tigre{} package is included in Bioconductor since release 2.6 for
+R 2.11. The package and users' guide are available at
+\href{http://www.bioconductor.org}{http://www.bioconductor.org}.
 
-\section{Contact:} \href{antti.honkela@tkk.fi}{antti.honkela@tkk.fi},
+\section{Contact:} \href{antti.honkela@hiit.fi}{antti.honkela@hiit.fi},
 \href{m.rattray@sheffield.ac.uk}{m.rattray@sheffield.ac.uk},\\
 \href{n.lawrence@sheffield.ac.uk}{n.lawrence@sheffield.ac.uk}
 \end{abstract}
@@ -72,7 +76,9 @@ leads to a
 joint Gaussian process model over the protein activity level and all
 gene expression levels~\citep{Gao2008}.  The Gaussian processes can be
 marginalised out analytically while the model parameters are optimised
-using maximum likelihood.
+using maximum likelihood.  Candidate targets are then ranked by model
+likelihood, which effectively measures how well the target fits a
+model of regulation by the inferred TF.
 
 The method was originally implemented in MATLAB,
 making handling of genomic data sets much more cumbersome than in the
@@ -126,15 +132,14 @@ the method, including estimation of standard errors of unlogged expression
 values for \emph{puma} processed data (currently \emph{puma} standard errors are for logged expression); fitting the models individually
 or in a batch; and plotting the models to assess the fit.  The models
 are fitted using scaled conjugate gradient
-optimisation~\citep{Moller:scg93}.  Fitted models can be stored very
-compactly by just storing their parameters.  They can also be easily
-recreated afterwards without rerunning the optimiser used in the
-fitting.
+optimisation~\citep{Moller:scg93}.  Depending on the number of genes
+in the model, the model is defined using from 7 up to a few dozen
+parameters, allowing very compact storage of fitted models.
 
 \subsection{Parallelisation of the Ranking}
 
-The method implemented by \tigre{} includes no Monte Carlo simulations
-and is thus relatively fast, but still takes some time, ranging from
+The method implemented by \tigre{} includes no Monte Carlo simulations,
+but typical running times still range from
 seconds to up to a few minutes per gene depending on the data and the
 number of targets in the models.
 Therefore \tigre{} has been designed for efficient parallelisation.  In the
@@ -144,7 +149,8 @@ in a separate machine.  This linear parallelisation to potentially
 several thousands of processes is impossible in more tightly coupled
 modelling methods.
 
-The easiest way to run \tigre{} in parallel is to simply split the
+In terms of required additional software,
+the easiest way to run \tigre{} in parallel is to simply split the
 task to a number of jobs that can be run independently, possibly by
 submitting them as independent jobs to a queuing system.  The package
 does not include integration with an MPI environment, because that
@@ -155,13 +161,13 @@ An alternative technique for running \tigre{} in parallel is based on
 MapReduce~\citep{Dean2008}.  The ranking approach fits this paradigm
 perfectly: the mapper fits models to each gene independently and the
 reducer forms the final ranking.  We have implemented this approach
-using Hadoop and RHIPE.  This approach also allows relatively easy
-running of the ranking in a highly parallelised fashion in a cloud
+using Hadoop and RHIPE.  This approach provides an alternative method
+of running the ranking in a highly parallelised fashion in a cloud
 computing setting.
 
 \section{Discussion}
 
-\tigre{} can provide useful results on very short time series.  We
+\tigre{} can fit the models already on very short time series.  We
 have successfully applied it to data sets with as few as 6 and 7 time
 points~\citep{Honkela2010PNAS,Honkela2010MLSP}.
 
@@ -171,20 +177,23 @@ form the ranking.  Direct interpretation of the log-likelihood scores
 can be difficult.  We have found it very useful to use visualisations
 of the models to assess the fit and to select thresholds for filtering
 weakly expressed genes \citep[for details, see][]{Honkela2010PNAS}.
-We have also developed a web interface called \emph{tigreBrowser} to
-aid in browsing the visualisations \citep{Matikainen2010tigreBrowser}.
+We have also developed a web interface called \emph{tigreBrowser}
+(\href{http://pypi.python.org/pypi/tigreBrowser}{http://pypi.python.org/pypi/tigreBrowser}) to
+aid in browsing the visualisations.
 
 The linearity of the differential equation transcription model greatly
 simplifies the algorithm, but it may be too crude an assumption for some
 situations.  We are working on a method based on a more realistic
-model.  However, it will be challenging to turn that framework into
-something as convenient as \tigre{}, which nicely captures the
+non-linear model.  Such models require, however, more advanced
+computational techniques that often tend to be more fragile.
+\tigre{} avoids this pitfall by using a simple enough model allowing
+very robust inference while effectively capturing the
 essential degrees of freedom in the transcription regulatory process.
 
 \section*{Acknowledgement}
 
 The authors wish to thank Jennifer Withers for useful comments on the
-package.
+package and Miika-Petteri Matikainen for implementing \emph{tigreBrowser}.
 
 \paragraph{Funding\textcolon}
 This work was supported by the Academy of Finland [121179 to A.H.];
