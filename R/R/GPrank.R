@@ -1,5 +1,5 @@
 GPLearn <- function(preprocData, TF = NULL, targets = NULL,
-                    useGpdisim = FALSE, randomize = FALSE,
+                    useGpdisim = !is.null(TF), randomize = FALSE,
                     addPriors = FALSE, fixedParams = FALSE,
                     initParams = NULL, initialZero = TRUE,
                     fixComps = NULL, dontOptimise = FALSE,
@@ -19,19 +19,13 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
   else
     genes <- targets
 
-  options <- list(includeNoise=0, optimiser="SCG")
-
-  if (!is.null(gpsimOptions)) {
-    for (i in seq(along=gpsimOptions))
-      options[[names(gpsimOptions)[[i]]]] <- gpsimOptions[[i]]
+  if (class(try(preprocData[genes,], silent=TRUE)) == "try-error") {
+    if (! all(TF %in% featureNames(preprocData))) {
+      stop("unknown TF")
+    } else {
+      stop("unknown target gene")
+    }
   }
-  
-  if (addPriors)
-    options$addPriors <- TRUE
-
-  if (!initialZero && useGpdisim)
-    options$timeSkew <- 1000.0
-  #options$gaussianInitial <- TRUE
 
   if (length(unique(preprocData$experiments)) == length(preprocData$experiments)) {
     options$structuredExperiments <- TRUE
@@ -47,9 +41,23 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
 
   Nrep <- length(y)
 
+  options <- list(includeNoise=0, optimiser="SCG")
+
   if (any(yvar[[1]] == 0))
     options$includeNoise = 1
   
+  if (!is.null(gpsimOptions)) {
+    for (i in seq(along=gpsimOptions))
+      options[[names(gpsimOptions)[[i]]]] <- gpsimOptions[[i]]
+  }
+  
+  if (addPriors)
+    options$addPriors <- TRUE
+
+  if (!initialZero && useGpdisim)
+    options$timeSkew <- 1000.0
+  #options$gaussianInitial <- TRUE
+
   if (useGpdisim) {
     Ngenes <- length(genes) - 1
     options$fix$names <- "di_variance"
@@ -108,10 +116,10 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
   for ( i in seq(length=Nrep) ) {
     #repNames <- names(model$comp)
     if (useGpdisim) {
-      model$comp[[i]] <- gpdisimCreate(Ngenes, Ntf, times, t(y[[i]]), t(yvar[[i]]), options, genes = genes)
+      model$comp[[i]] <- gpdisimCreate(Ngenes, Ntf, times, t(y[[i]]), t(yvar[[i]]), options, genes = featureNames(preprocData[genes,]), annotation=annotation(preprocData))
     }
     else {
-      model$comp[[i]] <- gpsimCreate(Ngenes, Ntf, times, t(y[[i]]), t(yvar[[i]]), options, genes = genes)
+      model$comp[[i]] <- gpsimCreate(Ngenes, Ntf, times, t(y[[i]]), t(yvar[[i]]), options, genes = featureNames(preprocData[genes,]), annotation=annotation(preprocData))
     }
     #names(model$comp) <- c(repNames, paste("rep", i, sep=""))
     #if (fixedParams) {
@@ -124,9 +132,9 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
     altopts$structuredExperiments <- FALSE
     altopts$experiments <- NULL
     if (useGpdisim) {
-      altmodel <- gpdisimCreate(Ngenes, Ntf, times, t(y[[i]]), t(yvar[[i]]), altopts, genes = genes)
+      altmodel <- gpdisimCreate(Ngenes, Ntf, times, t(y[[i]]), t(yvar[[i]]), altopts, genes = featureNames(preprocData[genes,]), annotation=annotation(preprocData))
     } else {
-      altmodel <- gpsimCreate(Ngenes, Ntf, times, t(y[[i]]), t(yvar[[i]]), altopts, genes = genes)
+      altmodel <- gpsimCreate(Ngenes, Ntf, times, t(y[[i]]), t(yvar[[i]]), altopts, genes = featureNames(preprocData[genes,]), annotation=annotation(preprocData))
     }
   }
 
@@ -176,7 +184,11 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
   }
 
   if (!dontOptimise) {
-    message(paste(c("Optimising genes", paste(genes, collapse=' '), "\n"), sep=" "))
+    if (useGpdisim) {
+      message(paste("Optimising the model for TF", TF, "and targets", paste(genes, collapse=' '), sep=" "))
+    } else {
+      message(paste("Optimising the model for targets", paste(genes, collapse=' '), sep=" "))
+    }
     model <- modelOptimise(model, optOptions)
   }
 
@@ -204,9 +216,21 @@ GPRankTargets <- function(preprocData, TF = NULL, knownTargets = NULL,
 
   if (is.list(testTargets))
     testTargets <- unlist(testTargets)
-  
+
   if (is.list(knownTargets))
     knownTargets <- unlist(knownTargets)
+  
+  if (!is.null(TF) && !all(TF %in% featureNames(preprocData))) {
+    stop("unknown TF")
+  }
+  
+  if (!all(knownTargets %in% featureNames(preprocData))) {
+    stop("unknown genes in knownTargets")
+  }
+  
+  if (class(try(preprocData[testTargets,], silent=TRUE)) == "try-error") {
+    stop("unknown genes in testTargets")
+  }
   
   if ('var.exprs' %in% assayDataElementNames(preprocData))
     testTargets <- .filterTargets(preprocData[testTargets,], filterLimit)
@@ -329,7 +353,15 @@ GPRankTFs <- function(preprocData, TFs, targets,
 
   genes = c(TFs, targets)
 
-  # Filtering the genes based on the calculated ratios. If the limit is 0, all genes are accepted.
+  if (class(try(preprocData[TFs,], silent=TRUE)) == "try-error") {
+    stop("unknown genes in TFs")
+  }
+
+  if (!all(targets %in% featureNames(preprocData))) {
+    stop("unknown genes in targets")
+  }
+  
+  ## Filtering the genes based on the calculated ratios. If the limit is 0, all genes are accepted.
   if ('var.exprs' %in% assayDataElementNames(preprocData))
     TFs <- .filterTargets(preprocData[TFs,], filterLimit)
   else

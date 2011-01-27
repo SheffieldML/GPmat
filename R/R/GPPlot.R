@@ -18,6 +18,12 @@ GPPlot <- function(data, savepath = '', nameMapping = NULL,
       model <- data
   }
 
+  if ("annotation" %in% names(model$comp[[1]])) {
+    mapping <- try(getAnnMap("SYMBOL", model$comp[[1]]$annotation), silent=TRUE)
+    if (class(mapping) != "try-error")
+      nameMapping <- mapping
+  }
+
   is_gpdisim_model <- (model$type == 'cgpdisim')
   
   if (is_gpdisim_model) {
@@ -76,7 +82,7 @@ GPPlot <- function(data, savepath = '', nameMapping = NULL,
       if ( is.null(nameMapping) ) {
         genename <- genes[j]
       } else {
-        genename <- get(genes[j], env=nameMapping)
+        genename <- paste(get(genes[j], nameMapping), " (", genes[j], ")", sep='')
       }
       
       if ( j==1 && is_gpdisim_model ) {
@@ -106,4 +112,46 @@ GPPlot <- function(data, savepath = '', nameMapping = NULL,
     }
   }
  
+}
+
+
+plotTimeseries <- function(data, nameMapping=NULL) {
+  require(annotate)
+  
+  mapping <- try(getAnnMap("SYMBOL", annotation(data)), silent=TRUE)
+  if (class(mapping) != "try-error")
+    nameMapping <- mapping
+
+  exps <- unique(data$experiments)
+  tshifts <- seq(-0.2, 0.2, length.out=length(exps))
+
+  ngenes <- dim(data)[1]
+
+  nrows = floor(sqrt(ngenes))
+  par(mfrow = c(nrows, ceiling(ngenes / nrows)))
+
+  for (j in seq(ngenes)) {
+    for (i in exps) {
+      t <- data$modeltime[data$experiments==i] + tshifts[i]
+      m <- exprs(data)[j,data$experiments==i]
+      sd <- sqrt(var.exprs(data)[j,data$experiments==i])
+      probe <- featureNames(data)[j]
+      if (i==1) {
+        plot(t, m, type='l',
+             ylim=c(0, max(exprs(data)[j,] + 2*sqrt(var.exprs(data)[j,]))))
+      } else {
+        lines(t, m)
+      }
+      warnOption <- getOption('warn')
+      options(warn=-1)
+      plotCI(t, m,
+             uiw=2*sd, lwd=1, col=3, add=TRUE)
+      options(warn=warnOption)
+      if (!is.null(nameMapping)) {
+        title(paste(get(probe, nameMapping), " (", probe, ")", sep=''))
+      } else {
+        title(probe)
+      }
+    }
+  }
 }

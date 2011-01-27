@@ -6,7 +6,8 @@
   Plots GP(DI)SIM models.
 }
 \usage{
-GPPlot(data, savepath = '', nameMapping = NULL, predt = NULL, fileOutput=FALSE)
+GPPlot(data, savepath = '', nameMapping = NULL, predt = NULL,
+       fileOutput=FALSE, plotTime=NULL)
 }
 \arguments{
   \item{data}{The model to plot as returned by GPLearn.}
@@ -17,6 +18,8 @@ GPPlot(data, savepath = '', nameMapping = NULL, predt = NULL, fileOutput=FALSE)
     (default: the time interval covering the data).}
   \item{fileOutput}{Is the plot being saved to a file? If yes, do not
     open new interactive devices for each plot.}
+  \item{plotTime}{The times of observations to use in the plot.
+    Should usually not be changed!}
 }
 \details{
   The function plots

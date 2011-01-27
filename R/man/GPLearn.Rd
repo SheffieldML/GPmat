@@ -11,7 +11,7 @@
 }
 \usage{
   model <- GPLearn(preprocData, TF = NULL, targets = NULL,
-    useGpdisim = FALSE, randomize = FALSE, addPriors = FALSE,
+    useGpdisim = !is.null(TF), randomize = FALSE, addPriors = FALSE,
     fixedParams = FALSE, initParams = NULL, initialZero = TRUE,
     fixComps = NULL, dontOptimise = FALSE,
     allowNegativeSensitivities = FALSE, quiet = FALSE,
@@ -19,11 +19,13 @@
 }
 \arguments{
   \item{preprocData}{The preprocessed data to be used.}
-  \item{TF}{The transcription factor of the model. In GPsim, there can
-    be only one transcription factor for each model.}
+  \item{TF}{The probe corresponding to the transcription factor (TF) mRNA
+    if TF protein translation model is used, or NULL (default) if the
+    translation model is not used.}
   \item{targets}{The target genes of the model.}
-  \item{useGpdisim}{A logical value determining whether GPDISIM is used,
-    FALSE (default) implies GPSIM.}
+  \item{useGpdisim}{A logical value determining whether a model of
+    translation is included.  By default TRUE if TF is set, FALSE
+    if TF is unset.}
   \item{randomize}{A logical value determining whether the parameters
     of the model are randomized before optimization.}
   \item{addPriors}{A logical value determining whether priors are

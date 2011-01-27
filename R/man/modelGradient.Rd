@@ -19,6 +19,14 @@
 \alias{gpsimLogLikeGradients}
 \alias{gpsimObjective}
 \alias{gpsimLogLikelihood}
+\alias{gammaPriorGradient}
+\alias{invgammaPriorGradient}
+\alias{kernPriorGradient}
+\alias{priorGradient}
+\alias{gammaPriorLogProb}
+\alias{invgammaPriorLogProb}
+\alias{kernPriorLogProb}
+\alias{priorLogProb}
 \title{Model log-likelihood/objective error function and its gradient.}
 \description{
   \code{modeGradient} gives the gradient of the objective function for a

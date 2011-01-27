@@ -143,14 +143,17 @@ st_models <- list()
 for (i in seq(along=targetProbes)) {
   st_models[[i]] <- GPLearn(drosophila_gpsim_fragment,
                             TF=twi, targets=targetProbes[i],
-                            useGpdisim=TRUE, quiet=TRUE)
+                            quiet=TRUE)
 }
 # Learn a joint model for all targets
 mt_model <- GPLearn(drosophila_gpsim_fragment, TF=twi,
                     targets=targetProbes,
-                    useGpdisim=TRUE, quiet=TRUE)
+                    quiet=TRUE)
 # Display the joint model parameters
 show(mt_model)
+# Learn a model without TF mRNA and TF protein translation
+nt_model <- GPLearn(drosophila_gpsim_fragment,
+                    targets=c(twi, targetProbes[1:2]), quiet=TRUE)
 @ 
 
 \subsection{Visualising the models}
@@ -158,9 +161,11 @@ show(mt_model)
 The models can be plotted using commands like
 <<eval=FALSE>>=
 GPPlot(st_models[[1]], nameMapping=getAnnMap("FLYBASE",
-                         annotation(drosophila_gpsim_fragment)))
+                        annotation(drosophila_gpsim_fragment)))
 GPPlot(mt_model, nameMapping=getAnnMap("FLYBASE",
-                   annotation(drosophila_gpsim_fragment)))
+                  annotation(drosophila_gpsim_fragment)))
+GPPlot(nt_model, nameMapping=getAnnMap("FLYBASE",
+                  annotation(drosophila_gpsim_fragment)))
 @ 
 
 \begin{figure}
@@ -182,6 +187,18 @@ GPPlot(mt_model, nameMapping=getAnnMap("FLYBASE",
 @
 \end{center}
 \caption{Multiple-target model for all the example genes.  The
+  call creates independent figures for each repeated time series.}
+\end{figure}
+
+\begin{figure}
+  \begin{center}
+<<fig=TRUE, echo=FALSE>>=
+GPPlot(nt_model, nameMapping=getAnnMap("FLYBASE",
+                   annotation(drosophila_gpsim_fragment)))
+@
+\end{center}
+\caption{Multiple-target model without TF protein translation for
+  selected example genes without.  The
   call creates independent figures for each repeated time series.}
 \end{figure}
 

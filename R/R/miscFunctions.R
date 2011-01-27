@@ -88,7 +88,7 @@ modelTieParam <- function (model, paramsList) {
   }
 
   params <- try(modelExtractParam(model, only.values=FALSE), TRUE)
-  if (!is.list(params))
+  if (! is.list(params) )
     params <- kernExtractParam(model, only.values=FALSE)
   
   for ( i in seq(along=paramsList) ) {
@@ -133,9 +133,12 @@ modelTieParam <- function (model, paramsList) {
   for ( i in 1:Num ) {
     ## clear the last error message
     try(stop(""),TRUE)
+    ow <- options("warn")
+    options(warn=2)
 
     Ch <- try( chol( M + jitter*eyeM ), silent=TRUE )
 
+    options(ow)
     nPos <- grep("not positive definite",  geterrmessage())
 
     if ( length(nPos) != 0 ) {
@@ -164,9 +167,12 @@ modelTieParam <- function (model, paramsList) {
 
     ## clear the last error message
     try(stop(""),TRUE)
+    ow <- options("warn")
+    options(warn=2)
 
     Ch <- try( chol( M + jitter*eyeM ), silent=TRUE )
 
+    options(ow)
     nPos <- grep("not positive definite",  geterrmessage())
 
     if ( length(nPos) != 0 ) {
@@ -182,7 +188,10 @@ modelTieParam <- function (model, paramsList) {
     else break
   }
 
+  ow <- options("warn")
+  options(warn=2)
   invCh <- try (solve( Ch, eyeM ), silent=TRUE)
+  options(ow)
 
   if ( class(invCh) == "try-error" ) {
     return (NaN)
@@ -258,7 +267,8 @@ modelExtractParam <- function (model, only.values=TRUE,
   
   funcName <- paste(model$type, "ExtractParam", sep="")
   func <- get(funcName, mode="function")
-  params <- func(model, only.values=only.values, untransformed.values=untransformed.values)
+  params <- func(model, only.values=only.values,
+                 untransformed.values=untransformed.values)
 
   if ( !only.values ) {
     origNames <- names(params)
@@ -428,7 +438,7 @@ modelLogLikelihood <- function (model) {
 }
 
 
-gpsimKernelSpec <- function(comps, options, exps=NULL) {
+.gpsimKernelSpec <- function(comps, options, exps=NULL) {
   kernType <- list(type="multi", comp=list())
 
   if (!is.null(exps)) {

@@ -10,6 +10,10 @@
 \alias{simKernParamInit}
 \alias{translateKernParamInit}
 \alias{whiteKernParamInit}
+\alias{priorCreate}
+\alias{gammaPriorParamInit}
+\alias{invgammaPriorParamInit}
+\alias{priorParamInit}
 
 \title{Initialise a kernel structure.}
 \description{
