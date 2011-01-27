@@ -5,17 +5,11 @@
 \begin{document}
 \maketitle
 
-To install the gpsim software, Antti suggests the following:
-\begin{verbatim}
-mkdir ~/R-libs
-cd ~/mlprojects/gpsim/R
-R CMD INSTALL --library=~/R-libs .
-\end{verbatim}
-
 First we load in the raw cel files and process using mmgmos. This takes about 20 minutes to run. 
 <<echo=FALSE>>=
 ## source("http://www.bioconductor.org/biocLite.R")
 ## biocLite("puma")
+## biocLite("tigre")
 ## biocLite("mouse430a2.db")
 library(puma)
 library(affy)
@@ -59,7 +53,7 @@ probeNames = names(which(tp53_cl$cluster==1))
 
 %Now we load in the gpsim software
 <<echo=FALSE>>=
-library(gpsim, lib.loc="~/R-libs")
+library(tigre)
 #Preprocess data for Antti's approach to mean and variance.
 #preprocData <- processData(eset_tp53_mmgmos)
 show(preprocData)

@@ -14,6 +14,10 @@
 \alias{simKernExtractParam}
 \alias{translateKernExtractParam}
 \alias{whiteKernExtractParam}
+\alias{gammaPriorExtractParam}
+\alias{invgammaPriorExtractParam}
+\alias{priorExtractParam}
+
 \title{Extract the parameters of a model.}
 \description{
   Extract parameters from the model into a vector of parameters for optimisation.

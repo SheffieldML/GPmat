@@ -1,4 +1,4 @@
-gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
+gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL, annotation = NULL) {
 
   if ( any(dim(y)!=dim(yvar)) )
     stop("The gene variances have a different size matrix to the gene values.")
@@ -17,7 +17,7 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
   model$uniqueT <- sort(unique(times))
   lBounds <- c(min(diff(model$uniqueT)),
                (model$uniqueT[length(model$uniqueT)]-model$uniqueT[1]))
-  invWidthBounds <- c(2/(lBounds[2]^2), 2/(lBounds[1]^2))
+  invWidthBounds <- c(1/(lBounds[2]^2), 1/(lBounds[1]^2))
 
   if ("structuredExperiments" %in% names(options) &&
       options$structuredExperiments &&
@@ -185,6 +185,10 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL) {
     model$genes <- genes
   }
 
+  if (!is.null(annotation)  && annotation != "") {
+    model$annotation <- annotation
+  }
+
   if ( "fix" %in% names(options) ) {
     params <- modelExtractParam(model, only.values=FALSE)
     model$fix <- options$fix
@@ -234,6 +238,18 @@ gpsimExtractParam <- function (model, only.values=TRUE,
   funcName <- optimiDefaultConstraint(model$bTransform)
   func <- get(funcName$func, mode="function")
 
+  if (untransformed.values && "fix" %in% names(model)) {
+    params <- gpsimExtractParam(model, only.values=TRUE,
+                                untransformed.values=FALSE)
+    origparams <- params
+    for ( i in seq(along=model$fix$index) )
+      params[model$fix$index[i]] <- model$fix$value[i]
+
+    if (! all(params==origparams)) {
+      model <- gpsimExpandParam(model, params)
+    }
+  }
+  
   if ( only.values ) {
     params <- kernExtractParam(model$kern,
                                untransformed.values=untransformed.values)
@@ -257,11 +273,6 @@ gpsimExtractParam <- function (model, only.values=TRUE,
     }
     params <- c(params, Bparams)
   }
-
-  # FIXME: Does not work with untransformed.values!!!
-  if ( "fix" %in% names(model) ) 
-    for ( i in seq(along=model$fix$index) )
-      params[model$fix$index[i]] <- model$fix$value[i]
 
   params <- Re(params)        
 
@@ -444,7 +455,7 @@ gpsimLogLikelihood <- function (model) {
   ll <- -dim*log(2*pi) - model$logDetK - t(model$m) %*% model$invK %*% model$m
   ll <- 0.5*ll
 
-  # prior contributions
+  ## prior contributions
   ll <- ll + kernPriorLogProb(model$kern)
   if ( "bprior" %in% names(model) ) {
     ll <- ll + priorLogProb(model$bprior, model$B)
@@ -501,7 +512,7 @@ gpsimLogLikeGradients <- function (model) {
   funcName <- optimiDefaultConstraint(model$bTransform)
   func <- get(funcName$func, mode="function")
 
-  # prior contribution
+  ## prior contribution
   if ( "bprior" %in% names(model) ) {
     gb <- gb + priorGradient(model$bprior, model$B)
   }

@@ -8,9 +8,9 @@
 }
 \usage{
 model <- gpsimCreate(numGenes, numProteins, times, geneVals,
-                     geneVars, options, genes)
+                     geneVars, options, genes, annotation)
 model <- gpdisimCreate(numGenes, numProteins, times, geneVals,
-                       geneVars, options, genes)
+                       geneVars, options, genes, annotation)
 }
 \arguments{
   \item{numGenes}{number of genes to be modelled in the system.}
@@ -20,6 +20,7 @@ model <- gpdisimCreate(numGenes, numProteins, times, geneVals,
   \item{geneVars}{the varuabces of each gene at the different time points.}
   \item{options}{options structure (optional).}
   \item{genes}{names of the probes the model is for}
+  \item{annotation}{(optional) annotation for the probe names}
 }
 \value{
   \item{model}{model structure containing default parameterisation.}

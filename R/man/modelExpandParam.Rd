@@ -19,6 +19,9 @@
 \alias{gpdisimUpdateProcesses}
 \alias{cgpsimUpdateProcesses}
 \alias{gpsimUpdateProcesses}
+\alias{gammaPriorExpandParam}
+\alias{invgammaPriorExpandParam}
+\alias{priorExpandParam}
 
 \title{Update a model structure with new parameters or update the
   posterior processes.}

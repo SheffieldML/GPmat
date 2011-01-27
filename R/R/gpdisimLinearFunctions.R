@@ -1,4 +1,4 @@
-gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL, genes = NULL) {
+gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL, annotation=NULL) {
 
   if ( any(dim(y)!=dim(yvar)) )
     stop("The gene variances have a different size matrix to the gene values.")
@@ -35,7 +35,7 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL,
   model$uniqueT <- sort(unique(times))
   lBounds <- c(min(diff(model$uniqueT)),
                (model$uniqueT[length(model$uniqueT)]-model$uniqueT[1]))
-  invWidthBounds <- c(2/(lBounds[2]^2), 2/(lBounds[1]^2))
+  invWidthBounds <- c(1/(lBounds[2]^2), 1/(lBounds[1]^2))
 
   if ("structuredExperiments" %in% names(options) &&
       options$structuredExperiments &&
@@ -60,13 +60,13 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL,
     myopts <- list(isNormalised=TRUE, inverseWidthBounds=invWidthBounds)
 
   if (!model$isHierarchical) {
-    kernType1 <- gpsimKernelSpec(c('rbf', rep('disim', Ngenes)),
+    kernType1 <- .gpsimKernelSpec(c('rbf', rep('disim', Ngenes)),
                                  myopts, exps=NULL)
 
     tieParam <- list(tieDelta="di_decay", tieWidth="inverseWidth",
                      tieSigma="di_variance", tieRBFVariance="rbf.?_variance")
   } else {
-    kernType1 <- gpsimKernelSpec(c('rbf', rep('disim', Ngenes)),
+    kernType1 <- .gpsimKernelSpec(c('rbf', rep('disim', Ngenes)),
                                  myopts, exps=model$expids)
 
     tieParam <- list(tieDelta="di_decay", tieWidth="inverseWidth",
@@ -158,7 +158,7 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, annotation=NULL,
     model$bTransform <- "positive"
   }
 
-  if ( !is.null(annotation) ) {
+  if ( !is.null(annotation) && annotation != "" ) {
     model$annotation <- annotation
   }
 
@@ -285,7 +285,7 @@ gpdisimLogLikelihood <- function (model) {
   ll <- -dim*log(2*pi) - model$logDetK - t(model$m) %*% model$invK %*% model$m
   ll <- 0.5*ll
 
-  # prior contributions
+  ## prior contributions
   ll <- ll + kernPriorLogProb(model$kern)
   if ( "bprior" %in% names(model) ) {
     ll <- ll + priorLogProb(model$bprior, model$B)
@@ -319,7 +319,7 @@ gpdisimLogLikeGradients <- function (model) {
                         covGrad)
   }
 
-  # Prior contribution (will be zero if no prior)
+  ## Prior contribution (will be zero if no prior)
   g <- g + kernPriorGradient(model$kern)
 
   gmuFull <- t(model$m) %*% model$invK

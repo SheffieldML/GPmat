@@ -24,7 +24,9 @@ scores <- GPRankTFs(preprocData, TFs, targets,
 }
 \arguments{
   \item{preprocData}{The preprocessed data to be used.}
-  \item{TF}{The transcription factor present in all models.}
+  \item{TF}{The transcription factor (TF) probe present in all models
+    when TF protein translation model is used. Set to NULL (default)
+    when translation model is not used.}
   \item{knownTargets}{The target genes present in all models.}
   \item{testTargets}{Target genes that are tested by including them in
     the models one at a time. Can be names of genes, or a set of indices
@@ -44,8 +46,9 @@ scores <- GPRankTFs(preprocData, TFs, targets,
 
 \details{The models are formed by calling \code{\link{GPLearn}}.
   If there is no value given to the transcription
-  factor, GPSIM is used. Otherwise, GPDISIM is used. GPSIM needs some
-  known targets. If known
+  factor, a model without protein translation is used.
+  Without protein translation model, some
+  known targets are needed. If known
   targets are given, a model is first created with only the transcription
   factor and the known targets. The parameters extracted from this model
   are used as initial parameters of the models with test targets.
