@@ -12,8 +12,6 @@ function model = leOptimise(model, display, iters)
 
 % MLTOOLS
 
-[model.indices, D2] = findNeighbours(model.Y, model.k);
-model.L = spalloc(model.N, model.N, model.N*model.k);
 switch model.weightType
  case 'constant'
   model.kappa = repmat(1, model.N, model.k);

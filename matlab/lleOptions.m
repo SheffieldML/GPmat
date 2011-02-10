@@ -18,4 +18,5 @@ function options = lleOptions(neighbours)
   options.numNeighbours = neighbours;
   options.isNormalised = true;
   options.regulariser = 0.0;
+  options.acyclic = false;
 end

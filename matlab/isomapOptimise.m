@@ -15,7 +15,7 @@ function model = isomapOptimise(model, display, iters)
   
   % Note: isomap code uses the transpose of a design matrix.
 if any(any(isnan(model.Y)))
-  error('Cannot initialise gplvm using isomap when missing data is present.')
+  error('Cannot run isomap when missing data is present.')
 else
   D = L2_distance(model.Y', model.Y', 1);
   options.dims = 1:model.q;

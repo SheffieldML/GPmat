@@ -16,7 +16,7 @@ if(any(any(isnan(model.Y))))
   error('Cannot run MVU when missing data is present.');
 end
 
-[X, details] = mvu(distance(model.Y'),model.k, 'solver', model.solver);
+[X, details] = mvu(distance(model.Y'), model.k, 'solver', model.solver);
 
 model.X = X(1:1:model.q,:)';
 model.lambda = details.D/sum(details.D);

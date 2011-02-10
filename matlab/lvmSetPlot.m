@@ -45,7 +45,7 @@ set(visualiseInfo.plotAxes, 'YLim', yLim)
 numLatentDims = model.q;
 numSliders = model.q - 2;
 
-sliderHeight = 0.05;
+sliderHeight = 0.01;
 pos = get(visualiseInfo.plotAxes, 'position');
 pos(2) = pos(2) + sliderHeight*numSliders;
 

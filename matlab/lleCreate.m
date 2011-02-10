@@ -24,8 +24,16 @@ if size(Y, 2) ~= outputDim
 end
 model.isNormalised = options.isNormalised;
 model.regulariser = options.regulariser;
+model.acyclic = options.acyclic;
 model.k = options.numNeighbours;
 model.Y = Y;
 model.d = outputDim;
 model.q = inputDim;
 model.N = size(Y, 1);
+
+if isfield(model, 'acyclic') && model.acyclic
+  model.indices = findAcyclicNeighbours(model.Y, model.k);
+else
+  model.indices = findNeighbours(model.Y, model.k);
+end
+model.W = spalloc(model.N, model.N, model.N*model.k);

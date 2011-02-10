@@ -31,3 +31,6 @@ model.Y = Y;
 model.d = outputDim;
 model.q = inputDim;
 model.N = size(Y, 1);
+
+[model.indices, D2] = findNeighbours(model.Y, model.k);
+model.L = spalloc(model.N, model.N, model.N*model.k);

@@ -17,8 +17,15 @@ function model = spectralUpdateX(model)
   options.disp = 0; 
   options.isreal = 1; 
   options.issym = 1; 
-  
+  noeigs = false;
   if isoctave
+    noeigs = true;
+    %verStr= ver('octave').Version
+    %if str2num(verStr(1:3))<3.2
+    %  noeigs = true;
+    %end
+  end
+  if noeigs
     warning('No eigs function in Octave');
     % Nasty hack for eigenvalue problem in Octave.
     [m, v] = eig(model.L);
