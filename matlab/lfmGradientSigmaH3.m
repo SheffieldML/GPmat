@@ -35,7 +35,6 @@ if ~mode
         g = -preFactor(1)*gradupsilon + preFactor(2)*conj(gradupsilon);
     end
 else
-
     g =  preFactor(1)*lfmGradientSigmaUpsilonMatrix(gamma1,sigma2,t1,t2) + ...
         preFactor(2)*lfmGradientSigmaUpsilonMatrix(gamma2,sigma2,t1,t2);
 end

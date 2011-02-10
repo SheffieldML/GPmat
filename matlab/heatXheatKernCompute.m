@@ -56,24 +56,27 @@ t1 = x1(x1(:,1)~=Inf,1);
 t2 = x2(x2(:,1)~=Inf,1);
 s1 = x1(x1(:,2)~=Inf,2);
 s2 = x2(x2(:,2)~=Inf,2);
+
 if (length(t1) == length(s1)) && (length(t2) == length(s2))
     ut1 = unique(t1);
     ut2 = unique(t2);
-    if (length(ut1) == length(t1)) || (length(ut2) == length(t2))
-        isPointwise = true;
-        K = zeros(length(t1), length(t2));
-        if heatKern.includeIC
-            sK = zeros(length(t1), length(t2));
-            sKIC = zeros(length(t1), length(t2));
-        end
-    else
-        us1 = unique(s1);us2 = unique(s2);
+    us1 = unique(s1);
+    us2 = unique(s2);
+    if (length(ut1)*length(us1) == length(t1)) && ...
+            (length(ut2)*length(us2) == length(t2))
         t1 = ut1; s1 = us1; t2 = ut2; s2 = us2;
         isPointwise = false;
         K = zeros(length(t1)*length(s1), length(t2)*length(s2));
-        if heatKern.includeIC
+        if heatKern1.includeIC
             sK = zeros(length(t1)*length(s1), length(t2)*length(s2));
             sKIC = zeros(length(t1)*length(s1), length(t2)*length(s2));
+        end        
+    else                
+        isPointwise = true;
+        K = zeros(length(t1), length(t2));
+        if heatKern1.includeIC
+            sK = zeros(length(t1), length(t2));
+            sKIC = zeros(length(t1), length(t2));
         end
     end
 else
@@ -186,6 +189,9 @@ else
         sKIC = 0;
     end
 end
+
+K = real(K);
+sK = real(sK);
 
 
 

@@ -30,19 +30,20 @@ s = x(x(:,2)~=Inf,2);
 
 if (length(t) == length(s))
     ut = unique(t);
-    if (length(ut) == length(t))
+    us = unique(s);
+    if (length(ut)*length(us) == length(t))
+        t = ut;
+        s = us;
+        isPointwise = false;        
+        sk = zeros(length(t)*length(s), 1);
+        if heatKern.includeIC
+            skIC = zeros(length(t)*length(s), 1);
+        end        
+    else        
         isPointwise = true;
         sk = zeros(length(t), 1);
         if heatKern.includeIC
             skIC = zeros(length(t), 1);
-        end
-    else
-        s = unique(s);
-        t = ut;
-        isPointwise = false;
-        sk = zeros(length(t)*length(s), 1);
-        if heatKern.includeIC
-            skIC = zeros(length(t)*length(s), 1);
         end
     end
 else
@@ -175,6 +176,8 @@ else
     end
 end
 
+k = real(k);
+sk = real(sk);
 
 
 

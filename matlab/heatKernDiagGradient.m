@@ -33,14 +33,15 @@ s = x(x(:,2)~=Inf,2);
 
 if (length(t) == length(s))
     ut = unique(t);
-    if (length(ut) == length(t))
-        isPointwise = true;
-        sk = zeros(length(t), 1);
-    else
-        s = unique(s);
+    us = unique(s);
+    if (length(ut)*length(us) == length(t))
+        s = us;
         t = ut;
         isPointwise = false;
-        sk = zeros(length(t)*length(s), 1);
+        sk = zeros(length(t)*length(s), 1);                
+    else
+        isPointwise = true;        
+        sk = zeros(length(t), 1);
     end
 else
     isPointwise = false;

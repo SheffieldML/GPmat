@@ -28,11 +28,12 @@ t = x(x(:,1)~=Inf,1);
 s = x(x(:,2)~=Inf,2);
 
 if (length(t) == length(s))
-    ut = unique(t);    
-    if (length(ut) == length(t))
-        k = ones(length(t),1);
+    ut = unique(t);
+    us = unique(s);
+    if (length(ut)*length(us) == length(t))
+        k = ones(length(ut)*length(us),1);        
     else
-        k = ones(length(t)*length(s),1);        
+        k = ones(length(t),1);        
     end    
 else
     k = ones(length(t)*length(s),1);
