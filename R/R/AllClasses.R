@@ -234,8 +234,7 @@ setMethod("c", signature(x="scoreList"),
 setGeneric("sort", function(x, decreasing=FALSE, ...) standardGeneric("sort"))
 setMethod("sort", signature(x="scoreList"), 
           function(x, decreasing=FALSE, ...) {
-            r <- sort(loglikelihoods(x), decreasing=decreasing, index.return=TRUE)
-            x[r$ix]
+            x[order(loglikelihoods(x), decreasing=decreasing, na.last=NA)]
           })
 
 setGeneric("write.scores", function(x, ...) standardGeneric("write.scores"))

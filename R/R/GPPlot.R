@@ -134,11 +134,17 @@ plotTimeseries <- function(data, nameMapping=NULL) {
     for (i in exps) {
       t <- data$modeltime[data$experiments==i] + tshifts[i]
       m <- exprs(data)[j,data$experiments==i]
-      sd <- sqrt(var.exprs(data)[j,data$experiments==i])
+      if (! is.null(var.exprs(data))) {
+        sd <- sqrt(var.exprs(data)[j,data$experiments==i])
+        maxsd <- sqrt(var.exprs(data)[j,])
+      } else {
+        sd <- 0*m
+        maxsd <- 0*exprs(data)[j,]
+      }
       probe <- featureNames(data)[j]
       if (i==1) {
         plot(t, m, type='l',
-             ylim=c(0, max(exprs(data)[j,] + 2*sqrt(var.exprs(data)[j,]))))
+             ylim=c(0, max(exprs(data)[j,] + 2*maxsd)))
       } else {
         lines(t, m)
       }

@@ -1,11 +1,26 @@
-citHeader("The tigre package is based on a body of methodological
-research.  Citing tigre in publications will usually involve citing
-one or more of the methodology papers that the software is based on:")
+citEntry(entry="Article",
+  header="The tigre package is based on a body of methodological
+  research.  The software itself can be cited as:",
+  author = "Antti Honkela and Pei Gao and Jonatan Ropponen and Magnus Rattray and Neil D Lawrence",
+  title = "tigre: Transcription factor Inference through Gaussian process Reconstruction of Expression for Bioconductor",
+  journal = "Bioinformatics",
+  year = "2011",
+  doi = "10.1093/bioinformatics/btr057",
+  textVersion = paste(
+    "Antti Honkela, Pei Gao, Jonatan Ropponen, Magnus Rattray,
+    and Neil D. Lawrence.",
+    "tigre: Transcription factor Inference through Gaussian
+    process Reconstruction of Expression for Bioconductor.",
+    "Bioinformatics, 2011.",
+    "DOI: 10.1093/bioinformatics/btr057."
+  )
+)
 
 citEntry(entry="Article",
+  header="The underlying methodology papers can be cited as:",
   author =       "Antti Honkela and Charles Girardot and E. Hilary Gustafson and Ya-Hsin Liu and Eileen E.M. Furlong and Neil D. Lawrence and Magnus Rattray",
   title =        "Model-based method for transcription factor target identification with limited data",
-  journal =      "Proc Natl Acad Sci U S A",
+  journal =      "Proc Natl Acad Sci USA",
   year =         "2010",
   volume =       "107",
   pages =        "7793-7798",
@@ -18,7 +33,7 @@ citEntry(entry="Article",
     Eileen E. M. Furlong, Neil D. Lawrence, and Magnus Rattray.",
     "Model-based method for transcription factor target identification
     with limited data.",
-    "Proc Natl Acad Sci U S A 107(17):7793-7798, Apr 2010.",
+    "Proc Natl Acad Sci USA 107(17):7793-7798, Apr 2010.",
     "DOI: 10.1073/pnas.0914285107."
   )
 )
