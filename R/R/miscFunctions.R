@@ -262,7 +262,7 @@ lnDiffErfs <- function(x1, x2) {
 
 modelExtractParam <- function (model, only.values=TRUE,
                                untransformed.values=FALSE) {
-  if (any(.packages(all.available=T)=="tigre") && is.GPModel(model))
+  if (("tigre" %in% .packages()) && is.GPModel(model))
     model <- modelStruct(model)
   
   funcName <- paste(model$type, "ExtractParam", sep="")
@@ -323,7 +323,7 @@ modelDisplay <- function(model, ...) {
 }
 
 modelObjective <- function (params, model, ...) {
-  if (any(.packages(all.available=T)=="tigre") && is.GPModel(model))
+  if (("tigre" %in% .packages()) && is.GPModel(model))
     model <- modelStruct(model)
 
   funcName <- paste(model$type, "Objective", sep="")
@@ -346,7 +346,7 @@ modelObjective <- function (params, model, ...) {
 
 
 modelGradient <- function (params, model, ...) {
-  if (any(.packages(all.available=T)=="tigre") && is.GPModel(model))
+  if (("tigre" %in% .packages()) && is.GPModel(model))
     model <- modelStruct(model)
 
   funcName <- paste(model$type, "Gradient", sep="")

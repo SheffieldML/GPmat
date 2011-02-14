@@ -1,6 +1,11 @@
 Package: tigre
 ==============
 
+Version: 1.4.2 / 1.5.2 [2011-02-14]
+* Fix scoreList::sort when including NA values
+* Fixes for working with non-Affymetrix data
+* New citation information
+
 Version: 1.4.1 / 1.5.1 [2011-01-19]
 * Clarify output from model fitting and remove unnecessary warnings
 * Minor documentation improvements

@@ -27,7 +27,10 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
     }
   }
 
-  if (length(unique(preprocData$experiments)) == length(preprocData$experiments)) {
+  options <- list(includeNoise=0, optimiser="SCG")
+
+  ##if (length(unique(preprocData$experiments)) == length(preprocData$experiments)) {
+  if (length(unique(preprocData$experiments)) > 1) {
     options$structuredExperiments <- TRUE
     options$experiments <- preprocData$experiments
     newData <- .getProcessedData(preprocData[genes,], returnJustOne=TRUE)
@@ -40,8 +43,6 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
   times <- newData$times
 
   Nrep <- length(y)
-
-  options <- list(includeNoise=0, optimiser="SCG")
 
   if (any(yvar[[1]] == 0))
     options$includeNoise = 1
@@ -113,13 +114,18 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
   else
     model <- list(type="cgpsim")
 
+  if (length(annotation(preprocData)) > 0)
+    dataAnnotation <- annotation(preprocData)
+  else
+    dataAnnotation <- NULL
+
   for ( i in seq(length=Nrep) ) {
     #repNames <- names(model$comp)
     if (useGpdisim) {
-      model$comp[[i]] <- gpdisimCreate(Ngenes, Ntf, times, t(y[[i]]), t(yvar[[i]]), options, genes = featureNames(preprocData[genes,]), annotation=annotation(preprocData))
+      model$comp[[i]] <- gpdisimCreate(Ngenes, Ntf, times, t(y[[i]]), t(yvar[[i]]), options, genes = featureNames(preprocData[genes,]), annotation=dataAnnotation)
     }
     else {
-      model$comp[[i]] <- gpsimCreate(Ngenes, Ntf, times, t(y[[i]]), t(yvar[[i]]), options, genes = featureNames(preprocData[genes,]), annotation=annotation(preprocData))
+      model$comp[[i]] <- gpsimCreate(Ngenes, Ntf, times, t(y[[i]]), t(yvar[[i]]), options, genes = featureNames(preprocData[genes,]), annotation=dataAnnotation)
     }
     #names(model$comp) <- c(repNames, paste("rep", i, sep=""))
     #if (fixedParams) {
@@ -127,7 +133,9 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
     #}
   }
 
-  if (options$structuredExperiments) {
+  if (options$structuredExperiments &&
+      (length(unique(preprocData$experiments))
+       == length(preprocData$experiments))) {
     altopts <- options
     altopts$structuredExperiments <- FALSE
     altopts$experiments <- NULL
@@ -170,7 +178,9 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
       model <- modelExpandParam(model, params)
     }
   } else {
-    if (options$structuredExperiments && !dontOptimise) {
+    if (options$structuredExperiments && !dontOptimise &&
+        (length(unique(preprocData$experiments))
+         == length(preprocData$experiments))) {
       message(paste(c("Optimising a basic model for genes", paste(genes, collapse=' '), "\n"), sep=" "))
       altmodel <- modelOptimise(altmodel, optOptions)
       a <- modelExtractParam(model, only.values=FALSE)
@@ -185,9 +195,13 @@ GPLearn <- function(preprocData, TF = NULL, targets = NULL,
 
   if (!dontOptimise) {
     if (useGpdisim) {
-      message(paste("Optimising the model for TF", TF, "and targets", paste(genes, collapse=' '), sep=" "))
+      message(paste("Optimising the model.\nTF:", TF,
+                    ifelse(length(targets) > 1, "\nTargets:", "\nTarget:"),
+                    paste(targets, collapse=' '), sep=" "))
     } else {
-      message(paste("Optimising the model for targets", paste(genes, collapse=' '), sep=" "))
+      message(paste("Optimising the model.",
+                    ifelse(length(targets) > 1, "\nTargets:", "\nTarget:"),
+                    paste(targets, collapse=' '), sep=" "))
     }
     model <- modelOptimise(model, optOptions)
   }
