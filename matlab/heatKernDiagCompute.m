@@ -93,7 +93,7 @@ if heatKern.includeIC
             skIC = skIC + ktIC.*ksIC;
             sk = sk + kt.*ks;
             for j=1:i-1
-                if (mod(i+j,2)==1)
+                if (mod(i+j,2)==0)
                     heatKern.sim.decay = beta(i);
                     simLocal.decay = beta(j);
                     %kt = diag(simXsimKernCompute(heatKern.sim, simLocal, t, t));
@@ -116,7 +116,7 @@ if heatKern.includeIC
             skIC = skIC + kron(ktIC, ksIC);
             sk = sk + kron(kt, ks);
             for j=1:i-1
-                if (mod(i+j,2)==1)
+                if (mod(i+j,2)==0)
                     heatKern.sim.decay = beta(i);
                     simLocal.decay = beta(j);
                     %kt = diag(simXsimKernCompute(heatKern.sim, simLocal, t, t));
@@ -141,7 +141,7 @@ else
             ks = sheatKernDiagCompute(sigmax, lengthX, s, w, gamma, wz1, wz2, i, i);
             sk = sk + kt.*ks;
             for j=1:i-1
-                if (mod(i+j,2)==1)
+                if (mod(i+j,2)==0)
                     heatKern.sim.decay = beta(i);
                     simLocal.decay = beta(j);
                     %kt = diag(simXsimKernCompute(heatKern.sim, simLocal, t, t));
@@ -158,7 +158,7 @@ else
             ks = sheatKernDiagCompute(sigmax, lengthX, s, w, gamma, wz1, wz2, i, i);
             sk = sk + kron(kt, ks);
             for j=1:i-1
-                if (mod(i+j,2)==1)
+                if (mod(i+j,2)==0)
                     heatKern.sim.decay = beta(i);
                     simLocal.decay = beta(j);
                     %kt = diag(simXsimKernCompute(heatKern.sim, simLocal, t, t));

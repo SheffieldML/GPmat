@@ -91,7 +91,7 @@ else
             g(4) = g(4) + gB;
             sk = sk + kt.*ks;
             for j=1:i-1
-                if (mod(i+j,2)==1)
+                if (mod(i+j,2)==0)
                     heatKern.sim.decay = beta(i);
                     simLocal.decay = beta(j);
                     kt = simXsimKernDiagCompute(heatKern.sim, simLocal, t);
@@ -136,7 +136,7 @@ else
             g(4) = g(4) + gB;
             sk = sk + kron(kt, ks);
             for j=1:i-1
-                if (mod(i+j,2)==1)
+                if (mod(i+j,2)==0)
                     heatKern.sim.decay = beta(i);
                     simLocal.decay = beta(j);
                     kt = simXsimKernDiagCompute(heatKern.sim, simLocal, t);

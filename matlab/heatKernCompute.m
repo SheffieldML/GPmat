@@ -108,7 +108,7 @@ if nargin < 3
                 sKIC = sKIC + KtIC.*KsIC;
                 sK = sK + Kt.*Ks;
                 for j=1:i-1
-                    if (mod(i+j,2)==1)
+                    if (mod(i+j,2)==0)
                         heatKern.sim.decay = beta(i);
                         simLocal.decay = beta(j);
                         Kt = simXsimKernCompute(heatKern.sim, simLocal, t1, t2);
@@ -132,7 +132,7 @@ if nargin < 3
                 sKIC = sKIC + kron(KtIC,KsIC);
                 sK = sK + kron(Kt,Ks);
                 for j=1:i-1
-                    if (mod(i+j,2)==1)
+                    if (mod(i+j,2)==0)
                         heatKern.sim.decay = beta(i);
                         simLocal.decay = beta(j);
                         Kt = simXsimKernCompute(heatKern.sim, simLocal, t1, t2);
@@ -158,7 +158,7 @@ if nargin < 3
                 Ks = sheatKernCompute(sigmax, lengthX, s1, s2, w, gamma, wz1, wz2, i, i);
                 K = K + Kt.*Ks;
                 for j=1:i-1
-                    if (i == j) || (mod(i+j,2)==1)
+                    if (i == j) || (mod(i+j,2)==0)
                         heatKern.sim.decay = beta(i);
                         simLocal.decay = beta(j);
                         Kt = simXsimKernCompute(heatKern.sim, simLocal, t1, t2);
@@ -175,7 +175,7 @@ if nargin < 3
                 Ks = sheatKernCompute(sigmax, lengthX, s1, s2, w, gamma, wz1, wz2, i, i);
                 K = K + kron(Kt, Ks);
                 for j=1:i-1
-                    if (i == j) || (mod(i+j,2)==1)
+                    if (i == j) || (mod(i+j,2)==0)
                         heatKern.sim.decay = beta(i);
                         simLocal.decay = beta(j);
                         Kt = simXsimKernCompute(heatKern.sim, simLocal, t1, t2);

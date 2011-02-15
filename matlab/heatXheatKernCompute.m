@@ -125,7 +125,7 @@ if heatKern1.includeIC
     if isPointwise
         for i=1:nterms
             for j=1:nterms
-                if (i == j) || (mod(i+j,2)==1)
+                if (i == j) || (mod(i+j,2)==0)
                     heatKern1.sim.decay = beta1(i);
                     heatKern2.sim.decay = beta2(j);
                     Kt = simXsimKernCompute(heatKern1.sim, heatKern2.sim, t1, t2);
@@ -140,7 +140,7 @@ if heatKern1.includeIC
     else
         for i=1:nterms
             for j=1:nterms
-                if (i == j) || (mod(i+j,2)==1)
+                if (i == j) || (mod(i+j,2)==0)
                     heatKern1.sim.decay = beta1(i);
                     heatKern2.sim.decay = beta2(j);
                     Kt = simXsimKernCompute(heatKern1.sim, heatKern2.sim, t1, t2);
@@ -161,7 +161,7 @@ else
     if isPointwise
         for i=1:nterms
             for j=1:nterms
-                if (i == j) || (mod(i+j,2)==1)
+                if (i == j) || (mod(i+j,2)==0)
                     heatKern1.sim.decay = beta1(i);
                     heatKern2.sim.decay = beta2(j);
                     Kt = simXsimKernCompute(heatKern1.sim, heatKern2.sim, t1, t2);
@@ -173,7 +173,7 @@ else
     else
         for i=1:nterms
             for j=1:nterms
-                if (i == j) || (mod(i+j,2)==1)
+                if (i == j) || (mod(i+j,2)==0)
                     heatKern1.sim.decay = beta1(i);
                     heatKern2.sim.decay = beta2(j);
                     Kt = simXsimKernCompute(heatKern1.sim, heatKern2.sim, t1, t2);

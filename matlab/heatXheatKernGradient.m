@@ -44,7 +44,8 @@ function [g1, g2] = heatXheatKernGradient(heatKern1, heatKern2, x1, x2, covGrad)
 
 % KERN
 
-if nargin < 4
+if nargin < 5
+    covGrad = x2;
     x2 = x1;
 end
 if size(x1, 2) ~= 2 || size(x2, 2) ~= 2
@@ -131,7 +132,7 @@ if heatKern1.includeIC
     if isPointwise
         for i=1:nterms
             for j=1:nterms
-                if (i == j) || (mod(i+j,2)==1)
+                if (i == j) || (mod(i+j,2)==0)
                     heatKern1.sim.decay = beta1(i);
                     heatKern2.sim.decay = beta2(j);
                     Kt = simXsimKernCompute(heatKern1.sim, heatKern2.sim, t1, t2);
@@ -172,7 +173,7 @@ if heatKern1.includeIC
         covGradsIC = zeros(length(s1), length(s2));
         for i=1:nterms
             for j=1:nterms
-                if (i == j) || (mod(i+j,2)==1)
+                if (i == j) || (mod(i+j,2)==0)
                     heatKern1.sim.decay = beta1(i);
                     heatKern2.sim.decay = beta2(j);
                     Kt = simXsimKernCompute(heatKern1.sim, heatKern2.sim, t1, t2);
@@ -255,7 +256,7 @@ else
     if isPointwise
         for i=1:nterms
             for j=1:nterms
-                if (i == j) || (mod(i+j,2)==1)
+                if (i == j) || (mod(i+j,2)==0)
                     heatKern1.sim.decay = beta1(i);
                     heatKern2.sim.decay = beta2(j);
                     Kt = simXsimKernCompute(heatKern1.sim, heatKern2.sim, t1, t2);
@@ -280,7 +281,7 @@ else
         covGrads = zeros(length(s1), length(s2));
         for i=1:nterms
             for j=1:nterms
-                if (i == j) || (mod(i+j,2)==1)
+                if (i == j) || (mod(i+j,2)==0)
                     heatKern1.sim.decay = beta1(i);
                     heatKern2.sim.decay = beta2(j);
                     Kt = simXsimKernCompute(heatKern1.sim, heatKern2.sim, t1, t2);

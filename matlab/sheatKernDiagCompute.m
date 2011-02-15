@@ -26,23 +26,17 @@ sinS1 = sin(w(n)*s);
 sinS2 = sin(w(m)*s);
 
 if n == m
-    const = real(pwz1(n) - exp(-(lengthX/sigmax)^2)*exp(-gamma(n)*lengthX)*pwz2(n));
-    const = (sigmax*lengthX*sqrt(pi)/2)*const; 
-    if mod(n,2) == 0
-        const = const + (sigmax^2)/2*(exp(-(lengthX/sigmax)^2) - 1);
-    else
-        const = const - (sigmax^2)/2*(exp(-(lengthX/sigmax)^2) + 1);
-    end    
+    Wox = pwz1(n) - exp(-(lengthX/sigmax)^2)*exp(-gamma(n)*lengthX)*pwz2(n);
+    const = (sigmax*sqrt(pi)*lengthX/2)*(real(Wox) ...
+        - imag(Wox)*((sigmax^2*n*pi)/(2*lengthX^2) + (1/(n*pi)))) ...
+        +(sigmax^2/2)*(exp(-(lengthX/sigmax)^2)*cos(n*pi) - 1);
 else
-    if mod(n+m,2)==1   
-        A = (1/(n+m)) + (1/(n-m)); 
-        B = (1/(n+m)) - (1/(n-m));
-        preA = pwz1(m) - exp(-(lengthX/sigmax)^2)*exp(-gamma(m)*lengthX)*pwz2(m);
-        preB = pwz1(n) - exp(-(lengthX/sigmax)^2)*exp(-gamma(n)*lengthX)*pwz2(n);
-        const = A*imag(preA) + B*imag(preB);
-        const = (sigmax*lengthX/(2*sqrt(pi)))*const;
-    else
-        const = 0;
+    if mod(n+m,2)==1
+         const = 0;        
+    else        
+        Woxm = pwz1(m) - exp(-(lengthX/sigmax)^2)*exp(-gamma(m)*lengthX)*pwz2(m);
+        Woxn = pwz1(n) - exp(-(lengthX/sigmax)^2)*exp(-gamma(n)*lengthX)*pwz2(n);        
+        const = ((sigmax*lengthX)/(sqrt(pi)*(m^2-n^2)))*(n*imag(Woxm) - m*imag(Woxn));       
     end
 end
 

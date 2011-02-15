@@ -49,7 +49,7 @@ else
 end
 
 kern.decay = 1;
-kern.diffusion = 1e-2;
+kern.diffusion = 1e-6;
 kern.inverseWidthTime = 100;
 kern.inverseWidthSpace = 1000;
 kern.sensitivity = 1;
