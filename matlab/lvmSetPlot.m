@@ -24,7 +24,7 @@ lvmScatterPlot(model, YLbls,   visualiseInfo.plotAxes, ...
   
 
 set(get(visualiseInfo.plotAxes, 'title'), 'string', 'X', 'fontsize', 30);
-set(visualiseInfo.plotAxes, 'position', [0.05 0.05 0.9 0.8]);
+set(visualiseInfo.plotAxes, 'position', [0.05 0.05 0.9 0.9]);
 
 % Set up the X limits and Y limits of the main plot
 xLim = [min(model.X(:, visualiseInfo.dim1)) max(model.X(:, visualiseInfo.dim1))];
@@ -44,18 +44,19 @@ set(visualiseInfo.plotAxes, 'YLim', yLim)
 
 numLatentDims = model.q;
 numSliders = model.q - 2;
-
-sliderHeight = 0.01;
 pos = get(visualiseInfo.plotAxes, 'position');
-pos(2) = pos(2) + sliderHeight*numSliders;
-
+if numSliders > 0
+  sliderHeight = min([0.1 0.3/(model.q-2)]);
+  pos(4) = pos(4) - sliderHeight*numSliders;
+  pos(2) = pos(2) + sliderHeight*numSliders;
+end
 a = ver('matlab');
 if strcmp(a.Version, '7.0.1')
   menu = 'listbox';
 else
   menu = 'popupmenu';
 end
-if model.q > 2
+if numSliders > 0
   pos(3) = pos(3)-0.2;
   for i = 1:model.q
     string{i} = num2str(i);

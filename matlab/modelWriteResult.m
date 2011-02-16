@@ -14,7 +14,7 @@ function fileName = modelWriteResult(model, dataset, number)
 
 % MLTOOLS
 
-  %dataset(1) = upper(dataset(1));
+  dataset(1) = upper(dataset(1));
   type = model.type;
   type(1) = upper(type(1));
   fileName = ['dem' dataset type num2str(number)];

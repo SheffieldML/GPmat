@@ -77,14 +77,25 @@ switch call
 
  case 'latentSliderChange'
   counter = 0;
-  for i = 1:size(visualiseInfo.latentPos, 2)
-    if i~= visualiseInfo.dim1 && i ~= visualiseInfo.dim2
+  for i = size(visualiseInfo.latentPos, 2):-1:1
+    % Go through setting latent positions to slider positions.
+    if i ~= visualiseInfo.dim1 && i ~= visualiseInfo.dim2
       counter = counter + 1;
       visualiseInfo.latentPos(i) = get(visualiseInfo.latentSlider(counter), 'value');
       set(visualiseInfo.sliderTextVal(counter), 'string', num2str(visualiseInfo.latentPos(i)));
     end
   end
   lvmSetPlot;
+  fhandle = str2func([visualiseInfo.model.type 'PosteriorMeanVar']);
+  [mu, varsigma] = fhandle(visualiseInfo.model, visualiseInfo.latentPos);
+  if isfield(visualiseInfo.model, 'noise')
+    Y = noiseOut(visualiseInfo.model.noise, mu, varsigma);
+  else
+    Y = mu;
+  end
+  visualiseInfo.visualiseModify(visualiseInfo.visHandle, ...
+                                    Y, visualiseInfo.varargin{:});
+
   visualiseInfo.latentHandle = line(visualiseInfo.latentPos(visualiseInfo.dim1), ...
                                     visualiseInfo.latentPos(visualiseInfo.dim2), ...
                                     'markersize', 20, 'color', [0.5 0.5 0.5], ...
