@@ -90,7 +90,7 @@ def test(kernType, numIn=4, tieParamNames=None):
             paramExpand = np.eye(len(params))
             toRemove = []
             for l in range(len(tieParamNames)):
-                #ties = strfind(paramnames, tieParamNames[l]);
+                #ties = strfind(paramnames, tieParamNames[l];
                 ties = paramNameRegularExpressionLookup(model, tieParamNames[0])
                 ties = regexp(paramnames, tieParamNames[l]);
                 tieParams[0] = []
@@ -1997,3 +1997,159 @@ class bias(kern):
         """
 
         return np.array([np.sum(covGrad)])
+
+class sim(kern):
+	def __init__(self, inDim=None, X=None):
+		kern.__init__(sela,inDim, X)
+
+	def paramInit(self,inDim)
+		"""% SIMKERNPARAMINIT SIM kernel parameter initialisation.
+		% The single input motif (SIM) kernel is specifically designed for
+		% working with gene networks where there is assumed to be a single
+		% transcription factor controlling several genes. If each gene is
+		% related to the transcription factor through the following
+		% differential equation,
+		%
+		% dx(t)/dt = B + S f(t-delta) - D x(t),
+		%
+		% where D is a decay term, S is a response term, delta is a time delay
+		% and B is an initial level. Then if f(t) is assumed to come from a
+		% Gaussian process with an RBF covariance function x(t) is a Gaussian
+		% process with a covariance function provided by the single input
+		% motif kernel.
+		%
+		% The kernel is designed to interoperate with the multiple output
+		% block kernel so that f(t) can be inferred given several different
+		% instantiations of x(t) (associated with different genes).
+		%
+		% By default the parameters (B, S, delta and D) are constrained positive. If
+		% kern.options.isNegativeS is set true then the parameter S is allowed to go
+		% negative.
+		%
+		% FORMAT
+		% DESC initialises the single input motif kernel structure with some 
+		% default parameters.
+		% ARG kern : the kernel structure which requires initialisation.
+		% RETURN kern : the kernel structure with the default parameters placed in.
+		%
+		% SEEALSO : kernCreate, kernParamInit, simKernCompute
+		%
+		% COPYRIGHT : Neil D. Lawrence, 2006, 2009
+
+		"""
+		assert self.inputDimension==1,'SIM kernel only valid for one-D input.')
+
+		if hasattr(self, 'options'):
+			if hasattr(self.options, 'gaussianInitial'):
+				if self.options.gaussianInitial:
+					self.gaussianInitial = 1;
+					self.initialVariance = 1;
+		else
+			self.gaussianInitial = 0;
+
+		self.delay = 0;
+		self.decay = 1;
+		self.initVal = 1;
+		self.variance = 1;
+		self.inverseWidth = 1;
+
+		if self.gaussianInitial,
+			self.nParams = 4;
+		else
+			self.nParams = 3;
+
+		self.isNegativeS = False;
+		if hasattr(self, 'options'):
+			if hasattr(self.options, 'isNegativeS'):
+				if self.options.isNegativeS:
+					self.isNegativeS = True
+
+		if self.isNegativeS:
+			self.transforms.index = setdiff(1:self.nParams, 3);
+			self.sensitivity = 1;
+		else:
+			self.transforms.index = 1:self.nParams;
+			self.transforms.type = optimiDefaultConstraint('positive');
+
+		self.isStationary = false;
+		self.isNormalised = false;
+		self.positiveTime = true;
+
+	def compute(self,t,t2=None):
+		"""% SIMKERNCOMPUTE Compute the SIM kernel given the parameters and X.
+		% FORMAT
+		% DESC computes the kernel parameters for the single input motif
+		% kernel given inputs associated with rows and columns.
+		% ARG kern : the kernel structure for which the matrix is computed.
+		% ARG t1 : the input matrix associated with the rows of the kernel.
+		% ARG t2 : the input matrix associated with the columns of the kernel.
+		% RETURN k : the kernel matrix computed at the given points.
+		% RETURN sk : unscaled kernel matrix (i.e. only 0.5 times the sum of h's
+		% part).
+		%
+		% FORMAT
+		% DESC computes the kernel matrix for the single input motif
+		% kernel given a design matrix of inputs.
+		% ARG kern : the kernel structure for which the matrix is computed.
+		% ARG t : input data matrix in the form of a design matrix.
+		% RETURN k : the kernel matrix computed at the given points.
+		% RETURN sk : unscaled kernel matrix (i.e. only 0.5 times the sum of h's
+		% part).
+		%
+		% SEEALSO : simKernParamInit, kernCompute, kernCreate, simKernDiagCompute
+		%
+		% COPYRIGHT : Neil D. Lawrence, 2006
+		%
+		% MODIFICATIONS : David Luengo, 2009
+		%
+		% MODIFICATIONS : Mauricio Alvarez, 2009
+		%
+		% MODIFICATIONS : Antti Honkela, 2009
+		%
+		% MODIFICATIONS : James Hensman 2011
+		"""
+		symmetry=False
+		if not t2:
+			t2 = t
+			symmetry=True
+
+
+		assert( (t.shape[2]==1) & (t2.shape[2]==1),'Input can only have one column')
+
+		sigma = np.sqrt(2/self.inverseWidth)
+
+		if (self.isStationary
+			h = simComputeHStat(t, t2, kern.decay, kern.decay, kern.delay, kern.delay, sigma)[0]
+		else:
+			h = simComputeH(t, t2, kern.decay, kern.decay, kern.delay, kern.delay, sigma)[0]
+		if symmetry:
+			sk = 0.5 * (h + h.T)
+		else
+			if (kern.isStationary == false)
+				h2 = simComputeH(t2, t, kern.decay, kern.decay, kern.delay, kern.delay, sigma)
+			else
+				h2 = simComputeHStat(t2, t, kern.decay, kern.decay, kern.delay, kern.delay, sigma)
+			sk = 0.5 * (h + h2.T)
+
+		#if isfield(kern, 'isNormalised') && (kern.isNormalised == true)
+		if self.isNormalised:
+			k = sk
+		else
+			k = np.sqrt(np.pi)*sigma*sk
+
+		#if isfield(kern, 'isNegativeS') && (kern.isNegativeS == true)
+		if self.isNegativeS:
+			k = (kern.sensitivity*kern.sensitivity)*k
+		else
+			k = self.variance*k
+
+		#if isfield(kern, 'gaussianInitial') && kern.gaussianInitial,
+		if self.gaussianInitial:
+			dim1 = t.shape[0]
+			dim2 = t2.shape[0]
+			t1Mat = t*np.ones(1,dim2)#(:, ones(1, dim2))
+			t2Mat = t2*np.ones(1,dim1)#(:, ones(1, dim1))'
+			t2Mat = t2Mat.T
+
+			k = k + self.initialVariance * exp(- self.decay * (t1Mat + t2Mat))
+		return(k)
