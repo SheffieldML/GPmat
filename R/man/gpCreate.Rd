@@ -13,7 +13,7 @@ model <- gpCreate(q, d, X, y, options)
   \item{d}{the number of processes (i.e. output data dimension).}
   \item{X}{the input data matrix.}
   \item{y}{the target (output) data.}
-  \item{options}{options structure as defined by gpOptions.m.}
+  \item{options}{options structure as defined by gpOptions.R.}
 }
 \value{
   \item{model}{model structure containing the Gaussian process.}

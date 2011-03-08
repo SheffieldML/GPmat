@@ -14,8 +14,8 @@ gpPlot <- function(model,Xstar,mu,S,simpose=NULL,xlim=NULL,ylim=NULL,xlab='',yla
     }
   }
 
-#   f = c(mu+2*sqrt(abs(S)), rev(mu-2*sqrt(abs(S))))
-  f = c(mu+2*abs(S), rev(mu-2*abs(S)))
+  f = c(mu+2*sqrt(abs(S)), rev(mu-2*sqrt(abs(S))))
+#   f = c(mu+2*abs(S), rev(mu-2*abs(S)))
 
   xcomb = rbind(model$X,Xstar); ycomb = f # rbind(model$y,mu,S)
   if (is.null(xlim))
@@ -26,8 +26,8 @@ gpPlot <- function(model,Xstar,mu,S,simpose=NULL,xlim=NULL,ylim=NULL,xlab='',yla
 #   par(pty="s") 
   plot(0, type="n", xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=title, new=TRUE) ## Empty plot basis.
 
-  if (col=='blue') shade = rgb(0,0,255,max=255,alpha=.1*255)
-  else if (col=='red') shade = rgb(255,0,0,max=255,alpha=.1*255)
+  if (col=='blue') shade = rgb(0,0,1,alpha=.1)
+  else if (col=='red') shade = rgb(255,0,0,alpha=.1)
   else shade = 'gray'
 
   polygon(c(Xstar, rev(Xstar)), f, col = shade, border = shade)
