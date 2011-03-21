@@ -11,8 +11,9 @@ sys.path.append(os.path.join(posix.environ['HOME'], 'mlprojects', 'mlopy', 'netl
 import pdb
 ##ENDSETUP
 
-import netlab
+#import netlab
 import optimi
+from sim import simComputeH, lnDiffErfs
 
 
 def test(kernType, numIn=4, tieParamNames=None):
@@ -868,7 +869,7 @@ class rbf(kern):
         # Constrains parameters positive for optimisation.
         self.addTransform(optimi.defaultConstraint('positive'), [0, 1])
         self.stationary = True
-        self.normalised = False
+        self.isNormalised = False
 
     def compute(self, x, x2=None):
 
@@ -900,6 +901,8 @@ class rbf(kern):
         wi2 = (.5 * self.inverseWidth)
         sk = np.exp(-n2*wi2)
         k = sk*self.variance        
+	if self.isNormalised:
+	    k = k * np.sqrt(self.inverseWidth/(2.*np.pi))
         return k, sk, n2
 
 
@@ -919,7 +922,11 @@ class rbf(kern):
         
         '''
 
-        return np.tile(self.variance, x.shape[0])
+	if self.isNormalised:
+		k = np.tile(self.variance * np.sqrt(self.inverseWidth/(2.*np.pi)), x.shape[0])
+	else:
+		k = np.tile(self.variance, x.shape[0])
+	return k
 
     def diagGradX(self, X):
         '''% DIAGGRADX Gradient of RBF kernel's diagonal with respect to X.
@@ -962,10 +969,13 @@ class rbf(kern):
 
         '''
 
-
         g = np.zeros(self.nParams)
-        g[0] = 0.0
-        g[1] = covDiag.sum()
+	if self.isNormalised:
+		g[0] = np.sqrt(self.inverseWidth/(2*np.pi)) * covDiag.sum()
+		g[1] = 0.5 * self.variance / np.sqrt(2*np.pi*self.inverseWidth) * covDiag.sum()
+	else:
+		g[0] = 0.0
+		g[1] = covDiag.sum()
         return g
 
     def display(self, numSpaces=0):
@@ -1071,6 +1081,8 @@ class rbf(kern):
         gX = np.empty((X2.shape[0], X2.shape[1], X.shape[0]))
         for i in range(X.shape[0]):
             gX[:, :, i] = self.gradXpoint(X[i:i+1, :], X2)
+	if self.isNormalised:
+		gX = gX * np.sqrt(self.inverseWidth/(2*np.pi))
         return gX
 
 
@@ -1128,14 +1140,16 @@ class rbf(kern):
         % COPYRIGHT : Neil D. Lawrence, 2004-2006, 2009
 
         '''
-
         if X2 is None:
             k, sk, dist2xx = self.compute(X)
         else:
             k, sk, dist2xx = self.compute(X, X2)
         g = np.zeros(self.nParams)
-        g[0] = - .5*np.multiply(np.multiply(covGrad,k),dist2xx).sum()
-        g[1] =  np.multiply(covGrad,sk).sum()
+	g[0] = - .5*np.multiply(np.multiply(covGrad,k),dist2xx).sum()
+	g[1] =  np.multiply(covGrad,sk).sum()
+	if self.isNormalised:
+		g[0] = (0.5*self.variance/np.sqrt(2*np.pi)) * np.sum(covgrad*sk* (1./np.sqrt(self.inverseWidth)-np.sqrt(self.inverseWidth)*dist2xx))
+		g[1] *= np.sqrt(self.inverseWidth/(2*np.pi)) 
         return g
 
 class lin(kern):
@@ -1750,7 +1764,7 @@ class bias(kern):
         self.nParams = 1
         
         # Constrains parameters positive for optimisation.
-        self.addTransform(optimi.defaultConstraint('positive'), [0])
+        self.addTrans(optimi.defaultConstraint('positive'), [0])
         self.stationary = True
 
     def compute(self, x, x2=None):
@@ -2000,9 +2014,9 @@ class bias(kern):
 
 class sim(kern):
 	def __init__(self, inDim=None, X=None):
-		kern.__init__(sela,inDim, X)
+		kern.__init__(self,inDim, X)
 
-	def paramInit(self,inDim)
+	def paramInit(self,inDim):
 		"""% SIMKERNPARAMINIT SIM kernel parameter initialisation.
 		% The single input motif (SIM) kernel is specifically designed for
 		% working with gene networks where there is assumed to be a single
@@ -2026,54 +2040,47 @@ class sim(kern):
 		% kern.options.isNegativeS is set true then the parameter S is allowed to go
 		% negative.
 		%
-		% FORMAT
-		% DESC initialises the single input motif kernel structure with some 
-		% default parameters.
-		% ARG kern : the kernel structure which requires initialisation.
-		% RETURN kern : the kernel structure with the default parameters placed in.
-		%
 		% SEEALSO : kernCreate, kernParamInit, simKernCompute
 		%
 		% COPYRIGHT : Neil D. Lawrence, 2006, 2009
 
 		"""
-		assert self.inputDimension==1,'SIM kernel only valid for one-D input.')
+		assert(self.inputDimension==1,'SIM kernel only valid for one-D input.')
 
+		self.gaussianInitial = False;
 		if hasattr(self, 'options'):
 			if hasattr(self.options, 'gaussianInitial'):
 				if self.options.gaussianInitial:
-					self.gaussianInitial = 1;
+					self.gaussianInitial = True;
 					self.initialVariance = 1;
-		else
-			self.gaussianInitial = 0;
 
-		self.delay = 0;
-		self.decay = 1;
-		self.initVal = 1;
-		self.variance = 1;
-		self.inverseWidth = 1;
+		self.delay = 0.
+		self.decay = 1.
+		self.initVal = 1.
+		self.variance = 1.
+		self.inverseWidth = 1.
 
-		if self.gaussianInitial,
-			self.nParams = 4;
-		else
-			self.nParams = 3;
+		if self.gaussianInitial:
+			self.nParams = 4
+		else:
+			self.nParams = 3
 
-		self.isNegativeS = False;
+		self.isNegativeS = False
 		if hasattr(self, 'options'):
 			if hasattr(self.options, 'isNegativeS'):
 				if self.options.isNegativeS:
 					self.isNegativeS = True
 
 		if self.isNegativeS:
-			self.transforms.index = setdiff(1:self.nParams, 3);
-			self.sensitivity = 1;
+			index = np.setdiff1d(np.arange(self.nParams), np.array([2]))
+			self.addTransform(optimi.defaultConstraint('positive'), index)
+			self.sensitivity = 1.
 		else:
-			self.transforms.index = 1:self.nParams;
-			self.transforms.type = optimiDefaultConstraint('positive');
+			self.addTransform(optimi.defaultConstraint('positive'), np.arange(self.nParams))
 
-		self.isStationary = false;
-		self.isNormalised = false;
-		self.positiveTime = true;
+		self.isStationary = False;
+		self.isNormalised = False;
+		self.positiveTime = True;
 
 	def compute(self,t,t2=None):
 		"""% SIMKERNCOMPUTE Compute the SIM kernel given the parameters and X.
@@ -2109,38 +2116,38 @@ class sim(kern):
 		% MODIFICATIONS : James Hensman 2011
 		"""
 		symmetry=False
-		if not t2:
+		if t2 is None:
 			t2 = t
 			symmetry=True
 
 
-		assert( (t.shape[2]==1) & (t2.shape[2]==1),'Input can only have one column')
+		assert( (t.shape[1]==1) & (t2.shape[1]==1),'Input can only have one column')
 
 		sigma = np.sqrt(2/self.inverseWidth)
 
-		if (self.isStationary
-			h = simComputeHStat(t, t2, kern.decay, kern.decay, kern.delay, kern.delay, sigma)[0]
+		if (self.isStationary):
+			h = simComputeHStat(t, t2, self.decay, self.decay, self.delay, self.delay, sigma)[0]
 		else:
-			h = simComputeH(t, t2, kern.decay, kern.decay, kern.delay, kern.delay, sigma)[0]
+			h = simComputeH(t, t2, self.decay, self.decay, self.delay, self.delay, sigma)[0]
 		if symmetry:
 			sk = 0.5 * (h + h.T)
-		else
-			if (kern.isStationary == false)
-				h2 = simComputeH(t2, t, kern.decay, kern.decay, kern.delay, kern.delay, sigma)
-			else
-				h2 = simComputeHStat(t2, t, kern.decay, kern.decay, kern.delay, kern.delay, sigma)
+		else:
+			if (self.isStationary == False):
+				h2,tmp1,tmp2,tmp3 = simComputeH(t2, t, self.decay, self.decay, self.delay, self.delay, sigma)
+			else:
+				h2,tmp1,tmp2,tmp3 = simComputeHStat(t2, t, self.decay, self.decay, self.delay, self.delay, sigma)
 			sk = 0.5 * (h + h2.T)
 
 		#if isfield(kern, 'isNormalised') && (kern.isNormalised == true)
 		if self.isNormalised:
 			k = sk
-		else
+		else:
 			k = np.sqrt(np.pi)*sigma*sk
 
 		#if isfield(kern, 'isNegativeS') && (kern.isNegativeS == true)
 		if self.isNegativeS:
 			k = (kern.sensitivity*kern.sensitivity)*k
-		else
+		else:
 			k = self.variance*k
 
 		#if isfield(kern, 'gaussianInitial') && kern.gaussianInitial,
@@ -2153,3 +2160,93 @@ class sim(kern):
 
 			k = k + self.initialVariance * exp(- self.decay * (t1Mat + t2Mat))
 		return(k)
+
+	def expandParam(self,param):
+		self.decay,self.inverseWidth, self.variance = param
+
+	def extractParam(self):
+		return np.array([self.decay,self.inverseWidth, self.variance])
+
+	def crossCompute(self,other,t1,t2=None):
+		if (t2 is None):
+			t2=t1
+
+		if isinstance(other, sim):
+			assert self.isNormalised == other.isNormalised
+			assert self.inverseWidth == other.inverseWidth
+
+			sigma = np.sqrt(2./self.inverseWidth)
+
+			if not self.isStationary:
+				h1,tmp1,tmp2,tmp3 = simComputeH(t1, t2, self.decay, other.decay, self.delay, other.delay, sigma)
+			        h2,tmp1,tmp2,tmp3 = simComputeH(t2, t1, other.decay, self.decay, other.delay, self.delay, sigma);
+			else:
+				h1,tmp1,tmp2,tmp3 = simComputeHStat(t1, t2, self.decay, other.decay, self.delay, other.delay, sigma);
+			        h2,tmp1,tmp2,tmp3 = simComputeHStat(t2, t1, other.decay, self.decay, other.delay, self.delay, sigma);
+
+			sK = 0.5 * (h1 + h2.T)
+
+			if not self.isNormalised:
+				sK = np.sqrt(np.pi) * sigma * sK
+
+			#if isfield(simKern1, 'isNegativeS') && (simKern1.isNegativeS == true)
+			if self.isNegativeS:
+				K = self.sensitivity * sK;
+			else:
+				K = np.sqrt(self.variance) *sK
+			#if isfield(simKern2, 'isNegativeS') && (simKern2.isNegativeS == true)
+			if other.isNegativeS:
+				K = other.sensitivity * K
+			else:
+				K = np.sqrt(other.variance) * K
+			return K
+
+			
+		elif isinstance(other,rbf):
+			assert self.isNormalised == other.isNormalised
+			assert self.inverseWidth == other.inverseWidth
+			assert other.variance==1.
+
+
+			dim1 = t1.shape[0]
+			dim2 = t2.shape[0]
+			t1 = t1 - self.delay;
+
+			#t1Mat = t1(:, ones(1, dim2))
+			t1Mat = t1*np.ones((1,dim2))
+			#t2Mat = t2(:, ones(1, dim1))';
+			t2Mat = np.ones((dim1,1))*t2.T
+
+			diffT = t1Mat - t2Mat
+
+			sigma = np.sqrt(2./self.inverseWidth)
+
+			invSigmaDiffT = 1./sigma*diffT
+			halfSigmaD_i = 0.5*sigma*self.decay
+
+			if not self.isStationary:
+				lnPart, signs = lnDiffErfs(halfSigmaD_i + t2Mat/sigma, halfSigmaD_i - invSigmaDiffT)
+			else:
+				lnPart, signs = lnDiffErfs(inf, halfSigmaD_i - invSigmaDiffT)
+
+			sK = signs * np.exp(halfSigmaD_i*halfSigmaD_i - self.decay*diffT + lnPart)
+
+			sK = 0.5 * sK
+
+			if not self.isNormalised:
+				sK = sK * np.sqrt(np.pi);
+				if self.isNegativeS:
+					K = sK * self.sensitivity * sigma
+				else:
+					K = sK * np.sqrt(self.variance) * sigma
+			else:
+				if self.isNegativeS:
+					K = sK * self.sensitivity
+				else:
+					K = sK * np.sqrt(self.variance)
+			return K
+
+		else:
+			raise NotImplementedError
+
+
