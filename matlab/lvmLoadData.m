@@ -8,7 +8,7 @@ function [Y, lbls, Ytest, lblstest] = lvmLoadData(dataset, seedVal)
 % 'robotTwoLoops', 'robotTraces', 'robotTracesTest', 'cmu35gplvm',
 % 'cmu35Taylor', 'cmu35walkJog', 'vowels', 'stick', 'brendan',
 % 'digits', 'twos', 'oil', 'oilTest', 'oilValid', 'oil100',
-% 'swissRoll'.
+% 'swissRoll', 'missa'.
 % RETURN Y : the training data loaded in.
 % RETURN lbls : a set of labels for the data (if there are no
 % labels it is empty).
@@ -35,6 +35,8 @@ function [Y, lbls, Ytest, lblstest] = lvmLoadData(dataset, seedVal)
   lbls = [];
   lblstest = [];
   switch dataset
+   case 'missa'
+       load([baseDir 'miss-americaHD.mat']);
    case 'movielens'
     try 
       load([baseDir 'movielens.mat']);
