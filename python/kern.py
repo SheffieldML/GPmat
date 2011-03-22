@@ -7,7 +7,7 @@ import os
 import posix
 sys.path.append(os.path.join(posix.environ['HOME'], 'mlprojects', 'swig', 'src'))
 sys.path.append(os.path.join(posix.environ['HOME'], 'mlprojects', 'optimi', 'python'))
-sys.path.append(os.path.join(posix.environ['HOME'], 'mlprojects', 'mlopy', 'netlab'))
+#sys.path.append(os.path.join(posix.environ['HOME'], 'mlprojects', 'mlopy', 'netlab'))
 import pdb
 ##ENDSETUP
 
@@ -15,6 +15,8 @@ import pdb
 import optimi
 from sim import simComputeH, lnDiffErfs
 
+def dist2(x1,x2):
+	return np.sum(np.square(x1[:,np.newaxis,:]-x2[np.newaxis,:,:]),-1)
 
 def test(kernType, numIn=4, tieParamNames=None):
     """% TEST Run some tests on the specified kernel.
@@ -894,9 +896,9 @@ class rbf(kern):
         '''
         
         if x2 is None:
-            n2 = netlab.dist2(x, x)
+            n2 = dist2(x, x)
         else:
-            n2 = netlab.dist2(x, x2)
+            n2 = dist2(x, x2)
         
         wi2 = (.5 * self.inverseWidth)
         sk = np.exp(-n2*wi2)
@@ -1090,7 +1092,7 @@ class rbf(kern):
         '''% GRADXPOINT Gradient with respect to one point of x.'''
 
         gX = np.zeros(X2.shape)
-        n2 = netlab.dist2(X2, x)
+        n2 = dist2(X2, x)
         wi2 = (.5 * self.inverseWidth)
         rbfPart = self.variance*np.exp(-n2*wi2)
         for i in range(x.shape[1]):
