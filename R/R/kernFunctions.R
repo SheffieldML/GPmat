@@ -318,7 +318,8 @@ kernGradX <- function (kern, x, x2) {
 
 .kernTestCombinationFunction <- function (kern1, kern2) {
   if (kern1$type == "selproj" && kern2$type == "selproj")
-    funcName <- paste(kern1$comp[[1]]$type, "X", kern2$comp[[1]]$type, "KernCompute", sep="")
+    #funcName <- paste(kern1$comp[[1]]$type, "X", kern2$comp[[1]]$type, "KernCompute", sep="")
+    return(.kernTestCombinationFunction(kern1$comp[[1]], kern2$comp[[1]]))
   else
     funcName <- paste(kern1$type, "X", kern2$type, "KernCompute", sep="")
 
@@ -421,6 +422,46 @@ multiKernDisplay <- function (kern, spaceNum=0) {
   }
 }
 
+multiKernComputeJames <- function(kern, x, x2=2){
+  if (is.list(x)){
+    stopifnot(length(x)==kern$numBlocks)
+    stopifnot(length(x)==length(x2))
+    dim1 <- unlist(lapply(x,nrow))
+    dim2 <- unlist(lapply(x2,nrow))
+  }else{
+  x = list(x)
+  x2 = list(x2)
+  for (i in seq(2,kern$numBlocks)){
+    x[[i]] = x[[1]]
+    x2[[i]] = x2[[1]]
+  }
+  }
+    
+  K <- matrix(0,sum(dim1),sum(dim2))
+  for (i in 1:length(dim1)){
+    startOne <- sum(dim1[seq(length.out=(i-1))])+1
+    endOne <- sum(dim1[seq(length.out=i)])
+    startThree <- sum(dim2[seq(length.out=(i-1))])+1
+    endThree <- sum(dim2[seq(length.out=i)])
+
+    K[startOne:endOne, startThree:endThree] <- .multiKernComputeBlock(kern, i, i, x[[i]])
+
+    for ( j in seq(length.out=(i-1)) ){
+      if ( !is.na(kern$block[[i]]$cross[j]) ) {
+        startTwo <- sum(dim2[seq(length.out=(j-1))])+1
+        endTwo <- sum(dim2[seq(length.out=j)])
+        K[startOne:endOne, startTwo:endTwo] <- .multiKernComputeBlock(kern, i, j, x[[i]], x[[j]])
+        K[startTwo:endTwo, startOne:endOne] <- t(K[startOne:endOne, startTwo:endTwo])
+        startFour <- sum(dim1[seq(length.out=(j-1))])+1
+        endFour <- sum(dim1[seq(length.out=j)])
+        K[startFour:endFour, startThree:endThree] <- t(.multiKernComputeBlock(kern, j, i, x2[[i]], x[[j]]))
+      }
+    }
+  }
+}
+    
+    
+    
 multiKernCompute <- function (kern, x, x2=x) {
   if ( is.list(x) ) {
     if ( length(x) != kern$numBlocks )

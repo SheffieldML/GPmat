@@ -438,6 +438,63 @@ modelLogLikelihood <- function (model) {
 }
 
 
+.gpsimKernelHierSpec <- function(comps, options, exps){
+  #comps is the (multi) structure of the overall covariance
+  #exps is the data.frame-like structuer specifying the hierarchy. 
+  #The number of levels in the hierarchy is given by the number of columns
+  #in exps
+
+  kerntype <- list(type='multi', comp=list())
+  # TODO catch the unliekly event of being passed a non hierarchical structure (no exps)
+
+  if (!is.null(exps)) {
+    hierkern <- list(type='cmpnd', comp=list())
+    tree = list()
+
+    count = 1
+    hierkern$comp[[count]] <- list(type='multi', comp=list()) #root node, 0,0,0,0...
+    tree[[count]] <- 0
+    
+    #the first col (second layer in hierarchy) needs to be done separately because of the unpredicatable behaviour of unique(). sigh.
+    ue <- unique(exps[,1])
+    for(k in 1:length(ue)){
+      count <- count + 1
+      hierkern$comp[[count]] <- list(type='multi', comp=list())
+      tree[[count]] <- ue[k]
+    }
+    #okay, here's most of the tree
+    for(i in seq(2,length.out=ncol(exps)-1)){
+      ue <- unique(exps[,1:i])
+      for(j in 1:nrow(ue)){
+        count <- count + 1
+        hierkern$comp[[count]] <- list(type='multi', comp=list())
+        tree[[count]] <- ue[j,]
+      }
+    }
+    #pad the tree with zeros
+    depth <- max(unlist(lapply(tree,length)))
+    tree <- lapply(tree,function(x) c(x,array(0,dim=depth-length(x))))
+  
+    #fill the kernel using expmask as specified by the tree
+    for(count in seq_along(tree)){
+      for(c in seq_along(comps)){
+        nest <- list(type='selproj',options=list(expmask=tree[[count]][depth]),comp=list(comps[c]))
+        for(i in 1:(depth-1)){
+          nest <- list(type='selproj',options=list(expmask=tree[[count]][depth-i]),comp=list(nest))
+        }
+        hierkern$comp[[count]]$comp[[c]] <- nest
+      }
+    }
+  
+
+  }    
+
+  return(hierkern)
+}
+  
+
+
+
 .gpsimKernelSpec <- function(comps, options, exps=NULL) {
   kernType <- list(type="multi", comp=list())
 
