@@ -468,10 +468,12 @@ gpdisimUpdateProcesses <- function (model, predt=NULL) {
   }
 
   par <- kernExtractParam(model$kern, untransformed.values=TRUE)
+
   if (model$includeNoise)
     simMultiKern <- model$kern$comp[[1]]
   else
     simMultiKern <- model$kern
+
   if (model$isHierarchical)
     simMultiKern <- simMultiKern$comp[[1]]
 
