@@ -244,5 +244,38 @@ class fixable(transformable):
 		unfixed_index = np.setdiff1d(np.arange(param.size),self.fixed_index)
 		return param[unfixed_index]
 
+class tieable(fixable):
+	"""allows some of the parameters to be tied together"""
+	def __init__(self):
+		fixable.__init__(self)
+		self.tied_visible_index = np.array([],dtype=np.int)
+		self.tied_hidden_index = np.array([],dtype=np.int)
+	
+	def tieParam(self,index1,index2):
+		self.tied_visible_index = np.hstack((self.tied_visible_index,index1))
+		self.tied_hidden_index = np.hstack((self.tied_hidden_index,index2))
+		#set tied parameters to their values... not sure if this python hack is healthy?
+		p = fixable.getParam(self)
+		p[index2] = p[index1]
+		fixable.setParam(self,p)
+
+	def setParam(self,params):
+		old_param = fixable.getParam(self)
+		N = old_param.size
+		newparam = np.zeros(N)
+		count = 0
+		for i in range(N):
+			if not i in self.tied_hidden_index:
+				newparam[i]=params[count]
+				count += 1
+		newparam[self.tied_hidden_index] = newparam[self.tied_visible_index]
+		pdb.set_trace()
+		fixable.setParam(self,newparam)
+
+	def getParam(self):
+		p = fixable.getParam(self)
+		return np.delete(p,self.tied_hidden_index,0)
+
+
 
 	
