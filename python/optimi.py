@@ -63,6 +63,7 @@ class transformable(optimisable):
     """This class allows the parameters of a model to be transformed."""
 
     def __init__(self):
+	optimisable.__init__(self)
         self.transArray = []
     
     def addTransform(self, trans, index):
@@ -117,6 +118,7 @@ class transformable(optimisable):
     def gradParam(self):
         pass
 
+
 class transform:
     """Base class for the transforms."""
 
@@ -157,12 +159,12 @@ class expTransform(transform):
     def atox(self, a):
         limVal = 36
         x = np.zeros(a.shape)
-        index = np.nonzero(a<-limVal)
+        index = np.nonzero(a<-limVal)[0]
         x[index] = np.exp(-limVal)
-        a[index] = float('nan')
+        a[index] = np.nan
         index = np.nonzero(a<limVal)
         x[index] = np.exp(a[index])
-        a[index] = float('nan')
+        a[index] = np.nan
         index = np.nonzero(np.logical_not(np.isnan(a)))
         if len(index[0])>0:
             x[index] = np.exp(limVal)
@@ -213,3 +215,34 @@ class transforms:
     def __init__(self, trans, index):
         self.index = index
         self.trans = trans
+
+class fixable(transformable):
+	"""A class to allow objects fo also have fixed values, as well as transformed ones"""
+	def __init__(self):
+		transformable.__init__(self)
+		self.fixed_index = np.array([],dtype=np.int)
+		self.fixed_values = np.array([],dtype=np.float64)
+
+	def addFix(self,index,value):
+		self.fixed_index = np.hstack((self.fixed_index,index))
+		self.fixed_values = np.hstack((self.fixed_values,value))
+		
+		#set the model's value to the fixed value!
+		p = self.extractTransParam()
+		p[index] = value
+		self.expandTransParam(p)
+
+	def setParam(self,params):
+		allparam = np.zeros(params.size+self.fixed_values.size)
+		allparam[self.fixed_index] = self.fixed_values
+		unfixed_index = np.nonzero(allparam==0)[0]
+		allparam[unfixed_index] = params
+		self.expandTransParam(allparam)
+
+	def getParam(self):
+		param = self.extractTransParam()
+		unfixed_index = np.setdiff1d(np.arange(param.size),self.fixed_index)
+		return param[unfixed_index]
+
+
+	
