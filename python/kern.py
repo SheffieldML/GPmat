@@ -304,11 +304,11 @@ def create(type, inDim=None, X=None):
         return ker
 
 
-class kern(optimi.fixable):
+class kern(optimi.tieable):
     """The base kernel class from which all kernels are derived."""
 
     def __init__(self, inDim=None, X=None):
-        optimi.fixable.__init__(self)
+        optimi.tieable.__init__(self)
         self.whiteVariance = None # whether the covariance has a white
                                   # noise component
         self.positiveTime = False # default value, set true for
