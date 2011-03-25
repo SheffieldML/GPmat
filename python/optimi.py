@@ -200,7 +200,6 @@ def defaultConstraint(constraint):
     % OPTIMI
 
     '''
-    
     if constraint == 'positive':
         str = 'exp'
     elif constraint == 'zeroone':
@@ -233,48 +232,44 @@ class fixable(transformable):
 		self.expandTransParam(p)
 
 	def setParam(self,params):
-		allparam = np.zeros(params.size+self.fixed_values.size)
-		allparam[self.fixed_index] = self.fixed_values
-		unfixed_index = np.nonzero(allparam==0)[0]
-		allparam[unfixed_index] = params
-		self.expandTransParam(allparam)
+		params = np.insert(params,self.fixed_index-np.arange(self.fixed_index.size),self.fixed_values)
+		transformable.setParam(self,params)
 
 	def getParam(self):
-		param = self.extractTransParam()
-		unfixed_index = np.setdiff1d(np.arange(param.size),self.fixed_index)
-		return param[unfixed_index]
+		params = transformable.getParam(self)
+		return np.delete(params,self.fixed_index)
 
 class tieable(fixable):
 	"""allows some of the parameters to be tied together"""
 	def __init__(self):
 		fixable.__init__(self)
-		self.tied_visible_index = np.array([],dtype=np.int)
-		self.tied_hidden_index = np.array([],dtype=np.int)
+		self.tied_index = []
 	
-	def tieParam(self,index1,index2):
-		self.tied_visible_index = np.hstack((self.tied_visible_index,index1))
-		self.tied_hidden_index = np.hstack((self.tied_hidden_index,index2))
-		#set tied parameters to their values... not sure if this python hack is healthy?
-		p = fixable.getParam(self)
-		p[index2] = p[index1]
-		fixable.setParam(self,p)
+	def tieParam(self,index):
+		assert len(self.tied_index)==0, "NOT IMPLEMENTED! - only use one tie for the moment"
+		index = np.sort(index)
+		assert np.all(index == np.unique(index))
+		self.tied_index.append(index)
+		#fix current values in the model, now that they're tied.
+		oldParam = fixable.getParam(self)
+		self.setParam(np.delete(oldParam,index[1:]))
 
 	def setParam(self,params):
-		old_param = fixable.getParam(self)
-		N = old_param.size
-		newparam = np.zeros(N)
-		count = 0
-		for i in range(N):
-			if not i in self.tied_hidden_index:
-				newparam[i]=params[count]
-				count += 1
-		newparam[self.tied_hidden_index] = newparam[self.tied_visible_index]
-		pdb.set_trace()
+		if len(self.tied_index)==0:
+			newparam = params
+		else:
+			i = self.tied_index[0]#TODO allow more than one tie!
+			val = params[i[0]]
+			inserts = i[1:]-np.arange(len(i)-1)
+			newparam = np.insert(params,inserts,val)
 		fixable.setParam(self,newparam)
 
 	def getParam(self):
 		p = fixable.getParam(self)
-		return np.delete(p,self.tied_hidden_index,0)
+		if len(self.tied_index)==0:
+			return p
+		i = self.tied_index[0]#TODO!
+		return np.delete(p,i[1:])
 
 
 
