@@ -13,7 +13,7 @@ import pdb
 
 #import netlab
 import optimi
-from sim import simComputeH, lnDiffErfs
+from sim_fns_weave import simComputeH, lnDiffErfs
 
 def dist2(x1,x2):
 	return np.sum(np.square(x1[:,np.newaxis,:]-x2[np.newaxis,:,:]),-1)
