@@ -5,6 +5,48 @@ from scipy.special import erf, erfc
 from erfcx import erfcx
 from scipy.weave import inline
 
+c_erfcx = """
+double erfcx(double x){
+	double t, u, y;
+	t = 3.97886080735226 / ( fabs(x)+ 3.97886080735226);
+	u = t-0.5;
+	y = (((((((((u * 0.00127109764952614092 + 1.19314022838340944e-4) * u 
+	    - 0.003963850973605135)   * u - 8.70779635317295828e-4) * u +     
+	      0.00773672528313526668) * u + 0.00383335126264887303) * u -     
+	      0.0127223813782122755)  * u - 0.0133823644533460069)  * u +     
+	      0.0161315329733252248)  * u + 0.0390976845588484035)  * u +     
+	      0.00249367200053503304;
+	y = ((((((((((((y * u - 0.0838864557023001992) * u -           
+	      0.119463959964325415) * u + 0.0166207924969367356) * u + 
+	      0.357524274449531043) * u + 0.805276408752910567)  * u + 
+	      1.18902982909273333)  * u + 1.37040217682338167)   * u + 
+	      1.31314653831023098)  * u + 1.07925515155856677)   * u + 
+	      0.774368199119538609) * u + 0.490165080585318424)  * u + 
+	      0.275374741597376782) * t;
+	
+	if (x<0){
+		y = 2.0*exp(x*x) - y;
+		}
+	return y;
+	}
+"""
+c_lndifferfs = """
+double lndifferfs(double *x1, double *x2){
+	if (((*x1)*(*x2))<0.0){
+	    return log(erf(*x1)-erf(*x2));
+	    }
+	else if (((*x1)>0.0) & ((*x2)>0.0)){
+	    return log(erfcx(*x2) - erfcx(*x1) * exp((*x2)*(*x2) - (*x1)*(*x1))) - (*x2)*(*x2);
+	    }
+	else if ((*x1)==(*x2)){
+	    return -1e10000;
+	    }
+	else{
+	    return log(erfcx(-*x1) - erfcx(-*x2) * exp((*x1)*(*x1) - (*x2)*(*x2))) - (*x1)*(*x1);
+	    }
+	}
+"""
+
 def erfcx(x):
 	x = float(x)
 	if x > 2.53e307:
@@ -14,7 +56,7 @@ def erfcx(x):
 
 	support_code = """
 	#include <math.h>;
-	double d_erfcx(double x){
+	double erfcx(double x){
 	double t, u, y;
 	t = 3.97886080735226 / ( fabs(x)+ 3.97886080735226);
 	u = t-0.5;
@@ -40,7 +82,7 @@ def erfcx(x):
 	}
 	"""
 	code = """
-	return_val = d_erfcx(x);
+	return_val = erfcx(x);
 	"""
 	return inline(code,['x'],support_code=support_code)
 
@@ -49,45 +91,7 @@ def lnDiffErfs(x1,x2):
 	"""this only works for x1.shape==x2.shape for the moment"""
 	support_code = """
 	#include <math.h>;
-	double d_erfcx(double x){
-		double t, u, y;
-		t = 3.97886080735226 / ( fabs(x)+ 3.97886080735226);
-		u = t-0.5;
-		y = (((((((((u * 0.00127109764952614092 + 1.19314022838340944e-4) * u 
-		    - 0.003963850973605135)   * u - 8.70779635317295828e-4) * u +     
-		      0.00773672528313526668) * u + 0.00383335126264887303) * u -     
-		      0.0127223813782122755)  * u - 0.0133823644533460069)  * u +     
-		      0.0161315329733252248)  * u + 0.0390976845588484035)  * u +     
-		      0.00249367200053503304;
-		y = ((((((((((((y * u - 0.0838864557023001992) * u -           
-		      0.119463959964325415) * u + 0.0166207924969367356) * u + 
-		      0.357524274449531043) * u + 0.805276408752910567)  * u + 
-		      1.18902982909273333)  * u + 1.37040217682338167)   * u + 
-		      1.31314653831023098)  * u + 1.07925515155856677)   * u + 
-		      0.774368199119538609) * u + 0.490165080585318424)  * u + 
-		      0.275374741597376782) * t;
-		
-		if (x<0){
-			y = 2.0*exp(x*x) - y;
-			}
-		return y;
-		}
-		
-	double lndifferfs(double *x1, double *x2){
-		if (((*x1)*(*x2))<0.0){
-		    return log(erf(*x1)-erf(*x2));
-		    }
-		else if (((*x1)>0.0) & ((*x2)>0.0)){
-		    return log(d_erfcx(*x2) - d_erfcx(*x1) * exp((*x2)*(*x2) - (*x1)*(*x1))) - (*x2)*(*x2);
-		    }
-		else if ((*x1)==(*x2)){
-		    return -1e10000;
-		    }
-		else{
-		    return log(d_erfcx(-*x1) - d_erfcx(-*x2) * exp((*x1)*(*x1) - (*x2)*(*x2))) - (*x1)*(*x1);
-		    }
-		}
-	"""
+	"""+c_erfcx+c_lndifferfs
 	code = """
 	double *p1, *p2, *p3, *p4;
 	PyObject *itr;
@@ -162,4 +166,49 @@ def simComputeH(t1, t2, D_i, D_j, delta_i, delta_j, sigma, compute_gradDdecay1=F
 		dh_dsigma = 0.5*D_i*D_i*sigma*h+ 2/(np.sqrt(np.pi)*(D_i+D_j))*((-diffT/sigma2-D_i/2)*np.exp(-diffT*diffT/sigma2)+ (-t2Mat/sigma2+D_i/2)*np.exp(-t2Mat*t2Mat/sigma2-D_i*t1Mat) - (-t1Mat/sigma2-D_i/2)*np.exp(-t1Mat*t1Mat/sigma2-D_j*t2Mat)- D_i/2*np.exp(-(D_i*t1Mat+D_j*t2Mat)));
 	
 	return (h, dh_dD_i, dh_dD_j, dh_dsigma)
+
+def simComputeH_inplace(t1mat,t2mat,Di,Dj,sigma,H):
+	support_code = "#include <math.h>\n"+c_erfcx+c_lndifferfs
+	code= """
+	double *pt1, *pt2, *pH;
+	double halfsigmaDi = 0.5*sigma*Di;
+	double halfsigmaDi2 = halfsigmaDi*halfsigmaDi;
+	double logDiDj = log(Di+Dj);
+	double arg1, arg2;
+	PyObject *itr;
+	itr = PyArray_MultiIterNew(3, t1mat_array, t2mat_array,H_array);
+	while(PyArray_MultiIter_NOTDONE(itr)) {
+		pt1 = (double *) PyArray_MultiIter_DATA(itr, 0);
+		pt2 = (double *) PyArray_MultiIter_DATA(itr, 1);
+		pH = (double *) PyArray_MultiIter_DATA(itr, 2);
+
+		//do the first part
+		arg1 = halfsigmaDi+*pt2/sigma;
+		arg2 = halfsigmaDi-(1.0/sigma)*(*pt1-*pt2);
+		if((arg1-arg2)<0){
+			*pH = -1*exp(halfsigmaDi2 - Di*(*pt1-*pt2) +lndifferfs(&arg2,&arg1) - logDiDj);
+		}
+		else{
+			*pH = exp(halfsigmaDi2 - Di*(*pt1-*pt2) +lndifferfs(&arg1,&arg2) - logDiDj);
+		}
+		
+		//do the second part
+		arg1 = halfsigmaDi;
+		arg2 = halfsigmaDi - *pt1/sigma;
+		if((arg1-arg2)<0){
+			*pH += exp(halfsigmaDi2 - Di*(*pt1) -Dj*(*pt2) +lndifferfs(&arg2,&arg1) -logDiDj);
+		}
+		else{
+			*pH += -exp(halfsigmaDi2 - Di*(*pt1) -Dj*(*pt2) +lndifferfs(&arg1,&arg2) -logDiDj);
+		}
+		PyArray_MultiIter_NEXT(itr);
+
+	}
+	Py_DECREF(itr);
+	"""
+	Di = float(Di)
+	Dj = float(Dj)
+	sigma = float(sigma)
+	inline(code,['t1mat','t2mat','Di','Dj','sigma','H'],support_code = support_code)
+	
 
