@@ -17,7 +17,7 @@ def testfn(x1,x2):
 
 		PyArray_MultiIter_NEXT(itr);
 	}
-	PyMem_Free(itr);
+	Py_DECREF(itr);
 	"""
 	x1 = np.atleast_1d(x1)
 	x2 = np.atleast_1d(x2)

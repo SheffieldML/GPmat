@@ -100,19 +100,17 @@ def lnDiffErfs(x1,x2):
 
 		if((*p1-*p2)<0){
 		*p4 =-1;
-		//*p3 = lndifferfs(p2, p1);
-		*p3 = 1.0;
+		*p3 = lndifferfs(p2, p1);
 		}
 		else{
 		*p4 = 1;
-		//*p3 = lndifferfs(p1, p2);
-		*p3 = 1.0;
+		*p3 = lndifferfs(p1, p2);
 		}
 
 		PyArray_MultiIter_NEXT(itr);
 
 	}
-	free(itr);
+	Py_DECREF(itr);
 	"""
 	x1 = np.atleast_1d(x1)
 	x2 = np.atleast_1d(x2)
