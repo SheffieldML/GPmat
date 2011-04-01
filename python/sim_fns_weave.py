@@ -124,10 +124,11 @@ def lnDiffErfs(x1,x2):
 	inline(code,['x1','x2','x3','x4'],support_code=support_code)
 	return (x3,x4)
 
-
 def simComputeH(t1, t2, D_i, D_j, delta_i, delta_j, sigma, compute_gradDdecay1=False, compute_gradDdecay2=False, compute_gradsigma=False):
 	"""
-	See docsting for non weave version
+	Creates structures ant then uses the in-place version.
+
+	See also docsting for non weave version
 	"""
 
 	assert(((t1.shape[1]==1) and (t2.shape[1]==1)),'Input can only have one column')
@@ -137,35 +138,14 @@ def simComputeH(t1, t2, D_i, D_j, delta_i, delta_j, sigma, compute_gradDdecay1=F
 	t1 = t1 - delta_i;
 	t2 = t2 - delta_j;
 
-	t1Mat = t1*np.ones((1,dim2))#(:, ones(1, dim2));
-	t2Mat = t2*np.ones((1,dim1))#(:, ones(1, dim1))';
+	t1Mat = t1*np.ones((1,dim2))
+	t2Mat = t2*np.ones((1,dim1))
 	t2Mat = t2Mat.T
-	diffT = (t1Mat - t2Mat);
+	h = np.empty(t1Mat.shape)
+	simComputeH_inplace(t1Mat,t2Mat,D_i,D_j,sigma,h)
+	return h
 
-	invSigmaDiffT = 1/sigma*diffT;
-	halfSigmaD_i = 0.5*sigma*D_i;
-	#ind = find(t1Mat~=0); # this never gets used? -- James
-	h = np.zeros(diffT.shape);
 
-	(lnPart1, sign1) = lnDiffErfs(halfSigmaD_i + t2Mat/sigma,  halfSigmaD_i - invSigmaDiffT);
-	(lnPart2, sign2) = lnDiffErfs(halfSigmaD_i, halfSigmaD_i - t1Mat/sigma);
-
-	h = sign1 * np.exp(halfSigmaD_i*halfSigmaD_i-D_i*diffT+lnPart1 - np.log(D_i + D_j)) - sign2 * np.exp(halfSigmaD_i*halfSigmaD_i-D_i*t1Mat-D_j*t2Mat + lnPart2 - np.log(D_i + D_j));
-	sigma2 = sigma*sigma;
-
-	dh_dD_i, dh_dD_j, dh_dsigma = None, None, None
-
-	if compute_gradDdecay1:
-		dh_dD_i = (0.5*D_i*sigma2*(D_i + D_j)-1)*h + (-diffT*sign1*np.exp(halfSigmaD_i*halfSigmaD_i-D_i*diffT+lnPart1) +t1Mat*sign2*np.exp(halfSigmaD_i*halfSigmaD_i-D_i*t1Mat - D_j*t2Mat+lnPart2)) + sigma/np.sqrt(np.pi)*(-np.exp(-diffT*diffT/sigma2)+np.exp(-t2Mat*t2Mat/sigma2-D_i*t1Mat)+np.exp(-t1Mat*t1Mat/sigma2-D_j*t2Mat)-np.exp(-(D_i*t1Mat + D_j*t2Mat)))
-		dh_dD_i = np.real(dh_dD_i/(D_i+D_j));
-	if compute_gradDdecay2:
-		dh_dD_j = t2Mat*sign2*np.exp(halfSigmaD_i*halfSigmaD_i-(D_i*t1Mat + D_j*t2Mat)+lnPart2)-h;
-		dh_dD_j = np.real(dh_dD_j/(D_i + D_j));
-    
-	if compute_gradsigma:
-		dh_dsigma = 0.5*D_i*D_i*sigma*h+ 2/(np.sqrt(np.pi)*(D_i+D_j))*((-diffT/sigma2-D_i/2)*np.exp(-diffT*diffT/sigma2)+ (-t2Mat/sigma2+D_i/2)*np.exp(-t2Mat*t2Mat/sigma2-D_i*t1Mat) - (-t1Mat/sigma2-D_i/2)*np.exp(-t1Mat*t1Mat/sigma2-D_j*t2Mat)- D_i/2*np.exp(-(D_i*t1Mat+D_j*t2Mat)));
-	
-	return (h, dh_dD_i, dh_dD_j, dh_dsigma)
 
 def simComputeH_inplace(t1mat,t2mat,Di,Dj,sigma,H):
 	support_code = "#include <math.h>\n"+c_erfcx+c_lndifferfs
