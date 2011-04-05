@@ -64,9 +64,9 @@ kernCreate <- function(x, kernType, kernOptions=NULL) {
         
         if (kern$type == "selproj") {
           if ( (dim(as.matrix(x))[2] == 1) && (dim(as.matrix(x))[1] == 1) )
-            x_proj <- x-1
+            x_proj <- x-length(kern$options$expmask)
           else
-            x_proj <- x[,-1]
+            x_proj <- x[,-seq(length(kern$options$expmask))]
             
           kern$comp[[i-start+1]] <- kernCreate(x_proj, iType)
         } else {

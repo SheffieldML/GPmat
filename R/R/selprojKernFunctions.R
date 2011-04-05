@@ -6,17 +6,56 @@
 #
 
 
+selprojKernParamInit <- function (kern) {
+  kern <- cmpndKernParamInit(kern)
+
+  for (i in seq_along(kern$comp))
+    if (kern$comp[[i]]$type == "multi")
+      error("selproj kernel does not support wrapping a multi kernel.")
+
+  stopifnot(!is.null(kern$options$expmask))
+  
+  kern$expmask <- kern$options$expmask
+  kern$masklen <- length(kern$expmask)
+  kern$transforms <- kern$comp[[1]]$transforms
+  if ("transformArgs" %in% names(kern$comp[[1]]))
+    kern$transformArgs <- kern$comp[[1]]$transformArgs
+  
+  return (kern)
+}
+
+
+.selprojDataMaskCompare <- function (m, m1) {
+  I <- vector(len=dim(m1)[1])
+  I[] <- TRUE
+
+  for (i in seq_along(m)) {
+    if (m[i] > 0)
+      I <- I & (m1[,i] == m)
+  }
+  return (I)
+}
+
+
+.selprojKernMaskCombine <- function (m1, m2) {
+  stopifnot(length(m1) == length(m2))
+
+  if (any((m1 > 0) & (m2 > 0) & (m1 != m2)))
+    return (NA)
+  else
+    return (pmax(m1, m2))
+}
+
+
+
 selprojKernDiagCompute <- function (kern, x) {
   d <- dim(as.array(x))[1]
   k <- array(0, dim=d)
 
   if (dim(as.array(x))[2] > 1) {
-    if (kern$expmask > 0)
-      I <- (x[,1] == kern$expmask)
-    else
-      I <- 1:d
+    I <- .selprojDataMaskCompare(kern$expmask, x[,seq(kern$masklen)])
 
-    k[I] <- kernDiagCompute(kern$comp[[1]], x[I,-1])
+    k[I] <- kernDiagCompute(kern$comp[[1]], x[I,-seq(kern$masklen)])
   }
 
   return (k)
@@ -58,34 +97,27 @@ selprojKernCompute <- function (kern, x, x2) {
     k <- array(0, dim=c(d1, d2))
 
     if (dim(as.array(x))[2] > 1 && dim(as.array(x2))[2] > 1) {
-      if (kern$expmask > 0) {
-        I1 <- (x[,1] == kern$expmask)
-        I2 <- (x2[,1] == kern$expmask)
+      I1 <- .selprojDataMaskCompare(kern$expmask, x[,seq(kern$masklen)])
+      I2 <- .selprojDataMaskCompare(kern$expmask, x2[,seq(kern$masklen)])
 
-        if (!any(I1) || !any(I2))
-          return (k)
-      } else {
-        I1 <- 1:d1
-        I2 <- 1:d2
-      }
+      if (!any(I1) || !any(I2))
+        return (k)
 
-      k[I1,I2] <- kernCompute(kern$comp[[1]], x[I1,-1], x2[I2,-1])
+      k[I1,I2] <- kernCompute(kern$comp[[1]],
+                              x[I1,-seq(kern$masklen)],
+                              x2[I2,-seq(kern$masklen)])
     }
   } else {
     d1 <- dim(as.array(x))[1]
     k <- array(0, dim=c(d1, d1))
 
     if (dim(as.array(x))[2] > 1) {
-      if (kern$expmask > 0) {
-        I1 <- (x[,1] == kern$expmask)
+      I1 <- .selprojDataMaskCompare(kern$expmask, x[,seq(kern$masklen)])
 
-        if (!any(I1))
-          return (k)
-      } else {
-        I1 <- 1:d1
-      }
+      if (!any(I1))
+        return (k)
       
-      k[I1,I1] <- kernCompute(kern$comp[[1]], x[I1,-1])
+      k[I1,I1] <- kernCompute(kern$comp[[1]], x[I1,-seq(kern$masklen)])
     }
   }
   return (k)  
@@ -96,70 +128,38 @@ selprojKernCompute <- function (kern, x, x2) {
 selprojXselprojKernCompute <- function (kern1, kern2, x, x2) {
   funcName <- paste(kern1$comp[[1]]$type, "X", kern2$comp[[1]]$type, "KernCompute", sep="")
   func <- get(funcName, mode="function")
+
+  mask <- selprojKernMaskCombine(kern1$expmask, kern2$expmask)
   
   if ( nargs()>3 ) {
     d1 <- dim(as.array(x))[1]
     d2 <- dim(as.array(x2))[1]
     k <- array(0, dim=c(d1, d2))
 
-    if (dim(as.array(x))[2] > 1 && dim(as.array(x2))[2] > 1) {
-      # Zero output if different non-zero expmasks
-      if (kern1$expmask <= 0 || kern2$expmask <= 0 ||
-          kern1$expmask == kern2$expmask) {
-        expmask <- max(kern1$expmask, kern2$expmask)
-        if (expmask > 0) {
-          I1 <- (x[,1] == expmask)
-          I2 <- (x2[,1] == expmask)
+    if (dim(as.array(x))[2] > 1 && dim(as.array(x2))[2] > 1 &&
+        !any(is.na(mask))) {
+      I1 <- .selprojDataMaskCompare(mask, x[,seq(kern1$masklen)])
+      I2 <- .selprojDataMaskCompare(mask, x2[,seq(kern1$masklen)])
 
-          if (!any(I1) || !any(I2))
-            return (k)
-        } else {
-          I1 <- 1:d1
-          I2 <- 1:d2
-        }
+      if (!any(I1) || !any(I2))
+        return (k)
 
-        k[I1,I2] <- func(kern1$comp[[1]], kern2$comp[[1]], x[I1,-1], x2[I2,-1])
-      }
+      k[I1,I2] <- func(kern1$comp[[1]], kern2$comp[[1]], x[I1,-seq(kern$masklen)], x2[I2,-seq(kern$masklen)])
     }
   } else {
     d1 <- dim(as.array(x))[1]
     k <- array(0, dim=c(d1, d1))
 
-    if (dim(as.array(x))[2] > 1) {
-      if (kern1$expmask <= 0 || kern2$expmask <= 0 ||
-          kern1$expmask == kern2$expmask) {
-        expmask <- max(kern1$expmask, kern2$expmask)
-        if (expmask > 0) {
-          I1 <- (x[,1] == expmask)
-          
-        if (!any(I1))
-          return (k)
-        } else {
-          I1 <- 1:d1
-        }
-      
-        k[I1,I1] <- func(kern1$comp[[1]], kern2$comp[[1]], x[I1,-1])
-      }
+    if (dim(as.array(x))[2] > 1 && !any(is.na(mask))) {
+      I1 <- .selprojDataMaskCompare(mask, x[,seq(kern1$masklen)])
+
+      if (!any(I1))
+        return (k)
+
+      k[I1,I1] <- func(kern1$comp[[1]], kern2$comp[[1]], x[I1,-seq(kern$masklen)])
     }
   }
   return (k)  
-}
-
-
-
-selprojKernParamInit <- function (kern) {
-  kern <- cmpndKernParamInit(kern)
-
-  for (i in seq_along(kern$comp))
-    if (kern$comp[[i]]$type == "multi")
-      error("selproj kernel does not support wrapping a multi kernel.")
-  
-  kern$expmask <- kern$options$expmask
-  kern$transforms <- kern$comp[[1]]$transforms
-  if ("transformArgs" %in% names(kern$comp[[1]]))
-    kern$transformArgs <- kern$comp[[1]]$transformArgs
-  
-  return (kern)
 }
 
 
@@ -173,36 +173,26 @@ selprojKernGradient <- function (kern, x, x2, covGrad) {
 
     d1 <- dim(as.array(x))[1]
 
-    if (dim(as.array(x))[2] > 1) {
-      if (kern$expmask > 0) {
-        I1 <- (x[,1] == kern$expmask)
+    stopifnot(dim(as.array(x))[2] > 1)
 
-        if (!any(I1))
-          return (rep(0, kern$nParams))
-      } else {
-        I1 <- 1:d1
-      }
-    }
+    I1 <- .selprojDataMaskCompare(kern$expmask, x[,seq(kern$masklen)])
 
-    g <- func(kern$comp[[1]], x[I1,-1], covGrad[I1,I1])
+    if (!any(I1))
+      return (array(0, dim=kern$nParams))
+
+    g <- func(kern$comp[[1]], x[I1,-seq(kern$masklen)], covGrad[I1,I1])
   } else {
     d1 <- dim(as.array(x))[1]
     d2 <- dim(as.array(x2))[1]
 
-    if (dim(as.array(x))[2] > 1 && dim(as.array(x2))[2] > 1) {
-      if (kern$expmask > 0) {
-        I1 <- (x[,1] == kern$expmask)
-        I2 <- (x2[,1] == kern$expmask)
+    stopifnot(dim(as.array(x))[2] > 1 && dim(as.array(x2))[2] > 1)
+    I1 <- .selprojDataMaskCompare(kern$expmask, x[,seq(kern$masklen)])
+    I2 <- .selprojDataMaskCompare(kern$expmask, x2[,seq(kern$masklen)])
 
-        if (!any(I1) || !any(I2))
-          return (rep(0, kern$nParams))
-      } else {
-        I1 <- 1:d1
-        I2 <- 1:d2
-      }
-    }
-    
-    g <- func(kern$comp[[1]], x[I1,-1], x2[I2,-1], covGrad[I1,I2])
+    if (!any(I1) || !any(I2))
+      return (array(0, dim=kern$nParams))
+
+    g <- func(kern$comp[[1]], x[I1,-seq(kern$masklen)], x2[I2,-seq(kern$masklen)], covGrad[I1,I2])
   }
 
   return (g)
@@ -212,56 +202,40 @@ selprojKernGradient <- function (kern, x, x2, covGrad) {
 selprojXselprojKernGradient <- function (kern1, kern2, x, x2, covGrad) {
   funcName <- paste(kern1$comp[[1]]$type, "X", kern2$comp[[1]]$type, "KernGradient", sep="")
   func <- get(funcName, mode="function")
+  mask <- selprojKernMaskCombine(kern1$expmask, kern2$expmask)
 
   if ( nargs()<5 ) {
     covGrad <- x2
 
     d1 <- dim(as.array(x))[1]
 
-    if (dim(as.array(x))[2] > 1 &&
-        (kern1$expmask <= 0 || kern2$expmask <= 0 ||
-         kern1$expmask == kern2$expmask)) {
-      expmask <- max(kern1$expmask, kern2$expmask)
+    if (dim(as.array(x))[2] > 1 && !any(is.na(mask))) {
+      I1 <- .selprojDataMaskCompare(mask, x[,seq(kern1$masklen)])
 
-      if (expmask > 0) {
-        I1 <- (x[,1] == expmask)
+      if (!any(I1))
+        return (list(g1=array(0, dim=kern1$nParams), g2=array(0, dim=kern2$nParams)))
 
-        return (list(g1=rep(0, kern1$nParams), g2=rep(0, kern2$nParams)))
-      } else {
-        I1 <- 1:d1
-      }
-
-      g <- func(kern1$comp[[1]], kern2$comp[[1]], x[I1,-1], covGrad[I1,I1])
+      return (func(kern1$comp[[1]], kern2$comp[[1]], x[I1,-seq(kern$masklen)], covGrad[I1,I1]))
     } else {
-      g <- list(g1=rep(0, kern1$nParams), g2=rep(0, kern2$nParams))
+      return (list(g1=array(0, dim=kern1$nParams), g2=array(0, dim=kern2$nParams)))
     }
   } else {
     d1 <- dim(as.array(x))[1]
     d2 <- dim(as.array(x2))[1]
 
     if (dim(as.array(x))[2] > 1 && dim(as.array(x2))[2] > 1 &&
-        (kern1$expmask <= 0 || kern2$expmask <= 0 ||
-         kern1$expmask == kern2$expmask)) {
-      expmask <- max(kern1$expmask, kern2$expmask)
+        !any(is.na(mask))) {
+      I1 <- .selprojDataMaskCompare(mask, x[,seq(kern1$masklen)])
+      I2 <- .selprojDataMaskCompare(mask, x2[,seq(kern1$masklen)])
 
-      if (expmask > 0) {
-        I1 <- (x[,1] == expmask)
-        I2 <- (x2[,1] == expmask)
+      if (!any(I1) || !any(I2))
+        return (list(g1=array(0, dim=kern1$nParams), g2=array(0, dim=kern2$nParams)))
 
-        if (!any(I1) || !any(I2))
-          return (list(g1=rep(0, kern1$nParams), g2=rep(0, kern2$nParams)))
-      } else {
-        I1 <- 1:d1
-        I2 <- 1:d2
-      }
-
-      g <- func(kern1$comp[[1]], kern2$comp[[1]], x[I1,-1], x2[I2,-1], covGrad[I1,I2])
+      return (func(kern1$comp[[1]], kern2$comp[[1]], x[I1,-seq(kern$masklen)], x2[I2,-seq(kern$masklen)], covGrad[I1,I2]))
     } else {
-      g <- list(g1=rep(0, kern1$nParams), g2=rep(0, kern2$nParams))
+      return (list(g1=array(0, dim=kern1$nParams), g2=array(0, dim=kern2$nParams)))
     }
   }
-
-  return (g)
 }
 
 
