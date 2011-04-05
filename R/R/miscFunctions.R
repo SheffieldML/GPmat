@@ -438,6 +438,27 @@ modelLogLikelihood <- function (model) {
 }
 
 
+.gpsimExpandMaskSpec <- function(exps) {
+  if (!is.array(exps))
+    exps <- t(t(as.array(exps)))
+  explen <- dim(exps)[1]
+  masklen <- dim(exps)[2]
+
+  J <- sort(unique(exps[,1]))
+  mymask <- array(as.integer(rep(0, masklen)), dim=c(1, masklen))
+  for (j in setdiff(J, 0)) {
+    I <- (exps[,1] == j)
+    if (masklen > 1)
+      mymask <- rbind(mymask, cbind(j, .gpsimExpandMaskSpec(exps[I,-1]),
+                                    deparse.level=0),
+                      deparse.level=0)
+    else
+      mymask <- rbind(mymask, j, deparse.level=0)
+  }
+  return (as.array(mymask))
+}
+
+
 .gpsimKernelHierSpec <- function(comps, options, exps){
   #comps is the (multi) structure of the overall covariance
   #exps is the data.frame-like structuer specifying the hierarchy. 
@@ -493,14 +514,14 @@ modelLogLikelihood <- function (model) {
 }
   
 
-
-
 .gpsimKernelSpec <- function(comps, options, exps=NULL) {
   kernType <- list(type="multi", comp=list())
-
   if (!is.null(exps)) {
+    exps <- .gpsimExpandMaskSpec(exps)
+    explen <- dim(exps)[1]
+
     hierkern <- list(type="cmpnd", comp=list())
-    for (k in seq(1, length(exps)+1)) {
+    for (k in seq(explen)) {
       hierkern$comp[[k]] <- list(type="multi", comp=list())
     }
   }
@@ -512,10 +533,10 @@ modelLogLikelihood <- function (model) {
       hierkern$comp[[1]]$comp[[i]] <-
         list(type="selproj",
              comp=kernType$comp[i],
-             options=list(expmask=0))
-      for (k in seq_along(exps)) {
-        hierkern$comp[[k+1]]$comp[[i]] <- hierkern$comp[[1]]$comp[[i]]
-        hierkern$comp[[k+1]]$comp[[i]]$options$expmask <- exps[k]
+             options=list(expmask=exps[1,]))
+      for (k in seq(2, explen)) {
+        hierkern$comp[[k]]$comp[[i]] <- hierkern$comp[[1]]$comp[[i]]
+        hierkern$comp[[k]]$comp[[i]]$options$expmask <- exps[k,]
         #if (i==1)
         #  hierkern$comp[[k+1]]$comp[[i]]$options$priors <- list(list(type="invgamma", params=c(0.5, 0.5), index=2))
       }
@@ -530,15 +551,22 @@ modelLogLikelihood <- function (model) {
 }
 
 
-gpsimExperimentMask <- function(Ngenes, experiments) {
-  mask <- diag(1, nrow=Ngenes*length(experiments))
+.rbfKernelSpec <- function(options, exps) {
+  exps <- .gpsimExpandMaskSpec(exps)
+  explen <- dim(exps)[1]
 
-  expids <- unique(experiments)
-  for (i in seq(along=expids)) {
-    mask[experiments==expids[i],experiments==expids[i]] <- 1
+  hierkern <- list(type="cmpnd", comp=list())
+
+  hierkern$comp[[1]] <-
+    list(type="selproj",
+         comp=list(list(type="parametric", realType="rbf", options=options)),
+         options=list(expmask=exps[1,]))
+  for (k in seq(2, explen)) {
+    hierkern$comp[[k]] <- hierkern$comp[[1]]
+    hierkern$comp[[k]]$options$expmask <- exps[k,]
   }
 
-  return(mask)
+  return (hierkern);
 }
 
 

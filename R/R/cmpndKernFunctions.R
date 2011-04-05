@@ -186,7 +186,7 @@ cmpndKernGradient <- function (kern, x, x2, covGrad) {
     startVal <- endVal + 1       
   }
 
-  g <- g %*% kern$paramGroups    
+  g <- (g %*% kern$paramGroups)[1,]
 
   return (g)
 }
