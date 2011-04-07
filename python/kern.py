@@ -2128,18 +2128,18 @@ class sim(kern):
 		sigma = np.sqrt(2/self.inverseWidth)
 
 		if (self.isStationary):
-			h = simComputeHStat(t, t2, self.decay, self.decay, self.delay, self.delay, sigma)[0]
+			h = simComputeHStat(t, t2, self.decay, self.decay, self.delay, self.delay, sigma)
 		else:
-			h = simComputeH(t, t2, self.decay, self.decay, self.delay, self.delay, sigma)[0]
+			h = simComputeH(t, t2, self.decay, self.decay, self.delay, self.delay, sigma)
 		if symmetry:
 			sk = 0.5 * (h + h.T)
 		else:
 			if (self.isStationary == False):
-				h2,tmp1,tmp2,tmp3 = simComputeH(t2, t, self.decay, self.decay, self.delay, self.delay, sigma)
+				h2 = simComputeH(t2, t, self.decay, self.decay, self.delay, self.delay, sigma)
 			else:
+				raise NotImplementedError
 				h2,tmp1,tmp2,tmp3 = simComputeHStat(t2, t, self.decay, self.decay, self.delay, self.delay, sigma)
 			sk = 0.5 * (h + h2.T)
-
 		#if isfield(kern, 'isNormalised') && (kern.isNormalised == true)
 		if self.isNormalised:
 			k = sk
@@ -2180,9 +2180,10 @@ class sim(kern):
 			sigma = np.sqrt(2./self.inverseWidth)
 
 			if not self.isStationary:
-				h1,tmp1,tmp2,tmp3 = simComputeH(t1, t2, self.decay, other.decay, self.delay, other.delay, sigma)
-			        h2,tmp1,tmp2,tmp3 = simComputeH(t2, t1, other.decay, self.decay, other.delay, self.delay, sigma);
+				h1 = simComputeH(t1, t2, self.decay, other.decay, self.delay, other.delay, sigma)
+			        h2 = simComputeH(t2, t1, other.decay, self.decay, other.delay, self.delay, sigma);
 			else:
+				raise NotImplementedError
 				h1,tmp1,tmp2,tmp3 = simComputeHStat(t1, t2, self.decay, other.decay, self.delay, other.delay, sigma);
 			        h2,tmp1,tmp2,tmp3 = simComputeHStat(t2, t1, other.decay, self.decay, other.delay, self.delay, sigma);
 
