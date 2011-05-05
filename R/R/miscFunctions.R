@@ -190,15 +190,13 @@ modelTieParam <- function (model, paramsList) {
 
   ow <- options("warn")
   options(warn=2)
-  invCh <- try (solve( Ch, eyeM ), silent=TRUE)
+  invM <- try (chol2inv(Ch), silent=TRUE)
   options(ow)
 
-  if ( class(invCh) == "try-error" ) {
+  if ( class(invM) == "try-error" ) {
     return (NaN)
   }
   else {
-    invM <- invCh %*% t(invCh)
-
     if ( jitter == 0 ) {
       ans <- list(invM=invM, jitter=jitter, chol=Ch)
     }
@@ -211,16 +209,16 @@ modelTieParam <- function (model, paramsList) {
 
 
 .dist2 <- function (x, x2) {
-  xdim <- dim(as.matrix(x))
-  x2dim <- dim(as.matrix(x2))
-
-  xMat <- array(apply(as.matrix(x*x),1,sum), c(xdim[1], x2dim[1]))
-  x2Mat <- t(array(apply(as.matrix(x2*x2),1,sum), c(x2dim[1], xdim[1])))
+  x <- as.matrix(x)
+  x2 <- as.matrix(x2)
+  xdim <- dim(x)
+  x2dim <- dim(x2)
 
   if ( xdim[2] != x2dim[2] )
     stop("Data dimensions are not matched.")
 
-  n2 <-   xMat+x2Mat-2*tcrossprod(x, x2)
+  n2 <- tcrossprod(rowSums(x^2), rep(1, x2dim[1])) +
+    tcrossprod(rep(1, xdim[1]), rowSums(x2^2)) -2*tcrossprod(x, x2)
 
   return (n2)
 }

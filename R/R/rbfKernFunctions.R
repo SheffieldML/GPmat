@@ -84,16 +84,18 @@ rbfKernCompute <- function (kern, x, x2=NULL) {
 
 rbfKernGradient <- function (kern, x, x2, covGrad) {
   if ( nargs()==3 ) {
-    k <- rbfKernCompute(kern, x)
     dist2xx <- .dist2(x, x)
     covGrad <- x2
   } else if ( nargs()==4 ) {
-    k <- rbfKernCompute(kern, x, x2)
     dist2xx <- .dist2(x, x2)
   }
+  wi2 <- 0.5*kern$inverseWidth
+  k <- kern$variance*exp(-dist2xx*wi2)
+  g <- array(0, 2)
 
-  g <- array()
   if ("isNormalised" %in% names(kern) && kern$isNormalised) {
+    k <- k * sqrt(kern$inverseWidth/(2*pi))
+
     g[1] <- -0.5*sum(covGrad*k*dist2xx) +
       0.5 * sum(covGrad*k)/kern$inverseWidth
   }
