@@ -38,8 +38,14 @@ hrbfCreate <- function(Ngenes, times, y, yvar, options, genes = NULL, annotation
   else
     isNegativeS <- FALSE
 
-  myopts <- list(isNormalised=TRUE, inverseWidthBounds=invWidthBounds,
-                 isNegativeS=isNegativeS)
+  if ("prior" %in% names(options) && options$prior == "halfcauchy")
+    myopts <- list(isNormalised=TRUE, inverseWidthBounds=invWidthBounds,
+                   isNegativeS=isNegativeS,
+                   priors=list(list(type='halfcauchy', params=10, index=2)))
+  else
+    myopts <- list(isNormalised=TRUE, inverseWidthBounds=invWidthBounds,
+                   isNegativeS=isNegativeS,
+                   priors=list(list(type='lognormal', params=c(0, 25), index=2)))
 
   if ("debug" %in% names(options))
     model$debug <- options$debug
@@ -47,6 +53,10 @@ hrbfCreate <- function(Ngenes, times, y, yvar, options, genes = NULL, annotation
   timesCell <- times
 
   kernType1 <- .rbfKernelSpec(myopts, exps=model$experimentStructure)
+  kernType1$comp[[1]]$comp[[1]]$options$priors[[2]] <-
+    list(type='lognormal', params=c(-2, 4), index=1)
+  ##kernType1$comp[[1]]$comp[[1]]$options$priors[[2]] <-
+  ##  list(type='invgamma', params=c(3, 12), index=1)
 
   tieParam <- list(tieWidth="inverseWidth")
 
@@ -58,7 +68,9 @@ hrbfCreate <- function(Ngenes, times, y, yvar, options, genes = NULL, annotation
   }
 
   if (model$includeNoise) {
-    kernType2 <- list(type="selproj", comp=list(list(type="white")),
+    kernType2 <- list(type="selproj", comp=list(list(type="parametric",
+                                        realType="white",
+                                        options=list(priors=list(list(type='halfcauchy', params=0.5))))),
                       options=list(expmask=rep(0, model$masklen)))
 
     model$kern <- kernCreate(model$masklen+1,

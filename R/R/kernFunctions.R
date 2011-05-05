@@ -1,6 +1,6 @@
 kernCreate <- function(x, kernType, kernOptions=NULL) {
   if ( is.list(x) ) {
-    dim <- array()
+    dim <- array(0, length(x))
     for ( i in 1:length(x) ) {
       dim[i] <- dim(as.matrix(x[[i]]))[2]
       if ( (dim[i] == 1) & (dim(as.matrix(x[[i]]))[1] == 1) )
@@ -215,7 +215,7 @@ kernGradient <- function (kern, x, ...) {
 
 kernPriorLogProb <- function (kern) {
   L <- 0
-  if (kern$type %in% c('cmpnd', 'multi', 'tensor')) {
+  if (kern$type %in% c('cmpnd', 'multi', 'tensor', 'selproj')) {
     for (i in seq_along(kern$comp)) {
       L <- L + kernPriorLogProb(kern$comp[[i]])
     }
@@ -236,7 +236,7 @@ kernPriorLogProb <- function (kern) {
 kernPriorGradient <- function (kern) {
   g <- array(0, kern$nParams)
 
-  if (kern$type %in% c('cmpnd', 'multi', 'tensor')) {
+  if (kern$type %in% c('cmpnd', 'multi', 'tensor', 'selproj')) {
     startVal <- 1
     endVal <- 0
     for (i in seq_along(kern$comp)) {
@@ -352,7 +352,7 @@ multiKernParamInit <- function (kern) {
     kern$nParams <- kern$nParams + kern$comp[[i]]$nParams
     kern$comp[[i]]$index <- array()
 
-    kern$block[[i]] <- list(cross=array(), transpose=array())
+    kern$block[[i]] <- list(cross=array("", i-1), transpose=array(FALSE, i-1))
 
     for ( j in seq(length.out=i-1) ) {
       if ( .kernTestCombinationFunction(kern$comp[[i]], kern$comp[[j]]) ) {
@@ -615,8 +615,8 @@ multiKernGradient <- function (kern, x, x2, covGrad) {
 
     arg1 <- list()
     arg2 <- list()
-    dim1 <- array()
-    dim2 <- array()
+    dim1 <- array(0, kern$numBlocks)
+    dim2 <- array(0, kern$numBlocks)
     for ( i in seq(length=kern$numBlocks) ) {
       dim1[i] <- dim(as.array(x[[i]]))[1]
       arg1[[i]] <- x[[i]]
