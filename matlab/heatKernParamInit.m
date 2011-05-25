@@ -77,11 +77,30 @@ else
     kern.includeIC = false;
 end
 
+if isfield(kern, 'options') && isfield(kern.options, 'includeIndSens') ...
+        && kern.options.includeIndSens    
+    kern.includeIndSens = true;
+    kern.sensitivitySpace = 1;
+    if kern.includeIC
+        kern.nParams = 8;
+    else
+        kern.nParams = 6; % The last two are sensitivities for [time space]        
+    end
+else
+    kern.includeIndSens = false;
+end
+
+
 if isfield(kern, 'options') ...
         && isfield(kern.options, 'isStationary') ...
         && kern.options.isStationary,
    kern.isStationary = true;
 else
    kern.isStationary = false;
+end
+
+if isfield(kern, 'options') ...
+        && isfield(kern.options, 'pde')
+   kern.pde = kern.options.pde;
 end
 

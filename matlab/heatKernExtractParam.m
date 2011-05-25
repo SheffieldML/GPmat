@@ -27,6 +27,7 @@ function [params, names] = heatKernExtractParam(kern)
 %
 % KERN
 
+
 if kern.includeIC
     params = [kern.decay kern.diffusion kern.inverseWidthTime kern.inverseWidthSpace kern.sensitivity ...
         kern.inverseWidthSpaceIC kern.sensitivityIC];
@@ -38,5 +39,13 @@ else
     params = [kern.decay kern.diffusion kern.inverseWidthTime kern.inverseWidthSpace kern.sensitivity];
     if nargout > 1
         names = {'decay', 'diffusion rate', 'inverse width time', 'inverse width space.', 'sensitivity'};
+    end
+end
+
+if kern.includeIndSens
+    params = [params kern.sensitivitySpace];
+    if nargout > 1
+        names{5} = 'sensitivity time';
+        names{end+1} = 'sensitivity space';        
     end
 end

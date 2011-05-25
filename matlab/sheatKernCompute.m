@@ -1,4 +1,4 @@
-function [K, const] = sheatKernCompute(sigmax, lengthX, s1, s2, w, gamma, pwz1, pwz2, n, m)
+function [K, const] = sheatKernCompute(sigmax, lengthX, s1, s2, w, gamma, pwz1, pwz2, n, m, kern)
 
 % SHEATKERNCOMPUTE Compute a cross kernel between two SHEAT kernels.
 % FORMAT
@@ -22,24 +22,49 @@ function [K, const] = sheatKernCompute(sigmax, lengthX, s1, s2, w, gamma, pwz1, 
 
 % KERN
 
-sinS1 = sin(w(n)*s1);
-sinS2 = sin(w(m)*s2);
+isNumeric = true;
 
-if n == m
-    Wox = pwz1(n) - exp(-(lengthX/sigmax)^2)*exp(-gamma(n)*lengthX)*pwz2(n);
-    const = (sigmax*sqrt(pi)*lengthX/2)*(real(Wox) ...
-        - imag(Wox)*((sigmax^2*n*pi)/(2*lengthX^2) + (1/(n*pi)))) ...
-        +(sigmax^2/2)*(exp(-(lengthX/sigmax)^2)*cos(n*pi) - 1);
-else
-    if mod(n+m,2)==1
-         const = 0;        
-    else        
-        Woxm = pwz1(m) - exp(-(lengthX/sigmax)^2)*exp(-gamma(m)*lengthX)*pwz2(m);
-        Woxn = pwz1(n) - exp(-(lengthX/sigmax)^2)*exp(-gamma(n)*lengthX)*pwz2(n);        
-        const = ((sigmax*lengthX)/(sqrt(pi)*(m^2-n^2)))*(n*imag(Woxm) - m*imag(Woxn));       
-    end
+if nargin < 11
+    kern.pde = 'sin';
 end
 
-constSinS1 = const*sinS1;
-K = constSinS1*sinS2';
-
+if strcmp(kern.pde, 'cos')
+    cosS1 = cos(w(n+1)*s1);
+    cosS2 = cos(w(m+1)*s2);
+    if isNumeric
+        tol = 1e-6;
+        wn = (2*n+1)*pi/(2*lengthX);
+        wm = (2*m+1)*pi/(2*lengthX);
+        z=@(x,y)cos(wn*x).*cos(wm*y).*exp(-((x-y).*(x-y))/(sigmax^2));
+        const = dblquad(z, 0, lengthX, 0, lengthX, tol);
+    end
+    constCosS1 = const*cosS1;
+    K = constCosS1*cosS2';    
+else
+    sinS1 = sin(w(n)*s1);
+    sinS2 = sin(w(m)*s2);
+    if isNumeric
+        tol = 1e-6;
+        wn = n*pi/lengthX;
+        wm = m*pi/lengthX;
+        z=@(x,y)sin(wn*x).*sin(wm*y).*exp(-((x-y).*(x-y))/(sigmax^2));
+        const = dblquad(z, 0, lengthX, 0, lengthX, tol);
+    else
+        if n == m
+            Wox = pwz1(n) - exp(-(lengthX/sigmax)^2)*exp(-gamma(n)*lengthX)*pwz2(n);
+            const = (sigmax*sqrt(pi)*lengthX/2)*(real(Wox) ...
+                - imag(Wox)*((sigmax^2*n*pi)/(2*lengthX^2) + (1/(n*pi)))) ...
+                +(sigmax^2/2)*(exp(-(lengthX/sigmax)^2)*cos(n*pi) - 1);
+        else
+            if mod(n+m,2)==1
+                const = 0;
+            else
+                Woxm = pwz1(m) - exp(-(lengthX/sigmax)^2)*exp(-gamma(m)*lengthX)*pwz2(m);
+                Woxn = pwz1(n) - exp(-(lengthX/sigmax)^2)*exp(-gamma(n)*lengthX)*pwz2(n);
+                const = ((sigmax*lengthX)/(sqrt(pi)*(m^2-n^2)))*(n*imag(Woxm) - m*imag(Woxn));
+            end
+        end
+    end    
+    constSinS1 = const*sinS1;
+    K = constSinS1*sinS2';    
+end

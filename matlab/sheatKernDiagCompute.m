@@ -42,4 +42,3 @@ end
 
 constSinS1 = const*sinS1;
 k = constSinS1.*sinS2;
-

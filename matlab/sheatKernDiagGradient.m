@@ -64,4 +64,3 @@ else
 end
 
 g = dC*sum((sinS1.*sinS2).*covDiag);
-
