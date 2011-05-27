@@ -29,10 +29,10 @@ if kern.includeIC
    kern.sensitivityIC = params(7);
 end
 
-if kern.includeIndSens
-    if kern.includeIC
-        kern.sensitivitySpace = params(8);
-    else
-        kern.sensitivitySpace = params(6);
-    end
-end
+% if kern.includeIndSens
+%     if kern.includeIC
+%         kern.sensitivitySpace = params(8);
+%     else
+%         kern.sensitivitySpace = params(6);
+%     end
+% end

@@ -115,26 +115,22 @@ if strcmp(heatKern1.pde, 'cos')
     cK = 4/(lengthX^2);
     if isPointwise
         for i=0:nterms-1
-            for j=0:nterms-1
-                %if (i == j) || (mod(i+j,2)==0)
+            for j=0:nterms-1                
                 heatKern1.sim.decay = beta1(i+1);
                 heatKern2.sim.decay = beta2(j+1);
                 Kt = simXsimKernCompute(heatKern1.sim, heatKern2.sim, t1, t2);
-                Ks = sheatKernCompute(sigmax, lengthX, s1, s2, w, gamma, wz1, wz2, i, j, heatKern1);
-                K = K + Kt.*Ks;
-                %end
+                Ks = sheatKernCompute(sigmax, lengthX, s1, s2, w, gamma, wz1, wz2, i, j, heatKern1.pde);
+                K = K + Kt.*Ks;                
             end
         end
     else
         for i=0:nterms-1
-            for j=0:nterms-1
-                %if (i == j) || (mod(i+j,2)==0)
+            for j=0:nterms-1                
                 heatKern1.sim.decay = beta1(i+1);
                 heatKern2.sim.decay = beta2(j+1);
                 Kt = simXsimKernCompute(heatKern1.sim, heatKern2.sim, t1, t2);
-                Ks = sheatKernCompute(sigmax, lengthX, s1, s2, w, gamma, wz1, wz2, i, j, heatKern1);
-                K = K + kron(Kt,Ks);
-                %end
+                Ks = sheatKernCompute(sigmax, lengthX, s1, s2, w, gamma, wz1, wz2, i, j, heatKern1.pde);
+                K = K + kron(Kt,Ks);                
             end
         end
     end

@@ -1,4 +1,4 @@
-function [K, const] = sheatKernCompute(sigmax, lengthX, s1, s2, w, gamma, pwz1, pwz2, n, m, kern)
+function [K, const] = sheatKernCompute(sigmax, lengthX, s1, s2, w, gamma, pwz1, pwz2, n, m, bctype, isNumeric)
 
 % SHEATKERNCOMPUTE Compute a cross kernel between two SHEAT kernels.
 % FORMAT
@@ -14,6 +14,9 @@ function [K, const] = sheatKernCompute(sigmax, lengthX, s1, s2, w, gamma, pwz1, 
 % ARG pwz2 : precomputed constant.
 % ARG n : integer indicating first series term
 % ARG m : integer indicating second series term
+% ARG bctype : type of boundary conditions
+% ARG isNumeric : specifies if the solution is obtained numerically or
+% analytically
 % RETURN K : block of values from kernel matrix.
 %
 % SEEALSO : multiKernParamInit, multiKernCompute, heatKernParamInit
@@ -22,21 +25,37 @@ function [K, const] = sheatKernCompute(sigmax, lengthX, s1, s2, w, gamma, pwz1, 
 
 % KERN
 
-isNumeric = true;
-
-if nargin < 11
-    kern.pde = 'sin';
+if nargin < 12
+    isNumeric = false;
+    if nargin < 11
+        bctype = 'sin';
+    end
 end
-
-if strcmp(kern.pde, 'cos')
+if strcmp(bctype, 'cos')
     cosS1 = cos(w(n+1)*s1);
     cosS2 = cos(w(m+1)*s2);
     if isNumeric
-        tol = 1e-6;
+        tol = 1e-9;
         wn = (2*n+1)*pi/(2*lengthX);
         wm = (2*m+1)*pi/(2*lengthX);
         z=@(x,y)cos(wn*x).*cos(wm*y).*exp(-((x-y).*(x-y))/(sigmax^2));
         const = dblquad(z, 0, lengthX, 0, lengthX, tol);
+    else
+        Wox = pwz1(n+1) - exp(-(lengthX/sigmax)^2)*exp(-gamma(n+1)*lengthX)*pwz2(n+1);
+        if n == m            
+            const = (sigmax*sqrt(pi)*lengthX/2)*(real(Wox) ...
+                - imag(Wox)*((sigmax^2*(2*n+1)*pi)/(4*lengthX^2))) ...
+                +(sigmax^2/2)*(exp(-(lengthX/sigmax)^2)*cos((2*n+1)*pi/2) - 1);
+        else
+            Woxm = pwz1(m+1) - exp(-(lengthX/sigmax)^2)*exp(-gamma(m+1)*lengthX)*pwz2(m+1); 
+            Woxn = Wox;
+            if mod(n+m,2)==0               
+                const = (1/(m-n))*(imag(Woxm) - imag(Woxn));                
+            else
+                const = (1/(m+n+1))*(imag(Woxm) + imag(Woxn));
+            end
+            const = (sigmax*lengthX)/(2*sqrt(pi))*const;
+        end        
     end
     constCosS1 = const*cosS1;
     K = constCosS1*cosS2';    

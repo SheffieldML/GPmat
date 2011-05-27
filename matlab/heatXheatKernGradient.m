@@ -119,12 +119,11 @@ if strcmp(heatKern1.pde, 'cos')
     g2 = zeros(1,5);
     if isPointwise
         for i=0:nterms-1
-            for j=0:nterms-1
-                %if (i == j) || (mod(i+j,2)==0)
+            for j=0:nterms-1                
                 heatKern1.sim.decay = beta1(i+1);
                 heatKern2.sim.decay = beta2(j+1);
                 Kt = simXsimKernCompute(heatKern1.sim, heatKern2.sim, t1, t2);
-                Ks = sheatKernCompute(sigmax, lengthX, s1, s2, w, gamma, wz1, wz2, i, j, heatheatKern1);
+                Ks = sheatKernCompute(sigmax, lengthX, s1, s2, w, gamma, wz1, wz2, i, j, heatKern1.pde);
                 covGradt = covGrad.*Ks;
                 covGrads = covGrad.*Kt;
                 [g1A, g2A] = simXsimKernGradient(heatKern1.sim, heatKern2.sim, t1, t2, covGradt);
@@ -133,23 +132,21 @@ if strcmp(heatKern1.pde, 'cos')
                 g1(3) = g1(3) + g1A(2);          % Inverse width for time
                 g2(1) = g2(1) + g2A(1);          % Decay for second kernel
                 g2(2) = g2(2) + (w(j+1)^2)*g2A(1); % Diffusion rate for the second kernel
-                g1B = sheatKernGradient(sigmax, lengthX, s1, s2, w, gamma, wz1, wz2, i, j, covGrads, heatKern1);
+                g1B = sheatKernGradient(sigmax, lengthX, s1, s2, w, gamma, wz1, wz2, i, j, covGrads, heatKern1.pde);
                 g1B = -(1/sqrt(2*heatKern1.inverseWidthSpace^3))*g1B; % Transforms to the derivative of the inverse width
                 g1(4) = g1(4) + g1B;
-                sK = sK + Kt.*Ks;
-                %end
+                sK = sK + Kt.*Ks;               
             end
         end
     else
         covGradt = zeros(length(t1), length(t2));
         covGrads = zeros(length(s1), length(s2));
         for i=0:nterms-1
-            for j=0:nterms-1
-                %if (i == j) || (mod(i+j,2)==0)
+            for j=0:nterms-1               
                 heatKern1.sim.decay = beta1(i+1);
                 heatKern2.sim.decay = beta2(j+1);
                 Kt = simXsimKernCompute(heatKern1.sim, heatKern2.sim, t1, t2);
-                Ks = sheatKernCompute(sigmax, lengthX, s1, s2, w, gamma, wz1, wz2, i, j, heatKern1);
+                Ks = sheatKernCompute(sigmax, lengthX, s1, s2, w, gamma, wz1, wz2, i, j, heatKern1.pde);
                 % These loops might slow everything
                 startOne = 1;
                 endOne = 0;
@@ -177,11 +174,10 @@ if strcmp(heatKern1.pde, 'cos')
                 g1(3) = g1(3) + g1A(2);          % Inverse width for time
                 g2(1) = g2(1) + g2A(1);          % Decay for second kernel
                 g2(2) = g2(2) + (w(j+1)^2)*g2A(1); % Diffusion rate for the second kernel
-                g1B = sheatKernGradient(sigmax, lengthX, s1, s2, w, gamma, wz1, wz2, i, j, covGrads, heatKern1);
+                g1B = sheatKernGradient(sigmax, lengthX, s1, s2, w, gamma, wz1, wz2, i, j, covGrads, heatKern1.pde);
                 g1B = -(1/sqrt(2*heatKern1.inverseWidthSpace^3))*g1B; % Transforms to the derivative of the inverse width
                 g1(4) = g1(4) + g1B;
-                sK = sK + kron(Kt, Ks);
-                %end
+                sK = sK + kron(Kt, Ks);                
             end
         end
     end

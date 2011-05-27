@@ -42,10 +42,10 @@ else
     end
 end
 
-if kern.includeIndSens
-    params = [params kern.sensitivitySpace];
-    if nargout > 1
-        names{5} = 'sensitivity time';
-        names{end+1} = 'sensitivity space';        
-    end
-end
+% if kern.includeIndSens
+%     params = [params kern.sensitivitySpace];
+%     if nargout > 1
+%         names{5} = 'sensitivity time';
+%         names{end+1} = 'sensitivity space';        
+%     end
+% end
