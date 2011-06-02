@@ -10,7 +10,7 @@
 \usepackage{graphicx}
 \usepackage[round]{natbib}
 
-\input{../definitions}
+\input{../definitions.tex}
 
 \begin{document}
 
@@ -196,10 +196,10 @@ of convolutions of our original basis. For some choices for
 $\basisFunc_k(t)$ the integral in \refeq{eq:basisFunctionSolution}
 will be tractable. In particular if we use the Gaussian form shown in
 \refeq{eq:eqBasis} we can show that,
- \begin{array*}
+ \begin{align*}
  e^{-\decayRate_{j}t}\int_0^t e^{\decayRate_{j}u} \basisFunc_k(u) \mathrm{d}u =& e^{-\decayRate_j(t-\tau_k)}e^{\frac{\decayRate_j^2\lengthScale{}_k^2}{4}}
 \frac{1}{2}\bigg[\erf\left(\frac{t-\left(\tau_k+\frac{\decayRate_j\lengthScale{}_k^2}{2}\right)}{\lengthScale_k}\right)\\&-\erf\left(-\frac{\tau_k+\frac{\decayRate_j\lengthScale{}_k^2}{2}}{\lengthScale_k}\right)\bigg]
-\end{array*}
+\end{align*}
 where $\erf(\cdot)$ is the error function defined as
 \[
 \erf(x) = \int_{0}^x \frac{2}{\sqrt{\pi}}\exp\left(-z^2\right) \mathrm{d}z.
@@ -479,9 +479,9 @@ Performing the integration leads to
 \frac{\alpha}{\sqrt{2\pi\lengthScale{}^2}} \exp\left(
   -\frac{\left(t-t^\prime\right)^2}{2\lengthScale{}^2}\right)
 \frac{1}{2}\bigg[\mathrm{erf}\left(\sqrt{\frac{2}{\lengthScale^2}}\left(b
-      \\ & - \frac{t + t^\prime}{2}\right) \right) -
+      - \frac{t + t^\prime}{2}\right) \right) \\ & -
   \mathrm{erf}\left(\sqrt{\frac{2}{\lengthScale^2}}\left(a - \frac{t +
-        t^\prime}{2}\right) \right)\right],
+        t^\prime}{2}\right) \right)\bigg],
 \end{align*}
 Finally, if we take the limit as $a\rightarrow -\infty$ and
 $b\rightarrow \infty$ (i.e. we have infinite basis functions
@@ -821,7 +821,6 @@ data~\citep{Tomancak:systematic02}.
 
 \begin{figure*}[tb]
   \centering
-  %\includegraphics[trim=0mm 18mm 0mm 0mm]{../disim_pnas/dros_global_evaluation}
   \includegraphics[width=12cm]{../disim_pnas/fig3}
   \caption{Evaluation results of different rankings
     \citep[from][]{Honkela:modelbased10} as
