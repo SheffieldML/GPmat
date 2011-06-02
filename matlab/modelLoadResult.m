@@ -24,7 +24,7 @@ function model = modelLoadResult(type, dataSet, number)
   if exist(fhandle)==2
     % There is load result code, use it.
     fhandle = str2func(fhandle);
-    model = fhandle(dataSet, number);
+    model = fhandle(origDataSet, number);
   else
     fhandle = [origType 'Reconstruct'];
     if exist(fhandle)==2

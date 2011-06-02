@@ -13,7 +13,7 @@ function fileName = modelWriteResult(model, dataset, number)
 % COPYRIGHT : Neil D. Lawrence, 2009
 
 % MLTOOLS
-
+  origDataset = dataset;
   dataset(1) = upper(dataset(1));
   type = model.type;
   type(1) = upper(type(1));
@@ -25,7 +25,7 @@ function fileName = modelWriteResult(model, dataset, number)
   if exist(fhandle)==2
     % There is write file code, use it.
     fhandle = str2func(fhandle);
-    fileName = fhandle(model, dataset, number);
+    fileName = fhandle(model, origDataset, number);
   else
     fhandle = [model.type 'Deconstruct'];
     if exist(fhandle)==2
