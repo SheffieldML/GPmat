@@ -36,11 +36,11 @@ indMissing = find(rand(N, d)>0.7);
 approxType = {'ftc', 'dtc', 'dtcvar', 'fitc', 'pitc'};
 approxType = {'ftc'}
 counter = 0;
-for back = false
+for back = true
 %for back = [false true]
-  for missing = [false true] 
+  for missing = [false] 
 %    for missing = false
-      for fixInducing = false
+      for fixInducing = true
 %      for fixInducing = [false true] 
       Y = Yorig;
       if missing
@@ -138,7 +138,9 @@ for back = false
             seqY = randn(Nseq, model.d);
             seqY(find(rand(Nseq, model.d)>0.7)) = NaN;
             fprintf('Checking Sequence gradients\n');
-            model = rmfield(model, 'alphas');
+            if isfield(model, 'alphas')
+              model = rmfield(model, 'alphas');
+            end
             gradientCheck(seqX(:)', 'fgplvmSequenceObjective', 'fgplvmSequenceGradient', ...
                           model, seqY, argin{:});
 %          else

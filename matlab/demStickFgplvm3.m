@@ -20,6 +20,7 @@ options.back = 'kbr';
 options.backOptions = kbrOptions(Y);
 options.backOptions.kern = kernCreate(Y, 'rbf');
 options.backOptions.kern.inverseWidth = 0.0001;
+options.optimiseInitBack = true;
 
 d = size(Y, 2);
 model = fgplvmCreate(latentDim, d, Y, options);
