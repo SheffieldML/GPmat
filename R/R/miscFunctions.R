@@ -194,7 +194,7 @@ modelTieParam <- function (model, paramsList) {
   options(ow)
 
   if ( class(invM) == "try-error" ) {
-    return (NaN)
+    return (list(invM=NaN))
   }
   else {
     if ( jitter == 0 ) {
