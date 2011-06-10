@@ -4,14 +4,14 @@
 
 % Show prediction for test data.
 yPred = modelOut(model, XTest);
-xyzankurAnimCompare(yPred, yTest);
+xyzankurAnimCompare(yPred, yTest, 96);
 
 yDiff = (yPred - yTest);
-rmsError = sqrt(sum(sum(yDiff.*yDiff))/prod(size(yDiff)));
+rmsError = sqrt(sum(sum(yDiff.*yDiff))/numel(yDiff));
 
 counter = 0;
 if printDiagram
-  ind = 1:27:size(yPred, 1)
+  ind = 1:27:size(yPred, 1);
   for i = ind
     counter = counter + 1;
     figure
