@@ -16,3 +16,7 @@ dir: .
 ~/mlprojects/datasets/matlab/uw-floor.txt
 ~/mlprojects/datasets/matlab/europeDistance.xls
 ~/mlprojects/datasets/matlab/Trace-3rdFloor-01.uwar.slam
+~/mlprojects/datasets/matlab/DellaGatta.mat
+~/mlprojects/datasets/matlab/DGdat_p63_case1_GL.txt
+~/mlprojects/datasets/matlab/DGdat_p63_case2_GL.txt
+~/mlprojects/datasets/matlab/DGdat_p63_case3_GL.txt
