@@ -13,11 +13,15 @@ Toolkit (gptk).
 RELEASEINFORMATION
 
 <h4>Version 1.0</h4>
-R implementation of the original Matlab GP toolkit, written by Neil D. Lawrence.
-Implemented in R by Alfredo A. Kalaitzis. Contributions by Pei Gao, Antti Honkela, Neil D. Lawrence.
+R implementation of the original Matlab GP toolkit written by Neil D. Lawrence.
+Implemented in R by Alfredo A. Kalaitzis. Contributions by Antti Honkela, Pei Gao, Neil D. Lawrence.
 
 <h4>Version 1.01</h4>
-Demos no more enforce creation of png and gif files.
+Demos no longer enforce creation of png and gif files.
+
+<h4>Version 1.02</h4>
+Removed peprecated source files.
+
 
 <h2>Examples</h2>
 

@@ -6,7 +6,7 @@
   updates the representations of A and D in the model when called by gpUpdateKernels.
 }
 \usage{
-model <- gpUpdateAD(model, X)
+gpUpdateAD(model, X)
 }
 \arguments{
   \item{model}{the model for which the representations are being updated.}

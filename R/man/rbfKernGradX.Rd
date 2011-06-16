@@ -7,7 +7,7 @@
   computes the gradident of the radial basis function kernel with respect to the input positions where both the row positions and column positions are provided separately.
 }
 \usage{
-g <- rbfKernGradX(kern, x1, x2)
+rbfKernGradX(kern, x1, x2)
 }
 \arguments{
   \item{kern}{kernel structure for which gradients are being computed.}

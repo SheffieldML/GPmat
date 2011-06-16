@@ -6,7 +6,7 @@
   initialises the radial basis function kernel structure with some default parameters.
 }
 \usage{
-kern <- rbfKernParamInit(kern)
+rbfKernParamInit(kern)
 }
 \arguments{
   \item{kern}{the kernel structure which requires initialisation.}

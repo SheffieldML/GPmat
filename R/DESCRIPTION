@@ -1,14 +1,14 @@
 Package: gptk
-Version: 1.1.1
+Version: 1.02
 Date: 2010-12-08
 Title: Gaussian Processes Tool-Kit
 Author@R: c(person("Alfredo", "Kalaitzis", "A", email = "alkalait@gmail.com"),
-	    person("Pei", "Gao", email = "pei.gao@manchester.ac.uk"),
 	    person("Antti", "Honkela", email = "antti.honkela@tkk.fi"),
+	    person("Pei", "Gao", email = "pg349@medschl.cam.ac.uk"),
 	    person("Neil", "Lawrence", "D", email = "N.Lawrence@dcs.shef.ac.uk"))
 Author: Alfredo A. Kalaitzis <alkalait@gmail.com>,
-	Pei Gao, <pei.gao@manchester.ac.uk>,
 	Antti Honkela <antti.honkela@tkk.fi>,
+	Pei Gao <pg349@medschl.cam.ac.uk>,
 	Neil D. Lawrence <N.Lawrence@dcs.shef.ac.uk>
 Maintainer: Alfredo A. Kalaitzis <alkalait@gmail.com>
 Depends: R (>= 2.8.0), fields
@@ -16,7 +16,7 @@ Imports:
 Suggests: spam
 Description: The gptk package implements a general-purpose toolkit for Gaussian
   process regression with an RBF covariance function. Based on a MATLAB implementation
-  written by Neil D. Lawrence. See inst/doc/index.html for more details.
+  by Neil D. Lawrence. See inst/doc/index.html for more details.
 License: AGPL-3
 URL:
-BugReports:
+BugReports: alkalait@gmail.com

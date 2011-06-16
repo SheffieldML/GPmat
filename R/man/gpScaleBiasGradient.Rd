@@ -6,7 +6,7 @@
   computes the gradient of the log likelihood with respect to the scales. In the future the gradients with respect to the biases may also be included.
 }
 \usage{
-  values <- gpScaleBiasGradient(model)
+  gpScaleBiasGradient(model)
 }
 \arguments{
   \item{model}{the model for which the gradients are to be computed.}

@@ -1,4 +1,4 @@
-gpTest <- function(q=2, d=3, N=10, Nseq=4, k=5) {
+gpTest <- function(q=2, d=3, N=10, k=5) {
   
   modelRet = list()
   kernType = list(type='cmpnd',comp=list('rbf', 'lin', 'rbfard', 'mlp', 'mlpard', 'white'))

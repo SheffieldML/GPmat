@@ -6,7 +6,7 @@
   takes the given vector of parameters and places them in the model structure, it then updates any stored representations that are dependent on those parameters, for example kernel matrices etc..
 }
 \usage{
-model <- gpExpandParam(model, params)
+gpExpandParam(model, params)
 }
 \arguments{
   \item{model}{the model structure for which parameters are to be updated.}

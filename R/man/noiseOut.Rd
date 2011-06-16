@@ -6,12 +6,12 @@
   computes the ouptut for the given noise given input mean and variances.
 }
 \usage{
-y <- noiseOut(noise, mu, varSigma)
+noiseOut(noise, mu, varsigma)
 }
 \arguments{
   \item{noise}{the noise structure for which the output is computed.}
   \item{mu}{the input mean values.}
-  \item{varSigma}{the input variance values.}
+  \item{varsigma}{the input variance values.}
 }
 \value{
   \item{y}{the output from the noise model.}

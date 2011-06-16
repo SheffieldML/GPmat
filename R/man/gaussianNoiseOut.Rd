@@ -6,7 +6,7 @@
   computes the ouptut for the Gaussian noise given input mean and variances.
 }
 \usage{
-y <- gaussianNoiseOut(noise, mu, varSigma)
+gaussianNoiseOut(noise, mu, varSigma)
 }
 \arguments{
   \item{noise}{the noise structure for which the output is computed.}

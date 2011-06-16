@@ -6,12 +6,13 @@
   optimises the Gaussian process  model for a given number of iterations.
 }
 \usage{
-model <- gpOptimise(model, display, iters)
+gpOptimise(model, display, iters, gradcheck)
 }
 \arguments{
   \item{model}{the model to be optimised.}
   \item{display}{whether or not to display while optimisation proceeds, set to 2 for the most verbose and 0 for the least verbose.}
   \item{iters}{number of iterations for the optimisation.}
+  \item{gradcheck}{(logical) do a gradient check.}
 }
 \value{
   \item{model}{the optimised model.}

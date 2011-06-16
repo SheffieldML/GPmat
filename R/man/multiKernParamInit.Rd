@@ -6,7 +6,7 @@
   initialises the multiple output block kernel structure with some default parameters.
 }
 \usage{
-kern <- multiKernParamInit(kern)
+multiKernParamInit(kern)
 }
 \arguments{
   \item{kern}{the kernel structure which requires initialisation.}

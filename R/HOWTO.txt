@@ -14,54 +14,58 @@
 ## In a terminal, open an R session with sudo priviledges:
 sudo R
 
-## Then enter the following in the R session:
+## Then, enter the following in the R session:
 install.packages("spam", dependencies=TRUE) 
 source("http://bioconductor.org/biocLite.R")
 biocLite("puma")
 biocLite("tigre")
 
-install.packages("gptk", dependencies=TRUE) ## To load latest released version of GPTK...
+install.packages("gptk", dependencies=TRUE) ## To load the latest released version of GPTK.
 ## OR
-source("~/mlprojects/gp/R/R/gpLoadToolkit.R") ## ... include the internal version of the source code manually.
-gpLoadToolkit()
+source("~/mlprojects/gp/R-internal/R/gpLoadToolkit.R") ## ... include the internal version of the source code manually.
+gpLoadToolkit('~/mlprojects/gp/R-internal/R/')
 gpTest() # run some tests
 demInterpolation() # run demo
 demRegression() # another demo
 demOptimiseGp() # and another demo
 
-#####################################################################################
-########## To build the gptk R package from the 'mlprojects/gp/R' folder: ##########
+####################################################################################
+#### To build the gptk R package from the 'mlprojects/gp/R-internal/' folder: ######
 ## First make sure documentation is complete. Antti's python function might help in that respect.
-## Edit '~/mlprojects/R/general/matlab_to_R_doc_converter.py' so that, for instance, BASEPATH='~/mlprojects/gp/matlab/.',
-## the base path of the matlab code you wish to translate documentation for and MANPATH='~/mlprojects/gp/R/man',
-## the target path you want for the translated R manuals.
+## Edit '~/mlprojects/R/general/matlab_to_R_doc_converter.py' so that, for instance, BASEPATH='~/mlprojects/gp/matlab/.'
+## is the base path of the matlab code you wish to translate documentation for, and MANPATH='~/mlprojects/gp/R/man'
+## is the target path you want for the translated R manuals.
 ## Then in a terminal, do for example:
+
 python ~/mlprojects/R/general/matlab_to_R_doc_converter.py -o gpCreate
 
+## Potential issues with the documentation files:
 ## Make sure not to leave any latex-style comments in the .Rd files before package 'build'.
+## R 2.13.0 or higher does not like assignments in \usage sections.
+## Make sure all examples in \usage sections match exactly with the code, e.g. use  'only.values=TRUE', not 'only.values'.
+
 ## Now, in an R session:
-source('~/mlprojects/gp/R/R/gpLoadToolkit.R')
-gpLoadToolkit() ## This will load up in memory all the package-related source files in 'mlprojects/gp/R/R/'.
-system('rm -R -f ~/gptk/') ## Remove '~/gptk/'.
+
+source('~/mlprojects/gp/R-internal/R/gpLoadToolkit.R')
+gpLoadToolkit('~/mlprojects/gp/R-internal/R/') ## This will load up in memory all the package-related source files in 'mlprojects/gp/R-internal/R/'.
+system('rm -R -f ~/gptk/') ## Remove any previous copies of '~/gptk/'.
 package.skeleton(name='gptk', path='~') ## The package skeleton folder [name] will be created in [path].
 system('rm ~/gptk/R/gpLoadToolkit.R') ## Remove gpLoadTookit() from '~/gptk/R/'.
 system('rm -R -f ~/gptk/man/') ## Overwrite skeleton man '~/gptk/man/' with proper man 'man/'.
-system('cp -R ~/mlprojects/gp/R/man/ ~/gptk/')
-## Make sure to keep 'index.html' up-to-date. Then place a copy of inst/.
-system('cp -R ~/mlprojects/gp/R/inst/ ~/gptk/') 
-system('rm -R -f ~/gptk/man/.svn/') ## Remove hidden files related to the svn (.svn/, etc.) from every copied folder.
+system('cp -R ~/mlprojects/gp/R-internal/man/ ~/gptk/')
+system('cp -R ~/mlprojects/gp/R-internal/inst/ ~/gptk/') ## Make sure to keep 'inst/doc/index.html' up-to-date. Then we place a copy of 'inst/' in '~/gptk/'.
+
+## Clean up.
+
+system('rm -R -f ~/gptk/man/.svn/') ## Remove hidden files related to the svn from every copied folder.
 system('rm -R -f ~/gptk/inst/.svn/')
 system('rm -R -f ~/gptk/inst/doc/.svn/')
-## Clean up.
-system('rm ~/gptk/R/*~')
+system('rm ~/gptk/R/*~') ## Remove backup files.
 system('rm ~/gptk/man/*~')
 system('rm ~/gptk/inst/doc/*~')
-## Remove unnecessary .eps and .png files and make sure to update 'index.html'.
-system('rm ~/gptk/inst/doc/*.eps')
-## Make sure to keep 'DESCRIPTION' up-to-date. Then copy it over to '~/gptk/'.
-system('cp ~/mlprojects/gp/R/DESCRIPTION ~/gptk/')
-## Read, then remove 'Read-and-delete-me'.
-system('rm ~/gptk/Read-and-delete-me')
+system('rm ~/gptk/inst/doc/*.eps') ## Remove unnecessary .eps files.
+system('cp ~/mlprojects/gp/R-internal/DESCRIPTION ~/gptk/') ## Make sure to keep 'DESCRIPTION' up-to-date. Then copy it over to '~/gptk/'.
+system('rm ~/gptk/Read-and-delete-me') ## Read, then remove 'Read-and-delete-me'.
 system('rm -R ~/gptk/data/') ## Remove 'data/'.
 q('no') ## Exit; no saving.
 

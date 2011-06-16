@@ -6,7 +6,7 @@
   returns the indices of data which is not missing for a given dimension in the GP-LVM and a block number in the PITC approximation.
 }
 \usage{
-values <- gpDataIndices(model, dimNo, blockNo)
+gpDataIndices(model, dimNo, blockNo)
 }
 \arguments{
   \item{model}{the model for which the indices are being returned.}

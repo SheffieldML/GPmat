@@ -6,7 +6,7 @@
   computes the log likelihood of a data set given a GP model.
 }
 \usage{
-ll <- gpLogLikelihood(model)
+gpLogLikelihood(model)
 }
 \arguments{
   \item{model}{the GP model for which log likelihood is to be computed.}

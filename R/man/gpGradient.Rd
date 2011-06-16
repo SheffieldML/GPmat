@@ -6,7 +6,7 @@
   wraps the log likelihood gradient function to return the gradient of the negative of the log likelihood. This can then be used in, for example, NETLAB, minimisation tools.
 }
 \usage{
-g <- gpGradient(params, model)
+gpGradient(params, model)
 }
 \arguments{
   \item{params}{the parameters of the model.}

@@ -6,11 +6,12 @@
   returns the posterior mean and variance for a given set of points.
 }
 \usage{
-values <- gpPosteriorMeanVar(model, x)
+gpPosteriorMeanVar(model, X, varsigma.return=FALSE)
 }
 \arguments{
   \item{model}{the model for which the posterior will be computed.}
-  \item{x}{the input positions for which the posterior will be computed.}
+  \item{X}{the input positions for which the posterior will be computed.}
+  \item{varsigma.return}{(logical) compute variances.}
 }
 \value{
   \item{mu}{the mean of the posterior distribution.}

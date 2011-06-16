@@ -6,11 +6,11 @@
   returns the indices of a given block for the PITC approximation.
 }
 \usage{
-indices <- gpBlockIndices(model, blockNum)
+gpBlockIndices(model, blockNo)
 }
 \arguments{
   \item{model}{the model for which the indices are being computed.}
-  \item{blockNum}{the block number for which the indices are required.}
+  \item{blockNo}{the block number for which the indices are required.}
 }
 \value{
   \item{indices}{the data indices associated with given block.}

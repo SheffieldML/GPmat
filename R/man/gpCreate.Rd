@@ -1,12 +1,12 @@
 \name{gpCreate}
 \Rdversion{1.0}
 \alias{gpCreate}
-\title{Create a GP model with inducing varibles/pseudo-inputs.}
+\title{Create a GP model with inducing variables/pseudo-inputs.}
 \description{
   Creates a Gaussian process model structure with default parameter settings as specified by the options vector.
 }
 \usage{
-model <- gpCreate(q, d, X, y, options)
+gpCreate(q, d, X, y, options)
 }
 \arguments{
   \item{q}{input data dimension.}

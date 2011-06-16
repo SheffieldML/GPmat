@@ -37,7 +37,7 @@ gpPosteriorMeanVar <- function(model, X, varsigma.return=FALSE) {
 			    model$alpha[model$indexPresent[[i]], i,drop=FALSE]
     }
     
-    ## Compute variances if requried.
+    ## Compute variances if required.
     if (varsigma.return) { #if (nargout > 1)
       varsigma = matrix(0, dim(X)[1], model$d)
       if (!("isSpherical" %in% names(model)) || model$isSpherical) {

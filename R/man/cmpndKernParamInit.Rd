@@ -6,7 +6,7 @@
   initialises the compound kernel structure with some default parameters.
 }
 \usage{
-kern <- cmpndKernParamInit(kern)
+cmpndKernParamInit(kern)
 }
 \arguments{
   \item{kern}{the kernel structure which requires initialisation.}

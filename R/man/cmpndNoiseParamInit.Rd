@@ -6,10 +6,11 @@
   initialises the compound noise structure with some default parameters.
 }
 \usage{
-noise <- cmpndNoiseParamInit(noise)
+cmpndNoiseParamInit(noise,y)
 }
 \arguments{
   \item{noise}{the noise structure which requires initialisation.}
+  \item{y}{the data design matrix.}
 }
 \value{
   \item{noise}{the noise structure with the default parameters placed in.}

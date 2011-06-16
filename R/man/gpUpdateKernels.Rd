@@ -6,7 +6,7 @@
   updates any representations of the kernel in the model structure, such as invK, logDetK or K.
 }
 \usage{
-values <- gpUpdateKernels(model, model, X, X_u)
+gpUpdateKernels(model, X, X_u)
 }
 \arguments{
   \item{model}{the model structure for which kernels are being updated.}

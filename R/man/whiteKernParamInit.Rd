@@ -6,7 +6,7 @@
   initialises the white noise kernel structure with some default parameters.
 }
 \usage{
-kern <- whiteKernParamInit(kern)
+whiteKernParamInit(kern)
 }
 \arguments{
   \item{kern}{the kernel structure which requires initialisation.}

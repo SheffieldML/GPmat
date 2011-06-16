@@ -14,8 +14,8 @@ gpPlot <- function(model,Xstar,mu,S,simpose=NULL,xlim=NULL,ylim=NULL,xlab='',yla
     }
   }
 
-#   f = c(mu+2*sqrt(abs(S)), rev(mu-2*sqrt(abs(S))))
-  f = c(mu+2*abs(S), rev(mu-2*abs(S)))
+  f = c(mu+2*sqrt(abs(S)), rev(mu-2*sqrt(abs(S))))
+#   f = c(mu+2*abs(S), rev(mu-2*abs(S)))
 
   xcomb = rbind(model$X,Xstar); ycomb = f # rbind(model$y,mu,S)
   if (is.null(xlim))
@@ -39,5 +39,5 @@ gpPlot <- function(model,Xstar,mu,S,simpose=NULL,xlim=NULL,ylim=NULL,xlab='',yla
     points(simpose, y, pch = 4, cex = 1.5, lwd=3, col = col)
   }
 
-  zeroAxes(cbind(model$X,model$y))
+  zeroAxes()
 }

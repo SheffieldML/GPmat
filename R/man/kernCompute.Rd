@@ -28,28 +28,28 @@
   Compute the kernel given the parameters and X.
 }
 \usage{
-K <- kernCompute(kern, X)
-K <- kernCompute(kern, X1, X2)
-Kd <- kernDiagCompute(kern, X)
+kernCompute(kern, x, x2)
+kernDiagCompute(kern, x)
 }
 \arguments{
   \item{kern}{kernel structure to be computed.}
-  \item{X}{input data matrix (rows are data points) to the kernel computation.}
-  \item{X1}{first input matrix to the kernel computation (forms the rows of the kernel).}
-  \item{X2}{second input matrix to the kernel computation (forms the columns of the kernel).}
+  \item{x}{depending on the number of inputs, x can be the input data matrix
+    (rows are data points) to the kernel computation, or
+    the first input matrix to the kernel computation (forms the rows of the kernel).}
+  \item{x2}{second input matrix to the kernel computation (forms the columns of the kernel).}
 }
 \details{
-  \code{K <- kernCompute(kern, X)}
+  \code{K <- kernCompute(kern, x)}
   computes a kernel matrix for the given kernel type given an input data matrix.
 
-  \code{K <- kernCompute(kern, X1, X2)}
+  \code{K <- kernCompute(kern, x1, x2)}
   computes a kernel matrix for the given kernel type given two input data matrices, one for the rows and one for the columns.
   
-  \code{K <- kernDiagCompute(kern, X)}
+  \code{K <- kernDiagCompute(kern, x)}
   computes the diagonal of a kernel matrix for the given kernel.
   
-  \code{K <- *X*kernCompute(kern1, kern2, X)}
-  \code{K <- *X*kernCompute(kern1, kern2, X1, X2)}
+  \code{K <- *X*kernCompute(kern1, kern2, x)}
+  \code{K <- *X*kernCompute(kern1, kern2, x1, x2)}
   same as above, but for cross combinations of two kernels, \code{kern1} and \code{kern2}.
 }
 \value{

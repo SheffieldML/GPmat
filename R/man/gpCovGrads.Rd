@@ -6,7 +6,7 @@
   gives the gradients of the log likelihood with respect to the components of the sparse covariance (or the full covariance for the ftc case).
 }
 \usage{
-values <- gpCovGrads(model, M)
+gpCovGrads(model, M)
 }
 \arguments{
   \item{model}{the model for which the gradients are to be computed.}

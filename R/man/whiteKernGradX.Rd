@@ -6,7 +6,7 @@
   computes the gradident of the white noise kernel with respect to the input positions where both the row positions and column positions are provided separately.
 }
 \usage{
-g <- whiteKernGradX(kern, x1, x2)
+whiteKernGradX(kern, x1, x2)
 }
 \arguments{
   \item{kern}{kernel structure for which gradients are being computed.}

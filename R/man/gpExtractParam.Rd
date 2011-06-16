@@ -6,10 +6,11 @@
   does the same as above, but also returns parameter names.
 }
 \usage{
-values <- gpExtractParam(model, model)
+gpExtractParam(model, only.values=TRUE)
 }
 \arguments{
   \item{model}{the model structure containing the information about the model.}
+  \item{only.values}{(logical) do not return parameter names.}
 }
 \value{
   \item{params}{a vector of parameters from the model.}

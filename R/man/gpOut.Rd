@@ -6,7 +6,7 @@
   evaluates the output of a given Gaussian process model.
 }
 \usage{
-y <- gpOut(model, x)
+gpOut(model, x)
 }
 \arguments{
   \item{model}{the model for which the output is being evaluated.}

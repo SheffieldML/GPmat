@@ -308,10 +308,10 @@ kernDiagGradX <- function (kern, x) {
 
 
 
-kernGradX <- function (kern, x, x2) {
+kernGradX <- function (kern, x1, x2) {
   funcName <- paste(kern$type, "KernGradX", sep="")
   func <- get(funcName, mode="function")
-  k <- func(kern, x, x2)
+  k <- func(kern, x1, x2)
   return (k)
 }
 

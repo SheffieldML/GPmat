@@ -6,7 +6,7 @@
   initialises the parameters of a kernel.
 }
 \usage{
-kern <- kernParamInit(kern)
+kernParamInit(kern)
 }
 \arguments{
   \item{kern}{the kernel structure for which the parameters will be initialised.}

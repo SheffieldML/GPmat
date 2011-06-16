@@ -6,7 +6,7 @@
   computes the gradient of the diagonal of the white noise kernel matrix with respect to the elements of the design matrix given in X.
 }
 \usage{
-gX <- whiteKernDiagGradX(kern, X)
+whiteKernDiagGradX(kern, X)
 }
 \arguments{
   \item{kern}{the kernel structure for which gradients are being computed.}

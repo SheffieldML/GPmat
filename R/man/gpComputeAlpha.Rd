@@ -6,7 +6,7 @@
   updates the vectors that are known as `alpha' in the support vector machine, in other words invK*y, where y is the target values.
 }
 \usage{
-model <- gpComputeAlpha(model, m)
+gpComputeAlpha(model, m)
 }
 \arguments{
   \item{model}{the model for which the alphas are going to be updated.}

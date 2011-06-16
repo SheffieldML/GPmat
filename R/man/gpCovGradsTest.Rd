@@ -6,7 +6,7 @@
   tests the gradients of the covariance to ensure they are correct.
 }
 \usage{
-model <- gpCovGradsTest(model)
+gpCovGradsTest(model)
 }
 \arguments{
   \item{model}{the model to be tested.}

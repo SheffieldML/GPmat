@@ -1,4 +1,4 @@
-gpExtractParam <- function(model, only.values=TRUE, ...) {
+gpExtractParam <- function(model, only.values=TRUE) {
 
   ## Check if the output scales are being learnt.
   scaleParams = list()
