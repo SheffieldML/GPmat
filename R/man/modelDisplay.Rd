@@ -18,10 +18,11 @@
   the console.
 }
 \usage{
-model <- modelDisplay(model)
+modelDisplay(model, ...)
 }
 \arguments{
   \item{model}{the model/kernel structure to be displayed.}
+  \item{...}{optional additional arguments.}
 }
 \seealso{
 \code{\link{modelExtractParam}}

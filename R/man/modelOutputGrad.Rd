@@ -6,8 +6,7 @@
   Compute derivatives with respect to params of model outputs.
 }
 \usage{
-  g <- modelOutputGrad(model, X)
-  g <- modelOutputGrad(model, X, dim)
+  modelOutputGrad(model, X, dim)
 }
 \arguments{
   \item{model}{the model structure for which gradients are computed.}

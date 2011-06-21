@@ -22,15 +22,15 @@ biocLite("tigre")
 
 install.packages("gptk", dependencies=TRUE) ## To load the latest released version of GPTK.
 ## OR
-source("~/mlprojects/gp/R-internal/R/gpLoadToolkit.R") ## ... include the internal version of the source code manually.
-gpLoadToolkit('~/mlprojects/gp/R-internal/R/')
+source("~/mlprojects/gp/R/R/gpLoadToolkit.R") ## ... include the internal version of the source code manually.
+gpLoadToolkit('~/mlprojects/gp/R/R/')
 gpTest() # run some tests
 demInterpolation() # run demo
 demRegression() # another demo
 demOptimiseGp() # and another demo
 
 ####################################################################################
-#### To build the gptk R package from the 'mlprojects/gp/R-internal/' folder: ######
+#### To build the gptk R package from the 'mlprojects/gp/R/' folder: ######
 ## First make sure documentation is complete. Antti's python function might help in that respect.
 ## Edit '~/mlprojects/R/general/matlab_to_R_doc_converter.py' so that, for instance, BASEPATH='~/mlprojects/gp/matlab/.'
 ## is the base path of the matlab code you wish to translate documentation for, and MANPATH='~/mlprojects/gp/R/man'
@@ -46,14 +46,14 @@ python ~/mlprojects/R/general/matlab_to_R_doc_converter.py -o gpCreate
 
 ## Now, in an R session:
 
-source('~/mlprojects/gp/R-internal/R/gpLoadToolkit.R')
-gpLoadToolkit('~/mlprojects/gp/R-internal/R/') ## This will load up in memory all the package-related source files in 'mlprojects/gp/R-internal/R/'.
+source('~/mlprojects/gp/R/R/gpLoadToolkit.R')
+gpLoadToolkit('~/mlprojects/gp/R/R/') ## This will load up in memory all the package-related source files in 'mlprojects/gp/R/R/'.
 system('rm -R -f ~/gptk/') ## Remove any previous copies of '~/gptk/'.
 package.skeleton(name='gptk', path='~') ## The package skeleton folder [name] will be created in [path].
 system('rm ~/gptk/R/gpLoadToolkit.R') ## Remove gpLoadTookit() from '~/gptk/R/'.
 system('rm -R -f ~/gptk/man/') ## Overwrite skeleton man '~/gptk/man/' with proper man 'man/'.
-system('cp -R ~/mlprojects/gp/R-internal/man/ ~/gptk/')
-system('cp -R ~/mlprojects/gp/R-internal/inst/ ~/gptk/') ## Make sure to keep 'inst/doc/index.html' up-to-date. Then we place a copy of 'inst/' in '~/gptk/'.
+system('cp -R ~/mlprojects/gp/R/man/ ~/gptk/')
+system('cp -R ~/mlprojects/gp/R/inst/ ~/gptk/') ## Make sure to keep 'inst/doc/index.html' up-to-date. Then we place a copy of 'inst/' in '~/gptk/'.
 
 ## Clean up.
 
@@ -64,7 +64,7 @@ system('rm ~/gptk/R/*~') ## Remove backup files.
 system('rm ~/gptk/man/*~')
 system('rm ~/gptk/inst/doc/*~')
 system('rm ~/gptk/inst/doc/*.eps') ## Remove unnecessary .eps files.
-system('cp ~/mlprojects/gp/R-internal/DESCRIPTION ~/gptk/') ## Make sure to keep 'DESCRIPTION' up-to-date. Then copy it over to '~/gptk/'.
+system('cp ~/mlprojects/gp/R/DESCRIPTION ~/gptk/') ## Make sure to keep 'DESCRIPTION' up-to-date. Then copy it over to '~/gptk/'.
 system('rm ~/gptk/Read-and-delete-me') ## Read, then remove 'Read-and-delete-me'.
 system('rm -R ~/gptk/data/') ## Remove 'data/'.
 q('no') ## Exit; no saving.

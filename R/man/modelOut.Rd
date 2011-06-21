@@ -6,12 +6,13 @@
   Give the output of a model for given X.
 }
 \usage{
-Y <- modelOut(model, X)
-values <- modelOut(model, X)
+modelOut(model, X, Phi.return=FALSE, ...)
 }
 \arguments{
   \item{model}{structure specifying the model.}
   \item{X}{input location(s) for which output is to be computed.}
+  \item{Phi.return}{(logical) return the basis function(s) as well.}
+  \item{...}{optional additional arguments.}
 }
 \details{
   \code{Y <- modelOut(model, X)}

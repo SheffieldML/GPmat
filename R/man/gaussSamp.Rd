@@ -6,7 +6,7 @@
   samples a given number of samples from a Gaussian with a given covariance matrix.
 }
 \usage{
-y <- gaussSamp(mu=matrix(0,nrow=dim(Sigma)[1]), Sigma, numSamps)
+gaussSamp(mu=matrix(0,nrow=dim(Sigma)[1]), Sigma, numSamps)
 }
 \arguments{
   \item{mu}{the mean of the Gaussian to sample from.}

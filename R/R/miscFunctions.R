@@ -251,8 +251,7 @@ boundedTransform <- function (x, transform="atox", bounds) {
 
 
 
-modelExtractParam <- function (model, only.values=TRUE,
-                               untransformed.values=FALSE) {
+modelExtractParam <- function (model, only.values=TRUE, untransformed.values=FALSE) {
 #   if (any(.packages(all.available=TRUE)=="tigre") && is.GPModel(model))
 #     model <- modelStruct(model)
   
