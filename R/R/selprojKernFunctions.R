@@ -26,6 +26,7 @@ selprojKernParamInit <- function (kern) {
 
 
 .selprojDataMaskCompare <- function (m, m1) {
+  m1 <- as.matrix(m1)
   I <- vector(len=dim(m1)[1])
   I[] <- TRUE
 
@@ -129,7 +130,7 @@ selprojXselprojKernCompute <- function (kern1, kern2, x, x2) {
   funcName <- paste(kern1$comp[[1]]$type, "X", kern2$comp[[1]]$type, "KernCompute", sep="")
   func <- get(funcName, mode="function")
 
-  mask <- selprojKernMaskCombine(kern1$expmask, kern2$expmask)
+  mask <- .selprojKernMaskCombine(kern1$expmask, kern2$expmask)
   
   if ( nargs()>3 ) {
     d1 <- dim(as.array(x))[1]
@@ -144,7 +145,7 @@ selprojXselprojKernCompute <- function (kern1, kern2, x, x2) {
       if (!any(I1) || !any(I2))
         return (k)
 
-      k[I1,I2] <- func(kern1$comp[[1]], kern2$comp[[1]], x[I1,-seq(kern$masklen)], x2[I2,-seq(kern$masklen)])
+      k[I1,I2] <- func(kern1$comp[[1]], kern2$comp[[1]], x[I1,-seq(kern1$masklen)], x2[I2,-seq(kern2$masklen)])
     }
   } else {
     d1 <- dim(as.array(x))[1]
@@ -156,7 +157,7 @@ selprojXselprojKernCompute <- function (kern1, kern2, x, x2) {
       if (!any(I1))
         return (k)
 
-      k[I1,I1] <- func(kern1$comp[[1]], kern2$comp[[1]], x[I1,-seq(kern$masklen)])
+      k[I1,I1] <- func(kern1$comp[[1]], kern2$comp[[1]], x[I1,-seq(kern1$masklen)])
     }
   }
   return (k)  
@@ -202,7 +203,7 @@ selprojKernGradient <- function (kern, x, x2, covGrad) {
 selprojXselprojKernGradient <- function (kern1, kern2, x, x2, covGrad) {
   funcName <- paste(kern1$comp[[1]]$type, "X", kern2$comp[[1]]$type, "KernGradient", sep="")
   func <- get(funcName, mode="function")
-  mask <- selprojKernMaskCombine(kern1$expmask, kern2$expmask)
+  mask <- .selprojKernMaskCombine(kern1$expmask, kern2$expmask)
 
   if ( nargs()<5 ) {
     covGrad <- x2
@@ -215,7 +216,7 @@ selprojXselprojKernGradient <- function (kern1, kern2, x, x2, covGrad) {
       if (!any(I1))
         return (list(g1=array(0, dim=kern1$nParams), g2=array(0, dim=kern2$nParams)))
 
-      return (func(kern1$comp[[1]], kern2$comp[[1]], x[I1,-seq(kern$masklen)], covGrad[I1,I1]))
+      return (func(kern1$comp[[1]], kern2$comp[[1]], x[I1,-seq(kern1$masklen)], covGrad[I1,I1]))
     } else {
       return (list(g1=array(0, dim=kern1$nParams), g2=array(0, dim=kern2$nParams)))
     }
@@ -231,7 +232,7 @@ selprojXselprojKernGradient <- function (kern1, kern2, x, x2, covGrad) {
       if (!any(I1) || !any(I2))
         return (list(g1=array(0, dim=kern1$nParams), g2=array(0, dim=kern2$nParams)))
 
-      return (func(kern1$comp[[1]], kern2$comp[[1]], x[I1,-seq(kern$masklen)], x2[I2,-seq(kern$masklen)], covGrad[I1,I2]))
+      return (func(kern1$comp[[1]], kern2$comp[[1]], x[I1,-seq(kern1$masklen)], x2[I2,-seq(kern2$masklen)], covGrad[I1,I2]))
     } else {
       return (list(g1=array(0, dim=kern1$nParams), g2=array(0, dim=kern2$nParams)))
     }

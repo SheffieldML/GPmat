@@ -24,7 +24,6 @@ gpsimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL, anno
       (length(unique(options$experiments)) > 1)) {
     model$isHierarchical <- TRUE
     model$experimentStructure <- options$experiments
-    model$experimentMask <- gpsimExperimentMask(Ngenes+1, options$experiments)
     model$expids <- unique(options$experiments)
   }
   else
