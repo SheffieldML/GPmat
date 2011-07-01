@@ -1,7 +1,8 @@
 require(gplots)
 
 GPPlot <- function(data, savepath = '', nameMapping = NULL,
-                   predt = NULL, fileOutput=FALSE, plotTime=NULL) {
+                   predt = NULL, fileOutput=FALSE, plotTime=NULL,
+                   plotMask = 0) {
   FONTSIZE <- 10;
   LINEWIDTH <- 1;
   MARKERSIZE <- 10;
@@ -46,7 +47,7 @@ GPPlot <- function(data, savepath = '', nameMapping = NULL,
   else {
     singlePlot <- FALSE
   }
-  model <- modelUpdateProcesses(model, predt=predt)
+  model <- modelUpdateProcesses(model, predt=predt, expmask=plotMask)
   for ( i in seq(along=model$comp) ) {
     while (any(model$comp[[i]]$varF < 0) || any(model$comp[[i]]$ypredVar < 0)) {
       warning('Negative variances in GPPlot, adding jitter to fix')

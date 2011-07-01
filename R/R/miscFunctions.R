@@ -367,13 +367,13 @@ modelGradient <- function (params, model, ...) {
 
 
 
-modelUpdateProcesses <- function (model, predt=NULL) {
+modelUpdateProcesses <- function (model, predt=NULL, expmask=0) {
   if (is.GPModel(model))
-    return (modelUpdateProcesses(modelStruct(model), predt=predt))
+    return (modelUpdateProcesses(modelStruct(model), predt=predt, expmask=expmask))
 
   funcName <- paste(model$type, "UpdateProcesses", sep="")
   func <- get(funcName, mode="function")
-  return (func(model, predt=predt))
+  return (func(model, predt=predt, expmask=expmask))
 }
 
 

@@ -42,7 +42,6 @@ gpdisimCreate <- function(Ngenes, Ntf, times, y, yvar, options, genes = NULL, an
       (length(unique(options$experiments)) > 1)) {
     model$isHierarchical <- TRUE
     model$experimentStructure <- options$experiments
-    model$experimentMask <- gpsimExperimentMask(Ngenes+1, options$experiments)
     model$expids <- unique(options$experiments)
   }
   else
@@ -441,9 +440,9 @@ cgpdisimGradient <- function (params, model, ...) {
 
 
 
-cgpdisimUpdateProcesses <- function (model, predt=NULL) {
+cgpdisimUpdateProcesses <- function (model, predt=NULL, expmask=0) {
   for ( i in seq(along=model$comp) )
-    model$comp[[i]] <- gpdisimUpdateProcesses(model$comp[[i]], predt=predt)
+    model$comp[[i]] <- gpdisimUpdateProcesses(model$comp[[i]], predt=predt, expmask=expmask)
 
   return (model)
 }
@@ -451,7 +450,7 @@ cgpdisimUpdateProcesses <- function (model, predt=NULL) {
 
 
 # FIXME: isHierarchical not handled (?)
-gpdisimUpdateProcesses <- function (model, predt=NULL) {
+gpdisimUpdateProcesses <- function (model, predt=NULL, expmask=0) {
 
   if ( "proteinPrior" %in% names(model) ) {
     t <- model$timesCell[[2]]
@@ -509,13 +508,13 @@ gpdisimUpdateProcesses <- function (model, predt=NULL) {
     proteinKern$complete <- TRUE
     projproteinKern <- kernCreate(2, list(type="selproj",
                                           comp=list(proteinKern),
-                                          options(expmask=0)))
+                                          options=list(expmask=expmask)))
     projproteinKern$comp[[1]]$inverseWidth <- proteinKern$inverseWidth
     projproteinKern$comp[[1]]$decay <- proteinKern$decay
     projproteinKern$comp[[1]]$variance <- proteinKern$variance
 
     for ( i in seq(2, length=(simMultiKern$numBlocks-1)) )
-      K <- cbind(K,t(selprojXselprojKernCompute(simMultiKern$comp[[i]], projproteinKern, cbind(0, model$t), cbind(0, predt))))
+      K <- cbind(K,t(selprojXselprojKernCompute(simMultiKern$comp[[i]], projproteinKern, cbind(0, model$t), cbind(expmask, predt))))
   }
 
   ymean <- t(matrix(c(0, model$mu), model$numGenes+1, numData))
@@ -526,7 +525,7 @@ gpdisimUpdateProcesses <- function (model, predt=NULL) {
   if (!model$isHierarchical)
     Kxx <- multiKernCompute(simMultiKern, predt, model$t)
   else
-    Kxx <- multiKernCompute(simMultiKern, cbind(0, predt), cbind(0, model$t))
+    Kxx <- multiKernCompute(simMultiKern, cbind(expmask, predt), cbind(0, model$t))
 
   meanPredX <- t(matrix(c(0, model$B/model$D), model$numGenes+1, length(predt)))
   predX <- c(meanPredX) + Re(Kxx %*% model$invK %*% c(model$y-ymean))
