@@ -10,6 +10,10 @@
 
 RELEASEINFORMATION
 
+Release for release of VARGPLVM with dynamics.
+
+<h4>Version 0.136</h4>
+
 Minor mods.
 
 <h4>Version 0.135</h4>
