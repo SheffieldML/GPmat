@@ -8,7 +8,7 @@ function fileName = modelWriteResult(model, dataset, number)
 % ARG number : the experiment number.
 % RETURN fileName : the file name used.
 %
-% SEEALSO : modelCreate
+% SEEALSO : modelCreate, modelLoadResult
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 

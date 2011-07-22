@@ -10,6 +10,10 @@
 
 RELEASEINFORMATION
 
+Minor tweak of model write result and model load result to allow specification of the data loading function.
+
+<h4>Version 0.137</h4>
+
 Release for release of VARGPLVM with dynamics.
 
 <h4>Version 0.136</h4>
