@@ -81,6 +81,10 @@ if iscell(kernelType)
     % translate kernel type
     start = 2;
     kern.type = 'translate';
+   case 'velotrans'
+    % velocity translate kernel type
+    start = 2;
+    kern.type = 'velotrans';
    case 'exp'
     % exponentiated kernel type
     start = 2;
@@ -101,7 +105,7 @@ if iscell(kernelType)
       end
       kern.comp{i-start+1}.index = [];
     end
-   case {'tensor', 'cmpnd', 'translate'}
+   case {'tensor', 'cmpnd', 'translate', 'velotrans'}
     for i = start:length(kernelType)
       kern.comp{i-start+1} = kernCreate(X, kernelType{i});
       kern.comp{i-start+1}.index = [];

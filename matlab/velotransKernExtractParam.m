@@ -1,8 +1,8 @@
-function [params, names] = translateKernExtractParam(kern)
+function [params, names] = velotransKernExtractParam(kern)
 
-% TRANSLATEKERNEXTRACTPARAM Extract parameters from the TRANSLATE kernel structure.
+% VELOTRANSKERNEXTRACTPARAM Extract parameters from the VELOTRANS kernel structure.
 % FORMAT
-% DESC extracts parameters from the input space translation
+% DESC extracts parameters from the velocity translate
 % kernel structure into a vector of parameters for optimisation.
 % ARG kern : the kernel structure containing the parameters to be
 % extracted.
@@ -12,7 +12,7 @@ function [params, names] = translateKernExtractParam(kern)
 % positive only parameters could be logged before being returned).
 %
 % FORMAT
-% DESC extracts parameters and parameter names from the input space translation
+% DESC extracts parameters and parameter names from the velocity translate
 % kernel structure.
 % ARG kern : the kernel structure containing the parameters to be
 % extracted.
@@ -23,21 +23,20 @@ function [params, names] = translateKernExtractParam(kern)
 % RETURN names : cell array of strings containing names for each
 % parameter.
 %
-% SEEALSO translateKernParamInit, translateKernExpandParam,
-% kernExtractParam, cmpndKernExtractParam, scg, conjgrad
+% SEEALSO velotransKernParamInit, velotransKernExpandParam, kernExtractParam, scg, conjgrad
 %
-% COPYRIGHT : Neil D. Lawrence, 2007
+% COPYRIGHT : Neil D. Lawrence, 2011
 %
 % KERN
 
-kern.nParams = kern.nParams - kern.inputDimension;
+kern.nParams = kern.nParams - kern.inputDimension + 1;
 if nargout == 2
   [params, names] = cmpndKernExtractParam(kern);
   namLength = length(names);
-  for i = 1:kern.inputDimension
-    names{namLength+i} = ['Centre ' num2str(i)];
+  for i = 1:(kern.inputDimension - 1)
+    names{namLength+i} = ['Velocity ' num2str(i)];
   end
 else
   params = cmpndKernExtractParam(kern);
 end
-params = [params kern.centre];
+params = [params kern.velocity];

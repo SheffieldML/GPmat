@@ -1,9 +1,9 @@
-function g = translateKernGradient(kern, varargin)
+function g = velotransKernGradient(kern, varargin)
 
-% TRANSLATEKERNGRADIENT Gradient of TRANSLATE kernel's parameters.
+% VELOTRANSKERNGRADIENT Gradient of VELOTRANS kernel's parameters.
 % FORMAT
 % DESC computes the gradient of functions with respect to the
-% input space translation
+% velocity translate
 % kernel's parameters. As well as the kernel structure and the
 % input positions, the user provides a matrix PARTIAL which gives
 % the partial derivatives of the function with respect to the
@@ -37,15 +37,16 @@ function g = translateKernGradient(kern, varargin)
 % RETURN g : gradients of the function of interest with respect to
 % the kernel parameters.
 %
-% SEEALSO translateKernParamInit, kernGradient,
-% translateKernDiagGradient, cmpndKernGradient, cmpndKernGradX, kernGradX
+% SEEALSO velotransKernParamInit, kernGradient, velotransKernDiagGradient, kernGradX, translateKernGradient
 %
-% COPYRIGHT : Neil D. Lawrence, 2007
+% COPYRIGHT : Neil D. Lawrence, 2011
 
 % KERN
 
 for i = 1:length(varargin)-1
-  varargin{i} = varargin{i} - repmat(kern.centre, size(varargin{i}, 1), 1);
+  t{i} = varargin{i}(:, end);
+  varargin{i}(:, end) = [];
+  varargin{i} = varargin{i} - t{i}*kern.velocity;
 end
 g = cmpndKernGradient(kern, varargin{:});
 
@@ -63,23 +64,23 @@ else
   gKX_21 = cmpndKernGradX(kern, varargin{2}, varargin{1});
 end
   
-gcentre = zeros(1, kern.inputDimension);
+gvelocity = zeros(1, kern.inputDimension-1);
 if length(varargin) == 2
   for i = 1:size(varargin{1}, 1);
-    for j = 1:kern.inputDimension
-      gcentre(1, j) = gcentre(1, j) - gKX(:, j, i)'*varargin{end}(:, i);
+    for j = 1:kern.inputDimension-1
+      gvelocity(1, j) = gvelocity(1, j) - gKX(:, j, i)'*(varargin{end}(:, i).*t{1}(i));
     end
   end
 else
   for i = 1:size(varargin{1}, 1)
-    for j = 1:kern.inputDimension
-      gcentre(1, j) = gcentre(1, j) - sum(gKX_12(:, j, i).*varargin{end}(i, :)');
+    for j = 1:kern.inputDimension-1
+      gvelocity(1, j) = gvelocity(1, j) - sum(t{1}(i).*gKX_12(:, j, i).*varargin{end}(i, :)');
     end
   end
   for i = 1:size(varargin{2}, 1)
-    for j = 1:kern.inputDimension
-      gcentre(1, j) = gcentre(1, j) - sum(gKX_21(:, j, i).*varargin{end}(:, i));
+    for j = 1:kern.inputDimension-1
+      gvelocity(1, j) = gvelocity(1, j) - sum(t{2}(i).*gKX_21(:, j, i).*varargin{end}(:, i));
     end
   end
 end
-g = [g gcentre];
+g = [g gvelocity];

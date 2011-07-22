@@ -1,8 +1,8 @@
-function translateKernDisplay(kern, varargin)
+function velotransKernDisplay(kern, varargin)
 
-% TRANSLATEKERNDISPLAY Display parameters of the TRANSLATE kernel.
+% VELOTRANSKERNDISPLAY Display parameters of the VELOTRANS kernel.
 % FORMAT
-% DESC displays the parameters of the input space translation
+% DESC displays the parameters of the velocity translate
 % kernel and the kernel type to the console.
 % ARG kern : the kernel to display.
 %
@@ -11,9 +11,9 @@ function translateKernDisplay(kern, varargin)
 % ARG kern : the kernel to display.
 % ARG spacing : how many spaces to indent the display of the kernel by.
 %
-% SEEALSO : translateKernParamInit, modelDisplay, kernDisplay
+% SEEALSO : velotransKernParamInit, modelDisplay, kernDisplay, translateKernDisplay
 %
-% COPYRIGHT : Neil D. Lawrence, 2007
+% COPYRIGHT : Neil D. Lawrence, 2011
 
 % KERN
 
@@ -26,11 +26,13 @@ else
 end
 spacing = char(spacing);
 fprintf(spacing);
-fprintf('Translate kernel:\n')
-for i = 1:length(kern.centre)
+fprintf('Velocity Translate kernel:\n')
+for i = 1:length(kern.velocity)
   fprintf(spacing);
-  fprintf(' Centre %d: %2.4f\n', i, kern.centre(i));
+  fprintf(' Velocity %d: %2.4f\n', i, kern.velocity(i));
 end
 for i = 1:length(kern.comp)
   kernDisplay(kern.comp{i}, varargin{:});
 end
+
+  
