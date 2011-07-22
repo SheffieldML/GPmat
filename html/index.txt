@@ -11,6 +11,11 @@ Software (GP).
 
 RELEASEINFORMATION
 
+Minor updates to gpLoadResult for allowing different functions for loading in data.
+
+<h3>Version 0.136</h4>
+
+
 Changes to gpReadFromFID for compatibility with C++ code.
 
 <h4>Version 0.135</h4>

@@ -5,6 +5,11 @@ Rasmussen (JMLR 2005). Since version 0.132 it also provides an
 implementation of Titsias's sparse variational approximation published
 in AISTATS 2009.
 
+Version 0.137
+-------------
+
+Minor updates to gpLoadResult for allowing different functions for loading in data.
+
 Version 0.136
 -------------
 

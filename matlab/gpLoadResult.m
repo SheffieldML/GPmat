@@ -1,4 +1,4 @@
-function model = gpLoadResult(dataSet, number)
+function model = gpLoadResult(dataSet, number, dataLoaderStr)
 
 % GPLOADRESULT Load a previously saved result.
 % FORMAT
@@ -9,11 +9,15 @@ function model = gpLoadResult(dataSet, number)
 %
 % SEEALSO : gpLoadResult
 %
-% COPYRIGHT : Neil D. Lawrence, 2003, 2004, 2005, 2006, 2008
+% COPYRIGHT : Neil D. Lawrence, 2003, 2004, 2005, 2006, 2008, 2011
   
 % GP
 
-  [X, y] = mapLoadData(dataSet);
+  if nargin < 3 
+    dataLoaderStr = 'mapLoadData';
+  end
+  dataLoaderHandler = str2func(dataLoaderStr);
+  [X, y] = dataLoaderHandler(dataSet);
 
   dataSet(1) = upper(dataSet(1));
   load(['dem' dataSet 'Gp' num2str(number)])
