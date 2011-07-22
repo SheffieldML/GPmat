@@ -1,6 +1,6 @@
 function K = lfmaXlfmaKernCompute(lfmKern1, lfmKern2, t1, t2)
 
-% LFMAXLFMAVKERNCOMPUTE Acceleration and acceleration LFM kernel  
+% LFMAXLFMAKERNCOMPUTE Acceleration and acceleration LFM kernel  
 % FORMAT
 % DESC computes cross kernel terms between acceleration and acceleration LFM
 % kernels.

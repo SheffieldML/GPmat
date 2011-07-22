@@ -1,7 +1,7 @@
 Version 0.226
 -------------
 
-Added velotrans covariance function which allows a moving field type covariance function with a constant velocity.
+Added velotrans covariance function which allows a moving field type covariance function with a constant velocity. Added rbfperiodic2 for periodic covariances with learnable period. Added various multioutput covariance functions for switched latent force models.
 
 Version 0.225
 -------------
