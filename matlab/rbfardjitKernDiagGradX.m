@@ -1,6 +1,6 @@
-function gX = rbfard2KernDiagGradX(kern, X)
+function gX = rbfardjitKernDiagGradX(kern, X)
 
-% RBFARD2KERNDIAGGRADX Gradient of RBFARD2 kernel's diagonal with respect to X.
+% RBFARDJITKERNDIAGGRADX Gradient of RBFARDJIT kernel's diagonal with respect to X.
 % FORMAT
 % DESC computes the gradient of the diagonal of the automatic relevance determination radial basis function kernel matrix with
 % respect to the elements of the design matrix given in X.

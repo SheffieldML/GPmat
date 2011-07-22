@@ -1,7 +1,7 @@
 function [h, compUpJV] =  lfmComputeH3JV(gamma1_p, gamma1_m, sigma2, t1, ...
     t2, preFactor, mode)
 
-% LFMCOMPUTEH3AV Helper function for computing part of the LFMJV kernel.
+% LFMCOMPUTEH3JV Helper function for computing part of the LFMJV kernel.
 % FORMAT
 % DESC computes a portion of the LFMJV kernel.
 % ARG gamma1 : Gamma value for first system.

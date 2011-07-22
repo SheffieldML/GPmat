@@ -1,21 +1,8 @@
 function [K, wz1, wz2] = srbfhKernCompute(sigmax, lengthX, s1, s2, w, gamma, n)
 
-% SHEATKERNCOMPUTE Compute a cross kernel between two SHEAT kernels.
+% SRBFHKERNCOMPUTE Compute an SRBFH kernel.
 % FORMAT
-% DESC computes cross kernel terms between two SHEAT kernels. It gives a 
-% partial result needed for the computation of the HEAT kernel. 
-% ARG sigmax : length-scale of the spatial gp prior.
-% ARG lengthX : length of the spatial domain
-% ARG s1 : row inputs for which kernel is to be computed. 
-% ARG s2 : column inputs for which kernel is to be computed. 
-% ARG w  : precomputed constant.
-% ARG gamma : precomputed constant.
-% ARG n : integer indicating first series term
-% RETURN K : block of values from kernel matrix.
-% RETURN wz1 : precomputed values of the complex error function.
-% RETURN wz2 : precomputed values of the complex error function.
-%
-% SEEALSO : multiKernParamInit, multiKernCompute, heatKernParamInit
+
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 

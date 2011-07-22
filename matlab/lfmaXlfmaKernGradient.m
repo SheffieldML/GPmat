@@ -1,6 +1,6 @@
 function [g1, g2] = lfmaXlfmaKernGradient(lfmKern1, lfmKern2, t1, t2, covGrad, meanVector)
 
-% LFMAXLFMKERNGRADIENT Compute a cross gradient between a LFMA and a LFMA.
+% LFMAXLFMAKERNGRADIENT Compute a cross gradient between a LFMA and a LFMA.
 % FORMAT
 % DESC computes cross gradient of parameters of a cross kernel
 % between two lfm kernels, both lfm kernels correspond to the accelerations. 

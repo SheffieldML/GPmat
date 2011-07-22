@@ -1,6 +1,6 @@
 function kern = rbfardjitKernExpandParam(kern, params)
 
-% RBFARD2KERNEXPANDPARAM Create kernel structure from RBFARD2 kernel's parameters.
+% RBFARDJITKERNEXPANDPARAM Create kernel structure from RBFARDJIT kernel's parameters.
 % FORMAT
 % DESC returns a automatic relevance determination radial basis
 % function kernel structure filled with the parameters in the given

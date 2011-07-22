@@ -1,7 +1,7 @@
 function  [h, compUpXP] =  lfmComputeH4JV(gamma1_p, gamma1_m, sigma2, t1, ...
     preFactor, preExp, mode)
 
-% LFMCOMPUTEH4AV Helper function for computing part of the LFMJV kernel.
+% LFMCOMPUTEH4JV Helper function for computing part of the LFMJV kernel.
 % FORMAT
 % DESC computes a portion of the LFMJV kernel.
 % ARG gamma1 : Gamma value for first system.

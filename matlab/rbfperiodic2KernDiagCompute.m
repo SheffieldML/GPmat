@@ -1,28 +1,23 @@
 function k = rbfperiodic2KernDiagCompute(kern, x)
 
 % RBFPERIODIC2KERNDIAGCOMPUTE Compute diagonal of RBFPERIODIC2 kernel.
+% FORMAT
+% DESC computes the diagonal of the kernel matrix for the RBF periodic covariance with variying period kernel given a design matrix of inputs.
+% ARG kern : the kernel structure for which the matrix is computed.
+% ARG x : input data matrix in the form of a design matrix.
+% RETURN k : a vector containing the diagonal of the kernel matrix
+% computed at the given points.
 %
-%	Description:
+% SEEALSO : rbfperiodic2KernParamInit, kernDiagCompute, kernCreate, rbfperiodic2KernCompute
 %
-%	K = RBFPERIODIC2KERNDIAGCOMPUTE(KERN, X) computes the diagonal of the
-%	kernel matrix for the RBF derived periodic kernel given a design
-%	matrix of inputs.
-%	 Returns:
-%	  K - a vector containing the diagonal of the kernel matrix computed
-%	   at the given points.
-%	 Arguments:
-%	  KERN - the kernel structure for which the matrix is computed.
-%	  X - input data matrix in the form of a design matrix.
-%	
+% COPYRIGHT : Neil D. Lawrence, 2007, 2009
 %
-%	See also
-%	RBFPERIODIC2KERNPARAMINIT, KERNDIAGCOMPUTE, KERNCREATE, RBFPERIODIC2KERNCOMPUTE
+% MODIFICATIONS : Andreas C. Damianou, 2011
+%
+% MODIFICATIONS : Michalis K. Titsias, 2011
 
+% KERN
 
-%	Copyright (c) 2007 Neil D. Lawrence
-% 	rbfperiodicKernDiagCompute.m CVS version 1.1
-% 	rbfperiodicKernDiagCompute.m SVN version 1
-% 	last update 2007-02-03T09:15:15.000000Z
 
 
 k = repmat(kern.variance, size(x, 1), 1);

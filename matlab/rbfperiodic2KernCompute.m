@@ -1,39 +1,30 @@
 function [k, sk, n2] = rbfperiodic2KernCompute(kern, x, x2)
 
 % RBFPERIODIC2KERNCOMPUTE Compute the RBFPERIODIC2 kernel given the parameters and X.
+% FORMAT
+% DESC computes the kernel parameters for the RBF periodic covariance with variying period
+% kernel given inputs associated with rows and columns.
+% ARG kern : the kernel structure for which the matrix is computed.
+% ARG x : the input matrix associated with the rows of the kernel.
+% ARG x2 : the input matrix associated with the columns of the kernel.
+% RETURN k : the kernel matrix computed at the given points.
 %
-%	Description:
+% FORMAT
+% DESC computes the kernel matrix for the RBF periodic covariance with variying period
+% kernel given a design matrix of inputs.
+% ARG kern : the kernel structure for which the matrix is computed.
+% ARG x : input data matrix in the form of a design matrix.
+% RETURN k : the kernel matrix computed at the given points.
 %
-%	K = RBFPERIODIC2KERNCOMPUTE(KERN, X, X2) computes the kernel
-%	parameters for the RBF derived periodic kernel given inputs
-%	associated with rows and columns. This kernel function is identical
-%   to rbfperiodicKern* functions, with the only difference being that here
-%   the periodi is not given and kept fixed but instead, it is learned.
-%   For some applications is better to keep the period fixed though,
-%   especially if it is known for the particular problem (it helps escaping
-%   local optima during optimisation).
-%	 Returns:
-%	  K - the kernel matrix computed at the given points.
-%	 Arguments:
-%	  KERN - the kernel structure for which the matrix is computed.
-%	  X - the input matrix associated with the rows of the kernel.
-%	  X2 - the input matrix associated with the columns of the kernel.
+% SEEALSO : rbfperiodic2KernParamInit, kernCompute, kernCreate, rbfperiodic2KernDiagCompute
 %
-%	K = RBFPERIODIC2KERNCOMPUTE(KERN, X) computes the kernel matrix for
-%	the RBF derived periodic kernel given a design matrix of inputs.
-%	 Returns:
-%	  K - the kernel matrix computed at the given points.
-%	 Arguments:
-%	  KERN - the kernel structure for which the matrix is computed.
-%	  X - input data matrix in the form of a design matrix.
-%	
+% COPYRIGHT : Neil D. Lawrence, 2007, 2009
 %
-%	See also
-%	RBFPERIODICKERNCREATE, RBFPERIODIC2KERNPARAMINIT, KERNCOMPUTE, KERNCREATE, RBFPERIODIC2KERNDIAGCOMPUTE
+% MODIFICATIONS : Andreas C. Damianou, 2011
+%
+% MODIFICATIONS : Michalis K. Titsias, 2011
 
-
-%	Copyright (c) 2007, 2009 Neil D. Lawrence
-%	MODIFICATIONS : Andreas C. Damianou,  Michalis K. Titsias, 2011
+% KERN
 
 factor = kern.factor; % Default (if period is fixed: 2*pi/kern.period)
 if nargin < 3

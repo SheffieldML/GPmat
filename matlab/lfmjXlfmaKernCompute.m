@@ -1,6 +1,6 @@
 function K = lfmjXlfmaKernCompute(lfmKern1, lfmKern2, t1, t2)
 
-% LFMJXLFMVKERNCOMPUTE Jolt and acceleration LFM kernel  
+% LFMJXLFMAKERNCOMPUTE Jolt and acceleration LFM kernel  
 % FORMAT
 % DESC computes cross kernel terms between the jolt and acceleration LFM
 % kernels.

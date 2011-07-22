@@ -1,11 +1,13 @@
 function [h, dh_dD_i, dh_dD_j, dh_dsigma] = simXsimComputeDiagH(t, D_i, D_j, delta_i, delta_j, sigma)
 
-% SIMCOMPUTEH Helper function for comptuing part of the SIM kernel.
+% SIMXSIMCOMPUTEDIAGH Helper function for comptuing part of the SIM kernel.
 % FORMAT
 % DESC computes a portion of the SIM kernel.
 % ARG t :  time input (number of time points x 1).
 % ARG decay1 : Decay rate for first system.
 % ARG decay2 : Decay rate for second system.
+% ARG delay1 : Delay for first system.
+% ARG delay2 : Delay for second system.
 % ARG l : length scale of latent process.
 % RETURN h : result of this subcomponent of the kernel for the given values.
 %
@@ -14,6 +16,8 @@ function [h, dh_dD_i, dh_dD_j, dh_dsigma] = simXsimComputeDiagH(t, D_i, D_j, del
 % ARG t : time input (number of time points x 1).
 % ARG decay1 : Decay rate for first system.
 % ARG decay2 : Decay rate for second system.
+% ARG delay1 : Delay for first system.
+% ARG delay2 : Delay for second system.
 % ARG l : length scale of latent process.
 % RETURN h : result of this subcomponent of the kernel for the given values.
 % RETURN grad_D_decay1 : gradient of H with respect to DECAY1.

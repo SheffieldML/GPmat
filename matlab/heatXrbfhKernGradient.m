@@ -1,6 +1,6 @@
 function [g1, g2] = heatXrbfhKernGradient(heatKern, rbfhKern, x1, x2, covGrad)
 
-% HEATXHEATKERNGRADIENT Gradient wrt parameters between a HEAT and a RBFH.
+% HEATXRBFHKERNGRADIENT Gradient wrt parameters between a HEAT and a RBFH.
 % FORMAT
 % DESC computes the gradients wrt parameters of a cross kernel term between 
 % a HEAT kernel and a RBFH kernel for the multiple output kernel.

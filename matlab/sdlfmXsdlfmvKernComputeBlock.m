@@ -1,7 +1,7 @@
 function K = sdlfmXsdlfmvKernComputeBlock(lfmKern1, lfmKern2, t1, t2, ...
     kyy, kyv, kvy, kvv, i, j, generalConst)
 
-% SDLFMXSDLFMKERNCOMPUTEBLOCK Computes SDLFM kernel matrix for block i,j
+% SDLFMXSDLFMVKERNCOMPUTEBLOCK Computes SDLFM kernel matrix for block i,j
 % FORMAT
 % DESC computes the kernel matrix for the SDLFM kernel function in the
 % block specified at indeces i,j. It assumes the computation for functions

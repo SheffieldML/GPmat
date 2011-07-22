@@ -1,6 +1,6 @@
 function k = lmcKernDiagCompute(kern, X)
 
-% LMCKERNCOMPUTE Compute the diagonal of the LMC kernel.
+% LMCKERNDIAGCOMPUTE Compute the diagonal of the LMC kernel.
 % FORMAT
 % DESC computes the diagonal of the kernel matrix for the LMC kernel 
 % function given X.

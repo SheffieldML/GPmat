@@ -1,6 +1,6 @@
 function k = rbfardjitKernDiagCompute(kern, x)
 
-% RBFARD2KERNDIAGCOMPUTE Compute diagonal of RBFARD2 kernel.
+% RBFARDJITKERNDIAGCOMPUTE Compute diagonal of RBFARDJIT kernel.
 % FORMAT
 % DESC computes the diagonal of the kernel matrix for the automatic relevance determination radial basis function kernel given a design matrix of inputs.
 % ARG kern : the kernel structure for which the matrix is computed.

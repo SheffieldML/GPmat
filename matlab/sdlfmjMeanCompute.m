@@ -31,7 +31,7 @@ function term  = sdlfmjMeanCompute(sdlfmKern, t , option)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SDLFMGP
+% KERN
 
 if nargin < 3
     option = 'Pos';

@@ -1,6 +1,6 @@
 function dUpsilon = lfmapGradientUpsilonVector(gamma, sigma2, t, upsilon)
 
-% LFMVPGRADIENTUPSILONVECTOR Gradient upsilon vector accel. pos.
+% LFMAPGRADIENTUPSILONVECTOR Gradient upsilon vector accel. pos.
 % FORMAT
 % DESC computes the gradient of a portion of the LFM kernel.
 % ARG gamma : Gamma value for system.

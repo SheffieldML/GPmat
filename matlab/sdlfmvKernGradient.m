@@ -1,6 +1,6 @@
 function [g, covGradLocal] = sdlfmvKernGradient(kern, t, varargin)
 
-% LFMKERNGRADIENT Gradient of SDLFM kernel's parameters.
+% SDLFMVKERNGRADIENT Gradient of SDLFM kernel's parameters.
 % FORMAT
 % DESC computes the gradient of functions with respect to the switching 
 % latent force model kernel's parameters. The kernels refers to the

@@ -1,6 +1,6 @@
 function K = lfmvXrbfvKernCompute(lfmKern, rbfKern, t1, t2)
 
-% LFMVXRBFKERNCOMPUTE Compute a cross kernel between the LFMV and RBFV kernels.
+% LFMVXRBFVKERNCOMPUTE Compute a cross kernel between the LFMV and RBFV kernels.
 % FORMAT
 % DESC computes cross kernel terms between LFMV and RBFV kernels for
 % the multiple output kernel.  This function is employed in the SDLFM kernel

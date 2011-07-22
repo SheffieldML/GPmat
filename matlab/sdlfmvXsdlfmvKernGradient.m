@@ -1,7 +1,7 @@
 function [g1,g2, covGradLocal] = sdlfmvXsdlfmvKernGradient(sdlfmvKern1, sdlfmvKern2, ...
     t1, t2, covGrad, covIC)
 
-% SDLFMXSDLFMVKERNGRADIENT Gradients of cross kernel between 2 SDLFM kernels.
+% SDLFMVXSDLFMVKERNGRADIENT Gradients of cross kernel between 2 SDLFM kernels.
 % FORMAT
 % DESC computes a cross gradient for a cross kernel between two switching 
 % dynamical LFM kernels for the multiple output kernel. Both SDLFM kernels

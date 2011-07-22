@@ -1,7 +1,6 @@
-function    g = lfmGradientH41VP(preFactor, preFactorGrad, gradThetaGamma, preExp, ...
-    gradUpsilon1, gradUpsilon2, compUpsilon1, compUpsilon2)
+function g = lfmGradientH41VP(preFactor, preFactorGrad, gradThetaGamma, preExp, gradUpsilon1, gradUpsilon2, compUpsilon1, compUpsilon2)
 
-% LFMGRADIENTH41 Gradient of the function h_i(z) with respect to some of the
+% LFMGRADIENTH41VP Gradient of the function h_i(z) with respect to some of the
 % hyperparameters of the kernel: m_k, C_k, D_k, m_r, C_r or D_r.
 % FORMAT
 % DESC Computes the gradient of the function h_i(z) with respect to some of

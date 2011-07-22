@@ -1,29 +1,25 @@
 function rbfperiodic2KernDisplay(kern, spacing)
 
 % RBFPERIODIC2KERNDISPLAY Display parameters of the RBFPERIODIC2 kernel.
+% FORMAT
+% DESC displays the parameters of the RBF periodic covariance with variying period
+% kernel and the kernel type to the console.
+% ARG kern : the kernel to display.
 %
-%	Description:
+% FORMAT does the same as above, but indents the display according
+% to the amount specified.
+% ARG kern : the kernel to display.
+% ARG spacing : how many spaces to indent the display of the kernel by.
 %
-%	RBFPERIODIC2KERNDISPLAY(KERN) displays the parameters of the RBF
-%	derived periodic kernel and the kernel type to the console.
-%	 Arguments:
-%	  KERN - the kernel to display.
+% SEEALSO : rbfperiodic2KernParamInit, modelDisplay, kernDisplay
 %
-%	RBFPERIODIC2KERNDISPLAY(KERN, SPACING)
-%	 Arguments:
-%	  KERN - the kernel to display.
-%	  SPACING - how many spaces to indent the display of the kernel by.
-%	
+% COPYRIGHT : Neil D. Lawrence, 2007, 2009
 %
-%	See also
-%	RBFPERIODIC2KERNPARAMINIT, MODELDISPLAY, KERNDISPLAY
+% MODIFICATIONS : Andreas C. Damianou, 2011
+%
+% MODIFICATIONS : Michalis K. Titsias, 2011
 
-
-%	Copyright (c) 2007 Neil D. Lawrence
-% 	rbfperiodicKernDisplay.m CVS version 1.2
-% 	rbfperiodicKernDisplay.m SVN version 1
-% 	last update 2008-10-11T19:45:36.000000Z
-
+% KERN
 
 if nargin > 1
   spacing = repmat(32, 1, spacing);

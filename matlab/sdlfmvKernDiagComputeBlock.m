@@ -1,6 +1,6 @@
 function k = sdlfmvKernDiagComputeBlock(lfmKern, t, kyy, kyv, kvy, kvv)
 
-% SDLFMVKERNCOMPUTEBLOCK Diagonal of a SDLFM kernel matrix for block i
+% SDLFMVKERNDIAGCOMPUTEBLOCK Diagonal of a SDLFM kernel matrix for block i
 % FORMAT
 % DESC computes the diagonal of a SDLFM kernel matrix for a particular block  
 % It assumes the computation for functions that describe velocities 

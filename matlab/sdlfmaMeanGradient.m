@@ -1,6 +1,6 @@
 function [gradAlpha, gradOmega] = sdlfmaMeanGradient(sdlfmKern, t , option)
 
-% SDLFMMEANGRADIENT Gradients wrt parameters of the accel. mean SDLFM.
+% SDLFMAMEANGRADIENT Gradients wrt parameters of the accel. mean SDLFM.
 % Computes the gradients of the terms $r_d$ and $b_d$ that appear in the 
 % mean function with respect to $\alpha_d$ and $\omega_d$. 
 % FORMAT
@@ -27,7 +27,7 @@ function [gradAlpha, gradOmega] = sdlfmaMeanGradient(sdlfmKern, t , option)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SDLFMGP
+% KERN
 
 if nargin < 3
     option = 'Pos';

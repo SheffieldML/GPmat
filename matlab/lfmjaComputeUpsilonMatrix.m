@@ -1,6 +1,6 @@
 function upsilon = lfmjaComputeUpsilonMatrix(gamma, sigma2, t1, t2, mode)
 
-% LFMAACOMPUTEUPSILONMATRIX Upsilon matrix jolt. accel. with t1, t2 limits
+% LFMJACOMPUTEUPSILONMATRIX Upsilon matrix jolt. accel. with t1, t2 limits
 % FORMAT
 % DESC computes a portion of the LFM kernel.
 % ARG gamma : Gamma value for system.

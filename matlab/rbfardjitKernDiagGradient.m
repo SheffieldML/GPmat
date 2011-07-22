@@ -1,7 +1,6 @@
 function g = rbfardjitKernDiagGradient(kern, x, covDiag)
 
-
-% RBFARD2KERNDIAGGRADIENT Compute the gradient of the RBFARD2 kernel's diagonal wrt parameters.
+% RBFARDJITKERNDIAGGRADIENT Compute the gradient of the RBFARD2 kernel's diagonal wrt parameters.
 % FORMAT
 % DESC computes the gradient of functions of the diagonal of the
 % automatic relevance determination radial basis function kernel matrix with respect to the parameters of the kernel. The

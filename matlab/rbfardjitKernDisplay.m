@@ -1,6 +1,6 @@
 function rbfardjitKernDisplay(kern, spacing)
 
-% RBFARD2KERNDISPLAY Display parameters of the RBFARD2 kernel.
+% RBFARDJITKERNDISPLAY Display parameters of the RBFARDJIT kernel.
 % FORMAT
 % DESC displays the parameters of the automatic relevance determination radial basis function
 % kernel and the kernel type to the console.

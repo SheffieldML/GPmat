@@ -1,6 +1,6 @@
 function [g1, g2] = lfmvXlfmvKernGradient(lfmKern1, lfmKern2, t1, t2, covGrad, meanVector)
 
-% LFMVXLFMKERNGRADIENT Compute a cross gradient between a LFMV and a LFMV.
+% LFMVXLFMVKERNGRADIENT Compute a cross gradient between a LFMV and a LFMV.
 % FORMAT
 % DESC computes cross gradient of parameters of a cross kernel
 % between two lfm kernels, both of them correspond to the velocities.

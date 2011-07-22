@@ -1,6 +1,6 @@
-function gX = rbfard2KernGradX(kern, X, X2)
+function gX = rbfardjitKernGradX(kern, X, X2)
 
-% RBFARD2KERNGRADX Gradient of RBFARD2 kernel with respect to input locations.
+% RBFARDJITKERNGRADX Gradient of RBFARDJIT kernel with respect to input locations.
 % FORMAT
 % DESC computes the gradident of the automatic relevance determination radial basis function
 % kernel with respect to the input positions where both the row
@@ -32,7 +32,7 @@ end
 
 function gX = rbfardjitKernGradXpoint(kern, x, X2)
 
-% RBFARD2KERNGRADXPOINT Gradient with respect to one point of x.
+% RBFARDJITKERNGRADXPOINT Gradient with respect to one point of x.
 
 scales = sparse(sqrt(diag(kern.inputScales)));
 gX = zeros(size(X2));
