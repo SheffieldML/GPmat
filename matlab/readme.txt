@@ -1,3 +1,8 @@
+Version 0.226
+-------------
+
+Added velotrans covariance function which allows a moving field type covariance function with a constant velocity.
+
 Version 0.225
 -------------
 

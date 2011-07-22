@@ -8,6 +8,11 @@
 
 RELEASEINFORMATION
 
+Added velotrans covariance function which allows a moving field type covariance function with a constant velocity.
+
+
+<h3>Version 0.225</h3>
+
 Updates from Mauricio for the latest release of the MULTIGP toolbox.
 
 <h3>Version 0.224</h3>
