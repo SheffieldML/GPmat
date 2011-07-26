@@ -150,6 +150,7 @@ kernExtractParam <- function (kern, only.values=TRUE, untransformed.values=FALSE
 
 
 kernExpandParam <- function (kern, params, untransformed.values=FALSE) {
+# browser()
   if ( is.list(params) )
     params <- params$values
   
@@ -161,12 +162,14 @@ kernExpandParam <- function (kern, params, untransformed.values=FALSE) {
       func <- get(funcName$func, mode="function")
       if (funcName$hasArgs)
         params[index] <- func(params[index], "atox", kern$transformArgs[[i]])
-      else
+      else {
         params[index] <- func(params[index], "atox")
+      }
     }
 
   funcName <- paste(kern$type, "KernExpandParam", sep="")
   func <- get(funcName, mode="function")
+# browser()
   kern <- func(kern, params)
 
   return (kern)

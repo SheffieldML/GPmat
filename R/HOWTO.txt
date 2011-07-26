@@ -19,6 +19,7 @@ install.packages("spam", dependencies=TRUE)
 source("http://bioconductor.org/biocLite.R")
 biocLite("puma")
 biocLite("tigre")
+require(Matrix)
 
 install.packages("gptk", dependencies=TRUE) ## To load the latest released version of GPTK.
 ## OR

@@ -13,7 +13,6 @@ gpExpandParam <- function (model, params) {
   }
   startVal = endVal + 1
   endVal = endVal + model$kern$nParams
-
   model$kern = kernExpandParam(model$kern, params[startVal:endVal])
 
   ## Check if there is a mean function.

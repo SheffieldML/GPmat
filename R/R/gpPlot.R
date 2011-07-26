@@ -17,13 +17,13 @@ gpPlot <- function(model,Xstar,mu,S,simpose=NULL,xlim=NULL,ylim=NULL,xlab='',yla
   f = c(mu+2*sqrt(abs(S)), rev(mu-2*sqrt(abs(S))))
 #   f = c(mu+2*abs(S), rev(mu-2*abs(S)))
 
-  xcomb = rbind(model$X,Xstar); ycomb = f # rbind(model$y,mu,S)
+  xcomb = rbind(model$X,Xstar); ycomb = f
   if (is.null(xlim))
-    xlim = range(xcomb) #c(min(xcomb), max(xcomb))
+    xlim = range(xcomb)
   if (is.null(ylim))
-    ylim = range(ycomb) #c(min(ycomb), max(ycomb))
+    ylim = range(ycomb)
 
-#   par(pty="s") 
+#   par(pty="s")
   plot(0, type="n", xlim=xlim, ylim=ylim, xlab=xlab, ylab=ylab, main=title, new=TRUE) ## Empty plot basis.
 
   if (col=='blue') shade = rgb(0,0,1,alpha=.1)
