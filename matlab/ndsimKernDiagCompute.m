@@ -34,11 +34,11 @@ else
     variancemultiplier = kern.variance;
 end
 
-dim1 = size(t1, 1);
-dim2 = size(t2, 1);
-t1Mat = t1(:, ones(1, dim2));
-t2Mat = t2(:, ones(1, dim1))';
-diffT = (t1Mat - t2Mat);
+% dim1 = size(t1, 1);
+% dim2 = size(t2, 1);
+% t1Mat = t1(:, ones(1, dim2));
+% t2Mat = t2(:, ones(1, dim1))';
+% diffT = (t1Mat - t2Mat);
 
 k1 = 2*t.*erf(t/sigma);
 k2 = k1;
