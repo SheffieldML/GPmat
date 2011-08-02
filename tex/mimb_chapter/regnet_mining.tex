@@ -278,8 +278,46 @@ The results can then be viewed most easily by running the
 \texttt{tigreServer.py} script and pointing it to the saved
 \texttt{p53\_results.sqlite} file.
 
+As there is no suitable genome-wide validation data available, we used
+a sequence-based method of validation.  To do this, we looked for
+strong occurrences of the known p53 binding motif in the promoters of
+highly ranked targets.  This was done by using the \texttt{p53scan}
+tool of Smeenk et al.~\cite{Smeenk2008} on the sequences of 5000 bp
+upstream of annotated transcription starts of RefSeq genes with
+annotated 5' UTRs downloaded from hg19 assembly in the UCSC Genome
+Browser~\cite{Fujita2011}.  Figure~\ref{fig:p53_validation} shows the
+enrichment of the strongest $10 \%$ of the binding motif instances
+identified by \texttt{p53scan} as ranked by the score on the promoters
+of highly ranked genes.  While these high scoring motif instances are
+the most likely true binding sites, some of them may still be
+non-functional.  On the other hand, it is likely that many other genes
+are regulated through a weaker site on the promoter or a more distant
+site which cannot be detected without additional information.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=.7\textwidth]{p53_validation}
+  \caption{Enrichment of strong p53 binding motifs in the promoters of
+    selected number of top predicted targets.  $p$-values of the
+    enrichments are denoted by `***': $p < 0.001$, `**': $p < 0.01$,
+    `*': $p < 0.05$, '+': $p < 0.1$ (tail probability in
+    hypergeometric distribution).}
+  \label{fig:p53_validation}
+\end{figure}
+
 \section{Notes}
 
+One critical question in applying \tigre{} is whether to use the TF
+mRNA data.  The extra information can potentially greatly help in
+identifying the TF activity profile and hence making better
+predictions of new targets, but it can also lead to incorrect
+predictions if it turns out incorrect.  Based on our experience, the
+critical question is whether some outside influence, such as a
+external signal, is the rate-limiting factor in the production of the
+active TF.  Simple post-translational modifications such as
+dimerisation to not appear to significantly hinder the use of TF mRNA
+data, as witnessed by the results in~\cite{Honkela2010PNAS} for
+Drosophila TFs Mef2 and Twi which are known to function as dimers.
 
 \bibliography{mimb_book}
 \bibliographystyle{unsrt}
