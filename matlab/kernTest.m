@@ -82,10 +82,15 @@ else
     % negative inputs...
     x = abs(randn(numData, numIn));
     x2 = abs(randn(numData/2, numIn));
+  elseif isfield(kern, 'indexValues') && kern.indexValues
+    % For index covariance function.
+    x = kern.indices(randi(length(kern.indices), numData, 1))';
+    x2 = kern.indices(randi(length(kern.indices), numData, 1))';
   else
     x = randn(numData, numIn);
     x2 = randn(numData/2, numIn);
   end
+  
 
   % Set the parameters randomly.
   [params, paramnames] = kernExtractParam(kern);

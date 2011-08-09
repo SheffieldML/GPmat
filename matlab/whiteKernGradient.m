@@ -58,31 +58,9 @@ function g = whiteKernGradient(kern, x, varargin)
 % KERN
 
 
-if nargin < 4
-  % If less than 4 parameters are provided, then only a single set
-  % of input locations is used, and the third parameter is the
-  % partial-derivative matrix
-    
-  if (isfield(kern,'use_fixedvariance')) && (kern.use_fixedvariance==1),  
-    % If the special kernel option is used where fixed variances
-    % are interpolated between one-dimensional input locations,
-    % then the kernel variance parameter has no effect on the
-    % kernel and the gradient must be set to zero.
-    g(1, 1) = 0;
-  else
-    % If the kernel is computed as usual as an isotropic
-    % white-noise kernel, then the line below is the correct
-    % gradient with respect to the variance parameter of the kernel.
+  if nargin < 4
     g(1, 1) = trace(varargin{end});
-  end;
-else
-  % If there are at least 4 parameters, then the kernel is being
-  % computed between two different sets of observations: the first
-  % element of varargin is the second set of observation-locations,
-  % and the second element is the partial-derivative matrix. In this
-  % case, because observations are assumed to have independent
-  % noise variables, the kernel is simply a constant (zero) between
-  % any two observations, so the gradient with respect to the
-  % kernel's variance parameter is also zero.
-  g = 0;
+  else
+    g = 0;
+  end
 end

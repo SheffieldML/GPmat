@@ -1,8 +1,8 @@
-function linard2KernDisplay(kern, spacing)
+function indexardKernDisplay(kern, spacing)
 
-% LINARD2KERNDISPLAY Display parameters of the LINARD2 kernel.
+% INDEXKERNDISPLAY Display parameters of the INDEXARD kernel.
 % FORMAT
-% DESC displays the parameters of the automatic relevance determination linear
+% DESC displays the parameters of the index ard based covariance function
 % kernel and the kernel type to the console.
 % ARG kern : the kernel to display.
 %
@@ -11,11 +11,9 @@ function linard2KernDisplay(kern, spacing)
 % ARG kern : the kernel to display.
 % ARG spacing : how many spaces to indent the display of the kernel by.
 %
-% SEEALSO : linard2KernParamInit, modelDisplay, kernDisplay
+% SEEALSO : indexKernParamInit, modelDisplay, kernDisplay
 %
-% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
-%
-% COPYRIGHT : Michalis K. Titsias, 2009
+% COPYRIGHT : Neil D. Lawrence, 2011
 
 % KERN
 
@@ -26,8 +24,8 @@ function linard2KernDisplay(kern, spacing)
     spacing = [];
   end
   spacing = char(spacing);
-  for i = 1:kern.inputDimension
+  for i = 1:length(kern.indices)
     fprintf(spacing)
-    fprintf('Linear ARD Input %d scale: %2.4f\n', i, kern.inputScales(i))
+    fprintf('Index ARD Index %d scale: %2.4f\n', kern.indices(i), kern.indexScales(i))
   end
 end
