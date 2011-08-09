@@ -1,8 +1,7 @@
 function kern = cmpndKernExpandParamTransformSettings(kern, paramtransformsettings)
 
 
-% CMPNDKERNEXPANDPARAM Create kernel structure from CMPND kernel's
-% parameter transformation settings.
+% CMPNDKERNEXPANDPARAMTRANSFORMSETTINGS Create kernel structure from CMPND kernel's parameter transformation settings.
 %
 % FORMAT
 %

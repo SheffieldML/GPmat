@@ -1,6 +1,6 @@
 function g = nddisimKernGradient(kern, t1, varargin)
 
-% DISIMKERNGRADIENT Gradient of DISIM kernel's parameters.
+% NDDISIMKERNGRADIENT Gradient of NDDISIM kernel's parameters.
 % FORMAT
 % DESC computes the gradient of functions with respect to the
 % single input motif

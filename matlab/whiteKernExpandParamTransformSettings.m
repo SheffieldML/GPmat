@@ -1,6 +1,6 @@
 function kern = whiteKernExpandParamTransformSettings(kern, paramtransformsettings)
 
-% WHITEKERNEXPANDPARAM Create kernel structure from WHITE kernel's
+% WHITEKERNEXPANDPARAMTRANSFORMSETTINGS Create kernel structure from WHITE kernel's
 % parameter transformation settings.
 %
 % FORMAT

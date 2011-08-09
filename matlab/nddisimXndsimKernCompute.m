@@ -1,7 +1,6 @@
 function K = nddisimXndsimKernCompute(disimKern, simKern, t1, t2)
 
-% DISIMXSIMKERNCOMPUTE Compute a cross kernel between DISIM and SIM
-% kernels with no decay in the SIM part.
+% NDDISIMXNDSIMKERNCOMPUTE Compute a cross kernel between DISIM and SIM kernels with no decay in the SIM part.
 % FORMAT
 % DESC computes cross kernel terms between DISIM and SIM kernels for
 % the multiple output kernel. 
@@ -28,7 +27,9 @@ function K = nddisimXndsimKernCompute(disimKern, simKern, t1, t2)
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
 % COPYRIGHT : Antti Honkela, 2007-2009
-  
+%
+% COPYRIGHT : Jaakko Peltonen, 2011
+
 % KERN
 
 if nargin < 4

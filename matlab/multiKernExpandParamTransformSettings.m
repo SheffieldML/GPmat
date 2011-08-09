@@ -1,7 +1,6 @@
 function kern = multiKernExpandParamTransformSettings(kern, paramtransformsettings)
 
-% MULTIKERNEXPANDPARAM Create kernel structure from MULTI kernel's
-% parameter transformation settings.
+% MULTIKERNEXPANDPARAMTRANSFORMSETTINGS Create kernel structure from MULTI kernel's parameter transformation settings.
 %
 % FORMAT
 %

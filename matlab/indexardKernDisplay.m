@@ -1,6 +1,6 @@
 function indexardKernDisplay(kern, spacing)
 
-% INDEXKERNDISPLAY Display parameters of the INDEXARD kernel.
+% INDEXARDKERNDISPLAY Display parameters of the INDEXARD kernel.
 % FORMAT
 % DESC displays the parameters of the index ard based covariance function
 % kernel and the kernel type to the console.

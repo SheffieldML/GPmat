@@ -1,7 +1,6 @@
 function kern = ndsimKernExpandParamTransformSettings(kern, paramtransformsettings)
 
-% SIMKERNEXPANDPARAM Create kernel structure from SIM kernel's
-% parameters' transform settings.
+% NDSIMKERNEXPANDPARAMTRANSFORMSETTINGS Create kernel structure from SIM kernel's parameters' transform settings.
 % FORMAT
 % DESC returns a single input motif kernel structure filled with the
 % parameters in the given vector. This is used as a helper function to
@@ -17,6 +16,8 @@ function kern = ndsimKernExpandParamTransformSettings(kern, paramtransformsettin
 % SEEALSO : simKernParamInit, simKernExtractParam, kernExpandParam
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
+% 
+% COPYRIGHT : Jaakko Peltonen, 2011
 
 % KERN
 

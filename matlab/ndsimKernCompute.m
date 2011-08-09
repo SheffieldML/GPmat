@@ -1,7 +1,6 @@
 function k = ndsimKernCompute(kern, t1, t2)
 
-% SIMKERNCOMPUTE Compute the SIM kernel with no decay given the 
-% parameters and X.
+% NDSIMKERNCOMPUTE Compute the NDSIM kernel with no decay given the parameters and X.
 %
 % FORMAT
 % DESC computes the kernel parameters for the single input motif

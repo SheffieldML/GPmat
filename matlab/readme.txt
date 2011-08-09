@@ -1,3 +1,8 @@
+Version 0.227
+-------------
+
+Added diag covariance which uses the inputs as a diagonal covariance function (takes a one dimensional input only). Useful for having heteroschedastic noise. And index covariance functions which return a value if the two input indices are identical, and zero otherwise. Also includes Jaakko's NDDISIM and NDSIM covariance functions.
+
 Version 0.226
 -------------
 

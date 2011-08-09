@@ -1,6 +1,6 @@
 function kern = nddisimKernExpandParamTransformSettings(kern, paramtransformsettings)
 
-% DISIMKERNEXPANDPARAM Create kernel structure from DISIM kernel's parameters.
+% NDDISIMKERNEXPANDPARAMTRANSFORMSETTINGS Create kernel structure from DISIM kernel's parameters.
 % FORMAT
 % DESC returns a single input motif kernel structure filled with the
 % parameters in the given vector. This is used as a helper function to

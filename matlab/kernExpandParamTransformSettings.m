@@ -1,6 +1,6 @@
 function kern = kernExpandParamTransformSettings(kern, paramtransformsettings)
 
-% KERNEXPANDPARAM Expand parameters' transform settings to form a kernel structure.
+% KERNEXPANDPARAMTRANSFORMSETTINGS Expand parameters' transform settings to form a kernel structure.
 %
 % FORMAT
 %

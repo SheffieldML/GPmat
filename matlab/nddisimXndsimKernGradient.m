@@ -1,6 +1,6 @@
 function [g1,g2] = nddisimXndsimKernGradient(disimKern, simKern, t1, t2, covGrad)
 
-% DISIMXSIMKERNCOMPUTE Compute a cross kernel between DISIM and SIM
+% NDDISIMXNDSIMKERNGRADIENT Compute a cross gradient between NDDISIM and NDSIM
 % kernels with no decay in the SIM part.
 % FORMAT
 % DESC computes cross kernel terms between DISIM and SIM kernels for

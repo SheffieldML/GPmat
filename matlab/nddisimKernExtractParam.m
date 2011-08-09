@@ -1,6 +1,6 @@
 function [params, names] = nddisimKernExtractParam(kern)
 
-% DISIMKERNEXTRACTPARAM Extract parameters from the DISIM kernel structure.
+% NDDISIMKERNEXTRACTPARAM Extract parameters from the NDDISIM kernel structure.
 % FORMAT
 % DESC Extract parameters from the single input motif kernel structure
 % into a vector of parameters for optimisation.
