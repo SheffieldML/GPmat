@@ -10,11 +10,9 @@ function fileName = fgplvmWriteResult(model, dataSet, number)
 %
 % SEEALSO : fgplvmLoadResult
 %
-% COPYRIGHT : Neil D. Lawrence, 2009
+% COPYRIGHT : Neil D. Lawrence, 2009, 2011
   
 % FGPLVM
-
-[Y, lbls] = lvmLoadData(dataSet);
 
 dataSet(1) = upper(dataSet(1));
 type = model.type;
