@@ -19,6 +19,11 @@ function model = gpExpandParam(model, params)
 
 % GP
 
+if isfield(model, 'fix')
+  for i = 1:length(model.fix)
+    params(model.fix(i).index) = model.fix(i).value;
+  end
+end
 
 if strcmp(model.approx, 'ftc') || model.fixInducing
   endVal = 0;

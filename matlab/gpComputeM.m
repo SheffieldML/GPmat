@@ -5,7 +5,7 @@ function m = gpComputeM(model)
 % DESC computes the matrix m (the scaled, bias and mean function
 % removed matrix of the targets), given the model.
 % ARG model : the model for which the values are to be computed.
-% ARG m : the scaled, bias and mean function removed values.
+% RETURN m : the scaled, bias and mean function removed values.
 %
 % SEEALSO : gpCreate, gpComputeAlpha, gpUpdateAD
 %

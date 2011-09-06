@@ -88,9 +88,9 @@ href="/~neill/gplvm/">here</a>.
 function to be sampled from a Gaussian distribution. The sample is 25
 dimensional and is from a Gaussian with a particular covariance.
 
-<p><code>
+<pre>
 &gt;&gt; demGpSample
-</code>
+</pre>
 
 <p><center><img src="gpSample.png" width ="50%"><img
 src="gpCovariance.png" width ="50%"><br> <i>Left</i> A single, 25
@@ -126,18 +126,18 @@ for <i>f</i><sub>1</sub> and <i>f</i><sub>5</sub>.  </center>
 A script is provided which samples from a Gaussian process with the
 provided covariance function.
 
-<p><code>
+<pre>
 &gt;&gt; gpSample('rbf', 10, [1 1], [-3 3], 1e5)
-</code>
+</pre>
 
 <p>will give 10 samples from an RBF covariance function with a
 parameter vector given by [1 1] (inverse width 1, variance 1) across
 the range -3 to 3 on the <i>x</i>-axis. The random seed will be set to
 1e5.
 
-<p><code>
+<pre>
 &gt;&gt; gpSample('rbf', 10, [16 1], [-3 3], 1e5)
-</code>
+</pre>
 
 <p>is similar, but the inverse width is now set to 16 (length scale 0.25).
 
@@ -154,18 +154,18 @@ the MLP covariance which is non stationary and can produce point
 symmetric functions,
 
 
-<p><code>
+<pre>
 &gt;&gt; gpSample('mlp', 10, [100 100 1], [-1 1], 1e5)
-</code>
+</pre>
 
 gives 10 samples from the MLP covariance function where the &quot;bias
 variance&quot; is 100 (basis functions are centered around the origin
 with standard deviation of 10) and the &quot;weight variance&quot; is
 100.
 
-<p><code>
+<pre>
 &gt;&gt; gpSample('mlp', 10, [100 1e-16 1], [-1 1], 1e5)
-</code>
+</pre>
 
 gives 10 samples from the MLP covariance function where the &quot;bias
 variance&quot; is approximately zero (basis functions are placed on
@@ -185,15 +185,15 @@ and bias variance approximately zero.  </center>
 
 <p>Gaussian processes are non-parametric models. They are specified by their covariance function and a mean function. When combined with data observations a posterior Gaussian process is induced. The demos below show samples from that posterior.
 
-<p><code>
+<pre>
 &gt;&gt;  gpPosteriorSample('rbf', 5, [1 1], [-3 3], 1e5)
-</p>
+</pre>
 
 and 
 
-<p><code>
+<pre>
 &gt;&gt;  gpPosteriorSample('rbf', 5, [16 1], [-3 3], 1e5)
-</p>
+</pre>
 
 <p><center><img
 src="gpPosteriorSampleRbfSamples5Seed100000InverseWidth1Variance1bw.png" width
@@ -216,9 +216,9 @@ the data is sampled from a GP with a known covariance function. The
 curve is then recovered with minimal uncertainty after only nine data
 points are included. The code is run with
 
-<p><code>
+<pre>
 &gt;&gt; demInterpolation
-</code>
+</pre>
 
 <p><center><img src="demInterpolation3.png" width ="50%"><img
 src="demInterpolation4.png" width ="50%"><br>
@@ -243,9 +243,9 @@ not necessarily pass right through each data point.
 
 The code is run with
 
-<p><code>
+<pre>
 &gt;&gt; demRegression
-</code>
+</pre>
 
 
 <p><center><img src="demRegression3.png" width ="50%"><img
@@ -266,9 +266,9 @@ included.<br> </center>
 interpretations of regression is the ability to select the hyper
 parameters of the kernel automatically. The demo
 
-<p><code>
+<pre>
 &gt;&gt; demOptimiseGp
-</code>
+</pre>
 
 <p>shows a series of plots of a Gaussian process with different length
 scales fitted to six data points. For each plot there is a
@@ -298,7 +298,7 @@ length scale value of 1.</center>
 
 <p>As a simple example of regression for real data we consider a motion capture data set. The data is <a href="http://accad.osu.edu/research/mocap/mocap_data.htm">from Ohio State University</a>. In the example script we perform Gaussian process regression with time as the input and the x,y,z position of the marker attached to the left ankle. To demonstrate the behavior of the model when the marker is lost, we remove data from This code can be run with
 
-<p><code> &gt;&gt; demStickGp1 </code> 
+<pre> &gt;&gt; demStickGp1 </pre> 
 
 <p>The code will optimize hyper parameters and show plots of the posterior process through the training data and the missing test points.
 
@@ -336,7 +336,7 @@ training conditional&quot; (DTC) approximation.
 
 <p>To use this approximation the following script can be run.
 
-<p><code> &gt;&gt; demSpgp1dGp1 </code> 
+<pre> &gt;&gt; demSpgp1dGp1 </pre> 
 
 <p>The result of the script is
 given in the plot below.  
@@ -351,7 +351,7 @@ given as grey shading.</center>
 QR-terminology this is known as the fully independent training
 conditional (FITC). To try this approximation run the following script
 
-<p><code> &gt;&gt; demSpgp1dGp2 </code>
+<pre> &gt;&gt; demSpgp1dGp2 </pre>
 
 <p>The result of the script is given on the left of the plot below.
 
@@ -375,9 +375,9 @@ and Rasmussen's</a> review. This approximation is known as the
 &quot;partially independent training conditional&quot; (PITC) in
 QR-terminology. To try this approximation run the following script
 
-<p><code>
+<pre>
 &gt;&gt; demSpgp1dGp3
-</code>
+</pre>
 
 <p>The result of the script is given on the right of the plot above.
 
@@ -385,9 +385,9 @@ QR-terminology. To try this approximation run the following script
 Gaussian process on the data with the correct hyper-parameters. To do
 this the following script can be run.
 
-<p><code>
+<pre>
 &gt;&gt; demSpgp1dGp4
-</code>
+</pre>
 
 <p>The result of the script is given in the plot below.
 

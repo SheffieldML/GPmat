@@ -38,8 +38,10 @@ end
 t_star = linspace(lims(1), lims(2), 200)';
 
 kern = kernCreate(t_star, kernType);
-for i=1:length(kern.comp)
-  kern.comp{i}.transforms = [];
+if isfield(kern, 'comp')
+  for i=1:length(kern.comp)
+    kern.comp{i}.transforms = [];
+  end
 end
 
 if ~isempty(params)

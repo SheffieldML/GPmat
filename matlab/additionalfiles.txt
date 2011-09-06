@@ -31,3 +31,8 @@ dir: html
 ~/mlprojects/gp/html/demSpgp1dGp2.png
 ~/mlprojects/gp/html/demSpgp1dGp3.png
 ~/mlprojects/gp/html/demSpgp1dGp4.png
+~/mlprojects/gp/html/demStickGp1Out1.png
+~/mlprojects/gp/html/demStickGp1Out2.png
+~/mlprojects/gp/html/demStickGp1Out3.png
+~/mlprojects/gp/html/gpPosteriorSampleRbfSamples5Seed100000InverseWidth1Variance1bw.png
+~/mlprojects/gp/html/gpPosteriorSampleRbfSamples5Seed100000InverseWidth16Variance1bw.png

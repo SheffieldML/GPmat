@@ -1,4 +1,4 @@
-% DEMGPTWOSAMPLEEB Run GP two sample code on EB.
+% DEMGPTWOSAMPLEEBSH Run GP two sample code on EB data
 
 % GP
 
