@@ -3,7 +3,7 @@ function model = spectralUpdateX(model)
 % SPECTRALUPDATEX Update the latent representation for spectral model.
 % FORMAT
 % DESC updates the latent represenation given the stiffness matrix for a
-% spectral model (stiffness matrix is stored in model.L).
+% spectral model (Laplacian matrix is stored in model.L).
 % ARG model : the model to be updated (with the stiffness matrix
 % computed).
 % RETURN model : the model with latent positions X updated.

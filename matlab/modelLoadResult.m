@@ -37,7 +37,7 @@ function model = modelLoadResult(type, dataSet, number, dataLoaderStr)
     fhandle = [origType 'Reconstruct'];
     if exist(fhandle)==2
       % There is reconstruct code, use it to reconstruct.
-      [Y, lbls] = dataLoaderHandler(origDataSet);
+      [Y, lbls] = dataLoaderHandle(origDataSet);
       load(fileName);
       varName = [origType 'Info'];
       eval(['model = ' fhandle '(' varName ', Y);'])
