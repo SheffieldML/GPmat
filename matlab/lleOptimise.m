@@ -75,8 +75,8 @@ function model = lleOptimise(model, display, iters)
   %options.isreal = 1; 
   %options.issym = 1; 
   %[m, v] = svds(model.W', model.q+1, 0);
-  
+
+  % This should be done more efficiently 
   model.L = model.W*model.W';
-  
   model = spectralUpdateX(model);
 end
