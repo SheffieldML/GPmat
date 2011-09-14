@@ -31,11 +31,15 @@ function kern = kernExpandParamTransformSettings(kern, paramtransformsettings)
 
 % KERN
 
+%fprintf(1,'kernExpandParamTransformSettings step1\n');
+
 % If no transformation settings are provided, do nothing, otherwise
 % simply call the kernel-specific function.
 if ~isempty(paramtransformsettings),
   % Get the handle of the kernel-specific function and call it
+  kern.type
   fhandle = str2func([kern.type 'KernExpandParamTransformSettings']);
   kern = fhandle(kern, paramtransformsettings);
 end;
 
+%fprintf(1,'kernExpandParamTransformSettings done\n');
