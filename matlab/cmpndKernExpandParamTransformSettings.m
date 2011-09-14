@@ -32,17 +32,26 @@ function kern = cmpndKernExpandParamTransformSettings(kern, paramtransformsettin
 
 % KERN
 
+
+%fprintf(1,'cmpndKernExpandParamTransformSettings step1\n');
+
 %fprintf(1,'cmpndKernExpandParam, params, kern.paramGroups\n')
 %params
 %full(kern.paramGroups)
 
+% kern.paramGroups
+% paramtransformsettings
+% length(paramtransformsettings)
+% size(kern.paramGroups,2)
 
 % There should be as many transformation settings provided as there
 % are shared parameters in the compound kernel.
-if length(paramtransformationsettings)~=size(kern.paramGroups,2),
-  error(sprintf('Problem in cmpndKernExpandParamTransformSettings: expected %d transformation-settings, received %d\n',size(kern.paramGroups,2),length(paramtransformationsettings)));
+if length(paramtransformsettings)~=size(kern.paramGroups,2),
+  error(sprintf('Problem in cmpndKernExpandParamTransformSettings: expected %d transformation-settings, received %d\n',size(kern.paramGroups,2),length(paramtransformsettings)));
 end;
 
+%fprintf(1,'cmpndKernExpandParamTransformSettings step1b\n');
+%pause
 
 % In a compound (cmpnd) kernel, some parameters may be shared
 % between groups. Each provided transformation-setting is 
@@ -51,7 +60,12 @@ end;
 % using that shared parameter.
 
 expandedsettings=cell(size(kern.paramGroups,1),1);
+
+%fprintf(1,'cmpndKernExpandParamTransformSettings step1b2\n');
+
+
 for k=1:length(expandedsettings),
+  fprintf(1,'cmpndKernExpandParamTransformSettings step1b3\n');
   % Find the shared parameter that correspond to the k:th non-shared parameter
   k2=find(kern.paramGroups(k,:)==1);
   
@@ -64,6 +78,7 @@ end;
 %expandedsettings
 %pause
 
+%fprintf(1,'cmpndKernExpandParamTransformSettings step2\n');
 
 % Distribute each group of transformation-settings into the
 % corresponding component-kernel of the compound kernel.
@@ -73,6 +88,10 @@ for i = 1:length(kern.comp)
   % Each component-kernel is assumed to require as many transformation
   % settings as it has parameters.
   endVal = endVal + kern.comp{i}.nParams;
+  fprintf(1,'cmpndKernExpandParamTransformSettings step3\n');
   kern.comp{i} = kernExpandParamTransformSettings(kern.comp{i}, expandedsettings(startVal:endVal));
+  fprintf(1,'cmpndKernExpandParamTransformSettings step4\n');
   startVal = endVal + 1;
 end
+
+%fprintf(1,'cmpndKernExpandParamTransformSettings done\n');
