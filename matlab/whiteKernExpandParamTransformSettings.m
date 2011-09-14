@@ -33,12 +33,19 @@ function kern = whiteKernExpandParamTransformSettings(kern, paramtransformsettin
 
 % KERN
 
+%fprintf(1,'whiteKernExpandParamTransformSettings step1\n');
+
+% paramtransformsettings
 
 % The "white" kernel uses just one transformation, for the variance 
 % parameter of the kernel.
-if length(paramtransformsettings~=1),
+if length(paramtransformsettings)~=1,
   error(sprintf('Problem in whiteKernExpandParamTransformSettings: expected 1 transformation setting, received %d\n',...
         length(paramtransformsettings)));
 end;
 
+%fprintf(1,'whiteKernExpandParamTransformSettings step2\n');
+
 kern.transforms(1).transformsettings=paramtransformsettings{1};
+
+%fprintf(1,'whiteKernExpandParamTransformSettings done\n');
