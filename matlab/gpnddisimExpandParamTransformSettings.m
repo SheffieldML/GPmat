@@ -22,6 +22,8 @@ function model = gpnddisimExpandParamTransformSettings(model, paramtransformsett
 
 % GPSIM
 
+% fprintf(1,'gpnddisimExpandParamTransformSettings step1\n');
+
 
 if length(paramtransformsettings) ~= model.numParams
   error(sprintf('Parameter transform settings cell array is incorrect length %d, expected %d',...
@@ -30,6 +32,9 @@ end
 startVal = 1;
 endVal = model.kern.nParams;
 model.kern = kernExpandParamTransformSettings(model.kern, paramtransformsettings(startVal:endVal));
+
+% fprintf(1,'gpnddisimExpandParamTransformSettings step2\n');
+
 
 if model.numGenes>0,
   model.bTransformSettings = paramtransformsettings(endVal+1:endVal+model.numGenes);
@@ -41,6 +46,7 @@ if model.numGenes>0,
   end;  
 end;
 
+% fprintf(1,'gpnddisimExpandParamTransformSettings step3\n');
 
 
 if isfield(model,'disimdecayindices'),
@@ -85,3 +91,4 @@ end;
 
 model.simMeanTransformSettings = paramtransformsettings{endVal+1};
 
+% fprintf(1,'gpnddisimExpandParamTransformSettings done\n');
