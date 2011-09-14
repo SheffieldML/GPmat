@@ -57,10 +57,12 @@ function g = whiteKernGradient(kern, x, varargin)
 
 % KERN
 
-
+if (isfield(kern,'use_fixedvariance')==1) && (kern.use_fixedvariance==1),
+  g(1,1)=0;
+else  
   if nargin < 4
     g(1, 1) = trace(varargin{end});
   else
     g = 0;
-  end
+  end    
 end
