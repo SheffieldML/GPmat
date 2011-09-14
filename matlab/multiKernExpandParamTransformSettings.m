@@ -34,8 +34,8 @@ function kern = multiKernExpandParamTransformSettings(kern, paramtransformsettin
 
 % There should be as many transformation settings provided as there
 % are shared parameters in the compound kernel.
-if length(paramtransformationsettings)~=size(kern.paramGroups,2),
-  error(sprintf('Problem in cmpndKernExpandParamTransformSettings: expected %d transformation-settings, received %d\n',size(kern.paramGroups,2),length(paramtransformationsettings)));
+if length(paramtransformsettings)~=size(kern.paramGroups,2),
+  error(sprintf('Problem in cmpndKernExpandParamTransformSettings: expected %d transformation-settings, received %d\n',size(kern.paramGroups,2),length(paramtransformsettings)));
 end;
 
 
