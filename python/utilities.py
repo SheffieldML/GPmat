@@ -28,6 +28,9 @@ class parameterised:
 			assert not np.any(matches[:,None]==np.hstack(self.tied_indices)), "Some indices are already tied!"
 		self.tied_indices.append(matches)
 		#TODO only one of the priors will be evaluated. Give a warning message if the priors are not identical
+		if hasattr(self,'prior'):
+			pass
+
 		self.expand_param(self.extract_param())# sets tied parameters to single value
 		
 
@@ -153,16 +156,40 @@ class parameterised:
 			to_remove=self.constrained_fixed_indices
 		return np.delete(x,to_remove)
 
+	def extract_gradients(self):
+		"""use self.log_likelihood_gradients and self.prior_gradients to get the gradients of the model.
+		Adjust the gradient for constraints and ties, return."""
+		#TODO: prior gradients
+		g = self.log_likelihood_gradients()
+		x = self.get_param()
+		g[self.constrained_positive_indices] = g[self.constrained_positive_indices]*x[self.constrained_positive_indices]
+		g[self.constrained_negative_indices] = g[self.constrained_negative_indices]*x[self.constrained_negative_indices]
+		[np.put(g,i,g[i]*(1.-sigmoid(xx[i]))*sigmoid(xx[i])*(high-low)) for i,low,high in zip(self.constrained_bounded_indices, self.constrained_bounded_lowers, self.constrained_bounded_uppers)]
+		[np.put(g,i,v) for i,v in [(t[0],np.sum(g[t[1:]])) for t in self.tied_indices]]
+		if len(self.tied_indices):
+			to_remove = np.hstack((self.constrained_fixed_indices,np.hstack([t[1:] for t in self.tied_indices])))
+		else:
+			to_remove=self.constrained_fixed_indices
+			
+		return np.delete(g,to_remove)
+
+
 
 	def expand_param(self,x):
 		""" takes the vector x, which is then modified (by untying, reparameterising or inserting fixed values), and then call self.set_param"""
-		Nfix_places = len(self.constrained_fixed_indices)+len(self.tied_indices)
+		#work out how many places are fixed, and where they are. tricky logic!
+		Nfix_places = 0.
+		if len(self.tied_indices):
+			Nfix_places += np.hstack(self.tied_indices)-len(self.tied_indices)
+		if len(self.constrained_fixed_indices):
+			Nfix_places += np.hstack(self.constrained_fixed_indices).size
 		if Nfix_places:
 			fix_places = np.hstack(self.constrained_fixed_indices+[t[1:] for t in self.tied_indices])
 		else:
 			fix_places = []
-		free_places = np.setdiff1d(np.arange(Nfix_places+x.size),fix_places)
-		xx = np.zeros(Nfix_places+free_places.size)
+		free_places = np.setdiff1d(np.arange(Nfix_places+x.size,dtype=np.int),fix_places)
+		#put the models values in the vector xx
+		xx = np.zeros(Nfix_places+free_places.size,dtype=np.float64)
 		xx[free_places] = x
 		[np.put(xx,i,v) for i,v in zip(self.constrained_fixed_indices, self.constrained_fixed_values)]
 		[np.put(xx,i,v) for i,v in [(t[1:],xx[t[0]]) for t in self.tied_indices] ]
@@ -193,50 +220,55 @@ class model(parameterised):
 
 	def log_prior(self):
 		"""evaluate the prior"""
+		raise NotImplementedError, "TODO"
 		return self.prior.lnpdf(self.get_param())
 	
 	def log_prior_gradients(self):
 		"""evaluate the gradients of the prior"""
+		raise NotImplementedError, "TODO"
 		return self.prior.lnpdf_grad(self.get_param())
 
 	def randomize(self):
-		x = self.get_param()
-		self.set_param(np.random.randn(x.size))
+		x = self.extract_param()
+		self.expand_param(np.random.randn(x.size))
 
-
-	def maximum_likelihood_restarts(self, Nrestarts=10):
-		D = self.get_param().size
-		mls = []
+	def maximum_likelihood_restarts(self, Nrestarts=10, compare_Laplace=False, **kwargs):
+		D = self.extract_param().size
+		scores = []
 		params = []
 		for i in range(Nrestarts):
-			self.set_param(np.random.randn(D))
-			self.maximum_likelihood()
-			mls.append(self.log_likelihood())
-			params.append(self.get_param())
-		i = np.argmax(mls)
-		self.set_param(params[i])
+			self.expand_param(np.random.randn(D))
+			self.maximum_likelihood(**kwargs)
+			if compare_Laplace:
+				self.maximum_likelihood(ftol=1e-9)#need more numerical stability for good laplace approximation
+				scores.append(self.Laplace_evidence())
+			else:
+				scores.append(self.log_likelihood())
+			params.append(self.extract_param())
+		i = np.argmax(scores)
+		self.expand_param(params[i])
 
-	def maximum_likelihood(self):
+	def maximum_likelihood(self,**kwargs):
 		def f_fp(x):
-			self.set_param(x)
-			return -self.log_likelihood(),-self.log_likelihood_gradients()
-		start = self.get_param()
-		opt = optimize.fmin_tnc(f_fp,start)[0]
-		self.set_param(opt)
+			self.expand_param(x)
+			return -self.log_likelihood(),-self.extract_gradients()
+		start = self.extract_param()
+		opt = optimize.fmin_tnc(f_fp,start,**kwargs)[0]
+		self.expand_param(opt)
 
 	def maximum_aposteriori(self):
 		def f_fp(x):
-			self.set_param(x)
+			self.expand_param(x)
 			return -self.log_likelihood() -self.log_prior() ,-self.log_likelihood_gradients() -self.log_prior_gradients()
-		start = self.get_param()
+		start = self.extract_param()
 		opt = optimize.fmin_tnc(f_fp,start)[0]
-		self.set_param(opt)
+		self.expand_param(opt)
 
 
-	def Laplace_evidence(self):
-		"""Returns an estiamte of the model evidence based on the Laplace approximation. 
-		Uses a numerical estimate of the hessian if none is available analytically"""
+	def Laplace_covariance(self):
+		"""return the covariance matric of a Laplace approximatino at the current (stationary) point"""
 		#TODO add in the prior contributions for MAP estimation
+		#TODO fix the hessian for tied, constrained and fixed components
 		if hasattr(self, 'log_likelihood_hessian'):
 			A = -self.log_likelihood_hessian()
 
@@ -248,12 +280,18 @@ class model(parameterised):
 				return self.log_likelihood()
 			h = ndt.Hessian(f)
 			A = -h(x)
+			self.set_param(x)
 		# check for almost zero components on the diagonal which screw up the cholesky
 		aa = np.nonzero((np.diag(A)<1e-6) & (np.diag(A)>0.))[0]
 		A[aa,aa] = 0.
-		self.set_param(x)
+		return A
+
+	def Laplace_evidence(self):
+		"""Returns an estiamte of the model evidence based on the Laplace approximation. 
+		Uses a numerical estimate of the hessian if none is available analytically"""
+		A = self.Laplace_covariance()
 		hld = np.sum(np.log(np.diag(jitchol(A)[0])))
-		return 0.5*x.size*np.log(2*np.pi) + self.log_likelihood() - hld
+		return 0.5*self.get_param().size*np.log(2*np.pi) + self.log_likelihood() - hld
 
 	def checkgrad(self,step=1e-6, tolerance = 1e-3, *args):
 		"""check the gradient of the model by comparing to a numerical estimate. 
@@ -293,38 +331,47 @@ class model(parameterised):
 				gradient = self.log_likelihood_gradients()
 
 			
-			numerical_gradient = (f1-f2)/(2*dx)
-			print i,"th element"
-			#print "gradient = ",gradient
-			#print "numerical gradient = ",numerical_gradient
-			ratio = (f1-f2)/(2*np.dot(dx,gradient))
-			print "ratio = ",ratio,'\n'
-			sys.stdout.flush()
-	
+				numerical_gradient = (f1-f2)/(2*dx)
+				print i,"th element"
+				#print "gradient = ",gradient
+				#print "numerical gradient = ",numerical_gradient
+				ratio = (f1-f2)/(2*np.dot(dx,gradient))
+				print "ratio = ",ratio,'\n'
+				sys.stdout.flush()
+		
 
 class Metropolis_Hastings:
-	def __init__(self,model,Ntotal=100,Nburn=0,Nthin=1,tune=True,tune_throughout=False,tune_interval=100,cov=None):
-
+	def __init__(self,model,cov=None):
+		"""Metropolis Hastings, with tunings according to Gelman et al. """
 		self.model = model
-		current = self.model.get_param()
+		current = self.model.extract_param()
 		self.D = current.size
-		self.chain = []
+		self.chains = []
 		if cov is None:
-			self.cov = np.eye(self.D) # TODO use hessian
+			self.cov = m.Laplace_covariance()
 		else:
 			self.cov = cov
+		self.scale = 2.4/np.sqrt(self.D)
+		self.new_chain(current)
 
-		self.sample(Ntotal, Nburn, Nthin)
+	def new_chain(self, start=None):
+		self.chains.append([])
+		if start is None:
+			self.model.randomise()
+		else:
+			self.model.expand_param(start)
+
+
 
 	def sample(self, Ntotal, Nburn, Nthin, tune=True, tune_throughout=False, tune_interval=100):
-		current = self.model.get_param()
+		current = self.model.extract_param()
 		fcurrent = self.model.log_likelihood() # TODO priors
 		accepted = np.zeros(Ntotal,dtype=np.bool)
 		for it in range(Ntotal):
 			print "sample %d of %d\r"%(it,Ntotal)
 			sys.stdout.flush()
-			prop = current + np.random.multivariate_normal(np.zeros(self.D),self.cov)
-			self.model.set_param(prop)
+			prop = current + np.random.multivariate_normal(np.zeros(self.D),self.cov*self.scale)
+			self.model.expand_param(prop)
 			fprop = self.model.log_likelihood()
 
 			if fprop>fcurrent:#sample accepted, going 'uphill'
@@ -340,15 +387,15 @@ class Metropolis_Hastings:
 
 			#store current value
 			if (it > Nburn) & ((it%Nthin)==0):
-				self.chain.append(current)
+				self.chains[-1].append(current)
 
 			#tuning!
 			if ((it%tune_interval)==0) & tune & ((it<Nburn) | (tune_throughout)):
 				pc = np.mean(accepted[it-tune_interval:it])
-				if pc > .4:
-					self.cov *= 1.1
-				if pc < .2:
-					self.cov /= 1.1
+				if pc > .25:
+					self.scale *= 1.1
+				if pc < .15:
+					self.scale /= 1.1
 
 	def predict(self,function,args):
 		"""Make a prediction for the function, to which we will pass the additional arguments"""

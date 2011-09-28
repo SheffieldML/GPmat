@@ -72,6 +72,14 @@ def nextLight():
 	lightList.append(lightList.pop(0))
 	return lightList[-1]
 
+def reset():
+	while not darkList[0]==coloursHex['darkBlue']:
+		darkList.append(darkList.pop(0))
+	while not mediumList[0]==coloursHex['mediumBlue']:
+		mediumList.append(mediumList.pop(0))
+	while not lightList[0]==coloursHex['lightBlue']:
+		lightList.append(lightList.pop(0))
+
 def setLightFigures():
 	mpl.rcParams['axes.edgecolor']=coloursHex['Aluminium6']
 	mpl.rcParams['axes.facecolor']=coloursHex['Aluminium2']
