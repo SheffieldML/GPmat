@@ -218,6 +218,16 @@ class model(parameterised):
 	def __init__(self):
 		parameterised.__init__(self)
 
+	def set_prior(self,which,what):
+		"""sets priors on the model parameters.
+
+		Arguments
+		---------
+		which -- string, regexp, or integer array
+		what -- instance of prior class
+		"""
+		pass
+
 	def log_prior(self):
 		"""evaluate the prior"""
 		raise NotImplementedError, "TODO"
@@ -348,7 +358,7 @@ class Metropolis_Hastings:
 		self.D = current.size
 		self.chains = []
 		if cov is None:
-			self.cov = m.Laplace_covariance()
+			self.cov = model.Laplace_covariance()
 		else:
 			self.cov = cov
 		self.scale = 2.4/np.sqrt(self.D)
@@ -357,7 +367,7 @@ class Metropolis_Hastings:
 	def new_chain(self, start=None):
 		self.chains.append([])
 		if start is None:
-			self.model.randomise()
+			self.model.randomize()
 		else:
 			self.model.expand_param(start)
 
@@ -368,9 +378,9 @@ class Metropolis_Hastings:
 		fcurrent = self.model.log_likelihood() # TODO priors
 		accepted = np.zeros(Ntotal,dtype=np.bool)
 		for it in range(Ntotal):
-			print "sample %d of %d\r"%(it,Ntotal)
+			print "sample %d of %d\r"%(it,Ntotal),
 			sys.stdout.flush()
-			prop = current + np.random.multivariate_normal(np.zeros(self.D),self.cov*self.scale)
+			prop = np.random.multivariate_normal(current, self.cov*self.scale)
 			self.model.expand_param(prop)
 			fprop = self.model.log_likelihood()
 
