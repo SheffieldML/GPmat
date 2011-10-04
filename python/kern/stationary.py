@@ -38,7 +38,7 @@ class stationary(kern):
 		"""
 		Arguments
 		---------
-		target : a np array to add the computation of this kernel to
+		target : a np array to add the computation of this kernel to. If None, a new array is created
 		"""
 		if target is None:
 			target = np.zeros(self.shape)
@@ -49,10 +49,23 @@ class stationary(kern):
 		return target
 		
 	def diag_compute(self):
-		return np.ones(self.shape[0])*self.alpha
+		if self.masked:
+			ret = np.zeros(self.shape[0])
+			ret[self.mask[0][0]] = self.alpha
+			return ret
+		else:
+			return np.ones(self.shape[0])*self.alpha
+
 	def cross_compute(self,X2):
-		r = (np.exp(-self.gamma*np.square(np.sum(self.X[:,None,:]-X2[None,:,:],-1))))
-		return self.alpha*self.function(r)
+		if self.masked:
+			ret = np.zeros((self.shape[0],X2.shape[0]))
+			r = np.sum(self.X[self.mask[0][0]][:,None,:]-X2[None,:,:],-1)
+			ret[self.mask[0][0],:] = self.alpha*self.function(r)
+			return ret
+		else:
+			r = np.square(np.sum(self.X[:,None,:]-X2[None,:,:],-1))
+			return self.alpha*self.function(r)
+
 	def function(self):
 		raise NotImplementedError
 	def function_gradients(self):
