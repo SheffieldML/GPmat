@@ -1,14 +1,12 @@
 import numpy as np
 from scipy import linalg, optimize
 import pylab as pb
-import Tango
 import sys
 import re
 import numdifftools as ndt
 import pdb
-import cPickle
 from parameterised import parameterised
-
+import prior
 
 class model(parameterised):
 	def __init__(self):
@@ -20,33 +18,84 @@ class model(parameterised):
 		Arguments
 		---------
 		which -- string, regexp, or integer array
-		what -- instance of prior class
+		what -- instance of a prior class
 		"""
-		pass
+		if not hasattr(self,'priors'):
+			self.priors = [None for i in range(self.get_param().size)]
+
+		which = self.grep_param_names(which)
+
+		#priors on positive variables
+		if isinstance(what, (prior.gamma, prior.log_Gaussian)):
+			assert not np.any(which[:,None]==self.constrained_negative_indices), "constraint and prior incompatible"
+			unconst = np.setdiff1d(which, self.constrained_positive_indices)
+			if len(unconst):
+				print "Warning: constraining parameters to be positive:"
+				print '\n'.join([n for i,n in enumerate(self.get_param_names()) if i in unconst])
+				print '\n'
+				self.constrain_positive(unconst)
+
+
+		#store the prior in a local list
+		for w in which:
+			self.priors[w] = what
+
 
 	def log_prior(self):
 		"""evaluate the prior"""
-		raise NotImplementedError, "TODO"
-		return self.prior.lnpdf(self.get_param())
+		if not hasattr(self, 'priors'):
+			return 0.
+		return np.sum([p.lnpdf(x) for p, x in zip(self.priors,self.get_param()) if p is not None])
 	
 	def log_prior_gradients(self):
-		"""evaluate the gradients of the prior"""
-		raise NotImplementedError, "TODO"
-		return self.prior.lnpdf_grad(self.get_param())
+		"""evaluate the gradients of the priors"""
+		x = self.get_param()
+		ret = np.zeros(x.size)
+		if hasattr(self, 'priors'):
+			[np.put(ret,i,p.lnpdf_grad(xx)) for i,(p,xx) in enumerate(zip(self.priors,x)) if not p is None]
+		return ret
+
+	def extract_gradients(self):
+		"""use self.log_likelihood_gradients and self.prior_gradients to get the gradients of the model.
+		Adjust the gradient for constraints and ties, return."""
+		g = self.log_likelihood_gradients() + self.log_prior_gradients()
+		x = self.get_param()
+		g[self.constrained_positive_indices] = g[self.constrained_positive_indices]*x[self.constrained_positive_indices]
+		g[self.constrained_negative_indices] = g[self.constrained_negative_indices]*x[self.constrained_negative_indices]
+		[np.put(g,i,g[i]*(1.-sigmoid(xx[i]))*sigmoid(xx[i])*(high-low)) for i,low,high in zip(self.constrained_bounded_indices, self.constrained_bounded_lowers, self.constrained_bounded_uppers)]
+		[np.put(g,i,v) for i,v in [(t[0],np.sum(g[t[1:]])) for t in self.tied_indices]]
+		if len(self.tied_indices):
+			to_remove = np.hstack((self.constrained_fixed_indices,np.hstack([t[1:] for t in self.tied_indices])))
+		else:
+			to_remove=self.constrained_fixed_indices
+			
+		return np.delete(g,to_remove)
 
 	def randomize(self):
+		"""
+		Randomize the model. 
+		Make this draw from the prior if one exists, else draw from N(0,1)
+		"""
+		#first take care of all parameters (from N(0,1))
 		x = self.extract_param()
-		self.expand_param(np.random.randn(x.size))
+		x = np.random.randn(x.size)
+		self.expand_param(x)
+		#now draw from prior where possible
+		if hasattr(self,'priors'):
+			x = self.get_param()
+			[np.put(x,i,p.rvs(1)) for i,p in enumerate(self.priors) if not p is None]
+			self.set_param(x)
 
-	def maximum_likelihood_restarts(self, Nrestarts=10, compare_Laplace=False, **kwargs):
+
+	def optimize_restarts(self, Nrestarts=10, compare_Laplace=False, **kwargs):
 		D = self.extract_param().size
 		scores = []
 		params = []
 		for i in range(Nrestarts):
-			self.expand_param(np.random.randn(D))
-			self.maximum_likelihood(**kwargs)
+			self.randomize()
+			self.optimize(**kwargs)
 			if compare_Laplace:
-				self.maximum_likelihood(ftol=1e-9)#need more numerical stability for good laplace approximation
+				self.optimize(ftol=1e-9)#need more numerical stability for good laplace approximation
 				scores.append(self.Laplace_evidence())
 			else:
 				scores.append(self.log_likelihood())
@@ -54,20 +103,12 @@ class model(parameterised):
 		i = np.argmax(scores)
 		self.expand_param(params[i])
 
-	def maximum_likelihood(self,**kwargs):
+	def optimize(self,**kwargs):
 		def f_fp(x):
 			self.expand_param(x)
 			return -self.log_likelihood(),-self.extract_gradients()
 		start = self.extract_param()
 		opt = optimize.fmin_tnc(f_fp,start,**kwargs)[0]
-		self.expand_param(opt)
-
-	def maximum_aposteriori(self):
-		def f_fp(x):
-			self.expand_param(x)
-			return -self.log_likelihood() -self.log_prior() ,-self.log_likelihood_gradients() -self.log_prior_gradients()
-		start = self.extract_param()
-		opt = optimize.fmin_tnc(f_fp,start)[0]
 		self.expand_param(opt)
 
 
@@ -102,22 +143,24 @@ class model(parameterised):
 			return np.nan
 		return 0.5*self.get_param().size*np.log(2*np.pi) + self.log_likelihood() - hld
 
-	def checkgrad(self,step=1e-6, tolerance = 1e-3, *args):
+	def checkgrad(self, include_priors=False, step=1e-6, tolerance = 1e-3, *args):
 		"""check the gradient of the model by comparing to a numerical estimate. 
-		If the overall gradient fails, invividual components are tested numerically"""
+		If the overall gradient fails, invividual components are tested numerically#
+		
+		TODO: check the gradients of priors"""
 	
-		x = self.get_param().copy()
+		x = self.extract_param().copy()
 
 		#choose a random direction to step in:
 		dx = step*np.sign(np.random.uniform(-1,1,x.size))
 	
 		#evaulate around the point x
-		self.set_param(x+dx)
-		f1,g1 = self.log_likelihood(), self.log_likelihood_gradients()
-		self.set_param(x-dx)
-		f2,g2 = self.log_likelihood(), self.log_likelihood_gradients()
-		self.set_param(x)
-		gradient = self.log_likelihood_gradients()
+		self.expand_param(x+dx)
+		f1,g1 = self.log_likelihood() + self.log_prior(), self.extract_gradients()
+		self.expand_param(x-dx)
+		f2,g2 = self.log_likelihood() + self.log_prior(), self.extract_gradients()
+		self.expand_param(x)
+		gradient = self.extract_gradients()
 		
 		numerical_gradient = (f1-f2)/(2*dx)
 		ratio = (f1-f2)/(2*np.dot(dx,gradient))
@@ -132,12 +175,12 @@ class model(parameterised):
 				dx = np.zeros(x.shape)
 				dx[i] = step*np.sign(np.random.uniform(-1,1,x[i].shape))
 				
-				self.set_param(x+dx)
-				f1,g1 = self.log_likelihood(), self.log_likelihood_gradients()
-				self.set_param(x-dx)
-				f2,g2 = self.log_likelihood(), self.log_likelihood_gradients()
-				self.set_param(x)
-				gradient = self.log_likelihood_gradients()
+				self.expand_param(x+dx)
+				f1,g1 = self.log_likelihood() + self.log_prior(), self.extract_gradients()
+				self.expand_param(x-dx)
+				f2,g2 = self.log_likelihood() + self.log_prior(), self.extract_gradients()
+				self.expand_param(x)
+				gradient = self.extract_gradients()
 
 			
 				numerical_gradient = (f1-f2)/(2*dx)
