@@ -1,11 +1,13 @@
 import sys
 sys.path.append('/home/james/mlprojects/ndlutil/python')
 import ndlutil
+from ndlutil.utilities import sigmoid
 import numpy as np
 
 class kern(ndlutil.parameterised):
 	"""The base class for kernels. Should not be instantiated"""
 	def __init__(self):
+		ndlutil.parameterised.__init__(self)
 		self.shape = tuple()
 		self.Nparam = 0
 	def set_param(self):
@@ -24,6 +26,21 @@ class kern(ndlutil.parameterised):
 		raise NotImplementedError
 	def gradients(self):
 		raise NotImplementedError
+	def extract_gradients(self):
+		"""extract the gradients. much like model.extract_gradients, but we're dealing with lists of matrices here, which is a little more tricky"""
+		g = self.gradients()
+		x = self.get_param()
+		#in-place multiplication correct gradients. in-place summation for tied parameters. 
+		[np.multiply(g[i],x[i],g[i]) for i in self.constrained_positive_indices]
+		[np.multiply(g[i],x[i],g[i]) for i in self.constrained_negative_indices]
+		[[np.multiply(g[i],(1.-sigmoid(x[i]))*sigmoid(x[i])*(high-low),g[i]) for i in inds] for inds,high,low in zip(self.constrained_bounded_indices,self.constrained_bounded_uppers, self.constrained_bounded_lowers)]
+		[np.sum([g[ii] for ii in i],axis=0,out=g[i[0]]) for i in self.tied_indices]
+		if len(self.tied_indices):
+			to_remove = np.hstack((self.constrained_fixed_indices,np.hstack([t[1:] for t in self.tied_indices])))
+		else:
+			to_remove = self.constrained_fixed_indices
+		return [gg for i,g in enumerate(g) if not i in to_remove]
+
 	def gradients_X(self):
 		raise NotImplementedError
 	def __add__(self,other):
@@ -107,7 +124,7 @@ class hierarchical(compound):
 		ret = np.zeros((self.shape[0],X2.shape[0]))
 		for k,c in zip(self.kerns,connections.T):
 			i = np.nonzero(c)[0]
-			ret[:,i] += k.cross_compute(X2[i,:])
+			ret[:,i] += k.cross_compute(X2[i,:]) #can't do in place here due to fancy indexing (which always copies) TODO: in-place would save some time
 		return ret
 			
 	

@@ -56,15 +56,16 @@ class stationary(kern):
 		else:
 			return np.ones(self.shape[0])*self.alpha
 
-	def cross_compute(self,X2):
+	def cross_compute(self,X2,target=None):
+		if target is None:
+			target = np.zeros((self.shape[0],X2.shape[0]))
 		if self.masked:
-			ret = np.zeros((self.shape[0],X2.shape[0]))
 			r = np.sum(self.X[self.mask[0][0]][:,None,:]-X2[None,:,:],-1)
-			ret[self.mask[0][0],:] = self.alpha*self.function(r)
-			return ret
+			target[self.mask[0][0],:] += self.alpha*self.function(r)
 		else:
 			r = np.square(np.sum(self.X[:,None,:]-X2[None,:,:],-1))
-			return self.alpha*self.function(r)
+			target += self.alpha*self.function(r)
+		return target
 
 	def function(self):
 		raise NotImplementedError
@@ -72,6 +73,12 @@ class stationary(kern):
 		raise NotImplementedError
 	def gradients(self):
 		return [self.function(), self.alpha*self.function_gradient()]
+	def gradients_X(self):
+		f1 = self.function_gradient_X(self.r)
+		ret = [[np.zeros(self.shape) for i in range(self.shape[0])] for j in range(self.shape[1])]
+		[[np.put(ret[i,j],self.shape[0]*i+j,(self.X[i]-self.X[j])*f1[i,j]/self.r[i,j]) for i in range(self.shape[0])] for j in range(self.shape[1])]
+		return ret
+
 	def get_param(self):
 		return np.array([self.alpha, self.gamma])
 	def set_param(self,x):
@@ -94,6 +101,8 @@ class rbf(stationary):
 		return np.exp(-self.gamma*np.square(r))
 	def function_gradient(self,r):
 		return -np.square(r)*self.function(r)
+	def function_gradient_X(self,r):
+		return -2.*g*r*self.function(r)
 
 class Matern32(stationary):
 	"""
