@@ -3,13 +3,15 @@ from kern import kern
 
 class stationary(kern):
 	"""
-	Base class for kernels which are a functions of the absolute difference r.
+	Base class for kernels which are functions of the absolute difference r.
 	See Rasmussen and Williams p 83.
 
 	Notes
 	-----
 	To implement a new stationary covariance, simply define the normalised 
-	function and its gradient wrt gamma. This class takes care of the rest!
+	function, its gradient wrt gamma and gradient wrt r. This class takes care of the rest!
+
+	This also allows for efficient computation: r is stored when set_X is called.
 
 	TODO
 	----
@@ -24,6 +26,7 @@ class stationary(kern):
 		self.set_X(X)
 
 	def set_X(self,X):
+		"""Set self X  to the passed value and compute and store r"""
 		self.r = np.sqrt(np.sum(np.square(X[:,None,:]-X[None,:,:]),-1))
 		self.X = X
 		self.shape = self.r.shape
@@ -31,9 +34,7 @@ class stationary(kern):
 			self.r = self.r[self.mask_grid]
 
 	def set_mask(self,mask):
-		"""
-		Apply a mask to this kernel. i is a list or array of integer indices
-		"""
+		"""Apply a mask to this kernel. i is a list or array of integer indices	"""
 		self.masked=True
 		self.mask = mask
 		self.mask_grid = np.meshgrid(mask,mask)
@@ -54,6 +55,7 @@ class stationary(kern):
 		return target
 		
 	def diag_compute(self):
+		"""Compute just the diagonal terms of the covariance"""
 		if self.masked:
 			ret = np.zeros(self.shape[0])
 			ret[self.mask] = self.alpha
@@ -62,6 +64,7 @@ class stationary(kern):
 			return np.ones(self.shape[0])*self.alpha
 
 	def cross_compute(self,X2,target=None):
+		"""Compute the covariance between self.X and the passed values X2. Mask aware"""
 		if target is None:
 			target = np.zeros((self.shape[0],X2.shape[0]))
 		if self.masked:
@@ -76,9 +79,16 @@ class stationary(kern):
 		raise NotImplementedError
 	def function_gradient(self):
 		raise NotImplementedError
-	def function_gradient_r(self):
+	def function_gradient_r_over_r(self):
 		raise NotImplementedError
 	def gradients(self):
+		"""
+		The gradient of the kernel wrt the variance and gamma.
+
+		Returns
+		-------
+		A list of np arrays.
+		"""
 		if self.masked:
 			ret = [np.zeros(self.shape), np.zeros(self.shape)]
 			ret[0][self.mask_grid] = self.function(self.r)
@@ -87,7 +97,16 @@ class stationary(kern):
 			ret = [self.function(self.r), self.alpha*self.function_gradient(self.r)]
 		return ret
 	def gradients_X(self,target=None):
-		"""the gradient of the kernel wrt the input points self.X
+		"""
+		The gradient of the kernel wrt the input points self.X
+
+		In-place computation available by passing the target array. 
+
+		Relies on the implementation of function_gradient_r_over_r:
+		$$
+		\\frac{\\partial f(r_{i,j}}{\\partial r_{i,j} \\times \\frac{1}{r_{i.j}}
+		$$
+		which arises from applying the chain rule to the derivative. Definin it this way helps prevent singlularity.
 		"""
 		if target is None:
 			target = np.zeros(self.shape+self.X.shape)
