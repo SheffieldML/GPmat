@@ -39,7 +39,7 @@ class kern(ndlutil.parameterised):
 			to_remove = np.hstack((self.constrained_fixed_indices,np.hstack([t[1:] for t in self.tied_indices])))
 		else:
 			to_remove = self.constrained_fixed_indices
-		return [gg for i,g in enumerate(g) if not i in to_remove]
+		return [gg for i,gg in enumerate(g) if not i in to_remove]
 
 	def gradients_X(self):
 		raise NotImplementedError
@@ -51,6 +51,7 @@ class kern(ndlutil.parameterised):
 
 class compound(kern):
 	def __init__(self,kerns=[]):
+		kern.__init__(self)
 		if isinstance(kerns,kern):
 			kerns = [kern]
 
@@ -78,6 +79,10 @@ class compound(kern):
 		return np.sum([k.diag() for k in self.kerns],0)
 	def gradients(self):
 		return sum([k.gradients() for k in self.kerns],[])
+	def gradients_X(self):
+		ret = np.zeros(self.shape+self.kerns[0].X.shape)
+		[k.gradients_X(ret) for k in self.kerns] # in place computation
+		return ret
 	def __add__(self,other):
 		if isinstance(other,compound):
 			assert self.shape==other.shape
