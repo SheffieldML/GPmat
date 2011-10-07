@@ -19,7 +19,6 @@ class stationary(kern):
 	"""
 	def __init__(self,X,alpha=1., gamma=1.):
 		kern.__init__(self)
-		self.masked=False
 		self.alpha = alpha #variance
 		self.gamma = gamma #parameter of function, to be defined by inherreted class ( usually a lengthscale)
 		self.Nparam = 2
@@ -32,13 +31,6 @@ class stationary(kern):
 		self.shape = self.r.shape
 		if self.masked:
 			self.r = self.r[self.mask_grid]
-
-	def set_mask(self,mask):
-		"""Apply a mask to this kernel. i is a list or array of integer indices	"""
-		self.masked=True
-		self.mask = mask
-		self.mask_grid = np.meshgrid(mask,mask)
-		self.set_X(self.X)
 
 	def compute(self,target=None):
 		"""
@@ -68,10 +60,10 @@ class stationary(kern):
 		if target is None:
 			target = np.zeros((self.shape[0],X2.shape[0]))
 		if self.masked:
-			r = np.sum(self.X[self.mask][:,None,:]-X2[None,:,:],-1)
+			r = np.sqrt(np.sum(np.square(self.X[self.mask][:,None,:]-X2[None,:,:]),-1))
 			target[self.mask,:] += self.alpha*self.function(r)
 		else:
-			r = np.square(np.sum(self.X[:,None,:]-X2[None,:,:],-1))
+			r = np.sqrt(np.sum(np.square(self.X[:,None,:]-X2[None,:,:]),-1))
 			target += self.alpha*self.function(r)
 		return target
 
@@ -107,18 +99,20 @@ class stationary(kern):
 		\\frac{\\partial f(r_{i,j}}{\\partial r_{i,j} \\times \\frac{1}{r_{i.j}}
 		$$
 		which arises from applying the chain rule to the derivative. Definin it this way helps prevent singlularity.
+
+		Returns
+		-------
+		A NxNxD array. the i,j,kth element is the gradient of the [i,j]the element of the kernel wrt the k'th dimension of the i'th input.
 		"""
 		if target is None:
-			target = np.zeros(self.shape+self.X.shape)
+			target = np.zeros(self.shape+(self.X.shape[1],))
 		if self.masked:
-			common = np.empty(self.shape,dtype=np.float64)
+			common = np.zeros(self.shape,dtype=np.float64)
 			common[self.mask_grid] = self.alpha*self.function_gradient_r_over_r(self.r)
-			[np.add(target[i,:,i,:],common[i,:][:,None]*(self.X[i]-self.X),target[i,:,i,:]) for i in self.mask]
-			[np.add(target[:,i,i,:],common[i,:][:,None]*(self.X[i]-self.X),target[:,i,i,:]) for i in self.mask]
+			[np.add(target[:,i,:],common[i,:][:,None]*(self.X[i]-self.X),target[:,i,:]) for i in self.mask]
 		else:
 			common = self.alpha*self.function_gradient_r_over_r(self.r)
-			[np.add(target[i,:,i,:],common[i,:][:,None]*(self.X[i]-self.X),target[i,:,i,:]) for i in range(self.shape[0])]
-			[np.add(target[:,i,i,:],common[i,:][:,None]*(self.X[i]-self.X),target[:,i,i,:]) for i in range(self.shape[0])]
+			[np.add(target[:,i,:],common[i,:][:,None]*(self.X[i]-self.X),target[:,i,:]) for i in range(self.shape[0])]
 		return target
 
 	def get_param(self):

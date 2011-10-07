@@ -3,6 +3,7 @@ sys.path.append('/home/james/mlprojects/ndlutil/python')
 import ndlutil
 from ndlutil.utilities import sigmoid
 import numpy as np
+import pdb
 
 class kern(ndlutil.parameterised):
 	"""The base class for kernels. Should not be instantiated"""
@@ -10,6 +11,7 @@ class kern(ndlutil.parameterised):
 		ndlutil.parameterised.__init__(self)
 		self.shape = tuple()
 		self.Nparam = 0
+		self.masked=False
 	def set_param(self):
 		raise NotImplementedError
 	def get_param(self):
@@ -18,8 +20,23 @@ class kern(ndlutil.parameterised):
 		raise NotImplementedError
 	def set_X(self):
 		raise NotImplementedError
-	def set_mask(self):
-		raise NotImplementedError
+	def set_mask(self,mask):
+		"""Apply a mask to this kernel. 
+
+		Arguments
+		---------
+		mask : a valid index that can be applied to self.X: a boolean array of sefl.X.shape[0] or an integer array
+		"""
+		if mask.size == self.X.shape[0]:
+			mask = np.nonzero(mask.flatten())[0]
+		if mask.size==self.X.shape[0]:
+			self.masked=False
+			return
+		self.masked=True
+		self.mask = mask
+		self.mask_grid = np.meshgrid(mask,mask)
+		self.set_X(self.X)
+
 	def compute(self):
 		raise NotImplementedError
 	def compute_diag(self):
@@ -33,8 +50,8 @@ class kern(ndlutil.parameterised):
 		#in-place multiplication correct gradients. in-place summation for tied parameters. 
 		[np.multiply(g[i],x[i],g[i]) for i in self.constrained_positive_indices]
 		[np.multiply(g[i],x[i],g[i]) for i in self.constrained_negative_indices]
-		[[np.multiply(g[i],(1.-sigmoid(x[i]))*sigmoid(x[i])*(high-low),g[i]) for i in inds] for inds,high,low in zip(self.constrained_bounded_indices,self.constrained_bounded_uppers, self.constrained_bounded_lowers)]
-		[np.sum([g[ii] for ii in i],axis=0,out=g[i[0]]) for i in self.tied_indices]
+		[[np.multiply(g[i],(1.-x[i])*x[i]*(high-low),g[i]) for i in inds] for inds,high,low in zip(self.constrained_bounded_indices,self.constrained_bounded_uppers, self.constrained_bounded_lowers)]
+		[[np.add(g[ii], g[i[0]], g[i[0]]) for ii in i[1:]] for i in self.tied_indices]
 		if len(self.tied_indices):
 			to_remove = np.hstack((self.constrained_fixed_indices,np.hstack([t[1:] for t in self.tied_indices])))
 		else:
@@ -72,15 +89,18 @@ class compound(kern):
 	def set_mask(self,i):
 		[k.set_mask(i) for k in self.kerns]
 	def compute(self):
-		return np.sum([k.compute() for k in self.kerns],0)
+		#return np.sum([k.compute() for k in self.kerns],0)
+		ret = np.zeros(self.shape)
+		[k.compute(ret) for k in self.kerns]
+		return ret
 	def cross_compute(self,X2):
-		return np.sum([k.cross_compute(X2) for k in self.kerns])
+		return np.sum([k.cross_compute(X2) for k in self.kerns],0)
 	def diag(self):
 		return np.sum([k.diag() for k in self.kerns],0)
 	def gradients(self):
 		return sum([k.gradients() for k in self.kerns],[])
 	def gradients_X(self):
-		ret = np.zeros(self.shape+self.kerns[0].X.shape)
+		ret = np.zeros(self.shape+(self.kerns[0].X.shape[1],))
 		[k.gradients_X(ret) for k in self.kerns] # in place computation
 		return ret
 	def __add__(self,other):
@@ -118,18 +138,23 @@ class hierarchical(compound):
 		k = kern.hierarchical(con,kerns)
 
 		"""
+		assert len(kerns)==connections.shape[1]
 		compound.__init__(self,kerns)
 		for i,k in enumerate(self.kerns):
 			assert k.shape==kerns[0].shape
-			k.set_mask(np.nonzero(connections[:,i])[0])
+			mask = np.nonzero(connections[:,i])[0]
+			if len(mask)<connections.shape[0]:
+				k.set_mask(mask)
+
 	def cross_compute(self,X2,connections):
 		if len(self.kerns)==1:
 			connections = connections.reshape(connections.size,1)
-		assert connections.shape == (X2.shape[0],len(self.kerns))
+		assert connections.shape == (X2.shape[0],len(self.kerns)), "Connections do not match input data"
 		ret = np.zeros((self.shape[0],X2.shape[0]))
 		for k,c in zip(self.kerns,connections.T):
 			i = np.nonzero(c)[0]
-			ret[:,i] += k.cross_compute(X2[i,:]) #can't do in place here due to fancy indexing (which always copies) TODO: in-place would save some time
+			if len(i):
+				ret[:,i] += k.cross_compute(X2[i,:]) #can't do in place here due to fancy indexing (which always copies) TODO: in-place would save some time
 		return ret
 			
 	
@@ -142,11 +167,10 @@ class hierarchical(compound):
 		
 		if isinstance(kerns,kern):
 			kerns = [kerns]
-		if connections is None:
-			connections=np.ones((self.shape[0],len(kerns)))
 		for i,k in enumerate(kerns):
 			compound.__add__(self,k)
-			k.set_mask(np.nonzero(connections)[0])
+			if not connections is None:
+				k.set_mask(np.nonzero(connections[:,i])[0])
 			
 
 	
