@@ -50,7 +50,7 @@ class kern(ndlutil.parameterised):
 		#in-place multiplication correct gradients. in-place summation for tied parameters. 
 		[np.multiply(g[i],x[i],g[i]) for i in self.constrained_positive_indices]
 		[np.multiply(g[i],x[i],g[i]) for i in self.constrained_negative_indices]
-		[[np.multiply(g[i],(1.-x[i])*x[i]*(high-low),g[i]) for i in inds] for inds,high,low in zip(self.constrained_bounded_indices,self.constrained_bounded_uppers, self.constrained_bounded_lowers)]
+		[[np.multiply(g[i],(x[i]-l)*(h-x[i])/(h-l),g[i]) for i in inds] for inds,h,l in zip(self.constrained_bounded_indices,self.constrained_bounded_uppers, self.constrained_bounded_lowers)]
 		[[np.add(g[ii], g[i[0]], g[i[0]]) for ii in i[1:]] for i in self.tied_indices]
 		if len(self.tied_indices):
 			to_remove = np.hstack((self.constrained_fixed_indices,np.hstack([t[1:] for t in self.tied_indices])))
