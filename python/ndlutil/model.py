@@ -7,6 +7,7 @@ import numdifftools as ndt
 import pdb
 from parameterised import parameterised
 import prior
+from utilities import sigmoid
 
 class model(parameterised):
 	def __init__(self):
@@ -62,7 +63,7 @@ class model(parameterised):
 		x = self.get_param()
 		g[self.constrained_positive_indices] = g[self.constrained_positive_indices]*x[self.constrained_positive_indices]
 		g[self.constrained_negative_indices] = g[self.constrained_negative_indices]*x[self.constrained_negative_indices]
-		[np.put(g,i,g[i]*(1.-sigmoid(xx[i]))*sigmoid(xx[i])*(high-low)) for i,low,high in zip(self.constrained_bounded_indices, self.constrained_bounded_lowers, self.constrained_bounded_uppers)]
+		[np.put(g,i,g[i]*(x[i]-l)*(h-x[i])/(h-l)) for i,l,h in zip(self.constrained_bounded_indices, self.constrained_bounded_lowers, self.constrained_bounded_uppers)]
 		[np.put(g,i,v) for i,v in [(t[0],np.sum(g[t[1:]])) for t in self.tied_indices]]
 		if len(self.tied_indices):
 			to_remove = np.hstack((self.constrained_fixed_indices,np.hstack([t[1:] for t in self.tied_indices])))

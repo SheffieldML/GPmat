@@ -7,6 +7,7 @@ import re
 import numdifftools as ndt
 import pdb
 import cPickle
+from utilities import sigmoid
 
 
 class parameterised:
@@ -129,7 +130,7 @@ class parameterised:
 		#check to ensure constraint is in place
 		x = self.get_param()
 		for i,xx in enumerate(x):
-			if ((xx<lower)|(xx>upper)) & (i in matches):
+			if ((xx<=lower)|(xx>=upper)) & (i in matches):
 				x[i] = sigmoid(xx)*(upper-lower) + lower
 		self.set_param(x)
 
@@ -164,31 +165,13 @@ class parameterised:
 			to_remove=self.constrained_fixed_indices
 		return np.delete(x,to_remove)
 
-	def extract_gradients(self):
-		"""use self.log_likelihood_gradients and self.prior_gradients to get the gradients of the model.
-		Adjust the gradient for constraints and ties, return."""
-		#TODO: prior gradients
-		g = self.log_likelihood_gradients()
-		x = self.get_param()
-		g[self.constrained_positive_indices] = g[self.constrained_positive_indices]*x[self.constrained_positive_indices]
-		g[self.constrained_negative_indices] = g[self.constrained_negative_indices]*x[self.constrained_negative_indices]
-		[np.put(g,i,g[i]*(1.-sigmoid(xx[i]))*sigmoid(xx[i])*(high-low)) for i,low,high in zip(self.constrained_bounded_indices, self.constrained_bounded_lowers, self.constrained_bounded_uppers)]
-		[np.put(g,i,v) for i,v in [(t[0],np.sum(g[t[1:]])) for t in self.tied_indices]]
-		if len(self.tied_indices):
-			to_remove = np.hstack((self.constrained_fixed_indices,np.hstack([t[1:] for t in self.tied_indices])))
-		else:
-			to_remove=self.constrained_fixed_indices
-			
-		return np.delete(g,to_remove)
-
-
 
 	def expand_param(self,x):
 		""" takes the vector x, which is then modified (by untying, reparameterising or inserting fixed values), and then call self.set_param"""
 		#work out how many places are fixed, and where they are. tricky logic!
 		Nfix_places = 0.
 		if len(self.tied_indices):
-			Nfix_places += np.hstack(self.tied_indices)-len(self.tied_indices)
+			Nfix_places += np.hstack(self.tied_indices).size-len(self.tied_indices)
 		if len(self.constrained_fixed_indices):
 			Nfix_places += np.hstack(self.constrained_fixed_indices).size
 		if Nfix_places:
