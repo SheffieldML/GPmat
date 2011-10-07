@@ -12,6 +12,14 @@ from utilities import sigmoid
 class model(parameterised):
 	def __init__(self):
 		parameterised.__init__(self)
+	def get_param(self):
+		raise NotImplementedError, "this needs to be implemented to utilise the model class"
+	def set_param(self,x):
+		raise NotImplementedError, "this needs to be implemented to utilise the model class"
+	def log_likelihood(self):
+		raise NotImplementedError, "this needs to be implemented to utilise the model class"
+	def log_likelihood_gradients(self):
+		raise NotImplementedError, "this needs to be implemented to utilise the model class"
 
 	def set_prior(self,which,what):
 		"""sets priors on the model parameters.
