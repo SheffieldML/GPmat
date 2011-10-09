@@ -45,8 +45,8 @@ class dot(kern):
 		raise NotImplementedError
 	def gradients_X(self):
 		raise NotImplementedError, "TODO"
-	def get_param(self)
-		return np.array([self.alpha]))
+	def get_param(self):
+		return self.alpha
 	def set_param(self,x):
 		self.alpha = x
 	def get_param_names(self):
@@ -92,11 +92,11 @@ class mlp(dot):
 		self.gamma=gamma
 		self.Nparam = 2
 	def function(self,xTx,x1x1,x2x2):
-		return self.alpha*2./np.pi*np.arcsin(self.gamma*xTx/np.sqrt((1.+self.gamma*x1x1)*(1.+self.gamma*x2x2))
+		return self.alpha*2./np.pi*np.arcsin(self.gamma*xTx/np.sqrt((1.+self.gamma*x1x1)*(1.+self.gamma*x2x2)))
 	def gradients(self,xTx,x1x1,x2x2):
 		return []
-	def get_param(self)
-		return np.array([self.alpha,self.gamma]))
+	def get_param(self):
+		return np.array([self.alpha,self.gamma]).flatten()
 	def set_param(self,x):
 		self.alpha,self.gamma = x
 	def get_param_names(self):
