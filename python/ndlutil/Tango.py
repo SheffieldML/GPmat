@@ -2,8 +2,8 @@ import matplotlib as mpl
 
 import pylab as pb
 import sys
-sys.path.append('/home/james/mlprojects/sitran_cluster/')
-from switch_pylab_backend import *
+#sys.path.append('/home/james/mlprojects/sitran_cluster/')
+#from switch_pylab_backend import *
 
 
 #this stuff isn;t really Tango related: maybe it could be moved out? TODO
