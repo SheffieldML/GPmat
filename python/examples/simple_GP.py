@@ -38,6 +38,7 @@ class GP(model):
 		pb.figure()
 		X = self.kern.kerns[0].X
 		xmin,xmax = X.min(),X.max()
+		xmin, xmax = xmin-0.2*(xmax-xmin), xmax+0.2*(xmax-xmin)
 		Xnew = np.linspace(xmin,xmax,100)[:,None]
 		m,v = self.predict(Xnew)
 		gpplot(Xnew,m,v)

@@ -94,7 +94,10 @@ class mlp(dot):
 	def function(self,xTx,x1x1,x2x2):
 		return self.alpha*2./np.pi*np.arcsin(self.gamma*xTx/np.sqrt((1.+self.gamma*x1x1)*(1.+self.gamma*x2x2)))
 	def gradients(self,xTx,x1x1,x2x2):
-		return []
+		"""Credit to wolfram alpha :)"""
+		denom2 = (1.+self.gamma*x1x1)*(1.+self.gamma*x2x2)
+		return [2./np.pi*np.arcsin(self.gamma*xTx/np.sqrt(denom2)),\
+			self.alpha/np.pi*xTx*(self.gamma*(x1x1+x2x2)+2.)/np.power(denom2,3./2.)/np.sqrt(1.-np.square(self.gamma*xTx)/denom2)]
 	def get_param(self):
 		return np.array([self.alpha,self.gamma]).flatten()
 	def set_param(self,x):
