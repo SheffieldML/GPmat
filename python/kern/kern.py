@@ -40,6 +40,8 @@ class kern(ndlutil.parameterised):
 		---------
 		mask : a valid index that can be applied to self.X: a boolean array of sefl.X.shape[0] or an integer array
 		"""
+		if not self.masked:
+			self.Xfull = self.X.copy()
 		if mask.size == self.X.shape[0]:
 			mask = np.nonzero(mask.flatten())[0]
 		if mask.size==self.X.shape[0]:
@@ -48,7 +50,7 @@ class kern(ndlutil.parameterised):
 		self.masked=True
 		self.mask = mask
 		self.mask_grid = np.meshgrid(mask,mask)
-		self.set_X(self.X)
+		self.set_X(self.Xfull[mask,:])
 
 	def compute(self,target=None):
 		"""

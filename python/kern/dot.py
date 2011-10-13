@@ -12,7 +12,7 @@ class dot(kern):
 	Masking is handled higher up the inherritance tree, in kern
 
 	"""
-	def __init__(self,X,alpha=1., gamma=1.):
+	def __init__(self,X,alpha=1.):
 		kern.__init__(self,X)
 		self.alpha = alpha #variance
 		self.Nparam = 1
