@@ -49,6 +49,7 @@ if ~any(any(isnan(Y)))
     end
     X = Ycentre*u(:, 1:dims)*diag(1./sqrt(v(1:dims)));
     sigma2 = mean(v(dims+1:end));
+    W = X'*Ycentre;
   end
 else
   % Hacky implementation of Probabilistic PCA for when there is missing data.
