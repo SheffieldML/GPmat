@@ -535,12 +535,9 @@ gpdisimUpdateProcesses <- function (model, predt=NULL, expmask=0) {
     varX <- Re( kernDiagCompute(simMultiKern, cbind(0, predt))-apply(t(Kxx)*(model$invK%*%t(Kxx)), 2, sum) ) + 1e-13
 
   predExprs <- matrix(predX, length(predt), model$numGenes+1)
-  meanExprs <- t(matrix(apply(predExprs, 2, mean), model$numGenes+1, length(predt)))
-  scaleExprs <- t(matrix(sd(predExprs)/sd(as.matrix(model$y)), model$numGenes+1, length(predt)))
   predExprs <- predExprs[1:(length(predt)-length(t)),]
 
   varExprs <- matrix(varX, length(predt), model$numGenes+1)
-  varExprs <- varExprs/scaleExprs/scaleExprs
   varExprs <- varExprs[1:(length(predt)-length(t)),]
 
   predF <- predF[1:(length(predt)-length(t))]
