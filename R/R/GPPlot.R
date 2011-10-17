@@ -69,17 +69,34 @@ GPPlot <- function(data, savepath = '', nameMapping = NULL,
          ylim=c(min(model$comp[[i]]$predF-2*sqrt(model$comp[[i]]$varF)),
            max(model$comp[[i]]$predF+2*sqrt(model$comp[[i]]$varF))),
          type="l", lwd=3, xlab="Time",ylab="")
+    polygon(c(model$comp[[i]]$predt, rev(model$comp[[i]]$predt)),
+            c(model$comp[[i]]$predF+2*sqrt(model$comp[[i]]$varF),
+              rev(model$comp[[i]]$predF-2*sqrt(model$comp[[i]]$varF))),
+            col='grey', border=NA)
+    lines(model$comp[[i]]$predt, model$comp[[i]]$predF,
+          ylim=c(min(model$comp[[i]]$predF-2*sqrt(model$comp[[i]]$varF)),
+            max(model$comp[[i]]$predF+2*sqrt(model$comp[[i]]$varF))),
+          type="l", lwd=3, col='blue', xlab="Time",ylab="")
     title("Inferred TF Protein Concentration")
-    lines(model$comp[[i]]$predt, model$comp[[i]]$predF+2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
-    lines(model$comp[[i]]$predt, model$comp[[i]]$predF-2*sqrt(model$comp[[i]]$varF), lty=2, lwd=3, col=2)
 
     for ( j in seq(length=numGenes) ) {
       plot(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j],
            ylim=c(min(c(model$comp[[i]]$ypred[,j]-2*sqrt(model$comp[[i]]$ypredVar[,j]),
-                        model$comp[[i]]$y[,j]-2*sqrt(model$comp[[i]]$yvar[,j]))),
+             model$comp[[i]]$y[,j]-2*sqrt(model$comp[[i]]$yvar[,j]))),
              max(c(model$comp[[i]]$ypred[,j]+2*sqrt(model$comp[[i]]$ypredVar[,j]),
                    model$comp[[i]]$y[,j]+2*sqrt(model$comp[[i]]$yvar[,j])))),
            type="l", lwd=3, xlab="Time",ylab="")
+      polygon(c(model$comp[[i]]$predt, rev(model$comp[[i]]$predt)),
+              c(model$comp[[i]]$ypred[,j]+2*sqrt(model$comp[[i]]$ypredVar[,j]),
+                rev(model$comp[[i]]$ypred[,j]-2*sqrt(model$comp[[i]]$ypredVar[,j]))),
+              col='grey', border=NA)
+
+      lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j],
+            ylim=c(min(c(model$comp[[i]]$ypred[,j]-2*sqrt(model$comp[[i]]$ypredVar[,j]),
+              model$comp[[i]]$y[,j]-2*sqrt(model$comp[[i]]$yvar[,j]))),
+              max(c(model$comp[[i]]$ypred[,j]+2*sqrt(model$comp[[i]]$ypredVar[,j]),
+                    model$comp[[i]]$y[,j]+2*sqrt(model$comp[[i]]$yvar[,j])))),
+            type="l", lwd=3, col='blue', xlab="Time",ylab="")
       if ( is.null(nameMapping) ) {
         genename <- genes[j]
       } else {
@@ -105,11 +122,9 @@ GPPlot <- function(data, savepath = '', nameMapping = NULL,
       warnOption <- getOption('warn')
       options(warn=-1)
       plotCI(plotTime, model$comp[[i]]$y[,j],
-             uiw=2*sqrt(model$comp[[i]]$yvar[,j]), lwd=3, col=3, add=TRUE)
+             uiw=2*sqrt(model$comp[[i]]$yvar[,j]), lwd=3, col='red', add=TRUE)
       options(warn=warnOption)
       #points(model$comp[[i]]$t, model$comp[[i]]$y[,j], lwd=3, col=3)
-      lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]+2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
-      lines(model$comp[[i]]$predt, model$comp[[i]]$ypred[,j]-2*sqrt(model$comp[[i]]$ypredVar[,j]), lty=2, lwd=3, col=2)
     }
   }
  

@@ -606,9 +606,9 @@ cgpsimGradient <- function (params, model, ...) {
 
 
 
-cgpsimUpdateProcesses <- function (model, predt=NULL) {
+cgpsimUpdateProcesses <- function (model, predt=NULL, expmask=0) {
   for ( i in seq(along=model$comp) )
-    model$comp[[i]] <- gpsimUpdateProcesses(model$comp[[i]], predt=predt)
+    model$comp[[i]] <- gpsimUpdateProcesses(model$comp[[i]], predt=predt, expmask=expmask)
 
   return (model)
 }
@@ -623,7 +623,7 @@ gpsimGradient <- function (params, model, ...) {
 }
 
 
-gpsimUpdateProcesses <- function (model, predt=NULL) {
+gpsimUpdateProcesses <- function (model, predt=NULL, expmask=0) {
   if ( "proteinPrior" %in% names(model) ) {
     t <- model$timesCell[[2]]
   } else {
