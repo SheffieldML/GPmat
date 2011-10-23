@@ -107,7 +107,6 @@ else
     %fprintf(1,'gradfact-transforming x %f, A %f, B %f\n',x,A,B);
     %y = (B-A)*x.*(1-x);
     y = (x-A).*(B-x)/(B-A);
-    
     %y=0*x+1; % DEBUG ONLY, turns factors off!
   end
 end;
