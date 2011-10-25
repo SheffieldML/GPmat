@@ -41,7 +41,7 @@ if ~isempty(kern.transforms)
     % If the transformation has been provided with specific
     % settings (such as a custom output range), use the settings, 
     % otherwise transform without settings
-    if isfield(kern.transforms(i),'transformsettings'),
+    if isfield(kern.transforms(i),'transformsettings') && ~isempty(kern.transforms(i).transformsettings)
       factors.val = [factors.val  ...
 		     fhandle(params(index), factorType, kern.transforms(i).transformsettings)];
     else

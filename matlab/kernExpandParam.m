@@ -44,7 +44,7 @@ if ~isempty(kern.transforms)
     
     % If custom settings have been provided for the transformation,
     % use them, otherwise call the transformation with no settings
-    if isfield(kern.transforms(i),'transformsettings'),    
+    if isfield(kern.transforms(i),'transformsettings') && ~isempty(kern.transforms(i).transformsettings)    
       params(index) = fhandle(params(index), 'atox', kern.transforms(i).transformsettings);    
     else
       params(index) = fhandle(params(index), 'atox');    

@@ -62,7 +62,7 @@ if ~isempty(kern.transforms)
     % If custom settings have been provided for the i:th
     % transformation, use them, otherwise call the transformation
     % without parameters.
-    if isfield(kern.transforms(i),'transformsettings'),        
+    if isfield( kern.transforms(i),'transformsettings' ) && ~isempty(kern.transforms(i).transformsettings')
       params(index) = fhandle(params(index), 'xtoa', kern.transforms(i).transformsettings);
     else
       params(index) = fhandle(params(index), 'xtoa');
