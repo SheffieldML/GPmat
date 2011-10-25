@@ -1,6 +1,6 @@
 function samples = gpnddisimSampleHMC(model, display, iters);
 
-% GPSIMSAMPLEHMC Do HMC sampling for the GPNDDISIM model.
+% GPNDDISIMSAMPLEHMC Do HMC sampling for the GPNDDISIM model.
 % FORMAT
 % DESC performs HMC sampling for the Gaussian process single input
 % motif model for a given number of iterations.
@@ -19,7 +19,7 @@ function samples = gpnddisimSampleHMC(model, display, iters);
 %
 % COPYRIGHT : Jaakko Peltonen, 2011
 
-% GPSIM
+% GPNDDISIM
 
 
 if nargin < 3
