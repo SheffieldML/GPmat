@@ -203,7 +203,7 @@ class compound(kern):
 		return np.sum([k.compute_new(Xnew) for k in self.kerns],0)
 
 	def gradients(self):
-		return sum([k.extract_gradients() for k in self.kerns],[])
+		return sum([k.extract_gradients() for k in self.kerns],[]) #simply concatenates all the gradient matrices!
 
 	def gradients_X(self):
 		ret = np.zeros(self.shape+(self.kerns[0].X.shape[1],))

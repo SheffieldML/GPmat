@@ -44,7 +44,15 @@ class dot(kern):
 	def gradients(self):
 		raise NotImplementedError
 	def gradients_X(self):
-		raise NotImplementedError, "TODO"
+		"""
+		this will work for the linear and polynomial kerns. the mlp kern need special treatment, and will overload this fn
+		Notes
+		-----
+		NxNxD array. the i,j,kth element is the gradient of the [i,j]the element of the kernel wrt the k'th dimension of the i'th input."""
+		target = np.zeros((self.X.shape[0],self.X.shape[0],self.X.shape[1]))
+		pg1,pg2,pg3 = self.gradients_xTx(*self.args)
+		target += pg1[:,:,None]*self.X[:,None,:]
+		return target
 	def get_param(self):
 		return self.alpha
 	def set_param(self,x):
@@ -67,6 +75,8 @@ class linear(dot):
 		return self.alpha*xTx
 	def gradients(self,xTx,x1x1,x2x2):
 		return [xTx]
+	def gradients_xTx(self,xTx,x1x1,x2x2):
+		return (np.asarray(self.alpha).reshape(1,1), 0., 0.)
 
 class polynomial(dot):
 	"""A polynomial kernel with a fixed order"""
@@ -77,10 +87,12 @@ class polynomial(dot):
 		return self.alpha*(1.+xTx)**self.order
 	def gradients(self,xTx,x1x1,x2x2):
 		return [(1.+xTx)**self.order]
+	def gradients_xTx(self,xTx,x1x1,x2x2):
+		return (self.alpha*self.order*(1.+xTx)**(self.order-1),0.,0.)
 
 class mlp(dot):
 	"""
-	A mlp kernel. This has an extra parameter over the linear kernel.
+	A mlp kernel. This has an extra parameter over the linear kernel, so some get/set functions need to be overloaded. .
 	
 	Notes
 	-----
@@ -98,6 +110,28 @@ class mlp(dot):
 		denom2 = (1.+self.gamma*x1x1)*(1.+self.gamma*x2x2)
 		return [2./np.pi*np.arcsin(self.gamma*xTx/np.sqrt(denom2)),\
 			self.alpha/np.pi*xTx*(self.gamma*(x1x1+x2x2)+2.)/np.power(denom2,3./2.)/np.sqrt(1.-np.square(self.gamma*xTx)/denom2)]
+
+	def gradients_X(self):
+		"""
+		This overloads the function in the parent class, rather than implementing gradients_xTx
+		
+		TODO: 
+		1) remove the loop over dimensions, use broadcasting
+		2) take only partial derivaties and integrate neatly with other dot kernels"""
+
+		xTx, x1x1, x2x2 = self.args
+		target = np.zeros((self.X.shape[0],self.X.shape[0],self.X.shape[1]))
+
+		numer = xTx*self.gamma # N x N
+		denom2 = (1.+self.gamma*x1x1)*(1.+self.gamma*x2x2) # N x N
+		vec2 = x2x2.flatten()*self.gamma + 1. # a hangover from matlab, shape= (N,)
+		denom = np.sqrt(denom2) # N x N
+		denom3 = np.power(denom,3) # N x N
+		arg = numer/denom # N x N
+		foo = np.sqrt(1.-arg**2)
+		[np.add(target[:,:,d], (x[None,:]/denom - vec2[None,:]*x[:,None]*numer/denom3).T/foo,target[:,:,d]) for d,x in enumerate(self.X.T)]
+		return target*self.alpha*self.gamma*2./np.pi
+
 	def get_param(self):
 		return np.array([self.alpha,self.gamma]).flatten()
 	def set_param(self,x):

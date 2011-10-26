@@ -48,11 +48,7 @@ class stationary(kern):
 		which arises from applying the chain rule to the derivative. Defining it this way helps prevent divide-by-zero errors
 
 		"""
-		target = np.zeros((self.X.shape[0],self.X.shape[0],self.X.shape[1]))
-		common = self.gradients_r_over_r(*self.args)
-		#TODO can this be done without a loop?
-		[np.add(target[:,i,:],common[i,:][:,None]*(x-self.X),target[:,i,:]) for i,x in enumerate(self.X)]
-		return target
+		return self.gradients_r_over_r(*self.args)[:,:,None]*(self.X[None,:,:]-self.X[:,None,:])
 
 	def get_param(self):
 		return np.array([self.alpha, self.gamma])
