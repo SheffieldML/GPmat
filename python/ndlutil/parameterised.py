@@ -158,12 +158,13 @@ class parameterised:
 		x = self.get_param()
 		x[self.constrained_positive_indices] = np.log(x[self.constrained_positive_indices])
 		x[self.constrained_negative_indices] = np.log(-x[self.constrained_negative_indices])
-		[np.put(x,i,np.log((x[i]-l)/(h-x[i]))) for i,l,h in zip(self.constrained_bounded_indices, self.constrained_bounded_lowers, self.constrained_bounded_uppers)]
-		if len(self.tied_indices):
-			to_remove = np.hstack((self.constrained_fixed_indices,np.hstack([t[1:] for t in self.tied_indices])))
+		[np.put(x,i,np.log(np.clip(x[i]-l,1e-10,np.inf)/np.clip(h-x[i],1e-10,np.inf))) for i,l,h in zip(self.constrained_bounded_indices, self.constrained_bounded_lowers, self.constrained_bounded_uppers)]
+
+		to_remove = self.constrained_fixed_indices+[t[1:] for t in self.tied_indices]
+		if len(to_remove):
+			return np.delete(x,np.hstack(to_remove))
 		else:
-			to_remove=self.constrained_fixed_indices
-		return np.delete(x,to_remove)
+			return x
 
 
 	def expand_param(self,x):
