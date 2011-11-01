@@ -102,6 +102,39 @@ class kern(ndlutil.parameterised):
 
 
 	def extract_gradients(self,targets=None):
+		x = self.get_param()
+		gradients = self.gradients(*self.args)
+
+		#work out which gradient go where, with overlaps due to tying and nans due to fixing
+		target_index = np.arange(self.Nparam)
+		for tie in self.tied_indices:
+			target_index[tie[1:]] = tie[0]
+		some_fixed=False
+		if len(self.constrained_fixed_indices):
+			some_fixed=True
+			target_index[np.hstack(self.constrained_fixed_indices)] = target_index.size
+
+		target_index = np.argmax(target_index[:,None]==np.unique(target_index),1) #NB: the fixed indices are now just the maximum value
+
+		#get the gradient correction factors which some from the constraints TODO: arbitrary constraints, not just exp
+		factors = np.ones(self.Nparam)
+		[np.put(factors,i,x[i]) for i in self.constrained_positive_indices]
+		[np.put(factors,i,x[i]) for i in self.constrained_negative_indices]
+		[[np.put(factors,i,(x[i]-l)*(h-x[i])/(h-l)) for i in inds] for inds,h,l in zip(self.constrained_bounded_indices,self.constrained_bounded_uppers, self.constrained_bounded_lowers)]
+
+		if targets is None:
+			targets = [np.zeros(self.shape) for i in range(np.unique(target_index).size-some_fixed)]
+		if self.masked:
+			for f,g,i in zip(factors,gradients,target_index):
+				if (not some_fixed)|(i<target_index.max()):
+					targets[i][self.mask_grid] += f*g
+		else:
+			[np.add(targets[ti],g*f,targets[ti]) for ti,g,f in zip(target_index,gradients,factors) if (not some_fixed)|(ti<target_index.max())]
+		return targets
+		
+
+
+	def extract_gradients_old(self,targets=None):
 		"""
 		Extract the gradients. Much like model.extract_gradients,
 		but we're dealing with lists of matrices here, which is a little more tricky.
@@ -130,10 +163,11 @@ class kern(ndlutil.parameterised):
 		[np.multiply(targets[i],x[i],targets[i]) for i in self.constrained_negative_indices]
 		[[np.multiply(targets[i],(x[i]-l)*(h-x[i])/(h-l),targets[i]) for i in inds] for inds,h,l in zip(self.constrained_bounded_indices,self.constrained_bounded_uppers, self.constrained_bounded_lowers)]
 		[[np.add(targets[ii], targets[i[0]], targets[i[0]]) for ii in i[1:]] for i in self.tied_indices]
-		if len(self.tied_indices):
-			to_remove = np.hstack((self.constrained_fixed_indices,np.hstack([t[1:] for t in self.tied_indices])))
+		to_remove = self.constrained_fixed_indices + [t[1:] for t in self.tied_indices]
+		if len(to_remove):
+			to_remove = np.hstack(to_remove)
 		else:
-			to_remove = self.constrained_fixed_indices
+			to_remove = []
 		return [gg for i,gg in enumerate(targets) if not i in to_remove]
 
 	def extract_gradients_X(self,target=None):

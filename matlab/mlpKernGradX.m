@@ -44,3 +44,4 @@ for j = 1:size(X2, 2)
   gX(:, j)=X2(:, j)./denom - vec2.*x(:, j).*numer./denom.^3;
   gX(:, j) = twooverpi*kern.weightVariance*kern.variance*gX(:, j)./sqrt(1-arg.*arg);
 end
+

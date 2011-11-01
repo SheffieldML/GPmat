@@ -47,13 +47,14 @@ class GP(model):
 if __name__=='__main__':
 	X = np.random.randn(20,1)
 	Y = np.sin(X)+np.random.randn(20,1)*0.05
-	kerns = [kern.linear(X), kern.rbf(X), kern.mlp(X)]
+	kerns = [kern.linear(X), kern.rbf(X), kern.mlp(X),kern.polynomial(X)]
 	kerns = [k+kern.white(X) for k in kerns]
 	[k.constrain_positive('') for k in kerns]
 	models = [GP(k,Y) for k in kerns]
 	[m.optimize() for m in models]
 	[m.plot() for m in models]
 	
+	pb.show()
 
 
 
