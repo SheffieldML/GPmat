@@ -307,7 +307,7 @@ class hierarchical(compound):
 		for k,c in zip(self.kerns,connections.T):
 			i = np.nonzero(c)[0]
 			if len(i):
-				ret += k.compute_new(Xnew[i,:]) 
+				ret[np.meshgrid(i,i)] += k.compute_new(Xnew[i,:]) 
 		return ret
 			
 	
