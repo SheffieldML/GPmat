@@ -92,6 +92,20 @@ class parameterised:
 		self.set_param(x)
 
 
+	def unconstrain(self,which):
+		"""Unconstrain matching parameters.  does not untie or unfix parameters"""
+		matches = self.grep_param_names(which)
+		self.constrained_positive_indices = np.delete(self.constrained_positive_indices,np.nonzero(np.sum(self.constrained_positive_indices[:,None]==matches[None,:],1))[0])
+		self.constrained_negative_indices = np.delete(self.constrained_negative_indices,np.nonzero(np.sum(self.constrained_negative_indices[:,None]==matches[None,:],1))[0])
+		if len(self.constrained_bounded_indices):
+			self.constrained_bounded_indices = [np.delete(a,np.nonzero(np.sum(a[:,None]==matches[None,:],1))[0]) for a in self.constrained_bounded_indices]
+			if np.hstack(self.constrained_bounded_indices).size:
+				self.constrained_bounded_uppers, self.constrained_bounded_lowers, self.constrained_bounded_indices = zip(*[(u,l,i) for u,l,i in zip(self.constrained_bounded_uppers, self.constrained_bounded_lowers, self.constrained_bounded_indices) if i.size])
+			else:
+				self.constrained_bounded_uppers, self.constrained_bounded_lowers, self.constrained_bounded_indices = [],[],[]
+
+
+
 	def constrain_negative(self,which):
 		"""
 		Set negative constraints. 
