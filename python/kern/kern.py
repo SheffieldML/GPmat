@@ -1,5 +1,4 @@
 import sys
-sys.path.append('/home/james/mlprojects/ndlutil/python')
 import ndlutil
 from ndlutil.utilities import sigmoid
 import numpy as np
@@ -101,7 +100,7 @@ class kern(ndlutil.parameterised):
 		raise NotImplementedError, "TODO"
 
 
-	def extract_gradients(self,targets=None):
+	def extract_gradients_new(self,targets=None):
 		x = self.get_param()
 		gradients = self.gradients(*self.args)
 
@@ -134,7 +133,7 @@ class kern(ndlutil.parameterised):
 		
 
 
-	def extract_gradients_old(self,targets=None):
+	def extract_gradients(self,targets=None):
 		"""
 		Extract the gradients. Much like model.extract_gradients,
 		but we're dealing with lists of matrices here, which is a little more tricky.
