@@ -1,18 +1,21 @@
 import numpy as np
 import pylab as pb
 import sys
-sys.path.append('..')
-sys.path.append('../../../ndlutil/python/')
 import kern
 from ndlutil import model
 from ndlutil.utilities import pdinv, gpplot
 
 class GP(model):
-	def __init__(self,kern,Y):
+	def __init__(self,X,Y,kern=None):
 		model.__init__(self)
-		self.kern = kern
+		self.X = X
 		self.Y = Y
+		if kern is None:
+			self.kern = kern.rbf(self.X) + kern.white(self.X)
+		else:
+			self.kern = kern
 		self.Youter = np.dot(Y,Y.T)
+		self.Nparam = self.kern.Nparam
 	def set_param(self,p):
 		self.kern.expand_param(p)
 		self.K = self.kern.compute()
@@ -36,24 +39,22 @@ class GP(model):
 		return mu,var
 	def plot(self):
 		pb.figure()
-		X = self.kern.kerns[0].X
-		xmin,xmax = X.min(),X.max()
+		xmin,xmax = self.X.min(),self.X.max()
 		xmin, xmax = xmin-0.2*(xmax-xmin), xmax+0.2*(xmax-xmin)
 		Xnew = np.linspace(xmin,xmax,100)[:,None]
 		m,v = self.predict(Xnew)
 		gpplot(Xnew,m,v)
-		pb.plot(X,self.Y,'kx',mew=1.5)
+		pb.plot(self.X,self.Y,'kx',mew=1.5)
 
 if __name__=='__main__':
 	X = np.random.randn(20,1)
 	Y = np.sin(X)+np.random.randn(20,1)*0.05
-	kerns = [kern.linear(X), kern.rbf(X), kern.mlp(X)]
-	kerns = [k+kern.white(X) for k in kerns]
-	[k.constrain_positive('') for k in kerns]
-	models = [GP(k,Y) for k in kerns]
+	models = [GP(X,Y,k) for k in kern.linear, kern.rbf, kern.mlp,kern.polynomial, kern.cubic_spline]
+	[m.constrain_positive('') for m in models]
 	[m.optimize() for m in models]
 	[m.plot() for m in models]
 	
+	pb.show()
 
 
 
