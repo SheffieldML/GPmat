@@ -53,7 +53,7 @@ class GP(model):
 if __name__=='__main__':
 	X = np.random.randn(20,1)
 	Y = np.sin(X)+np.random.randn(20,1)*0.05
-	models = [GP(X,Y,k) for k in kern.linear, kern.rbf, kern.mlp,kern.polynomial, kern.cubic_spline]
+	models = [GP(X,Y,k(X)) for k in kern.linear, kern.rbf, kern.mlp,kern.polynomial]#, kern.cubic_spline]
 	[m.constrain_positive('') for m in models]
 	[m.optimize() for m in models]
 	[m.plot() for m in models]
