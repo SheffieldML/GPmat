@@ -8,6 +8,10 @@ from ndlutil.utilities import pdinv, gpplot
 class GP(model):
 	def __init__(self,X,Y,kernel=None):
 		model.__init__(self)
+		assert len(X.shape)==2
+		assert len(Y.shape)==2
+		assert X.shape[0]==Y.shape[0]
+		assert Y.shape[1]==1
 		self.X = X
 		self.Y = Y
 		if kernel is None:
