@@ -6,14 +6,14 @@ from ndlutil import model
 from ndlutil.utilities import pdinv, gpplot
 
 class GP(model):
-	def __init__(self,X,Y,kern=None):
+	def __init__(self,X,Y,kernel=None):
 		model.__init__(self)
 		self.X = X
 		self.Y = Y
-		if kern is None:
+		if kernel is None:
 			self.kern = kern.rbf(self.X) + kern.white(self.X)
 		else:
-			self.kern = kern
+			self.kern = kernel
 		self.Youter = np.dot(Y,Y.T)
 		self.Nparam = self.kern.Nparam
 	def set_param(self,p):
