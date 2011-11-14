@@ -6,7 +6,7 @@
   Helper function for computing the log of difference
 }
 \usage{
-v <- lnDiffErfs(x1, x2)
+  lnDiffErfs(x1, x2)
 }
 \arguments{
   \item{x1}{argument of the positive erf}

@@ -11,10 +11,10 @@
   Optimise the given function using (scaled) conjugate gradients.
 }
 \usage{
-  options <- optimiDefaultOptions()
-  newParams <- SCGoptim(x, fn, grad, options, ...)
-  newParams <- CGoptim(x, fn, grad, options, ...)
-  model <- modelOptimise(model, options, ...)
+  optimiDefaultOptions()
+  SCGoptim(x, fn, grad, options, ...)
+  CGoptim(x, fn, grad, options, ...)
+  modelOptimise(model, options, ...)
 }
 \arguments{
   \item{model}{the model to be optimised.}

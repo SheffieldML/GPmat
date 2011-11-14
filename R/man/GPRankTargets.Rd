@@ -14,13 +14,15 @@
   arguments.
 }
 \usage{
-scores <- GPRankTargets(preprocData, TF = NULL, knownTargets = NULL,
-                        testTargets = NULL, filterLimit = 1.8,
-                        returnModels = FALSE, options = NULL,
-                        scoreSaveFile = NULL)
-scores <- GPRankTFs(preprocData, TFs, targets,
-                    filterLimit = 1.8, returnModels = FALSE, options = NULL,
-                    scoreSaveFile = NULL)
+GPRankTargets(preprocData, TF = NULL, knownTargets = NULL,
+              testTargets = NULL, filterLimit = 1.8,
+              returnModels = FALSE, options = NULL,
+              scoreSaveFile = NULL,
+              datasetName = "", experimentSet = "")
+GPRankTFs(preprocData, TFs, targets,
+          filterLimit = 1.8, returnModels = FALSE, options = NULL,
+          scoreSaveFile = NULL, datasetName = "", experimentSet = "")
+
 }
 \arguments{
   \item{preprocData}{The preprocessed data to be used.}
@@ -42,6 +44,10 @@ scores <- GPRankTFs(preprocData, TFs, targets,
   \item{TFs}{The transcription factors that are tested by
     including them in the models one at a time.}
   \item{targets}{The target genes present in all models.}
+  \item{datasetName}{For exporting the scores using
+    \code{\link{export.scores}}: Name of the dataset in the database.}
+  \item{experimentSet}{For exporting the scores using
+    \code{\link{export.scores}}: Name of the experiment set in the database.}
 }
 
 \details{The models are formed by calling \code{\link{GPLearn}}.
@@ -65,7 +71,8 @@ scores <- GPRankTFs(preprocData, TFs, targets,
 }
 \author{Antti Honkela, Jonatan Ropponen, Magnus Rattray, Neil D. Lawrence}
 \seealso{
-  \code{\link{GPLearn}, \linkS4class{scoreList}, \link{generateModels}}.
+  \code{\link{GPLearn}, \linkS4class{scoreList}, \link{generateModels},
+    \link{export.scores}}.
 }
 \examples{\dontrun{
   # Load a mmgmos preprocessed fragment of the Drosophila developmental

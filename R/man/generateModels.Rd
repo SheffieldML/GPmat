@@ -7,7 +7,7 @@
   stored in a scoreList.
 }
 \usage{
-models <- generateModels(preprocData, scores)
+  generateModels(preprocData, scores)
 }
 \arguments{
   \item{preprocData}{The preprocessed data to be used.}

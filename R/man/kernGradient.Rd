@@ -20,16 +20,22 @@
   Compute the gradient wrt the kernel parameters.
 }
 \usage{
-g <- kernGradient(kern, x, partial)
-g <- kernGradient(kern, x1, x2, partial_)
+  kernGradient(kern, x, ...)
 }
 \arguments{
   \item{kern}{the kernel structure for which the gradients are being computed.}
-  \item{x}{the input locations for which the gradients are being computed.}
-  \item{partial}{matrix of partial derivatives of the function of interest with respect to the kernel matrix. The argument takes the form of a square matrix of dimension  numData, where numData is the number of rows in X.}
-  \item{x1}{the input locations associated with the rows of the kernel matrix.}
-  \item{x2}{the input locations associated with the columns of the kernel matrix.}
-  \item{partial_}{matrix of partial derivatives of the function of interest with respect to the kernel matrix. The matrix should have the same number of rows as X1 and the same number of columns as X2 has rows.}
+  \item{x}{the input locations for which the gradients are being computed,
+    specifically those associated with the rows of the kernel matrix
+    if there are two arguments of input locations.}
+  \item{...}{optional arguments including potentially:
+    the input locations associated with the columns of the kernel matrix;
+    matrix of partial derivatives of the function of interest with
+    respect to the kernel matrix. With single input, the argument
+    takes the form of a square matrix of dimension numData, where numData
+    is the number of rows in x, with two input arguments
+    the matrix should have the same number of rows as the first and the same
+    number of columns as the second has rows.
+    }
 }
 \details{
   \code{g <- kernGradient(kern, x, partial)}

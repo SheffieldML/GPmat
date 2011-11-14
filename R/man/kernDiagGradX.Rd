@@ -11,15 +11,15 @@
   computes the gradient of the (diagonal of the) kernel matrix with respect to the elements of the design matrix given in X.
 }
 \usage{
-gX <- kernDiagGradX(kern, X)
-gX2 <- kernGradX(kern, X)
-gX2 <- kernGradX(kern, X1, X2)
+  kernDiagGradX(kern, x)
+  kernGradX(kern, x, x2)
 }
 \arguments{
   \item{kern}{the kernel structure for which gradients are being computed.}
-  \item{X}{the input data in the form of a design matrix.}
-  \item{X1}{row locations against which gradients are being computed.}
-  \item{X2}{column locations against which gradients are being computed.}
+  \item{x}{if only argument: the input data in the form of a design
+    matrix, if two arguments: row locations against which gradients are
+    being computed.}
+  \item{x2}{(optional) column locations against which gradients are being computed.}
 }
 \value{
   \item{gX}{the gradients of the diagonal with respect to each element of X. The returned matrix has the same dimensions as X.}

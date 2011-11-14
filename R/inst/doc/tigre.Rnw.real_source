@@ -33,9 +33,11 @@ candidate targets of a TF.
 \section{Citing \tigre{}}
 
 The \tigre{} package is based on a body of methodological research.
-Citing \tigre{} in publications will usually involve citing one or more
-of the methodology papers \citep{Lawrence2007,Gao2008,Honkela2010PNAS} that the
-software is based on as well as citing the software package itself.
+Citing \tigre{} in publications will usually involve citing one or
+more of the methodology papers
+\citep{Honkela2010PNAS,Gao2008,Lawrence2007} that the software is
+based on as well as citing the software package itself
+\citep{Honkela2011}.
 
 <<echo=FALSE, eval=TRUE>>=
 options(width = 60)
@@ -356,6 +358,12 @@ which is used to define which annotation information is inserted. In the
 example above, FLYBASE gene numbers are also added to the genes in the
 database. The insertion of alias annotations and z-scores requires that the
 preprocessed data is supplied.
+
+\section{Session Info}
+
+<<sessionInfo>>=
+sessionInfo()
+@ 
 
 \bibliographystyle{plainnat}
 \bibliography{gpsim}

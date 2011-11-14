@@ -5,13 +5,17 @@ citEntry(entry="Article",
   title = "tigre: Transcription factor Inference through Gaussian process Reconstruction of Expression for Bioconductor",
   journal = "Bioinformatics",
   year = "2011",
+  volume = "27",
+  pages = "1026-1027",
+  number = "7",
   doi = "10.1093/bioinformatics/btr057",
+  url = "http://dx.doi.org/10.1093/bioinformatics/btr057",
   textVersion = paste(
     "Antti Honkela, Pei Gao, Jonatan Ropponen, Magnus Rattray,
     and Neil D. Lawrence.",
     "tigre: Transcription factor Inference through Gaussian
     process Reconstruction of Expression for Bioconductor.",
-    "Bioinformatics, 2011.",
+    "Bioinformatics 27(7):1026-1027, 2011.",
     "DOI: 10.1093/bioinformatics/btr057."
   )
 )
@@ -25,7 +29,6 @@ citEntry(entry="Article",
   volume =       "107",
   pages =        "7793-7798",
   number =       "17",
-  month =        "Apr",
   doi =          "10.1073/pnas.0914285107",
   url =          "http://dx.doi.org/10.1073/pnas.0914285107",
   textVersion = paste(
@@ -33,7 +36,7 @@ citEntry(entry="Article",
     Eileen E. M. Furlong, Neil D. Lawrence, and Magnus Rattray.",
     "Model-based method for transcription factor target identification
     with limited data.",
-    "Proc Natl Acad Sci USA 107(17):7793-7798, Apr 2010.",
+    "Proc Natl Acad Sci USA 107(17):7793-7798, 2010.",
     "DOI: 10.1073/pnas.0914285107."
   )
 )

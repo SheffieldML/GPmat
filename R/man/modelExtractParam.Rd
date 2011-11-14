@@ -23,7 +23,7 @@
   Extract parameters from the model into a vector of parameters for optimisation.
 }
 \usage{
-  param <- modelExtractParam(model, only.values=TRUE, untransformed.values=FALSE)
+  modelExtractParam(model, only.values=TRUE, untransformed.values=FALSE)
 }
 \arguments{
   \item{model}{the model structure containing the parameters to be extracted.}
