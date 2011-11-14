@@ -6,7 +6,7 @@ Author: Antti Honkela, Pei Gao, Jonatan Ropponen, Miika-Petteri Matikainen, Magn
 Maintainer: Antti Honkela <antti.honkela@hiit.fi>
 Depends: R (>= 2.8.0), Biobase
 Imports: Biobase, methods, AnnotationDbi, gplots, graphics, puma, stats, utils, annotate, DBI, RSQLite
-Suggests: puma, drosgenome1.db, annotate
+Suggests: puma, drosgenome1.db, annotate, lumi
 Description: The tigre package implements our methodology of Gaussian
  process differential equation models for analysis of gene expression
  time series from single input motif networks. The package can be used

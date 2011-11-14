@@ -5,24 +5,24 @@
 \title{Processing expression time series}
 \description{
   \code{processData} further processes time series data preprocessed
-  by \code{mmgmos}.
+  by \code{puma} or \code{lumi}.
   
-  \code{processData} further processes time series data preprocessed
-  by \code{mmgmos}.
+  \code{processRawData} performs similar processing for other data.
 
   Both functions return \code{\linkS4class{ExpressionTimeSeries}}
   objects that can be used as input for the functions
   \code{\link{GPLearn}} and \code{\link{GPRankTargets}}.
 }
 \usage{
-preprocData <- processData(data, times = NULL, experiments = NULL,
-  do.normalisation = TRUE)
-preprocData <- processRawData(rawData, times, experiments = NULL,
-  is.logged = TRUE, do.normalisation = ifelse(is.logged, TRUE, FALSE))
+  processData(data, times = NULL, experiments = NULL,
+    do.normalisation = TRUE)
+  processRawData(rawData, times, experiments = NULL,
+    is.logged = TRUE, do.normalisation = ifelse(is.logged, TRUE, FALSE))
 }
 \arguments{
-  \item{data}{The preprocessed data (\code{\linkS4class{exprReslt}})
-    from mmgMOS to be used.}
+  \item{data}{The preprocessed data from \code{mmgMOS} in the
+    \code{puma} package (an \code{exprReslt} object) or
+    from the \code{lumi} package (a \code{LumiBatch} object).}
   \item{rawData}{Raw data matrix to be used. Each row corresponds to
     a gene and each column to a data point.}
   \item{times}{Observation times of each data point.
@@ -41,7 +41,8 @@ preprocData <- processRawData(rawData, times, experiments = NULL,
 }
 \details{
   The expression data (and percentiles, if available) are normalized
-  by equalising the mean. In \code{processData}, a normal
+  by equalising the mean of log-expression in each time points.
+  In \code{processData}, a normal
   distribution is then fitted into the data with distfit.
 }
 \value{

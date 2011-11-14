@@ -7,7 +7,7 @@
   parameter.
 }
 \usage{
-val <- optimiDefaultConstraint(constraint)
+  optimiDefaultConstraint(constraint)
 }
 \arguments{
   \item{constraint}{the type of constraint you want to place on the parameter, options include 'positive' (gives an 'exp' constraint) and 'zeroone' (gives a 'sigmoid' constraint).}

@@ -20,13 +20,14 @@
   Initialise a kernel structure.
 }
 \usage{
-kern <- kernCreate(X, type)
-kern <- kernCreate(dim, type)
+  kernCreate(x, kernType, kernOptions=NULL)
 }
 \arguments{
-  \item{X}{Input data values (from which kernel will later be computed).}
+  \item{x}{If list, array or matrix: input data values (from which kernel will later be computed).
+	If scalar: input dimension of the design matrix (i.e. number of
+    features in the design matrix).}
   
-  \item{type}{Type of kernel to be created, some standard types are
+  \item{kernType}{Type of kernel to be created, some standard types are
     'rbf', 'white', 'sim' and 'disim'. If a list of the form
     \code{list(type='cmpnd', comp=c('rbf', 'rbf', 'white'))} is used a
     compound kernel based on
@@ -35,9 +36,8 @@ kern <- kernCreate(dim, type)
     \code{list(type='parametric', options=list(opt=val), realType=...)},
     where \code{realType} is the type that would be used otherwise.
     }
-  
-  \item{dim}{input dimension of the design matrix (i.e. number of
-    features in the design matrix).}
+
+  \item{kernOptions}{(optional) list of kernel options}
 }
 \details{
   \code{kern <- kernCreate(X, type)}

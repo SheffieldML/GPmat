@@ -7,17 +7,17 @@
   creates a model for single input motifs with Gaussian processes.
 }
 \usage{
-model <- gpsimCreate(numGenes, numProteins, times, geneVals,
-                     geneVars, options, genes, annotation)
-model <- gpdisimCreate(numGenes, numProteins, times, geneVals,
-                       geneVars, options, genes, annotation)
+  gpsimCreate(Ngenes, Ntf, times, y,
+              yvar, options, genes=NULL, annotation=NULL)
+  gpdisimCreate(Ngenes, Ntf, times, y,
+                yvar, options, genes=NULL, annotation=NULL)
 }
 \arguments{
-  \item{numGenes}{number of genes to be modelled in the system.}
-  \item{numProteins}{number of proteins to be modelled in the system.}
+  \item{Ngenes}{number of genes to be modelled in the system.}
+  \item{Ntf}{number of proteins to be modelled in the system.}
   \item{times}{the time points where the data is to be modelled.}
-  \item{geneVals}{the values of each gene at the different time points.}
-  \item{geneVars}{the varuabces of each gene at the different time points.}
+  \item{y}{the values of each gene at the different time points.}
+  \item{yvar}{the variances of each gene at the different time points.}
   \item{options}{options structure (optional).}
   \item{genes}{names of the probes the model is for}
   \item{annotation}{(optional) annotation for the probe names}

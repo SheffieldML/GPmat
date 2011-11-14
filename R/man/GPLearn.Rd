@@ -10,7 +10,7 @@
   given data can also be searched for the data of specific genes.
 }
 \usage{
-  model <- GPLearn(preprocData, TF = NULL, targets = NULL,
+  GPLearn(preprocData, TF = NULL, targets = NULL,
     useGpdisim = !is.null(TF), randomize = FALSE, addPriors = FALSE,
     fixedParams = FALSE, initParams = NULL, initialZero = TRUE,
     fixComps = NULL, dontOptimise = FALSE,

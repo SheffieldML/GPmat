@@ -1,16 +1,37 @@
 Package: tigre
 ==============
 
-Version: 1.4.2 / 1.5.2 [2011-02-14]
+Version: 1.8.0
+
+NEW FEATURES
+
+* Direct support for variances for Illumina Bead Array data from lumi.
+* Prettier default plot style
+
+BUG FIXES
+
+* Fix to variance scaling in plots of models with TF mRNA measurements
+
+Version: 1.6.1 [2011-04-26]
+
+BUG FIXES
+
+* Fix: target ranking now works with >= 10 known targets
+  (thanks to Jake Michaelson for the report)
+
+Version: 1.6.0
+* Function documentation updates
+
+Version: 1.4.2 [2011-02-14]
 * Fix scoreList::sort when including NA values
 * Fixes for working with non-Affymetrix data
 * New citation information
 
-Version: 1.4.1 / 1.5.1 [2011-01-19]
+Version: 1.4.1 [2011-01-19]
 * Clarify output from model fitting and remove unnecessary warnings
 * Minor documentation improvements
 
-Version: 1.4.0 / 1.3.3 [2010-10-12]
+Version: 1.4.0
 * Easier access to untransformed parameter values and other usability fixes
 * Add functionality to introduce priors to parameters
 * More sensible length scale bounds
@@ -19,13 +40,13 @@ Version: 1.3.2 [2010-10-08]
 * Add database export for tigreBrowser
 * Make kernel computation numerically more robust
 
-Version: 1.2.1 / 1.3.1 [2010-09-20]
+Version: 1.2.1 [2010-09-20]
 * Fix baseline log-likelihood computation
 * Robustify against genes with constant zero expression
 * Fix package name in data files
 * Documentation and citation information updates
 
-Version: 1.2.0 [2010-04-22]
+Version: 1.2.0
 * Same as 1.0.0, due to version numbering glitch
 
 Version: 1.0.0 [2010-04-22]

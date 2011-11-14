@@ -6,7 +6,7 @@
   groups of parameters of a model to be seen as one parameter during optimisation of the model.
 }
 \usage{
-model <- modelTieParam(model, paramsList)
+  modelTieParam(model, paramsList)
 }
 \arguments{
   \item{model}{the model for which parameters are being tied together.}

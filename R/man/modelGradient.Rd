@@ -34,9 +34,9 @@
   a negative log likelihood (\code{modelLogLikelihood}).
 }
 \usage{
-v <- modelObjective(model)
-ll <- modelLogLikelihood(model)
-g <- modelGradient(params, model, ...)
+  modelObjective(params, model, ...)
+  modelLogLikelihood(model)
+  modelGradient(params, model, ...)
 }
 \arguments{
   \item{params}{parameter vector to evaluate at.}

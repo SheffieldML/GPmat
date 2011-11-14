@@ -34,9 +34,11 @@ candidate targets of a TF.
 \section{Citing \tigre{}}
 
 The \tigre{} package is based on a body of methodological research.
-Citing \tigre{} in publications will usually involve citing one or more
-of the methodology papers \citep{Lawrence2007,Gao2008,Honkela2010PNAS} that the
-software is based on as well as citing the software package itself.
+Citing \tigre{} in publications will usually involve citing one or
+more of the methodology papers
+\citep{Honkela2010PNAS,Gao2008,Lawrence2007} that the software is
+based on as well as citing the software package itself
+\citep{Honkela2011}.
 
 
 \section{Introductory example analysis - Drosophila development}
@@ -89,6 +91,7 @@ To start from scratch on Affymetrix data, the .CEL files from
 processed using:
 \begin{Schunk}
 \begin{Sinput}
+> # Names of CEL files
 > expfiles <- c(paste("embryo_tc_4_", 1:12, ".CEL", sep=""),
 +               paste("embryo_tc_6_", 1:12, ".CEL", sep=""),
 +               paste("embryo_tc_8_", 1:12, ".CEL", sep=""))
@@ -131,6 +134,7 @@ Let us now recreate some the models shown in the plots of the PNAS
 paper~\citep{Honkela2010PNAS}:
 \begin{Schunk}
 \begin{Sinput}
+> # FBgn names of target genes
 > targets <- c('FBgn0003486', 'FBgn0033188', 'FBgn0035257')
 > # Load gene annotations
 > library(annotate)
@@ -166,40 +170,40 @@ Gaussian process driving input single input motif model:
     152715_at
     147995_at
   Basal transcription rate:
-    Gene 1: 19.8333185379932
-    Gene 2: 0.00781061203696723
-    Gene 3: 2.10339379632397e-06
+    Gene 1: 23.0628118698704
+    Gene 2: 0.00777234767448941
+    Gene 3: 9.61284386889363e-07
   Kernel:
     Multiple output block kernel:
     Block 1
     Normalised version of the kernel.
-    RBF inverse width: 0.7732607 (length scale 1.137200)
-    RBF variance: 1.753763
+    RBF inverse width: 0.7713904 (length scale 1.138578)
+    RBF variance: 1.756029
     Block 2
     Normalised version of the kernel
-    DISIM decay: 0.0728792
-    DISIM inverse width: 0.7732607 (length scale 1.137200)
+    DISIM decay: 0.07312269
+    DISIM inverse width: 0.7713904 (length scale 1.138578)
     DISIM Variance: 1
-    SIM decay: 1267.35
-    SIM Variance: 0.002280034
-    RBF Variance: 1.753763
+    SIM decay: 1472.725
+    SIM Variance: 0.002370256
+    RBF Variance: 1.756029
     Block 3
     Normalised version of the kernel
-    DISIM decay: 0.0728792
-    DISIM inverse width: 0.7732607 (length scale 1.137200)
+    DISIM decay: 0.07312269
+    DISIM inverse width: 0.7713904 (length scale 1.138578)
     DISIM Variance: 1
-    SIM decay: 0.4984536
-    SIM Variance: 0.03224155
-    RBF Variance: 1.753763
+    SIM decay: 0.4974917
+    SIM Variance: 0.03221548
+    RBF Variance: 1.756029
     Block 4
     Normalised version of the kernel
-    DISIM decay: 0.0728792
-    DISIM inverse width: 0.7732607 (length scale 1.137200)
+    DISIM decay: 0.07312269
+    DISIM inverse width: 0.7713904 (length scale 1.138578)
     DISIM Variance: 1
-    SIM decay: 0.000346373
-    SIM Variance: 0.003266206
-    RBF Variance: 1.753763
-  Log-likelihood: -31.85442 
+    SIM decay: 0.0001589233
+    SIM Variance: 0.003267953
+    RBF Variance: 1.756029
+  Log-likelihood: -31.84627 
 \end{Soutput}
 \begin{Sinput}
 > # Learn a model without TF mRNA and TF protein translation
@@ -252,6 +256,8 @@ The models can be plotted using commands like
 Bulk ranking of candidate targets can be accomplished using
 \begin{Schunk}
 \begin{Sinput}
+> ## Rank the targets, filtering weakly expressed genes with average
+> ## expression z-score below 1.8
 > scores <- GPRankTargets(drosophila_gpsim_fragment, TF=twi,
 +                         testTargets=targetProbes,
 +                         options=list(quiet=TRUE),
@@ -262,9 +268,9 @@ Bulk ranking of candidate targets can be accomplished using
 \end{Sinput}
 \begin{Soutput}
 "log-likelihood" "null_log-likelihood"
-"147995_at" 6.75527239025642 -487.893231050121
-"152715_at" -1.51369376081680 -539.73619673943
-"148227_at" -2.03034458491229 -73.4806804255218
+"147995_at" 6.75316505600457 -487.893231050121
+"148227_at" -1.48337994116984 -73.4806804255218
+"152715_at" -1.51379773568251 -539.73619673943
 \end{Soutput}
 \end{Schunk}
 
@@ -286,22 +292,22 @@ Gaussian process driving input single input motif model:
   Target genes (1):
     147995_at
   Basal transcription rate:
-    Gene 1: 0.000141495455304562
+    Gene 1: 0.000141988952743346
   Kernel:
     Multiple output block kernel:
     Block 1
     Normalised version of the kernel.
-    RBF inverse width: 0.7614166 (length scale 1.146011)
-    RBF variance: 1.80484
+    RBF inverse width: 0.7604155 (length scale 1.146765)
+    RBF variance: 1.808011
     Block 2
     Normalised version of the kernel
-    DISIM decay: 0.02029628
-    DISIM inverse width: 0.7614166 (length scale 1.146011)
+    DISIM decay: 0.02024595
+    DISIM inverse width: 0.7604155 (length scale 1.146765)
     DISIM Variance: 1
-    SIM decay: 0.02009845
-    SIM Variance: 0.002770748
-    RBF Variance: 1.80484
-  Log-likelihood: 6.755272 
+    SIM decay: 0.02016988
+    SIM Variance: 0.002793356
+    RBF Variance: 1.808011
+  Log-likelihood: 6.753165 
 \end{Soutput}
 \end{Schunk}
 
@@ -311,6 +317,8 @@ Ranking using known targets with multiple-target models can be
 accomplished simply by adding the \texttt{knownTargets} argument
 \begin{Schunk}
 \begin{Sinput}
+> ## Rank the targets, filtering weakly expressed genes with average
+> ## expression z-score below 1.8
 > scores <- GPRankTargets(drosophila_gpsim_fragment, TF=twi,
 +                         knownTargets=targetProbes[1],
 +                         testTargets=targetProbes[2:3],
@@ -322,8 +330,8 @@ accomplished simply by adding the \texttt{knownTargets} argument
 \end{Sinput}
 \begin{Soutput}
 "log-likelihood" "null_log-likelihood"
-"152715_at" -28.3200146572150 -539.73619673943
-"147995_at" -240.431133078273 -487.893231050121
+"152715_at" -28.0630300387158 -539.73619673943
+"147995_at" -240.364785399555 -487.893231050121
 \end{Soutput}
 \end{Schunk}
 
@@ -444,6 +452,44 @@ which is used to define which annotation information is inserted. In the
 example above, FLYBASE gene numbers are also added to the genes in the
 database. The insertion of alias annotations and z-scores requires that the
 preprocessed data is supplied.
+
+\section{Session Info}
+
+\begin{Schunk}
+\begin{Sinput}
+> sessionInfo()
+\end{Sinput}
+\begin{Soutput}
+R version 2.14.0 RC (2011-10-23 r57410)
+Platform: x86_64-unknown-linux-gnu (64-bit)
+
+locale:
+ [1] LC_CTYPE=fi_FI.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_GB.UTF-8        LC_COLLATE=en_GB.UTF-8    
+ [5] LC_MONETARY=fi_FI.UTF-8    LC_MESSAGES=en_GB.UTF-8   
+ [7] LC_PAPER=C                 LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_GB.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets 
+[6] methods   base     
+
+other attached packages:
+[1] drosgenome1.db_2.6.3  org.Dm.eg.db_2.6.4   
+[3] RSQLite_0.10.0        DBI_0.2-5            
+[5] annotate_1.31.2       AnnotationDbi_1.15.40
+[7] tigre_1.7.5           Biobase_2.13.11      
+
+loaded via a namespace (and not attached):
+ [1] affy_1.31.6           affyio_1.21.2        
+ [3] BiocInstaller_1.1.29  gdata_2.8.2          
+ [5] gplots_2.10.1         gtools_2.6.2         
+ [7] IRanges_1.11.31       preprocessCore_1.15.0
+ [9] puma_2.5.0            tools_2.14.0         
+[11] xtable_1.6-0          zlibbioc_0.1.8       
+\end{Soutput}
+\end{Schunk}
 
 \bibliographystyle{plainnat}
 \bibliography{gpsim}
