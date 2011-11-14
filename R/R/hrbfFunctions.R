@@ -235,7 +235,7 @@ hrbfExpandParam <- function (model, params) {
   model$K <- k ##+diag(as.array(noiseVar))
   invK <- .jitCholInv(model$K, silent=TRUE)
 
-  if ( is.nan(invK[1]) ) {
+  if ( any(is.nan(invK$invM)) ) {
     if ("debug" %in% names(model) && model$debug) {
       cat("kern$decay = \n", model$D, "\n")
       cat("\n")
