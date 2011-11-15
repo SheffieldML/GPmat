@@ -42,13 +42,25 @@ class GP(model):
 		var = Kxx - np.dot(np.dot(Kx.T,self.Ki),Kx)
 		return mu,var
 	def plot(self):
-		pb.figure()
-		xmin,xmax = self.X.min(),self.X.max()
-		xmin, xmax = xmin-0.2*(xmax-xmin), xmax+0.2*(xmax-xmin)
-		Xnew = np.linspace(xmin,xmax,100)[:,None]
-		m,v = self.predict(Xnew)
-		gpplot(Xnew,m,v)
-		pb.plot(self.X,self.Y,'kx',mew=1.5)
+		if self.X.shape[1]==1:
+			pb.figure()
+			xmin,xmax = self.X.min(),self.X.max()
+			xmin, xmax = xmin-0.2*(xmax-xmin), xmax+0.2*(xmax-xmin)
+			Xnew = np.linspace(xmin,xmax,100)[:,None]
+			m,v = self.predict(Xnew)
+			gpplot(Xnew,m,v)
+			pb.plot(self.X,self.Y,'kx',mew=1.5)
+		elif self.X.shape[1]==2:
+			xmin,xmax = self.X.min(0),self.X.max(0)
+			xmin, xmax = xmin-0.2*(xmax-xmin), xmax+0.2*(xmax-xmin)
+			xx,yy = np.mgrid[xmin[0]:xmax[0]:100j,xmin[1]:xmax[1]:100j]
+			Xtest = np.vstack((xx.flatten(),yy.flatten())).T
+			zz = self.predict(Xtest).reshape(100,100)
+			pb.contour(xx,yy,zz,vmin=zz.min(),vmax=zz.max())
+			pb.scatter(self.X[:,0],self.X[:,1],40,self.Y,linewidth=0)
+
+		else:
+			raise NotImplementedError, "Cannot plot GPs with more than two input dimensions"
 
 if __name__=='__main__':
 	X = np.random.randn(20,1)
