@@ -29,6 +29,9 @@ function [priormeans,posteriormeans,covmatrix,rbfposteriormeans,rbfcovmatrix] = 
 % GPASIMPREDICT
 
 
+%predtimes
+%pause
+
 numGenes=model.numGenes;
 if predict_rna==0,
   numGenes=0;
@@ -36,7 +39,11 @@ end;
 
 
 % compute prior means 
-pol2priormeans=ones(size(predtimes,1),1)*model.simMean;
+if iscell(predtimes)==0,
+  pol2priormeans=ones(size(predtimes,1),1)*model.simMean;
+else
+  pol2priormeans=ones(size(predtimes{1},1),1)*model.simMean;
+end;
 %model.pol2mean;
 
 if numGenes>0,
@@ -61,23 +68,39 @@ if numGenes>0,
   rnapriormeans=[];
   tempind1=1;
   for k=1:numGenes,
-    nt=length(predtimes);
+    if iscell(predtimes)==0,
+      nt=length(predtimes);
+    else
+      nt=length(predtimes{k+1});
+    end;
+
     rnapriormeans=[rnapriormeans;nan*ones(nt,1)];
     if (model.use_disimstartmean==1),
-      tempt=predtimes-model.delay(k);
-      I=find(tempt<0);
-      tempt(I)=0;
+      if iscell(predtimes)==0,
+        tempt=predtimes;
+      else
+        tempt=predtimes{k+1};
+      end;
+      delayedt=tempt-model.delay(k);
+
+      I=find(delayedt<0);
+      delayedt(I)=0;
       rnapriormeans(tempind1:tempind1+nt-1)=...
-          model.disimStartMean(k)*exp(model.D(k)*(-predtimes)) ...
-          +(model.B(k)/model.D(k))*(1-exp(-model.D(k)*predtimes)) ...
-          +(model.simMean*model.S(k)/model.D(k))*(1-exp(-model.D(k)*tempt));
+          model.disimStartMean(k)*exp(model.D(k)*(-tempt)) ...
+          +(model.B(k)/model.D(k))*(1-exp(-model.D(k)*tempt)) ...
+          +(model.simMean*model.S(k)/model.D(k))*(1-exp(-model.D(k)*delayedt));
     else
-      tempt=predtimes-model.delay(k);
-      I=find(tempt<0);
-      tempt(I)=0;
+      if iscell(predtimes)==0,
+        tempt=predtimes;
+      else
+        tempt=predtimes{k+1};
+      end;
+      delayedt=tempt-model.delay(k);
+      I=find(delayedt<0);
+      delayedt(I)=0;
       rnapriormeans(tempind1:tempind1+nt-1)=...
-          ((model.B(k)+model.simMean*model.S(k))/model.D(k))*exp(model.D(k)*(-predtimes))...
-          +((model.B(k)+model.simMean*model.S(k))/model.D(k))*(1-exp(-model.D(k)*tempt));
+          ((model.B(k)+model.simMean*model.S(k))/model.D(k))*exp(model.D(k)*(-tempt))...
+          +((model.B(k)+model.simMean*model.S(k))/model.D(k))*(1-exp(-model.D(k)*delayedt));
     end;
     tempind1=tempind1+nt;
   end;
@@ -87,11 +110,29 @@ end;
 
   
 if 1,
+% This version of K_new does not include observation noise
+% K_new=kernCompute(model.kern, predtimes, predtimes);
+
+% This version of K_new does include observation noise
 K_new=kernCompute(model.kern, predtimes);
-K_new_old=kernCompute(model.kern, predtimes, model.t);
+
+predmodeltimes=model.t;
+if (iscell(predtimes)==1) && (iscell(model.t)==0),
+  predmodeltimes={model.t,model.t};
+end;
+if (iscell(predtimes)==0) && (iscell(model.t)==1),
+  predtimes={predtimes,predtimes};
+end;
+
+K_new_old=kernCompute(model.kern, predtimes, predmodeltimes);
 K_old=model.K;
 K_old_new=K_new_old';
 end;
+
+%K_old
+%pause
+
+
 
 if 0,
 K_old_ndsim=ndsimKernCompute(model.kern.comp{1}.comp{1},model.t);
@@ -122,9 +163,22 @@ K_new=K_new+noisekern_new;
 end;
 
 tempm=model.m;
+
+% If we do not want to predict using RNA observations, throw out kernel parts related to RNA
 if numGenes==0,
-  ot=length(model.t);
-  nt=length(predtimes);
+  if iscell(model.t)==0,
+    ot=length(model.t);
+    nt=length(predtimes);
+  else
+    % ot=0;
+    % nt=0;
+    % for k=1:length(model.t),
+    %   ot=ot+size(model.t{k},1);
+    %   nt=nt+size(predtimes{k},1);
+    % end;
+    ot=length(model.t{1});
+    nt=length(predtimes{1});
+  end;
   K_old=K_old(1:ot,1:ot);
   K_new_old=K_new_old(1:nt,1:ot);
   K_old_new=K_old_new(1:ot,1:nt);
@@ -151,14 +205,25 @@ posteriormeans=priormeans+K_new_old*(K_old\tempm);
 
 covmatrix=K_new-K_new_old*(K_old\K_old_new);
 if(min(diag(covmatrix))<0),
+  % Try omitting the first row and column of the kernel
+  % since it might be all zeroes
 
-  ot=length(model.t);
-  nt=length(predtimes);
+  if iscell(model.t)==0,
+    ot_pol2=length(model.t);
+    ot_rna=length(model.t);
+    nt_pol2=length(predtimes);
+    nt_rna=length(predtimes);
+  else
+    ot_pol2=size(model.t{1},1);
+    ot_rna=size(model.t{2},1);
+    nt_pol2=size(predtimes{1},1);
+    nt_rna=size(predtimes{2},1);
+  end;
 
   if (numGenes>0),
-    okentries=[(2:ot) (ot+2:2*ot)];
+    okentries=[(2:ot_pol2) (ot_pol2+2:ot_pol2+ot_rna)];
   else
-    okentries=[2:ot];
+    okentries=[2:ot_pol2];
   end;
   
   K_old=K_old(okentries,okentries);               

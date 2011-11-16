@@ -30,7 +30,7 @@ if nargin < 3
 end
 
 
-params = modelExtractParam(model);
+[params,paramnames] = modelExtractParam(model);
 
 options = optOptions;
 if display
@@ -44,14 +44,17 @@ end
 options(5) = 1;
 
 % Leapfrog steps
-options(7) = 100;
+options(7) = 20;
 
 % options(18) = epsilon, step length
-options(18) = .01;
+options(18) = .05;
 
 % Number of samples to return
 options(14) = iters;
 
+fprintf(1,'Initial parameters:\n');
+params
+paramnames
 
 samples = hmc('modelObjective', params,  options, ...
 	      'modelGradient', model);
