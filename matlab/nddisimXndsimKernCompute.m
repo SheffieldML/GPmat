@@ -32,12 +32,23 @@ function K = nddisimXndsimKernCompute(disimKern, simKern, t1, t2)
 
 % KERN
 
+
+%fprintf(1,'nddisimXndsimKernCompute step1\n');
+%t1
+%t2
+
+
 if nargin < 4
   t2 = t1;
 end
 if size(t1, 2) > 1 | size(t2, 2) > 1
   error('Input can only have one column');
 end
+
+if (isempty(t1)) || (isempty(t2)),
+  K = zeros(size(t1,1),size(t2,1));
+  return;
+end;
 
 
 if isfield(disimKern,'delay'),
@@ -64,6 +75,10 @@ end
 
 dim1 = size(t1, 1);
 dim2 = size(t2, 1);
+%size(t1)
+%t1
+%size(t2)
+%t2
 t1Mat = t1(:, ones(1, dim2));
 t2Mat = t2(:, ones(1, dim1))';
 diffT = (t1Mat - t2Mat);

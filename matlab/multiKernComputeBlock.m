@@ -28,6 +28,15 @@ function K = multiKernComputeBlock(kern, X, X2, i, j)
 
 % KERN
 
+
+%fprintf(1,'multiKernComputeBlock step1\n');
+%X
+%X2
+%i
+%j
+%nargin
+
+
 if nargin < 5
   j = i;
   i = X2;
@@ -59,6 +68,8 @@ if isfield(kern, 'fixedBlocks') && kern.fixedBlocks(i) && ...
       kern.fixedBlocks(j),
   K = multiKernCacheBlock(kern, fhandle, arg, i, j, X, X2);
 else
+  % PROBLEM: inconsistent behavior!
+
   if isempty(X2)
     K = fhandle(arg{:}, X);
   else

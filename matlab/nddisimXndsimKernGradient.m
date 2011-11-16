@@ -46,10 +46,28 @@ end
 dim1 = size(t1, 1);
 dim2 = size(t2, 1);
 
+if (isempty(t1)==1) || (isempty(t2)==1),
+  % Complete gradient of NDDISIM parameters
+  %g1=[dk_dInverseWidth dk_ddi_variance dk_dD dk_dvariance dk_ddelay];
+  g1=[0 0 0 0 0];
+
+  % gradients with respect to NDSIM kernel parameters
+  g2 = [0 0];
+
+  return;
+end;
+
+
+
+
+
 if isfield(disimKern,'delay'),
   delay=disimKern.delay;
   origt1=t1;
-  origt1PosFlag=t1>delay;origt1PosFlag=origt1PosFlag(:, ones(1, dim2));
+  origt1PosFlag=t1>delay;
+  %size(origt1PosFlag)
+  %dim2
+  origt1PosFlag=origt1PosFlag(:, ones(1, dim2));
   t1=t1-delay;
   
   % crude way to handle times below zero, just truncate to zero
@@ -81,6 +99,14 @@ variancemultiplier=disimKern.di_variance*sqrt(disimKern.variance);
 [lndiff2,lndiffsigns2]=lnDiffErfs(D_i*sigma/2-t1Mat/sigma,D_i*sigma/2);
 % I=find(~isfinite(lndiff1)); lndiff1(I)=0; lndiffsigns1(I)=0;
 % I=find(~isfinite(lndiff2)); lndiff2(I)=0; lndiffsigns2(I)=0;
+%size(lndiff1)
+%size(lndiff2)
+%size(lndiffsigns1)
+%size(lndiffsigns2)
+%size(t1Mat)
+%size(t2Mat)
+%atemp1=lndiffsigns1.*exp((D_i*sigma/2)^2-D_i*t1Mat+D_i*t2Mat+lndiff1)
+%atemp2=lndiffsigns2.*exp((D_i*sigma/2)^2-D_i*t1Mat+lndiff2)
 k1a=-sqrt(pi)*sigma/(2*D_i*D_i)*...
     ( lndiffsigns1.*exp((D_i*sigma/2)^2-D_i*t1Mat+D_i*t2Mat+lndiff1)...
      +lndiffsigns2.*exp((D_i*sigma/2)^2-D_i*t1Mat+lndiff2) );
