@@ -84,23 +84,36 @@ if (update_mean==1),
     % Version with NDDISIM start mean
     %--------------------------------
     
-    % Compute gradient for basal transcription rates
-    gb=zeros(1, model.numGenes);
+    % PART1 Compute gradient for basal transcription rates
+    gb=zeros(1, model.numGenes);    
+    if iscell(model.t)==0, tempt=model.t; else tempt=model.t{1}; end;
+    indStart=length(tempt)+1;
     for k=1:model.numGenes,
       % note that delay in the DISIM model does not affect the
       % contribution of the basal transcription, thus delays are
       % not applied to model.t here.
-      delayedt=model.t;      
-      indStart=length(model.t)*k + 1;
-      indEnd=indStart+length(model.t)-1;
-      gb(k)=gmuFull(indStart:indEnd)*((1-exp(-model.D(k)*delayedt))/model.D(k));
+      if iscell(model.t)==0, delayedt=model.t; else delayedt=model.t{k+1}; end;
+      % indStart=length(model.t)*k + 1;
+      % indEnd=indStart+length(model.t)-1;
+      indEnd=indStart+length(delayedt)-1;
+      %size(delayedt)
+      %indStart
+      %indEnd
+      if size(delayedt,1)>0,
+        gb(k)=gmuFull(indStart:indEnd)*((1-exp(-model.D(k)*delayedt))/model.D(k));
+      else
+        gb(k)=0;
+      end;
+      indStart=indStart+size(delayedt,1);
     end;
+
     % Add contribution of prior on B if it exists.
     if isfield(model, 'bprior');
       if model.numGenes>0,
 	gb = gb + priorGradient(model.bprior, model.B);
       end;
     end
+
     % Multiply by factors from parameter transformations
     if model.numGenes>0,
       fhandle = str2func([model.bTransform 'Transform']);
@@ -109,15 +122,24 @@ if (update_mean==1),
       end;
     end;
     
-    % Compute gradient for DISIM start mean
+    % PART2 Compute gradient for DISIM start mean
     gdisimstartmean=zeros(1, model.numGenes);
+    if iscell(model.t)==0, tempt=model.t; else tempt=model.t{1}; end;
+    indStart=length(tempt)+1;
     for k=1:model.numGenes,
       % note that delay in the DISIM model does not affect the
       % decay of the starting RNA concentration, thus delays are
       % not applied to model.t here.
-      indStart=length(model.t)*k + 1;
-      indEnd=indStart+length(model.t)-1;
-      gdisimstartmean(k)=gmuFull(indStart:indEnd)*exp(-model.D(k)*model.t);
+      if iscell(model.t)==0, delayedt=model.t; else delayedt=model.t{k+1}; end;
+      %indStart=length(model.t)*k + 1;
+      %indEnd=indStart+length(model.t)-1;
+      indEnd=indStart+size(delayedt,1)-1;
+      if size(delayedt,1)>0,
+        gdisimstartmean(k)=gmuFull(indStart:indEnd)*exp(-model.D(k)*delayedt);
+      else
+        gdisimstartmean(k)=0;
+      end;
+      indStart=indStart+size(delayedt,1);
     end;
     % Multiply by factors from parameter transformations
     if model.numGenes>0,
@@ -127,8 +149,10 @@ if (update_mean==1),
       end;
     end;
     
-    % Compute gradient for DISIM-level decays
+    % PART3 Compute gradient for DISIM-level decays
     gd=zeros(1, model.numGenes);
+    if iscell(model.t)==0, tempt=model.t; else tempt=model.t{1}; end;
+    indStart=length(tempt)+1;
     for k=1:model.numGenes,
       % note that delay in the DISIM model does not affect the
       % decay of the starting RNA concentration, or the
@@ -137,23 +161,31 @@ if (update_mean==1),
       % affect the contribution of the POL2 mean ("simMean"), so
       % delays must be applied when computing the gradient with
       % respect to decay for that part of the mean function.
-      delayedt=model.t-model.delay(k);      
+      if iscell(model.t)==0, tempt=model.t; else tempt=model.t{k+1}; end;
+      delayedt=tempt-model.delay(k);      
       I=find(delayedt<0);
       delayedt(I)=0;
       
-      indStart=length(model.t)*k + 1;
-      indEnd=indStart+length(model.t)-1;
+      % indStart=length(model.t)*k + 1;
+      % indEnd=indStart+length(model.t)-1;
 %      gd(k)=gmuFull(indStart:indEnd)*...
 %	    ( (-(model.B(k)+model.S(k)*model.simMean)/(model.D(k)*model.D(k)))*(1-exp(-model.D(k)*model.t)) ...
 %	      +(model.disimStartMean(k)-(model.B(k)+model.S(k)*model.simMean)/model.D(k))*exp(-model.D(k)*model.t).*(-model.t));    
-      gd(k)=gmuFull(indStart:indEnd)*...
-	    ( -model.B(k)/(model.D(k)*model.D(k))*(1-exp(-model.D(k)*model.t)) ...
-              +model.B(k)/model.D(k)*exp(-model.D(k)*model.t).*model.t ...
-	      +model.disimStartMean(k)*exp(-model.D(k)*model.t).*(-model.t) ...
+
+      indEnd=indStart+size(delayedt,1)-1;
+      if size(delayedt,1)>0,
+        gd(k)=gmuFull(indStart:indEnd)*...
+  	    ( -model.B(k)/(model.D(k)*model.D(k))*(1-exp(-model.D(k)*tempt)) ...
+              +model.B(k)/model.D(k)*exp(-model.D(k)*tempt).*tempt ...
+	      +model.disimStartMean(k)*exp(-model.D(k)*tempt).*(-tempt) ...
               -model.simMean*model.S(k)/(model.D(k)*model.D(k))*(1-exp(-model.D(k)*delayedt)) ...
               +model.simMean*model.S(k)/model.D(k)*exp(-model.D(k)*delayedt).*delayedt ...
               );
-    end;    
+      else
+        gd(k)=0;
+      end;
+      indStart=indStart+size(delayedt,1);
+    end;
     % Apply factors from transformations, and add gradient of the
     % decays to the main decay-gradient from the kernel,
     if model.numGenes>0,
@@ -163,44 +195,70 @@ if (update_mean==1),
 	g(decayIndices(k)) = g(decayIndices(k)) ...
 	    + gd(k)*sigmoidabTransform(model.D(k), 'gradfact',decayTransformationSettings{k});  
       end;
-    end;          
+    end;
 
-    % Compute gradient for SIM-level mean
+    % PART4 Compute gradient for SIM-level mean
     gsimmean=zeros(1, 1);
     indStart=1;
-    indEnd=indStart+length(model.t)-1;
-    gsimmean=gmuFull(indStart:indEnd)*(ones(indEnd-indStart+1,1));
+    if iscell(model.t)==0, tempt=model.t; else tempt=model.t{1}; end;
+    indEnd=indStart+length(tempt)-1;
+    if size(tempt,1)>0,
+      gsimmean=gmuFull(indStart:indEnd)*(ones(indEnd-indStart+1,1));
+    else
+      gsimmean=0;
+    end;
+    indStart=indStart+length(tempt);
     for k=1:model.numGenes,
       % note that delay in the DISIM model affects the contribution 
       % of the POL2 mean ("simMean"), so delays must be applied to time 
       % points when computing the gradient with respect to simMean.
-      delayedt=model.t-model.delay(k);      
+      if iscell(model.t)==0, tempt=model.t; else tempt=model.t{k+1}; end;
+      delayedt=tempt-model.delay(k);
       I=find(delayedt<0);
       delayedt(I)=0;
       
-      indStart=length(model.t)*k + 1;
-      indEnd=indStart+length(model.t)-1;
-      gsimmean=gsimmean+gmuFull(indStart:indEnd)*((1-exp(-model.D(k)*delayedt))*model.S(k)/model.D(k));
+      %indStart=length(model.t)*k + 1;
+      %indEnd=indStart+length(model.t)-1;
+      indEnd=indStart+size(delayedt,1)-1;
+      if size(delayedt,1)>0,
+        gsimmean=gsimmean+gmuFull(indStart:indEnd)*((1-exp(-model.D(k)*delayedt))*model.S(k)/model.D(k));
+      else
+        gsimmean=gsimmean+0;
+      end;
+      indStart=indStart+size(delayedt,1);
     end;
     % Multiply by factors from parameter transformations
     fhandle = str2func([model.simMeanTransform 'Transform']);
     gsimmean = gsimmean*fhandle(model.simMean, 'gradfact', model.simMeanTransformSettings);
 
-    % Compute gradient for DISIM-level variance
+    % PART5 Compute gradient for DISIM-level variance
     gdisimvar=zeros(1, model.numGenes);
+    if iscell(model.t)==0, tempt=model.t; else tempt=model.t{1}; end;
+    indStart=length(tempt)+1;
     for k=1:model.numGenes,
       % note that delay in the DISIM model affects the contribution 
       % of the POL2 mean ("simMean"), so delays must be applied to time 
       % points when computing the gradient with respect to DISIM variance,
       % for the part of the mean function related to simMean.
-      delayedt=model.t-model.delay(k);      
+      if iscell(model.t)==0, tempt=model.t; else tempt=model.t{k+1}; end;
+      delayedt=tempt-model.delay(k);
       I=find(delayedt<0);
       delayedt(I)=0;
 
-      indStart=length(model.t)*k + 1;
-      indEnd=indStart+length(model.t)-1;
-      gdisimvar(k)=gmuFull(indStart:indEnd)*...
-            ((1-exp(-model.D(k)*delayedt))*model.simMean/model.D(k)*0.5/model.S(k));
+      % indStart=length(model.t)*k + 1;
+      % indEnd=indStart+length(model.t)-1;
+      indEnd=indStart+size(delayedt,1)-1;
+      %size(gmuFull)
+      %indStart
+      %indEnd
+      %size(delayedt)
+      if size(delayedt,1)>0,
+        gdisimvar(k)=gmuFull(indStart:indEnd)*...
+              ((1-exp(-model.D(k)*delayedt))*model.simMean/model.D(k)*0.5/model.S(k));
+      else
+        gdisimvar(k)=0;
+      end;
+      indStart=indStart+size(delayedt,1);
     end;    
     % Multiply by factors from parameter transformations, and add gradient of the
     % DISIM-variances to the main DISIM-variance gradient from the kernel
@@ -213,21 +271,30 @@ if (update_mean==1),
       end;
     end;    
 
-    % Compute gradient for DISIM-level delay
+    % PART6 Compute gradient for DISIM-level delay
     gdisimdelay=zeros(1, model.numGenes);
+    if iscell(model.t)==0, tempt=model.t; else tempt=model.t{1}; end;
+    indStart=length(tempt)+1;
     for k=1:model.numGenes,
       % note that delay in the DISIM model affects the contribution 
       % of the POL2 mean ("simMean"), so delays must be applied to time 
       % points when computing the gradient with respect to DISIM variance,
       % for the part of the mean function related to simMean.
-      delayedt=model.t-model.delay(k);      
+      if iscell(model.t)==0, tempt=model.t; else tempt=model.t{k+1}; end;
+      delayedt=tempt-model.delay(k);      
       I=find(delayedt<0);
       delayedt(I)=0;
 
-      indStart=length(model.t)*k + 1;
-      indEnd=indStart+length(model.t)-1;
-      gdisimdelay(k)=gmuFull(indStart:indEnd)*...
-            (-exp(-model.D(k)*delayedt).*(delayedt>0)*model.simMean*model.S(k));
+      % indStart=length(model.t)*k + 1;
+      % indEnd=indStart+length(model.t)-1;
+      indEnd=indStart+size(delayedt,1)-1;
+      if size(delayedt,1)>0,
+        gdisimdelay(k)=gmuFull(indStart:indEnd)*...
+              (-exp(-model.D(k)*delayedt).*(delayedt>0)*model.simMean*model.S(k));
+      else
+        gdisimdelay(k)=0;
+      end;
+      indStart=indStart+size(delayedt,1);
     
 %          +(model.simMean*model.S(k)/model.D(k))*(1-exp(-model.D(k)*tempt));
     
@@ -249,6 +316,8 @@ if (update_mean==1),
     %--------------------------------
     % Version without DISIM start mean
     % TODO: this version of the code does not yet take into account delays in the model!
+    % TODO: it also does not allow cell-format time indices, assumes RNA and POL2 have the 
+    % observation times
     %--------------------------------
     gdisimstartmean=[];
     

@@ -75,11 +75,21 @@ if(numGenes ~= (size(geneVals, 2) - 1))
   error('The number of genes given does not match the dimension of the gene values given.')
 end
 
-if(size(times, 1) ~= size(geneVals, 1))
-  error('The number of time points given does not match the number of gene values given')
-end
+if iscell(times)==0,
+  if(size(times, 1) ~= size(geneVals, 1))
+    error('The number of time points given does not match the number of gene values given')
+  end
+else
+  for k=1:length(times),
+    if(size(times{k}, 1) ~= size(geneVals{k}, 1))
+      error('The number of time points given does not match the number of gene values given')
+    end    
+  end;
+end;
 
 model.type = 'gpnddisim';
+
+fprintf(1,'nddisimCreate step2\n');
 
 
 % The kernel in the model is composed as K = K{1} + K{2}, 
@@ -114,22 +124,39 @@ else
   tieParam = {};
 end;
 
+fprintf(1,'nddisimCreate step3\n');
+
 
 % Store the observed output values of the input protein and the
 % output genes inside the model, as a single vector. The first
 % entries of model.y will contain the values of the input protein,
 % then the values of the first output gene, second output gene, and
 % so on.
-model.y = geneVals(:);
 
+if iscell(geneVals)==0,
+  model.y = geneVals(:);
+else
+  model.y = [];
+  for k=1:length(geneVals),
+    model.y = [model.y; geneVals{k}];
+  end;
+end;
 
 % Due to historical reasons a 'model.yvar' field for
 % observation-noise variances is kept here. However, we do not use
 % it for anything, and set it to zero to make sure it does not
 % affect computation. Instead, any provided fixed observation-noise
 % variances will be inserted directly into the RNA white-noise kernel!
-model.yvar = 0*geneVals(:);
+if iscell(geneVals)==0,
+  model.yvar = 0*geneVals(:);
+else
+  model.yvar = [];
+  for k=1:length(geneVals),
+    model.yvar = [model.yvar; 0*geneVals{k}];
+  end;
+end;
 
+fprintf(1,'nddisimCreate step4\n');
 
 
 % Check if we should create an observation-noise term.
@@ -169,6 +196,8 @@ end
 simMultiKern = eval(simMultiKernName);
 
 
+fprintf(1,'nddisimCreate step5\n');
+
 
 % This is if we need to place priors on parameters ...
 % Currently the model has not been tested with priors so this part
@@ -207,6 +236,8 @@ if isfield(options, 'addPriors') && options.addPriors,
 end
 
 
+fprintf(1,'nddisimCreate step6\n');
+
 
 % Get the parameters from the kernel... this may be unnecessary at
 % this point???
@@ -216,12 +247,16 @@ end
 %pause
 
 
+fprintf(1,'nddisimCreate step7\n');
+
 
 % Tie together the parameters according to the regular expression
 % "tieParam" created earlier in the current function.
 model.kern = modelTieParam(model.kern, tieParam);
 
 
+
+fprintf(1,'nddisimCreate step8\n');
 
 % I think this part may be unnecessary - it is mainly to make sure
 % that the initial variances of the noise kernels are in the
@@ -253,6 +288,8 @@ if numGenes > 0,
 end;
 
 
+fprintf(1,'nddisimCreate step9\n');
+
 
 % Whether to use, for each gene, an initial RNA concentration that
 % decays away. The need for an initial concentration comes from
@@ -278,8 +315,22 @@ end;
 if (use_disimstartmean==1),
   num_disimstartmeans=numGenes;
   for k=1:numGenes,
-    model.disimStartMean(k)=geneVals(1, k+1);
+    % k
+    % geneVals
+    if iscell(geneVals)==0,
+      model.disimStartMean(k)=geneVals(1, k+1);
+    else
+      % geneVals{k+1}
+      if ~isempty(geneVals{k+1}),
+        % tempa=1
+        % tempa=geneVals{k+1}(1)
+        model.disimStartMean(k)=geneVals{k+1}(1);
+      else
+        model.disimStartMean(k)=0.1;
+      end;
+    end;
   end;
+  % tempa=1
   % Use a scaled sigmoid transformation for the "initial RNA
   % concentration" parameters (disimStartMean), so that
   % their allowed range can be customized.
@@ -297,13 +348,25 @@ model.use_disimstartmean=use_disimstartmean;
 num_basalrates=numGenes;
 % model.B = model.D.*model.mu;
 if numGenes > 0,
-  model.B = model.D.*geneVals(1, 2:end);
+  if iscell(geneVals)==0,
+    model.B = model.D.*geneVals(1, 2:end);
+  else
+    for k=1:numGenes,
+      if ~isempty(geneVals{k+1}),
+        model.B(k) = model.D(k)*geneVals{k+1}(1);
+      else
+        model.B(k) = model.D(k)*0.1;
+      end;
+    end;
+  end;
 end;
 % The basal transcriptions rates must be postitive. Use a scaled
 % sigmoid transformation for them so that the allowed range of the
 % basal transcription rates can be customized.
 model.bTransform = 'sigmoidab';
 
+
+fprintf(1,'nddisimCreate step10\n');
 
 
 % Mean value parameter for the input protein. The protein is
@@ -336,6 +399,8 @@ model.numGenes = numGenes;
 model.t = times;
 
 
+fprintf(1,'nddisimCreate step11\n');
+
 
 % Initialize the mean vector of the model, according to the results
 % of the differential equation. Note that the mean is
@@ -344,13 +409,28 @@ model.t = times;
 % the basal rate kicks in to establish the final expected amount of
 % RNA, which depends on the basal rate and decay rate.
 mu = zeros(size(model.y));
-nt=size(model.t,1);
+
+if iscell(model.t)==0,
+  nt=size(model.t,1);
+else
+  nt=size(model.t{1},1);
+end;
 mu(1:nt)=model.simMean;
+
 tempind1=nt+1;
 for k=1:numGenes,
+  if iscell(model.t)==0,
+    nt=size(model.t,1);
+    tempt=model.t;
+  else
+    nt=size(model.t{k+1},1);
+    tempt=model.t{k+1};
+  end;
+
   if (use_disimstartmean==1),
-    mu(tempind1:tempind1+nt-1)=(model.B(k)+model.simMean*model.S(k))/model.D(k)+ ...
-	(model.disimStartMean(k)-(model.B(k)+model.simMean*model.S(k))/model.D(k))*exp(model.D(k)*(-model.t));
+    mu(tempind1:tempind1+nt-1)=...
+        (model.B(k)+model.simMean*model.S(k))/model.D(k)+ ...
+	(model.disimStartMean(k)-(model.B(k)+model.simMean*model.S(k))/model.D(k))*exp(model.D(k)*(-tempt));
   else
     mu(tempnd1:tempind1+nt-1)=(model.B(k)+model.simMean*model.S(k))/model.D(k);
   end;  
@@ -365,6 +445,8 @@ model.mu = mu;
 model.m = model.y-model.mu;
 
 
+fprintf(1,'nddisimCreate step12\n');
+
 
 % If it is desired to use fixed observation-noise variances for the
 % output genes instead of modeling them as a free parameter, then
@@ -376,23 +458,46 @@ model.m = model.y-model.mu;
 if isfield(options,'use_fixedrnavariance'),  
   % As a final check we require that at least one of the fixed
   % variances is nonzero.
-  if (options.use_fixedrnavariance==1) && (sum(sum(geneVars(:,2:end)))>0),
-    model.use_fixedrnavar=1;
-    % force the RNA observation variance kernels to use fixed
-    % variance values, and provide the variance values to the kernels.
-    for k=1:numGenes,
-      model.kern.comp{2}.comp{k+1}.use_fixedvariance=1;
-      % model.kern.comp{2}.comp{k+1}.fixedvariance=model.yvar(k*nt+1:(k+1)*nt);
-      model.kern.comp{2}.comp{k+1}.fixedvariance=geneVars(:,k+1);
-      model.kern.comp{2}.comp{k+1}.fixedvariance_times=model.t;
+  if iscell(geneVars)==0,
+    if (options.use_fixedrnavariance==1) && (sum(sum(geneVars(:,2:end)))>0),
+      model.use_fixedrnavar=1;
+      % force the RNA observation variance kernels to use fixed
+      % variance values, and provide the variance values to the kernels.
+      for k=1:numGenes,
+        model.kern.comp{2}.comp{k+1}.use_fixedvariance=1;
+        % model.kern.comp{2}.comp{k+1}.fixedvariance=model.yvar(k*nt+1:(k+1)*nt);
+        model.kern.comp{2}.comp{k+1}.fixedvariance=geneVars(:,k+1);
+        model.kern.comp{2}.comp{k+1}.fixedvariance_times=model.t;
+      end;  
+    else
+      model.use_fixedrnavar=0;
     end;
   else
-    model.use_fixedrnavar=0;
+    if (options.use_fixedrnavariance==1),
+      model.use_fixedrnavar=1;
+      % force the RNA observation variance kernels to use fixed
+      % variance values, and provide the variance values to the kernels.
+      for k=1:numGenes,
+        model.kern.comp{2}.comp{k+1}.use_fixedvariance=1;
+        % model.kern.comp{2}.comp{k+1}.fixedvariance=model.yvar(k*nt+1:(k+1)*nt);
+        if iscell(geneVars)==0,
+          model.kern.comp{2}.comp{k+1}.fixedvariance=geneVars(:,k+1);
+          model.kern.comp{2}.comp{k+1}.fixedvariance_times=model.t;
+        else
+          model.kern.comp{2}.comp{k+1}.fixedvariance=geneVars{k+1};
+          model.kern.comp{2}.comp{k+1}.fixedvariance_times=model.t{k+1};
+        end;
+      end;  
+    else
+      model.use_fixedrnavar=0;
+    end;
   end;
 else
   model.use_fixedrnavar=0;  
 end;
 
+
+fprintf(1,'nddisimCreate step13\n');
 
 
 % Store the desired optimization algorithm, such as 'conjgrad',
@@ -418,6 +523,8 @@ end
 % Store any provided options within the model
 model.options = options;
 
+
+fprintf(1,'nddisimCreate step14\n');
 
 
 % fprintf(1,'Force kernel compute 1\n');

@@ -105,37 +105,43 @@ if (~isempty(update_kernel)) && (update_kernel==1),
 end;
 
 
-if (~isempty(update_mean)) && (update_mean==1),  
-  lengthObs = size(model.t, 1);
+if (~isempty(update_mean)) && (update_mean==1),
 
   model.mu = zeros(size(model.y));
   
   % update POL2 mean
+  if iscell(model.t)==0, tempt=model.t; else tempt=model.t{1}; end;
+  lengthObs = size(tempt, 1);
   ind = 1:lengthObs;
   model.mu(ind) = model.simMean;
   %model.m(ind) = model.y(ind)-model.mu(ind);
   
   % update RNA means
-  nt=size(model.t,1);
+  if iscell(model.t)==0, tempt=model.t; else tempt=model.t{1}; end;
+  nt=size(tempt,1);
   tempind1=nt+1;
   for k=1:model.numGenes,
+    if iscell(model.t)==0, tempt=model.t; else tempt=model.t{k+1}; end;
+    nt=size(tempt,1);
+
     if (model.use_disimstartmean==1),
-      tempt=model.t-model.delay(k);
-      I=find(tempt<0);
-      tempt(I)=0;
+      delayedt=tempt-model.delay(k);
+      I=find(delayedt<0);
+      delayedt(I)=0;
       model.mu(tempind1:tempind1+nt-1)=...
-	  model.disimStartMean(k)*exp(model.D(k)*(-model.t)) ...
-          +(model.B(k)/model.D(k))*(1-exp(-model.D(k)*model.t)) ...
-          +(model.simMean*model.S(k)/model.D(k))*(1-exp(-model.D(k)*tempt));
+	  model.disimStartMean(k)*exp(model.D(k)*(-tempt)) ...
+          +(model.B(k)/model.D(k))*(1-exp(-model.D(k)*tempt)) ...
+          +(model.simMean*model.S(k)/model.D(k))*(1-exp(-model.D(k)*delayedt));
       %model.mu
     else
-      tempt=model.t-model.delay(k);
-      I=find(tempt<0);
-      tempt(I)=0;
+      delayedt=model.t-model.delay(k);
+      I=find(delayedt<0);
+      delayedt(I)=0;
       model.mu(tempind1:tempind1+nt-1)=...
-	  ((model.B(k)+model.simMean*model.S(k))/model.D(k))*exp(model.D(k)*(-model.t))...
-          +((model.B(k)+model.simMean*model.S(k))/model.D(k))*(1-exp(-model.D(k)*tempt));
+	  ((model.B(k)+model.simMean*model.S(k))/model.D(k))*exp(model.D(k)*(-tempt))...
+          +((model.B(k)+model.simMean*model.S(k))/model.D(k))*(1-exp(-model.D(k)*delayedt));
     end;
+
     tempind1=tempind1+nt;
   end;
        
