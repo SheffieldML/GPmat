@@ -10,3 +10,4 @@ gpGradient <- function(params, model) {
 
   return (g)
 }
+

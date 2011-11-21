@@ -6,3 +6,5 @@ gaussianNoiseOut <- function(noise, mu, varSigma) {
 
   return (y)
 }
+
+
