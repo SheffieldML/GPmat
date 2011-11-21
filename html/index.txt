@@ -193,7 +193,7 @@ Another ongoing piece of work with Jeff Bilmes and Jon Malkin involves embedding
 
 <p><code>
 &gt;&gt; demCmu35gplvm1
-</p>
+</code></p>
 
 <p>for the four dimensional latent space, <code>demCmu35gplvm2</code> for the three dimensional latent space and <code>demCmu35gplvm3</code> for the five dimensional latent space. The test data reconstruction can then be performed for all models with <code>demCmu35gplvmReconstruct</code>. Taylor <i>et al.</i>'s nearest neighbour results can be recreated using <code>demCmu35TaylorNearestNeighbour</code>.
 
