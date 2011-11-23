@@ -89,6 +89,7 @@ class chgp(ndlutil.model):
 		Kxx = self.kernf.compute_new(Xnew)
 		mu = np.dot(Kx.T,np.dot(self.Kfi,fhat))
 		var = Kxx - np.dot(Kx.T,np.dot(B, Kx))
+		#var = Kxx - ndlutil.mdot(Kx.T,self.Kfi, Kx)
 		return mu,var
 
 	def predict_y(self,Xnew,i):
@@ -97,8 +98,33 @@ class chgp(ndlutil.model):
 
 		fhat = np.dot(self.Li,np.dot(self.Kyi,self.Y.sum(1)))
 		fcov = self.Li
-		#TODO
 
+		mu_f, var_f = self.predict_f(Xnew)
+
+		Kxx = self.kerny.compute_new(Xnew)
+		Kx = self.kerny.cross_compute(Xnew)
+
+		diff = self.Y[:,i]-fhat
+		
+		mu = mu_f + np.dot(Kx.T,np.dot(self.Kyi,diff))
+		var = var_f*0 + Kxx - np.dot(Kx.T,np.dot(self.Kyi,Kx))
+		return mu,var
+
+	def plot(self):
+		assert self.X.shape[1]==1
+		xx = np.linspace(self.X.min(),self.X.max(),100)[:,None]
+		ndlutil.Tango.reset()
+		for i,y in enumerate(self.Y.T):
+			c = ndlutil.Tango.nextMedium()
+			cf = ndlutil.Tango.nextLight()
+			cp = ndlutil.Tango.nextDark()
+			pb.plot(X,y[:,None],color=cp,marker='o')
+			ndlutil.utilities.gpplot(xx,*self.predict_y(xx,i),edgecol=c,fillcol=cf,alpha=0.3)
+		ndlutil.utilities.gpplot(xx,*self.predict_f(xx),alpha=0.3)
+
+		fhat = np.dot(self.Li,np.dot(self.Kyi,self.Y.sum(1)))
+		fcov = self.Li
+		pb.errorbar(self.X[:,0],fhat,color='k',yerr=2*np.sqrt(np.diag(fcov)),elinewidth=2,linewidth=0)
 
 
 
@@ -107,12 +133,11 @@ class chgp(ndlutil.model):
 
 if __name__=='__main__':
 
-	Nd = 20
-	Ng = 8
-	X = np.linspace(-3,3,Nd)[:,None]
-	Y = np.sin(X) + 0.3*np.sin(X+5*np.random.np.random.rand(1,Ng)) + np.random.randn(Nd,Ng)*0.01
-	for y in Y.T:
-		pb.plot(X,y[:,None],marker='o')
+	Nd = 10
+	Ng = 2
+	#X = np.linspace(-3,3,Nd)[:,None]
+	X = np.random.randn(10,1)
+	Y = np.sin(X) + 0.8*np.sin(X+5*np.random.np.random.rand(1,Ng)) + np.random.randn(Nd,Ng)*0.01
 	kernf = kern.rbf(X)
 	kerny = kern.rbf(X) + kern.white(X)
 
@@ -120,9 +145,7 @@ if __name__=='__main__':
 	m.constrain_positive('')
 	m.optimize()
 
-	xx = np.linspace(-3.2,3.2,100)[:,None]
-	ndlutil.utilities.gpplot(xx,*m.predict_f(xx))
-	#pb.show()
+	m.plot()
 
 
 			
