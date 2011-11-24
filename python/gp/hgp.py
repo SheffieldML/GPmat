@@ -90,7 +90,10 @@ class hgp(GP):
 			ncol = np.unique(self.pdata).size + 1
 			rownames = np.unique(self.pdata[:,0])
 			# do mean predictions first
-			xmin,xmax = min(0.,self.X.min()),self.X.max()+0.2*(self.X.max()-self.X.min())
+			xmin,xmax = self.X.min(),self.X.max()
+			xmin,xmax = xmin-0.2*(xmax-xmin),xmax+0.2*(xmax-xmin)
+			ymin,ymax = self.Y.min(),self.Y.max()
+			ymin,ymax = ymin-0.2*(ymax-ymin),ymax+0.2*(ymax-ymin)
 			Xplot = np.linspace(xmin,xmax,100)[:,None]
 
 			pb.subplot(nrow,ncol,1)
@@ -98,6 +101,7 @@ class hgp(GP):
 			gpplot(Xplot,*self.predict(pd,Xplot))
 			pb.xticks([])
 			pb.xlim(xmin,xmax)
+			pb.ylim(ymin,ymax)
 
 			colnames = np.unique(self.pdata[:,0])
 			for j,cn in enumerate(colnames):
@@ -110,6 +114,7 @@ class hgp(GP):
 				pb.xticks([])
 				pb.yticks([])
 				pb.xlim(xmin,xmax)
+				pb.ylim(ymin,ymax)
 
 
 		if self.Nlevels==2:

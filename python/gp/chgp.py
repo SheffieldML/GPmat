@@ -3,6 +3,7 @@ import pylab as pb
 import sys
 import kern
 from simple_GP import GP 
+import hgp
 from ndlutil.utilities import pdinv, gpplot
 import ndlutil
 from scipy import optimize
@@ -88,8 +89,8 @@ class chgp(ndlutil.model):
 		Kx = self.kernf.cross_compute(Xnew)
 		Kxx = self.kernf.compute_new(Xnew)
 		mu = np.dot(Kx.T,np.dot(self.Kfi,fhat))
-		var = Kxx - np.dot(Kx.T,np.dot(B, Kx))
-		#var = Kxx - ndlutil.mdot(Kx.T,self.Kfi, Kx)
+		#var = Kxx - np.dot(Kx.T,np.dot(B, Kx))
+		var = Kxx - ndlutil.mdot(Kx.T,self.Kfi - ndlutil.mdot(self.Kfi,fcov,self.Kfi), Kx)
 		return mu,var
 
 	def predict_y(self,Xnew,i):
@@ -107,24 +108,28 @@ class chgp(ndlutil.model):
 		diff = self.Y[:,i]-fhat
 		
 		mu = mu_f + np.dot(Kx.T,np.dot(self.Kyi,diff))
-		var = var_f*0 + Kxx - np.dot(Kx.T,np.dot(self.Kyi,Kx))
+		var = var_f + Kxx - np.dot(Kx.T,np.dot(self.Kyi,Kx))
 		return mu,var
 
 	def plot(self):
 		assert self.X.shape[1]==1
 		xx = np.linspace(self.X.min(),self.X.max(),100)[:,None]
 		ndlutil.Tango.reset()
+
+		pb.subplot(1,self.Y.shape[1]+1,1)
+		ndlutil.utilities.gpplot(xx,*self.predict_f(xx),alpha=0.3)
+		fhat = np.dot(self.Li,np.dot(self.Kyi,self.Y.sum(1)))
+		fcov = self.Li
+		pb.errorbar(self.X[:,0],fhat,color='k',yerr=2*np.sqrt(np.diag(fcov)),elinewidth=2,linewidth=0)
+
 		for i,y in enumerate(self.Y.T):
+			pb.subplot(1,self.Y.shape[1]+1,i+2)
 			c = ndlutil.Tango.nextMedium()
 			cf = ndlutil.Tango.nextLight()
 			cp = ndlutil.Tango.nextDark()
 			pb.plot(X,y[:,None],color=cp,marker='o')
 			ndlutil.utilities.gpplot(xx,*self.predict_y(xx,i),edgecol=c,fillcol=cf,alpha=0.3)
-		ndlutil.utilities.gpplot(xx,*self.predict_f(xx),alpha=0.3)
 
-		fhat = np.dot(self.Li,np.dot(self.Kyi,self.Y.sum(1)))
-		fcov = self.Li
-		pb.errorbar(self.X[:,0],fhat,color='k',yerr=2*np.sqrt(np.diag(fcov)),elinewidth=2,linewidth=0)
 
 
 
@@ -133,11 +138,12 @@ class chgp(ndlutil.model):
 
 if __name__=='__main__':
 
-	Nd = 10
+	Nd = 20
 	Ng = 2
 	#X = np.linspace(-3,3,Nd)[:,None]
-	X = np.random.randn(10,1)
-	Y = np.sin(X) + 0.8*np.sin(X+5*np.random.np.random.rand(1,Ng)) + np.random.randn(Nd,Ng)*0.01
+	X = np.random.randn(Nd,1)
+	X.sort(0)
+	Y = np.sin(X) + 0.3*np.sin(X+5*np.random.np.random.rand(1,Ng)) + np.random.randn(Nd,Ng)*0.1
 	kernf = kern.rbf(X)
 	kerny = kern.rbf(X) + kern.white(X)
 
@@ -146,6 +152,17 @@ if __name__=='__main__':
 	m.optimize()
 
 	m.plot()
+
+	#build a hgp model
+	XX = np.tile(X,(Ng,1))
+	YY = Y.T.flatten()[:,None]
+	pd = np.vstack([np.tile([[str(i)]],(Nd,1)) for i in range(Ng)])
+	m2 = hgp.hgp(XX,YY,pd)
+	m2.kern.unconstrain('')
+	m2.constrain_positive('')
+	m2.optimize()
+	pb.figure()
+	m2.plot()
 
 
 			

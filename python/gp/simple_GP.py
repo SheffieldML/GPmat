@@ -11,7 +11,7 @@ class GP(model):
 		assert len(X.shape)==2
 		assert len(Y.shape)==2
 		assert X.shape[0]==Y.shape[0]
-		assert Y.shape[1]==1
+		assert Y.shape[1]==1 #TODO: multiple independent ops
 		self.X = X
 		self.Y = Y
 		if kernel is None:
@@ -29,7 +29,7 @@ class GP(model):
 	def get_param_names(self):
 		return self.kern.extract_param_names()
 	def log_likelihood(self):
-		return -self.hld -0.5*np.sum(self.Ki*self.Youter)
+		return -0.5*self.Y.size*np.log(2*np.pi) -self.hld -0.5*np.sum(self.Ki*self.Youter)
 	def log_likelihood_gradients(self):
 		alpha = np.dot(self.Ki,self.Y.flatten())
 		dL_dK = 0.5*(np.outer(alpha,alpha)-self.Ki)
