@@ -113,14 +113,22 @@ class chgp(ndlutil.model):
 
 	def plot(self):
 		assert self.X.shape[1]==1
-		xx = np.linspace(self.X.min(),self.X.max(),100)[:,None]
 		ndlutil.Tango.reset()
+
+		xmin,xmax = self.X.min(),self.X.max()
+		xmin,xmax = xmin-0.2*(xmax-xmin),xmax+0.2*(xmax-xmin)
+		ymin,ymax = self.Y.min(),self.Y.max()
+		ymin,ymax = ymin-0.2*(ymax-ymin),ymax+0.2*(ymax-ymin)
+		xx = np.linspace(xmin,xmax,100)[:,None]
 
 		pb.subplot(1,self.Y.shape[1]+1,1)
 		ndlutil.utilities.gpplot(xx,*self.predict_f(xx),alpha=0.3)
 		fhat = np.dot(self.Li,np.dot(self.Kyi,self.Y.sum(1)))
 		fcov = self.Li
 		pb.errorbar(self.X[:,0],fhat,color='k',yerr=2*np.sqrt(np.diag(fcov)),elinewidth=2,linewidth=0)
+		pb.xlim(xmin,xmax)
+		pb.ylim(ymin,ymax)
+		pb.xticks([])
 
 		for i,y in enumerate(self.Y.T):
 			pb.subplot(1,self.Y.shape[1]+1,i+2)
@@ -129,6 +137,10 @@ class chgp(ndlutil.model):
 			cp = ndlutil.Tango.nextDark()
 			pb.plot(X,y[:,None],color=cp,marker='o')
 			ndlutil.utilities.gpplot(xx,*self.predict_y(xx,i),edgecol=c,fillcol=cf,alpha=0.3)
+			pb.xlim(xmin,xmax)
+			pb.ylim(ymin,ymax)
+			pb.xticks([])
+			pb.yticks([])
 
 
 
@@ -138,8 +150,8 @@ class chgp(ndlutil.model):
 
 if __name__=='__main__':
 
-	Nd = 20
-	Ng = 2
+	Nd = 30
+	Ng = 8
 	#X = np.linspace(-3,3,Nd)[:,None]
 	X = np.random.randn(Nd,1)
 	X.sort(0)
