@@ -12,6 +12,7 @@ class kern(ndlutil.parameterised):
 		self.dimensions = X.shape[1]
 		self.Nparam = 0
 		self.masked=False
+		self.scaled=False
 	def set_param(self):
 		raise NotImplementedError
 	def get_param(self):
@@ -25,8 +26,11 @@ class kern(ndlutil.parameterised):
 	def gradients(self):
 		raise NotImplementedError
 	def expand_X(self,X):
-		"""apply masks to X and call set_X"""
+		"""apply masks and scaling to X and call set_X"""
+		self.Xoriginal = X.copy()
 		self.shape=(X.shape[0],X.shape[0])
+		if self.scaled:
+			X = self.scalefunc(X)
 		if self.masked:
 			self.set_X(X[self.mask,:])
 		else:
@@ -39,8 +43,6 @@ class kern(ndlutil.parameterised):
 		---------
 		mask : a valid index that can be applied to self.X: a boolean array of sefl.X.shape[0] or an integer array
 		"""
-		if not self.masked:
-			self.Xfull = self.X.copy()
 		if mask.size == self.X.shape[0]:
 			mask = np.nonzero(mask.flatten())[0]
 		if mask.size==self.X.shape[0]:
@@ -49,7 +51,23 @@ class kern(ndlutil.parameterised):
 		self.masked=True
 		self.mask = mask
 		self.mask_grid = np.meshgrid(mask,mask)
-		self.set_X(self.Xfull[mask,:])
+		self.expand_X(self.Xoriginal)
+	
+	def set_scaled(self,limits=None):
+		"""force the kernel to scale the data before computing.
+		convenintly deals with scaling args for cross computing etx.
+		
+		Arguments
+		---------
+		limits = a tuple of (xmin, xmax)
+		"""
+		if limits is None:
+			self.Xmin,self.Xmax = self.Xoriginal.min(), self.Xoriginal.max()
+		else:
+			self.Xmin,self.Xmax = limits
+		self.scaled=True
+		self.scalefunc = lambda x : (x-self.Xmin)/(self.Xmax-self.Xmin)
+		self.expand_X(self.X)
 
 	def compute(self,target=None):
 		"""
@@ -73,7 +91,10 @@ class kern(ndlutil.parameterised):
 		"""Compute the covariance between self.X and the passed values X2. Mask aware."""
 		if target is None:
 			target = np.zeros((self.shape[0],X2.shape[0]))
-		args = self.cross_args(X2)
+		if self.scaled:
+			args = self.cross_args(self.scalefunc(X2))
+		else:
+			args = self.cross_args(X2)
 		if self.masked:
 			target[self.mask,:] += self.function(*args)
 		else:

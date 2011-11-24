@@ -7,7 +7,7 @@ class constant(kern):
 	def __init__(self,X,alpha=1.):
 		kern.__init__(self,X)
 		self.alpha = alpha
-		self.set_X(X)
+		self.expand_X(X)
 		self.Nparam = 1
 	def set_X(self,X):
 		self.args = ((X.shape[0],X.shape[0]),)

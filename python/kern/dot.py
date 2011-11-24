@@ -16,7 +16,7 @@ class dot(kern):
 		kern.__init__(self,X)
 		self.alpha = alpha #variance
 		self.Nparam = 1
-		self.set_X(X)
+		self.expand_X(X)
 
 	def set_X(self,X):
 		"""Set self.X  to the passed value and compute and store the argument(s) to the function
@@ -54,7 +54,7 @@ class dot(kern):
 		target += pg1[:,:,None]*self.X[:,None,:]
 		return target
 	def get_param(self):
-		return self.alpha
+		return np.atleast_1d(self.alpha)
 	def set_param(self,x):
 		self.alpha = x
 	def get_param_names(self):

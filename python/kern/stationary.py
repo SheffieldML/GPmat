@@ -21,7 +21,7 @@ class stationary(kern):
 		self.alpha = alpha #variance
 		self.gamma = gamma #parameter of function, to be defined by inherreted class ( usually a lengthscale)
 		self.Nparam = 2
-		self.set_X(X)
+		self.expand_X(X)
 
 	def set_X(self,X):
 		"""Set self.X  to the passed value and compute and store the argument(s) to the function """
