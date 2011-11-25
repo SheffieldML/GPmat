@@ -2,7 +2,7 @@ gpUpdateKernels <- function (model, X, X_u) {
   jitter =  1e-6
 
   if (model$approx == "ftc") {
-    ## Long term should allow different kernels in each dimension here.
+    ## (dev note) In the long term, we should allow different kernels in each dimension here.
     model$K_uu = kernCompute(model$kern, X)
 
     if ((!"isSpherical" %in% names(model)) || model$isSpherical) {

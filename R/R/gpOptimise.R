@@ -25,7 +25,7 @@ gpOptimise <- function(model, display=TRUE, iters=2000, gradcheck=FALSE) {
 #     params = optim('gpObjectiveGradient', params, options, model);
 #   else
   ## R version of NETLAB function
-  params = optim(params, fn, grad, options, model)
+  params = optim(params, fn, grad, options, model)	## log-transformed params passed into optimiser
 
   model = gpExpandParam(model, params)
 

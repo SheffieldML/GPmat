@@ -34,7 +34,7 @@ demOptimiseGp <- function(path=getwd(), filename='demOptimiseGp', png=FALSE, gif
     # invK = .jitCholInv(K, silent=TRUE)
     # logDetK = 2* sum( log ( diag(invK$chol) ) )
     ## Hyperparameters: inverse-lengthscale, signal-variance, noise-variance.
-    inithypers = log(c(1/(lengthScale[i]^2), 1, model$kern$comp[[2]]$variance))
+    inithypers = log(c(1/(lengthScale[i]), 1, model$kern$comp[[2]]$variance))
     model = gpExpandParam(model, inithypers) ## This forces kernel computation. 
     invK = model$invK_uu
     logDetK = model$logDetK_uu
@@ -63,8 +63,8 @@ demOptimiseGp <- function(path=getwd(), filename='demOptimiseGp', png=FALSE, gif
 
     dev.new(); plot.new() #dev.set(3)
     matplot(lengthScale[1:i], cbind(ll[1:i], llLogDet[1:i],  llFit[1:i]), type="l", lty=c(1,2,3), log="x",
-      xlab='length-scale', ylab='log-likelihood')
-    legend(x='topleft',c('log-likelihood','complexity term','data-fit term'),
+      xlab='length-scale', ylab='log-probability')
+    legend(x='topleft',c('marginal likelihood','minus complexity penalty','data-fit'),
       lty=c(1,2,3),col=c('black','red','green'))
     if (png) {
       dev.copy2eps(file = paste(path,'/',filename,'2_', as.character(figNo), '.eps', sep='')) ## Save plot as eps
