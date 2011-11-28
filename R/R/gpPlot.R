@@ -9,13 +9,13 @@ gpPlot <- function(model,Xstar,mu,S,simpose=NULL,xlim=NULL,ylim=NULL,xlab='',yla
     stop('Missing GP model or points of prediction Xstar.')
   } else {
     if (missing(mu) || missing(S)) {
+# browser()
       meanVar = gpPosteriorMeanVar(model, Xstar, varsigma.return=TRUE)
       mu = meanVar$mu; S = meanVar$varsigma
     }
   }
 
   f = c(mu+2*sqrt(abs(S)), rev(mu-2*sqrt(abs(S))))
-  #   f = c(mu+2*abs(S), rev(mu-2*abs(S))) ## Wrong!
 
   if (is.null(xlim))
     xlim = range(rbind(model$X, Xstar))

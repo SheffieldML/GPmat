@@ -1,5 +1,5 @@
 gpPosteriorMeanVar <- function(model, X, varsigma.return=FALSE) {
-
+# browser()
   if (!"alpha" %in% names(model))
     model = gpComputeAlpha(model)
 
@@ -23,8 +23,10 @@ gpPosteriorMeanVar <- function(model, X, varsigma.return=FALSE) {
     indices = startVal:endVal
 
     ## Compute kernel for new point.
-    if (model$approx == "ftc")
+    if (model$approx == "ftc") {
+# browser()
       KX_star = kernCompute(model$kern, model$X, X[indices, ,drop=FALSE])
+    }
     else if (model$approx %in% c("dtc", "dtcvar", "fitc", "pitc"))
       KX_star = kernCompute(model$kern, model$X_u, X[indices, ,drop=FALSE])
     
@@ -44,6 +46,7 @@ gpPosteriorMeanVar <- function(model, X, varsigma.return=FALSE) {
 	## Compute diagonal of kernel for new point.
 	diagK = kernDiagCompute(model$kern, X[indices, ,drop=FALSE])
 	if (model$approx == "ftc")
+# browser()
 	  Kinvk = model$invK_uu %*% KX_star
 	else if (model$approx %in% c("dtc", "dtcvar", "fitc", "pitc"))
 	  Kinvk = (model$invK_uu - drop(1/model$beta)*model$Ainv) %*% KX_star
@@ -69,6 +72,7 @@ gpPosteriorMeanVar <- function(model, X, varsigma.return=FALSE) {
     
     
     ## Rescale the mean
+#browser()
     mu[indices,] = mu[indices, ,drop=FALSE] * kronecker(matrix(1,length(indices),1), model$scale)
     ## Add the bias back in.
     mu[indices,] = mu[indices, ,drop=FALSE] + kronecker(matrix(1,length(indices),1), model$bias)

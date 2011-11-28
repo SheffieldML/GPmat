@@ -3,6 +3,7 @@ gpUpdateKernels <- function (model, X, X_u) {
 
   if (model$approx == "ftc") {
     ## (dev note) In the long term, we should allow different kernels in each dimension here.
+# browser()
     model$K_uu = kernCompute(model$kern, X)
 
     if ((!"isSpherical" %in% names(model)) || model$isSpherical) {
@@ -11,9 +12,12 @@ gpUpdateKernels <- function (model, X, X_u) {
 	model$K_uu[seq(1,length(model$K_uu),by= dim(model$K_uu)[1]+1)] = 
 	  model$K_uu[seq(1,length(model$K_uu),by= dim(model$K_uu)[1]+1)] + 1/model$beta
       }
+# browser()
       invK = .jitCholInv(model$K_uu, silent=TRUE) ## pdinv + jitChol combined
       model$invK_uu = invK$invM
       model$logDetK_uu = 2* sum( log ( diag(invK$chol) ) )
+
+
     } else {
       model$invK_uu=list(); model$logDetK_uu=matrix(0,1,model$d)
       for (i in 1:model$d) {

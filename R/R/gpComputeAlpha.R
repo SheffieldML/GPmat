@@ -5,6 +5,7 @@ gpComputeAlpha <- function(model, m) {
 
   model$alpha = matrix(0, model$k, model$d)
   if (model$approx == "ftc") {
+# browser()	## m = y-mean(y)
     if (!"isSpherical" %in% names(model) || model$isSpherical)
       model$alpha = model$invK_uu %*% m
     else {
