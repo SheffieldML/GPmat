@@ -72,7 +72,7 @@ class model(parameterised):
 		g[self.constrained_positive_indices] = g[self.constrained_positive_indices]*x[self.constrained_positive_indices]
 		g[self.constrained_negative_indices] = g[self.constrained_negative_indices]*x[self.constrained_negative_indices]
 		[np.put(g,i,g[i]*(x[i]-l)*(h-x[i])/(h-l)) for i,l,h in zip(self.constrained_bounded_indices, self.constrained_bounded_lowers, self.constrained_bounded_uppers)]
-		[np.put(g,i,v) for i,v in [(t[0],np.sum(g[t[1:]])) for t in self.tied_indices]]
+		[np.put(g,i,v) for i,v in [(t[0],np.sum(g[t])) for t in self.tied_indices]]
 		if len(self.tied_indices):
 			to_remove = np.hstack((self.constrained_fixed_indices,np.hstack([t[1:] for t in self.tied_indices])))
 		else:
@@ -97,12 +97,20 @@ class model(parameterised):
 
 
 	def optimize_restarts(self, Nrestarts=10, compare_Laplace=False, **kwargs):
-		D = self.extract_param().size
-		scores = []
-		params = []
+		"""
+		Perform random restarts of the model. Include the current point in the comparison.
+		passes **kwargs to the optimizer
+		"""
+		scores = [self.log_likelihood()]
+		params = [self.extract_param()]
 		for i in range(Nrestarts):
 			self.randomize()
-			self.optimize(**kwargs)
+			try:
+				self.optimize(**kwargs)
+			except np.linalg.LinAlgErr:
+				scores.append(-np.inf)
+				params.append('')
+				continue
 			if compare_Laplace:
 				self.optimize(ftol=1e-9)#need more numerical stability for good laplace approximation
 				scores.append(self.Laplace_evidence())
@@ -114,8 +122,11 @@ class model(parameterised):
 
 	def optimize(self,**kwargs):
 		def f_fp(x):
-			self.expand_param(x)
-			return -self.log_likelihood(),-self.extract_gradients()
+			try:
+				self.expand_param(x)
+				return -self.log_likelihood(),-self.extract_gradients()
+			except:
+				return np.nan, x*np.nan
 		start = self.extract_param()
 		opt = optimize.fmin_tnc(f_fp,start,**kwargs)[0]
 		self.expand_param(opt)
