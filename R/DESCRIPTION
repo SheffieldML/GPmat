@@ -1,6 +1,6 @@
 Package: gptk
-Version: 1.04
-Date: 2011-11-21
+Version: 1.05
+Date: 2011-12-05
 Title: Gaussian Processes Tool-Kit
 Authors@R: c(person(c("Alfredo","A."), "Kalaitzis", role = c("aut","cre","trl"),
 		    email = "alkalait@gmail.com"),

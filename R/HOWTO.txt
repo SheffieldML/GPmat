@@ -29,6 +29,7 @@ gpTest() # run some tests
 demInterpolation() # run demo
 demRegression() # another demo
 demOptimiseGp() # and another demo
+demAutoOptimiseGp() # last demo
 
 ####################################################################################
 #### To build the gptk R package from the 'mlprojects/gp/R/' folder: ######
