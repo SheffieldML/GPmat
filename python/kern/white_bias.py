@@ -6,7 +6,7 @@ class constant(kern):
 	to extend this calss, define a function which accepts a shape and returns an array of that shape with ones and zeros in"""
 	def __init__(self,X,alpha=1.):
 		kern.__init__(self,X)
-		self.alpha = alpha
+		self.alpha = np.array([alpha])
 		self.expand_X(X)
 		self.Nparam = 1
 	def set_X(self,X):
@@ -18,7 +18,7 @@ class constant(kern):
 	def set_param(self,alpha):
 		self.alpha = alpha
 	def get_param(self):
-		return self.alpha
+		return self.alpha.copy()
 	def get_param_names(self):
 		return ['alpha']
 
