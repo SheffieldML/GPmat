@@ -54,6 +54,7 @@ def jitchol(A,maxtries=5):
 				return linalg.cho_factor(A+np.eye(A.shape[0])*jitter)
 			except:
 				jitter *= 10
+				print 'Warning: adding jitter of '+str(jitter)
 		raise linalg.LinAlgError,"not positive definite, even with jitter."
 
 
