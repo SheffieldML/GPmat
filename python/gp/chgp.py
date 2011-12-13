@@ -130,17 +130,30 @@ class chgp(ndlutil.model):
 		pb.ylim(ymin,ymax)
 		pb.xticks([])
 
-		for i,y in enumerate(self.Y.T):
-			pb.subplot(1,self.Y.shape[1]+1,i+2)
-			c = ndlutil.Tango.nextMedium()
-			cf = ndlutil.Tango.nextLight()
-			cp = ndlutil.Tango.nextDark()
-			pb.plot(X,y[:,None],color=cp,marker='o')
-			ndlutil.utilities.gpplot(xx,*self.predict_y(xx,i),edgecol=c,fillcol=cf,alpha=0.3)
-			pb.xlim(xmin,xmax)
-			pb.ylim(ymin,ymax)
-			pb.xticks([])
-			pb.yticks([])
+		if isinstance(self.kernf,kern.hierarchical):
+			for i,y in enumerate(self.Y.T):
+				pb.subplot(1,self.Y.shape[1]+1,i+2)
+				c = ndlutil.Tango.nextMedium()
+				cf = ndlutil.Tango.nextLight()
+				cp = ndlutil.Tango.nextDark()
+				pb.plot(self.X,y[:,None],color=cp,marker='o')
+				#ndlutil.utilities.gpplot(xx,*self.predict_y(xx,i),edgecol=c,fillcol=cf,alpha=0.3)
+				pb.xlim(xmin,xmax)
+				pb.ylim(ymin,ymax)
+				pb.xticks([])
+				pb.yticks([])
+		else:
+			for i,y in enumerate(self.Y.T):
+				pb.subplot(1,self.Y.shape[1]+1,i+2)
+				c = ndlutil.Tango.nextMedium()
+				cf = ndlutil.Tango.nextLight()
+				cp = ndlutil.Tango.nextDark()
+				pb.plot(self.X,y[:,None],color=cp,marker='o')
+				ndlutil.utilities.gpplot(xx,*self.predict_y(xx,i),edgecol=c,fillcol=cf,alpha=0.3)
+				pb.xlim(xmin,xmax)
+				pb.ylim(ymin,ymax)
+				pb.xticks([])
+				pb.yticks([])
 
 
 
