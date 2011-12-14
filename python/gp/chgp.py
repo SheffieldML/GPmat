@@ -11,25 +11,25 @@ import pdb
 
 
 class chgp(ndlutil.model):
+	"""
+	A collapsed hierarchical GP. 
+
+	Assuming we have several measuremnets (call them genes) sampled at the same times, 
+	we can expolit this to build a GP which is more efficient for inference. 
+
+	Arguments
+	----------
+	X : a Nt x D numpy array (function inputs)
+	Y : a Nt x Ng numpy array, each column being a gene
+	kernf: a kernel object which models connections between genes
+	kerny: a kernel object which models the invididual genes
+
+	Notes
+	-----
+	You can use a hgp kernel for kerny to make a double hierarchy
+
+	"""
 	def __init__(self,X,Y,kernf,kerny):
-		"""
-		A collapsed hierarchical GP. 
-
-		Assuming we have several measuremnets (call them genes) sampled at the same times, 
-		we can expolit this to build a GP which is more efficient for inference. 
-
-		Arguments
-		----------
-		X : a Nt x D numpy array (function inputs)
-		Y : a Nt x Ng numpy array, each column being a gene
-		kernf: a kernel object which models connections between genes
-		kerny: a kernel object which models the invididual genes
-
-		Notes
-		-----
-		You can use a hgp kernel for kerny to make a double hierarchy
-
-		"""
 
 		assert len(X.shape)==2
 		assert len(Y.shape)==2

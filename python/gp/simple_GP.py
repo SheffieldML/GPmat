@@ -29,7 +29,7 @@ class GP(model):
 	def get_param_names(self):
 		return self.kern.extract_param_names()
 	def log_likelihood(self):
-		return -0.5*self.Y.size*np.log(2*np.pi) -self.hld -0.5*np.sum(self.Ki*self.Youter)
+		return -0.5*self.Y.size*np.log(2.*np.pi) -self.hld -0.5*np.sum(self.Ki*self.Youter)
 	def log_likelihood_gradients(self):
 		alpha = np.dot(self.Ki,self.Y.flatten())
 		dL_dK = 0.5*(np.outer(alpha,alpha)-self.Ki)
@@ -65,7 +65,7 @@ class GP(model):
 if __name__=='__main__':
 	X = np.random.randn(20,1)
 	Y = np.sin(X)+np.random.randn(20,1)*0.05
-	models = [GP(X,Y,k(X)) for k in kern.linear, kern.rbf, kern.mlp,kern.polynomial]#, kern.cubic_spline]
+	models = [GP(X,Y,k(X)+kern.white(X)) for k in kern.linear, kern.rbf, kern.mlp,kern.polynomial]#, kern.cubic_spline]
 	[m.constrain_positive('') for m in models]
 	[m.optimize() for m in models]
 	[m.plot() for m in models]
