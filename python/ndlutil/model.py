@@ -190,24 +190,30 @@ class model(parameterised):
 		sys.stdout.flush()
 		
 		if np.abs(1.-ratio)>tolerance:
-			print "Ratio far from unity. Testing individual gradients"
+			print "Ratio far from unity. Testing individual gradients\n"
+			try:
+				names = self.extract_param_names()
+			except NotImplementedError:
+				names = ['Variable %i'%i for i in range(len(x))]
 			for i in range(len(x)):
-				dx = np.zeros(x.shape)
-				dx[i] = step*np.sign(np.random.uniform(-1,1,x[i].shape))
-				
-				self.expand_param(x+dx)
-				f1,g1 = self.log_likelihood() + self.log_prior(), self.extract_gradients()
-				self.expand_param(x-dx)
-				f2,g2 = self.log_likelihood() + self.log_prior(), self.extract_gradients()
+				xx = x.copy()
+				xx[i] += step
+				self.expand_param(xx)
+				f1,g1 = self.log_likelihood() + self.log_prior(), self.extract_gradients()[i]
+				xx[i] -= 2.*step
+				self.expand_param(xx)
+				f2,g2 = self.log_likelihood() + self.log_prior(), self.extract_gradients()[i]
 				self.expand_param(x)
-				gradient = self.extract_gradients()
+				gradient = self.extract_gradients()[i]
 
 			
-				numerical_gradient = (f1-f2)/(2*dx)
-				print i,"th element"
-				#print "gradient = ",gradient
-				#print "numerical gradient = ",numerical_gradient
-				ratio = (f1-f2)/(2*np.dot(dx,gradient))
-				print "ratio = ",ratio,'\n'
+				numerical_gradient = (f1-f2)/(2*step)
+				print names[i]
+				ratio = (f1-f2)/(2*step*gradient)
+				difference = np.abs((f1-f2)/2/step - gradient)
+				print "ratio = ",ratio
+				print "difference = ",difference,'\n'
 				sys.stdout.flush()
+			return False
+		return True
 	

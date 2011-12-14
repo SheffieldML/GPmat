@@ -205,18 +205,26 @@ class parameterised:
 		self.set_param(xx)
 
 	def extract_param_names(self):
-		"""Resulting parameter names after tieing."""
+		"""Resulting parameter names after tieing and fixing."""
 		n =  self.get_param_names()
 		if len(self.tied_indices):
 			for t in self.tied_indices:
 				n[t[0]] = "<tie>".join([n[tt] for tt in t])
 			remove = np.hstack([t[1:] for t in self.tied_indices])
-			n = [nn for i,nn in enumerate(n) if not i in remove]
+		else:
+			remove=np.empty(shape=(0,),dtype=np.int)
+
+		#also remove the fixed params
+		if len(self.constrained_fixed_indices):
+			remove = np.hstack((remove, np.hstack(self.constrained_fixed_indices)))
+
+		n = [nn for i,nn in enumerate(n) if not i in remove]
 		return n
 
 	def __str__(self):
 		"""Return a string describing the parameter names and their ties and constraints"""
 		#TODO
+		pass
 
 
 
