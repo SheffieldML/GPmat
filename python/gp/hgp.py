@@ -84,7 +84,7 @@ class hgp(GP):
 		var = Kxnxn - np.dot(Kxxn.T,np.dot(self.Ki,Kxxn))
 		return mu,var
 	
-	def plot(self):
+	def plot(self,colour=False):
 		if self.Nlevels==1:
 			pb.figure()
 			nrow = 1
@@ -123,35 +123,56 @@ class hgp(GP):
 			nrow = np.unique(self.pdata[:,0]).size  + 1
 			ncol = np.max([np.unique(self.pdata[i,1]).size for i in [np.nonzero(self.pdata[:,0]==ui)[0] for ui in np.unique(self.pdata[:,0])]]) + 1
 			rownames = np.unique(self.pdata[:,0])
-			# do mean predictions first
-			xmin,xmax = min(0.,self.X.min()),self.X.max()+0.2*(self.X.max()-self.X.min())
+			xmin,xmax = self.X.min(),self.X.max()
+			xmin,xmax = xmin-0.2*(xmax-xmin),xmax+0.2*(xmax-xmin)
+			ymin,ymax = self.Y.min(),self.Y.max()
+			ymin,ymax = ymin-0.2*(ymax-ymin),ymax+0.2*(ymax-ymin)
 			Xplot = np.linspace(xmin,xmax,100)[:,None]
+			if colour:
+				c = Tango.coloursHex['mediumRed']
+				cf = Tango.coloursHex['lightRed']
+				cp = 'k'
+			else:
+				c = Tango.coloursHex['Aluminium6']
+				cf = Tango.coloursHex['Aluminium1']
+				cp = Tango.coloursHex['Aluminium6']
+			# do mean predictions first
 			for i,rn in enumerate(rownames):
 				pb.subplot(nrow,ncol,1+i*ncol)
 				pd = np.array([[rn,''] for foo in range(100)],dtype=np.str)
-				gpplot(Xplot,*self.predict(pd,Xplot))
+				gpplot(Xplot,*self.predict(pd,Xplot),edgecol=c,fillcol=cf,alpha=0.3)
 				pb.xticks([])
 				pb.ylabel(rn)
 				pb.xlim(xmin,xmax)
+				pb.ylim(ymin,ymax)
 
+			if colour:
+				c = Tango.coloursHex['mediumBlue']
+				cf = Tango.coloursHex['lightBlue']
 			for i,rn in enumerate(rownames):
 				index = np.nonzero(self.pdata[:,0]==rn)[0]
 				colnames = np.unique(self.pdata[index][:,1])
 				for j,cn in enumerate(colnames):
 					pb.subplot(nrow,ncol,2+i*ncol+j)
 					pd = np.array([[rn,cn] for foo in range(100)],dtype=np.str)
-					gpplot(Xplot,*self.predict(pd,Xplot))
+					gpplot(Xplot,*self.predict(pd,Xplot),edgecol=c,fillcol=cf,alpha=0.3)
 					index = np.nonzero((self.pdata[:,0]==rn)&(self.pdata[:,1]==cn))[0]
 					pb.plot(self.X[index,0],self.Y[index,0],'kx',mew=2,markersize=5)
 					pb.title(cn,size='small')
 					pb.xticks([])
 					pb.yticks([])
 					pb.xlim(xmin,xmax)
+					pb.ylim(ymin,ymax)
+			if colour:
+				c = Tango.coloursHex['mediumOrange']
+				cf = Tango.coloursHex['lightOrange']
 			pb.subplot(nrow,ncol,1+nrow*ncol-ncol)
 			pd = np.array([['',''] for foo in range(100)],dtype=np.str)
-			gpplot(Xplot,*self.predict(pd,Xplot))
-			pb.ylabel('Fusion')
+			gpplot(Xplot,*self.predict(pd,Xplot),edgecol=c,fillcol=cf,alpha=0.3)
 			pb.xlim(xmin,xmax)
+			pb.ylim(ymin,ymax)
+			Tango.removeUpperTicks()
+			Tango.removeRightTicks()
 
 
 
