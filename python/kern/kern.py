@@ -302,6 +302,7 @@ class hierarchical(compound):
 		"""
 		assert len(kerns)==connections.shape[1]
 		compound.__init__(self,X,kerns)
+		self.connections = connections
 		for i,k in enumerate(self.kerns):
 			assert k.shape==kerns[0].shape
 			mask = np.nonzero(connections[:,i])[0]
