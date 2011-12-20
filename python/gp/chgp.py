@@ -124,7 +124,7 @@ class chgp(ndlutil.model):
 		pb.figure()
 
 		if isinstance(self.kerny,kern.hierarchical):
-			ncol = self.kerny.connectivity.shape[1]-1
+			ncol = self.kerny.connections.shape[1]-1
 			nrow = self.Y.shape[1]+1
 			for i,y in enumerate(self.Y.T):
 				if colour:
@@ -137,7 +137,7 @@ class chgp(ndlutil.model):
 					cp = ndlutil.Tango.coloursHex['Aluminium6']
 
 				#prediction for the mean of each gene. bit of a hack I'm afraid
-				con = np.hstack((np.ones((100,2)),np.zeros((100,self.kerny.connectivity.shape[1]-2))))
+				con = np.hstack((np.ones((100,2)),np.zeros((100,self.kerny.connections.shape[1]-2))))
 				tmp1 = self.kerny.compute_new
 				tmp2 = self.kerny.cross_compute
 				self.kerny.compute_new = lambda x:tmp1(x,con)
@@ -159,11 +159,11 @@ class chgp(ndlutil.model):
 					cf = ndlutil.Tango.coloursHex['lightBlue']
 
 				#get prediction for each replicate and plot
-				for j in range(self.kerny.connectivity.shape[1]-2):
+				for j in range(self.kerny.connections.shape[1]-2):
 					pb.subplot(nrow,ncol,2+i*ncol+j)
 
 					#prediction for the mean of each replicate. Hacked as above
-					con = np.hstack((np.ones((100,2)),np.zeros((100,self.kerny.connectivity.shape[1]-2))))
+					con = np.hstack((np.ones((100,2)),np.zeros((100,self.kerny.connections.shape[1]-2))))
 					con[:,j+2] = 1
 					tmp1 = self.kerny.compute_new
 					tmp2 = self.kerny.cross_compute
@@ -174,7 +174,7 @@ class chgp(ndlutil.model):
 					self.kerny.cross_compute = tmp2
 
 					#plot actual data
-					index = np.nonzero(self.kerny.connectivity[:,j+2])[0]
+					index = np.nonzero(self.kerny.connections[:,j+2])[0]
 					pb.plot(self.X[index,0],y[index],color=cp,marker='x',linewidth=0,mew=2)
 
 					#plot config.

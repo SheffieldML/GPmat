@@ -51,7 +51,7 @@ class hgp(GP):
 
 		#build the kernel
 		self.kern = kern.hierarchical(self.X,con,kerns)
-		self.connectivity=con
+		self.connections=con
 
 		#tie and constrain the kernel parameters
 		for tie in ties:
