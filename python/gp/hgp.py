@@ -86,6 +86,7 @@ class hgp(GP):
 	
 	def plot(self):
 		if self.Nlevels==1:
+			pb.figure()
 			nrow = 1
 			ncol = np.unique(self.pdata).size + 1
 			rownames = np.unique(self.pdata[:,0])
@@ -118,6 +119,7 @@ class hgp(GP):
 
 
 		if self.Nlevels==2:
+			pb.figure()
 			nrow = np.unique(self.pdata[:,0]).size  + 1
 			ncol = np.max([np.unique(self.pdata[i,1]).size for i in [np.nonzero(self.pdata[:,0]==ui)[0] for ui in np.unique(self.pdata[:,0])]]) + 1
 			rownames = np.unique(self.pdata[:,0])
