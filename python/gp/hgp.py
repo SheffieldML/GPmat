@@ -51,17 +51,17 @@ class hgp(GP):
 
 		#build the kernel
 		self.kern = kern.hierarchical(self.X,con,kerns)
-		self.connections=con
+		self.connectivity=con
 
 		#tie and constrain the kernel parameters
 		for tie in ties:
 			self.kern.tie_param('_('+tie+')_alpha')
 			self.kern.tie_param('_('+tie+')_gamma')
-			self.kern.constrain_bounded('_('+tie+')_gamma',2e-1,0.3)
+			#self.kern.constrain_bounded('_('+tie+')_gamma',2e-1,0.3)
 
 		#constrain kernel_params
-		self.kern.constrain_positive('alpha')
-		self.kern.constrain_bounded('_0_gamma',1e-6,0.15)
+		#self.kern.constrain_positive('alpha')
+		#self.kern.constrain_bounded('_0_gamma',1e-6,0.15)
 
 		GP.__init__(self,self.X,self.Y,self.kern)
 
@@ -84,7 +84,7 @@ class hgp(GP):
 		var = Kxnxn - np.dot(Kxxn.T,np.dot(self.Ki,Kxxn))
 		return mu,var
 	
-	def plot(self,colour=False):
+	def plot(self,colour=True):
 		if self.Nlevels==1:
 			pb.figure()
 			nrow = 1
@@ -145,6 +145,7 @@ class hgp(GP):
 				pb.ylabel(rn)
 				pb.xlim(xmin,xmax)
 				pb.ylim(ymin,ymax)
+				Tango.removeRightTicks()
 
 			if colour:
 				c = Tango.coloursHex['mediumBlue']

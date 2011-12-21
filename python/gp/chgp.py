@@ -78,7 +78,7 @@ class chgp(ndlutil.model):
 
 	def predict_f(self, Xnew):
 		"""
-		Make a prediction for the GP function. 
+		Make a prediction for the *underlying* GP function, f. 
 
 		"""
 		N = self.Y.shape[1]
@@ -108,10 +108,11 @@ class chgp(ndlutil.model):
 		diff = self.Y[:,i]-fhat
 		
 		mu = mu_f + np.dot(Kx.T,np.dot(self.Kyi,diff))
-		var = var_f + Kxx - np.dot(Kx.T,np.dot(self.Kyi,Kx))
+		#var = var_f + Kxx - np.dot(Kx.T,np.dot(self.Kyi,Kx))
+		var = Kxx - np.dot(Kx.T,np.dot(self.Kyi,Kx))
 		return mu,var
 
-	def plot(self,colour=True):
+	def plot(self,colour=True,Fbars=False):
 		assert self.X.shape[1]==1, "Can only plot 1D GPs, sorry!"
 		ndlutil.Tango.reset()
 
@@ -189,6 +190,10 @@ class chgp(ndlutil.model):
 					cf = ndlutil.Tango.coloursHex['lightOrange']
 				pb.subplot(nrow,ncol,self.Y.shape[1]*ncol+1)
 				ndlutil.utilities.gpplot(xx,*self.predict_f(xx),edgecol=c,fillcol=cf,alpha=0.3)
+				if Fbars:
+					fhat = np.dot(self.Li,np.dot(self.Kyi,self.Y.sum(1)))
+					fcov = self.Li
+					pb.errorbar(self.X[:,0],fhat,color=c,yerr=2*np.sqrt(np.diag(fcov)),elinewidth=2,linewidth=0)
 				pb.xlim(xmin,xmax)
 				pb.ylim(ymin,ymax)
 				ndlutil.Tango.removeUpperTicks()
