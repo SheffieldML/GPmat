@@ -25,6 +25,12 @@ if isfield(model, 'bprior'),
   ll = ll + kernPriorLogProb(model.kern);
   if model.numGenes>0,
     ll = ll + priorLogProb(model.bprior, model.B);
+    ll = ll + priorLogProb(model.simMeanPrior, model.simMean);
   end;
+end
+
+if isfield(model, 'disimStartMeanPrior'),
+  ll = ll + priorLogProb(model.disimStartMeanPrior, ...
+			 model.disimStartMean);
 end
 

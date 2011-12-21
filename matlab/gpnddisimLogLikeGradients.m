@@ -141,6 +141,15 @@ if (update_mean==1),
       end;
       indStart=indStart+size(delayedt,1);
     end;
+
+    % Add contribution of prior on disimStartMean if it exists.
+    if isfield(model, 'disimStartMeanPrior');
+      if model.numGenes>0,
+	gdisimstartmean = gdisimstartmean + ...
+	    priorGradient(model.disimStartMeanPrior, model.disimStartMean);
+      end;
+    end
+
     % Multiply by factors from parameter transformations
     if model.numGenes>0,
       fhandle = str2func([model.disimStartMeanTransform 'Transform']);
@@ -227,6 +236,15 @@ if (update_mean==1),
       end;
       indStart=indStart+size(delayedt,1);
     end;
+
+    % Add contribution of prior on simMean if it exists.
+    if isfield(model, 'simMeanPrior');
+      if model.numGenes>0,
+	gsimmean = gsimmean + ...
+	    priorGradient(model.simMeanPrior, model.simMean);
+      end;
+    end
+
     % Multiply by factors from parameter transformations
     fhandle = str2func([model.simMeanTransform 'Transform']);
     gsimmean = gsimmean*fhandle(model.simMean, 'gradfact', model.simMeanTransformSettings);
@@ -388,6 +406,15 @@ if (update_mean==1),
       indEnd=indStart+length(model.t)-1;
       gsimmean=gsimmean+gmuFull(indStart:indEnd)*(ones(indEnd-indStart+1,1)*model.S(k)/model.D(k));
     end;
+
+    % Add contribution of prior on simMean if it exists.
+    if isfield(model, 'simMeanPrior');
+      if model.numGenes>0,
+	gsimmean = gsimmean + ...
+	    priorGradient(model.simMeanPrior, model.simMean);
+      end;
+    end
+
     % Multiply by factors from parameter transformations
     fhandle = str2func([model.simMeanTransform 'Transform']);
     gsimmean = gsimmean*fhandle(model.simMean, 'gradfact', model.simMeanTransformSettings);
