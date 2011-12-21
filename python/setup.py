@@ -10,7 +10,7 @@ def read(fname):
 
 setup(
     name = "gp",
-    version = "0.0.1",
+    version = "0.0.2",
     author = "James Hensman",
     author_email = "james.hensman@gmail.com",
     description = ("Some simple Gaussian Process classes"),
