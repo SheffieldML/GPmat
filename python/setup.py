@@ -10,7 +10,7 @@ def read(fname):
 
 setup(
     name = "ndlutil",
-    version = "0.0.2",
+    version = "0.0.3",
     author = "Neil Lawrence, James Hensman",
     author_email = "james.hensman@gmail.com",
     description = ("A kernel toolbox"),

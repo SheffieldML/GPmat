@@ -245,20 +245,20 @@ class parameterised:
 		Return a string describing the parameter names and their ties and constraints
 		"""
 		header = ['Name','Value','Constraints','Ties']
-		names = m.get_param_names()
+		names = self.get_param_names()
 		N = len(names)
-		values = map(str,m.get_param())
+		values = map(str,self.get_param())
 		#sort out the constraints
 		constraints = ['']*len(names)
-		for i in m.constrained_positive_indices:
+		for i in self.constrained_positive_indices:
 			constraints[i] = '(+ve)'
-		for i in m.constrained_negative_indices:
+		for i in self.constrained_negative_indices:
 			constraints[i] = '(-ve)'
-		for i,u,l in zip(m.constrained_bounded_indices, m.constrained_bounded_uppers, m.constrained_bounded_lowers):
+		for i,u,l in zip(self.constrained_bounded_indices, self.constrained_bounded_uppers, self.constrained_bounded_lowers):
 			constraints[i] = '('+str(l)+', '+str(u)+')'
 		#sort out the ties
 		ties = ['']*len(names)
-		for i,tie in enumerate(m.tied_indices):
+		for i,tie in enumerate(self.tied_indices):
 			for j in tie:
 				ties[j] = '('+str(i)+')'
 		
