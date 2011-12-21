@@ -9,6 +9,25 @@ import pdb
 import cPickle
 from utilities import sigmoid
 
+def truncate_pad(string,width,align='m'):
+	"""
+	A helper function to make aligned strings for parameterised.__str__
+	"""
+	width=max(width,4)
+	if len(string)>width:
+		return string[:width-3]+'...'
+	elif len(string)==width:
+		return string
+	elif len(string)<width:
+		diff = width-len(string)
+		if align=='m':
+			return ' '*np.floor(diff/2.) + string + ' '*np.ceil(diff/2.)
+		elif align=='l':
+			return string + ' '*diff
+		elif align=='r':
+			return ' '*diff + string
+		else:
+			raise ValueError
 
 class parameterised:
 	def __init__(self):
@@ -221,10 +240,38 @@ class parameterised:
 		n = [nn for i,nn in enumerate(n) if not i in remove]
 		return n
 
-	def __str__(self):
-		"""Return a string describing the parameter names and their ties and constraints"""
-		#TODO
-		pass
+	def __str__(self,nw=30):
+		"""
+		Return a string describing the parameter names and their ties and constraints
+		"""
+		header = ['Name','Value','Constraints','Ties']
+		names = m.get_param_names()
+		N = len(names)
+		values = map(str,m.get_param())
+		#sort out the constraints
+		constraints = ['']*len(names)
+		for i in m.constrained_positive_indices:
+			constraints[i] = '(+ve)'
+		for i in m.constrained_negative_indices:
+			constraints[i] = '(-ve)'
+		for i,u,l in zip(m.constrained_bounded_indices, m.constrained_bounded_uppers, m.constrained_bounded_lowers):
+			constraints[i] = '('+str(l)+', '+str(u)+')'
+		#sort out the ties
+		ties = ['']*len(names)
+		for i,tie in enumerate(m.tied_indices):
+			for j in tie:
+				ties[j] = '('+str(i)+')'
+		
+		#make things of a nice width
+		nw = min(max(map(len,names)),nw)
+		names = map(truncate_pad,names,[nw]*N,['r']*N)
+		values = map(truncate_pad,values,[20]*N,['m']*N)
+		constraints = map(truncate_pad,constraints,[13]*N,['m']*N)
+		ties = map(truncate_pad,ties,[13]*N,['m']*N)
 
+		lines = zip(names,values, constraints, ties)
+		lines = map(lambda x:' | '.join(x),lines)
 
-
+		header = ' | '.join(map(truncate_pad,header,[nw,20,13,13],['r','m','m','m']))
+		sep = '-'*len(header)
+		return '\n'.join([header,sep]+lines)
