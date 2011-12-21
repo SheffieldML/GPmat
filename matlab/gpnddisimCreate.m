@@ -58,7 +58,7 @@ function model = gpnddisimCreate(numGenes, numProteins, times, geneVals, ...
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
-% COPYRIGHT : Antti Honkela, 2007
+% COPYRIGHT : Antti Honkela, 2007-2011
 %
 % COPYRIGHT : Jaakko Peltonen, 2011
 
@@ -204,35 +204,42 @@ fprintf(1,'nddisimCreate step5\n');
 % of the code is just copied from earlier gpdisim code, and it may
 % not work properly.
 if isfield(options, 'addPriors') && options.addPriors,
-  for i = 1:length(simMultiKern.numBlocks)
-    % Priors on the sim kernels.
-    eval([simMultiKernName '.comp{i}.priors = priorCreate(''gamma'');']);
-    eval([simMultiKernName '.comp{i}.priors.a = 1;']);
-    eval([simMultiKernName '.comp{i}.priors.b = 1;']);
-    %model.kern.comp{i}.priors = priorCreate('gamma');
-    %model.kern.comp{i}.priors.a = 1;
-    %model.kern.comp{i}.priors.b = 1;
-    if i == 1
-      % For the SIM kernel place prior on inverse width.
-      % model.kern.comp{i}.priors.index = [1 2];
-      eval([simMultiKernName '.comp{i}.priors.index = [1 2];']);
-    elseif i == 2
-      % for the first DISIM kernel, place prior on ...
-      %model.kern.comp{i}.priors.index = [1 3 4 5];
-      eval([simMultiKernName '.comp{i}.priors.index = [1 3 4 5];']);
-    else
-      % For other DISIM kernels don't place prior on inverse width --- as
-      % they are all tied together and it will be counted multiple
-      % times.
-      %model.kern.comp{i}.priors.index = [4 5];
-      eval([simMultiKernName '.comp{i}.priors.index = [4 5];']);
+  eval([simMultiKernName '.comp{1}.priors = cell(1, simMultiKern.comp{1}.nParams);']);
+  for k=1:simMultiKern.comp{1}.nParams,
+    eval([simMultiKernName '.comp{1}.priors{k} = priorCreate(''logisticNormal'');']);
+    eval([simMultiKernName '.comp{1}.priors{k}.mu = 0;']);
+    eval([simMultiKernName '.comp{1}.priors{k}.sd = 2;']);
+    eval([simMultiKernName '.comp{1}.priors{k}.index = k;']);
+  end
+
+  for i = 2:length(simMultiKern.numBlocks)
+    eval([simMultiKernName '.comp{i}.priors = cell(1, simMultiKern.comp{i}.nParams-2);']);
+    for k=1:simMultiKern.comp{i}.nParams-2,
+      eval([simMultiKernName '.comp{i}.priors{k} = priorCreate(''logisticNormal'');']);
+      eval([simMultiKernName '.comp{i}.priors{k}.mu = 0;']);
+      eval([simMultiKernName '.comp{i}.priors{k}.sd = 2;']);
+      eval([simMultiKernName '.comp{1}.priors{k}.index = k+2;']);
     end
   end
 
   % Prior on the b values.
-  model.bprior = priorCreate('gamma');
-  model.bprior.a = 1;
-  model.bprior.b = 1;
+  model.bprior = priorCreate('logisticNormal');
+  model.bprior.mu = 0;
+  model.bprior.sd = 2;
+
+  % Prior on the b values.
+  model.simMeanPrior = priorCreate('logisticNormal');
+  model.simMeanPrior.mu = 0;
+  model.simMeanPrior.sd = 2;
+  
+  % Prior on the input noise variance
+  if model.includeNoise,
+    model.kern.comp{2}.comp{1}.priors = cell(1, 1);
+    model.kern.comp{2}.comp{1}.priors{1} = priorCreate('logisticNormal');
+    model.kern.comp{2}.comp{1}.priors{1}.mu = 0;
+    model.kern.comp{2}.comp{1}.priors{1}.sd = 2;
+    model.kern.comp{2}.comp{1}.priors{1}.index = 1;
+  end
 end
 
 
@@ -335,6 +342,13 @@ if (use_disimstartmean==1),
   % concentration" parameters (disimStartMean), so that
   % their allowed range can be customized.
   model.disimStartMeanTransform = 'sigmoidab';
+  
+  if isfield(options, 'addPriors') && options.addPriors,
+    % Prior on the disimStartMean values.
+    model.disimStartMeanPrior = priorCreate('logisticNormal');
+    model.disimStartMeanPrior.mu = 0;
+    model.disimStartMeanPrior.sd = 2;
+  end
 else
   num_disimstartmeans=0;
 end;
@@ -496,6 +510,18 @@ else
   model.use_fixedrnavar=0;  
 end;
 
+if isfield(options, 'addPriors') && options.addPriors && model.includeNoise,
+  for k=1:numGenes,
+    if ~isfield(model.kern.comp{2}.comp{k+1}, 'use_fixedvariance') || ...
+	  ~model.kern.comp{2}.comp{k+1}.use_fixedvariance,
+      model.kern.comp{2}.comp{k+1}.priors = cell(1, 1);
+      model.kern.comp{2}.comp{k+1}.priors{1} = priorCreate('logisticNormal');
+      model.kern.comp{2}.comp{k+1}.priors{1}.mu = 0;
+      model.kern.comp{2}.comp{k+1}.priors{1}.sd = 2;
+      model.kern.comp{2}.comp{k+1}.priors{1}.index = 1;
+    end
+  end
+end
 
 fprintf(1,'nddisimCreate step13\n');
 

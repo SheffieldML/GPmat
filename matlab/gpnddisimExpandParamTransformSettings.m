@@ -38,10 +38,19 @@ model.kern = kernExpandParamTransformSettings(model.kern, paramtransformsettings
 
 if model.numGenes>0,
   model.bTransformSettings = paramtransformsettings(endVal+1:endVal+model.numGenes);
+  if isfield(model, 'bprior'),
+    model.bprior = priorSetBounds(model.bprior, ...
+				  paramtransformsettings(endVal+1:endVal+model.numGenes));
+  end
   endVal=endVal+model.numGenes;
   
   if model.use_disimstartmean==1,
-    model.disimStartMeanTransformSettings = paramtransformsettings(endVal+1:endVal+model.numGenes);
+    model.disimStartMeanTransformSettings = ...
+	paramtransformsettings(endVal+1:endVal+model.numGenes);
+    if isfield(model, 'disimStartMeanPrior'),
+      model.disimStartMeanPrior = priorSetBounds(model.disimStartMeanPrior, ...
+						 paramtransformsettings(endVal+1:endVal+model.numGenes));
+    end
     endVal=endVal+model.numGenes;  
   end;  
 end;
@@ -90,5 +99,9 @@ if isfield(model,'disimdelayindices'),
 end;
 
 model.simMeanTransformSettings = paramtransformsettings{endVal+1};
+if isfield(model, 'simMeanPrior'),
+  model.simMeanPrior = priorSetBounds(model.simMeanPrior, ...
+				      paramtransformsettings{endVal+1});
+end
 
 % fprintf(1,'gpnddisimExpandParamTransformSettings done\n');
