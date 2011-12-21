@@ -28,6 +28,8 @@ function kern = kernExpandParamTransformSettings(kern, paramtransformsettings)
 % COPYRIGHT : Neil D. Lawrence, 2003, 2004, 2005, 2006
 %
 % COPYRIGHT : Jaakko Peltonen, 2011
+%
+% COPYRIGHT : Antti Honkela, 2011
 
 % KERN
 
@@ -41,5 +43,31 @@ if ~isempty(paramtransformsettings),
   fhandle = str2func([kern.type 'KernExpandParamTransformSettings']);
   kern = fhandle(kern, paramtransformsettings);
 end;
+
+if isfield(kern, 'priors')
+  if iscell(kern.priors)
+    for k=1:length(kern.priors),
+      if isfield(kern.priors{k}, 'isBounded') && ...
+	    kern.priors{k}.isBounded,
+	l = kern.priors{k}.index;
+	if length(l) > 1,
+	  error('Unable to set bounds to a prior shared by multiple params')
+	end
+	kern.priors{k} = priorSetBounds(kern.priors{k}, paramtransformsettings{l});
+      end
+    end
+  else
+    for k=1:length(kern.priors),
+      if isfield(kern.priors(k), 'isBounded') && ...
+	    kern.priors(k).isBounded,
+	l = kern.priors(k).index;
+	if length(l) > 1,
+	  error('Unable to set bounds to a prior shared by multiple params')
+	end
+	kern.priors(k) = priorSetBounds(kern.priors(k), paramtransformsettings{l});
+      end
+    end
+  end
+end
 
 %fprintf(1,'kernExpandParamTransformSettings done\n');
