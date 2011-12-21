@@ -23,4 +23,5 @@ prior.b = 1;
 
 prior.transforms.index = [2];
 prior.transforms.type = optimiDefaultConstraint('positive');
-prior.nParams = 4;
+prior.nParams = 2;
+prior.isBounded = 1;

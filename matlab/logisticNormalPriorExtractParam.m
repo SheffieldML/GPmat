@@ -4,8 +4,7 @@ function [params, names] = logisticNormalPriorExtractParam(prior)
 
 % PRIOR
 
-params = [prior.mu, prior.sd, prior.a, prior.b];
+params = [prior.mu, prior.sd];
 if nargout > 1
-  names = {'logistic-normal mean', 'logistic-normal std', ...
-	   'logistic-normal a', 'logistic-normal b'};
+  names = {'logistic-normal mean', 'logistic-normal std'};
 end

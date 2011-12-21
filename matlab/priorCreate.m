@@ -10,7 +10,7 @@ function prior = priorCreate(type)
 % SEEALSO : priorParamInit
 %
 % COPYRIGHT : Neil D. Lawrence, 2003
-  
+
 % PRIOR
 
 prior.type = type;
