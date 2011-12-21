@@ -10,8 +10,9 @@ pb.ion()
 
 #build a double-hierarchy HGP
 #1) construct the data
+genenames = ['foo','bar','baz','bex']
 Nrep = 5
-Ngene = 4
+Ngene = len(genenames)
 Nd = [np.random.randint(2,8) for i in range(Nrep)]
 X = [np.random.randn(Ndi,1) for Ndi in Nd]
 [xx.sort(0) for xx in X]
@@ -27,13 +28,15 @@ pdata_hgp = np.hstack((pdata_gene,np.array(['_'.join(np.hstack((g,r))) for g,r i
 m1 = hgp(np.tile(np.vstack(X),(Ngene,1)),np.vstack([np.vstack(yy) for yy in Y]),pdata_hgp)
 m1.constrain_positive('')
 m1.optimize()
-m1.plot(1)
+m1.genenames=genenames
+m1.plot()
 
 #4) construct nested chgp model
 tmp = hgp(np.vstack(X),np.random.randn(np.vstack(X).shape[0],1),pdata_chgp)
 m2 = chgp(np.vstack(X),np.hstack([np.vstack(yy) for yy in Y]),kern.rbf(np.vstack(X)),tmp.kern)
 m2.constrain_positive('')
 m2.optimize()
+m2.genenames=genenames
 m2.plot()
 
 

@@ -122,11 +122,11 @@ class chgp(ndlutil.model):
 		ymin,ymax = ymin-0.2*(ymax-ymin),ymax+0.2*(ymax-ymin)
 		xx = np.linspace(xmin,xmax,100)[:,None]
 
-		pb.figure()
 
 		if isinstance(self.kerny,kern.hierarchical):
 			ncol = self.kerny.connections.shape[1]-1
 			nrow = self.Y.shape[1]+1
+			pb.figure(figsize=(ncol*4,nrow*3))
 			for i,y in enumerate(self.Y.T):
 				if colour:
 					c = ndlutil.Tango.coloursHex['mediumRed']
@@ -183,24 +183,46 @@ class chgp(ndlutil.model):
 					pb.ylim(ymin,ymax)
 					pb.xticks([])
 					pb.yticks([])
+					
+				#annotate genenames
+				if hasattr(self,'genenames'):
+					pb.twinx()
+					pb.ylabel(self.genenames[i], rotation=0)
+					pb.xticks([])
+					pb.yticks([])
 
-				#get prediction for underlying function
-				if colour:
-					c = ndlutil.Tango.coloursHex['mediumOrange']
-					cf = ndlutil.Tango.coloursHex['lightOrange']
-				pb.subplot(nrow,ncol,self.Y.shape[1]*ncol+1)
-				ndlutil.utilities.gpplot(xx,*self.predict_f(xx),edgecol=c,fillcol=cf,alpha=0.3)
-				if Fbars:
-					fhat = np.dot(self.Li,np.dot(self.Kyi,self.Y.sum(1)))
-					fcov = self.Li
-					pb.errorbar(self.X[:,0],fhat,color=c,yerr=2*np.sqrt(np.diag(fcov)),elinewidth=2,linewidth=0)
+			#get prediction for underlying function
+			if colour:
+				c = ndlutil.Tango.coloursHex['mediumOrange']
+				cf = ndlutil.Tango.coloursHex['lightOrange']
+			pb.subplot(nrow,ncol,self.Y.shape[1]*ncol+1)
+			ndlutil.utilities.gpplot(xx,*self.predict_f(xx),edgecol=c,fillcol=cf,alpha=0.3)
+			if Fbars:
+				fhat = np.dot(self.Li,np.dot(self.Kyi,self.Y.sum(1)))
+				fcov = self.Li
+				pb.errorbar(self.X[:,0],fhat,color=c,yerr=2*np.sqrt(np.diag(fcov)),elinewidth=2,linewidth=0)
+			pb.xlim(xmin,xmax)
+			pb.ylim(ymin,ymax)
+			ndlutil.Tango.removeUpperTicks()
+			ndlutil.Tango.removeRightTicks()
+			
+			#prediction for new functions
+			if colour:
+				c = ndlutil.Tango.coloursHex['mediumGreen']
+				cf = ndlutil.Tango.coloursHex['lightGreen']
+			for i in range(1,ncol):
+				pb.subplot(nrow,ncol,self.Y.shape[1]*ncol+1+i)
+				mu,var = self.predict_f(xx)
+				var += np.sum([k.alpha for k in self.kerny.kerns])
+				ndlutil.utilities.gpplot(xx,mu,var,edgecol=c,fillcol=cf,alpha=0.3)
 				pb.xlim(xmin,xmax)
 				pb.ylim(ymin,ymax)
+				pb.yticks([])
 				ndlutil.Tango.removeUpperTicks()
-				ndlutil.Tango.removeRightTicks()
 
 
 		else:
+			pb.figure()
 			pb.subplot(1,self.Y.shape[1]+1,1)
 			ndlutil.utilities.gpplot(xx,*self.predict_f(xx),alpha=0.3)
 			fhat = np.dot(self.Li,np.dot(self.Kyi,self.Y.sum(1)))
