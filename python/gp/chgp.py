@@ -122,20 +122,20 @@ class chgp(ndlutil.model):
 		ymin,ymax = ymin-0.2*(ymax-ymin),ymax+0.2*(ymax-ymin)
 		xx = np.linspace(xmin,xmax,100)[:,None]
 
+		if colour:
+			c = ndlutil.Tango.coloursHex['mediumRed']
+			cf = ndlutil.Tango.coloursHex['lightRed']
+			cp = 'k'#ndlutil.Tango.coloursHex['Aluminium6']
+		else:
+			c = ndlutil.Tango.coloursHex['Aluminium6']
+			cf = ndlutil.Tango.coloursHex['Aluminium1']
+			cp = ndlutil.Tango.coloursHex['Aluminium6']
 
 		if isinstance(self.kerny,kern.hierarchical):
 			ncol = self.kerny.connections.shape[1]-1
 			nrow = self.Y.shape[1]+1
 			pb.figure(figsize=(ncol*4,nrow*3))
 			for i,y in enumerate(self.Y.T):
-				if colour:
-					c = ndlutil.Tango.coloursHex['mediumRed']
-					cf = ndlutil.Tango.coloursHex['lightRed']
-					cp = 'k'#ndlutil.Tango.coloursHex['Aluminium6']
-				else:
-					c = ndlutil.Tango.coloursHex['Aluminium6']
-					cf = ndlutil.Tango.coloursHex['Aluminium1']
-					cp = ndlutil.Tango.coloursHex['Aluminium6']
 
 				#prediction for the mean of each gene. bit of a hack I'm afraid
 				con = np.hstack((np.ones((100,2)),np.zeros((100,self.kerny.connections.shape[1]-2))))
@@ -222,26 +222,31 @@ class chgp(ndlutil.model):
 
 
 		else:
-			pb.figure()
+			pb.figure(figsize=(3*self.Y.shape[1]+3,4))
 			pb.subplot(1,self.Y.shape[1]+1,1)
-			ndlutil.utilities.gpplot(xx,*self.predict_f(xx),alpha=0.3)
+			ndlutil.utilities.gpplot(xx,*self.predict_f(xx),edgecol=c,fillcol=cf,alpha=0.3)
 			fhat = np.dot(self.Li,np.dot(self.Kyi,self.Y.sum(1)))
 			fcov = self.Li
-			pb.errorbar(self.X[:,0],fhat,color='k',yerr=2*np.sqrt(np.diag(fcov)),elinewidth=2,linewidth=0)
+			if Fbars:
+				pb.errorbar(self.X[:,0],fhat,color=cp,yerr=2*np.sqrt(np.diag(fcov)),elinewidth=2,linewidth=0)
 			pb.xlim(xmin,xmax)
 			pb.ylim(ymin,ymax)
-			pb.xticks([])
+			ndlutil.Tango.removeUpperTicks()
+			ndlutil.Tango.removeRightTicks()
+
+			#colours for the subsequent plots
+			if colour:
+				c = ndlutil.Tango.coloursHex['mediumBlue']
+				cf = ndlutil.Tango.coloursHex['lightBlue']
+
 			for i,y in enumerate(self.Y.T):
 				pb.subplot(1,self.Y.shape[1]+1,i+2)
-				c = ndlutil.Tango.nextMedium()
-				cf = ndlutil.Tango.nextLight()
-				cp = ndlutil.Tango.nextDark()
-				pb.plot(self.X,y[:,None],color=cp,marker='o')
+				pb.plot(self.X,y[:,None],color=cp,marker='x',linewidth=0,mew=2)
 				ndlutil.utilities.gpplot(xx,*self.predict_y(xx,i),edgecol=c,fillcol=cf,alpha=0.3)
 				pb.xlim(xmin,xmax)
 				pb.ylim(ymin,ymax)
-				pb.xticks([])
 				pb.yticks([])
+				ndlutil.Tango.removeUpperTicks()
 
 
 

@@ -1,5 +1,5 @@
 import sys
-sys.path.append('..')
+sys.path.insert(0,'..')
 import numpy as np
 import pylab as pb
 from gp import chgp
