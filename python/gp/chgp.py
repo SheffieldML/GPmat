@@ -112,7 +112,7 @@ class chgp(ndlutil.model):
 		var = Kxx - np.dot(Kx.T,np.dot(self.Kyi,Kx))
 		return mu,var
 
-	def plot(self,colour=True,Fbars=False):
+	def plot(self,colour=True,Fbars=False,xsize=3,ysize=3):
 		assert self.X.shape[1]==1, "Can only plot 1D GPs, sorry!"
 		ndlutil.Tango.reset()
 
@@ -126,7 +126,7 @@ class chgp(ndlutil.model):
 		if isinstance(self.kerny,kern.hierarchical):
 			ncol = self.kerny.connections.shape[1]-1
 			nrow = self.Y.shape[1]+1
-			pb.figure(figsize=(ncol*4,nrow*3))
+			pb.figure(figsize=(ncol*ysize,nrow*xsize))
 			for i,y in enumerate(self.Y.T):
 
 				if colour:
@@ -232,8 +232,10 @@ class chgp(ndlutil.model):
 				cf = ndlutil.Tango.coloursHex['Aluminium1']
 				cp = ndlutil.Tango.coloursHex['Aluminium6']
 
-			pb.figure(figsize=(3*self.Y.shape[1]+3,4))
-			pb.subplot(1,self.Y.shape[1]+1,1)
+			ncol = self.Y.shape[1]+1
+			nrow = 1
+			pb.figure(figsize=(ncol*ysize,nrow*xsize))
+			pb.subplot(nrow,ncol,1)
 			ndlutil.utilities.gpplot(xx,*self.predict_f(xx),edgecol=c,fillcol=cf,alpha=0.3)
 			fhat = np.dot(self.Li,np.dot(self.Kyi,self.Y.sum(1)))
 			fcov = self.Li
@@ -250,7 +252,7 @@ class chgp(ndlutil.model):
 				cf = ndlutil.Tango.coloursHex['lightBlue']
 
 			for i,y in enumerate(self.Y.T):
-				pb.subplot(1,self.Y.shape[1]+1,i+2)
+				pb.subplot(nrow,ncol,i+2)
 				pb.plot(self.X,y[:,None],color=cp,marker='x',linewidth=0,mew=2)
 				ndlutil.utilities.gpplot(xx,*self.predict_y(xx,i),edgecol=c,fillcol=cf,alpha=0.3)
 				pb.xlim(xmin,xmax)

@@ -84,31 +84,44 @@ class hgp(GP):
 		var = Kxnxn - np.dot(Kxxn.T,np.dot(self.Ki,Kxxn))
 		return mu,var
 	
-	def plot(self,colour=True):
+	def plot(self,colour=True,xsize=3,ysize=3):
 		if self.Nlevels==1:
-			pb.figure()
+
+			if colour:
+				c = Tango.coloursHex['mediumRed']
+				cf = Tango.coloursHex['lightRed']
+				cp = 'k'
+			else:
+				c = Tango.coloursHex['Aluminium6']
+				cf = Tango.coloursHex['Aluminium1']
+				cp = Tango.coloursHex['Aluminium6']
+
 			nrow = 1
 			ncol = np.unique(self.pdata).size + 1
+			pb.figure(figsize=(ysize*ncol,xsize*nrow))
 			rownames = np.unique(self.pdata[:,0])
-			# do mean predictions first
 			xmin,xmax = self.X.min(),self.X.max()
 			xmin,xmax = xmin-0.2*(xmax-xmin),xmax+0.2*(xmax-xmin)
 			ymin,ymax = self.Y.min(),self.Y.max()
 			ymin,ymax = ymin-0.2*(ymax-ymin),ymax+0.2*(ymax-ymin)
 			Xplot = np.linspace(xmin,xmax,100)[:,None]
 
+			# do mean predictions first
 			pb.subplot(nrow,ncol,1)
 			pd = np.array([[''] for foo in range(100)],dtype=np.str) # pdata for prediction
-			gpplot(Xplot,*self.predict(pd,Xplot))
+			gpplot(Xplot,*self.predict(pd,Xplot),edgecol=c,fillcol=cf,alpha=.3)
 			pb.xticks([])
 			pb.xlim(xmin,xmax)
 			pb.ylim(ymin,ymax)
 
+			if colour:
+				c = Tango.coloursHex['mediumBlue']
+				cf = Tango.coloursHex['lightBlue']
 			colnames = np.unique(self.pdata[:,0])
 			for j,cn in enumerate(colnames):
 				pb.subplot(nrow,ncol,2+j)
 				pd = np.array([[cn] for foo in range(100)],dtype=np.str)
-				gpplot(Xplot,*self.predict(pd,Xplot))
+				gpplot(Xplot,*self.predict(pd,Xplot),edgecol=c,fillcol=cf,alpha=0.3)
 				index = np.nonzero(self.pdata[:,0]==cn)[0]
 				pb.plot(self.X[index,0],self.Y[index,0],'kx',mew=2,markersize=5)
 				pb.title(cn,size='small')
@@ -119,9 +132,9 @@ class hgp(GP):
 
 
 		if self.Nlevels==2:
-			pb.figure()
 			nrow = np.unique(self.pdata[:,0]).size  + 1
 			ncol = np.max([np.unique(self.pdata[i,1]).size for i in [np.nonzero(self.pdata[:,0]==ui)[0] for ui in np.unique(self.pdata[:,0])]]) + 1
+			pb.figure(figsize=(ysize*ncol,xsize*nrow))
 			rownames = np.unique(self.pdata[:,0])
 			xmin,xmax = self.X.min(),self.X.max()
 			xmin,xmax = xmin-0.2*(xmax-xmin),xmax+0.2*(xmax-xmin)
@@ -174,6 +187,21 @@ class hgp(GP):
 			pb.ylim(ymin,ymax)
 			Tango.removeUpperTicks()
 			Tango.removeRightTicks()
+
+			#prediction for new functions
+			if colour:
+				c = Tango.coloursHex['mediumGreen']
+				cf = Tango.coloursHex['lightGreen']
+			for i in range(1,ncol):
+				pb.subplot(nrow,ncol,(nrow-1)*ncol+1+i)
+				mu,var = self.predict(pd,Xplot)
+				var += self.kern.kerns[2].alpha
+				gpplot(Xplot,mu,var,edgecol=c,fillcol=cf,alpha=0.3)
+				pb.xlim(xmin,xmax)
+				pb.ylim(ymin,ymax)
+				pb.yticks([])
+				Tango.removeUpperTicks()
+
 
 
 
