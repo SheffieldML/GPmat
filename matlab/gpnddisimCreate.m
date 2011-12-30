@@ -212,13 +212,13 @@ if isfield(options, 'addPriors') && options.addPriors,
     eval([simMultiKernName '.comp{1}.priors{k}.index = k;']);
   end
 
-  for i = 2:length(simMultiKern.numBlocks)
+  for i = 2:simMultiKern.numBlocks,
     eval([simMultiKernName '.comp{i}.priors = cell(1, simMultiKern.comp{i}.nParams-2);']);
     for k=1:simMultiKern.comp{i}.nParams-2,
       eval([simMultiKernName '.comp{i}.priors{k} = priorCreate(''logisticNormal'');']);
       eval([simMultiKernName '.comp{i}.priors{k}.mu = 0;']);
       eval([simMultiKernName '.comp{i}.priors{k}.sd = 2;']);
-      eval([simMultiKernName '.comp{1}.priors{k}.index = k+2;']);
+      eval([simMultiKernName '.comp{i}.priors{k}.index = k+2;']);
     end
   end
 
