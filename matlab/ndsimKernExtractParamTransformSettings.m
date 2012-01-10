@@ -1,7 +1,6 @@
 function [paramtransformsettings, names] = ndsimKernExtractParamTransformSettings(kern)
 
-% NDSIMKERNEXTRACTPARAMTRANSFORMSETTINGS Extract parameter transform settings from the SIM kernel 
-structure.
+% NDSIMKERNEXTRACTPARAMTRANSFORMSETTINGS Extract parameter transform settings from the SIM kernel structure.
 % FORMAT
 % DESC Extract parameters from the single input motif kernel structure
 % into a vector of parameters for optimisation.

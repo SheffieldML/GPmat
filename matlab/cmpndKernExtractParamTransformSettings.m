@@ -30,9 +30,9 @@ startVal = 1;
 endVal = 0;
 storedTypes = cell(0);
 for i = 1:length(kern.comp)
-  [tempparamtransformsettings, tempnames] = kernExtractParam(kern.comp{i});
+  [tempparamtransformsettings, tempnames] = kernExtractParamTransformSettings(kern.comp{i});
   endVal = endVal + length(tempparamtransformsettings);
-  paramtransformsettings{startVal:endVal} = tempparamtransformsettings{:};
+  paramtransformsettings(startVal:endVal) = tempparamtransformsettings(:);
 
   if nargout > 1
     instNum = sum(strcmp(kern.comp{i}.type, storedTypes)) + 1;
@@ -52,9 +52,9 @@ paramtransformationsettingsFinal={};
 paramGroups = kern.paramGroups;
 for i = 1:size(paramGroups, 2)
   ind = find(paramGroups(:, i));
+  paramtransformationsettingsFinal{i} = paramtransformsettings{ind(1)};
   if nargout > 1
     names{i} = namesTemp{ind(1)};
-    paramtransformationsettingsFinal{i} = paramtransformsettings{ind(1)};
     if length(ind) > 1
       for j = 2:length(ind)
         names{i} = [names{i} ', ' namesTemp{ind(j)}];
