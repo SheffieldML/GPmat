@@ -65,7 +65,7 @@ expandedsettings=cell(size(kern.paramGroups,1),1);
 
 
 for k=1:length(expandedsettings),
-  fprintf(1,'cmpndKernExpandParamTransformSettings step1b3\n');
+  %fprintf(1,'cmpndKernExpandParamTransformSettings step1b3\n');
   % Find the shared parameter that correspond to the k:th non-shared parameter
   k2=find(kern.paramGroups(k,:)==1);
   
@@ -88,9 +88,9 @@ for i = 1:length(kern.comp)
   % Each component-kernel is assumed to require as many transformation
   % settings as it has parameters.
   endVal = endVal + kern.comp{i}.nParams;
-  fprintf(1,'cmpndKernExpandParamTransformSettings step3\n');
+  %fprintf(1,'cmpndKernExpandParamTransformSettings step3\n');
   kern.comp{i} = kernExpandParamTransformSettings(kern.comp{i}, expandedsettings(startVal:endVal));
-  fprintf(1,'cmpndKernExpandParamTransformSettings step4\n');
+  %fprintf(1,'cmpndKernExpandParamTransformSettings step4\n');
   startVal = endVal + 1;
 end
 

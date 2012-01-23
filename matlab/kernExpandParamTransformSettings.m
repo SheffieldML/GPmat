@@ -39,7 +39,6 @@ function kern = kernExpandParamTransformSettings(kern, paramtransformsettings)
 % simply call the kernel-specific function.
 if ~isempty(paramtransformsettings),
   % Get the handle of the kernel-specific function and call it
-  kern.type
   fhandle = str2func([kern.type 'KernExpandParamTransformSettings']);
   kern = fhandle(kern, paramtransformsettings);
 end;
