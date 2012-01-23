@@ -65,7 +65,7 @@ function model = gpnddisimCreate(numGenes, numProteins, times, geneVals, ...
 % GPNDDISIM
 
 
-fprintf(1,'nddisimCreate step1\n');
+%fprintf(1,'nddisimCreate step1\n');
 
 if any(size(geneVars)~=size(geneVals))
   error('The gene variances have a different size matrix to the gene values.');
@@ -89,7 +89,7 @@ end;
 
 model.type = 'gpnddisim';
 
-fprintf(1,'nddisimCreate step2\n');
+%fprintf(1,'nddisimCreate step2\n');
 
 
 % The kernel in the model is composed as K = K{1} + K{2}, 
@@ -124,7 +124,7 @@ else
   tieParam = {};
 end;
 
-fprintf(1,'nddisimCreate step3\n');
+%fprintf(1,'nddisimCreate step3\n');
 
 
 % Store the observed output values of the input protein and the
@@ -156,7 +156,7 @@ else
   end;
 end;
 
-fprintf(1,'nddisimCreate step4\n');
+%fprintf(1,'nddisimCreate step4\n');
 
 
 % Check if we should create an observation-noise term.
@@ -196,7 +196,7 @@ end
 simMultiKern = eval(simMultiKernName);
 
 
-fprintf(1,'nddisimCreate step5\n');
+%fprintf(1,'nddisimCreate step5\n');
 
 
 % This is if we need to place priors on parameters ...
@@ -243,7 +243,7 @@ if isfield(options, 'addPriors') && options.addPriors,
 end
 
 
-fprintf(1,'nddisimCreate step6\n');
+%fprintf(1,'nddisimCreate step6\n');
 
 
 % Get the parameters from the kernel... this may be unnecessary at
@@ -254,7 +254,7 @@ fprintf(1,'nddisimCreate step6\n');
 %pause
 
 
-fprintf(1,'nddisimCreate step7\n');
+%fprintf(1,'nddisimCreate step7\n');
 
 
 % Tie together the parameters according to the regular expression
@@ -263,7 +263,7 @@ model.kern = modelTieParam(model.kern, tieParam);
 
 
 
-fprintf(1,'nddisimCreate step8\n');
+%fprintf(1,'nddisimCreate step8\n');
 
 % I think this part may be unnecessary - it is mainly to make sure
 % that the initial variances of the noise kernels are in the
@@ -295,7 +295,7 @@ if numGenes > 0,
 end;
 
 
-fprintf(1,'nddisimCreate step9\n');
+%fprintf(1,'nddisimCreate step9\n');
 
 
 % Whether to use, for each gene, an initial RNA concentration that
@@ -380,7 +380,7 @@ end;
 model.bTransform = 'sigmoidab';
 
 
-fprintf(1,'nddisimCreate step10\n');
+%fprintf(1,'nddisimCreate step10\n');
 
 
 % Mean value parameter for the input protein. The protein is
@@ -413,7 +413,7 @@ model.numGenes = numGenes;
 model.t = times;
 
 
-fprintf(1,'nddisimCreate step11\n');
+%fprintf(1,'nddisimCreate step11\n');
 
 
 % Initialize the mean vector of the model, according to the results
@@ -459,7 +459,7 @@ model.mu = mu;
 model.m = model.y-model.mu;
 
 
-fprintf(1,'nddisimCreate step12\n');
+%fprintf(1,'nddisimCreate step12\n');
 
 
 % If it is desired to use fixed observation-noise variances for the
@@ -523,7 +523,7 @@ if isfield(options, 'addPriors') && options.addPriors && model.includeNoise,
   end
 end
 
-fprintf(1,'nddisimCreate step13\n');
+%fprintf(1,'nddisimCreate step13\n');
 
 
 % Store the desired optimization algorithm, such as 'conjgrad',
@@ -550,7 +550,7 @@ end
 model.options = options;
 
 
-fprintf(1,'nddisimCreate step14\n');
+%fprintf(1,'nddisimCreate step14\n');
 
 
 % fprintf(1,'Force kernel compute 1\n');
@@ -560,7 +560,7 @@ fprintf(1,'nddisimCreate step14\n');
 % desired parameter ranges) within the model and the kernel structures.
 model=gpnddisimExpandParamTransformSettings(model, paramtransformsettings);
 
-fprintf(1,'Force kernel compute 1a\n');
+%fprintf(1,'Force kernel compute 1a\n');
 
 
 % Extract the parameters and their names. We need the names to find
@@ -570,7 +570,7 @@ fprintf(1,'Force kernel compute 1a\n');
 %params
 %paramnames
 
-fprintf(1,'Force kernel compute 1 done\n');
+%fprintf(1,'Force kernel compute 1 done\n');
 
 
 
@@ -663,10 +663,10 @@ end;
 % indices have been found, we can finally update the parameters
 % back into the model - this will cause the kernel to be computed
 % and the mean to be computed.
-fprintf(1,'gpasimTemp3Create step2\n');
-fprintf(1,'Force kernel compute 2\n');
+%fprintf(1,'gpasimTemp3Create step2\n');
+%fprintf(1,'Force kernel compute 2\n');
 model = gpnddisimExpandParam(model, params);
-fprintf(1,'gpasimTemp3Create step3\n');
+%fprintf(1,'gpasimTemp3Create step3\n');
 
 
-fprintf(1,'gpnddisimCreate done\n');
+%fprintf(1,'gpnddisimCreate done\n');
