@@ -31,7 +31,7 @@ function kern = kernCreate(X, kernelType)
 %
 % COPYRIGHT: Neil D. Lawrence, 2006
 %
-% MODIFICATIONS: Antti Honkela, 2009
+% MODIFICATIONS: Antti Honkela, 2009, Andreas Damianou, 2012
 
 % KERN
   
@@ -106,10 +106,40 @@ if iscell(kernelType)
       kern.comp{i-start+1}.index = [];
     end
    case {'tensor', 'cmpnd', 'translate', 'velotrans'}
-    for i = start:length(kernelType)
-      kern.comp{i-start+1} = kernCreate(X, kernelType{i});
-      kern.comp{i-start+1}.index = [];
-    end    
+       %%%---
+       if strcmp(kernelType{1}, 'invcmpnd')
+           kern.type = 'invcmpnd';
+           start = 2;
+           if iscell(X)
+               
+               % Every kernel has its own input space, length(dim) should be
+               % equal to length(kernelType(start:end))
+               if length(dim) ~= length(kernelType(2:end))
+                   error('For the invcmpnd kernel a separate input domain must be given for every compound');
+               end
+               
+               inds{1} = 1:dim(1);
+               kern.comp{1} = kernCreate(X{1}, kernelType{2});
+               kern.comp{1}.index = inds{1};
+               for i = 2:length(kernelType)-1
+                   lastInd = inds{i-1}(end);
+                   inds{i} = lastInd+1:lastInd + dim(i) ;
+                   kern.comp{i} = kernCreate(X{i}, kernelType{i+1});
+                   kern.comp{i}.index = inds{i};
+               end
+           else
+               for i = start:length(kernelType)
+                   kern.comp{i-start+1} = kernCreate(X, kernelType{i});
+                   kern.comp{i-start+1}.index = [];
+               end
+           end
+       else
+       %%%---
+          for i = start:length(kernelType)
+            kern.comp{i-start+1} = kernCreate(X, kernelType{i});
+            kern.comp{i-start+1}.index = [];
+          end
+       end
    case 'exp'
     if start == length(kernelType)
       kern.argument = kernCreate(X, kernelType{start});
