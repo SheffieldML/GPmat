@@ -1,4 +1,4 @@
-function xyz = bvh2xyz(skel, channels)
+function xyz = bvh2xyz(skel, channels, noOffset)
 
 % BVH2XYZ Compute XYZ values given structure and channels.
 % FORMAT
@@ -6,6 +6,7 @@ function xyz = bvh2xyz(skel, channels)
 % an associated set of channels.
 % ARG skel : a skeleton for the bvh file.
 % ARG channels : the channels for the bvh file.
+% ARG noOffset : don't add the offset in.
 % RETURN xyz : the point cloud positions for the skeleton.
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2008
@@ -14,6 +15,9 @@ function xyz = bvh2xyz(skel, channels)
 
 % MOCAP
 
+if nargin< 3
+  noOffset = false;
+end
 for i = 1:length(skel.tree)  
   if ~isempty(skel.tree(i).posInd)
     xpos = channels(skel.tree(i).posInd(1));
@@ -36,14 +40,17 @@ for i = 1:length(skel.tree)
   end
   thisRotation = rotationMatrix(xangle, yangle, zangle, skel.tree(i).order);
   thisPosition = [xpos ypos zpos];
+  if ~noOffset
+      thisPosition = skel.tree(i).offset + thisPosition;
+  end
   if ~skel.tree(i).parent
-    xyzStruct(i).rotation = thisRotation;
-    xyzStruct(i).xyz = skel.tree(i).offset + thisPosition;
+      xyzStruct(i).rotation = thisRotation;
+      xyzStruct(i).xyz = thisPosition;
   else
-    xyzStruct(i).xyz = ...
-        (skel.tree(i).offset + thisPosition)*xyzStruct(skel.tree(i).parent).rotation ...
-        + xyzStruct(skel.tree(i).parent).xyz;
-    xyzStruct(i).rotation = thisRotation*xyzStruct(skel.tree(i).parent).rotation;
+      xyzStruct(i).xyz = ...
+          thisPosition*xyzStruct(skel.tree(i).parent).rotation ...
+          + xyzStruct(skel.tree(i).parent).xyz;
+      xyzStruct(i).rotation = thisRotation*xyzStruct(skel.tree(i).parent).rotation;
     
   end
 end
