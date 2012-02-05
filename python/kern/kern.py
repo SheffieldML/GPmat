@@ -22,6 +22,7 @@ class kern(ndlutil.parameterised):
 	def set_X(self):
 		raise NotImplementedError
 	def cross_args(self,X2):
+		"The arguments to the function when computing the covariance between self.X and X2"
 		raise NotImplementedError
 	def gradients(self):
 		raise NotImplementedError

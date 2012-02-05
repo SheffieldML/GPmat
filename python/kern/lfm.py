@@ -1,4 +1,5 @@
 from kern import kern, crosskern
+
 class lfm(kern):
 	"""The base class for the latent force model kernel"""
 	def __init__(self,t,mass=1.,spring=1.,damper=1., sensitivity=1., initVal=0., rbfalpha=1., rbfgamma=1.):
@@ -27,6 +28,7 @@ class lfm(kern):
 		self.alpha = self.damper/(2.*self.mass);
 		self.omega = np.sqrt(self.spring/self.mass-self.alpha**2);
 		self.gamma = self.alpha + 1j*self.omega;
+		self.gamma_ = self.alpha - 1j*self.omega;
 		self.zeta = self.damper/(2.*np.sqrt(self.mass*self.spring));
 		self.omega_0 = np.sqrt(self.spring/self.mass);
 
