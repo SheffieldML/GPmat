@@ -42,3 +42,6 @@ def gradsigupmat(gamma, sig2, t1, t2):
     lfmGradientSigmaUpsilonMatrix.m in the matlab version
     """
     return(lfmulocal.gradsigupmat(gamma,sig2,t1,t2, np.shape(t1)[0], np.shape(t2)[0]))
+
+def h_single(gamma,sig2,t1,t2):
+	return 	(compupmat(gamma,sig2,t1,t2) + np.exp(-gamma*t1)*compupmat)/(2.*gamma)

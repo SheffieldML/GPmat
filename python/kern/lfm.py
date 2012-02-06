@@ -1,4 +1,5 @@
 from kern import kern, crosskern
+import lfmUpsilon
 
 class lfm(kern):
 	"""The base class for the latent force model kernel"""
@@ -21,7 +22,7 @@ class lfm(kern):
 		return (self.X, X2)
 
 	def get_param(self):
-		return [self.mass, self.spring, self.damper, self.sensitivity, self.rbfgamma
+		return [self.mass, self.spring, self.damper, self.sensitivity, self.rbfgamma]
 
 	def set_param(self, param):
 		self.mass, self.spring, self.damper, self.sensitivity, self.rbfgamma = param
