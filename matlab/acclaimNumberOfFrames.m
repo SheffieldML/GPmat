@@ -18,6 +18,6 @@ fid = fopen(fileName, 'rt');
 % Assumes the number of lines in each frame is fixed.
 a = cell(textscan(fid, '%s'));
 a = a{1};
-nFrames = a{end-91}; % 91 strings from eof to last frame #
+nFrames = str2double(a{end-91}); % 91 strings from eof to last frame #
 
 fclose(fid);
