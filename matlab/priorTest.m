@@ -10,7 +10,9 @@ function prior = priorTest(priorType);
 % priorLogProb, priorGradient
 %
 % COPYRIGHT : Neil D. Lawrence, 2003, 2004
-  
+%
+% MODIFICATIONS : Antti Honkela, 2012
+
 % PRIOR
 
 prior.type = priorType;
@@ -20,7 +22,11 @@ prior = priorParamInit(prior);
 params = priorExtractParam(prior);
 params = randn(size(params))./sqrt(randn(size(params)).^2);
 prior = priorExpandParam(prior, params);
-x = randn(1, 10);
+if isfield(prior, 'isBounded') && prior.isBounded,
+  x = rand(1, 10) * (prior.b - prior.a) + prior.a;
+else
+  x = randn(1, 10);
+end
 epsilon = 1e-6;
 
 if exist([priorType 'PriorGradientParams'])
