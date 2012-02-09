@@ -219,70 +219,32 @@ class kern(ndlutil.parameterised):
 		else:
 			return compound(self.X,[self,other])
 
-class cross_kern(ndlutil.parameterised):
+class cross_kern(kern):
 	def __init__(self,kern1, kern2):
-		ndlutil.parameterised.__init__(self)
+		kern.__init__(self)
 		self.kern1, self.kern2 = kern1, kern2
-		self.Nparam = 0
-	def set_param(self):
-		raise NotImplementedError
-	def get_param(self):
-		raise NotImplementedError
-	def get_param_names(self):
-		raise NotImplementedError
-	def set_X(self):
+		assert kern1.masked
+		assert kern2.masked
+		self.masked=True
+		#TODO: deal ith scaling?
+	def set_X(self,X1, X2):
+		"""
+		Any precomputing on X can be done here by children of the class
+		"""
 		raise NotImplementedError
 	def cross_args(self,X2):
 		"The arguments to the function when computing the covariance between self.X and X2"
-		raise NotImplementedError
-	def gradients(self):
-		raise NotImplementedError
+		raise NotImplementedError # This needs some thought
 	def expand_X(self,X):
-		pass #TODO?
+		"""
+		Take the matrix X and the meshes from the crossed kernels and precompute the with set_X
+		"""
+		# TODO Take the maske from the linked kernels.
+		self.set_X(X[self.kern1.??],X[self.kern2.??]) 
 		
 	def set_mask(self,mask):
-		raise AttributeError, "cross kernels cannot be masked"""
+		raise AttributeError, "cross kernels cannot be masked"
 	
-	def compute(self,target=None):
-		"""
-		Arguments
-		---------
-		target : a np array to add the computation of this kernel to, for in-place computation. If None, a new array is created
-
-		Notes
-		-----
-		We take the masking from both kernels to work out where to compute the function.
-		"""
-		if target is None:
-			target = np.zeros(self.shape)
-		if self.masked:
-			target[self.mask_grid] += self.function(*self.args)
-		else:
-			target += self.function(*self.args)
-		return target
-
-	def cross_compute(self,X2,target=None):
-		"""Compute the covariance between self.X and the passed values X2. Mask aware."""
-		pass #TODO
-	def compute_new(self,Xnew):
-		pass #TODO
-		
-	def diag_compute(self):
-		"""Compute just the diagonal terms of the covariance"""
-		raise NotImplementedError, "TODO"
-
-	def extract_gradients(self,targets=None):
-		pass #TODO
-
-	def extract_gradients_X(self,target=None):
-		pass #TODO
-
-	def __add__(self,other):
-		if isinstance(other,compound):
-			other.__add__(self)
-		else:
-			return compound(self.X,[self,other])
-
 
 class compound(kern):
 	def __init__(self,X,kerns=[]):

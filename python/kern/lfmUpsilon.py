@@ -43,5 +43,11 @@ def gradsigupmat(gamma, sig2, t1, t2):
     """
     return(lfmulocal.gradsigupmat(gamma,sig2,t1,t2, np.shape(t1)[0], np.shape(t2)[0]))
 
-def h_single(gamma,sig2,t1,t2):
-	return 	(compupmat(gamma,sig2,t1,t2) + np.exp(-gamma*t1)*compupmat)/(2.*gamma)
+def h(gamma1, gamma2, sig2, t1, t2):
+	"""
+	Compute the function h
+	"""
+	return 	(compupmat(gamma1,sig2,t1,t2) + np.exp(-gamma2*t1)*compupmat(gamma,sig1,t1,0.*t2))/(gamma1 + gamma2)
+
+
+
