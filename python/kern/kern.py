@@ -218,34 +218,6 @@ class kern(ndlutil.parameterised):
 			other.__add__(self)
 		else:
 			return compound(self.X,[self,other])
-
-class cross_kern(kern):
-	def __init__(self,kern1, kern2):
-		kern.__init__(self)
-		self.kern1, self.kern2 = kern1, kern2
-		assert kern1.masked
-		assert kern2.masked
-		self.masked=True
-		#TODO: deal ith scaling?
-	def set_X(self,X1, X2):
-		"""
-		Any precomputing on X can be done here by children of the class
-		"""
-		raise NotImplementedError
-	def cross_args(self,X2):
-		"The arguments to the function when computing the covariance between self.X and X2"
-		raise NotImplementedError # This needs some thought
-	def expand_X(self,X):
-		"""
-		Take the matrix X and the meshes from the crossed kernels and precompute the with set_X
-		"""
-		# TODO Take the maske from the linked kernels.
-		self.set_X(X[self.kern1.??],X[self.kern2.??]) 
-		
-	def set_mask(self,mask):
-		raise AttributeError, "cross kernels cannot be masked"
-	
-
 class compound(kern):
 	def __init__(self,X,kerns=[]):
 		kern.__init__(self,X)
@@ -306,6 +278,93 @@ class compound(kern):
 
 		else:
 			raise AttributeError, "%s is not a proper kernel"%str(other)
+
+class cross_kern(kern):
+	def __init__(self,kern1, kern2):
+		assert (kern1.masked and kern2.masked), "mask the crossed kernels before instantiating the cross kern object"
+		kern.__init__(self, kern1.Xoriginal)
+		self.kern1, self.kern2 = kern1, kern2
+		self.masked=True
+		self.maskgrid = (self.kern
+		#TODO: deal with scaling?
+	def set_X(self,X1, X2):
+		"""
+		Any precomputation on X can be done here by children of the class
+		"""
+		raise NotImplementedError
+	def cross_args(self,X2):
+		"The arguments to the function when computing the covariance between self.X and X2"
+		raise NotImplementedError # This needs some thought
+	def expand_X(self,X):
+		"""
+		Take the matrix X and the meshes from the crossed kernels and precompute the with set_X
+		"""
+		# Take the masks from the linked kernels.
+		self.set_X(X[self.kern1.mask,],X[self.kern2.mask]) 
+		
+	def set_mask(self):
+		"""
+		Take the mask from the crossed kernels
+		"""
+		self.maskgrid = (self.kern1.maskgrid[0],self.kern2.maskgrid[1])
+
+	def compute(self):
+		if target is None:
+			target = np.zeros(self.shape)
+		f = self.function(*self.args)
+		target[self.mask_grid] += f
+		target[self.mask_grid[::-1]] += f # no transopse: reversing the mesh does this.
+		return target
+
+
+class structured(compound):
+		def __init__(self,X,kerns,conn, xkerns='all'):
+			"""
+			A kernel with structured covariance 
+			This is more general than hierarhcical, below, but it _can_ do hierarhcical structures as well as multi-ouptut structures
+
+			Arguments
+			---------
+			X - (array, N x D), the continuos domain of the kernel 
+			kerns - (list of kern, len Dout) the kernels, each on X
+			conn - (N X Dout binary array) the connectivity of the kernels. 
+			xkerns - (Dout x Dout binary array), or 'None', or 'all':  which cross kernels to construct
+			
+			"""
+
+			#make sure things are the right size
+			self.Dout = len(kerns)
+			assert connections.shape[1] == self.Dout
+			assert xkerns in ['all', None] or xkerns.shape = (self.Dout,self.Dout)
+
+			self.connectivity = conn
+			self.X = X
+
+			#initialize and mask the kernels
+			compound.__init__(self,X,kerns)
+			for i,k in enumerate(self.kerns):
+				assert k.shape==kerns[0].shape
+				k.set_mask(np.nonzero(connections[:,i])[0])
+
+			#sort out the cross kernels
+			if xkerns == 'all':
+				xkerns = np.ones((self.Dout,self.Dout))
+			elif xkerns is None:
+				xkerns = np.zeros((self.Dout, self.Dout))
+			assert np.all(xkerns==xkerns.T) # make sure xkern connectivity is symmetrical
+			for i,j in itertoos.combinations(range(self.Dout,2)):
+				if xkerns[i,j]:
+					self.kerns.append(find_cross_kerns(self.kerns[i],self.kerns[j]))
+
+		def cross_compute(self,X2,conn2):
+			raise NotImplementedError, "TODO"
+
+		def compute_new(self,Xnew, conn):
+			raise NotImplementedError, "TODO"
+
+		def __add__(self,foo):
+			raise AttributeError, "Adding kernels to a structured kern is not currently supported"
+			
 
 class hierarchical(compound):
 	def __init__(self,X,connections,kerns):
