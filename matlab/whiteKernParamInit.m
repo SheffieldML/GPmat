@@ -24,6 +24,8 @@ function kern = whiteKernParamInit(kern)
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 %
 % COPYRIGHT : Jaakko Peltonen, 2011
+%
+% COPYRIGHT : Antti Honkela, 2012
 
 % KERN
 
@@ -41,6 +43,11 @@ if (isfield(kern,'options')) && ...
   
   kern.transforms.index = 1;
   kern.transforms.type = 'sigmoidab'; %optimiDefaultConstraint('positive');
+  kern.transforms.transformsettings = [0 1e6];
+elseif (isfield(kern,'options')) && ...
+   (isfield(kern.options,'boundedParam')) && kern.options.boundedParam,
+  kern.transforms.index = 1;
+  kern.transforms.type = optimiDefaultConstraint('bounded');
   kern.transforms.transformsettings = [0 1e6];
 else
   kern.transforms.index = 1;

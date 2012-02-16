@@ -15,6 +15,8 @@ function [paramtransformsettings, names] = cmpndKernExtractParamTransformSetting
 % SEEALSO cmpndKernParamInit, cmpndKernExpandParam, kernExtractParam, scg, conjgrad
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
+%
+% COPYRIGHT : Antti Honkela, 2012
 
 % KERN
 
@@ -38,7 +40,7 @@ for i = 1:length(kern.comp)
     instNum = sum(strcmp(kern.comp{i}.type, storedTypes)) + 1;
     for j = startVal:endVal
       namesTemp{1, j} = [kern.comp{i}.type ' ' num2str(instNum) ' ' ...
-                         namesTemp{1, j}];
+                         tempnames{j - startVal + 1}];
     end;
     storedTypes{end+1} = kern.comp{i}.type;
   end;

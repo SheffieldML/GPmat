@@ -26,16 +26,29 @@ function [paramtransformsettings, names] = kernExtractParamTransformSettings(ker
 % COPYRIGHT : Neil D. Lawrence, 2003, 2004, 2005, 2006
 %
 % COPYRIGHT : Jaakko Peltonen, 2011.
+%
+% COPYRIGHT : Antti Honkela, 2012
 
 % KERN
 
-fhandle = str2func([kern.type 'KernExtractParamTransformSettings']);
-names = cell(1, kern.nParams);
+fname = [kern.type 'KernExtractParamTransformSettings'];
 
-if nargout > 1
-  [paramtransformsettings, names] = fhandle(kern);
-else
-  paramtransformsettings = fhandle(kern);
+% Check if a specific method exists
+if exist(fname),
+  fhandle = str2func(fname);
+  names = cell(1, kern.nParams);
+
+  if nargout > 1
+    [paramtransformsettings, names] = fhandle(kern);
+  else
+    paramtransformsettings = fhandle(kern);
+  end
+else % No, so let's improvise
+  if nargout > 1,
+    phandle = str2func([kern.type 'KernExtractParam']);
+    [~, names] = phandle(kern);
+  end
+
+  [paramtransformsettings{1:length(kern.transforms)}] = ...
+      deal(kern.transforms.transformsettings);
 end
-
-
