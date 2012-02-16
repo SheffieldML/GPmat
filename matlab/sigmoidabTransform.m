@@ -30,12 +30,14 @@ function y = sigmoidabTransform(x, transform, varargin)
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006, 2007
 %
 % COPYRIGHT : Jaakko Peltonen, 2011
+%
+% COPYRIGHT : Antti Honkela, 2012
 
 % OPTIMI
 
 
 % Get the transformation settings from the varargin structure
-if length(varargin)>0,
+if ~isempty(varargin),
   transformsettings=varargin{1};
 else
   transformsettings=[];
@@ -77,31 +79,27 @@ else
     %B
     %fprintf(1,'transforming x %f, A %f, B %f\n',x,A,B);
     
-    index = find(x<-limVal);
-    y(index) = A+(B-A)*eps;
-    x(index) = NaN;
+    I1 = x < -limVal;
+    y(I1) = A+(B-A)*eps;
+
+    I2 = x > limVal;
+    y(I2) = A+(B-A)*(1-eps);
     
-    index = find(x<limVal);
-    y(index) = A+(B-A)*sigmoid(x(index));
-    x(index) = NaN;
-    
-    index = find(~isnan(x));
-    y(index) = A+(B-A)*(1-eps);
-    %y
+    I3 = ~I1 & ~I2;
+    y(I3) = A+(B-A)*sigmoid(x(I3));
     
    case 'xtoa'
     %  [x A B]
     %fprintf(1,'inverse-transforming x %f, A %f, B %f\n',x,A,B);
-    index=find(x<=minval_sigmoid);
-    y(index)=-limVal;
-    x(index)=NaN;
+    I1 = x<=minval_sigmoid;
+    y(I1) = -limVal;
     
-    index=find(x<maxval_sigmoid);
-    y(index) = invSigmoid((x(index)-A)/(B-A));
-    x(index)=NaN;
+    I2 = x>=maxval_sigmoid;
+    y(I2) = limVal;
+
+    I3 = ~I1 & ~I2;
+    y(I3) = invSigmoid((x(I3)-A)/(B-A));
     
-    index=find(x>=maxval_sigmoid);
-    y(index)=limVal;
     
    case 'gradfact'
     %fprintf(1,'gradfact-transforming x %f, A %f, B %f\n',x,A,B);

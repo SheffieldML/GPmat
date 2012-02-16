@@ -24,4 +24,6 @@ switch constraint
   str = 'exp';
  case 'zeroone'
   str = 'sigmoid';
+ case 'bounded'
+  str = 'sigmoidab';
 end
