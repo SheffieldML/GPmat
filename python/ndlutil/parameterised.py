@@ -254,6 +254,8 @@ class parameterised:
 			constraints[i] = '(+ve)'
 		for i in self.constrained_negative_indices:
 			constraints[i] = '(-ve)'
+		for i in self.constrained_fixed_indices:
+			constraints[i] = 'Fixed'
 		for i,u,l in zip(self.constrained_bounded_indices, self.constrained_bounded_uppers, self.constrained_bounded_lowers):
 			constraints[i] = '('+str(l)+', '+str(u)+')'
 		#sort out the ties
