@@ -63,11 +63,11 @@ class parameterised:
 
 	def all_constrained_indices(self):
 		"""Return a np array of all the constrained indices"""
-		if len(self.constrained_bounded_indices):
-			return np.hstack([self.constrained_positive_indices, self.constrained_negative_indices, np.hstack(self.constrained_bounded_indices)])
+		ret =  [np.hstack(i) for i in [self.constrained_bounded_indices, self.constrained_positive_indices, self.constrained_negative_indices, self.constrained_fixed_indices] if len(i)]
+		if len(ret):
+			return np.hstack(ret)
 		else:
-			return np.hstack([self.constrained_positive_indices, self.constrained_negative_indices])
-
+			return []
 	def grep_param_names(self, expr):
 		"""
 		Arguments
@@ -184,6 +184,7 @@ class parameterised:
 		assert not np.any(matches[:,None]==self.all_constrained_indices()), "Some indices are already constrained"
 		self.constrained_fixed_indices.append(matches)
 		self.constrained_fixed_values.append(value)
+		self.expand_param(self.extract_param())
 
 
 	def extract_param(self):
