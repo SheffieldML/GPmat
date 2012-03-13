@@ -121,6 +121,10 @@ class model(parameterised):
 		self.expand_param(params[i])
 
 	def optimize(self,**kwargs):
+		"""
+		Optimize the model using self.log_likelihood and self.log_likelihood_gradient, as well as self.priors.
+		Starts from the current condition and runs scipy.optimize.fmin_tnc with the passed kwargs. 
+		"""
 		def f_fp(x):
 			try:
 				self.expand_param(x)
