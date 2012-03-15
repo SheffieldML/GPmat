@@ -245,9 +245,11 @@ class parameterised:
 		"""
 		Return a string describing the parameter names and their ties and constraints
 		"""
-		header = ['Name','Value','Constraints','Ties']
 		names = self.get_param_names()
 		N = len(names)
+		if not N:
+			return "This object has no free parameters."
+		header = ['Name','Value','Constraints','Ties']
 		values = map(str,self.get_param())
 		#sort out the constraints
 		constraints = ['']*len(names)
