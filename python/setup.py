@@ -16,7 +16,7 @@ def config():
     return config
 
 if __name__=='__main__':
-	setup(version='0.0.3',**config().todict())
+	setup(version='0.0.4',**config().todict())
 
 
 #setup(

@@ -285,7 +285,7 @@ class cross_kern(kern):
 		kern.__init__(self, kern1.Xoriginal)
 		self.kern1, self.kern2 = kern1, kern2
 		self.masked=True
-		self.maskgrid = (self.kern
+		#self.maskgrid = (self.kern # TODO!!
 		#TODO: deal with scaling?
 	def set_X(self,X1, X2):
 		"""
@@ -335,7 +335,7 @@ class structured(compound):
 			#make sure things are the right size
 			self.Dout = len(kerns)
 			assert connections.shape[1] == self.Dout
-			assert xkerns in ['all', None] or xkerns.shape = (self.Dout,self.Dout)
+			assert xkerns in ['all', None] or xkerns.shape == (self.Dout,self.Dout)
 
 			self.connectivity = conn
 			self.X = X

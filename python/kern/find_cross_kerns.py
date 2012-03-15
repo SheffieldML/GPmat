@@ -3,7 +3,7 @@ from lfm import *
 from rbf import *
 
 table = {
-	lfm: {lfm:lfmXlfm, rbf:lfmXrbf}
+	lfm: {lfm:lfmXlfm, rbf:lfmXrbf},
 	rbf: {lfm:rbfXlfm}
 	}
 #TODO: more kernels to follow. Sim, in particular

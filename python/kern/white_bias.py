@@ -40,3 +40,18 @@ class bias(constant):
 		return self.alpha*np.ones(shape)
 	def gradients(self,shape):
 		return np.ones(shape)
+
+class fixed_effect(constant):
+	def __init__(self,X,K):
+		constant.__init__(self,X)
+		self.K = K
+	def cross_compute(self,X2,target=None):
+		return np.zeros((self.shape[0],X2.shape[0]))
+	def function(self,shape):
+		return self.alpha*self.K
+	def gradients(self,shape):
+		return [self.K]
+	def compute_new(self,Xnew):
+		return np.zeros((Xnew.shape[0],Xnew.shape[0]))
+		
+
