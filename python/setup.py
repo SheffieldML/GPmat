@@ -16,24 +16,16 @@ def config():
     return config
 
 if __name__=='__main__':
-	setup(version='0.0.4',**config().todict())
-
-
-#setup(
-    #name = "kern",
-    #version = "0.0.3",
-    #author = "James Hensman",
-    #author_email = "james.hensman@gmail.com",
-    #description = ("A kernel toolbox"),
-    #license = "BSD",
-    #keywords = "machine-learning kernels gaussian-processes",
-    #url = "http://TODO",
-    #packages=['kern'],
-    #long_description=read('README'),
-    #classifiers=[
-        #"Development Status :: 1 - Alpha",
-        #"Topic :: Machine Learning",
-        #"License :: OSI Approved :: BSD License",
-    #],
-    #configuration=config_f2py
-#)
+	setup(version = "0.0.5",
+	    author = "James Hensman",
+	    author_email = "james.hensman@gmail.com",
+	    description = ("A kernel toolbox"),
+	    license = "BSD",
+	    keywords = "machine-learning kernels gaussian-processes",
+	    url = "http://TODO",
+	    long_description=read('README'),
+	    classifiers=[
+		"Development Status :: 1 - Alpha",
+		"Topic :: Machine Learning",
+		"License :: OSI Approved :: BSD License"],
+		**config().todict())

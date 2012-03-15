@@ -68,6 +68,7 @@ class rbf(stationary):
 	"""
 	def __init__(self,X,alpha=1., gamma=1.):
 		stationary.__init__(self,X,alpha,gamma)
+		self.name='rbf'
 	def function(self,r):
 		return self.alpha*np.exp(-self.gamma*np.square(r))
 	def gradients(self,r):
@@ -87,6 +88,7 @@ class Matern32(stationary):
 	"""
 	def __init__(self,X,alpha=1., gamma=1.):
 		stationary.__init__(self,X,alpha,gamma)
+		self.name='Mat32'
 	def function(self,r):
 		return (1. + self.gamma*r)*np.exp(-self.gamma*r)
 	def gradients(self,r):
@@ -106,6 +108,7 @@ class Ornstein_Uhlenbeck(stationary):
 	"""
 	def __init__(self,X,alpha=1., gamma=1.):
 		stationary.__init__(self,X,alpha,gamma)
+		self.name='OU'
 	def function(self,r):
 		return self.alpha*np.exp(-self.gamma*r)
 	def gradients(self):

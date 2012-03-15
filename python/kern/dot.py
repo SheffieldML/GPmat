@@ -71,6 +71,7 @@ class linear(dot):
 	"""
 	def __init__(self,X,alpha=1.):
 		dot.__init__(self,X,alpha)
+		self.name='linear'
 	def function(self,xTx,x1x1,x2x2):
 		return self.alpha*xTx
 	def gradients(self,xTx,x1x1,x2x2):
@@ -83,6 +84,7 @@ class polynomial(dot):
 	def __init__(self,X,alpha=1.,order=3.):
 		dot.__init__(self,X,alpha)
 		self.order=order
+		self.name='poly'
 	def function(self,xTx,x1x1,x2x2):
 		return self.alpha*(1.+xTx)**self.order
 	def gradients(self,xTx,x1x1,x2x2):
@@ -103,6 +105,7 @@ class mlp(dot):
 		dot.__init__(self,X,alpha)
 		self.gamma=gamma
 		self.Nparam = 2
+		self.name='mlp'
 	def function(self,xTx,x1x1,x2x2):
 		return self.alpha*2./np.pi*np.arcsin(self.gamma*xTx/np.sqrt((1.+self.gamma*x1x1)*(1.+self.gamma*x2x2)))
 	def gradients(self,xTx,x1x1,x2x2):

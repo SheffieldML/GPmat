@@ -13,6 +13,7 @@ class lfm(kern):
 		self.initVal = initVal
 		self.rbfalpha = rbfalpha
 		self.rbfgamma = rbfgamma
+		self.name='lfm'
 
 	def setX(self,X):
 		self.args = (X,X)

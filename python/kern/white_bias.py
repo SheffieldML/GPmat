@@ -25,6 +25,7 @@ class constant(kern):
 class white(constant):
 	def __init__(self,X,alpha=1.):
 		constant.__init__(self,X,alpha)
+		self.name='white'
 	def cross_compute(self,X2,target=None):
 		return np.zeros((self.shape[0],X2.shape[0]))
 	def function(self,shape):
@@ -36,6 +37,7 @@ class white(constant):
 class bias(constant):
 	def __init__(self,X,alpha=1.):
 		constant.__init__(self,alpha)
+		self.name='bias'
 	def function(self,shape):
 		return self.alpha*np.ones(shape)
 	def gradients(self,shape):
@@ -45,6 +47,7 @@ class fixed_effect(constant):
 	def __init__(self,X,K):
 		constant.__init__(self,X)
 		self.K = K
+		self.name='fixed'
 	def cross_compute(self,X2,target=None):
 		return np.zeros((self.shape[0],X2.shape[0]))
 	def function(self,shape):

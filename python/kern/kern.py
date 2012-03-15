@@ -13,6 +13,7 @@ class kern(ndlutil.parameterised):
 		self.Nparam = 0
 		self.masked=False
 		self.scaled=False
+		self.name='unnamed'
 	def set_param(self):
 		raise NotImplementedError
 	def get_param(self):
@@ -232,11 +233,11 @@ class compound(kern):
 		self.args = tuple()#needed so that we can utilise extract_gradients
 
 	def set_param(self,x):
-		[k.set_param(x[i]) for k,i in zip(self.kerns, self.param_allocation)]
+		[k.expand_param(x[i]) for k,i in zip(self.kerns, self.param_allocation)]
 	def get_param(self):
-		return np.hstack([k.get_param() for k in self.kerns])
+		return np.hstack([k.extract_param() for k in self.kerns])
 	def get_param_names(self):
-		return sum([['cmpnd_%i_%s'%(i,n) for n in k.get_param_names()] for i,k in enumerate(self.kerns)],[])
+		return sum([['cmpnd%i_%s_%s'%(i,k.name,n) for n in k.extract_param_names()] for i,k in enumerate(self.kerns)],[])
 
 	def set_X(self,X):
 		[k.expand_X(X) for k in self.kerns]
@@ -270,14 +271,15 @@ class compound(kern):
 			self.kerns.extend(other.kerns)
 			self.param_allocation.extend([i+self.Nparam for i in other.param_allocation])
 			self.Nparam += other.Nparam
+			print 'Warning! parameter constraints may be lost! (TODO)'# TODO
 		elif isinstance(other,kern):
 			self.kerns.append(other)
 			assert self.shape==other.shape
-			self.param_allocation.append(np.arange(self.Nparam,self.Nparam+other.Nparam))
-			self.Nparam += other.Nparam
-
+			self.param_allocation.append(np.arange(self.Nparam,self.Nparam+other.extract_param().size))
+			self.Nparam += other.extract_param().size
 		else:
 			raise AttributeError, "%s is not a proper kernel"%str(other)
+		return self
 
 class cross_kern(kern):
 	def __init__(self,kern1, kern2):
@@ -285,6 +287,7 @@ class cross_kern(kern):
 		kern.__init__(self, kern1.Xoriginal)
 		self.kern1, self.kern2 = kern1, kern2
 		self.masked=True
+		self.name = self.kern1.name +'X' + self.kern2.name
 		#self.maskgrid = (self.kern # TODO!!
 		#TODO: deal with scaling?
 	def set_X(self,X1, X2):
