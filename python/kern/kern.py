@@ -10,7 +10,6 @@ class kern(ndlutil.parameterised):
 		ndlutil.parameterised.__init__(self)
 		self.shape = (X.shape[0],X.shape[0])
 		self.dimensions = X.shape[1]
-		self.Nparam = 0
 		self.masked=False
 		self.scaled=False
 		self.name='unnamed'
@@ -128,7 +127,7 @@ class kern(ndlutil.parameterised):
 		gradients = self.gradients(*self.args)
 
 		#work out which gradient go where, with overlaps due to tying and nans due to fixing
-		target_index = np.arange(self.Nparam)
+		target_index = np.arange(x.size)
 		for tie in self.tied_indices:
 			target_index[tie[1:]] = tie[0]
 		some_fixed=False
@@ -139,7 +138,7 @@ class kern(ndlutil.parameterised):
 		target_index = np.argmax(target_index[:,None]==np.unique(target_index),1) #NB: the fixed indices are now just the maximum value
 
 		#get the gradient correction factors which some from the constraints TODO: arbitrary constraints, not just exp
-		factors = np.ones(self.Nparam)
+		factors = np.ones(x.size)
 		[np.put(factors,i,x[i]) for i in self.constrained_positive_indices]
 		[np.put(factors,i,x[i]) for i in self.constrained_negative_indices]
 		[[np.put(factors,i,(x[i]-l)*(h-x[i])/(h-l)) for i in inds] for inds,h,l in zip(self.constrained_bounded_indices,self.constrained_bounded_uppers, self.constrained_bounded_lowers)]
@@ -169,8 +168,9 @@ class kern(ndlutil.parameterised):
 		-------
 		A list of np arrays.
 		"""
+		x = self.get_param()
 		if targets is None:
-			targets = [np.zeros(self.shape) for i in range(self.Nparam)]
+			targets = [np.zeros(self.shape) for i in range(x.size)]
 		if self.masked:
 			#[np.add(t[self.mask_grid],g,t[self.mask_grid]) for t,g in zip(targets,self.gradients(*self.args))]
 			for t,g in zip(targets,self.gradients(*self.args)):
@@ -227,7 +227,6 @@ class compound(kern):
 
 		self.kerns = []
 		self.shape = kerns[0].shape
-		self.Nparam = 0
 		self.param_allocation = []
 		[self.__add__(k) for k in kerns]
 		self.args = tuple()#needed so that we can utilise extract_gradients
@@ -269,14 +268,14 @@ class compound(kern):
 		if isinstance(other,compound):
 			assert self.shape==other.shape
 			self.kerns.extend(other.kerns)
-			self.param_allocation.extend([i+self.Nparam for i in other.param_allocation])
-			self.Nparam += other.Nparam
+			Nparam = self.get_param().size
+			self.param_allocation.extend([i+Nparam for i in other.param_allocation])
 			print 'Warning! parameter constraints may be lost! (TODO)'# TODO
 		elif isinstance(other,kern):
 			self.kerns.append(other)
 			assert self.shape==other.shape
-			self.param_allocation.append(np.arange(self.Nparam,self.Nparam+other.extract_param().size))
-			self.Nparam += other.extract_param().size
+			Nparam = self.get_param().size
+			self.param_allocation.append(np.arange(Nparam,Nparam+other.extract_param().size))
 		else:
 			raise AttributeError, "%s is not a proper kernel"%str(other)
 		return self

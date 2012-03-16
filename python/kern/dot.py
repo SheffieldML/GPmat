@@ -15,7 +15,6 @@ class dot(kern):
 	def __init__(self,X,alpha=1.):
 		kern.__init__(self,X)
 		self.alpha = alpha #variance
-		self.Nparam = 1
 		self.expand_X(X)
 
 	def set_X(self,X):
@@ -104,7 +103,6 @@ class mlp(dot):
 	def __init__(self,X,alpha=1.,gamma=3.):
 		dot.__init__(self,X,alpha)
 		self.gamma=gamma
-		self.Nparam = 2
 		self.name='mlp'
 	def function(self,xTx,x1x1,x2x2):
 		return self.alpha*2./np.pi*np.arcsin(self.gamma*xTx/np.sqrt((1.+self.gamma*x1x1)*(1.+self.gamma*x2x2)))

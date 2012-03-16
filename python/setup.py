@@ -16,7 +16,7 @@ def config():
     return config
 
 if __name__=='__main__':
-	setup(version = "0.0.5",
+	setup(version = "0.0.6",
 	    author = "James Hensman",
 	    author_email = "james.hensman@gmail.com",
 	    description = ("A kernel toolbox"),

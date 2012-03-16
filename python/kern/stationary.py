@@ -20,7 +20,6 @@ class stationary(kern):
 		kern.__init__(self,X)
 		self.alpha = alpha #variance
 		self.gamma = gamma #parameter of function, to be defined by inherreted class ( usually a lengthscale)
-		self.Nparam = 2
 		self.expand_X(X)
 
 	def set_X(self,X):

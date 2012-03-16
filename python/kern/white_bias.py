@@ -8,7 +8,6 @@ class constant(kern):
 		kern.__init__(self,X)
 		self.alpha = np.array([alpha])
 		self.expand_X(X)
-		self.Nparam = 1
 	def set_X(self,X):
 		self.args = ((X.shape[0],X.shape[0]),)
 		self.X = X
