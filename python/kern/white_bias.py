@@ -35,8 +35,10 @@ class white(constant):
 
 class bias(constant):
 	def __init__(self,X,alpha=1.):
-		constant.__init__(self,alpha)
+		constant.__init__(self,X,alpha)
 		self.name='bias'
+	def cross_args(self,X2):
+		return ((self.shape[0],X2.shape[0]),)
 	def function(self,shape):
 		return self.alpha*np.ones(shape)
 	def gradients(self,shape):
