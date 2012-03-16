@@ -234,7 +234,7 @@ class compound(kern):
 	def set_param(self,x):
 		[k.expand_param(x[i]) for k,i in zip(self.kerns, self.param_allocation)]
 	def get_param(self):
-		return np.hstack([k.extract_param() for k in self.kerns])
+		return np.hstack([k.extract_param() for k in self.kerns]+[np.zeros(0)])#this does a safe hstack
 	def get_param_names(self):
 		return sum([['cmpnd%i_%s_%s'%(i,k.name,n) for n in k.extract_param_names()] for i,k in enumerate(self.kerns)],[])
 
@@ -272,9 +272,9 @@ class compound(kern):
 			self.param_allocation.extend([i+Nparam for i in other.param_allocation])
 			print 'Warning! parameter constraints may be lost! (TODO)'# TODO
 		elif isinstance(other,kern):
+			Nparam = self.get_param().size
 			self.kerns.append(other)
 			assert self.shape==other.shape
-			Nparam = self.get_param().size
 			self.param_allocation.append(np.arange(Nparam,Nparam+other.extract_param().size))
 		else:
 			raise AttributeError, "%s is not a proper kernel"%str(other)
