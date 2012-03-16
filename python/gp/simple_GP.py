@@ -19,7 +19,6 @@ class GP(model):
 		else:
 			self.kern = kernel
 		self.Youter = np.dot(Y,Y.T)
-		self.Nparam = self.kern.Nparam
 	def set_param(self,p):
 		self.kern.expand_param(p)
 		self.K = self.kern.compute()

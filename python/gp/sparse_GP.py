@@ -15,6 +15,7 @@ class vsGP(model):
 		Y : matrix of observed points (N x 1)
 		Z : matrix of inducing points (M x D)
 		tau : noise precision
+		foo bar
 		"""
 
 		model.__init__(self)
@@ -22,7 +23,6 @@ class vsGP(model):
 		self.kernZ = kern.rbf(Z)
 		self.Y = Y
 		self.Youter = np.dot(Y,Y.T)
-		self.Nparam = self.kernZ.Nparam + 1
 
 	def set_param(self,p):
 		self.tau = p[0]
@@ -41,7 +41,7 @@ class vsGP(model):
 	def get_param_names(self):
 		return ['noise_precision']+self.kern.extract_param_names()
 	def log_likelihood(self):
-		return -self.hld -0.5*np.sum(self.Ki*self.Youter)
+		return -self.hld -0.5*np.sum(self.Ki*self.Youter) + trace_term??
 	def log_likelihood_gradients(self):
 		alpha = np.dot(self.Ki,self.Y.flatten())
 		dL_dK = 0.5*(np.outer(alpha,alpha)-self.Ki)
