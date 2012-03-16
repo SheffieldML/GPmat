@@ -38,7 +38,7 @@ class GP(model):
 		Kx = self.kern.cross_compute(X)
 		Kxx = self.kern.compute_new(X)
 		mu = np.dot(np.dot(Kx.T,self.Ki),self.Y)
-		var = Kxx - np.dot(np.dot(Kx.T,self.Ki),Kx)
+		var = Kxx - np.dot(np.dot(Kx.T,self.Ki),Kx) 
 		return mu,var
 	def plot(self):
 		if self.X.shape[1]==1:
