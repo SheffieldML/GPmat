@@ -5,6 +5,8 @@ import kern
 from ndlutil import model
 from ndlutil.utilities import pdinv, gpplot
 
+
+
 class vsGP(model):
 	def __init__(self,X,Y,M=10, tau=50.):
 		model.__init__(self)
@@ -15,12 +17,13 @@ class vsGP(model):
 		self.X = X
 		self.N, self.D = self.X.shape
 		self.M = M
-		self.Z = self.X[np.random.permutation(self.N)[:self.M]]
+		self.Z = self.X[np.random.permutation(self.N)[:self.M]].copy()
 		self.Y = Y
 		self.tau = tau
 		self.kernN = kern.rbf(self.X)
 		self.kernM = kern.rbf(self.Z)
 		self.Youter = np.dot(Y,Y.T)
+		self.jitter = 1e-6
 
 	def set_param(self,p):
 		self.tau = p[0]
@@ -28,29 +31,33 @@ class vsGP(model):
 		self.kernM.expand_param(p[1:])
 		self.Knn_diag = np.diag(self.kernN.compute()) # TODO: make the kern toolbox compute diags
 		self.Kmm = self.kernM.compute()
-		self.Kmmi, self.Kmm_hld = pdinv(self.Kmm)
+		self.Kmmi, self.Kmm_hld = pdinv(self.Kmm+ np.eye(self.M)*self.jitter)
 		self.Knm = self.kernN.cross_compute(self.Z)
 		self.KmnKnm = np.dot(self.Knm.T, self.Knm)
 		self.KnmKmmiKmn = np.dot(self.Knm,np.dot(self.Kmmi, self.Knm.T))
 		self.Woodbury_inv, self.Woodbury_hld = pdinv(self.tau*self.KmnKnm + self.Kmm)
-		self.Qi = np.dot(self.Knm, np.dot(self.Woodbury_inv,self.Knm.T))
-		self.hld = -0.5*self.N*np.log(self.tau) +self.Kmm_hld + self.Woodbury_hld
+		self.Qi = -np.dot(self.Knm, np.dot(self.Woodbury_inv,self.Knm.T)) * self.tau**2 + self.tau*np.eye(self.N) # TOCHECK
+		self.hld = -0.5*self.N*np.log(self.tau) -self.Kmm_hld + self.Woodbury_hld
+		print  -0.5*self.N*np.log(self.tau), -self.Kmm_hld , self.Woodbury_hld
 
 	def get_param(self):
 		return np.hstack([self.tau,self.kernM.extract_param()])
 	def get_param_names(self):
 		return ['tau']+self.kernM.extract_param_names()
 	def log_likelihood(self):
-		return -0.5*self.Y.size*np.log(2.*np.pi) -self.hld -0.5*np.sum(self.Qi*self.Youter) -0.5*self.tau*(self.Knn_diag.sum() + np.trace(self.KnmKmmiKmn))
+		return -0.5*self.Y.size*np.log(2.*np.pi) -self.hld -0.5*np.sum(self.Qi*self.Youter) -0.5*self.tau*(self.Knn_diag.sum() - np.trace(self.KnmKmmiKmn))
 	def log_likelihood_gradients(self):
+	
 		pass #return np.array([np.sum(dK_dpi*dL_dK) for dK_dpi in dK_dp])
 	def predict(self,X):
-		u_mu = self.tau*np.dot(self.Kmm,np.dot(self.Woodbury_inv,np.dot(self.Knm.T,self.Y))) # mean of the latent variables f_m (or u)
+		#u_mu = self.tau*np.dot(self.Kmm,np.dot(self.Woodbury_inv,np.dot(self.Knm.T,self.Y))) # mean of the latent variables f_m (or u)
 		Kx = self.kernM.cross_compute(X)
 		Kxx = self.kernM.compute_new(X)
-		mu = np.dot(np.dot(Kx.T,self.Kmmi),u_mu)
+		mu = self.tau*np.dot(np.dot(np.dot(Kx.T,self.Woodbury_inv),self.Knm.T),self.Y)
 		var = Kxx - np.dot(np.dot(Kx.T,self.Kmmi-self.Woodbury_inv),Kx) 
 		return mu,var
+	def inducing_inputs(self):
+		return self.Z
 	def plot(self):
 		if self.X.shape[1]==1:
 			pb.figure()
