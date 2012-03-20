@@ -23,38 +23,38 @@ class vsGP(model):
 		self.kernN = kern.rbf(self.X)
 		self.kernM = kern.rbf(self.Z)
 		self.Youter = np.dot(Y,Y.T)
-		self.jitter = 1e-6
+		self.jitter = 1e-12
 
 	def set_param(self,p):
 		self.tau = p[0]
-		self.kernN.expand_param(p[1:])
-		self.kernM.expand_param(p[1:])
+		self.kernN.expand_param(p[1:-self.Z.size])
+		self.kernM.expand_param(p[1:-self.Z.size])
+		self.Z = p[-self.Z.size:].reshape(self.M,self.D)
+		self.kernM.expand_X(self.Z)
 		self.Knn_diag = np.diag(self.kernN.compute()) # TODO: make the kern toolbox compute diags
 		self.Kmm = self.kernM.compute()
 		self.Kmmi, self.Kmm_hld = pdinv(self.Kmm+ np.eye(self.M)*self.jitter)
 		self.Knm = self.kernN.cross_compute(self.Z)
 		self.KmnKnm = np.dot(self.Knm.T, self.Knm)
 		self.KnmKmmiKmn = np.dot(self.Knm,np.dot(self.Kmmi, self.Knm.T))
-		self.Woodbury_inv, self.Woodbury_hld = pdinv(self.tau*self.KmnKnm + self.Kmm)
-		self.Qi = -np.dot(self.Knm, np.dot(self.Woodbury_inv,self.Knm.T)) * self.tau**2 + self.tau*np.eye(self.N) # TOCHECK
-		self.hld = -0.5*self.N*np.log(self.tau) -self.Kmm_hld + self.Woodbury_hld
-		print  -0.5*self.N*np.log(self.tau), -self.Kmm_hld , self.Woodbury_hld
+		self.Woodbury_inv, self.Woodbury_hld = pdinv(self.KmnKnm + self.Kmm/self.tau)
+		self.Qi = -np.dot(self.Knm, np.dot(self.Woodbury_inv,self.Knm.T)) * self.tau + self.tau*np.eye(self.N) 
+		self.hld = -0.5*(self.N-self.M)*np.log(self.tau) -self.Kmm_hld + self.Woodbury_hld
 
 	def get_param(self):
-		return np.hstack([self.tau,self.kernM.extract_param()])
+		return np.hstack([self.tau,self.kernM.extract_param(),self.Z.flatten()])
 	def get_param_names(self):
-		return ['tau']+self.kernM.extract_param_names()
+		return ['tau']+self.kernM.extract_param_names()+['iip_%i'%i for i in range(self.Z.size)]
 	def log_likelihood(self):
 		return -0.5*self.Y.size*np.log(2.*np.pi) -self.hld -0.5*np.sum(self.Qi*self.Youter) -0.5*self.tau*(self.Knn_diag.sum() - np.trace(self.KnmKmmiKmn))
 	def log_likelihood_gradients(self):
-	
 		pass #return np.array([np.sum(dK_dpi*dL_dK) for dK_dpi in dK_dp])
 	def predict(self,X):
 		#u_mu = self.tau*np.dot(self.Kmm,np.dot(self.Woodbury_inv,np.dot(self.Knm.T,self.Y))) # mean of the latent variables f_m (or u)
 		Kx = self.kernM.cross_compute(X)
 		Kxx = self.kernM.compute_new(X)
-		mu = self.tau*np.dot(np.dot(np.dot(Kx.T,self.Woodbury_inv),self.Knm.T),self.Y)
-		var = Kxx - np.dot(np.dot(Kx.T,self.Kmmi-self.Woodbury_inv),Kx) 
+		mu = np.dot(np.dot(np.dot(Kx.T,self.Woodbury_inv),self.Knm.T),self.Y)
+		var = Kxx - np.dot(np.dot(Kx.T,self.Kmmi-self.Woodbury_inv),Kx) + np.eye(X.shape[0])/self.tau # TODO check me
 		return mu,var
 	def inducing_inputs(self):
 		return self.Z

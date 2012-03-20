@@ -9,34 +9,26 @@ from sparse_GP import vsGP
 from simple_GP import GP
 
 #run /home/ricardo/mlprojects/gp/python/gp/dem_sparse_GP.py 
-N = 50
-M = 50
+N = 100
+M = 10
 X = np.random.randn(N,1)
 X.sort(0)
-Y = np.sin(X)+np.random.randn(N,1)*0.05
-#models = [GP(X,Y,k(X)+kern.white(X)) for k in kern.linear, kern.rbf, kern.mlp,kern.polynomial]#, kern.cubic_spline]
-#[m.constrain_positive('') for m in models]
-#[m.optimize() for m in models]
-#[m.plot() for m in models] 
-
-#m = [vsGP(X,Y,k(x)+kern.white(X)) for k in kern.linear, kern.rbf, kern.mlp,kern.polynomial]
+Y = np.sin(X)+.5*np.cos(4*X)+np.random.randn(N,1)*0.25
 m = vsGP(X,Y,M)
-m.constrain_positive('')
+m.constrain_positive('alp|tau|gam')
+m.tau = 1.
+m.expand_param(m.extract_param())
 def f(X):
 	m.expand_param(X)
 	return  -m.log_likelihood()
 
-#xopt = optimize.fmin(f,m.extract_param())
-#m.expand_param(xopt)
-
 m2 = GP(X,Y)
 m2.constrain_positive('')
-#m2.optimize()
 
 pb.ion()
 pb.close('all')
-m.plot()
-m2.plot()
+#m.plot()
+#m2.plot()
 
 pb.figure()
 Xnew = np.linspace(X.min(),X.max(),100)[:,None]
