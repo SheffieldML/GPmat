@@ -34,7 +34,12 @@ if showVariance
 else
     visualiseInfo.plotAxes = lvmScatterPlotNoVar(model, YLbls);
 end
-lvmSetPlot;
+
+if showVariance
+    lvmSetPlot;
+else
+    lvmSetPlotNoVar;
+end
 visualiseInfo.latentHandle = line(0, 0, 'markersize', 20, 'color', ...
                                   [0 0 0], 'marker', '.', 'visible', ...
                                   'on', 'erasemode', 'xor');
