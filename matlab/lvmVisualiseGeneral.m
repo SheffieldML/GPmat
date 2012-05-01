@@ -16,6 +16,8 @@ function lvmVisualiseGeneral(model, YLbls, ...
 
 global visualiseInfo
 
+visualiseInfo.showVariance = showVariance;
+
 lvmClassVisualiseFunc = [model.type 'ClassVisualise'];
 if ~exist(lvmClassVisualiseFunc)
     lvmClassVisualiseFunc = 'lvmClassVisualise';
@@ -38,7 +40,7 @@ end
 if showVariance
     lvmSetPlot;
 else
-    lvmSetPlotNoVar;
+    lvmSetPlotNoVar(lvmClassVisualiseFunc);
 end
 visualiseInfo.latentHandle = line(0, 0, 'markersize', 20, 'color', ...
                                   [0 0 0], 'marker', '.', 'visible', ...
