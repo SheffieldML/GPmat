@@ -3,6 +3,7 @@ dir: html
 ~/mlprojects/datasets/html/index.html
 dir: .
 ~/mlprojects/datasets/matlab/3Class.mat
+~/mlprojects/datasets/matlab/combined.csv
 ~/mlprojects/datasets/matlab/frey_rawface.mat
 ~/mlprojects/datasets/matlab/swiss_roll_data.mat
 ~/mlprojects/datasets/matlab/twos.mat
