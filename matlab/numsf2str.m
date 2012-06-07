@@ -39,7 +39,7 @@ function str = numsf2str(num, sf);
   end
   if length(tail)>0
     tail = num2str(str2num(tail));
-    tail = ['\times 10^' tail];
+    tail = ['\times 10^{' tail '}'];
   end
   str = [str tail];
 end

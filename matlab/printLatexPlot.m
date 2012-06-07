@@ -88,7 +88,6 @@ function printLatexPlot(fileName, directory, width, options)
     fclose(FID);
     system(['rm -f ' fileName '.tex']);
     FID = fopen([newName '.tex'], 'w');
-    
     fprintf(FID, fileStr);
     fclose(FID);
     
