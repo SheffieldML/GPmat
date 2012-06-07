@@ -66,12 +66,17 @@ function [ax, data] = lvmScatterPlot(model, YLbls, ax, dims, defaultVals);
   
   %if size(model.X, 2)==2
     
-  try
     [X1, X2] = meshgrid(x1, x2);
     XTest = repmat(defaultVals, prod(size(X1)), 1);
     XTest(:, dims(1)) = X1(:);
     XTest(:, dims(2)) = X2(:);
     varsigma = modelPosteriorVar(model, XTest);
+  try
+    [X1, X2] = meshgrid(x1, x2);
+    XTest = repmat(defaultVals, prod(size(X1)), 1);
+    XTest(:, dims(1)) = X1(:);
+    XTest(:, dims(2)) = X2(:);
+    varsigma = modelPosteriorVar(model, XTest);  
     posteriorVarDefined = true;
   catch 
     [lastMsg, lastId] = lasterr;

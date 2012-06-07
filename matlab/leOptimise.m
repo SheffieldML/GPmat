@@ -16,7 +16,7 @@ switch model.weightType
  case 'constant'
   model.kappa = repmat(1, model.N, model.k);
  case 'rbf'
-  model.kappa = exp(-D2/(2*model.weightScale*model.weightScale));
+  model.kappa = exp(-dist2(model.Y, model.Y)/(2*model.weightScale*model.weightScale));
  otherwise
   error('Unknown weight type in leOptimise');
 end
