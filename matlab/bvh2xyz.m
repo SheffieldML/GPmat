@@ -9,7 +9,7 @@ function xyz = bvh2xyz(skel, channels, noOffset)
 % ARG noOffset : don't add the offset in.
 % RETURN xyz : the point cloud positions for the skeleton.
 %
-% COPYRIGHT : Neil D. Lawrence, 2005, 2008
+% COPYRIGHT : Neil D. Lawrence, 2005, 2008, 2012
 %
 % SEEALSO : acclaim2xyz, skel2xyz
 
@@ -40,13 +40,13 @@ for i = 1:length(skel.tree)
   end
   thisRotation = rotationMatrix(xangle, yangle, zangle, skel.tree(i).order);
   thisPosition = [xpos ypos zpos];
-  if ~noOffset
-      thisPosition = skel.tree(i).offset + thisPosition;
-  end
   if ~skel.tree(i).parent
       xyzStruct(i).rotation = thisRotation;
-      xyzStruct(i).xyz = thisPosition;
+      xyzStruct(i).xyz = thisPosition + skel.tree(i).offset;
   else
+      if ~noOffset
+          thisPosition = skel.tree(i).offset + thisPosition;
+      end
       xyzStruct(i).xyz = ...
           thisPosition*xyzStruct(skel.tree(i).parent).rotation ...
           + xyzStruct(skel.tree(i).parent).xyz;
