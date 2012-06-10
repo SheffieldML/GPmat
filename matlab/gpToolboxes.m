@@ -2,7 +2,7 @@
 
 importLatest('netlab');
 importLatest('mocap');
-importLatest('ndlutil');
+importTool('ndlutil');
 importLatest('prior');
 importLatest('mltools');
 importLatest('mocap')
