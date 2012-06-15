@@ -1,4 +1,4 @@
-function model = modelOptimise(model, varargin)
+function [model, options] = modelOptimise(model, varargin)
 
 % MODELOPTIMISE Optimise the given model.
 % FORMAT
@@ -9,6 +9,8 @@ function model = modelOptimise(model, varargin)
 % ARG display : whether or not to display optimization values.
 % ARG iters : number of iterations.
 % RETURN model : the optimised model.
+% RETURN options : a vector containig the number of function and gradient
+% evaluations. Also the number of iterations employed.
 %
 % SEEALSO : modelObjective, modelGradient
 %
@@ -19,7 +21,7 @@ function model = modelOptimise(model, varargin)
 % MLTOOLS
 
 if nargin < 2
-  varargin = {}
+  varargin = {};
 end
 fhandle = [model.type 'Optimise'];
 if exist(fhandle)==2
@@ -62,7 +64,7 @@ else
       optim = str2func('conjgrad');
     end
     
-    params = optim('modelObjective', params,  options, ...
+    [params, options] = optim('modelObjective', params,  options, ...
                    'modelGradient', model);
     
     model = modelExpandParam(model, params);
