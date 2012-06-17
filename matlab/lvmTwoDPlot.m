@@ -31,7 +31,7 @@ function [returnVal, txtReturnVal] = lvmTwoDPlot(X, lbl, symbol)
     labelsString = false;
   end
   
-  if nargin < 3
+  if nargin < 3 || isempty(symbol)
     if isempty(lbl)
       symbol = getSymbols(1);
     else
