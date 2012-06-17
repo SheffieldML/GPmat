@@ -21,6 +21,10 @@ function str = numsf2str(num, sf);
   if ~isempty(ePos)
     tail = str(ePos+1:end);
     str = str(1:ePos-1);
+  else
+    if length(str)<sf && isempty(find(str == '.'))
+      str = [str '.'];
+    end
   end
   ind = 1;
   while  ind<=length(str) && (str(ind) == '0' || str(ind) == '.')
