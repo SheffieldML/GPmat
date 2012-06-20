@@ -1,5 +1,10 @@
 This toolbox stores datasets and gives commands for accessing them.
 
+Version 0.1372
+--------------
+
+Added missa and osr data set.
+
 Version 0.1371
 --------------
 

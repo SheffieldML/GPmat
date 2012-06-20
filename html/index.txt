@@ -10,6 +10,10 @@
 
 RELEASEINFORMATION
 
+Added missa and osr data set.
+
+<h4>Version 0.1371</h4>
+
 Minor mods to lvmLoadData for Spellman data.
 
 <h4>Version 0.137</h4>

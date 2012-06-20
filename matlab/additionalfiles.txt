@@ -2,6 +2,7 @@
 dir: html
 ~/mlprojects/datasets/html/index.html
 dir: .
+~/mlprojects/datasets/matlab/miss-americaHD.mat
 ~/mlprojects/datasets/matlab/3Class.mat
 ~/mlprojects/datasets/matlab/combined.csv
 ~/mlprojects/datasets/matlab/frey_rawface.mat
@@ -21,3 +22,5 @@ dir: .
 ~/mlprojects/datasets/matlab/DGdat_p63_case1_GL.txt
 ~/mlprojects/datasets/matlab/DGdat_p63_case2_GL.txt
 ~/mlprojects/datasets/matlab/DGdat_p63_case3_GL.txt
+dir: osr
+~/mlprojects/datasets/matlab/osr/OSR_uk_000_0020_8k.wav
