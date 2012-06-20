@@ -8,6 +8,11 @@
 
 RELEASEINFORMATION
 
+
+Added plotMatrix for visualizating matrices on figure axes.
+
+<h4>Version 0.162</h4>
+
 <p>Added files for printing to latex plots from Octave.
 
 <h4>Version 0.161</h4>
