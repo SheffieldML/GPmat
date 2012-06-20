@@ -1,6 +1,6 @@
 function lfmVisualiseWalking(model, visualiseFunction, visualiseModify, varargin)
 
-% LFMVISUALISE Visualise the outputs in a latent force model
+% LFMVISUALISEWALKING Visualise the outputs in a latent force model
 % FORMAT
 % DESC visualises a latent force model with two latent forces as inputs
 % ARG model :  the model to visualise.

@@ -1,9 +1,34 @@
 function [ax, data] = lvmScatterPlotNoVar(model, YLbls, ax, dims, defaultVals);
 
-% LVMSCATTERPLOT 2-D scatter plot of the latent points.
-% This is a copy of lvmScatterPlot with the difference being that the
-% variance of the inputs is not visualised, something which saves a lot of
-% computational time for high-dimensional outputs.
+% LVMSCATTERPLOTNOVAR 2-D scatter plot of the latent points.
+% FORMAT
+% DESC This version of lvmScatterPlot doesn't visualize the
+% variance which can sometimes save time in plotting.
+% DESC produces a visualisation of the latent space with the given model.
+% ARG model : the model for which the scatter plot is being produced.
+% RETURN ax : the axes handle where the scatter plot was placed.
+%
+% DESC produces a visualisation of the latent space for the given model, 
+% using the provided labels to distinguish the latent points.
+% ARG model : the model for which the scatter plot is being produced.
+% ARG lbls : labels for each data point so that they may be given different
+% symbols. Useful when each data point is associated with a different
+% class.
+% RETURN ax : the axes handle where the scatter plot was placed.
+% 
+% DESC produces a visualisation of the latent space for the given model, 
+% using the provided labels to distinguish the latent points.
+% ARG model : the model for which the scatter plot is being produced.
+% ARG lbls : labels for each data point so that they may be given different
+% symbols. Useful when each data point is associated with a different
+% class.
+% ARG ax : the axes where the plot is to be placed.
+% RETURN ax : the axes handle where the scatter plot was placed.
+%
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
+%
+% MODIFICATIONS : Andreas Damianou, 2012
+  
 % SEEALSO lvmScatterPlot, lvmVisualise, lvmVisualiseGeneral
  
 % MLTOOLS
