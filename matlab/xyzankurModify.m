@@ -1,4 +1,4 @@
-function handle = xyzankurModify(handle,pos)
+function handle = xyzankurModify(handle,pos, varargin)
 
 % XYZANKURMODIFY  Helper function for modifying the point cloud from Agarwal and Triggs data.
 % FORMAT
