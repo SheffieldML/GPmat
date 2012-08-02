@@ -51,7 +51,7 @@ model.K = k + diag(noiseVar);
 %pause
 
 [model.invK, U, jitter] = pdinv(model.K);
-if jitter>1e-4
+if jitter>1e-4 && isfield(model, 'debug') && model.debug,
   warning('gpsimUpdateKernels added jitter of %2.4f\n', jitter)
 end
 model.logDetK = logdet(model.K, U);

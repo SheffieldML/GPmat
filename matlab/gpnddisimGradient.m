@@ -18,8 +18,12 @@ function g = gpnddisimGradient(params, model)
   
 % GPSIM
 
-model = gpnddisimExpandParam(model, params);
-g = - gpnddisimLogLikeGradients(model);
+try,
+    model = gpnddisimExpandParam(model, params);
+    g = - gpnddisimLogLikeGradients(model);
+catch,
+    g = 0*gpnddisimLogLikeGradients(model);
+end
 
 %plotpredictions(model,[0:5:1280]',2,1,1,'exampletitle');
 %drawnow;
