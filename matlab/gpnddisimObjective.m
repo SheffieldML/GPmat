@@ -22,5 +22,9 @@ function f = gpnddisimObjective(params, model)
 
 % GPSIM
 
-model = gpnddisimExpandParam(model, params);
-f = - gpnddisimLogLikelihood(model);
+try,
+    model = gpnddisimExpandParam(model, params);
+    f = - gpnddisimLogLikelihood(model);
+catch
+    f = -Inf;
+end
