@@ -1,4 +1,4 @@
-function [priormeans,posteriormeans,covmatrix,rbfposteriormeans,rbfcovmatrix] = gpnddisimPredict(model,predtimes,predict_rna);
+function [priormeans,posteriormeans,covmatrix,rbfposteriormeans,rbfcovmatrix] = gpnddisimPredict(model,predtimes,predict_rna,with_obsnoise);
 
 % GPASIMPREDICT Compute predictions (means and a covariance matrix)
 % of POL2 and RNA values for the GPASIM model.
@@ -31,6 +31,10 @@ function [priormeans,posteriormeans,covmatrix,rbfposteriormeans,rbfcovmatrix] = 
 
 %predtimes
 %pause
+
+if nargin < 4,
+  with_obsnoise = 1;
+end
 
 numGenes=model.numGenes;
 if predict_rna==0,
@@ -104,17 +108,19 @@ if numGenes>0,
     end;
     tempind1=tempind1+nt;
   end;
-  size(rnapriormeans)
-  size(pol2priormeans)
+  %size(rnapriormeans)
+  %size(pol2priormeans)
 end;
 
   
 if 1,
-% This version of K_new does not include observation noise
-% K_new=kernCompute(model.kern, predtimes, predtimes);
-
-% This version of K_new does include observation noise
-K_new=kernCompute(model.kern, predtimes);
+if with_obsnoise,
+  % This version of K_new does include observation noise
+  K_new=kernCompute(model.kern, predtimes);
+else
+  % This version of K_new does not include observation noise
+  K_new=kernCompute(model.kern, predtimes, predtimes);
+end
 
 predmodeltimes=model.t;
 if (iscell(predtimes)==1) && (iscell(model.t)==0),
