@@ -11,16 +11,16 @@ class runner():
         dt ,points, limits = readInst.read()
 
         #Create new linear learner object
-        #learner = lL(readInst.channels)
+        learner = lL(readInst.channels)
 
         #Create new non-linear learner object
-        nLLearner = nLL(readInst.channels)
+        #nLLearner = nLL(readInst.channels)
 
         # Create a new graphics object (no animation)
         #G(dt,points,limits,learner,readInst)
 
         # Create a new animation (no learning)
-        #G(dt,points,limits,learner,readInst,True)
+        G(dt,points,limits,learner,readInst,True)
 
         #run the test method
         self.myTest(readInst.channels,nLLearner)
