@@ -14,4 +14,5 @@ function options = printLatexOptions
   options.maintainAspect = true;
   options.height = 0;
   options.backgroundFile = '';
+  options.axisColor = [];
 end
