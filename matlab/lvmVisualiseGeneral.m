@@ -23,12 +23,25 @@ if ~exist(lvmClassVisualiseFunc)
     lvmClassVisualiseFunc = 'lvmClassVisualise';
 end
 
+if isfield(model, 'vis') && isfield(model.vis, 'figHandle')
+    figure(model.vis.figHandle{1});
+else
+    figure(1)
+end
 
-figure(1)
 clf
-visualiseInfo.dim1 = 1;
-visualiseInfo.dim2 = 2;
-visualiseInfo.latentPos = zeros(1, model.q);
+if isfield(model, 'vis') && isfield(model.vis, 'startDim')
+    visualiseInfo.dim1 = model.vis.startDim{1};
+    visualiseInfo.dim2 = model.vis.startDim{2};
+else
+    visualiseInfo.dim1 = 1;
+    visualiseInfo.dim2 = 2;
+end
+if isfield(model, 'vis') && isfield(model.vis, 'startPos')
+    visualiseInfo.latentPos = model.vis.startPos;
+else
+    visualiseInfo.latentPos = zeros(1, model.q);
+end
 visualiseInfo.model = model;
 visualiseInfo.lbls = YLbls;
 if showVariance
@@ -93,7 +106,11 @@ visualiseInfo.runDynamics = false;
 set(gcf, 'WindowButtonMotionFcn', [lvmClassVisualiseFunc '(''move'')'])
 set(gcf, 'WindowButtonDownFcn', [lvmClassVisualiseFunc '(''click'')'])
 
-figure(2)
+if isfield(model, 'vis') && isfield(model.vis, 'figHandle')
+    figure(model.vis.figHandle{2});
+else
+    figure(2)
+end
 clf
 
 if length(visualiseFunction)>4 & strcmp(visualiseFunction(1:5), 'image') & length(varargin)>0
