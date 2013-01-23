@@ -30,6 +30,12 @@ function handle =  plotMatrix(A, ax, bracketStyle, type, options)
           end
       end
   end
+  if isfield(options, 'color') && ~isempty(options.color)
+      lcolor = options.color;
+  else
+      lcolor = [0 0 0];
+  end
+
   nrows = size(A, 1);
   ncols = size(A, 2);
 
@@ -98,10 +104,10 @@ function handle =  plotMatrix(A, ax, bracketStyle, type, options)
   switch bracketStyle
     case 'boxes'
       for i = 0:nrows
-          line([0 ncols] + 0.5, i + [0.5 0.5]);
+          line([0 ncols] + 0.5, i + [0.5 0.5], 'color', lcolor);
       end
       for j = 0:ncols
-          line(j + [0.5 0.5], [0 nrows]+0.5);
+          line(j + [0.5 0.5], [0 nrows]+0.5, 'color', lcolor);
       end
     case 'square'
       tickLength = 0.25;
@@ -112,15 +118,15 @@ function handle =  plotMatrix(A, ax, bracketStyle, type, options)
       end
       line([xlim(1)+tickLength xlim(1) xlim(1) xlim(1)+tickLength], ...
            [ylim(1) ylim(1) ylim(2) ylim(2)], ...
-           'linewidth', bracketWidth);
+           'linewidth', bracketWidth, 'color', lcolor);
       line([xlim(2)-tickLength xlim(2) xlim(2) xlim(2)-tickLength], ...
            [ylim(1) ylim(1) ylim(2) ylim(2)], ...
-           'linewidth', bracketWidth);
+           'linewidth', bracketWidth, 'color', lcolor);
     case 'none'
     otherwise
       error('Bracket type not specified')
   end
-  
+      
   if options.highlight.on
       if isfield(options.highlight, 'color') && ~isempty(options.highlight.color)
           hcolor = options.highlight.color;
