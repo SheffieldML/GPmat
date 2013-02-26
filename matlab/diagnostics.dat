@@ -1,0 +1,2587 @@
+Files not tagged as in toolbox: 
+kernToolboxes.m
+computeGradient.m
+rotationMatrixGradient.m
+luisaPlot2.m
+luisaPlot.m
+pseudoRotation.m
+gpToolboxes.m
+convertxyz2Vect.m
+ncnmRunDataSet3.m
+ncnmOptions.m
+gaussianNoiseExpectationLogLikelihood.m
+logsumexp.m
+fgplvmToolboxes.m
+ivmToolboxes.m
+ankurAngle2XYZ.m
+pseudoGradient.m
+
+Files not commented:
+demSwissRollGplvm1.m
+demSwissRollFullFgplvm1.m
+demSwissRollFgplvm2.m
+demSwissRollFullFgplvm2.m
+demSwissRollFgplvm1.m
+luisaPlot2.m
+luisaPlot.m
+pseudoRotation.m
+nddisimKernCompute.m
+whiteKernExtractParamTransformSettings.m
+logsumexp.m
+mogUpdatePrior.m
+ankurAngle2XYZ.m
+
+Files not in CVS or SVN:
+sqexpKernExtractParam.m
+noneKernExpandParam.m
+disimKernGradX.m
+demCmu35gplvmReconstruct.m
+rbfperiodicKernExpandParam.m
+dnetOutputGradX.m
+fgplvmAddConstraint.m
+modelLatentGradients.m
+readDoubleFromFID.m
+matern32KernCompute.m
+linardKernGradient.m
+translateKernParamInit.m
+whitefixedXwhitefixedKernCompute.m
+sdlfmaXsdrbfKernCompute.m
+lleOptions.m
+polyardKernExtractParam.m
+gpReversibleDynamicsLogLikeGradients.m
+whitehKernDiagGradX.m
+ggXgaussianKernGradient.m
+spectralUpdateLaplacian.m
+lmcKernParamInit.m
+noneKernDiagGradX.m
+rbfwhiteKernExpandParam.m
+readBinaryDoubles.m
+gaussianPriorExtractParam.m
+acclaimSemiLoadChannels.m
+fgplvmExtractParam.m
+lmcKernDiagGradient.m
+simwhiteXwhiteKernGradient.m
+modelOut.m
+rbfperiodicOutputGradX.m
+noiseParamInit.m
+cumGaussian.m
+mlpOutputGrad.m
+lfmGradientSigmaH3AA.m
+plotMatrixOptions.m
+kernToolboxes.m
+lmcKernExpandParam.m
+leDeconstruct.m
+gibbsKernGradX.m
+robOneDynamicsCreate.m
+gpGradient.m
+ivm3dPlot.m
+spectrumModify.m
+traceProduct.m
+fileKernGradient.m
+fgplvmTestMissing.m
+velotransKernDisplay.m
+tensorKernExtractParam.m
+ivmAddPoint.m
+probitNoiseLikelihood.m
+sqexpKernDiagCompute.m
+ngaussNoiseExpandParam.m
+orderedGradX.m
+wienerKernDiagGradX.m
+ratquadKernDiagGradient.m
+componentKernReadParamsFromFID.m
+gpReversibleDynamicsExtractParam.m
+cmpndKernExpandParamTransformSettings.m
+nddisimKernGradient.m
+skelVisualise.m
+translateKernExtractParam.m
+ivmApproxGradX.m
+sdlfmKernComputeConstant.m
+mgaussianNoiseExpandParam.m
+rbfperiodicKernGradX.m
+gaussianNoiseSites.m
+robOneDynamicsExtractParam.m
+linard2KernDisplay.m
+kernDisplay.m
+mlpardKernGradient.m
+rbfinfwhiteKernExtractParam.m
+rbfardjitKernExpandParam.m
+stringSplit.m
+sdlfmXsdlfmvKernComputeBlock.m
+biasKernParamInit.m
+kernGetVariance.m
+demVowelsIsomap.m
+whiteKernExtractParam.m
+sheatKernCompute.m
+disimKernGradient.m
+sqexpKernExpandParam.m
+mlpardKernExpandParam.m
+uniformPriorGradient.m
+rbfard2KernExtractParam.m
+laplacePriorLogProb.m
+ppcaEmbed.m
+ivmGradX.m
+demRobotWirelessFgplvm4.m
+noiseWriteToFID.m
+lnDiffErfs.m
+multiKernGradient.m
+ppcaOut.m
+kernCorrelation.m
+laplacePriorExtractParam.m
+gpReconstruct.m
+xyzhumanevaJoint2pos.m
+bvhWriteFile.m
+mlpParamInit.m
+fgplvmTaylorAngleErrors.m
+skel2xyz.m
+heatKernDisplay.m
+rbfwhiteXwhiteKernGradient.m
+gpDynamicsExtractParam.m
+treeGetWidths.m
+simKernCompute.m
+fgplvmPrintPlot.m
+lfmComputeH4AV.m
+findDirectedNeighbours.m
+disimSample.m
+fgplvmScatterPlotColor.m
+gpDisplay.m
+demSwissRollGplvm1.m
+fgplvmPointGradient.m
+rbfKernDiagGradX.m
+cmpndNoiseGradientParam.m
+demSwissRollFullFgplvm1.m
+dnetReconstruct.m
+gaussianKernExpandParam.m
+demStickFgplvm1.m
+printPlot.m
+wangPriorExtractParam.m
+rbfperiodicLogLikeGradients.m
+diagKernGradient.m
+matrixReadFromFID.m
+rbfKernDiagCompute.m
+srbfhKernCompute.m
+ggXgaussianKernCompute.m
+simXsimKernDiagCompute.m
+gaussianNoiseGradVals.m
+whiteKernDiagGradient.m
+ngaussian.m
+ngaussNoiseLikelihood.m
+xyzpoppeAnim.m
+simKernDisplay.m
+pcaEmbed.m
+lfmLogLikeGradients.m
+demRegressionGp.m
+imageVisualise.m
+rbfDisplay.m
+invcmpndKernExpandParam.m
+demOilFgplvm5.m
+robThreeDynamicsCreate.m
+gpDynamicsSequenceLogLikeGradient.m
+ratquadKernGradX.m
+disimKernDisplay.m
+fgplvmPosteriorVar.m
+normuniPriorLogProb.m
+ivmLogLikelihood.m
+lfmaXrbfKernGradient.m
+simwhiteKernDiagCompute.m
+scaleNoiseParamInit.m
+kbrExpandParam.m
+expKernParamInit.m
+probit3dPlot.m
+demBrendanFgplvm1.m
+simwhiteKernDisplay.m
+linard2KernParamInit.m
+lvmVisualiseGeneral.m
+multimodelDisplay.m
+lfmGradientSigmaH3AV.m
+sdlfmaXsdlfmaKernGradientBlock.m
+mlpOptimise.m
+mlpOptions.m
+rbfOutputGrad.m
+fileKernRead.m
+lmcKernDiagGradX.m
+simwhiteXrbfinfwhiteKernGradient.m
+dnetDeconstruct.m
+robThreeDynamicsSetLatentValues.m
+demFourWalksReconstruct.m
+demOilFgplvm7.m
+biasKernDiagGradient.m
+lfmjXlfmvKernCompute.m
+demSilhouetteGp1.m
+gaussianPriorLogProb.m
+laplacePriorGradient.m
+whiteblockKernDiagGradient.m
+ivmRun.m
+xyzpoppeDraw.m
+lfmGradientUpsilon.m
+heatKernGradient.m
+matern32KernDisplay.m
+fgplvmOptimise.m
+lfmVisualise.m
+gpReversibleDynamicsCreate.m
+demSpgp1dGp2.m
+ngaussNoise3dPlot.m
+mlpCreate.m
+modelTest.m
+fgplvmVisualise.m
+lfmaXlfmKernGradient.m
+identityTransform.m
+cmdsRoadData.m
+gaussianKernParamInit.m
+lfmjXlfmaKernCompute.m
+modelSamp.m
+lfmComputeH3.m
+demCmu35gplvm4.m
+wangPriorGradient.m
+multiKernExpandParam.m
+rbfard2KernDiagGradX.m
+scg2.m
+ardKernGradient.m
+gpCovGradsTest.m
+whiteKernExpandParam.m
+xgamrnd.m
+linardKernDiagCompute.m
+matern32KernParamInit.m
+modelReadFromFID.m
+sdlfmKernCompute.m
+gpReadFromFID.m
+rbfardjitKernGradX.m
+demFourWalks1.m
+ratquadKernDiagCompute.m
+rbfXnoneKernCompute.m
+lfmvXlfmKernGradient.m
+demSwissRollFullLle3.m
+linard2KernGradX.m
+demOrdered1.m
+lfmvKernExtractParam.m
+kernPriorLogProb.m
+gaussianNoisePointPlot.m
+sdlfmvXsdlfmKernCompute.m
+ncnmNoiseExpandParam.m
+mogPrintPlot.m
+disimXdisimKernCompute.m
+gaussianKernDiagCompute.m
+rbfwhiteKernParamInit.m
+demSilhouettePlot.m
+cmpndNoiseGradVals.m
+demStickGp1.m
+rbfard2KernDiagCompute.m
+ratquadKernParamInit.m
+lfmComputeH4JP.m
+mgaussianNoiseOut.m
+modelCreate.m
+lnCumGaussSum.m
+gpSubspaceExpandParam.m
+mlpardKernDiagGradX.m
+writeIntToFID.m
+sdlfmvKernDiagComputeBlock.m
+xyzhumanevaHeadingAngle.m
+dnetUpdateOutputWeights.m
+sdlfmXsdlfmKernGradient.m
+leReconstruct.m
+rbfardKernDiagGradX.m
+gibbsKernDisplay.m
+mlpardKernCompute.m
+rbfinfwhiteXrbfinfwhiteKernGradient.m
+kernFactors.m
+ivmUpdateM.m
+lfmKernDiagGradX.m
+gpPosteriorGradMeanCovar.m
+lfmaaComputeUpsilonMatrix.m
+priorWriteToFID.m
+demEP1.m
+robTwoDynamicsExpandParam.m
+sdlfmvXsdrbfKernGradient.m
+printLatexOptions.m
+lfmjXlfmKernCompute.m
+stickVisualise.m
+multiKernDiagGradient.m
+simwhiteXrbfwhiteKernCompute.m
+fgplvmPointSampleLogLikelihood.m
+modelTieParam.m
+wienerKernCompute.m
+gibbsperiodicKernGradient.m
+lvmResultsDynamic.m
+ngaussNoiseGradientParam.m
+lfmapComputeUpsilonVector.m
+gaussianPriorExpandParam.m
+gpDynamicsCreate.m
+nddisimKernExpandParam.m
+orderedNoiseExtractParam.m
+sdlfmKernExpandParam.m
+tensorKernDiagGradX.m
+noiseUpdateNuG.m
+ggwhiteKernExpandParam.m
+ngaussNoiseNuG.m
+acclaim2xyz.m
+lfmComputeH4AP.m
+sdlfmXsdlfmKernGradientBlockIGJ.m
+disimXsimKernCompute.m
+sdrbfKernCompute.m
+lvmScatterPlotNoVar.m
+treeFindLeaves.m
+leOptions.m
+rbfperiodicExtractParam.m
+lmcKernExtractParam.m
+ivmVirtual.m
+whiteKernDisplay.m
+simComputeTest.m
+rbfperiodicKernParamInit.m
+demClassificationIvm1.m
+sdlfmvKernDisplay.m
+ardKernCompute.m
+springDampersModify.m
+whitefixedKernDiagCompute.m
+parseWirelessData.m
+fgplvmBackConstraintGrad.m
+ncnmNoiseExtractParam.m
+rbfard2KernDisplay.m
+xyzhumanevaAlign.m
+mogOptimise.m
+cmpndNoiseSites.m
+ardKernExtractParam.m
+indexardKernGradient.m
+rbfperiodicLogLikelihood.m
+lfmGradientH41VP.m
+lfmaXlfmaKernCompute.m
+sdlfmKernExtractParam.m
+demRobotWirelessNavigate.m
+mocapParseText.m
+rbfperiodicKernExtractParam.m
+rbfKernDiagGradient.m
+demCmu35gplvmFgplvm2.m
+simKernDiagCompute.m
+defaultOptions.m
+ggKernParamInit.m
+fgplvmPosteriorMeanVar.m
+lfmComputeH3JA.m
+cmpndKernGradX.m
+disimComputeHPrime.m
+stickModify.m
+matern52KernGradX.m
+lvmVisualise.m
+multimodelExtractParam.m
+normuniPriorGradient.m
+multiKernExpandParamTransformSettings.m
+gpOptimise.m
+priorTest.m
+noiseOut.m
+sdlfmXsdrbfKernGradientBlockIEJ.m
+rbfperiodic2KernExtractParam.m
+sdlfmaXsdrbfKernGradient.m
+smoothAngleChannels.m
+orderedNoisePointPlot.m
+rbfardKernDisplay.m
+hessianCheck.m
+invcmpndKernGradient.m
+scaleNoiseExpandParam.m
+lfmavComputeUpsilonMatrix.m
+lfmComputeH3VV.m
+whiteblockKernExtractParam.m
+fgplvmPointObjectiveGradient.m
+gpCovGrads.m
+mocapResultsCppBvh.m
+simwhiteKernCompute.m
+ivmComputeLandM.m
+gpExtractParam.m
+polyKernExtractParam.m
+robTwoDynamicsCreate.m
+orderedNoiseGradVals.m
+probitNoiseGradVals.m
+polyKernCompute.m
+rbfperiodicOptions.m
+whitehKernDisplay.m
+demCmu35gplvmReconstructTaylor.m
+xyzModify.m
+matern32KernDiagGradX.m
+rbfinfwhiteKernGradX.m
+lfmjvComputeUpsilonMatrix.m
+ivmOptimiseKernel.m
+sdlfmjMeanCompute.m
+robOneDynamicsSetLatentValues.m
+ivmEpUpdateM.m
+multiKernExtractParam.m
+kernGradX.m
+demSwissRollFgplvm2.m
+linearOut.m
+ggwhiteXwhiteKernGradient.m
+ivmComputeInfoChange.m
+sheatKernDiagGradient.m
+lfmwhiteXrbfwhiteKernGradient.m
+lfmaaGradientSigmaUpsilonMatrix.m
+ivmContour.m
+translateKernGradX.m
+sqexpKernParamInit.m
+fgplvmAddDynamics.m
+rbfardjitKernCompute.m
+ivmDowndateM.m
+lmcKernDisplay.m
+writeStringToFID.m
+lmcKernGradient.m
+demOilFgplvm9.m
+xyzankurAnimCompareMultiple.m
+computeGradient.m
+multiKernTest.m
+whiteKernDiagGradX.m
+demOilLle1.m
+linardKernDisplay.m
+sdlfmXsdlfmvKernGradientBlockIGJ.m
+whitehKernGradient.m
+gradLnDiffErfs.m
+biasKernDisplay.m
+linearOutputGrad.m
+matern32KernDiagGradient.m
+gammaPriorParamInit.m
+swissRollScatter.m
+sdrbfKernExpandParam.m
+fgplvmDynamicsPlot.m
+demSwissRollLle2.m
+demMppca1.m
+demOilFgplvm3.m
+generateCrescentData.m
+rbfardjitKernDiagCompute.m
+gibbsKernDiagCompute.m
+deg2rad.m
+linearDisplay.m
+demOilLle4.m
+lfmComputeH3AA.m
+wienerKernGradient.m
+lfmaKernParamInit.m
+lfmGradientH42.m
+gaussianwhiteKernDisplay.m
+fgplvmResultsDynamic.m
+negLogLogit.m
+ncnmLoadData.m
+rbfperiodic2KernCompute.m
+rbfperiodicOutputGrad.m
+ggwhiteKernDiagCompute.m
+bvhVisualise.m
+gaussianwhiteKernExpandParam.m
+whitefixedKernParamInit.m
+lfmapGradientSigmaUpsilonVector.m
+modelOutputGradX.m
+rbfwhiteKernDiagCompute.m
+fgplvmDeconstruct.m
+ggwhiteXgaussianwhiteKernGradX.m
+sdlfmXsdrbfKernCompute.m
+ngaussNoiseParamInit.m
+mogCreate.m
+rbfardKernExpandParam.m
+simwhiteKernGradX.m
+lfmwhiteXwhiteKernCompute.m
+cmpndNoiseOut.m
+sdlfmaXsdlfmKernGradientBlockIEJ.m
+expKernGradient.m
+nddisimKernDisplay.m
+lfmvXrbfvKernCompute.m
+lfmGradientSigmaH4AP.m
+rbfperiodicKernDisplay.m
+lfmvXlfmKernCompute.m
+whiteblockKernDiagCompute.m
+probitNoiseGradientParam.m
+indexKernCompute.m
+lfmGradientSigmaH3VP.m
+kernSetWhite.m
+lvmLoadResult.m
+dnetWriteResult.m
+gaussianNoiseParamInit.m
+lleDeconstruct.m
+diagKernDiagGradX.m
+cmpndKernCompute.m
+demSpgp1dGp1.m
+demSilhouettePlotTrue.m
+probitNoisePointPlot.m
+modelExtractParam.m
+mlpKernGradX.m
+sdlfmvKernGradient.m
+lfmwhiteXlfmwhiteKernCompute.m
+gpLogLikeGradients.m
+rbfKernCompute.m
+modelGradientCheck.m
+whitefixedKernCompute.m
+rbfard2KernCompute.m
+lfmvXrbfKernGradient.m
+lfmwhiteComputeGradThetaH2.m
+whitefixedKernExtractParam.m
+ggwhiteKernDisplay.m
+mlpKernCompute.m
+pdinv.m
+xyzankurModify.m
+demSwissRollFullLle5.m
+multiKernCompute.m
+vivmUspsResults.m
+lfmComputeH3JV.m
+simXsimKernGradient.m
+acclaimNumberOfFrames.m
+sdlfmXsdlfmKernCompute.m
+invgammaPriorExtractParam.m
+demSwissRollFullFgplvm2.m
+gpTimeDynamicsCreate.m
+gpReversibleDynamicsLatentGradients.m
+heatKernCompute.m
+probitNoiseOut.m
+lfmwhiteXlfmwhiteKernGradient.m
+ngaussNoiseOut.m
+gibbsperiodicKernParamInit.m
+ngaussNoisePointPlot.m
+lvmTwoDPlot.m
+modelReadFromFile.m
+mvuDeconstruct.m
+mvuOptions.m
+matern52KernDiagCompute.m
+xyzankurAnim.m
+xyzhumanevaVisualise2.m
+mlpLogLikeGradients.m
+logisticNormalPriorExpandParam.m
+cmpndNoiseNuG.m
+mgaussianNoiseDisplay.m
+lmcKernGradX.m
+demVowelsFgplvm3.m
+ncnmNoiseLogLikelihood.m
+simXsimKernDiagGradient.m
+preparePlot.m
+demRobotWirelessFgplvm3.m
+noneKernGradX.m
+gaussianNoiseExpandParam.m
+xyzhumaneva2joint.m
+gaussianKernDiagGradient.m
+fgplvmOptimisePoint.m
+kbrOut.m
+skelReverseLookup.m
+gaussianKernGradient.m
+lfmvXlfmvKernCompute.m
+matern52KernDiagGradient.m
+rbfhKernParamInit.m
+ivmEpLogLikelihood.m
+lfmaXlfmvKernGradient.m
+demStickFgplvm3.m
+modelWriteToFID.m
+mvuCreate.m
+invgammaPriorGradient.m
+gpDynamicsSamp.m
+sdlfmaXsdlfmvKernGradientBlock.m
+plotMatrix.m
+lfmComputeH4JA.m
+xyzVisualise.m
+gpObjective.m
+gpDynamicsLogLikelihood.m
+ratquadKernExpandParam.m
+fgplvmObjective.m
+lfmaXrbfKernCompute.m
+datasetsDirectory.m
+logisticNormalPriorLogProb.m
+lfmTest.m
+multiKernDiagGradientBlock.m
+ggwhiteXggwhiteKernGradient.m
+lvmSetPlotNoVar.m
+lfmwhiteKernParamInit.m
+demUnlabelledIvm1.m
+nddisimKernParamInit.m
+ivmOptions.m
+linearLogLikeGradients.m
+rbfXnoneKernGradient.m
+rbfardKernDiagGradient.m
+noiseDisplay.m
+fgplvmReconstruct.m
+multiKernCacheBlock.m
+heatKernDiagGradient.m
+fgplvmSequenceObjective.m
+sdlfmXsdlfmKernGradientBlock.m
+mogLowerBound.m
+demCmu35gplvmFgplvm1.m
+gpSubspaceCreate.m
+disimXsimKernGradient.m
+gaussianwhiteKernGradX.m
+demSwissRollFgplvm1.m
+tokenise.m
+mlpKernExpandParam.m
+sdlfmvXsdrbfKernComputeBlock.m
+polyKernParamInit.m
+lfmwhiteKernGradX.m
+polyardKernDisplay.m
+dnetTest.m
+sdlfmKernDiagComputeBlock.m
+whiteKernGradX.m
+priorExtractParam.m
+lfmvpGradientUpsilonMatrix.m
+matern32KernGradient.m
+rotationMatrixGradient.m
+orderedNoiseUpdateParams.m
+simwhiteXrbfinfwhiteKernCompute.m
+ivmRemovePoint.m
+simwhiteXwhiteKernCompute.m
+luisaPlot2.m
+logisticNormalPriorParamInit.m
+lfmGradientSigmaH4.m
+cmpndKernDisplay.m
+cmpndKernExtractParamTransformSettings.m
+nddisimXndsimKernCompute.m
+gaussianKernGradX.m
+velotransKernParamInit.m
+noiseWriteParamsToFID.m
+gpTimeDynamicsSetLatentValues.m
+invcmpndKernCompute.m
+noiseTest.m
+optimiseParams.m
+sdlfmaXsdrbfKernGradientBlock.m
+simKernGradX.m
+wangPriorParamInit.m
+heatKernExpandParam.m
+ivmPosteriorMeanVar.m
+lfmvXrbfKernCompute.m
+multimodelParamInit.m
+modelLogLikelihood.m
+gibbsKernExtractParam.m
+demRegression2.m
+whiteKernParamInit.m
+mogLogLikelihood.m
+lvmNearestNeighbour.m
+sdlfmaXsdlfmaKernGradient.m
+ngaussNoiseExtractParam.m
+linearOptions.m
+noneKernDisplay.m
+readStringFromFID.m
+cmpndNoiseExtractParam.m
+multiKernFixBlocks.m
+kbrDisplay.m
+polyardKernExpandParam.m
+modelExpandParam.m
+xyzpoppeModify.m
+lfmGradientSigmaH3AP.m
+uniformPriorExpandParam.m
+ardKernGradX.m
+ncnmNoiseGradientParam.m
+lvmClickVisualise.m
+luisaPlot.m
+simComputeHStat.m
+ndsimKernGradient.m
+tensorKernDiagCompute.m
+optimiDefaultOptimiser.m
+polyardKernGradX.m
+demBrendanFgplvm3.m
+fgplvmDynamicsPosteriorMeanVar.m
+demOilFgplvm4.m
+fgplvmDynamicsRun.m
+whiteKernCompute.m
+lfmvKernExpandParam.m
+lfmvpGradientUpsilonVector.m
+fgplvmPointLogLikelihood.m
+imageModify.m
+fgplvmSequenceLogLikeGradient.m
+rbfinfwhiteKernDisplay.m
+simXsimKernCompute.m
+ivmReconstruct.m
+cmpndKernExtractParam.m
+rbfhKernDiagCompute.m
+diagKernDiagCompute.m
+ivmPosteriorGradMeanVar.m
+sdlfmXsdlfmKernGradientICBlock.m
+demSilhouetteAverage.m
+lfmapGradientUpsilonMatrix.m
+gradientCheck.m
+mocapLoadTextData.m
+doubleMatrixWriteToFID.m
+heatXheatKernCompute.m
+indexardKernExtractParam.m
+multiKernGradX.m
+lfmaXrbfvKernCompute.m
+ppcaOptions.m
+invcmpndKernDiagGradient.m
+noneKernCompute.m
+gpDynamicsLatentGradients.m
+modelLoadResult.m
+getLocalGradAlphaOmega.m
+demGpTwoSample.m
+lfmvvComputeUpsilonMatrix.m
+simwhiteXsimwhiteKernGradient.m
+gpWriteResult.m
+rbfhKernDisplay.m
+gpDynamicsLogLikeGradients.m
+ndsimKernDisplay.m
+gaussianwhiteKernGradient.m
+demSwissRollLle5.m
+sdlfmXsdrbfKernGradientBlockIGJ.m
+xyzhumanevaVisualiseModes.m
+demVowelsFgplvm2.m
+lfmwhiteComputeH.m
+logisticNormalPriorSetBounds.m
+xyzhumanevaVisualise3d.m
+printLatexPlot.m
+fileKernGradX.m
+sdlfmvXsdlfmKernGradientBlock.m
+ivmSelectPoint.m
+dexpKernGradX.m
+xyzhumanevaModify2.m
+invgammaPriorExpandParam.m
+lvmPrintPlot.m
+lfmvvGradientUpsilonMatrix.m
+normuniPriorExtractParam.m
+ouKernDiagCompute.m
+simwhiteKernDiagGradX.m
+linKernGradient.m
+ndsimKernExpandParamTransformSettings.m
+ppcaPosteriorMeanVar.m
+lfmComputeUpsilon.m
+normuniPriorParamInit.m
+gaussianNoiseGradientParam.m
+ncnmNoiseDisplay.m
+demSwissRollLle1.m
+lfmaKernCompute.m
+rbfardKernCompute.m
+xyzhumanevaModify.m
+lfmjpComputeUpsilonMatrix.m
+sdlfmvKernParamInit.m
+lnDiffCumGaussian.m
+orderedNoise3dPlot.m
+gaussianNoiseLikelihood.m
+demOilFgplvm1.m
+rbfwhiteKernExtractParam.m
+sdlfmvKernDiagCompute.m
+noiseGradVals.m
+ivmDowndateNuG.m
+disimComputeH.m
+matern32KernExtractParam.m
+whiteKernExpandParamTransformSettings.m
+gaussianwhiteKernDiagGradient.m
+gpDynamicsPointLogLikelihood.m
+lfmKernGradX.m
+noneKernExtractParam.m
+lfmComputeH4JV.m
+expKernCompute.m
+rbfperiodic2KernGradient.m
+whiteKernDiagCompute.m
+pseudoRotation.m
+gaussianPriorParamInit.m
+tensorKernGradient.m
+sdlfmaXsdlfmvKernGradient.m
+sdlfmKernDiagCompute.m
+probitNoiseLogLikelihood.m
+probitNoiseExtractParam.m
+gpUpdateKernels.m
+readBoolFromFID.m
+mlpKernParamInit.m
+lleOptimise.m
+lfmaXlfmaKernGradient.m
+ggwhiteKernCompute.m
+gpTimeDynamicsExpandParam.m
+lfmapComputeUpsilonMatrix.m
+noiseReadParamsFromFID.m
+lfmvpGradientSigmaUpsilonVector.m
+sdlfmaXsdlfmKernGradientBlockILJ.m
+demInterpolationGp.m
+skelPlayData.m
+kernDiagGradX.m
+lfmGradientSigmaH3.m
+gpReversibleDynamicsSamp.m
+kernExpandParam.m
+bvhReadFile.m
+skelConnectionMatrix.m
+fileKernParamInit.m
+vivmRunDataSetLearn.m
+modelLogLikeGradients.m
+lfmKernExtractParam.m
+ivmSelectPoints.m
+gpSubspaceExtractParam.m
+kernSetIndex.m
+fgplvmLogLikelihood.m
+priorCreate.m
+linardKernExpandParam.m
+scaleNoiseOut.m
+fgplvmDisplay.m
+modelSetLatentValues.m
+priorSetBounds.m
+gpTimeDynamicsExtractParam.m
+lfmKernParamInit.m
+gpTimeDynamicsLogLikelihood.m
+rbfperiodic2KernGradX.m
+rbfinfwhiteKernExpandParam.m
+tableRead.m
+rbfCreate.m
+whitefixedKernExpandParam.m
+robThreeDynamicsExpandParam.m
+lfmaKernExpandParam.m
+lvmScatterPlotColor.m
+linKernExpandParam.m
+priorWriteParamsToFID.m
+modelPointLogLikelihood.m
+sdlfmvXsdlfmvKernCompute.m
+demRegression1.m
+multimodelLogLikelihood.m
+xyzhumanevaDraw.m
+simKernDiagGradX.m
+cmpndKernParamInit.m
+xyzhumanevaVisualise.m
+rbfKernDisplay.m
+matern52KernDiagGradX.m
+sdlfmXsdlfmKernGradientBlockIEJ.m
+matern32KernGradX.m
+sdlfmaMeanGradient.m
+demCmu35TaylorNearestNeighbour.m
+polyardKernParamInit.m
+xyzhumanevaAnim.m
+lfmaXlfmvKernCompute.m
+lvmScoreModel.m
+scaleNoiseSites.m
+heatKernDiagCompute.m
+isomapEmbed.m
+xyzpoppeVisualise.m
+rbfhKernDiagGradX.m
+polyardKernCompute.m
+indexKernDiagCompute.m
+demBrendanFgplvm4.m
+invCumGaussian.m
+ggwhiteKernGradient.m
+kernExpandParamTransformSettings.m
+scatterPlot.m
+lfmClassVisualise.m
+sigmoidTransform.m
+matern52KernExtractParam.m
+invcmpndKernDiagCompute.m
+velotransKernDiagGradX.m
+ngaussNoiseGradVals.m
+ivmGunnarData.m
+ivmNegGradientNoise.m
+demThreeFiveResults.m
+gpTimeDynamicsDisplay.m
+rbfhKernExpandParam.m
+rbfinfwhiteXrbfinfwhiteKernCompute.m
+whitehKernExpandParam.m
+modelDisplay.m
+gpPosteriorGradMeanVar.m
+ardKernDisplay.m
+sdlfmXsdlfmKernGradientIC.m
+lfmComputeH3AP.m
+whitefixedKernGradX.m
+fgplvmPointLogLikeGradient.m
+lfmwhiteKernGradient.m
+gpDynamicsExpandParam.m
+ivmOptimiseIvm.m
+whitehKernDiagCompute.m
+ggKernGradient.m
+robThreeDynamicsLogLikelihood.m
+demUspsIvm3.m
+noiseReadFromFID.m
+gaussianNoiseLogLikelihood.m
+robThreeDynamicsLatentGradients.m
+nddisimKernCompute.m
+ncnmNoiseParamInit.m
+disimKernCompute.m
+rayleighSamp.m
+expKernDiagCompute.m
+matern32KernDiagCompute.m
+ivmUspsResults.m
+mlpLogLikelihood.m
+lleReconstruct.m
+biasKernGradX.m
+rbfperiodicOut.m
+invcmpndKernGradX.m
+mvuEmbed.m
+matern32KernExpandParam.m
+demOptimiseGpTutorial.m
+lfmGradientSigmaH3VV.m
+orderedNoiseGradientParam.m
+gpTimeDynamicsLatentGradients.m
+scaleNoiseDisplay.m
+rbfhKernDiagGradient.m
+demUspsIvm1.m
+indexardKernParamInit.m
+lvmSetPlot.m
+sdlfmKernGradientMean.m
+kbrOptions.m
+translateKernDisplay.m
+invcmpndKernExtractParam.m
+sdlfmaXsdlfmaKernComputeBlock.m
+sparseDiag.m
+isomapOptions.m
+kernReadParamsFromFID.m
+lvmClassVisualise.m
+mapLoadData.m
+ivmUpdateNuG.m
+fgplvmCovGradsTest.m
+tensorKernCompute.m
+indexardKernExpandParam.m
+demSilhouetteLinear1.m
+rbfperiodic2KernParamInit.m
+gradLogCumGaussian.m
+xlsLoadData.m
+disimKernExpandParam.m
+mgaussianNoiseGradVals.m
+rbfhKernGradient.m
+paramNameRegularExpressionLookup.m
+translateKernDiagGradX.m
+sdlfmvXsdlfmKernComputeBlock.m
+fgplvmDynamicsFieldPlot.m
+bvhPlayFile.m
+disimXrbfKernGradient.m
+lfmapGradientSigmaUpsilonMatrix.m
+disimKernDiagCompute.m
+sdlfmvXsdlfmvKernGradientICBlock.m
+whiteXwhiteKernGradient.m
+disimKernDiagGradX.m
+rbfardKernGradX.m
+gpToolboxes.m
+modelOptions.m
+rbfwhiteKernDisplay.m
+kernTest.m
+kernCreate.m
+nddisimKernExtractParam.m
+gibbsperiodicKernDisplay.m
+linardKernCompute.m
+ratquadKernGradient.m
+ardKernDiagGradient.m
+optimiDefaultConstraint.m
+diagKernDisplay.m
+plot3Visualise.m
+simKernParamInit.m
+rbfardjitKernParamInit.m
+ncnmNoiseGradVals.m
+translateKernGradient.m
+indexKernExpandParam.m
+lfmvKernDisplay.m
+simComputeH.m
+whiteXwhiteKernCompute.m
+kernDiagGradient.m
+gpMeanFunctionGradient.m
+demOilFgplvm6.m
+ouKernDisplay.m
+dnetLowerBound.m
+cell2num.m
+readIntFromFID.m
+sdlfmaXsdrbfKernComputeBlock.m
+demSwissRollFullLle4.m
+rbfard2KernDiagGradient.m
+rbfKernGradient.m
+convertxyz2Vect.m
+lfmwhiteXrbfwhiteKernCompute.m
+lfmavGradientSigmaUpsilonMatrix.m
+gpPosteriorVar.m
+rotationMatrix.m
+sheatKernDiagCompute.m
+lfmComputeH4.m
+uniformPriorLogProb.m
+gaussianKernDiagGradX.m
+sdlfmaXsdlfmvKernComputeBlock.m
+robOneDynamicsExpandParam.m
+ncnmNoisePointPlot.m
+translateKernDiagCompute.m
+multimodelExpandParam.m
+mogUpdateCovariance.m
+computeKernel.m
+diagKernCompute.m
+lfmvpGradientSigmaUpsilonMatrix.m
+mapmodelReadFromFID.m
+cmpndNoise3dPlot.m
+fgplvmFieldPlot.m
+rbfperiodic2KernDiagCompute.m
+simKernDiagGradient.m
+sdrbfKernGradient.m
+xyzankur2joint.m
+rbfardjitKernDisplay.m
+sqexpKernGradient.m
+mgaussianNoiseExtractParam.m
+negNoiseLogLikelihood.m
+demBrendanPpca1.m
+gpPosteriorSample.m
+cmpndNoiseLogLikelihood.m
+printLatexText.m
+lfmvvGradientSigmaUpsilonMatrix.m
+sdlfmXsdrbfKernGradientBlock.m
+mlpKernDiagGradX.m
+rbfard2KernGradient.m
+whiteblockKernDisplay.m
+ncnmRunDataSet3.m
+ncnmOptions.m
+wienerKernDiagCompute.m
+simwhiteKernExtractParam.m
+ouKernParamInit.m
+whitefixedKernDiagGradX.m
+safeSave.m
+simXsimComputeDiagHStat.m
+fileKernDiagCompute.m
+demVowelsLle.m
+diagKernExtractParam.m
+noneKernDiagCompute.m
+modelObjective.m
+gpDeconstruct.m
+gaussianNoiseDisplay.m
+laplacePriorParamInit.m
+fileKernExpandParam.m
+sdrbfKernParamInit.m
+ivmCovarianceGradient.m
+invgammaPriorLogProb.m
+gpExpandParam.m
+linearOptimise.m
+probitNoise3dPlot.m
+ndsimKernDiagCompute.m
+priorExpandParam.m
+polyardKernGradient.m
+rbfperiodicExpandParam.m
+robOneDynamicsLogLikeGradients.m
+lfmwhiteComputeGradThetaH1.m
+kernPca.m
+polyKernDiagGradX.m
+rbfinfwhiteKernParamInit.m
+ivmReadFromFile.m
+ouKernExtractParam.m
+whitehKernGradX.m
+ncnmNoiseSites.m
+robThreeDynamicsExtractParam.m
+gammaPriorExpandParam.m
+gaussianwhiteKernExtractParam.m
+sdlfmvXsdlfmvKernComputeBlock.m
+gibbsKernDiagGradient.m
+simXsimComputeDiagH.m
+gaussianNoiseExpectationLogLikelihood.m
+ggwhiteKernParamInit.m
+rbfOutputGradX.m
+lvmScatterPlot.m
+lfmComputeH.m
+multimodelOptions.m
+lvmResultsClick.m
+dexpKernDiagCompute.m
+rbfperiodicKernDiagCompute.m
+paramNameReverseLookup.m
+expKernExpandParam.m
+gpLogLikelihood.m
+linKernDiagCompute.m
+noiseGradX.m
+whiteXwhiteKernGradX.m
+gpTimeDynamicsSequenceLogLikelihood.m
+rbfperiodicKernCompute.m
+mlpExpandParam.m
+demBrendanFgplvm5.m
+rbfwhiteXrbfwhiteKernGradient.m
+sdlfmaXsdlfmKernGradient.m
+plot3Modify.m
+whitehKernCompute.m
+kbrExtractParam.m
+whiteKernExtractParamTransformSettings.m
+indexKernExtractParam.m
+rbfwhiteXwhiteKernCompute.m
+ndsimKernParamInit.m
+dnetUpdateBeta.m
+componentKernWriteParamsToFID.m
+sdlfmXsdlfmvKernGradientICBlock.m
+sdrbfKernDisplay.m
+fgplvmReadFromFile.m
+gaussianwhiteKernCompute.m
+indexardKernCompute.m
+biasKernExtractParam.m
+lfmExpandParam.m
+isomapDeconstruct.m
+whitefixedXwhitefixedKernGradient.m
+rbfardjitKernExtractParam.m
+rbfperiodic2KernDiagGradX.m
+cmpndNoiseDisplay.m
+sigmoidabTransform.m
+noiseGradientParam.m
+gpPosteriorMeanVar.m
+mogOptions.m
+timeseriesdata.m
+gpDynamicsDisplay.m
+ivmDowndateSites.m
+mgaussianNoisePointPlot.m
+dnetOutputGrad.m
+demSpgp1dGp5.m
+matern52KernParamInit.m
+findAcyclicNeighbours2.m
+treeFindRoots.m
+mlpardKernGradX.m
+ivmKernelObjective.m
+lfmKernGradient.m
+lfmvpComputeUpsilonDiagVector.m
+cumGamma.m
+writeVersionToFID.m
+mocapConnections.m
+logsumexp.m
+matern52KernDisplay.m
+vectorVisualise.m
+disimKernParamInit.m
+dnetPosteriorMeanVar.m
+sdlfmaXsdlfmaKernCompute.m
+modelOutputGrad.m
+isomapOptimise.m
+heatXrbfhKernCompute.m
+gpTwoSample.m
+dexpKernParamInit.m
+gpDataIndices.m
+whiteblockKernGradient.m
+ncnmNoiseOut.m
+fgplvmWriteResult.m
+fgplvmGradient.m
+treeSwapNode.m
+priorReadFromFID.m
+lfmGradientSigmaH4VP.m
+gpSubspaceOptimise.m
+matern52KernCompute.m
+simXrbfKernGradient.m
+indexardKernDisplay.m
+optOptions.m
+dnetCreate.m
+fileKernCompute.m
+priorGradient.m
+linardKernGradX.m
+cmpndNoiseParamInit.m
+heatKernExtractParam.m
+simwhiteXsimwhiteKernCompute.m
+probitNoiseParamInit.m
+readVersionFromFID.m
+modelParamInit.m
+jitChol.m
+demClassificationIvm2.m
+lfmwhiteKernExtractParam.m
+ivmApproxLogLikelihood.m
+mlpOutputGradX.m
+lmvuEmbed.m
+ppcaCreate.m
+xyzankurAnimCompare.m
+ggwhiteXwhiteKernCompute.m
+sdlfmvXsdrbfKernCompute.m
+kbrCreate.m
+gaussOverDiffCumGaussian.m
+robTwoDynamicsSetLatentValues.m
+gibbsperiodicKernDiagCompute.m
+demGpTwoSampleLifsh.m
+negNoiseGradientParam.m
+rbfwhiteXrbfwhiteKernCompute.m
+rbfardjitKernGradient.m
+cmpndKernExpandParam.m
+htkLoadMmf.m
+expKernExtractParam.m
+lfmComputeH4VV.m
+translateKernCompute.m
+matern52KernExpandParam.m
+matern52KernGradient.m
+sdlfmvXsdlfmvKernGradientBlock.m
+ardKernExpandParam.m
+modelHessian.m
+heatXheatKernGradient.m
+lnCumGaussian.m
+velotransKernDiagCompute.m
+robTwoDynamicsDisplay.m
+rbfOptimise.m
+gradFuncWrapper.m
+noiseUpdateSites.m
+biasKernDiagCompute.m
+ggwhiteXgaussianwhiteKernCompute.m
+whiteblockKernCompute.m
+lfmGradientH32.m
+fgplvmOptions.m
+tensorKernSetIndex.m
+velotransKernGradient.m
+sdlfmvKernCompute.m
+orderedNoiseExpandParam.m
+cgcarl.m
+velotransKernGradX.m
+sdlfmXsdlfmvKernGradientBlock.m
+multiKernGradientBlock.m
+whitefixedKernDisplay.m
+rbfinfwhiteKernDiagGradX.m
+linKernGradX.m
+noneKernGradient.m
+gplvmCmu35Animate.m
+lfmvvComputeUpsilonDiagVector.m
+rbfinfwhiteKernDiagCompute.m
+orderedNoiseDisplay.m
+wienerKernGradX.m
+lfmComputeTest.m
+dnetExpandParam.m
+lfmvpComputeUpsilonVector.m
+probitNoiseDisplay.m
+uniformPriorExtractParam.m
+negLogLogitTransform.m
+gpTest.m
+pskernelGradient.m
+mlpOut.m
+gibbsperiodicKernGradX.m
+ppcaDeconstruct.m
+gaussianNoise3dPlot.m
+sdlfmKernGradient.m
+linearExtractParam.m
+lfmaKernDisplay.m
+lvmScatterPlotNeighbours.m
+ardKernDiagGradX.m
+sdlfmKernParamInit.m
+whitehKernDiagGradient.m
+simKernGradient.m
+demUspsIvm2.m
+ivmOut.m
+acclaimReadSkel.m
+demGpTwoSampleLif.m
+demOrderedIvm1.m
+mlpKernExtractParam.m
+uniformPriorParamInit.m
+rbfOptions.m
+linearParamInit.m
+cmpndKernDiagGradient.m
+demStickFgplvm5.m
+robOneDynamicsDisplay.m
+rbfOut.m
+fgplvmViterbiSequence.m
+gaussianwhiteKernDiagGradX.m
+sdlfmaXsdlfmaKernGradientBlockIGJ.m
+lfmXlfmKernCompute.m
+polyKernGradX.m
+robThreeDynamicsLogLikeGradients.m
+cmpndKernDiagCompute.m
+ggXggKernCompute.m
+dexpKernExtractParam.m
+gpReversibleDynamicsSetLatentValues.m
+simXrbfKernCompute.m
+ivmDisplay.m
+lfmGradientSigmaH4VV.m
+mogSample.m
+kbrOptimise.m
+gpWriteToFile.m
+ndsimKernExtractParam.m
+findNeighbours.m
+rbfperiodicCreate.m
+ivmReadFromFID.m
+lfmwhiteKernDisplay.m
+sdlfmvXsdlfmKernGradient.m
+noiseLogLikelihood.m
+velotransKernCompute.m
+sdlfmvXsdlfmKernGradientICBlock.m
+nddisimXndsimKernGradient.m
+springDampersVisualise.m
+robTwoDynamicsExtractParam.m
+ggXggKernGradient.m
+gpPosteriorMeanCovarTest.m
+lfmKernCompute.m
+demGpCov2D.m
+sigmoid.m
+mgaussianNoiseLogLikelihood.m
+priorReadParamsFromFID.m
+xyzankurVisualise.m
+ggKernExpandParam.m
+demGpTwoSampleEB.m
+gpSample.m
+gpTimeDynamicsSequenceLogLikeGradient.m
+gibbsperiodicKernExpandParam.m
+skelModify.m
+lfmUpdateKernels.m
+invgammaPriorParamInit.m
+ngaussNoiseSites.m
+gaussianNoiseExtractParam.m
+gpBlockIndices.m
+mappingOptimise.m
+linKernCompute.m
+sdrbfKernExtractParam.m
+mlpardKernDiagCompute.m
+dnetLoadResult.m
+dnetObjective.m
+biasKernExpandParam.m
+parseNobleKernelFile.m
+lfmGradientH42VP.m
+demGpCovFuncSample.m
+whiteXnoneKernGradient.m
+demCmu35gplvmFgplvm3.m
+rbfperiodicParamInit.m
+xyzankurDraw.m
+wienerKernExtractParam.m
+isoctave.m
+lfmComputeH3AV.m
+sdlfmKernDisplay.m
+lfmjpComputeUpsilonVector.m
+diagKernGradX.m
+invcmpndKernParamInit.m
+orderedNoiseLogLikelihood.m
+rbfhKernCompute.m
+gibbsKernCompute.m
+dnetOut.m
+rbfardjitKernDiagGradX.m
+velotransKernExtractParam.m
+dnetGradient.m
+spectrumVisualise.m
+demOilLle2.m
+dnetLogLikeGradients.m
+fgplvmClassVisualise.m
+sdlfmvKernExtractParam.m
+gibbsKernSetLengthScaleFunc.m
+mogTwoDPlot.m
+sdlfmaXsdlfmvKernCompute.m
+indexKernDisplay.m
+lfmComputeH3JP.m
+ppcaReconstruct.m
+orderedNoiseLikelihood.m
+whitefixedKernDiagGradient.m
+expKernDisplay.m
+sdlfmXsdlfmKernGradientBlockILJ.m
+stringSigFigs.m
+demSpgp1dGp4.m
+tensorKernDisplay.m
+acclaimGradient.m
+lfmaaComputeUpsilonDiagVector.m
+rbfard2KernParamInit.m
+xyzpoppe2joint.m
+polyKernGradient.m
+ivmInit.m
+robOneDynamicsLogLikelihood.m
+ivmOptimise.m
+gpPosteriorMeanCovar.m
+ggKernDisplay.m
+lfmResultsDynamicWalking.m
+gaussSamp.m
+kernParamInit.m
+linard2KernDiagGradX.m
+gaussianKernCompute.m
+ivmApproxLogLikeKernGrad.m
+robOneDynamicsLatentGradients.m
+kpcaEmbed.m
+ndsimKernCompute.m
+rbfwhiteKernGradient.m
+lfmOptions.m
+lfmwhiteComputePsi.m
+simSample.m
+linardKernExtractParam.m
+whiteKernGradient.m
+lfmaaGradientUpsilonMatrix.m
+gaussianwhiteKernDiagCompute.m
+uniformPriorSetBounds.m
+sqexpKernCompute.m
+tensorKernExpandParam.m
+demGpTwoSampleEBsh.m
+simwhiteKernGradient.m
+invcmpndKernDiagGradX.m
+ivmCreate.m
+kernReadFromFID.m
+biasKernDiagGradX.m
+gpSequenceLogLikeGradient.m
+fgplvmKernDynamicsSample.m
+linard2KernGradient.m
+wangPriorExpandParam.m
+polyardKernDiagGradX.m
+writeDoubleToFID.m
+kernCompute.m
+gpReversibleDynamicsOptions.m
+ivmSelectVisualise.m
+ggKernDiagCompute.m
+rbfKernExpandParam.m
+modelPosteriorVar.m
+ppcaPosteriorVar.m
+cmpndKernGradient.m
+mogUpdatePrior.m
+mlpKernGradient.m
+isomapCreate.m
+gaussianwhiteKernParamInit.m
+fgplvmPointObjective.m
+fgplvmCmu35Animate.m
+tensorKernParamInit.m
+lfmComputeH3VP.m
+lvmThreeDPlot.m
+ivm.m
+invcmpndKernDisplay.m
+gpOut.m
+leCreate.m
+mogUpdateMean.m
+rbfardjitKernDiagGradient.m
+ivmDeconstruct.m
+mvuOptimise.m
+gpTimeDynamicsOut.m
+simKernExpandParam.m
+noneKernParamInit.m
+sdlfmXsdlfmKernComputeBlock.m
+gpComputeObservationLogLikelihood.m
+kbrParamInit.m
+sqexpKernDiagGradX.m
+linKernDiagGradX.m
+linearExpandParam.m
+lfmvKernDiagCompute.m
+centeringMatrix.m
+fgplvmNearestNeighbour.m
+demStickFgplvm4.m
+indexKernGradient.m
+lleCreate.m
+ouKernDiagGradX.m
+bvhPlayData.m
+demOptimiseGp.m
+linKernDisplay.m
+fgplvmToolboxes.m
+translateKernExpandParam.m
+whiteblockKernDiagGradX.m
+lmcKernDiagCompute.m
+invSigmoid.m
+lfmVisualiseWalking.m
+linardKernDiagGradX.m
+lfmwhiteXwhiteKernGradient.m
+rbfinfwhiteXwhiteKernCompute.m
+rbfwhiteKernDiagGradX.m
+indexardKernDiagCompute.m
+whitehKernExtractParam.m
+ivmOptimiseNoise.m
+expKernDiagGradX.m
+linearOutputGradX.m
+sdlfmvXsdlfmvKernGradient.m
+demBrendanFgplvm2.m
+gpLoadResult.m
+sdlfmXsdrbfKernGradient.m
+lfmaKernExtractParam.m
+demVowelsFgplvm1.m
+mlpKernDisplay.m
+fgplvmExpandParam.m
+lfmaXlfmKernCompute.m
+demStickFgplvm2.m
+rbfardKernDiagCompute.m
+rbfwhiteKernCompute.m
+sdlfmvKernExpandParam.m
+ncnmNoiseLikelihood.m
+lfmComputeH4AA.m
+rbfKernGradX.m
+numsf2str.m
+tensorKernSlash.m
+whiteblockKernParamInit.m
+whitehKernParamInit.m
+expTransform.m
+multiKernDiagCompute.m
+whiteXnoneKernCompute.m
+mlpDisplay.m
+demWalkSitJogDynamicsLearn.m
+treeFindChildren.m
+rbfExtractParam.m
+dexpKernCompute.m
+gaussianKernDisplay.m
+wienerKernDisplay.m
+lfmvKernParamInit.m
+lfmResultsDynamic.m
+cmpndNoisePointPlot.m
+sqexpKernDisplay.m
+mlpardKernDisplay.m
+sdlfmvXsdrbfKernGradientBlock.m
+logisticNormalPriorExtractParam.m
+disimXrbfKernCompute.m
+disimKernDiagGradient.m
+multiKernDiagGradX.m
+lmcKernCompute.m
+linearLogLikelihood.m
+lfmjXrbfKernCompute.m
+fgplvmLogLikeGradients.m
+rbfperiodicKernGradient.m
+ncnmNoise3dPlot.m
+linard2KernExpandParam.m
+ratquadKernDisplay.m
+fgplvmObjectiveGradient.m
+modelWriteResult.m
+lfmavGradientUpsilonMatrix.m
+ngaussNoiseDisplay.m
+demSpgp1dPlot.m
+polyKernDisplay.m
+viterbiAlign.m
+rbfardKernParamInit.m
+ivmMeshVals.m
+noiseLikelihood.m
+sqexpKernGradX.m
+mogMeanCov.m
+linard2KernDiagCompute.m
+rbfinfwhiteKernGradient.m
+rbfKernParamInit.m
+rbfard2KernExpandParam.m
+xyzhumanevaRemovePart.m
+velotransKernExpandParam.m
+lfmXrbfKernCompute.m
+ivmNegLogLikelihood.m
+kbrOutputGrad.m
+ggwhiteXgaussianwhiteKernGradient.m
+demRobotTraces1.m
+ncnmTwoDPlot.m
+rbfExpandParam.m
+gammaPriorLogProb.m
+noise3dPlot.m
+ratquadKernCompute.m
+gpSubspaceOut.m
+dnetExtractParam.m
+ivmEpUpdatePoint.m
+robThreeDynamicsDisplay.m
+rocCurve.m
+linKernParamInit.m
+simwhiteKernExpandParam.m
+kernelCenter.m
+lfmXrbfvKernCompute.m
+mogProject.m
+fgplvmTest.m
+demRobotWirelessFgplvm1.m
+gibbsKernExpandParam.m
+acclaimPlayFile.m
+robTwoDynamicsLogLikeGradients.m
+polyardKernDiagCompute.m
+getline.m
+fgplvmSequenceLogLikelihood.m
+cmpndKernSetIndex.m
+demOrdered2.m
+logdet.m
+mlpKernDiagCompute.m
+rbfard2KernGradX.m
+kernDiagCompute.m
+ndsimKernExpandParam.m
+nddisimKernExpandParamTransformSettings.m
+dynamicsTest.m
+lfmGradientH31.m
+lfmKernDisplay.m
+linard2KernCompute.m
+isomapReconstruct.m
+simKernExtractParam.m
+demTwoClusters1.m
+ivmKernelGradient.m
+srbfhKernGradient.m
+ouKernExpandParam.m
+expKernGradX.m
+lfmSample.m
+modelGetOutputWeights.m
+diagKernParamInit.m
+lfmGradientSigmaH.m
+gibbsperiodicKernCompute.m
+pskernelObjective.m
+gaussianPriorGradient.m
+gibbsperiodicKernDiagGradient.m
+lfmCreate.m
+ggwhiteXggwhiteKernCompute.m
+ncnmContour.m
+kernExtractParamTransformSettings.m
+ggKernDiagGradient.m
+gibbsKernGradient.m
+whitefixedKernGradient.m
+demSpgp1dGp3.m
+demOrderedIvm2.m
+lfmvXlfmvKernGradient.m
+disimXdisimKernGradient.m
+findAcyclicNeighbours.m
+lfmwhiteKernCompute.m
+fileKernExtractParam.m
+sdlfmXsdrbfKernComputeBlock.m
+zeroAxes.m
+writeBoolToFID.m
+ggXgaussianKernGradX.m
+lfmaKernDiagCompute.m
+gpDynamicsSequenceLogLikelihood.m
+xyzankurVisualise2.m
+mlpLogLikeHessian.m
+getSymbols.m
+ggKernExtractParam.m
+rbfKernExtractParam.m
+multiKernComputeBlock.m
+sdlfmKernMeanCovPartial.m
+demSwissRollLle3.m
+dist1.m
+dexpKernDisplay.m
+rbfperiodic2KernDisplay.m
+rbfinfwhiteKernCompute.m
+multiKernParamInit.m
+xyzankurError.m
+xyzhumanevaGenerateMovie.m
+multimodelLogLikeGradients.m
+demCmu35SequenceOptimise.m
+cmpndNoiseLikelihood.m
+gpOptions.m
+fgplvmOptimiseSequence.m
+bvhConnectionMatrix.m
+modelSetOutputWeights.m
+multiKernDisplay.m
+gpCreate.m
+lleEmbed.m
+lfmKernExpandParam.m
+gpTimeDynamicsLogLikeGradients.m
+mlpardKernExtractParam.m
+gaussianKernExtractParam.m
+gaussianNoiseNuG.m
+lfmXlfmKernGradient.m
+xlogy.m
+ratquadKernDiagGradX.m
+ardKernDiagCompute.m
+demThreeFiveIvm.m
+ndsimKernExtractParamTransformSettings.m
+robTwoDynamicsLogLikelihood.m
+lfmGradientH41.m
+dnetEstep.m
+ggKernCompute.m
+dnetOptions.m
+ouKernCompute.m
+gibbsKernParamInit.m
+simwhiteKernParamInit.m
+mvuReconstruct.m
+sdlfmaXsdlfmKernCompute.m
+rbfwhiteKernGradX.m
+linard2KernExtractParam.m
+demRobotWirelessFgplvm2.m
+rbfhKernExtractParam.m
+logisticNormalPriorGradient.m
+fgplvmReadFromFID.m
+ouKernGradX.m
+ncnmNoiseNuG.m
+demSwissRollLle4.m
+mlpExtractParam.m
+bvhModify.m
+optimiMinimize.m
+ivmToolboxes.m
+lfmComputeUpsilonDiagVector.m
+cmpndNoiseExpandParam.m
+leOptimise.m
+kldivGaussian.m
+kernWriteParamsToFID.m
+vectorModify.m
+orderedNoiseOut.m
+mgaussianNoiseParamInit.m
+probitNoiseExpandParam.m
+linardKernParamInit.m
+sdlfmaXsdlfmKernComputeBlock.m
+acclaimLoadChannels.m
+noiseCreate.m
+lfmGradientH42AP.m
+biasKernCompute.m
+lfmComputeH4VP.m
+demOilFgplvm8.m
+dnetLogLikelihood.m
+nddisimKernExtractParamTransformSettings.m
+demSwissRollFullLle2.m
+lfmGradientSigmaH4AV.m
+noiseExpectationLogLikelihood.m
+whiteXrbfKernGradient.m
+gpPointLogLikelihood.m
+modelAddDynamics.m
+sdlfmKernGradientConstant.m
+rbfperiodicKernDiagGradient.m
+ivmPrintPlot.m
+normuniPriorExpandParam.m
+demUnlabelledIvm2.m
+lfmjaComputeUpsilonMatrix.m
+cmpndKernDiagGradX.m
+demOil100Fgplvm1.m
+gibbsKernDiagGradX.m
+rbfperiodicKernDiagGradX.m
+gpComputeAlpha.m
+smallrandEmbed.m
+wienerKernParamInit.m
+noiseExpandParam.m
+lvmClassClickVisualise.m
+gpReversibleDynamicsExpandParam.m
+treeFindParents.m
+lfmGradientSigmaUpsilon.m
+kernGradient.m
+gaussianNoiseOut.m
+polyKernDiagCompute.m
+dexpKernGradient.m
+wienerKernExpandParam.m
+gammaPriorGradient.m
+vivmRunDataSet.m
+sparseKernDisplay.m
+multiKernGradientBlockX.m
+demOilLle3.m
+ngaussNoiseLogLikelihood.m
+lfmKernDiagGradient.m
+demOilFgplvm2.m
+doubleMatrixReadFromFID.m
+gpUpdateAD.m
+rbfinfwhiteXwhiteKernGradient.m
+modelGradient.m
+indexKernParamInit.m
+invcmpndKernSetIndex.m
+whiteblockKernGradX.m
+lfmLogLikelihood.m
+kernPriorGradient.m
+linKernExtractParam.m
+lfmExtractParam.m
+gpDynamicsSetLatentValues.m
+mgaussianNoise3dPlot.m
+biasKernGradient.m
+lfmGradientH.m
+lfmXrbfKernGradient.m
+demGpSample.m
+ardKernParamInit.m
+stack.m
+mlpardKernParamInit.m
+sheffieldmlToolboxes.m
+mgaussianNoiseLikelihood.m
+noisePointPlot.m
+gpReversibleDynamicsLogLikelihood.m
+rbfperiodic2KernExpandParam.m
+fgplvmLoadResult.m
+fgplvmDynamicsSample.m
+robTwoDynamicsLatentGradients.m
+mogEstep.m
+wangPriorLogProb.m
+ivmUpdateSites.m
+linearCreate.m
+demProbit1.m
+rbfardKernExtractParam.m
+priorParamInit.m
+demSilhouetteGp2.m
+ratquadKernExtractParam.m
+lfmwhiteKernExpandParam.m
+mgaussianNoiseGradientParam.m
+lfmwhiteKernDiagGradX.m
+fgplvmSequenceObjectiveGradient.m
+kernExtractParam.m
+fileKernDisplay.m
+ouKernGradient.m
+gpReversibleDynamicsDisplay.m
+simwhiteXrbfwhiteKernGradient.m
+sheatKernGradient.m
+lfmGradientSigmaH4AA.m
+escapeText.m
+modelPosteriorMeanVar.m
+gpScaleBiasGradient.m
+tensorKernGradX.m
+demCmu35Animate.m
+gpComputeTranslationLogLikelihood.m
+demOil100Fgplvm2.m
+gammaPdf.m
+ggwhiteKernExtractParam.m
+multimodelCreate.m
+gammaPriorExtractParam.m
+diagKernExpandParam.m
+ankurAngle2XYZ.m
+multiKernExtractParamTransformSettings.m
+demSwissRollFullLle1.m
+dexpKernExpandParam.m
+fgplvmSequenceGradient.m
+noiseExtractParam.m
+lfmKernDiagCompute.m
+pseudoGradient.m
+rbfperiodicDisplay.m
+heatKernParamInit.m
+lfmvpComputeUpsilonMatrix.m
+distanceWarp.m
+sdlfmaXsdlfmKernGradientBlock.m
+orderedNoiseParamInit.m
+gpReadFromFile.m
+rbfardKernGradient.m
+gpComputeM.m
+disimKernExtractParam.m
+lfmapGradientUpsilonVector.m
+gibbsperiodicKernExtractParam.m
+whiteblockKernExpandParam.m
+dexpKernDiagGradX.m
+heatXrbfhKernGradient.m
+lvmLoadData.m
+sqexpKernDiagGradient.m
+kernWriteToFID.m
+lfmwhiteKernDiagCompute.m
+bvh2xyz.m
+priorLogProb.m
+gpObjectiveGradient.m
+modelOptimise.m
+laplacePriorExpandParam.m
+lvmClassVisualisePath.m
+cmpndTieParameters.m
+polyKernExpandParam.m
+spectralUpdateX.m
+fgplvmResultsCpp.m
+gibbsperiodicKernDiagGradX.m
+dnetOptimise.m
+fgplvmCreate.m
+
+Dependent toolbox problems
+File Comments Removed
+if any(isnan(g))
+ removed from exported fileKernGradient.m
+  warning('g is NaN')
+ removed from exported fileKernGradient.m
+end
+ removed from exported fileKernGradient.m
+    if lValInv < 1e-16
+ removed from exported ivmUpdateM.m
+      warning(['Square root of nu is ' num2str(lValInv)])
+ removed from exported ivmUpdateM.m
+    end
+ removed from exported ivmUpdateM.m
+  oldVarSigma = model.varSigma(:, c);
+ removed from exported ivmUpdateM.m
+  if any(model.varSigma(:, c)<0)
+ removed from exported ivmUpdateM.m
+    minVar = min(model.varSigma(:, c));
+ removed from exported ivmUpdateM.m
+    warning(['Minimum variance ' num2str(minVar)])
+ removed from exported ivmUpdateM.m
+    model.varSigma(find(model.varSigma(:, c) < 0), c) = 0;
+ removed from exported ivmUpdateM.m
+  end
+ removed from exported ivmUpdateM.m
+    if any(model.varSigma(:, c)<0)
+ removed from exported ivmUpdateM.m
+      minVar = min(model.varSigma(:, c));
+ removed from exported ivmUpdateM.m
+      warning(['Minimum variance ' num2str(minVar)])
+ removed from exported ivmUpdateM.m
+    end
+ removed from exported ivmUpdateM.m
+if any(isinf(params))
+ removed from exported polyKernExtractParam.m
+  warning('params are infinite')
+ removed from exported polyKernExtractParam.m
+end
+ removed from exported polyKernExtractParam.m
+if any(isnan(dlnZ_dmu))
+ removed from exported orderedNoiseGradVals.m
+  warning('dlnZ_dmu is NaN')
+ removed from exported orderedNoiseGradVals.m
+end
+ removed from exported orderedNoiseGradVals.m
+if any(isnan(dlnZ_dvs))
+ removed from exported orderedNoiseGradVals.m
+  warning('dlnZ_dvs is NaN')
+ removed from exported orderedNoiseGradVals.m
+end
+ removed from exported orderedNoiseGradVals.m
+  oldVarSigma = model.varSigma;
+ removed from exported ivmEpUpdateM.m
+  if any(model.varSigma(:, c)<0)
+ removed from exported ivmEpUpdateM.m
+    warning('Variance less than zero')
+ removed from exported ivmEpUpdateM.m
+  end
+ removed from exported ivmEpUpdateM.m
+    if any(model.varSigma(:, c)<0)
+ removed from exported ivmEpUpdateM.m
+      warning('Variance less than zero')
+ removed from exported ivmEpUpdateM.m
+    end
+ removed from exported ivmEpUpdateM.m
+  if lValInv < 1e-16
+ removed from exported ivmEpUpdateM.m
+    warning(['Square root of nu is ' num2str(lValInv)])
+ removed from exported ivmEpUpdateM.m
+  end
+ removed from exported ivmEpUpdateM.m
+  oldVarSigma = model.varSigma(:, c);
+ removed from exported ivmEpUpdateM.m
+  if any(model.varSigma(:, c)<0)
+ removed from exported ivmEpUpdateM.m
+    warning('Variance less than zero')
+ removed from exported ivmEpUpdateM.m
+  end
+ removed from exported ivmEpUpdateM.m
+  if any(model.varSigma(:, c)<0)
+ removed from exported ivmEpUpdateM.m
+    warning('Variance less than zero')
+ removed from exported ivmEpUpdateM.m
+  end
+ removed from exported ivmEpUpdateM.m
+    if any(model.varSigma(:, c)<0)
+ removed from exported ivmEpUpdateM.m
+      warning('Variance less than zero')
+ removed from exported ivmEpUpdateM.m
+    end
+ removed from exported ivmEpUpdateM.m
+  if any(model.varSigma(:, c)<0)
+ removed from exported ivmDowndateM.m
+    warning('Variance less than zero')
+ removed from exported ivmDowndateM.m
+  end
+ removed from exported ivmDowndateM.m
+    if any(model.varSigma(:, c)<0)
+ removed from exported ivmDowndateM.m
+      warning('Variance less than zero')
+ removed from exported ivmDowndateM.m
+    end
+ removed from exported ivmDowndateM.m
+if any(isinf(params))
+ removed from exported mlpKernExpandParam.m
+  warning('params are infinite')
+ removed from exported mlpKernExpandParam.m
+end
+ removed from exported mlpKernExpandParam.m
+if any(isnan(dlnZ_dmu))
+ removed from exported noiseGradVals.m
+  warning('Gradient of mu is NaN')
+ removed from exported noiseGradVals.m
+end
+ removed from exported noiseGradVals.m
+if any(isnan(dlnZ_dvs))
+ removed from exported noiseGradVals.m
+  warning('Gradient of varsigma is NaN')
+ removed from exported noiseGradVals.m
+end
+ removed from exported noiseGradVals.m
+    case 'pumadynSeeger'
+ removed from exported mapLoadData.m
+        data = load([baseDir 'Dataset.data']);
+ removed from exported mapLoadData.m
+        ind = randperm(size(data, 1));
+ removed from exported mapLoadData.m
+        indTr = ind(1:7168);
+ removed from exported mapLoadData.m
+        indTe = ind(7169:end);
+ removed from exported mapLoadData.m
+        X = data(indTr, 1:end-1);
+ removed from exported mapLoadData.m
+        y = data(indTr, end);
+ removed from exported mapLoadData.m
+        XTest = data(indTe, 1:end-1);
+ removed from exported mapLoadData.m
+        yTest = data(indTe, end);
+ removed from exported mapLoadData.m
+        Xscale = sqrt(var(X));
+ removed from exported mapLoadData.m
+        for j = 1:length(Xscale);
+ removed from exported mapLoadData.m
+            X(:, j) = X(:, j)/Xscale(j);
+ removed from exported mapLoadData.m
+            XTest(:, j) = XTest(:, j)/Xscale(j);
+ removed from exported mapLoadData.m
+        end
+ removed from exported mapLoadData.m
+        augX = [X ones(size(X, 1), 1)];
+ removed from exported mapLoadData.m
+        w = inv(augX'*augX)*augX'*y;
+ removed from exported mapLoadData.m
+        y = y -augX*w;
+ removed from exported mapLoadData.m
+        augTestX = [XTest ones(size(XTest, 1), 1)];
+ removed from exported mapLoadData.m
+        yTest = yTest - augTestX*w;
+ removed from exported mapLoadData.m
+        yscale = sqrt(var(y));
+ removed from exported mapLoadData.m
+        y = y/yscale;
+ removed from exported mapLoadData.m
+        yTest = yTest/yscale;
+ removed from exported mapLoadData.m
+    case 'pumadyn'
+ removed from exported mapLoadData.m
+
+ removed from exported mapLoadData.m
+        data = load([baseDir 'Dataset.data']);
+ removed from exported mapLoadData.m
+        ind = randperm(size(data, 1));
+ removed from exported mapLoadData.m
+        indTr = ind(1:7168);
+ removed from exported mapLoadData.m
+        indTe = ind(7169:end);
+ removed from exported mapLoadData.m
+        X = data(indTr, 1:end-1);
+ removed from exported mapLoadData.m
+        y = data(indTr, end);
+ removed from exported mapLoadData.m
+        XTest = data(indTe, 1:end-1);
+ removed from exported mapLoadData.m
+        yTest = data(indTe, end);
+ removed from exported mapLoadData.m
+    case 'lfmOde'
+ removed from exported mapLoadData.m
+        data = load([baseDir 'datasetODE31_150_5Ind0']);
+ removed from exported mapLoadData.m
+        X = data.Xtrain{1};
+ removed from exported mapLoadData.m
+        y = cell2mat(data.Ytrain');
+ removed from exported mapLoadData.m
+        XTest = data.Xtest{1};
+ removed from exported mapLoadData.m
+        yTest = cell2mat(data.Ytest');
+ removed from exported mapLoadData.m
+
+ removed from exported mapLoadData.m
+    case 'lfmOdeInd'
+ removed from exported mapLoadData.m
+        data = load([baseDir 'datasetODE31_100_5Ind1']);
+ removed from exported mapLoadData.m
+        X = data.Xtrain{1};
+ removed from exported mapLoadData.m
+        y = cell2mat(data.Ytrain');
+ removed from exported mapLoadData.m
+        XTest = data.Xtest{1};
+ removed from exported mapLoadData.m
+        yTest = cell2mat(data.Ytest');
+ removed from exported mapLoadData.m
+    case 'juraDataCo'
+ removed from exported mapLoadData.m
+        data = load([baseDir 'data_jura_Co']);
+ removed from exported mapLoadData.m
+        X = data.Xtrain;
+ removed from exported mapLoadData.m
+        y = data.Ytrain;
+ removed from exported mapLoadData.m
+        XTest = data.Xtest;
+ removed from exported mapLoadData.m
+        yTest = data.Ytest;
+ removed from exported mapLoadData.m
+    case 'juraDataPb'
+ removed from exported mapLoadData.m
+        data = load([baseDir 'data_jura_Pb']);
+ removed from exported mapLoadData.m
+        X = data.Xtrain;
+ removed from exported mapLoadData.m
+        y = data.Ytrain;
+ removed from exported mapLoadData.m
+        XTest = data.Xtest;
+ removed from exported mapLoadData.m
+        yTest = data.Ytest;
+ removed from exported mapLoadData.m
+
+ removed from exported mapLoadData.m
+    case 'juraDataCdIsotopic'
+ removed from exported mapLoadData.m
+        try
+ removed from exported mapLoadData.m
+            load([baseDir 'juraDataCdIsotopic.mat']);
+ removed from exported mapLoadData.m
+        catch
+ removed from exported mapLoadData.m
+            fidP = fopen([baseDir 'prediction.dat'],'r');
+ removed from exported mapLoadData.m
+            if fidP ==-1
+ removed from exported mapLoadData.m
+                error('The file prediction.dat does not exist in this directory');
+ removed from exported mapLoadData.m
+            end
+ removed from exported mapLoadData.m
+            fidV = fopen([baseDir 'validation.dat'],'r');
+ removed from exported mapLoadData.m
+            if fidV ==-1
+ removed from exported mapLoadData.m
+                error('The file validation.dat does not exist in this directory');
+ removed from exported mapLoadData.m
+            end
+ removed from exported mapLoadData.m
+            xLoc = [1 2];
+ removed from exported mapLoadData.m
+            primaryLoc = 5; % Column location of Cd in file prediction.dat and file validation.dat
+ removed from exported mapLoadData.m
+            secondaryLoc = [9 11]; % Column location of Ni and Zn
+ removed from exported mapLoadData.m
+            fseek(fidP, 61,-1);
+ removed from exported mapLoadData.m
+            A = textscan(fidP, '%f%f%f%f%f%f%f%f%f%f%f');
+ removed from exported mapLoadData.m
+            predValues = cell2mat(A);
+ removed from exported mapLoadData.m
+            fseek(fidV, 61,-1);
+ removed from exported mapLoadData.m
+            A = textscan(fidV, '%f%f%f%f%f%f%f%f%f%f%f');
+ removed from exported mapLoadData.m
+            valValues = cell2mat(A);
+ removed from exported mapLoadData.m
+            X = cell(1, 1+length(secondaryLoc));
+ removed from exported mapLoadData.m
+            y = cell(1, 1+length(secondaryLoc));
+ removed from exported mapLoadData.m
+            XTest =  cell(1, 1+length(secondaryLoc));
+ removed from exported mapLoadData.m
+            yTest =  cell(1, 1+length(secondaryLoc));
+ removed from exported mapLoadData.m
+            X{1} = predValues(:, xLoc);
+ removed from exported mapLoadData.m
+            y{1} = predValues(:,primaryLoc);
+ removed from exported mapLoadData.m
+            for i=1:length(secondaryLoc);
+ removed from exported mapLoadData.m
+                X{1+i} = predValues(:, xLoc);
+ removed from exported mapLoadData.m
+                y{1+i} = predValues(:, secondaryLoc(i));
+ removed from exported mapLoadData.m
+            end
+ removed from exported mapLoadData.m
+            XTest{1} = valValues(:, xLoc);
+ removed from exported mapLoadData.m
+            yTest{1} = valValues(:, primaryLoc);
+ removed from exported mapLoadData.m
+            for i=1:length(secondaryLoc);
+ removed from exported mapLoadData.m
+                XTest{1+i} = valValues(:, xLoc);
+ removed from exported mapLoadData.m
+                yTest{1+i} = valValues(:, secondaryLoc(i));
+ removed from exported mapLoadData.m
+            end
+ removed from exported mapLoadData.m
+            fclose(fidP);
+ removed from exported mapLoadData.m
+            fclose(fidV);
+ removed from exported mapLoadData.m
+            save([baseDir 'juraDataCdIsotopic.mat'], 'X', 'y', 'XTest', 'yTest');
+ removed from exported mapLoadData.m
+
+ removed from exported mapLoadData.m
+        end
+ removed from exported mapLoadData.m
+
+ removed from exported mapLoadData.m
+    case 'demp53_5genes'
+ removed from exported mapLoadData.m
+        data = load([baseDir 'dataBarencoOption_0_Genes_5']);
+ removed from exported mapLoadData.m
+        X = data.data{1}.Xtrain;
+ removed from exported mapLoadData.m
+        y = [cell2mat(data.data{1}.Ytrain); cell2mat(data.data{2}.Ytrain); cell2mat(data.data{3}.Ytrain)];
+ removed from exported mapLoadData.m
+        XTest = X;
+ removed from exported mapLoadData.m
+        yTest = [cell2mat(data.data{1}.Yvar); cell2mat(data.data{2}.Yvar); cell2mat(data.data{3}.Yvar)];
+ removed from exported mapLoadData.m
+
+ removed from exported mapLoadData.m
+    case 'demp53_50genes'
+ removed from exported mapLoadData.m
+        data = load([baseDir 'dataBarencoOption_0_Genes_50']);
+ removed from exported mapLoadData.m
+        X = data.data{1}.Xtrain;
+ removed from exported mapLoadData.m
+        y = [cell2mat(data.data{1}.Ytrain); cell2mat(data.data{2}.Ytrain); cell2mat(data.data{3}.Ytrain)];
+ removed from exported mapLoadData.m
+        XTest = X;
+ removed from exported mapLoadData.m
+        yTest = [cell2mat(data.data{1}.Yvar); cell2mat(data.data{2}.Yvar); cell2mat(data.data{3}.Yvar)];
+ removed from exported mapLoadData.m
+
+ removed from exported mapLoadData.m
+    case 'demp53_20genes'
+ removed from exported mapLoadData.m
+        data = load([baseDir 'dataBarencoOption_0_Genes_20']);
+ removed from exported mapLoadData.m
+        X = data.data{1}.Xtrain;
+ removed from exported mapLoadData.m
+        y = [cell2mat(data.data{1}.Ytrain); cell2mat(data.data{2}.Ytrain); cell2mat(data.data{3}.Ytrain)];
+ removed from exported mapLoadData.m
+        XTest = X;
+ removed from exported mapLoadData.m
+        yTest = [cell2mat(data.data{1}.Yvar); cell2mat(data.data{2}.Yvar); cell2mat(data.data{3}.Yvar)];
+ removed from exported mapLoadData.m
+if any(isnan(dlnZ_dmu))
+ removed from exported mgaussianNoiseGradVals.m
+  warning('dlnZ_dmu is NaN')
+ removed from exported mgaussianNoiseGradVals.m
+end
+ removed from exported mgaussianNoiseGradVals.m
+if any(isnan(dlnZ_dvs))
+ removed from exported mgaussianNoiseGradVals.m
+  warning('dlnZ_dvs is NaN')
+ removed from exported mgaussianNoiseGradVals.m
+end
+ removed from exported mgaussianNoiseGradVals.m
+if any(isnan(dlnZ_dmu))
+ removed from exported ncnmNoiseGradVals.m
+  warning('dlnZ_dmu is NaN')
+ removed from exported ncnmNoiseGradVals.m
+end
+ removed from exported ncnmNoiseGradVals.m
+if any(isnan(dlnZ_dvs))
+ removed from exported ncnmNoiseGradVals.m
+  warning('dlnZ_dvs is NaN')
+ removed from exported ncnmNoiseGradVals.m
+end
+ removed from exported ncnmNoiseGradVals.m
+if any(isnan(g))
+ removed from exported rbfKernGradient.m
+  warning('g is NaN')
+ removed from exported rbfKernGradient.m
+end
+ removed from exported rbfKernGradient.m
+if any(isnan(params))
+ removed from exported ivmKernelObjective.m
+  warning('Parameter is NaN')
+ removed from exported ivmKernelObjective.m
+end
+ removed from exported ivmKernelObjective.m
+    upsilon = gamma*lfmComputeUpsilonVector(gamma, sigma2, t1) ...
+ removed from exported lfmvpComputeUpsilonVector.m
+        - (2/(sqrt(pi)*sigma))*exp(-(t1.^2)/sigma2) ...
+ removed from exported lfmvpComputeUpsilonVector.m
+        + (2/(sqrt(pi)*sigma))*exp(-gamma*t1);
+ removed from exported lfmvpComputeUpsilonVector.m
+if any(isinf(params))
+ removed from exported mlpKernExtractParam.m
+  warning('params are infinite')
+ removed from exported mlpKernExtractParam.m
+end
+ removed from exported mlpKernExtractParam.m
+if any(isnan(g))
+ removed from exported polyKernGradient.m
+  warning('g is NaN')
+ removed from exported polyKernGradient.m
+end
+ removed from exported polyKernGradient.m
+ 
+ removed from exported ivmInit.m
+
+ removed from exported ivmInit.m
+ 
+ removed from exported ivmInit.m
+
+ removed from exported ivmInit.m
+
+ removed from exported ivmInit.m
+  
+ removed from exported ivmInit.m
+
+ removed from exported ivmInit.m
+if any(isnan(g))
+ removed from exported mlpKernGradient.m
+  warning('g is NaN')
+ removed from exported mlpKernGradient.m
+end
+ removed from exported mlpKernGradient.m
+if any(isnan(g))
+ removed from exported rbfperiodicKernGradient.m
+  warning('g is NaN')
+ removed from exported rbfperiodicKernGradient.m
+end
+ removed from exported rbfperiodicKernGradient.m
+
+ removed from exported demSpgp1dPlot.m
+model = ivmUpdateNuG(model, i);
+ removed from exported ivmEpUpdatePoint.m
+if any(isnan(params))
+ removed from exported ivmKernelGradient.m
+  warning('Parameter is NaN')
+ removed from exported ivmKernelGradient.m
+end
+ removed from exported ivmKernelGradient.m
+
+ removed from exported lfmCreate.m
+if any(isnan(g))
+ removed from exported dexpKernGradient.m
+  warning('g is NaN')
+ removed from exported dexpKernGradient.m
+end
+ removed from exported dexpKernGradient.m
+if any(any(isnan(model.posterior)))
+ removed from exported mogEstep.m
+  error('Posterior is nan');
+ removed from exported mogEstep.m
+end
+ removed from exported mogEstep.m
+if any(isnan(params));
+ removed from exported kernExtractParam.m
+  warning('Parameter has gone to NaN')
+ removed from exported kernExtractParam.m
+end
+ removed from exported kernExtractParam.m
+if any(isnan(g))
+ removed from exported ouKernGradient.m
+  warning('g is NaN')
+ removed from exported ouKernGradient.m
+end
+ removed from exported ouKernGradient.m
+   case 'fourWalks'
+ removed from exported lvmLoadData.m
+    try 
+ removed from exported lvmLoadData.m
+      load([baseDir 'fourWalks.mat']);
+ removed from exported lvmLoadData.m
+    catch
+ removed from exported lvmLoadData.m
+      [void, errid] = lasterr;
+ removed from exported lvmLoadData.m
+      if strcmp(errid, 'MATLAB:load:couldNotReadFile');
+ removed from exported lvmLoadData.m
+        
+ removed from exported lvmLoadData.m
+        subj = {'35', '10', '12', '16'};
+ removed from exported lvmLoadData.m
+        examples = {'02', '04', '01', '15'};
+ removed from exported lvmLoadData.m
+        exlbls = eye(4);
+ removed from exported lvmLoadData.m
+        startVals = [55, 222, 22, 62];
+ removed from exported lvmLoadData.m
+        endVals = [338, 499, 328, 342];
+ removed from exported lvmLoadData.m
+        diffInd = [1 3 5];
+ removed from exported lvmLoadData.m
+        totLength = 0;
+ removed from exported lvmLoadData.m
+        totTestLength = 0;
+ removed from exported lvmLoadData.m
+        for i = 1:length(examples)
+ removed from exported lvmLoadData.m
+          skel = acclaimReadSkel([baseDir 'mocap' dirSep 'cmu' dirSep subj{i} dirSep subj{i} ...
+ removed from exported lvmLoadData.m
+                              '.asf']);
+ removed from exported lvmLoadData.m
+          [tmpchan, skel] = acclaimLoadChannels([baseDir 'mocap' dirSep 'cmu' dirSep subj{i} dirSep subj{i} '_' ...
+ removed from exported lvmLoadData.m
+                              examples{i} '.amc'], skel);
+ removed from exported lvmLoadData.m
+          tY{i} = tmpchan(startVals(i):4:endVals(i), :);
+ removed from exported lvmLoadData.m
+          tY{i}(:, diffInd) = tmpchan(startVals(i)+1:4:endVals(i)+1, diffInd)...
+ removed from exported lvmLoadData.m
+              - tY{i}(:, diffInd);
+ removed from exported lvmLoadData.m
+          tlbls{i} = repmat(exlbls(i, :), size(tY{i}, 1), 1);
+ removed from exported lvmLoadData.m
+          totLength = totLength + size(tY{i}, 1);
+ removed from exported lvmLoadData.m
+        end
+ removed from exported lvmLoadData.m
+        Y = zeros(totLength, size(tY{1}, 2));
+ removed from exported lvmLoadData.m
+        lbls = zeros(totLength, size(tlbls{1}, 2));
+ removed from exported lvmLoadData.m
+        endInd = 0;
+ removed from exported lvmLoadData.m
+        for i = 1:length(tY)
+ removed from exported lvmLoadData.m
+          startInd = endInd + 1;
+ removed from exported lvmLoadData.m
+          endInd = endInd + size(tY{i}, 1);
+ removed from exported lvmLoadData.m
+          Y(startInd:endInd, :) = tY{i};
+ removed from exported lvmLoadData.m
+          lbls(startInd:endInd, :) = tlbls{i};
+ removed from exported lvmLoadData.m
+        end
+ removed from exported lvmLoadData.m
+        Ytest = [];
+ removed from exported lvmLoadData.m
+        lblstest = [];
+ removed from exported lvmLoadData.m
+        subj = {'35', '12', '16', '12', '07', '07', '08', '08'};
+ removed from exported lvmLoadData.m
+        examples = {'03', '02', '21', '03', '01', '02', '01', '02'};
+ removed from exported lvmLoadData.m
+        testexlbls = eye(8);
+ removed from exported lvmLoadData.m
+        startVals = ones(1, 8);
+ removed from exported lvmLoadData.m
+        endVals = 200*ones(1, 8);
+ removed from exported lvmLoadData.m
+        totLength = 0;
+ removed from exported lvmLoadData.m
+        totTestLength = 0;
+ removed from exported lvmLoadData.m
+        for i = 1:length(examples)
+ removed from exported lvmLoadData.m
+          skel = acclaimReadSkel([baseDir 'mocap' dirSep 'cmu' dirSep subj{i} dirSep subj{i} ...
+ removed from exported lvmLoadData.m
+                              '.asf']);
+ removed from exported lvmLoadData.m
+          [tmpchan, skel] = acclaimLoadChannels([baseDir 'mocap' dirSep 'cmu' dirSep subj{i} dirSep subj{i} '_' ...
+ removed from exported lvmLoadData.m
+                              examples{i} '.amc'], skel);
+ removed from exported lvmLoadData.m
+          tYtest{i} = tmpchan(startVals(i):4:endVals(i), :);
+ removed from exported lvmLoadData.m
+          tYtest{i}(:, diffInd) = tmpchan(startVals(i)+1:4:endVals(i)+1, diffInd)...
+ removed from exported lvmLoadData.m
+              - tYtest{i}(:, diffInd);
+ removed from exported lvmLoadData.m
+          tlblstest{i} = repmat(testexlbls(i, :), size(tYtest{i}, 1), 1);
+ removed from exported lvmLoadData.m
+          totLength = totLength + size(tYtest{i}, 1);
+ removed from exported lvmLoadData.m
+        end
+ removed from exported lvmLoadData.m
+        Ytest = zeros(totTestLength, size(tYtest{1}, 2));
+ removed from exported lvmLoadData.m
+        lblstest = zeros(totTestLength, size(tlblstest{1}, 2));
+ removed from exported lvmLoadData.m
+        endInd = 0;
+ removed from exported lvmLoadData.m
+        for i = 1:length(tYtest)
+ removed from exported lvmLoadData.m
+          startInd = endInd + 1;
+ removed from exported lvmLoadData.m
+          endInd = endInd + size(tYtest{i}, 1);
+ removed from exported lvmLoadData.m
+          Ytest(startInd:endInd, :) = tYtest{i};
+ removed from exported lvmLoadData.m
+          lblstest(startInd:endInd, :) = tlblstest{i};
+ removed from exported lvmLoadData.m
+        end
+ removed from exported lvmLoadData.m
+        save([baseDir 'fourWalks.mat'], 'Y', 'lbls', 'Ytest', 'lblstest');
+ removed from exported lvmLoadData.m
+      else
+ removed from exported lvmLoadData.m
+        error(lasterr);
+ removed from exported lvmLoadData.m
+      end
+ removed from exported lvmLoadData.m
+    end
+ removed from exported lvmLoadData.m
+
+ removed from exported lvmLoadData.m
+   case 'walkSitJog'
+ removed from exported lvmLoadData.m
+    Y = mocapLoadTextData([baseDir 'walkSitJog']);
+ removed from exported lvmLoadData.m
+    Y = Y(1:4:end, :)*200;
+ removed from exported lvmLoadData.m
+    
+ removed from exported lvmLoadData.m
+
+ removed from exported lvmLoadData.m
+   case 'robotAtrium'
+ removed from exported lvmLoadData.m
+    Y = parseWirelessData([baseDir 'uw-atrium.txt']);
+ removed from exported lvmLoadData.m
+    Y = (Y + 85)/15;
+ removed from exported lvmLoadData.m
+    Y = Y(1:281, :);
+ removed from exported lvmLoadData.m
+    lbls = 'connect'
+ removed from exported lvmLoadData.m
+   
+ removed from exported lvmLoadData.m
+    Ytest = parseWirelessData([baseDir 'uw-atrium.txt']);
+ removed from exported lvmLoadData.m
+    Ytest = (Ytest + 85)/15;
+ removed from exported lvmLoadData.m
+    Ytest = Ytest(282:end, :);
+ removed from exported lvmLoadData.m
+
+ removed from exported lvmLoadData.m
+    
+ removed from exported lvmLoadData.m
+   case 'accWalkSitJog'
+ removed from exported lvmLoadData.m
+    try
+ removed from exported lvmLoadData.m
+      load([baseDir 'walkSitJog.mat']); 
+ removed from exported lvmLoadData.m
+    catch    
+ removed from exported lvmLoadData.m
+      [void, errid] = lasterr;
+ removed from exported lvmLoadData.m
+      if strcmp(errid, 'MATLAB:load:couldNotReadFile')
+ removed from exported lvmLoadData.m
+        skel = acclaimReadSkel([baseDir 'mocap' dirSep 'cmu' dirSep '86' dirSep '86.asf']);
+ removed from exported lvmLoadData.m
+        [channels, skel] = acclaimLoadChannels([baseDir 'mocap' dirSep 'cmu' dirSep '86' dirSep '86_10.amc'], skel);
+ removed from exported lvmLoadData.m
+        channels(:, [1 3]) = zeros(size(channels, 1), 2);
+ removed from exported lvmLoadData.m
+        Y = channels(1:4:end, :);
+ removed from exported lvmLoadData.m
+        save([baseDir 'walkSitJog.mat'], 'Y')
+ removed from exported lvmLoadData.m
+      else
+ removed from exported lvmLoadData.m
+        error(lasterr);
+ removed from exported lvmLoadData.m
+      end
+ removed from exported lvmLoadData.m
+    end
+ removed from exported lvmLoadData.m
+   case 'horse'
+ removed from exported lvmLoadData.m
+    load([baseDir 'horse.dat']);
+ removed from exported lvmLoadData.m
+    horse([133, 309], :) = [];
+ removed from exported lvmLoadData.m
+    ordinalAtr = [1 2 7 8 9 10 11 12 13 14 15 17 18 21];
+ removed from exported lvmLoadData.m
+    horse(:, ordinalAtr) = horse(:, ordinalAtr) - 1;
+ removed from exported lvmLoadData.m
+
+ removed from exported lvmLoadData.m
+    lbls = zeros(size(horse, 1), 3);
+ removed from exported lvmLoadData.m
+    for i = 1:size(horse, 1)
+ removed from exported lvmLoadData.m
+      lbls(i, horse(i, 23)) = 1;
+ removed from exported lvmLoadData.m
+    end
+ removed from exported lvmLoadData.m
+    
+ removed from exported lvmLoadData.m
+    horse(:, 23:28) = [];
+ removed from exported lvmLoadData.m
+    horse(:, 3) = [];
+ removed from exported lvmLoadData.m
+    Y = horse;
+ removed from exported lvmLoadData.m
+    for i = [3 4 5 15 18 19 21];
+ removed from exported lvmLoadData.m
+      va = var(Y(find(~isnan(Y(:, i))), i));
+ removed from exported lvmLoadData.m
+      Y(:, i) = Y(:, i)/va;
+ removed from exported lvmLoadData.m
+    end
+ removed from exported lvmLoadData.m
+    
+ removed from exported lvmLoadData.m
+   case 'pitch'
+ removed from exported lvmLoadData.m
+    load('-ascii', [baseDir 'bballpitch.mat']);
+ removed from exported lvmLoadData.m
+    Y = bballpitch(:,8:end);
+ removed from exported lvmLoadData.m
+
+ removed from exported lvmLoadData.m
+   case 'ratemaps'
+ removed from exported lvmLoadData.m
+    Y = loadRateMap([baseDir 'ratemaps'])';
+ removed from exported lvmLoadData.m
+    Y = Y(1:10000, :);
+ removed from exported lvmLoadData.m
+    
+ removed from exported lvmLoadData.m
+   case 'cepstral'
+ removed from exported lvmLoadData.m
+    Y = load([baseDir 'cepvecs']);
+ removed from exported lvmLoadData.m
+    Y = Y(1:5000, :);
+ removed from exported lvmLoadData.m
+
+ removed from exported lvmLoadData.m
+   case 'vowels90'
+ removed from exported lvmLoadData.m
+    load([baseDir 'jon_vowel_data']);
+ removed from exported lvmLoadData.m
+    Y = [a_raw(1:30:end, :); ae_raw(1:30:end, :); ao_raw(1:30:end, :); ...
+ removed from exported lvmLoadData.m
+         e_raw(1:30:end, :); i_raw(1:30:end, :); ibar_raw(1:30:end, :); ...
+ removed from exported lvmLoadData.m
+         o_raw(1:30:end, :); schwa_raw(1:30:end, :); u_raw(1:30:end, :)];
+ removed from exported lvmLoadData.m
+    lbls = [];
+ removed from exported lvmLoadData.m
+    for i = 1:9
+ removed from exported lvmLoadData.m
+      lbl = zeros(1, 9);
+ removed from exported lvmLoadData.m
+      lbl(i) = 1;
+ removed from exported lvmLoadData.m
+      lbls = [lbls; repmat(lbl, 10, 1)];
+ removed from exported lvmLoadData.m
+    end
+ removed from exported lvmLoadData.m
+   case 'vowels3'
+ removed from exported lvmLoadData.m
+    load([baseDir 'jon_vowel_data']);
+ removed from exported lvmLoadData.m
+    Y = [a_raw(1:3:end, :); ae_raw(1:3:end, :); ao_raw(1:3:end, :); ...
+ removed from exported lvmLoadData.m
+         e_raw(1:3:end, :); i_raw(1:3:end, :); ibar_raw(1:3:end, :); ...
+ removed from exported lvmLoadData.m
+         o_raw(1:3:end, :); schwa_raw(1:3:end, :); u_raw(1:3:end, : ...
+ removed from exported lvmLoadData.m
+                                                      )];
+ removed from exported lvmLoadData.m
+    lbls = [];
+ removed from exported lvmLoadData.m
+    for i = 1:9
+ removed from exported lvmLoadData.m
+      lbl = zeros(1, 9);
+ removed from exported lvmLoadData.m
+      lbl(i) = 1;
+ removed from exported lvmLoadData.m
+      lbls = [lbls; repmat(lbl, 100, 1)];
+ removed from exported lvmLoadData.m
+    end
+ removed from exported lvmLoadData.m
+   case 'breakdance'
+ removed from exported lvmLoadData.m
+    Y = mocapLoadTextData([baseDir 'EricCamper04'], 0);
+ removed from exported lvmLoadData.m
+    Y = Y(1:4:end, :);
+ removed from exported lvmLoadData.m
+    
+ removed from exported lvmLoadData.m
+   case 'dance'
+ removed from exported lvmLoadData.m
+    Y = mocapLoadTextData([baseDir 'dancemotion'], 0);
+ removed from exported lvmLoadData.m
+    Y = Y(1:4:end, :);
+ removed from exported lvmLoadData.m
+
+ removed from exported lvmLoadData.m
+   case 'danceReduced'
+ removed from exported lvmLoadData.m
+    Y = mocapLoadTextData([baseDir 'dancemotion'], 0);
+ removed from exported lvmLoadData.m
+    Y = Y(1:16:end, :);
+ removed from exported lvmLoadData.m
+if any(isinf(params))
+ removed from exported polyKernExpandParam.m
+  warning('params are infinite')
+ removed from exported polyKernExpandParam.m
+end
+ removed from exported polyKernExpandParam.m
