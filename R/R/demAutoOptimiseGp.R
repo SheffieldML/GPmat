@@ -43,7 +43,7 @@ demAutoOptimiseGp <- function(path=getwd(), filename='demAutoOptimiseGp', png=FA
   }
 
   model = gpOptimise(model, display=TRUE, iters=400)
-  opthypers = gpExtractParam(model, only.value = FALSE);
+  opthypers = gpExtractParam(model, only.values = FALSE);
   opthypers = exp(opthypers);
   ll_opt = gpLogLikelihood(model)
   meanVar = gpPosteriorMeanVar(model, xtest, varsigma.return=TRUE) ## GP mean and variance.
