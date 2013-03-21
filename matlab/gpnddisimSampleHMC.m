@@ -1,4 +1,4 @@
-function samples = gpnddisimSampleHMC(model, display, iters);
+function samples = gpnddisimSampleHMC(model, display, iters, options);
 
 % GPNDDISIMSAMPLEHMC Do HMC sampling for the GPNDDISIM model.
 % FORMAT
@@ -15,7 +15,7 @@ function samples = gpnddisimSampleHMC(model, display, iters);
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
-% MODIFICATIONS : Antti Honkela, 2007
+% COPYRIGHT : Antti Honkela, 2007-2013
 %
 % COPYRIGHT : Jaakko Peltonen, 2011
 
@@ -32,29 +32,33 @@ end
 
 [params,paramnames] = modelExtractParam(model);
 
-options = optOptions;
+if nargin < 4,
+  options = hmcDefaultOptions;
+end
+
+hmcopt = optOptions;
 if display
-  options(1) = display;
+  hmcopt(1) = display;
   if length(params) <= 100
-    options(9) = 1;
+    hmcopt(9) = 1;
   end
 end
 
 % Momentum persistence
-options(5) = 1;
+hmcopt(5) = 1;
 
 % Leapfrog steps
-options(7) = 20;
+hmcopt(7) = options.tau;
 
-% options(18) = epsilon, step length
-options(18) = .05;
+% hmcopt(18) = epsilon, step length
+hmcopt(18) = options.epsilon;
 
 % Number of samples to return
-options(14) = iters;
+hmcopt(14) = iters;
 
-fprintf(1,'Initial parameters:\n');
-params
-paramnames
+%fprintf(1,'Initial parameters:\n');
+%params
+%paramnames
 
-samples = hmc('modelObjective', params,  options, ...
+samples = hmc('modelObjective', params,  hmcopt, ...
 	      'modelGradient', model);
