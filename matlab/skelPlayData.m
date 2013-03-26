@@ -51,5 +51,6 @@ set(gca, 'xlim', xlim, ...
 % Play the motion
 for j = 1:size(channels, 1)
   pause(frameLength)
+ % fprintf('%d ', j)
   skelModify(handle, channels(j, :), skelStruct);
 end
