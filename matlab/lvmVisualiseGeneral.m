@@ -139,8 +139,10 @@ set(visualiseInfo.visualiseAxes, 'position', [0.05 0.05 0.9 0.8]);
 
 visualiseInfo.visualiseFunction = str2func(visualiseFunction);
 visHandle = visualiseInfo.visualiseFunction(visData, varargin{:});
-set(visHandle, 'erasemode', 'xor')
-
+handleType = get(visHandle, 'type');
+if ~strcmp(handleType, 'figure')
+    set(visHandle, 'erasemode', 'xor');
+end
 % Pass the data to visualiseInfo
 visualiseInfo.model = model;
 visualiseInfo.varargin = varargin;
