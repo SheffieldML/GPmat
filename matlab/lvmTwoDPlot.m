@@ -38,7 +38,7 @@ if nargin < 3 || isempty(symbol)
         symbol = getSymbols(size(lbl,2));
     end
 end
-if nargin > 3
+if nargin > 3 && ~isempty(fhandle)
     axisHand = fhandle;
 else
     axisHand = gca;
