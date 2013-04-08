@@ -51,7 +51,8 @@ if numSliders > 0
   pos(2) = pos(2) + sliderHeight*numSliders;
 end
 a = ver('matlab');
-if strcmp(a.Version, '7.0.1')
+vv = a.Version;
+if strcmp(vv, '7.0.1')
   menu = 'listbox';
 else
   menu = 'popupmenu';
