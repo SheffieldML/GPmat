@@ -7,7 +7,8 @@ function lvmVisualiseGeneral(model, YLbls, ...
 % false, does not plot the variance of the inputs in the scatter plot,
 % something which saves a lot of computational time for high-dimensional
 % data.
-%
+% 
+% COPYRIGHT: Neil D. Lawrence, Andreas C, Damianou, 2012
 % SEEALSO : lvmVisualise, lvmClassVisualise, lvmScatterPlot,
 % lvmScatterPlotNoVar
 %
@@ -16,11 +17,19 @@ function lvmVisualiseGeneral(model, YLbls, ...
 
 global visualiseInfo
 
+if nargin < 5
+	showVariance = 1;
+end
+
 visualiseInfo.showVariance = showVariance;
 
 lvmClassVisualiseFunc = [model.type 'ClassVisualise'];
 if ~exist(lvmClassVisualiseFunc)
-    lvmClassVisualiseFunc = 'lvmClassVisualise';
+	if showVariance
+		lvmClassVisualiseFunc = 'lvmClassVisualise';
+	else
+		lvmClassVisualiseFunc = 'lvmClassVisualiseNoVar';
+	end
 end
 
 if isfield(model, 'vis') && isfield(model.vis, 'figHandle')
@@ -139,8 +148,10 @@ set(visualiseInfo.visualiseAxes, 'position', [0.05 0.05 0.9 0.8]);
 
 visualiseInfo.visualiseFunction = str2func(visualiseFunction);
 visHandle = visualiseInfo.visualiseFunction(visData, varargin{:});
-set(visHandle, 'erasemode', 'xor')
-
+handleType = get(visHandle, 'type');
+if ~strcmp(handleType, 'figure')
+    set(visHandle, 'erasemode', 'xor');
+end
 % Pass the data to visualiseInfo
 visualiseInfo.model = model;
 visualiseInfo.varargin = varargin;

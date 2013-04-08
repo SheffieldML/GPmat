@@ -20,11 +20,19 @@ function gX = linard2KernGradX(kern, X, X2)
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 %
 % COPYRIGHT : Michalis K. Titsias, 2009
+% MODIFICATIONS: Andreas C. Damianou, 2012
 
 % SHEFFIELDML
 
 
 scales = sparse(diag(kern.inputScales));
+
+%%%-- Allow for 1-D inputs (Q=1)
+if isscalar(scales)
+    scales = full(scales);
+end
+%%%--
+
 X2 = X2*scales;
 
 gX = repmat(X2, [1 1 size(X, 1)]);
