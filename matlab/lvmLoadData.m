@@ -35,8 +35,12 @@ function [Y, lbls, Ytest, lblstest] = lvmLoadData(dataset, seedVal)
   lbls = [];
   lblstest = [];
   switch dataset
+   case 'YaleSubset6_1'
+          load([baseDir 'YaleSubset6.mat']);
+          lbls = [height;width];
    case 'missa'
        load([baseDir 'miss-americaHD.mat']);
+       lbls = [288 ;360];
    case 'movielens'
     try 
       load([baseDir 'movielens.mat']);
