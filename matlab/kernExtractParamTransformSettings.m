@@ -51,4 +51,7 @@ else % No, so let's improvise
 
   [paramtransformsettings{1:length(kern.transforms)}] = ...
       deal(kern.transforms.transformsettings);
+  % We could remove empty slots like this:
+  %paramtransformsettings = ...
+  %    paramtransformsettings(~cellfun('isempty', paramtransformsettings));
 end
