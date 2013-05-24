@@ -37,7 +37,9 @@ model.kern = kernExpandParamTransformSettings(model.kern, paramtransformsettings
 
 
 if model.numGenes>0,
-  model.bTransformSettings = paramtransformsettings(endVal+1:endVal+model.numGenes);
+  for k=1:model.numGenes,
+    model.bTransform(k).transformsettings = paramtransformsettings{endVal+k};
+  end
   if isfield(model, 'bprior'),
     model.bprior = priorSetBounds(model.bprior, ...
 				  paramtransformsettings(endVal+1:endVal+model.numGenes));
@@ -45,8 +47,10 @@ if model.numGenes>0,
   endVal=endVal+model.numGenes;
   
   if model.use_disimstartmean==1,
-    model.disimStartMeanTransformSettings = ...
-	paramtransformsettings(endVal+1:endVal+model.numGenes);
+    for k=1:model.numGenes,
+      model.disimStartMeanTransform(k).transformsettings = ...
+	  paramtransformsettings{endVal+k};
+    end
     if isfield(model, 'disimStartMeanPrior'),
       model.disimStartMeanPrior = priorSetBounds(model.disimStartMeanPrior, ...
 						 paramtransformsettings(endVal+1:endVal+model.numGenes));
@@ -58,47 +62,36 @@ end;
 % fprintf(1,'gpnddisimExpandParamTransformSettings step3\n');
 
 
-if isfield(model,'disimdecayindices'),
-  if ~isempty(model.disimdecayindices),
-    % find and store transformation settings related to DISIM
-    % decay. Assumes model.disimdecayindices has already been created.
-    disimdecaytransformationsettings=cell(model.numGenes,1);
-    for disimindex=1:model.numGenes,
-      %fprintf('taking disimdecay transformsettings from index %d\n',model.disimdecayindices(disimindex));
-      disimdecaytransformationsettings{disimindex}=...
-	  paramtransformsettings{model.disimdecayindices(disimindex)};      
-    end;
-    model.disimdecaytransformationsettings=disimdecaytransformationsettings;
+if isfield(model,'disimdecayindices') && ~isempty(model.disimdecayindices),
+  % find and store transformation settings related to DISIM
+  % decay. Assumes model.disimdecayindices has already been created.
+  for disimindex=1:model.numGenes,
+    %fprintf('taking disimdecay transformsettings from index %d\n',model.disimdecayindices(disimindex));
+    model.disimdecaytransformation(disimindex).transformsettings=...
+	paramtransformsettings{model.disimdecayindices(disimindex)};
   end;
 end;
 
-if isfield(model,'disimvarianceindices'),
-  if ~isempty(model.disimvarianceindices),
-    % find and store transformation settings related to DISIM
-    % variance. Assumes model.disimvarianceindices has already been created.
-    disimvariancetransformationsettings=cell(model.numGenes,1);
-    for disimindex=1:model.numGenes,
-      disimvariancetransformationsettings{disimindex}=...
-	  paramtransformsettings{model.disimvarianceindices(disimindex)};
-    end;
-    model.disimvariancetransformationsettings=disimvariancetransformationsettings;
+if isfield(model,'disimvarianceindices') && ~isempty(model.disimvarianceindices),
+  % find and store transformation settings related to DISIM
+  % variance. Assumes model.disimvarianceindices has already been created.
+  disimvariancetransformationsettings=cell(model.numGenes,1);
+  for disimindex=1:model.numGenes,
+    model.disimvariancetransformation(disimindex).transformsettings=...
+	paramtransformsettings{model.disimvarianceindices(disimindex)};
   end;
 end;
 
-if isfield(model,'disimdelayindices'),
-  if ~isempty(model.disimdelayindices),
-    % find and store transformation settings related to DISIM
-    % delay. Assumes model.disimdelayindices has already been created.
-    disimdelaytransformationsettings=cell(model.numGenes,1);
-    for disimindex=1:model.numGenes,
-      disimdelaytransformationsettings{disimindex}=...
-	  paramtransformsettings{model.disimdelayindices(disimindex)};
-    end;
-    model.disimdelaytransformationsettings=disimdelaytransformationsettings;
+if isfield(model,'disimdelayindices') && ~isempty(model.disimdelayindices),
+  % find and store transformation settings related to DISIM
+  % delay. Assumes model.disimdelayindices has already been created.
+  for disimindex=1:model.numGenes,
+    model.disimdelaytransformation(disimindex).transformsettings=...
+	paramtransformsettings{model.disimdelayindices(disimindex)};
   end;
 end;
 
-model.simMeanTransformSettings = paramtransformsettings{endVal+1};
+model.simMeanTransform.transformsettings = paramtransformsettings{endVal+1};
 if isfield(model, 'simMeanPrior'),
   model.simMeanPrior = priorSetBounds(model.simMeanPrior, ...
 				      paramtransformsettings{endVal+1});

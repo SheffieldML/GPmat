@@ -43,7 +43,7 @@ end
 % Transformation settings for basal transcription rates
 if model.numGenes>0,
   for k=1:model.numGenes,
-    paramtransformsettings = {paramtransformsettings{:}, model.bTransformSettings{k}};
+    paramtransformsettings = {paramtransformsettings{:}, model.bTransform(k).transformsettings};
   end;
 end;
 
@@ -51,13 +51,13 @@ end;
 if model.numGenes>0,
   if (model.use_disimstartmean==1),
     for i=1:model.numGenes,
-      paramtransformsettings = {paramtransformsettings{:}, model.disimStartMeanTransformSettings{k}};
+      paramtransformsettings = {paramtransformsettings{:}, model.disimStartMeanTransform(k).transformsettings};
     end;
   end;
 end;
 
 % Transformation settings for SIM mean
-paramtransformsettings = {paramtransformsettings{:}, model.simMeanTransformSettings};
+paramtransformsettings = {paramtransformsettings{:}, model.simMeanTransform.transformsettings};
 
 
 

@@ -89,6 +89,14 @@ end;
 
 model.type = 'gpnddisim';
 
+if isfield(options, 'uniformPriors') && options.uniformPriors,
+  paramTransform = 'identity';
+  model.uniformPriors = 1;
+else
+  paramTransform = 'sigmoidab';
+  model.uniformPriors = 0;
+end
+
 %fprintf(1,'nddisimCreate step2\n');
 
 
@@ -106,9 +114,11 @@ model.type = 'gpnddisim';
 
 kernType1{1} = 'multi';  % The effect-kernel K{1} is defined as a block kernel
 kernType2{1} = 'multi';  % The noise-kernel K{2} is defined as a block kernel
-kernType1{2} = 'ndsim';  % The top-left block of K{1} is a NDSIM kernel
+kernType1{2} = {'parametric', struct('paramTransform', {paramTransform}), ...
+		'ndsim'}; % The top-left block of K{1} is a NDSIM kernel
 for i = 1:numGenes
-  kernType1{i+2} = 'nddisim'; % All other blocks of K{1} are NDDISIM kernels
+  kernType1{i+2} = {'parametric', struct('paramTransform', {paramTransform}), ...
+		    'nddisim'}; % All other blocks of K{1} are NDDISIM kernels
 end
 
 
@@ -167,10 +177,9 @@ if model.includeNoise
 
   % Set the new multi kernel to just contain 'white' kernels.
   for i = 1:numGenes+1
-    % Provide the 'use_sigmoidab' option to the white-noise kernels so the
-    % allowed range of the white noise parameter can be customized.
+    % Use a bounded transformation to constrain the parameter range.
     % kernType2{i+1} = 'white';
-    kernType2{i+1} = {'parametric', struct('use_sigmoidab', {1}), 'white'};
+    kernType2{i+1} = {'parametric', struct('paramTransform', {paramTransform}), 'white'};
   end
   
   % If desired, tie the observation-noise variance parameters
@@ -206,38 +215,58 @@ simMultiKern = eval(simMultiKernName);
 if isfield(options, 'addPriors') && options.addPriors,
   eval([simMultiKernName '.comp{1}.priors = cell(1, simMultiKern.comp{1}.nParams);']);
   for k=1:simMultiKern.comp{1}.nParams,
-    eval([simMultiKernName '.comp{1}.priors{k} = priorCreate(''logisticNormal'');']);
-    eval([simMultiKernName '.comp{1}.priors{k}.mu = 0;']);
-    eval([simMultiKernName '.comp{1}.priors{k}.sd = 2;']);
+    if model.uniformPriors,
+      eval([simMultiKernName '.comp{1}.priors{k} = priorCreate(''uniform'');']);
+    else
+      eval([simMultiKernName '.comp{1}.priors{k} = priorCreate(''logisticNormal'');']);
+      eval([simMultiKernName '.comp{1}.priors{k}.mu = 0;']);
+      eval([simMultiKernName '.comp{1}.priors{k}.sd = 2;']);
+    end
     eval([simMultiKernName '.comp{1}.priors{k}.index = k;']);
   end
 
   for i = 2:simMultiKern.numBlocks,
     eval([simMultiKernName '.comp{i}.priors = cell(1, simMultiKern.comp{i}.nParams-2);']);
     for k=1:simMultiKern.comp{i}.nParams-2,
-      eval([simMultiKernName '.comp{i}.priors{k} = priorCreate(''logisticNormal'');']);
-      eval([simMultiKernName '.comp{i}.priors{k}.mu = 0;']);
-      eval([simMultiKernName '.comp{i}.priors{k}.sd = 2;']);
+      if model.uniformPriors,
+	eval([simMultiKernName '.comp{i}.priors{k} = priorCreate(''uniform'');']);
+      else
+	eval([simMultiKernName '.comp{i}.priors{k} = priorCreate(''logisticNormal'');']);
+	eval([simMultiKernName '.comp{i}.priors{k}.mu = 0;']);
+	eval([simMultiKernName '.comp{i}.priors{k}.sd = 2;']);
+      end
       eval([simMultiKernName '.comp{i}.priors{k}.index = k+2;']);
     end
   end
 
   % Prior on the b values.
-  model.bprior = priorCreate('logisticNormal');
-  model.bprior.mu = 0;
-  model.bprior.sd = 2;
+  if model.uniformPriors,
+    model.bprior = priorCreate('uniform');
+  else
+    model.bprior = priorCreate('logisticNormal');
+    model.bprior.mu = 0;
+    model.bprior.sd = 2;
+  end
 
   % Prior on the b values.
-  model.simMeanPrior = priorCreate('logisticNormal');
-  model.simMeanPrior.mu = 0;
-  model.simMeanPrior.sd = 2;
+  if model.uniformPriors,
+    model.simMeanPrior = priorCreate('uniform');
+  else
+    model.simMeanPrior = priorCreate('logisticNormal');
+    model.simMeanPrior.mu = 0;
+    model.simMeanPrior.sd = 2;
+  end
   
   % Prior on the input noise variance
   if model.includeNoise,
     model.kern.comp{2}.comp{1}.priors = cell(1, 1);
-    model.kern.comp{2}.comp{1}.priors{1} = priorCreate('logisticNormal');
-    model.kern.comp{2}.comp{1}.priors{1}.mu = 0;
-    model.kern.comp{2}.comp{1}.priors{1}.sd = 2;
+    if model.uniformPriors,
+      model.kern.comp{2}.comp{1}.priors{1} = priorCreate('uniform');
+    else
+      model.kern.comp{2}.comp{1}.priors{1} = priorCreate('logisticNormal');
+      model.kern.comp{2}.comp{1}.priors{1}.mu = 0;
+      model.kern.comp{2}.comp{1}.priors{1}.sd = 2;
+    end
     model.kern.comp{2}.comp{1}.priors{1}.index = 1;
   end
 end
@@ -341,13 +370,18 @@ if (use_disimstartmean==1),
   % Use a scaled sigmoid transformation for the "initial RNA
   % concentration" parameters (disimStartMean), so that
   % their allowed range can be customized.
-  model.disimStartMeanTransform = 'sigmoidab';
+  model.disimStartMeanTransform = ...
+      struct('type', repmat({paramTransform}, [numGenes, 1]));
   
   if isfield(options, 'addPriors') && options.addPriors,
     % Prior on the disimStartMean values.
-    model.disimStartMeanPrior = priorCreate('logisticNormal');
-    model.disimStartMeanPrior.mu = 0;
-    model.disimStartMeanPrior.sd = 2;
+    if model.uniformPriors,
+      model.disimStartMeanPrior = priorCreate('uniform');
+    else
+      model.disimStartMeanPrior = priorCreate('logisticNormal');
+      model.disimStartMeanPrior.mu = 0;
+      model.disimStartMeanPrior.sd = 2;
+    end
   end
 else
   num_disimstartmeans=0;
@@ -377,7 +411,7 @@ end;
 % The basal transcriptions rates must be postitive. Use a scaled
 % sigmoid transformation for them so that the allowed range of the
 % basal transcription rates can be customized.
-model.bTransform = 'sigmoidab';
+model.bTransform = struct('type', repmat({paramTransform}, [numGenes, 1]));
 
 
 %fprintf(1,'nddisimCreate step10\n');
@@ -393,7 +427,7 @@ model.simMean = 0;
 % The mean of the input protein should be positive. Use a scaled
 % sigmoid transformation for them so that the allowed range of the
 % input protein mean can be customized.
-model.simMeanTransform = 'sigmoidab';
+model.simMeanTransform.type = paramTransform;
 
 
 
@@ -491,16 +525,13 @@ if isfield(options,'use_fixedrnavariance'),
       model.use_fixedrnavar=1;
       % force the RNA observation variance kernels to use fixed
       % variance values, and provide the variance values to the kernels.
-      for k=1:numGenes,
-        model.kern.comp{2}.comp{k+1}.use_fixedvariance=1;
-        % model.kern.comp{2}.comp{k+1}.fixedvariance=model.yvar(k*nt+1:(k+1)*nt);
-        if iscell(geneVars)==0,
-          model.kern.comp{2}.comp{k+1}.fixedvariance=geneVars(:,k+1);
-          model.kern.comp{2}.comp{k+1}.fixedvariance_times=model.t;
-        else
-          model.kern.comp{2}.comp{k+1}.fixedvariance=geneVars{k+1};
-          model.kern.comp{2}.comp{k+1}.fixedvariance_times=model.t{k+1};
-        end;
+      for k=1:numGenes+1,
+	if any(geneVars{k}),
+	  model.kern.comp{2}.comp{k}.use_fixedvariance=1;
+	  % model.kern.comp{2}.comp{k+1}.fixedvariance=model.yvar(k*nt+1:(k+1)*nt);
+	  model.kern.comp{2}.comp{k}.fixedvariance=geneVars{k};
+	  model.kern.comp{2}.comp{k}.fixedvariance_times=model.t{k};
+	end
       end;  
     else
       model.use_fixedrnavar=0;
@@ -515,9 +546,13 @@ if isfield(options, 'addPriors') && options.addPriors && model.includeNoise,
     if ~isfield(model.kern.comp{2}.comp{k+1}, 'use_fixedvariance') || ...
 	  ~model.kern.comp{2}.comp{k+1}.use_fixedvariance,
       model.kern.comp{2}.comp{k+1}.priors = cell(1, 1);
-      model.kern.comp{2}.comp{k+1}.priors{1} = priorCreate('logisticNormal');
-      model.kern.comp{2}.comp{k+1}.priors{1}.mu = 0;
-      model.kern.comp{2}.comp{k+1}.priors{1}.sd = 2;
+      if model.uniformPriors,
+	model.kern.comp{2}.comp{k+1}.priors{1} = priorCreate('uniform');
+      else
+	model.kern.comp{2}.comp{k+1}.priors{1} = priorCreate('logisticNormal');
+	model.kern.comp{2}.comp{k+1}.priors{1}.mu = 0;
+	model.kern.comp{2}.comp{k+1}.priors{1}.sd = 2;
+      end
       model.kern.comp{2}.comp{k+1}.priors{1}.index = 1;
     end
   end
@@ -588,18 +623,8 @@ for disimindex=1:numGenes,
 end;
 model.disimdecayindices=disimdecayindices;
 
-if ~isempty(model.disimdecayindices),
-  % find and store transformation settings related to DISIM
-  % decay. Assumes model.disimdecayindices has already been created.
-  disimdecaytransformationsettings=cell(model.numGenes,1);
-  for disimindex=1:model.numGenes,
-    disimdecaytransformationsettings{disimindex}=...
-        paramtransformsettings{model.disimdecayindices(disimindex)};
-  end;
-  model.disimdecaytransformationsettings=disimdecaytransformationsettings;
-end;
-
-
+model.disimdecaytransformation = ...
+    struct('type', repmat({paramTransform}, [numGenes, 1]));
 
 % Find and store indices and transformation settings related to
 % DISIM variance. This is necessary because the variance affects
@@ -617,18 +642,8 @@ for disimindex=1:numGenes,
 end;
 model.disimvarianceindices=disimvarianceindices;
 
-if ~isempty(model.disimvarianceindices),
-  % find and store transformation settings related to DISIM
-  % variance. Assumes model.disimvarianceindices has already been created.
-  disimvariancetransformationsettings=cell(model.numGenes,1);
-  for disimindex=1:model.numGenes,
-    disimvariancetransformationsettings{disimindex}=...
-        paramtransformsettings{model.disimvarianceindices(disimindex)};
-  end;
-  model.disimvariancetransformationsettings=disimvariancetransformationsettings;
-end;
-
-
+model.disimvariancetransformation = ...
+    struct('type', repmat({paramTransform}, [numGenes, 1]));
 
 % Find and store indices and transformation settings related to
 % DISIM delay. This is necessary because the delay affects
@@ -644,19 +659,11 @@ for disimindex=1:numGenes,
 end;
 model.disimdelayindices=disimdelayindices;
 
-if ~isempty(model.disimdelayindices),
-  % find and store transformation settings related to DISIM
-  % delay. Assumes model.disimdelayindices has already been created.
-  disimdelaytransformationsettings=cell(model.numGenes,1);
-  for disimindex=1:model.numGenes,
-    disimdelaytransformationsettings{disimindex}=...
-        paramtransformsettings{model.disimdelayindices(disimindex)};
-  end;
-  model.disimdelaytransformationsettings=disimdelaytransformationsettings;
-end;
+model.disimdelaytransformation = ...
+    struct('type', repmat({paramTransform}, [numGenes, 1]));
 
-
-
+% Update the transformation settings stored with the model
+model=gpnddisimExpandParamTransformSettings(model, paramtransformsettings);
 
 % Now that the transformation settings have been updated into the
 % model and the kernel structure, and the necessary parameter

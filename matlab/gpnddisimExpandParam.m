@@ -61,22 +61,19 @@ model.kern = kernExpandParam(model.kern, params(startVal:endVal));
 
 if model.numGenes>0,
   for i = 1:model.numGenes,  
-    fhandle = str2func([model.bTransform 'Transform']);
-    model.B(i) = fhandle(params(endVal+i), 'atox', model.bTransformSettings{i});
+    model.B(i) = doTransform(params(endVal+i), 'atox', model.bTransform(i));
   end;
   endVal=endVal+model.numGenes;
   
   if model.use_disimstartmean==1,
     for i = 1:model.numGenes,  
-      fhandle = str2func([model.disimStartMeanTransform 'Transform']);
-      model.disimStartMean(i) = fhandle(params(endVal+i), 'atox', model.disimStartMeanTransformSettings{i});
+      model.disimStartMean(i) = doTransform(params(endVal+i), 'atox', model.disimStartMeanTransform(i));
     end;    
     endVal=endVal+model.numGenes;    
   end;
 end;
 
-fhandle = str2func([model.simMeanTransform 'Transform']);
-model.simMean = fhandle(params(endVal+1), 'atox', model.simMeanTransformSettings);
+model.simMean = doTransform(params(endVal+1), 'atox', model.simMeanTransform);
 
 
 
