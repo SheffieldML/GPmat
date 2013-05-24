@@ -53,8 +53,7 @@ end
 %length(model.B)
 if model.numGenes>0,
   for k=1:model.numGenes,
-    fhandle = str2func([model.bTransform 'Transform']);
-    param = [param fhandle(model.B(k), 'xtoa',model.bTransformSettings{k})];
+    param = [param doTransform(model.B(k), 'xtoa',model.bTransform(k))];
   end;
 end;
 %length(param)
@@ -62,14 +61,13 @@ end;
 if model.numGenes>0,
   if (model.use_disimstartmean==1),
     for i=1:model.numGenes,
-      fhandle = str2func([model.disimStartMeanTransform 'Transform']);
-      param = [param fhandle(model.disimStartMean(k),'xtoa',model.disimStartMeanTransformSettings{k})];
+      param = [param doTransform(model.disimStartMean(k),'xtoa',model.disimStartMeanTransform(k))];
     end;
   end;
 end;
 
 
-param = [param fhandle(model.simMean,'xtoa',model.simMeanTransformSettings)];
+param = [param doTransform(model.simMean,'xtoa',model.simMeanTransform)];
 
 
 

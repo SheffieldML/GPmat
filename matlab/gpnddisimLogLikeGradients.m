@@ -116,9 +116,8 @@ if (update_mean==1),
 
     % Multiply by factors from parameter transformations
     if model.numGenes>0,
-      fhandle = str2func([model.bTransform 'Transform']);
       for k=1:length(gb),
-	gb(k) = gb(k)*fhandle(model.B(k), 'gradfact', model.bTransformSettings{k});
+	gb(k) = gb(k)*doTransform(model.B(k), 'gradfact', model.bTransform(k));
       end;
     end;
     
@@ -152,9 +151,8 @@ if (update_mean==1),
 
     % Multiply by factors from parameter transformations
     if model.numGenes>0,
-      fhandle = str2func([model.disimStartMeanTransform 'Transform']);
       for k=1:length(gdisimstartmean),
-	gdisimstartmean(k) = gdisimstartmean(k)*fhandle(model.disimStartMean(k), 'gradfact', model.disimStartMeanTransformSettings{k});
+	gdisimstartmean(k) = gdisimstartmean(k)*doTransform(model.disimStartMean(k), 'gradfact', model.disimStartMeanTransform(k));
       end;
     end;
     
@@ -199,10 +197,9 @@ if (update_mean==1),
     % decays to the main decay-gradient from the kernel,
     if model.numGenes>0,
       decayIndices = model.disimdecayindices;
-      decayTransformationSettings = model.disimdecaytransformationsettings;
       for k=1:length(decayIndices),
 	g(decayIndices(k)) = g(decayIndices(k)) ...
-	    + gd(k)*sigmoidabTransform(model.D(k), 'gradfact',decayTransformationSettings{k});  
+	    + gd(k)*doTransform(model.D(k), 'gradfact',model.disimdecaytransformation(k));
       end;
     end;
 
@@ -246,8 +243,7 @@ if (update_mean==1),
     end
 
     % Multiply by factors from parameter transformations
-    fhandle = str2func([model.simMeanTransform 'Transform']);
-    gsimmean = gsimmean*fhandle(model.simMean, 'gradfact', model.simMeanTransformSettings);
+    gsimmean = gsimmean*doTransform(model.simMean, 'gradfact', model.simMeanTransform);
 
     % PART5 Compute gradient for DISIM-level variance
     gdisimvar=zeros(1, model.numGenes);
@@ -282,10 +278,9 @@ if (update_mean==1),
     % DISIM-variances to the main DISIM-variance gradient from the kernel
     if model.numGenes>0,
       disimvarIndices = model.disimvarianceindices;
-      disimvarTransformationSettings = model.disimvariancetransformationsettings;
       for k=1:length(disimvarIndices),
         g(disimvarIndices(k)) = g(disimvarIndices(k)) ...
-            + gdisimvar(k)*sigmoidabTransform(model.S(k)*model.S(k), 'gradfact',disimvarTransformationSettings{k});
+            + gdisimvar(k)*doTransform(model.S(k)*model.S(k), 'gradfact',model.disimvariancetransformation(k));
       end;
     end;    
 
@@ -323,10 +318,9 @@ if (update_mean==1),
     % DISIM-variances to the main DISIM-variance gradient from the kernel
     if model.numGenes>0,
       disimdelayIndices = model.disimdelayindices;
-      disimdelayTransformationSettings = model.disimdelaytransformationsettings;
       for k=1:length(disimdelayIndices),
         g(disimdelayIndices(k)) = g(disimdelayIndices(k)) ...
-            + gdisimdelay(k)*sigmoidabTransform(model.delay(k), 'gradfact',disimdelayTransformationSettings{k});
+            + gdisimdelay(k)*doTransform(model.delay(k), 'gradfact',model.disimdelaytransformation(k));
       end;
     end;    
     
@@ -363,9 +357,8 @@ if (update_mean==1),
     end
   
     if model.numGenes>0,
-      fhandle = str2func([model.bTransform 'Transform']);
       for k=1:length(gb),
-	gb(k) = gb(k)*fhandle(model.B(k), 'gradfact', model.bTransformSettings{k});
+	gb(k) = gb(k)*doTransform(model.B(k), 'gradfact', model.bTransform(k));
       end;
     end;
   
@@ -389,10 +382,9 @@ if (update_mean==1),
       %  decayIndices(end+1) = decayIndices(end) + 2;
       %end 
       decayIndices = model.disimdecayindices;
-      decayTransformationSettings = model.disimdecaytransformationsettings;
       for k=1:length(decayIndices),
 	g(decayIndices(k)) = g(decayIndices(k)) ...
-	    + gd(k)*sigmoidabTransform(model.D(k), 'gradfact',decayTransformationSettings{k});  
+	    + gd(k)*doTransform(model.D(k), 'gradfact',model.disimdecaytransformation(k));  
       end;
     end;
   
@@ -416,8 +408,7 @@ if (update_mean==1),
     end
 
     % Multiply by factors from parameter transformations
-    fhandle = str2func([model.simMeanTransform 'Transform']);
-    gsimmean = gsimmean*fhandle(model.simMean, 'gradfact', model.simMeanTransformSettings);
+    gsimmean = gsimmean*doTransform(model.simMean, 'gradfact', model.simMeanTransform);
 
     % Compute gradient for DISIM-level variance
     gdisimvar=zeros(1, model.numGenes);
@@ -431,10 +422,9 @@ if (update_mean==1),
     % DISIM-variances to the main DISIM-variance gradient from the kernel
     if model.numGenes>0,
       disimvarIndices = model.disimvarianceindices;
-      disimvarTransformationSettings = model.disimvariancetransformationsettings;
       for k=1:length(disimvarIndices),
         g(disimvarIndices(k)) = g(disimvarIndices(k)) ...
-            + gdisimvar(k)*sigmoidabTransform(model.S(k)*model.S(k), 'gradfact',disimvarTransformationSettings{k});
+            + gdisimvar(k)*doTransform(model.S(k)*model.S(k), 'gradfact',model.disimvariancetransformation(k));
       end;
     end;    
     
