@@ -1,4 +1,4 @@
-function samples = gpnddisimSampleHMC(model, display, iters, options);
+function [samples, E_hist, g_mean] = gpnddisimSampleHMC(model, display, iters, options);
 
 % GPNDDISIMSAMPLEHMC Do HMC sampling for the GPNDDISIM model.
 % FORMAT
@@ -36,29 +36,37 @@ if nargin < 4,
   options = hmcDefaultOptions;
 end
 
-hmcopt = optOptions;
-if display
-  hmcopt(1) = display;
-  if length(params) <= 100
-    hmcopt(9) = 1;
+if isfield(model, 'uniformPriors') && model.uniformPriors,
+  options.iters = iters;
+  bounds = gpnddisimExtractParamTransformSettings(model);
+  bounds = cat(1, bounds{:})';
+  [samples, E_hist, g_mean] = ...
+      myhmc_bounded('modelObjective', params,  options, ...
+		    'modelGradient', bounds, model);
+else
+  hmcopt = optOptions;
+  if display
+    hmcopt(1) = display;
+    if length(params) <= 100
+      hmcopt(9) = 1;
+    end
   end
+
+  % Momentum persistence
+  hmcopt(5) = 1;
+
+  % Leapfrog steps
+  hmcopt(7) = options.tau;
+
+  % hmcopt(18) = epsilon, step length
+  hmcopt(18) = options.epsilon;
+
+  % Number of samples to return
+  hmcopt(14) = iters;
+
+  samples = hmc('modelObjective', params,  hmcopt, ...
+		'modelGradient', model);
+
+  E_hist = [];
+  g_mean = [];
 end
-
-% Momentum persistence
-hmcopt(5) = 1;
-
-% Leapfrog steps
-hmcopt(7) = options.tau;
-
-% hmcopt(18) = epsilon, step length
-hmcopt(18) = options.epsilon;
-
-% Number of samples to return
-hmcopt(14) = iters;
-
-%fprintf(1,'Initial parameters:\n');
-%params
-%paramnames
-
-samples = hmc('modelObjective', params,  hmcopt, ...
-	      'modelGradient', model);
