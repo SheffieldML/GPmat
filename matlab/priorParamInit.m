@@ -1,4 +1,4 @@
-function prior = priorParamInit(prior)
+function prior = priorParamInit(prior, options)
 
 % PRIORPARAMINIT Prior model's parameter initialisation.
 % FORMAT
@@ -12,4 +12,8 @@ function prior = priorParamInit(prior)
   
 % PRIOR
 
-prior = feval([prior.type 'PriorParamInit'], prior);
+if nargin > 1,
+  prior = feval([prior.type 'PriorParamInit'], prior, options);
+else
+  prior = feval([prior.type 'PriorParamInit'], prior);
+end

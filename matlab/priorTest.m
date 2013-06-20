@@ -15,8 +15,12 @@ function prior = priorTest(priorType);
 
 % PRIOR
 
-prior.type = priorType;
-prior = priorParamInit(prior);
+if ~isstruct(priorType),
+  prior.type = priorType;
+  prior = priorParamInit(prior);
+else
+  prior = priorType;
+end
 
 % Set the parameters randomly.
 params = priorExtractParam(prior);
@@ -29,7 +33,7 @@ else
 end
 epsilon = 1e-6;
 
-if exist([priorType 'PriorGradientParams'])
+if exist([prior.type 'PriorGradientParams'])
   params = priorExtractParam(prior);
   origParams = params;
   for i = 1:length(params);
@@ -65,7 +69,7 @@ if exist([priorType 'PriorGradientParams'])
     end
   end
 end
-if exist([priorType 'PriorGradient'])
+if exist([prior.type 'PriorGradient'])
   origX = x;
   for i = 1:length(x);
     x = origX;
