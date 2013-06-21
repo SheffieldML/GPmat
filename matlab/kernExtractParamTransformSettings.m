@@ -49,8 +49,12 @@ else % No, so let's improvise
     [~, names] = phandle(kern);
   end
 
-  [paramtransformsettings{1:length(kern.transforms)}] = ...
-      deal(kern.transforms.transformsettings);
+  if length(kern.transforms) > 0 && isfield(kern.transforms, 'transformsettings'),
+    [paramtransformsettings{1:length(kern.transforms)}] = ...
+        deal(kern.transforms.transformsettings);
+  else
+    paramtransformsettings = cell(1, kern.nParams);
+  end
   % We could remove empty slots like this:
   %paramtransformsettings = ...
   %    paramtransformsettings(~cellfun('isempty', paramtransformsettings));
