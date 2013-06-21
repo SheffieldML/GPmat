@@ -27,7 +27,11 @@ params = priorExtractParam(prior);
 params = randn(size(params))./sqrt(randn(size(params)).^2);
 prior = priorExpandParam(prior, params);
 if isfield(prior, 'isBounded') && prior.isBounded,
-  x = rand(1, 10) * (prior.b - prior.a) + prior.a;
+  if isfield(prior, 'lbound'),
+    x = rand(1, 10) * (prior.ubound - prior.lbound) + prior.lbound;
+  else
+    x = rand(1, 10) * (prior.b - prior.a) + prior.a;
+  end
 else
   x = randn(1, 10);
 end
