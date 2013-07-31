@@ -1,4 +1,21 @@
 function Yout = im2pyramid(Yin, height, width, layers)
+% Yout = im2pyramid(Yin, height, width, layers)
+%            Expands a data matrix that has been generated from images by 
+%            concatenating it with the pyramid representation of each
+%            image (using a low-pass filter)
+% FORMAT
+% Yin: Input design matrix, each row is a sample (built by vectorysing an
+%      image).
+% height: Hight of the original images.
+% width: Width of the original images.
+% layers: Number of layers used to built the image pyramids.
+%
+% Note: requires MatLab's Image Processing toolbox.
+%
+% COPYRIGHT: Teo de Campos 2013
+%
+
+% SHEFFIELDML
 
 nSamples = size(Yin,1);
 dOld = size(Yin,2);
@@ -7,8 +24,8 @@ nW = width;
 dNew = 0;
 for l=1:layers
     dNew = dNew + nH*nW;
-    nH = nH/2;
-    nW = nW/2;
+    nH = ceil(nH/2);
+    nW = ceil(nW/2);
 end
 
 Yout = zeros(nSamples, dNew);
