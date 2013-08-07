@@ -115,6 +115,7 @@ if (~isempty(update_mean)) && (update_mean==1),
   
   % update RNA means
   if iscell(model.t)==0, tempt=model.t; else tempt=model.t{1}; end;
+  timeshift = min(tempt);
   nt=size(tempt,1);
   tempind1=nt+1;
   for k=1:model.numGenes,
@@ -126,7 +127,7 @@ if (~isempty(update_mean)) && (update_mean==1),
       I=find(delayedt<0);
       delayedt(I)=0;
       model.mu(tempind1:tempind1+nt-1)=...
-	  model.disimStartMean(k)*exp(model.D(k)*(-tempt)) ...
+	  model.disimStartMean(k)*exp(model.D(k)*(-tempt + timeshift)) ...
           +(model.B(k)/model.D(k))*(1-exp(-model.D(k)*tempt)) ...
           +(model.simMean*model.S(k)/model.D(k))*(1-exp(-model.D(k)*delayedt));
       %model.mu
