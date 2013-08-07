@@ -449,49 +449,8 @@ model.t = times;
 
 %fprintf(1,'nddisimCreate step11\n');
 
-
-% Initialize the mean vector of the model, according to the results
-% of the differential equation. Note that the mean is
-% time-dependent. The mean is affected by two time-based effects:
-% as time passes the initial concentration of RNA decays away and
-% the basal rate kicks in to establish the final expected amount of
-% RNA, which depends on the basal rate and decay rate.
-mu = zeros(size(model.y));
-
-if iscell(model.t)==0,
-  nt=size(model.t,1);
-else
-  nt=size(model.t{1},1);
-end;
-mu(1:nt)=model.simMean;
-
-tempind1=nt+1;
-for k=1:numGenes,
-  if iscell(model.t)==0,
-    nt=size(model.t,1);
-    tempt=model.t;
-  else
-    nt=size(model.t{k+1},1);
-    tempt=model.t{k+1};
-  end;
-
-  if (use_disimstartmean==1),
-    mu(tempind1:tempind1+nt-1)=...
-        (model.B(k)+model.simMean*model.S(k))/model.D(k)+ ...
-	(model.disimStartMean(k)-(model.B(k)+model.simMean*model.S(k))/model.D(k))*exp(model.D(k)*(-tempt));
-  else
-    mu(tempnd1:tempind1+nt-1)=(model.B(k)+model.simMean*model.S(k))/model.D(k);
-  end;  
-  tempind1=tempind1+nt;
-end;
-model.mu = mu;
-
-
-
-% Difference between the observations and the expectation (mean),
-% used to compute the likelihood of the model.
-model.m = model.y-model.mu;
-
+% Removed initialisation of model.mu and model.m which is done later
+% by gpnddisimExpandParam() anyway
 
 %fprintf(1,'nddisimCreate step12\n');
 

@@ -124,6 +124,7 @@ if (update_mean==1),
     % PART2 Compute gradient for DISIM start mean
     gdisimstartmean=zeros(1, model.numGenes);
     if iscell(model.t)==0, tempt=model.t; else tempt=model.t{1}; end;
+    timeshift = min(tempt);
     indStart=length(tempt)+1;
     for k=1:model.numGenes,
       % note that delay in the DISIM model does not affect the
@@ -134,7 +135,8 @@ if (update_mean==1),
       %indEnd=indStart+length(model.t)-1;
       indEnd=indStart+size(delayedt,1)-1;
       if size(delayedt,1)>0,
-        gdisimstartmean(k)=gmuFull(indStart:indEnd)*exp(-model.D(k)*delayedt);
+        gdisimstartmean(k)=gmuFull(indStart:indEnd)* ...
+            exp(-model.D(k)*(delayedt - timeshift));
       else
         gdisimstartmean(k)=0;
       end;
@@ -159,6 +161,7 @@ if (update_mean==1),
     % PART3 Compute gradient for DISIM-level decays
     gd=zeros(1, model.numGenes);
     if iscell(model.t)==0, tempt=model.t; else tempt=model.t{1}; end;
+    timeshift = min(tempt);
     indStart=length(tempt)+1;
     for k=1:model.numGenes,
       % note that delay in the DISIM model does not affect the
@@ -173,18 +176,13 @@ if (update_mean==1),
       I=find(delayedt<0);
       delayedt(I)=0;
       
-      % indStart=length(model.t)*k + 1;
-      % indEnd=indStart+length(model.t)-1;
-%      gd(k)=gmuFull(indStart:indEnd)*...
-%	    ( (-(model.B(k)+model.S(k)*model.simMean)/(model.D(k)*model.D(k)))*(1-exp(-model.D(k)*model.t)) ...
-%	      +(model.disimStartMean(k)-(model.B(k)+model.S(k)*model.simMean)/model.D(k))*exp(-model.D(k)*model.t).*(-model.t));    
-
       indEnd=indStart+size(delayedt,1)-1;
       if size(delayedt,1)>0,
         gd(k)=gmuFull(indStart:indEnd)*...
   	    ( -model.B(k)/(model.D(k)*model.D(k))*(1-exp(-model.D(k)*tempt)) ...
               +model.B(k)/model.D(k)*exp(-model.D(k)*tempt).*tempt ...
-	      +model.disimStartMean(k)*exp(-model.D(k)*tempt).*(-tempt) ...
+	      +model.disimStartMean(k)* ...
+              exp(-model.D(k)*(tempt - timeshift)).*(-tempt + timeshift) ...
               -model.simMean*model.S(k)/(model.D(k)*model.D(k))*(1-exp(-model.D(k)*delayedt)) ...
               +model.simMean*model.S(k)/model.D(k)*exp(-model.D(k)*delayedt).*delayedt ...
               );
