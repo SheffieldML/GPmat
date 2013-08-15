@@ -37,6 +37,6 @@ for s = 1:nSamples,
         img = impyramid(img, 'reduce');
         newSize = numel(img);
         Yout(s,idx+1:idx+newSize) = img(:)';
-        idx = idx+newSize+1;
+        idx = idx+newSize;
     end    
 end
