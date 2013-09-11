@@ -724,7 +724,7 @@ function [Y, lbls, Ytest, lblstest] = lvmLoadData(dataset, seedVal)
     [ALL_T, sortIndices] = sort(ALL_T);
     ALL_DATA = ALL_DATA(sortIndices(:), :);
     Ytest = ALL_DATA;
-    lbls = zeros(size(ALL_T,1),10);
+    lblstest = zeros(size(ALL_T,1),10);
     for digit = 0:9;
       ind1 = min(find(ALL_T==digit));
       ind2 = max(find(ALL_T==digit));
