@@ -1,4 +1,4 @@
-function x = fgplvmOptimisePoint(model, x, y, display, iters);
+function x = fgplvmOptimisePoint(model, x, y, display, iters)
 
 % FGPLVMOPTIMISEPOINT Optimise the postion of a latent point.
 % FORMAT
