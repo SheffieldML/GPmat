@@ -1,4 +1,4 @@
-function prior = priorCreate(type)
+function prior = priorCreate(type, varargin)
 
 % PRIORCREATE Create a prior structure given a type.
 % FORMAT
@@ -10,8 +10,9 @@ function prior = priorCreate(type)
 % SEEALSO : priorParamInit
 %
 % COPYRIGHT : Neil D. Lawrence, 2003
-
+% MODIFICATIONS: Andreas C. Damianou 2013
+%
 % SHEFFIELDML
 
 prior.type = type;
-prior = priorParamInit(prior);
+prior = priorParamInit(prior, varargin{:});
