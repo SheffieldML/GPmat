@@ -31,6 +31,9 @@ dlnZ_dmu = zeros(size(nu));
 for i = 1:model.d
   dlnZ_dmu(:, i) = y(:, i) - mu(:, i);
 end
+nu(find(isnan(dlnZ_dmu))) = 0.0;
+dlnZ_dmu(find(isnan(dlnZ_dmu)))=0.0;
+
 dlnZ_dmu = dlnZ_dmu.*nu;
 dlnZ_dvs = 0.5*(dlnZ_dmu.*dlnZ_dmu - nu);
 

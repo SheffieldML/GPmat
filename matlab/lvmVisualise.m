@@ -98,7 +98,12 @@ if length(visualiseFunction)>4 & strcmp(visualiseFunction(1:5), 'image') & lengt
 else
   visualiseInfo.visualiseAxes =subplot(1, 1, 1);
 end
-visData = zeros(1,model.d);
+if exist('varargin','var')
+   dim = varargin{1}(1)*varargin{1}(2)
+else
+   dim = model.d;
+end
+visData = zeros(1,dim);
 if(length(visualiseFunction)>4 & strcmp(visualiseFunction(1:5), 'image'))
   visData(1) = min(min(model.y));
   visData(end) = max(max(model.y));
@@ -111,7 +116,7 @@ set(get(visualiseInfo.visualiseAxes, 'title'), 'string', 'Y', 'fontsize', 30);
 set(visualiseInfo.visualiseAxes, 'position', [0.05 0.05 0.9 0.8]);
 
 visualiseInfo.visualiseFunction = str2func(visualiseFunction);
-visHandle = visualiseInfo.visualiseFunction(visData, varargin{:});
+visHandle = visualiseInfo.visualiseFunction(visData(1:dim), varargin{:});
 set(visHandle, 'erasemode', 'xor')
 
 % Pass the data to visualiseInfo
