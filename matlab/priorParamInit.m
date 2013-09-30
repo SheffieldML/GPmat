@@ -1,4 +1,4 @@
-function prior = priorParamInit(prior)
+function prior = priorParamInit(prior, varargin)
 
 % PRIORPARAMINIT Prior model's parameter initialisation.
 % FORMAT
@@ -9,7 +9,8 @@ function prior = priorParamInit(prior)
 % SEEALSO : priorCreate
 %
 % COPYRIGHT : Neil D. Lawrence, 2003
+% MODIFICATIONS: Andreas Damianou, Carl Henrik Ek, 2013
   
 % SHEFFIELDML
 
-prior = feval([prior.type 'PriorParamInit'], prior);
+prior = feval([prior.type 'PriorParamInit'], prior, varargin{:});
