@@ -1,4 +1,4 @@
-Copyright (c) 2012, Neil Lawrence
+Copyright (c) 2001-2013, the GPmat authors
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
