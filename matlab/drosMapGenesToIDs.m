@@ -9,7 +9,7 @@ function ids = drosMapGenesToIDs(genes),
 %
 % COPYRIGHT : Antti Honkela, 2009
 
-% DISIMRANK
+% SHEFFIELDML
 
 ids = zeros(size(genes));
 for k=1:length(genes),

@@ -13,7 +13,7 @@ function g = gpsimLogLikeGradients(model)
 %
 % MODIFIED : Pei Gao, 2008
   
-% GPSIM
+% SHEFFIELDML
 
 covGrad = -model.invK + model.invK*model.m*model.m'*model.invK;
 covGrad = 0.5*covGrad;

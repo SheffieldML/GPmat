@@ -19,7 +19,7 @@ function model = gpsimExpandParam(model, params)
 %
 % MODIFIED : Pei Gao, 2008
   
-% GPSIM
+% SHEFFIELDML
 
 params = real(params);
 if isfield(model, 'fix')

@@ -14,7 +14,7 @@ function [r, lls, fitparams] = drosMLRank(drosexp, drosTF, tf, probes, t, do_plo
 %
 % COPYRIGHT : Antti Honkela, 2010
 
-% DISIMRANK
+% SHEFFIELDML
 
 if nargin < 5,
   t = 1:12;

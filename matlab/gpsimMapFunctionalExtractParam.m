@@ -13,6 +13,6 @@ function f = gpsimMapFunctionalExtractParam(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% GPSIM
+% SHEFFIELDML
 
 f = model.f';

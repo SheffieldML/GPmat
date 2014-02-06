@@ -14,7 +14,7 @@ function [y, gene, times, scale, rawExp] = gpsimLoadEcoliData
 %
 % COPYRIGHT : Pei Gao, Neil D. Lawrence and Magnus Rattary, 2008
 
-% GPSIM
+% SHEFFIELDML
 
 if exist('./data/ecoliData.mat') == 2 
   load('./data/ecoliData.mat');

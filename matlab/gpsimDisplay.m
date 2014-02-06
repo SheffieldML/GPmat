@@ -12,7 +12,7 @@ function gpsimDisplay(model, spaceNum)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% GPSIM
+% SHEFFIELDML
 
 if nargin > 1
   spacing = repmat(32, 1, spaceNum);

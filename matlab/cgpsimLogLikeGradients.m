@@ -11,7 +11,7 @@ function g = cgpsimLogLikeGradients(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% GPSIM
+% SHEFFIELDML
 
 g = gpsimLogLikeGradients(model.comp{1});
 for i = 2:length(model.comp)

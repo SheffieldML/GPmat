@@ -11,7 +11,7 @@ function modelRet = gpsimTest
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
 
-% GPSIM
+% SHEFFIELDML
 
 numGenes = 5;
 numProteins = 1;

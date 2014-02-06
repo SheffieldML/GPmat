@@ -13,7 +13,7 @@ function [f, g] = gpsimMapGradFuncWrapper(param, model)
 %
 % COPYRIGHT : Pei Gao, Magnus Rattray and Neil D. Lawrence, 2008
   
-% GPSIM
+% SHEFFIELDML
 
 g = zeros(1,length(param));
 if isfield(model, 'comp')

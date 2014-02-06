@@ -14,7 +14,7 @@ function model = gpsimUpdateKernels(model)
 %  
 % MODIFIED : Pei Gao, 2008
 
-% GPSIM
+% SHEFFIELDML
   
 eps = 1e-6;                             % minimum noise variance for the
                                         % RBF kernel of TF.

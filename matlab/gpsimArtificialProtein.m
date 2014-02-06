@@ -2,7 +2,7 @@ function f = gpsimArtificialProtein(t, alpha, mu, sigma);
 
 % GPSIMARTIFICIALPROTEIN Generate an artifical protein sequence.
 
-% GPSIM
+% SHEFFIELDML
 
 f = zeros(size(t));
 for i = 1:length(alpha)

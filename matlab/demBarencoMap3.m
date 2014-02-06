@@ -1,6 +1,6 @@
 % DEMBARENCOMAP3 Optimise model using MAP approximation with MLP kernel and linear response, using SCG optimisation and new PUMA processed data with noise variance estimation.
 
-% GPSIM
+% SHEFFIELDML
 clear,clc
 expNo = 1;
 type = 'mapMLPwithNoise';

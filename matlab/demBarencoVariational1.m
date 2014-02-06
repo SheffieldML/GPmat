@@ -1,6 +1,6 @@
 % DEMBARENCOVARIATIONAL1 Optimise model using variational approximation with RBF kernel and exponential response.
 
-% GPSIM
+% SHEFFIELDML
 
 % OPTIMISATION OF PARAMETERS NOT YET IMPLEMENTED!!!
 

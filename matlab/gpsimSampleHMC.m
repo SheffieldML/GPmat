@@ -17,7 +17,7 @@ function samples = gpsimSampleHMC(model, display, iters);
 %
 % MODIFICATIONS : Antti Honkela, 2007
 
-% GPSIM
+% SHEFFIELDML
 
 
 if nargin < 3

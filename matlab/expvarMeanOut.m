@@ -15,6 +15,6 @@ function Y = expvarMeanOut(model, X);
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% GPSIM
+% SHEFFIELDML
 
 Y = exp(0.5*kernDiagCompute(model.kern.argument, X));

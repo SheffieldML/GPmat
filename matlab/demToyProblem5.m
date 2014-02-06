@@ -1,6 +1,6 @@
 % DEMTOYPROBLEM5 Generate an artifical data set and solve with GPSIM.
 
-% GPSIM
+% SHEFFIELDML
 
 load demToyProblem5.mat
 bw = true;

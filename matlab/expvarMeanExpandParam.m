@@ -14,7 +14,7 @@ function model = expvarMeanExpandParam(model, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% GPSIM
+% SHEFFIELDML
 
 % simply update the parameters of the kernel.
 model.kern = kernExpandParam(model.kern, params);

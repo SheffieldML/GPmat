@@ -32,7 +32,7 @@ function results = drosScoreTFTargetList(tf, listfile, savepath, modulus, remind
 %
 % COPYRIGHT : Antti Honkela, 2009
 
-% DISIMRANK
+% SHEFFIELDML
 
 if nargin < 4,
   modulus = 1;

@@ -17,7 +17,7 @@ function f = gpsimCandidateObjective(params, model)
 % 
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% GPSIM
+% SHEFFIELDML
 
 model = gpsimCandidateExpandParam(model, params);
 f = - gpsimCandidateLogLikelihood(model);

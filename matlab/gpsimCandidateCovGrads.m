@@ -14,7 +14,7 @@ function [gK_uf, gK_ff] = gpsimCandidateCovGrads(model, M)
 %
 % SEEALSO : gpsimCreate, gpsimAddCandidate, gpsimCandidateLogLikeGradient
 
-% GPSIM
+% SHEFFIELDML
 %E = model.candidate.K_uf*M;
 E = model.candidate.K_uf*model.candidate.invK*M;
 EET = E*E';

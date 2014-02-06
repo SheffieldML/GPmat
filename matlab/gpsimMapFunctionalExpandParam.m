@@ -16,7 +16,7 @@ function model = gpsimMapFunctionalExpandParam(model, f)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% GPSIM
+% SHEFFIELDML
 
 model.f = f';
 model = gpsimMapUpdateG(model);

@@ -13,7 +13,7 @@ function I = drosFindGeneinds(drosdata, genes, incnulls, doprobes),
 %
 % COPYRIGHT : Antti Honkela, 2007-2009
 
-% DISIMRANK
+% SHEFFIELDML
 
 if nargin < 3,
   incnulls = 0;

@@ -4,7 +4,7 @@ function [dxdB dxdD dxdS dxdalpha dxdgParam] = gpsimXGradient(model, i, j)
 %
 % COPYRIGHT : Pei Gao, 2008
   
-% GPSIM
+% SHEFFIELDML
 
 % i: ti
 % j: jth gene

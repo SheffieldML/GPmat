@@ -13,7 +13,7 @@ function v = drosInsituPositives(ids, drosinsitu, drosexp),
 %
 % COPYRIGHT : Antti Honkela, 2009
 
-% DISIMRANK
+% SHEFFIELDML
 
 isgenes = drosinsitu.genes(find(sum(drosinsitu.data, 2)));
 I = drosFindGeneinds(drosexp, isgenes, 0);

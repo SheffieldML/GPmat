@@ -6,7 +6,7 @@ function genes = drosFindTargets(droschip),
 %   genes = drosFindTargets(droschip)
 % COPYRIGHT : Antti Honkela, 2008
   
-% GPSIM 
+% SHEFFIELDML
 
 [foo, I] = sort(-sum(droschip.data ~= 0, 2));
 genes = droschip.genes(I);

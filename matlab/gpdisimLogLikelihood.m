@@ -11,7 +11,7 @@ function ll = gpdisimLogLikelihood(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% GPSIM
+% SHEFFIELDML
 
 
 dim = size(model.y, 1);

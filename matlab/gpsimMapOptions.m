@@ -10,7 +10,7 @@ function options = gpsimMapOptions(numGenes)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% GPSIM
+% SHEFFIELDML
 
 options = gpsimOptions;
 

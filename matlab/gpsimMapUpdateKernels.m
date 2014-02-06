@@ -13,7 +13,7 @@ function [model, ll] = gpsimMapUpdateKernels(model)
 %
 % COPYRIGHT Neil D. Lawrence, 2006
 
-% GPSIM
+% SHEFFIELDML
 
 model.K = kernCompute(model.kern, model.mapt);
 model.K = model.K + eye(size(model.K, 1))*1e-6;
