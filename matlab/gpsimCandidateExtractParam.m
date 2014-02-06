@@ -13,7 +13,7 @@ function [param, names] = gpsimCandidateExtractParam(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% GPSIM
+% SHEFFIELDML
 
 
 if nargout>1

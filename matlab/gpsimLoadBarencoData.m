@@ -17,7 +17,7 @@ function [y, yvar, gene, times, scale, rawExp, rawVar] = gpsimLoadBarencoData
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% GPSIM
+% SHEFFIELDML
 
 if exist('./data/barencoData.mat') == 2 
   load('./data/barencoData.mat');

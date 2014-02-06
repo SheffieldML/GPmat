@@ -12,7 +12,7 @@ function model = cgpsimExpandParam(model, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% GPSIM
+% SHEFFIELDML
 
 for i = 1:length(model.comp)
   model.comp{i} = gpsimExpandParam(model.comp{i}, params);

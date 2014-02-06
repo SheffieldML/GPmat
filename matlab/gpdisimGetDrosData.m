@@ -18,7 +18,7 @@ function [y, yvar, gene, times, scale, rawExp, rawVar] = gpdisimGetDrosData(dros
 % COPYRIGHT : Neil D. Lawrence, 2006
 % COPYRIGHT : Antti Honkela, 2007
 
-% GPSIM
+% SHEFFIELDML
 
 if iscell(genes),
   genes = drosGetGeneinds(drosexp, genes);

@@ -13,7 +13,7 @@ function ll = cgpdisimLogLikelihood(model)
 %
 % COPYRIGHT : Antti Honkela, 2007
 
-% GPSIM
+% SHEFFIELDML
 
 ll = 0;
 for i = 1:length(model.comp)

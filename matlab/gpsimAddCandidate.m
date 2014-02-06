@@ -17,7 +17,7 @@ function model = gpsimAddCandidate(model, numCandidates, times, geneVals, ...
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% GPSIM
+% SHEFFIELDML
 
 model.candidate.y = geneVals(:);
 model.candidate.t = times(:);

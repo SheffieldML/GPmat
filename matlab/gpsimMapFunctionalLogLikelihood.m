@@ -14,7 +14,7 @@ function ll = gpsimMapFunctionalLogLikelihood(model)
 %  
 % MODIFIED : Pei Gao, 2008
 
-% GPSIM
+% SHEFFIELDML
 
 ll = gpsimMapLogLikelihood(model)-0.5*model.logDetCovf;
 

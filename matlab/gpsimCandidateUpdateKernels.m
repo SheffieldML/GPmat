@@ -12,7 +12,7 @@ function model = gpsimCandidateUpdateKernels(model)
 %
 % COPYRIGHT Neil D. Lawrence, 2007
 
-% GPSIM
+% SHEFFIELDML
 
 
 numBlocks = model.kern.numBlocks;

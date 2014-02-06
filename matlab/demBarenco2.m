@@ -1,7 +1,7 @@
 % DEMBARENCO2 Run experiments on data from Barenco et al in Genome Biology.
 % The raw data is pre-processed by MAS5.
 
-% GPSIM
+% SHEFFIELDML
 clear,clc
 colordef white
 [y, yvar, gene, times, scale] = gpsimLoadBarencoMASData;

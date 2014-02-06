@@ -1,6 +1,6 @@
 % DEMGPDISIMMEF2 Run experiments on Mef2 data. The raw data is pre-processed by the PUMA package.
 
-% GPSIM
+% SHEFFIELDML
 
 %/~
 % path(path, '/local/Matlab/underDevelopment/GPSIM016');

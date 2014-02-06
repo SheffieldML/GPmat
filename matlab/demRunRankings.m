@@ -4,7 +4,7 @@
 %
 % COPYRIGHT : Antti Honkela, 2009
 
-% DISIMRANK
+% SHEFFIELDML
 
 fprintf('Warning: running this demo may take *SEVERAL DAYS OR WEEKS*\n');
 fprintf('even on a very fast computer if the rankings need to be rerun.\n')

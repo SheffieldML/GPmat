@@ -12,7 +12,7 @@ function r = drosCorrelationRank(drosexp, drosTF, tf),
 %
 % COPYRIGHT : Antti Honkela, 2009
 
-% DISIMRANK
+% SHEFFIELDML
 
 N = length(drosexp.probes);
 

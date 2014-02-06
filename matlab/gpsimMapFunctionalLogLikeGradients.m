@@ -14,7 +14,7 @@ function [g, gdata] = gpsimMapFunctionalLogLikeGradients(model)
 %  
 % MODIFIED : Pei Gao, 2008
 
-% GPSIM
+% SHEFFIELDML
 
 gdata = zeros(1, model.numMapPts);
 numData = length(model.t);

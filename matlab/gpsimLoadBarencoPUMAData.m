@@ -18,7 +18,7 @@ function [y, yvar, gene, times, scale, rawExp, rawVar] = gpsimLoadBarencoPUMADat
 % COPYRIGHT : Neil D. Lawrence, 2008
 % MODIFIED : Pei Gao, 2008
   
-% GPSIM
+% SHEFFIELDML
 
 if nargin < 1
     option = 1;

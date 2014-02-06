@@ -17,7 +17,7 @@ function model = gpsimMapUpdatePosteriorCovariance(model)
 %
 % SEEALSO : gpsimMapUpdateKernels, gpsimMapFunctionalUpdateW
 
-% GPSIM
+% SHEFFIELDML
 
 
 [U, Lambda] = eig(model.W);

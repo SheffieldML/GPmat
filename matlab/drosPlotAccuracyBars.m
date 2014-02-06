@@ -23,7 +23,7 @@ function [r, pvals] = drosPlotAccuracyBars(rankings, validation, t, styles, filt
 %
 % COPYRIGHT : Antti Honkela, 2009
 
-% DISIMRANK
+% SHEFFIELDML
 
 if nargin < 4 || isempty(styles),
   styles = {'bo-', 'gx-', 'r+-', 'cd--', 'm*--', 'ks--', 'k--'};

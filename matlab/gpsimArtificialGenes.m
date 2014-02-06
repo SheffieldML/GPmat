@@ -2,7 +2,7 @@ function y = gpsimArtificialGenes(t, alpha, mu, sigma, B, S, D)
 
 % GPSIMARTIFICIALGENES Give artifical genes from given parameters.
 
-% GPSIM
+% SHEFFIELDML
 
 y = zeros(length(t), length(B));
 

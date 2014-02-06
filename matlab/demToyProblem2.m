@@ -1,6 +1,6 @@
 % DEMTOYPROBLEM2 Display results from toy problem point at a time.
 
-% GPSIM
+% SHEFFIELDML
 
 load demToyProblem1.mat
 

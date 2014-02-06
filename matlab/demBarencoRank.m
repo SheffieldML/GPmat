@@ -1,6 +1,6 @@
 % DEMBARENCORANK Do ranking experiments on data from Barenco et al in Genome Biology.
 
-% GPSIM
+% SHEFFIELDML
 
 colordef white
 [y, yvar, gene, times, scale, rawExp, rawVar] = gpsimLoadBarencoData;

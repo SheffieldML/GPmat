@@ -9,7 +9,7 @@ function genes = drosFindSIMTargets(droschip, drosTF, tf),
 %
 % COPYRIGHT : Antti Honkela, 2007
   
-% GPSIM 
+% SHEFFIELDML
 
 I = strcmp(tf, drosTF.names);
 tflabel = drosTF.labels(I);

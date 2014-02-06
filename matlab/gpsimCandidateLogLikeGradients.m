@@ -12,7 +12,7 @@ function [gParam, gX_u, gX] = gpsimCandidateLogLikeGradients(model, X, M, X_u)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% GPSIM
+% SHEFFIELDML
 
 if nargin < 4
   if nargin < 3

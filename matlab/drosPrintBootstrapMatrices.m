@@ -11,7 +11,7 @@ function drosPrintBootstrapMatrices(m, values, ignore),
 %
 % COPYRIGHT : Antti Honkela, 2009
 
-% DISIMRANK
+% SHEFFIELDML
 
 if nargin < 3,
   ignore = [];

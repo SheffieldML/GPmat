@@ -10,7 +10,7 @@ function r = drosMergeResults(rr),
 %
 % COPYRIGHT : Antti Honkela, 2009
 
-% DISIMRANK
+% SHEFFIELDML
 
 N = length(rr);
 

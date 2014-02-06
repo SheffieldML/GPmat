@@ -13,7 +13,7 @@ function g = gpsimMapMarginalLikeliGradient(model)
 %
 % COPYRIGHT : Pei Gao, Magnus Rattray and Neil D. Lawrence, 2008
 
-% GPSIM
+% SHEFFIELDML
 
 numData = length(model.t);
 ParamL = length(model.B);

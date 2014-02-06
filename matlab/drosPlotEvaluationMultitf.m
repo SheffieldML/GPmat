@@ -4,7 +4,7 @@
 %
 % COPYRIGHT : Antti Honkela, 2009
 
-% DISIMRANK
+% SHEFFIELDML
 
 tfnames = {'twi', 'mef2'};
 FONTSIZE = 8;

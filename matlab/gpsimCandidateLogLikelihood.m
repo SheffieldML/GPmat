@@ -12,7 +12,7 @@ function ll = gpsimCandidateLogLikelihood(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% GPSIM
+% SHEFFIELDML
 
 
 dim = size(model.y, 1);

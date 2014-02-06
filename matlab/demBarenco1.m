@@ -1,7 +1,7 @@
 % DEMBARENCO1 Run experiments on data from Barenco et al in Genome Biology.
 % The raw data is pre-processed by the PUMA package.
 
-% GPSIM
+% SHEFFIELDML
 clear,clc
 if ~isoctave
   colordef('white');

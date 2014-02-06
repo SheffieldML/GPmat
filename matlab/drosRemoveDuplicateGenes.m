@@ -11,7 +11,7 @@ function r = drosRemoveDuplicateGenes(drosexp, r0),
 %
 % COPYRIGHT : Antti Honkela, 2009
 
-% DISIMRANK
+% SHEFFIELDML
 
 [B, I, J] = unique(drosexp.genes(r0), 'first');
 r = r0(sort(I));

@@ -16,7 +16,7 @@ function g = gpdisimGradient(params, model)
 %
 % COPYRIGHT : Antti Honkela, 2007
   
-% GPSIM
+% SHEFFIELDML
 
 model = gpdisimExpandParam(model, params);
 g = - gpdisimLogLikeGradients(model);

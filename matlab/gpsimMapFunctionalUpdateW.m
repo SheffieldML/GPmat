@@ -15,7 +15,7 @@ function model = gpsimMapFunctionalUpdateW(model)
 %  
 % MODIFIED : Pei Gao, 2008
 
-% GPSIM
+% SHEFFIELDML
 
 if isfield(model, 'includeNoise') && model.includeNoise
   noiseMat = ones(length(model.t),1)*model.noiseVar;

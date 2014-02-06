@@ -10,7 +10,7 @@ function drosPlot(model, totgenes, thisgene)
 %
 % COPYRIGHT : Antti Honkela, 2009
 
-% DISIMRANK
+% SHEFFIELDML
 
 FONTSIZE = 8;
 LINEWIDTH = 1;
