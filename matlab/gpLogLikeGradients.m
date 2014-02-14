@@ -148,7 +148,7 @@ function [gParam, gX_u, gX, g_beta] = gpLogLikeGradients(model, X, M, X_u)
                                    X(model.indexPresent{k}, :), ...
                                    gK);
         else
-          g_param = g_param + kernGradient(model.kern, X, gK);
+            g_param = g_param + kernGradient(model.kern, X, gK);
         end
       end
       if isfield(model, 'beta') && model.optimiseBeta

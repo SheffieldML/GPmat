@@ -1,4 +1,4 @@
-function prior = invgammaPriorParamInit(prior)
+function prior = invgammaPriorParamInit(prior, params)
 
 % INVGAMMAPRIORPARAMINIT Inverse gamma prior model's parameter initialisation.
 % FORMAT
@@ -10,12 +10,18 @@ function prior = invgammaPriorParamInit(prior)
 % SEEALSO : priorCreate, gammaPriorParamInit
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
-
+%
+% MODIFICATIONS: Andreas C. Damianou, 2013
+%
 % GPMAT
 
-
-prior.a = 1e-6;
-prior.b = 1e-6;
+if nargin < 2
+    prior.a = 1e-6;
+    prior.b = 1e-6;
+else
+    prior.a = params(1);
+    prior.b = params(2);
+end
 
 prior.transforms.index = [1 2];
 prior.transforms.type =  optimiDefaultConstraint('positive');
