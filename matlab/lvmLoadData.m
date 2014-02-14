@@ -35,8 +35,12 @@ function [Y, lbls, Ytest, lblstest] = lvmLoadData(dataset, seedVal)
   lbls = [];
   lblstest = [];
   switch dataset
+   case 'YaleSubset6_1'
+          load([baseDir 'YaleSubset6.mat']);
+          lbls = [height;width];
    case 'missa'
        load([baseDir 'miss-americaHD.mat']);
+       lbls = [288 ;360];
    case 'movielens'
     try 
       load([baseDir 'movielens.mat']);
@@ -720,7 +724,7 @@ function [Y, lbls, Ytest, lblstest] = lvmLoadData(dataset, seedVal)
     [ALL_T, sortIndices] = sort(ALL_T);
     ALL_DATA = ALL_DATA(sortIndices(:), :);
     Ytest = ALL_DATA;
-    lbls = zeros(size(ALL_T,1),10);
+    lblstest = zeros(size(ALL_T,1),10);
     for digit = 0:9;
       ind1 = min(find(ALL_T==digit));
       ind2 = max(find(ALL_T==digit));
