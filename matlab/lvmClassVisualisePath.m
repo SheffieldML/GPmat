@@ -2,7 +2,7 @@ function lvmClassVisualisePath(call)
 
 % LVMCLASSVISUALISEPATH Latent variable model path drawing in latent space.
 
-% SHEFFIELDML 
+% GPMAT 
 
 global visualiseInfo
 

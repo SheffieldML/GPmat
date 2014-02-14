@@ -17,7 +17,7 @@ function h = gaussianNoisePointPlot(noise, X, y, fontName, fontSize, ...
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 
 h = plot3(X(:, 1), X(:, 2), y, 'r.', 'erasemode', 'xor',  'markerSize', markerSize, 'linewidth', lineWidth);

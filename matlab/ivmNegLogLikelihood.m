@@ -13,7 +13,7 @@ function e = ivmNegLogLikelihood(params, model)
 %
 % SEEALSO : noiseExpandParam, ivmLogLikelihood
 
-% SHEFFIELDML
+% GPMAT
 
 model.noise = noiseExpandParam(model.noise, params);
 e = - ivmLogLikelihood(model);

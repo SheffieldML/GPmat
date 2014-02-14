@@ -2,7 +2,7 @@ function model = gpReversibleDynamicsSetLatentValues(model, X)
 
 % GPREVERSIBLEDYNAMICSSETLATENTVALUES Set the latent values inside the model.
 
-% SHEFFIELDML
+% GPMAT
 
 model.diffX = X(2:end, :) - X(1:end-1, :);
 model.X = [X(2:end-1, :) model.diffX(1:end-1, :)];

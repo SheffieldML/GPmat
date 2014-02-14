@@ -18,7 +18,7 @@ function  h = lfmwhiteComputeH(gamma1, gamma2, t1, t2, isStationary1, isStationa
 %
 % SEEALSO : lfmwhiteKernParamInit, lfmwhiteXlfmwhiteKernCompute
 
-% SHEFFIELDML
+% GPMAT
 
 
 if size(t1, 2) > 1 | size(t2, 2) > 1

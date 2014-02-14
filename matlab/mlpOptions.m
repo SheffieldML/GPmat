@@ -17,7 +17,7 @@ function options = mlpOptions(numHidden)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 1
   numHidden = 20;

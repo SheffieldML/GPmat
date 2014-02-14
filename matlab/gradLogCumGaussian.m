@@ -14,7 +14,7 @@ function y = gradLogCumGaussian(x)
 % 
 % COPYRIGHT : Neil D. Lawrence, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 
 y = zeros(size(x));

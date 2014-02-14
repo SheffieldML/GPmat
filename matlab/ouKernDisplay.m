@@ -16,7 +16,7 @@ function ouKernDisplay(kern, spacing)
 %
 % COPYRIGHT : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin > 1

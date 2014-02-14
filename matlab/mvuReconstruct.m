@@ -14,7 +14,7 @@ function model = mvuReconstruct(mvuInfo, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
   model = mvuInfo;
   model.Y = y;

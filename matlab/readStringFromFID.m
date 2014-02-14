@@ -11,7 +11,7 @@ function val = readStringFromFID(FID, string)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
   
-% SHEFFIELDML
+% GPMAT
   
 lineStr = getline(FID);
 tokens = tokenise(lineStr, '=');

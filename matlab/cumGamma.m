@@ -10,6 +10,6 @@ function y = cumGamma(x, a, b)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 y = gammainc(x*b, a);

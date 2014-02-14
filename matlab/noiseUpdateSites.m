@@ -18,7 +18,7 @@ function [m, beta] = noiseUpdateSites(noise, g, nu, mu, varSigma, y);
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 if noise.updateSites
   % The noise model has its own code for site updates.

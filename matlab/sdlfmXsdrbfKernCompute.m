@@ -50,7 +50,7 @@ function [K, Kc] = sdlfmXsdrbfKernCompute(sdlfmKern, sdrbfKern, t1, t2, type)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 5
     type = 'Pos';

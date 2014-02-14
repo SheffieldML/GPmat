@@ -40,7 +40,7 @@ function g = expKernGradient(kern, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 

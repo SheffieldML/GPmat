@@ -16,7 +16,7 @@ function f = gpObjective(params, model)
 % 
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 model = gpExpandParam(model, params);
 f = - gpLogLikelihood(model);

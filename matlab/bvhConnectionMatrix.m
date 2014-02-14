@@ -12,7 +12,7 @@ function connection = bvhConnectionMatrix(skel);
 %
 % SEEALSO : skelConnectionMatrix
 
-% SHEFFIELDML
+% GPMAT
 
 connection = skelConnectionMatrix(skel);
 

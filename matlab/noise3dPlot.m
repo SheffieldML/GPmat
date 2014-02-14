@@ -17,7 +17,7 @@ function h = noise3dPlot(noise, plotType, CX, CY, CZ, CZVar, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 functionName = [noise.type 'Noise3dPlot'];
 if exist(functionName) == 2

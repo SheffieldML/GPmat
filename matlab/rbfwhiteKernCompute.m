@@ -22,7 +22,7 @@ function K = rbfwhiteKernCompute(kern, t1, t2)
 %
 % COPYRIGHT : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 3
   t2 = t1;

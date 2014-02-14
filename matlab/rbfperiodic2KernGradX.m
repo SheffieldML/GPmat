@@ -35,7 +35,7 @@ function gX = rbfperiodic2KernGradX(kern, X, X2)
 %
 % MODIFICATIONS : Michalis K. Titsias, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 
 

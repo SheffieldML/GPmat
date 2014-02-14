@@ -69,7 +69,7 @@ function [x, options, flog, pointlog, scalelog] = scg2(f, x, options, gradf, var
 %	Copyright (c) Ian T Nabney (1996-2001)
 %   Modifications: Andreas C. Damianou 2011
 
-% SHEFFIELDML
+% GPMAT
 
 
 

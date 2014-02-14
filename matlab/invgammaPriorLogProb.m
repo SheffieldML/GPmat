@@ -2,9 +2,9 @@ function l = invgammaPriorLogProb(prior, x)
 
 % INVGAMMAPRIORLOGPROB Log probability of inverse gamma prior.
 
-% SHEFFIELDML
+% GPMAT
 
-% SHEFFIELDML
+% GPMAT
 
 
 % Compute log prior

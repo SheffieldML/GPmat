@@ -27,7 +27,7 @@ function [params, names] = matern52KernExtractParam(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
-% SHEFFIELDML
+% GPMAT
 
 
 params = [kern.lengthScale kern.variance];

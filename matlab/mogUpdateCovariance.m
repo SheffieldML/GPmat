@@ -12,7 +12,7 @@ function model = mogUpdateCovariance(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 for i = 1:model.m
 

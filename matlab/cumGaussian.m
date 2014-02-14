@@ -10,6 +10,6 @@ function y = cumGaussian(x)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004
 
-% SHEFFIELDML
+% GPMAT
 
 y = 0.5*(1+erf(sqrt(2)/2*x));

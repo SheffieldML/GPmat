@@ -11,7 +11,7 @@ function model = mlpParamInit(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 if length(model.hiddenDim) == 1
   model.w1 = randn(model.inputDim, model.nhidden)/sqrt(model.inputDim + 1);

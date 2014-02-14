@@ -1,6 +1,6 @@
 % SIMCOMPUTETEST Test the file simComputeH.
 
-% SHEFFIELDML
+% GPMAT
 
 t1 = linspace(0, 1, 7)';
 t2 = linspace(0, 1, 7)';

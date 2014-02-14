@@ -16,7 +16,7 @@ function z = xlogy(x, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2001, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 % If there is only one input argument x is assumed to equal y.
 if nargin == 1

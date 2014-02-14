@@ -20,7 +20,7 @@ function [g1, g2] = simXsimKernDiagGradient(simKern1, simKern2, t, covDiag)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 
 if size(t, 2) > 1

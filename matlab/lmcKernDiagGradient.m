@@ -16,7 +16,7 @@ function g = lmcKernDiagGradient(kern, x, covDiag)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010 
 
-% SHEFFIELDML
+% GPMAT
   
 error('Not yet implemented');
 

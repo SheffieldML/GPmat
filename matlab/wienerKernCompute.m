@@ -20,7 +20,7 @@ function [K, sk] = wienerKernCompute(kern, x, x2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
   if any(x<0)
     error('WIENER kernel only valid for time greater than zero')

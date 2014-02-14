@@ -30,7 +30,7 @@ function [params, names] = linard2KernExtractParam(kern)
 %
 % COPYRIGHT : Michalis K. Titsias, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 params = [kern.inputScales];

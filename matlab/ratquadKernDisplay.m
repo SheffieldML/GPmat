@@ -15,7 +15,7 @@ function ratquadKernDisplay(kern, spacing)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin > 1
   spacing = repmat(32, 1, spacing);

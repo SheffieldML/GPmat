@@ -11,7 +11,7 @@ function acclaimPlayFile(fileNameAsf, fileNameAmc, frameLength)
 %
 % SEEALSO : acclaimPlayFile, bvhReadFile, skelPlayData
 
-% SHEFFIELDML
+% GPMAT
 
 skel = acclaimReadSkel(fileNameAsf);
 [channels, skel] = acclaimLoadChannels(fileNameAmc, skel);

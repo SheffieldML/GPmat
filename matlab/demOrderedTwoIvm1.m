@@ -1,6 +1,6 @@
 % DEMORDEREDTWOIVM1 Run a demonstration of the ordered categories noise model (circular data).
 
-% SHEFFIELDML
+% GPMAT
 
 randn('seed', 1e5);
 rand('seed', 1e5);

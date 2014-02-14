@@ -27,7 +27,7 @@ function kern = whiteKernParamInit(kern)
 %
 % COPYRIGHT : Antti Honkela, 2012
 
-% SHEFFIELDML
+% GPMAT
 
 
 kern.variance = exp(-2);

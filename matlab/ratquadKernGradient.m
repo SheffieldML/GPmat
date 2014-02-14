@@ -41,7 +41,7 @@ function g = ratquadKernGradient(kern, x, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 % The last argument is covGrad

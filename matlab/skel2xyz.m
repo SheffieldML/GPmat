@@ -12,7 +12,7 @@ function xyz = skel2xyz(skel, channels)
 %
 % SEEALSO : acclaim2xyz, bvh2xyz
 
-% SHEFFIELDML
+% GPMAT
 
 fname = str2func([skel.type '2xyz']);
 xyz = fname(skel, channels);

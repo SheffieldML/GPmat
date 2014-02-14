@@ -12,7 +12,7 @@ function [X, y] = generateCrescentData(numDataPart);
 %
 % COPYRIGHT : Neil D. Lawrence, 2004
 
-% SHEFFIELDML
+% GPMAT
 
 % Generate a toy data-set
 R = [sqrt(2)/2 -sqrt(2)/2; sqrt(2)/2 sqrt(2)/2];

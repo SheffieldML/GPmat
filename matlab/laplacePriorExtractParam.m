@@ -2,7 +2,7 @@ function [params, names] = laplacePriorExtractParam(prior)
 
 % LAPLACEPRIOREXTRACTPARAM Extract params from Laplace prior structure.
 
-% SHEFFIELDML
+% GPMAT
 
 params = prior.precision;
 if nargout > 1

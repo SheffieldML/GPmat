@@ -13,7 +13,7 @@ function kl = kldivGaussian(mean1, cov1, mean2, cov2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 [invCov2, U] = pdinv(cov2);
 logDet2 = logdet(cov2, U);

@@ -15,6 +15,6 @@ function k = sdlfmvKernDiagCompute(sdlfmvKern, t, covIC)
 %
 % COPYRIGHT : Mauricio Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 k = sdlfmKernDiagCompute(sdlfmvKern, t, covIC, 'VelVel');

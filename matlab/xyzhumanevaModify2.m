@@ -4,7 +4,7 @@ function handle = xyzhumanevaModify2(handle,pos)
 %
 % COPYRIGHT : Carl Henrik Ek and Neil Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 
 joint = xyzhumaneva2joint(pos);

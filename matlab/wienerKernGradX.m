@@ -30,6 +30,6 @@ function gX = wienerKernGradX(kern, x, x2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 error(['Unable to compute gradient with respect to input variables for Wiener kernel.']);

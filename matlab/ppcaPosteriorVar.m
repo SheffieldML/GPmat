@@ -13,6 +13,6 @@ function [varsigma] = ppcaPosteriorVar(model, X);
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 varsigma = repmat(1/model.beta, size(X, 1), 1);

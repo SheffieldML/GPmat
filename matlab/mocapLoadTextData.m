@@ -14,7 +14,7 @@ function [Y, connect] = mocapLoadTextData(dataset, centre)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 2
   % Remove centre of gravity from each frame

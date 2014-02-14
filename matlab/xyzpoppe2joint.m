@@ -4,7 +4,7 @@ function joint = xyzpoppe2joint(pos)
 %
 % COPYRIGHT : Carl Henrik Ek and Neil Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 % convert angles to radians
 pos = pos.*2*pi/360;

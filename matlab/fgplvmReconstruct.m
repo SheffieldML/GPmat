@@ -18,7 +18,7 @@ function model = fgplvmReconstruct(kern, noise, fgplvmInfo, X, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
   model = gpReconstruct(kern, noise, fgplvmInfo, X, y);
   model.type = 'fgplvm';

@@ -4,7 +4,7 @@ function model = gpSubspaceCreate(q,d,X,y,options,dim)
 %
 % COPYRIGHT : Carl Henrik Ek, 2008
 
-% SHEFFIELDML
+% GPMAT
   
 model = gpCreate(q,d,X,y,options);
 model.dim = dim;

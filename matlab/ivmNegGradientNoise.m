@@ -16,7 +16,7 @@ function g = ivmNegGradientNoise(params, model)
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 % 
 
-% SHEFFIELDML
+% GPMAT
 
 model.noise = noiseExpandParam(model.noise, params);
 g = - noiseGradientParam(model.noise, model.mu, model.varSigma, model.y);

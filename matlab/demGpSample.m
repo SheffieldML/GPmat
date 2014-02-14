@@ -1,6 +1,6 @@
 % DEMGPSAMPLE Simple demonstration of sampling from a covariance function.
 
-% SHEFFIELDML
+% GPMAT
 
 randn('seed', 1e5)
 rand('seed', 1e5)

@@ -13,7 +13,7 @@ function gX = translateKernDiagGradX(kern, X)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 
 X = X - repmat(kern.centre, size(X, 1), 1);

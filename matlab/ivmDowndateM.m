@@ -16,7 +16,7 @@ function model = ivmDowndateM(model, index)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 d = model.d;
 k = find(model.I == index);

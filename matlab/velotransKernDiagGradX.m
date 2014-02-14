@@ -13,7 +13,7 @@ function gX = velotransKernDiagGradX(kern, X)
 %
 % COPYRIGHT : Neil D. Lawrence, 2011
 
-% SHEFFIELDML
+% GPMAT
 
   Xpass = X(:, 1:end-1);
   t = X(:, end);

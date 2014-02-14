@@ -20,7 +20,7 @@ function [g1, g2, g3] = sdlfmXsdrbfKernGradientBlockIEJ(lfmKern, rbfKern, ...
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010.
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 6
     typeGrad  = {'lfm', 'lfmv'};

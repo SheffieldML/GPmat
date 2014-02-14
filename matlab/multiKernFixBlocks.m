@@ -11,7 +11,7 @@ function kern = multiKernFixBlocks(kern, blocks)
 %
 % COPYRIGHT : Antti Honkela, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 try,
   uuid = char(java.util.UUID.randomUUID);

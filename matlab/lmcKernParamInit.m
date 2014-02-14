@@ -30,7 +30,7 @@ function kern = lmcKernParamInit(kern)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if isfield(kern, 'options') && isfield(kern.options, 'basicKernelType')
     kern.basicKernelType = kern.options.basicKernelType;

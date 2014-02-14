@@ -27,7 +27,7 @@ function [params, names] = tensorKernExtractParam(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
-% SHEFFIELDML
+% GPMAT
 
 if nargout > 1
   [params, names] = cmpndKernExtractParam(kern);

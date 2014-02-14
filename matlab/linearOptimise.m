@@ -12,7 +12,7 @@ function model = linearOptimise(model, X, Y, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 N = size(X, 1);
 Xo = [X ones(N, 1)];

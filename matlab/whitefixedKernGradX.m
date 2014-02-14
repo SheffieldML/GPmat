@@ -30,6 +30,6 @@ function gX = whitefixedKernGradX(kern, X, X2)
 %
 % COPYRIGHT : Nathaniel J. King, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 gX = zeros(size(X2, 1), size(X2, 2), size(X, 1));

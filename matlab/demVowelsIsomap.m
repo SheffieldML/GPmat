@@ -1,6 +1,6 @@
 % DEMVOWELSISOMAP Model the vowels data with a 2-D FGPLVM using RBF kernel.
 
-% SHEFFIELDML
+% GPMAT
 
 % Fix seeds
 randn('seed', 1e5);

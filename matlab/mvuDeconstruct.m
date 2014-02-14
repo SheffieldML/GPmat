@@ -13,7 +13,7 @@ function mvuInfo = mvuDeconstruct(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 mvuInfo = model;
 removeFields = {'Y'};

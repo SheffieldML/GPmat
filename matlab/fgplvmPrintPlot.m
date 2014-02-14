@@ -12,7 +12,7 @@ function fgplvmPrintPlot(model, lbls, capName, experimentNo)
 % 
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 lvmScatterPlot(model, lbls);
 fileName = ['dem' capName num2str(experimentNo)];

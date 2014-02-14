@@ -30,7 +30,7 @@ function gX = velotransKernGradX(kern, X, X2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2011
 
-% SHEFFIELDML
+% GPMAT
 
   t = X(:, end);
   xPass = X(:, 1:end-1) - t*kern.velocity;

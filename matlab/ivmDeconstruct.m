@@ -15,7 +15,7 @@ function [kern, noise, ivmInfo] = ivmDeconstruct(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 kern = rmfield(model.kern, 'Kstore');
 kern = rmfield(kern, 'diagK');

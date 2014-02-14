@@ -11,7 +11,7 @@ function model = gpReadFromFID(FID, varargin)
 %
 % SEEALSO : gpReadFromFile
 
-% SHEFFIELDML
+% GPMAT
 
 try
   version = readVersionFromFID(FID);

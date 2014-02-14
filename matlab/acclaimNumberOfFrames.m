@@ -11,7 +11,7 @@ function nFrames = acclaimNumberOfFrames(fileName)
 %
 % SEEALSO :
 
-% SHEFFIELDML
+% GPMAT
 
 fid = fopen(fileName, 'rt');
 

@@ -2,9 +2,9 @@ function [m, beta] = cmpndNoiseSites(noise, g, nu, mu, varSigma, y)
 
 % CMPNDNOISESITES Site updates for compound noise model.
 
-% SHEFFIELDML
+% GPMAT
 
-% SHEFFIELDML
+% GPMAT
 
 
 m = zeros(size(g));

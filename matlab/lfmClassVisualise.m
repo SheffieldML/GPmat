@@ -2,7 +2,7 @@ function lfmClassVisualise( call )
 
 % LFMCLASSVISUALISE Callback function to visualize LFM in 2D
 
-% SHEFFIELDML
+% GPMAT
 
 global visualiseInfo
 maxN = 30;

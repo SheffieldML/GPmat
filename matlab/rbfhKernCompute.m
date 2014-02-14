@@ -20,7 +20,7 @@ function K = rbfhKernCompute(kern, x1, x2)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 3
     x2 = x1;

@@ -13,7 +13,7 @@ function model = ivmUpdateM(model, index)
 % SEEALSO : ivmCreate, ivmAddPoint, kernCompute
 %
 % COPYRIGHT : Neil D. Lawrence, 2005
-% SHEFFIELDML
+% GPMAT
 
 activePoint = length(model.I)+1;
 

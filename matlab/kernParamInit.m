@@ -10,7 +10,7 @@ function kern = kernParamInit(kern)
 %
 % SEEALSO : kernCreate
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([kern.type 'KernParamInit']);
 % By default don't transform kernel parameters.

@@ -18,7 +18,7 @@ function [dlnZ_dmu, dlnZ_dvs] = noiseGradVals(noise, mu, varsigma, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([noise.type 'NoiseGradVals']);
 [dlnZ_dmu, dlnZ_dvs] = fhandle(noise, mu, ...

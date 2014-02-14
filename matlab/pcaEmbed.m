@@ -13,7 +13,7 @@
 %
 % SEEALSO : pca
 
-% SHEFFIELDML
+% GPMAT
 
 function [X, U, V] = pcaEmbed(Y, dims)
     [U,V] = pca(Y,dims);

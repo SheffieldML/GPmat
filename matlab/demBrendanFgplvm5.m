@@ -1,6 +1,6 @@
 % DEMBRENDANFGPLVM5 Use the GP-LVM to model the Frey face data with DTCVAR and five latent dimensions..
 
-% SHEFFIELDML
+% GPMAT
 
 % Fix seeds
 randn('seed', 1e5);

@@ -34,7 +34,7 @@ function [g1, g2] = simwhiteXrbfwhiteKernGradient(simKern, rbfKern, t1, varargin
 %
 % COPYRIGHT : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin < 5

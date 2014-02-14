@@ -11,7 +11,7 @@ function prior = uniformPriorParamInit(prior)
 %
 % COPYRIGHT : Antti Honkela, 2012
 
-% SHEFFIELDML
+% GPMAT
 
 prior.a = 0;
 prior.b = 1;

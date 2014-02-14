@@ -14,7 +14,7 @@ function f = fgplvmObjective(params, model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 model = fgplvmExpandParam(model, params);
 f = - fgplvmLogLikelihood(model);

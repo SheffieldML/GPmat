@@ -20,7 +20,7 @@ function upsilon = lfmComputeUpsilon(gamma,sigma2,t1,t2, mode)
 %
 % SEEALSO : lfmKernParamInit, lfmXlfmKernCompute, lfmComputeH, W
 
-% SHEFFIELDML
+% GPMAT
 
 dev = sqrt(sigma2);
 

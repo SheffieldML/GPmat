@@ -10,6 +10,6 @@ function val = readVersionFromFID(FID)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
   
-% SHEFFIELDML
+% GPMAT
   
 val = str2num(readStringFromFID(FID, 'version'));

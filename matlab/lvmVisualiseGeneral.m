@@ -12,7 +12,7 @@ function lvmVisualiseGeneral(model, YLbls, ...
 % lvmScatterPlotNoVar
 %
 
-% SHEFFIELDML
+% GPMAT
 
 global visualiseInfo
 

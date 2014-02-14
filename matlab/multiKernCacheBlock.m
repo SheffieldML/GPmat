@@ -21,7 +21,7 @@ function K = multiKernCacheBlock(kern, fhandle, arg, i, j, X, X2)
 %
 % COPYRIGHT : Antti Honkela, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 persistent cache
 

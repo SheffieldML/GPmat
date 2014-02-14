@@ -20,7 +20,7 @@ function hessianCheck(params, objectiveFunction, hessianFunction, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 if isstr(objectiveFunction)
   objectiveFunction = str2func(objectiveFunction);

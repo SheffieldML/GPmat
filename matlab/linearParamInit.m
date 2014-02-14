@@ -11,7 +11,7 @@ function model = linearParamInit(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 model.W = randn(model.inputDim, model.outputDim)/sqrt(model.inputDim + 1);
 model.b = randn(1, model.outputDim)/sqrt(model.inputDim + 1);

@@ -29,7 +29,7 @@ function [paramtransformsettings, names] = kernExtractParamTransformSettings(ker
 %
 % COPYRIGHT : Antti Honkela, 2012
 
-% SHEFFIELDML
+% GPMAT
 
 fname = [kern.type 'KernExtractParamTransformSettings'];
 

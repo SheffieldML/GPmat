@@ -2,7 +2,7 @@ function gX = robTwoDynamicsLatentGradients(model);
 
 % ROBTWODYNAMICSLATENTGRADIENTS Gradients of the X vector given the dynamics model.
 
-% SHEFFIELDML
+% GPMAT
 
 gX = zeros(size(model.X));
 

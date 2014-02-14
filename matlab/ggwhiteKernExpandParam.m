@@ -19,7 +19,7 @@ function kern = ggwhiteKernExpandParam(kern, params)
 %
 % MODIFICATIONS : Mauricio A Alvarez, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 kern.precisionG = params(1:end-2)';
 kern.sigma2Noise = params(end-1);

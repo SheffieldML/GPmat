@@ -11,7 +11,7 @@ function [model, lbls] = modelReadFromFile(fileName, varargin)
 %
 % SEEALSO : modelReadFromFile
 
-% SHEFFIELDML
+% GPMAT
 
 
 FID = fopen(fileName);

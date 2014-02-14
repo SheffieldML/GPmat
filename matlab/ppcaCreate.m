@@ -16,7 +16,7 @@ function model = ppcaCreate(inputDim, outputDim, Y, options)
 % SEEALSO : ppcaOptions, mlpCreate, rbfCreate, kbrCreate
 
 
-% SHEFFIELDML
+% GPMAT
 
 model.type = 'ppca';
 

@@ -7,7 +7,7 @@ function handle = xyzpoppeDraw(joint,handle)
 % SEEALSO xyzpoppeModify, xyzpoppeVisualise
 %
 
-% SHEFFIELDML
+% GPMAT
 
 limb{1} = [2 1;1 3]; % spine
 limb{2} = [1 14;14 4;4 5]; % left arm

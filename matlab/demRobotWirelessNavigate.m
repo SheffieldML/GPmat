@@ -1,6 +1,6 @@
 % DEMROBOTWIRELESSNAVIGATE Take some test data for the robot and navigate with it.
 
-% SHEFFIELDML
+% GPMAT
 
 % Fix seeds
 randn('seed', 1e5);

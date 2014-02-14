@@ -14,7 +14,7 @@ function model = isomapReconstruct(isomapInfo, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
   model = isomapInfo;
   model.Y = y;

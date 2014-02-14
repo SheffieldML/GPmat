@@ -21,7 +21,7 @@ function [k, rbfPart, linearPart, n2] = ardKernCompute(kern, x, x2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004
 
-% SHEFFIELDML
+% GPMAT
 
 
 scales = diag(sqrt(kern.inputScales));

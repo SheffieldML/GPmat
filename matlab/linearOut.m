@@ -11,7 +11,7 @@ function Y = linearOut(model, X);
 %  
 % COPYRIGHT : Neil D. Lawrence, 2006, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 numData = size(X, 1);
 Y = X*model.W + ones(numData, 1)*model.b;

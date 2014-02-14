@@ -13,7 +13,7 @@ function k = expKernDiagCompute(kern, x)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 if kern.isStationary
   diagVal = kernDiagCompute(kern.argument, x(1, :));

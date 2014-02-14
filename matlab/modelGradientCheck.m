@@ -15,7 +15,7 @@ function modelGradientCheck(model, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 [params, names] = modelExtractParam(model);
 if length(names) == 0

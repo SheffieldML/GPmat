@@ -17,7 +17,7 @@ function kern = indexardKernExpandParam(kern, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2011
 
-% SHEFFIELDML
+% GPMAT
 
   kern.indexScales = params(1:end);
 end

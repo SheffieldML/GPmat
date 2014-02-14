@@ -11,7 +11,7 @@ function model = gpCovGradsTest(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 % WARNING --- this isn't testing g_Lambda in gpCovGrads
   

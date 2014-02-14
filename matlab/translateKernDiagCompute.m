@@ -13,7 +13,7 @@ function k = translateKernDiagCompute(kern, x)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 x = x - repmat(kern.centre, size(x, 1), 1);
 k = cmpndKernDiagCompute(kern, x);

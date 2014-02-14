@@ -2,7 +2,7 @@ function [params, names] = wangPriorExtractParam(prior)
 
 % WANGPRIOREXTRACTPARAM Extract params from Wang prior structure.
 
-% SHEFFIELDML
+% GPMAT
 
 params = [prior.M];
 if nargout > 1

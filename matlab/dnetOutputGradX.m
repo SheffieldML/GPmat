@@ -12,6 +12,6 @@ function g = dnetOutputGradX(model, X)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 g = modelOutputGradX(model.mapping, X);

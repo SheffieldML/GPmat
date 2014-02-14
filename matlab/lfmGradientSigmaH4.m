@@ -19,7 +19,7 @@ function    g = lfmGradientSigmaH4(gamma1, gamma2, sigma2, t1, ...
 %
 % SEEALSO : lfmKernGradient, lfmXlfmKernGradient, lfmGradientSigmaUpsilon
 
-% SHEFFIELDML
+% GPMAT
 
 
 % Gradient

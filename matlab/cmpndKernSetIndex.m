@@ -13,7 +13,7 @@ function kern = cmpndKernSetIndex(kern, component, indices)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 if size(indices, 1) ~= 1
   error('Indices should be a row vector.');

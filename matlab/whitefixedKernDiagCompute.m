@@ -13,7 +13,7 @@ function k = whitefixedKernDiagCompute(kern, x)
 %
 % COPYRIGHT : Nathaniel J. King, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 k = whiteKernDiagCompute(kern, x);

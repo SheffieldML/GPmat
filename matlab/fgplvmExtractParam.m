@@ -16,7 +16,7 @@ function [params, names] = fgplvmExtractParam(model)
 %
 % SEEALSO : fgplvmCreate, fgplvmExpandParam, modelExtractParam
 
-% SHEFFIELDML
+% GPMAT
 
 if nargout > 1
   returnNames = true;

@@ -19,7 +19,7 @@ function model = fgplvmCreate(q, d, Y, options)
 %
 % SEEALSO : modelCreate, fgplvmOptions
 
-% SHEFFIELDML
+% GPMAT
 
 if size(Y, 2) ~= d
   error(['Input matrix Y does not have dimension ' num2str(d)]);

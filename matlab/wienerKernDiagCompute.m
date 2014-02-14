@@ -12,6 +12,6 @@ function k = wienerKernDiagCompute(kern, x)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 k = kern.variance*x;

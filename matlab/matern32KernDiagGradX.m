@@ -13,6 +13,6 @@ function gX = matern32KernDiagGradX(kern, X)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 gX = zeros(size(X));

@@ -30,7 +30,7 @@ function gT = rbfinfwhiteKernGradX(kern, t1, t2)
 %
 % COPYRIGHT : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin < 3

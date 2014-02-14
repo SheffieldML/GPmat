@@ -15,7 +15,7 @@ function indexKernDisplay(kern, spacing)
 %
 % COPYRIGHT : Neil D. Lawrence, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 
   if nargin > 1

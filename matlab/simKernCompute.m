@@ -30,7 +30,7 @@ function [k, sk] = simKernCompute(kern, t, t2)
 %
 % MODIFICATIONS : Antti Honkela, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 3
   t2 = t;

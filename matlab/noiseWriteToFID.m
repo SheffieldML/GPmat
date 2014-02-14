@@ -11,7 +11,7 @@ function noiseWriteToFID(noise, FID)
 %
 % SEEALSO : modelReadFromFID, noiseCreate, noiseReadParamsFromFID
 
-% SHEFFIELDML
+% GPMAT
 
 writeVersionToFID(FID, 0.2);
 writeStringToFID(FID, 'baseType', 'noise');  

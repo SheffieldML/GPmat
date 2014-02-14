@@ -11,7 +11,7 @@ function ll = gpLogLikelihood(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 switch model.approx

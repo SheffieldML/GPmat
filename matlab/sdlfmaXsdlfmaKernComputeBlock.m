@@ -25,7 +25,7 @@ function K = sdlfmaXsdlfmaKernComputeBlock(lfmKern1, lfmKern2, t1, t2, ...
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010.
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin<11
     j = i;

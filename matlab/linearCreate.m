@@ -2,7 +2,7 @@ function model = linearCreate(inputDim, outputDim, options)
 
 % LINEARCREATE Create a linear model.
 
-% SHEFFIELDML
+% GPMAT
 
 model.type = 'linear';
 model.activeFunc = options.activeFunc; 

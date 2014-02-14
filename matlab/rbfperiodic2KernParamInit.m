@@ -40,7 +40,7 @@ function kern = rbfperiodic2KernParamInit(kern)
 %
 % MODIFICATIONS : Michalis K. Titsias, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 
 if kern.inputDimension > 1

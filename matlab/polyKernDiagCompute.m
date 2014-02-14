@@ -13,7 +13,7 @@ function k = polyKernDiagCompute(kern, x)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 k =  kern.variance*(sum(x.*x, 2)*kern.weightVariance + kern.biasVariance).^kern.degree;

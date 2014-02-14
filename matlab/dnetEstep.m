@@ -18,7 +18,7 @@ function model = dnetEstep(model, Ypred)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
   diffVal = zeros(model.N, model.M);
   if nargin < 2

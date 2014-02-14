@@ -40,7 +40,7 @@ function [g1, g2] = lfmwhiteXwhiteKernGradient(lfmKern, whiteKern, t1, varargin)
 %
 % COPYRIGHT : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin < 5

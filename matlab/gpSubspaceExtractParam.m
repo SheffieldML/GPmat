@@ -4,7 +4,7 @@ function params = gpSubspaceExtractParam(model)
 %
 % COPYRIGHT : Carl Henrik Ek, 2008
   
-% SHEFFIELDML 
+% GPMAT 
   
 params = gpExtractParam(model);
 

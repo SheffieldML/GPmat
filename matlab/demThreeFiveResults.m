@@ -3,7 +3,7 @@
 % Recreates the three versus five classification experiments
 % presented in the NIPS paper.
 
-% SHEFFIELDML
+% GPMAT
 
 load demThreeFiveIvm1
 clf

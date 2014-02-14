@@ -13,7 +13,7 @@ function [S, neighbours] = findAcyclicNeighbours2(Y, k)
 %
 % SEEALSO : lleOptimise, fmvuOptimise, isomapCreate
 
-% SHEFFIELDML
+% GPMAT
   
   [neighboursInd, A] = findNeighbours(Y, k);
   N = size(Y, 1);

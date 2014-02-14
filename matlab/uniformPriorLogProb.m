@@ -2,7 +2,7 @@ function l = uniformPriorLogProb(prior, x)
 
 % UNIFORMPRIORLOGPROB Log probability of uniform prior.
 
-% SHEFFIELDML
+% GPMAT
 
 % Compute log prior
 

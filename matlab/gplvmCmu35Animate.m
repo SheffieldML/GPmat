@@ -12,7 +12,7 @@ function gplvmCmu35Animate(experimentNo, missingData)
 %
 % SEEALSO : demCmu35gplvm1, demCmu35SequenceOptimisef
   
-% SHEFFIELDML
+% GPMAT
   
 dataSetName = 'cmu35gplvm';
 

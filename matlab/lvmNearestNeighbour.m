@@ -9,7 +9,7 @@ function err = lvmNearestNeighbour(model, lbls)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2006, 2008
   
-% SHEFFIELDML
+% GPMAT
 
 d = dist2(model.X, model.X);
 for i = 1:size(model.X, 1); 

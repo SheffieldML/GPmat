@@ -10,7 +10,7 @@ function preparePlot(limitVal, ax)
 % 
 % SEEALSO : zeroAxes
 
-% SHEFFIELDML
+% GPMAT
 
 axis equal
 

@@ -15,7 +15,7 @@ function model = gpTimeDynamicsSetLatentValues(model, X)
 %
 % MODIFICATIONS : Carl Henrik Ek, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 ind_in = [];
 ind_out = []; 

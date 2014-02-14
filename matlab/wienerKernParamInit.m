@@ -18,7 +18,7 @@ function kern = wienerKernParamInit(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if kern.inputDimension > 1
   error('WIENER kernel only valid for one-D input.')

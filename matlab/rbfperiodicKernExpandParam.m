@@ -17,7 +17,7 @@ function kern = rbfperiodicKernExpandParam(kern, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 
 kern.inverseWidth = params(1);

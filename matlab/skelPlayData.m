@@ -11,7 +11,7 @@ function skelPlayData(skelStruct, channels, frameLength)
 %
 % SEEALSO : bvhPlayData, acclaimPlayData
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 3
   frameLength = 1/120;

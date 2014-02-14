@@ -14,7 +14,7 @@ function g = ivmGradX(model, x, y);
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
  
-% SHEFFIELDML
+% GPMAT
 
 [mu, varsigma] = ivmPosteriorMeanVar(model, x);
 [dmu, dvs] = ivmPosteriorGradMeanVar(model, x);

@@ -2,7 +2,7 @@ function [ax, data] = fgplvmFieldPlot(model, YLbls);
 
 % FGPLVMFIELDPLOT 2-D field plot of the dynamics.
 
-% SHEFFIELDML
+% GPMAT
 
 if isempty(YLbls)
   symbol = [];

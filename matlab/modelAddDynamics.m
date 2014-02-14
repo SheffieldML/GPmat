@@ -12,7 +12,7 @@ function model = modelAddDynamics(model, type, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 type = [type 'Dynamics'];
 model.dynamics = modelCreate(type, model.q, model.q, model.X, varargin{:});

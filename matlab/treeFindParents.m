@@ -11,7 +11,7 @@ function tree = treeFindParents(tree)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 for i = 1:length(tree)
   for j = 1:length(tree(i).children)

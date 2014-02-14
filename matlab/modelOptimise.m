@@ -18,7 +18,7 @@ function [model, options] = modelOptimise(model, varargin)
 %
 % MODIFICATIONS : Carl Henrik Ek, 2007
  
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 2
   varargin = {};

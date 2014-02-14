@@ -18,7 +18,7 @@ function kern = sqexpKernExpandParam(kern, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004
 
-% SHEFFIELDML
+% GPMAT
 
 
 kern.inverseWidth = params(1);

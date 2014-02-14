@@ -31,7 +31,7 @@ function [ax, data] = lvmScatterPlotNoVar(model, YLbls, ax, dims, defaultVals);
   
 % SEEALSO lvmScatterPlot, lvmVisualise, lvmVisualiseGeneral
  
-% SHEFFIELDML
+% GPMAT
   if nargin < 5
     defaultVals = zeros(1, size(model.X, 2));
     

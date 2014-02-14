@@ -12,7 +12,7 @@ function model = modelLoadResult(type, dataSet, number, dataLoaderStr)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
   
-% SHEFFIELDML
+% GPMAT
   if nargin < 4
     dataLoaderStr = 'lvmLoadData';
   end

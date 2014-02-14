@@ -23,7 +23,7 @@ function [passParams, passNames] = multimodelExtractParam(model)
 %
 % MODIFICATIONS: Mauricio Alvarez, 2008, 2009
 %
-% SHEFFIELDML
+% GPMAT
 
   passParams = zeros(1, model.numParams);
   passNames = cell(1, model.numParams);

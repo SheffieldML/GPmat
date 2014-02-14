@@ -19,7 +19,7 @@ function x = fgplvmOptimisePoint(model, x, y, display, iters);
 %
 % SEEALSO : fgplvmCreate, fgplvmOptimiseSequence, fgplvmPointObjective, fgplvmPointGradient
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 5
   iters = 2000;

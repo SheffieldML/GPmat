@@ -12,6 +12,6 @@ function g = linearOutputGradX(model, X)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 g = repmat(shiftdim(model.W, -1), [size(X, 1) 1 1]);

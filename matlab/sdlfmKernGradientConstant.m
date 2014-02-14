@@ -15,7 +15,7 @@ function [generalConstGrad, generalConst] = sdlfmKernGradientConstant(nIntervals
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 generalConst = cell(nIntervals);
 generalGradAlpha = cell(nIntervals);

@@ -12,7 +12,7 @@ function [channels, skel] = acclaimLoadChannels(fileName, skel)
 % 
 % SEEALSO : acclaimReadSkel
   
-% SHEFFIELDML
+% GPMAT
 
 fid=fopen(fileName, 'rt');
 

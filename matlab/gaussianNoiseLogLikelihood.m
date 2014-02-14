@@ -12,7 +12,7 @@ function L = gaussianNoiseLogLikelihood(noise, mu, varsigma, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 
 N = size(mu, 1);

@@ -26,7 +26,7 @@ function [K, Pinv, Lqrinv, Lsrinv, Kbase, factorNoise, ...
 %
 % MODIFIED : Mauricio A. Alvarez, 2008, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 4
   x2 = x;

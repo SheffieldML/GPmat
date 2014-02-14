@@ -13,7 +13,7 @@ function mocapResultsCppBvh(fileName, bvhFileName, dataType, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 [model, labels] = fgplvmReadFromFile(fileName);
 bvhStruct = bvhReadFile(bvhFileName);

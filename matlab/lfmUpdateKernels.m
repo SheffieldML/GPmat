@@ -12,7 +12,7 @@ function model = lfmUpdateKernels(model)
 %
 % COPYRIGHT Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 
 model.K = real(kernCompute(model.kern, model.t)); 

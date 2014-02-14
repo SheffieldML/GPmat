@@ -40,7 +40,7 @@ function kern = disimKernParamInit(kern)
 %
 % COPYRIGHT : Antti Honkela, 2007, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if kern.inputDimension > 1
   error('DISIM kernel only valid for one-D input.')

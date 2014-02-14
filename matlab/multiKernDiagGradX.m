@@ -11,5 +11,5 @@ function gX = multiKernDiagGradX(kern, X)
 %
 % SEEALSO : multiKernParamInit, kernDiagGradX, multikernGradX
 
-% SHEFFIELDML
+% GPMAT
 

@@ -14,7 +14,7 @@ function model = dnetExpandParam(model, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 model.mapping = modelExpandParam(model.mapping, params(1:end-1));
 

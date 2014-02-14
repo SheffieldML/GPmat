@@ -1,6 +1,6 @@
 % DEMSPGP1DGP2 Do a simple 1-D regression after Snelson & Ghahramani's example.
 
-% SHEFFIELDML
+% GPMAT
 
 % Fix seeds
 randn('seed', 2e5);

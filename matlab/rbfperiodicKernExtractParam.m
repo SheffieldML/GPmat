@@ -27,7 +27,7 @@ function [params, names] = rbfperiodicKernExtractParam(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 %
-% SHEFFIELDML
+% GPMAT
 
 
 params = [kern.inverseWidth kern.variance];

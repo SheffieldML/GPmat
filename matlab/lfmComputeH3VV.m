@@ -15,7 +15,7 @@ function [h, compUpVV, compUpVP, compUp] =  lfmComputeH3VV(gamma1_p, gamma1_m, s
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 % Evaluation of h
 

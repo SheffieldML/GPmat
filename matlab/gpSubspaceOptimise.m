@@ -4,7 +4,7 @@ function model = gpSubspaceOptimise(model,varargin)
 %
 % COPYRIGHT : Carl Henrik Ek, 2008
   
-% SHEFFIELDML
+% GPMAT
 
 model = gpOptimise(model,varargin{:});
 

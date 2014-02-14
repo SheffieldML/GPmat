@@ -18,7 +18,7 @@ function h = probitNoisePointPlot(noise, X, y, ...
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 
 pointsNeg = plot(X(find(y(:, 1)==-1), 1), ...

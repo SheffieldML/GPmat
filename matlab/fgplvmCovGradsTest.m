@@ -2,7 +2,7 @@ function fgplvmCovGradsTest(model)
 
 % FGPLVMCOVGRADSTEST Test the gradients of the covariance.
 
-% SHEFFIELDML
+% GPMAT
 
 switch model.approx
  case 'ftc'

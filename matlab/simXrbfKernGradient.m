@@ -38,7 +38,7 @@ function [g1, g2] = simXrbfKernGradient(simKern, rbfKern, t1, t2, covGrad)
 %
 % MODIFICATIONS : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 arg{1} = t1;
 if nargin < 5

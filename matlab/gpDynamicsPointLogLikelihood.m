@@ -16,7 +16,7 @@ function ll = gpDynamicsPointLogLikelihood(model, x, y)
 
 % MODIFICATION: Carl Henrik Ek, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if(isfield(model,'indexIn'))
   x = x(:,model.indexIn);

@@ -14,7 +14,7 @@ function [mapping, dnetInfo] = dnetDeconstruct(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 mapping = model.mapping;
 dnetInfo = model;

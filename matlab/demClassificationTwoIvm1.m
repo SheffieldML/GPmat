@@ -1,6 +1,6 @@
 % DEMCLASSIFICATIONTWOIVM1 IVM for classification on a data-set sampled from a GP
 
-% SHEFFIELDML
+% GPMAT
 
 % Fix seeds
 randn('seed', 1e5);

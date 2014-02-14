@@ -15,7 +15,7 @@ function wienerKernDisplay(kern, spacing)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin > 1

@@ -11,6 +11,6 @@ function y = negLogLogit(x)
 %
 % SEEALSO : sigmoid
 
-% SHEFFIELDML
+% GPMAT
 
 y = log(1+exp(x));

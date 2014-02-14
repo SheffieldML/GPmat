@@ -11,7 +11,7 @@ function vec = readBinaryDoubles(fileName, format)
 %
 % SEEALSO : fopen, fread, fclose
 
-% SHEFFIELDML
+% GPMAT
   
   if nargin < 2
     format = 'ieee-le';

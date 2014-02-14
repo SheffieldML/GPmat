@@ -14,7 +14,7 @@ function model  = modelSetOutputWeights(model, W, b)
 % 
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
   
 switch model.type
  case 'mlp'

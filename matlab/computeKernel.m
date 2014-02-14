@@ -2,9 +2,9 @@ function [kx, rbfPart, linearPart, n2] = computeKernel(x, lntheta, type, x2)
 
 % COMPUTEKERNEL Compute the kernel given the parameters and X.
 
-% SHEFFIELDML
+% GPMAT
 
-% SHEFFIELDML
+% GPMAT
 
 lntheta=log(thetaConstrain(exp(lntheta)));
 theta = exp(lntheta);

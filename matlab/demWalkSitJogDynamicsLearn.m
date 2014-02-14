@@ -1,6 +1,6 @@
 % DEMWALKSITJOGDYNAMICSLEARN Learn the stick man dynamics.
 
-% SHEFFIELDML
+% GPMAT
 
 % Fix seeds
 randn('seed', 1e5);

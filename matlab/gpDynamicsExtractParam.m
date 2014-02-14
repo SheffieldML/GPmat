@@ -21,7 +21,7 @@ function [param, names] = gpDynamicsExtractParam(model, dim)
 %
 % MODIFICATIONS : Carl Henrik Ek, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 if nargout > 1
   returnNames = true;

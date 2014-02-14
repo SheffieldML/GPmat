@@ -18,7 +18,7 @@ function kern = indexKernParamInit(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 % These parameters are restricted to lie between 0 and 1.
   kern.variance = 1;

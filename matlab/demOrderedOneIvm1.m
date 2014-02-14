@@ -1,6 +1,6 @@
 % DEMORDEREDONEIVM1 Run a demonstration of the ordered categories noise model (linear data).
 
-% SHEFFIELDML
+% GPMAT
 % Fix seeds
 randn('seed', 1e5);
 rand('seed', 1e5);

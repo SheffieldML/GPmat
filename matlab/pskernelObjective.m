@@ -2,9 +2,9 @@ function f = pskernelObjective(lntheta, models, prior)
 
 % PSKERNELOBJECTIVE Likelihood approximation for point set IVM.
 
-% SHEFFIELDML
+% GPMAT
 
-% SHEFFIELDML
+% GPMAT
 
 % PSIVM
 

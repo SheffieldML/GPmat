@@ -18,7 +18,7 @@ function h = orderedNoisePointPlot(noise, X, y, ...
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 
 h = [];

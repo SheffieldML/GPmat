@@ -27,7 +27,7 @@ function [params, names] = noiseExtractParam(noise)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([noise.type 'NoiseExtractParam']);
 if nargout < 2

@@ -10,7 +10,7 @@ function Trans = gpComputeTranslationLogLikelihood(model, Xlabel, verbose);
 %
 % COPYRIGHT : Carl Henrik Ek, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 
 if(iscell(Xlabel)&&size(Xlabel{1},1)==1)

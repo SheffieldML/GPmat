@@ -11,7 +11,7 @@ function prior = priorWriteParamsToFID(prior, FID)
 %
 % SEEALSO : priorWriteToFID, modelWriteToFID
 
-% SHEFFIELDML
+% GPMAT
 
 writeIntToFID(FID, 'numParams', prior.nParams);
 fhandle = str2func([prior.type 'PriorExtractParam']);

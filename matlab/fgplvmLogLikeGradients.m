@@ -26,7 +26,7 @@ function [g, gParam] = fgplvmLogLikeGradients(model)
 %
 % SEEALSO : fgplvmLogLikelihood, fgplvmCreate, modelLogLikeGradients
 
-% SHEFFIELDML
+% GPMAT
 
 
 [gParam, gX_u, gX] = gpLogLikeGradients(model);

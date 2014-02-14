@@ -5,10 +5,11 @@ function options = printLatexOptions
 % RETURN options : options specify whether to create an eps and keep aspect ratio. 
 % SEEALSO : printLatexPlot
 %
-% COPYRIGHT : Neil D. Lawrence, 2010
+% COPYRIGHT : Neil D. Lawrence, 2010, 2013
   
-% SHEFFIELDML
+% GPMAT
   
+  options.tikz = false;
   options.pdf = true;
   options.eps = false;
   options.maintainAspect = true;

@@ -54,7 +54,7 @@ function g = invcmpndKernGradient(kern, x, varargin)
 %
 % COPYRIGHT : Andreas C. Damianou, 2012
 
-% SHEFFIELDML
+% GPMAT
 
 % !!! TODO: There are several precomputations and tricks to speed this up...!
 

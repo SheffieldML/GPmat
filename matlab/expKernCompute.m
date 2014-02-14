@@ -20,7 +20,7 @@ function [K, argK, kDiagMat] = expKernCompute(kern, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 argK = kernCompute(kern.argument, varargin{:});

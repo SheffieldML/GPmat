@@ -1,7 +1,7 @@
 function X = rocholTransMultiply(ch, Y);
 
 % ROCHOLTRANSMULTIPLY Multiply by the transposed version of the rank one Cholesky.
-% SHEFFIELDML
+% GPMAT
 
 %/~
 % This would be the long way of doing it.

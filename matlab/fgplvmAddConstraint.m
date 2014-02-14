@@ -12,7 +12,7 @@ function model = fgplvmAddConstraint(model,options,varargin)
 %
 % SEEALSO : constraintOptions
 
-% SHEFFIELDML
+% GPMAT
 
 
 %

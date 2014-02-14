@@ -11,7 +11,7 @@ function k = kernDiagGradX(kern, x)
 %
 % SEEALSO : kernDiagGradX, kernGradX
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([kern.type 'KernDiagGradX']);
 k = fhandle(kern, x);

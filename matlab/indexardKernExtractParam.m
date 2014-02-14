@@ -27,7 +27,7 @@ function [params, names] = indexardKernExtractParam(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2011
 %
-% SHEFFIELDML
+% GPMAT
 
   params = [kern.indexScales];
   if nargout > 1

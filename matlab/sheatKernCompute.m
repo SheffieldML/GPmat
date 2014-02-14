@@ -23,7 +23,7 @@ function [K, const] = sheatKernCompute(sigmax, lengthX, s1, s2, w, gamma, pwz1, 
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 12
     isNumeric = false;

@@ -1,6 +1,6 @@
 % CMDSROADDATA This script uses classical MDS to visualise some road distance data.
 
-% SHEFFIELDML
+% GPMAT
 
 % The file uses the m_map v1.3 available via the web at http://www.ocgy.ubc.ca/~rich/
 

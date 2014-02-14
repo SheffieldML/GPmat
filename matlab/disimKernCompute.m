@@ -20,7 +20,7 @@ function k = disimKernCompute(kern, t, t2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006; Antti Honkela, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 3
   t2 = t;

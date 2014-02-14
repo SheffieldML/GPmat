@@ -29,7 +29,7 @@ function kern = multiKernExpandParamTransformSettings(kern, paramtransformsettin
 %
 % COPYRIGHT : Jaakko Peltonen, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 
 % There should be as many transformation settings provided as there

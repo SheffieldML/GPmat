@@ -21,6 +21,6 @@
 %
 % COPYRIGHT : Antti Honkela, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 error('disimKernDiagGradient not yet implemented.')

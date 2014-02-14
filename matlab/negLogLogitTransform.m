@@ -16,7 +16,7 @@ function y = negLogLogitTransform(x, transform)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 
 y = zeros(size(x));
@@ -40,6 +40,6 @@ switch transform
   index = find(x>limVal);
   y(index) = 1;
   index = find(x<=limVal);
-  y(index) = (exp(x(index))-1)./exp(x(index));
+  y(index) = 1-exp(-x(index));
 end
   

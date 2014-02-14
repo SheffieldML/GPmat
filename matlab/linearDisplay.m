@@ -2,7 +2,7 @@ function linearDisplay(model, spacing)
 
 % LINEARDISPLAY Display a linear model.
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin > 1
   spacing = repmat(32, 1, spacing);

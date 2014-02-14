@@ -11,7 +11,7 @@ function modelRet = fgplvmTest
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2009
 
 
-% SHEFFIELDML
+% GPMAT
 
 q = 2;
 d = 3;

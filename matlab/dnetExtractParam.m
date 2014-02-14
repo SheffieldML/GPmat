@@ -14,7 +14,7 @@ function [params, names] = dnetExtractParam(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 if nargout > 1
   [params, names] = modelExtractParam(model.mapping);

@@ -19,7 +19,7 @@ function kern = rbfardjitKernExpandParam(kern, params)
 %
 % COPYRIGHT : Michalis K. Titsias, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 kern.variance = params(1);
 kern.inputScales = params(2:end);

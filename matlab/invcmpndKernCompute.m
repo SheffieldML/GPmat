@@ -28,7 +28,7 @@ function k = invcmpndKernCompute(kern, x, x2)
 %
 % COPYRIGHT : Andreas C. Damianou, 2012
 
-% SHEFFIELDML
+% GPMAT
 
 % !!! TODO: There are several precomputations and tricks to speed this up...!
 

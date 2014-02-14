@@ -28,7 +28,7 @@ function [params, names] = mlpKernExtractParam(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 %
-% SHEFFIELDML
+% GPMAT
 
 
 params = [kern.weightVariance kern.biasVariance kern.variance];

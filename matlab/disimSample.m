@@ -1,6 +1,6 @@
 % DISIMSAMPLE Sample from SIM kernel
 
-% SHEFFIELDML
+% GPMAT
 
 colordef white
 randn('seed', 1e8)

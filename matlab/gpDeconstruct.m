@@ -15,7 +15,7 @@ function [kern, noise, gpInfo] = gpDeconstruct(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 kern = model.kern;
 if isfield(model, 'noise')

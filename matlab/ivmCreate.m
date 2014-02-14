@@ -24,7 +24,7 @@ function model = ivmCreate(inputDim, outputDim, X, y, options);
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 
 model.type = 'ivm';

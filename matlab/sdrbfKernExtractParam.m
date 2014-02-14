@@ -20,7 +20,7 @@ function [params, names] = sdrbfKernExtractParam(kern)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 params = [kern.inverseWidth(:)' kern.switchingTimes];
 if nargout > 1

@@ -2,7 +2,7 @@ function kern = kernSetWhite(kern, value)
 
 % KERNSETWHITE Helper function to set the white noise in a kernel if it exists.
 
-% SHEFFIELDML
+% GPMAT
 
 whitePresent = 0;
 switch kern.type

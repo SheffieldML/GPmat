@@ -38,7 +38,7 @@ function g = kernGradient(kern, x, varargin)
 %
 % SEEALSO kernDiagGradient, kernGradX
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([kern.type 'KernGradient']);
 

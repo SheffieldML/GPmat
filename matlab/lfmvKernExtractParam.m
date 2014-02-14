@@ -20,6 +20,6 @@ function [params, names] = lfmvKernExtractParam(kern)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 [params, names] = lfmKernExtractParam(kern);

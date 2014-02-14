@@ -12,7 +12,7 @@ function gpDisplay(model, spaceNum)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin > 1
   spacing = repmat(32, 1, spaceNum);

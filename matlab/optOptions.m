@@ -6,7 +6,7 @@ function options = optOptions;
 % RETURN options : a set of options.
 %
 
-% SHEFFIELDML
+% GPMAT
 
 if exist('foptions')
   options = foptions;

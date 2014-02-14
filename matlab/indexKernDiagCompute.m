@@ -12,6 +12,6 @@ function k = indexKernDiagCompute(kern, x)
 %
 % COPYRIGHT : Neil D. Lawrence, 2011
 
-% SHEFFIELDML
+% GPMAT
   k = repmat(kern.variance, size(x, 1), 1);
 end

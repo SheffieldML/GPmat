@@ -35,7 +35,7 @@ function kern = gibbsperiodicKernParamInit(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 
 kern.variance = 1;

@@ -43,7 +43,7 @@ function g = disimKernGradient(kern, t, varargin)
 %
 % COPYRIGHT : Antti Honkela, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 if length(varargin)<2
   t2 = t;

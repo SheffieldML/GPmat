@@ -21,7 +21,7 @@ function [K, Kbase, n2]  = gaussianKernCompute(kern, x, x2)
 %
 % MODIFICATIONS: Mauricio Alvarez, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if kern.isArd
     sqrtP = sqrt(kern.precisionU);

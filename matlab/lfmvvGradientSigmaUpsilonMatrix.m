@@ -16,7 +16,7 @@ function dUpsilonS = lfmvvGradientSigmaUpsilonMatrix(gamma, sigma2, ...
 %
 % SEEALSO : lfmvvComputeUpsilonMatrix.m
 
-% SHEFFIELDML
+% GPMAT
 
 gridt1 = repmat(t1, 1, length(t2));
 gridt2 = repmat(t2', length(t1), 1);

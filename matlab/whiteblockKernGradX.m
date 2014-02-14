@@ -18,7 +18,7 @@ function gX = whiteblockKernGradX(kern, X, X2)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin<3
     X2 = X;

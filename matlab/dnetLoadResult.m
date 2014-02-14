@@ -11,7 +11,7 @@ function [model, lbls] = dnetLoadResult(dataSet, number)
 %
 % COPYRIGHT : Neil D. Lawrence,  2009
   
-% SHEFFIELDML
+% GPMAT
 
   [Y, lbls] = lvmLoadData(dataSet);
 

@@ -12,7 +12,7 @@ function y = gpDynamicsSamp(model, X);
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 [mu, var] = gpPosteriorMeanVar(model, X);
 y = gsamp(mu, diag(var), 1);

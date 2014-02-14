@@ -17,7 +17,7 @@ function kern = lmcKernExpandParam(kern, params)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([kern.basicKernelType 'KernExpandParam']);
 kern = fhandle(kern, params(1:kern.nParamsBK));

@@ -17,7 +17,7 @@ function g = dnetOutputGrad(model, X)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
   g = modelOutputGrad(model.mapping, X);
   % Add output gradient wrt beta.

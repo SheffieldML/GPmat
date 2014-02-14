@@ -30,7 +30,7 @@ function K = nddisimXndsimKernCompute(disimKern, simKern, t1, t2)
 %
 % COPYRIGHT : Jaakko Peltonen, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 
 %fprintf(1,'nddisimXndsimKernCompute step1\n');

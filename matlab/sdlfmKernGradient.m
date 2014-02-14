@@ -45,7 +45,7 @@ function [g, covGradLocal] = sdlfmKernGradient(kern, t, varargin)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if length(varargin)<2
   t2 = t;

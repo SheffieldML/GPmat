@@ -11,7 +11,7 @@ function model = gpLoadResult(dataSet, number, dataLoaderStr)
 %
 % COPYRIGHT : Neil D. Lawrence, 2003, 2004, 2005, 2006, 2008, 2011
   
-% SHEFFIELDML
+% GPMAT
 
   if nargin < 3 
     dataLoaderStr = 'mapLoadData';

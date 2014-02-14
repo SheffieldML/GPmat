@@ -24,7 +24,7 @@ function K = lfmvXlfmKernCompute(lfmKern1, lfmKern2, t1, t2)
 %
 % COPYRIGHT : Mauricio Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 4
     t2 = t1;

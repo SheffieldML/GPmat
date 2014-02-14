@@ -7,7 +7,7 @@
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 nData = 200;
 y1 = linspace(-1, 1, nData)';

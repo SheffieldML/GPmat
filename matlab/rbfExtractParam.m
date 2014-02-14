@@ -17,7 +17,7 @@ function [params, names] = rbfExtractParam(model)
 % COPYRIGHT : Neil D. Lawrence, 2006, 2007, 2008
 
 
-% SHEFFIELDML
+% GPMAT
 
 params = rbfpak(model);
 if nargout > 1

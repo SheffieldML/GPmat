@@ -4,7 +4,7 @@ function handle = xyzhumanevaVisualise2(pos,fid)
 %
 % COPYRIGHT : Carl Henrik Ek and Neil Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 
 if(nargin<2)

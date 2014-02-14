@@ -42,7 +42,7 @@ function kernRet = kernTest(kernType, numIn, tieParamNames, flags);
 %
 % MODIFICATIONS : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 2
   numIn = 4;

@@ -12,7 +12,7 @@ function g = rbfperiodicLogLikeGradients(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 
 [ypred, z, n2, sinarg, arg] = rbfperiodicOut(model, model.X);

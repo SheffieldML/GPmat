@@ -40,7 +40,7 @@ function g = heatKernGradient(kern, x, varargin)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 % if length(varargin)<2
 %     covGrad = varargin{1};

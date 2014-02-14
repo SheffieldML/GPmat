@@ -20,7 +20,7 @@ function [f, g] = fgplvmSequenceObjectiveGradient(xvec, model, Y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 % Check how the optimiser has given the parameters
 if size(xvec, 1) > size(xvec, 2)

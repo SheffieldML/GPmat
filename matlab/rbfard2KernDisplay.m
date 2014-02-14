@@ -17,7 +17,7 @@ function rbfard2KernDisplay(kern, spacing)
 %
 % COPYRIGHT : Michalis K. Titsias, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin > 1

@@ -17,7 +17,7 @@ function kern = multiKernExpandParam(kern, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 params = params*kern.paramGroups';
 startVal = 1;

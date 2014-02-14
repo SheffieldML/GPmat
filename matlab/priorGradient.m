@@ -14,7 +14,7 @@ function g = priorGradient(prior, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2003
 
-% SHEFFIELDML
+% GPMAT
   
 fhandle = str2func([prior.type 'PriorGradient']);
 g = fhandle(prior, params);

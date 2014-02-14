@@ -21,7 +21,7 @@ function [ax, data] = lvmScatterPlotColor(model, shade, ax, dims, defaultVals);
 %
 % SEEALSO : fgplvmVisualise, lvmTwoDPlot, lvmScatterPlot
 
-% SHEFFIELDML
+% GPMAT
 
   if nargin < 5
     defaultVals = zeros(1, model.q);

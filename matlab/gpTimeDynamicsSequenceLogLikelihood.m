@@ -19,7 +19,7 @@ function ll = gpTimeDynamicsSequenceLogLikelihood(model, latentValsRaw, t)
 %
 % MODIFICATIONS : Carl Henrik Ek, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin < 3

@@ -16,7 +16,7 @@ function g = multiKernDiagGradientBlock(kern, X, covGrad, i)
 %
 % COPYRIGHT : Mauricio A. Álvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 
 fhandle = [kern.comp{i}.type 'KernDiagGradient'];

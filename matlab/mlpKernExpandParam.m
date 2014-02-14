@@ -18,7 +18,7 @@ function kern = mlpKernExpandParam(kern, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 %/~

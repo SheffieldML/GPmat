@@ -22,7 +22,7 @@ function [gK_uu, gK_uf, g_Lambda, gBeta] = gpCovGrads(model, M)
 %
 % SEEALSO : gpCreate, gpLogLikeGradient
 
-% SHEFFIELDML
+% GPMAT
 
 switch model.approx
  case {'dtc', 'dtcvar'}

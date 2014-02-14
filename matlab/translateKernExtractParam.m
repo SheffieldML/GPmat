@@ -28,7 +28,7 @@ function [params, names] = translateKernExtractParam(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 %
-% SHEFFIELDML
+% GPMAT
 
 kern.nParams = kern.nParams - kern.inputDimension;
 if nargout == 2

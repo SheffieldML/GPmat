@@ -19,7 +19,7 @@ function kern = ndsimKernExpandParamTransformSettings(kern, paramtransformsettin
 % 
 % COPYRIGHT : Jaakko Peltonen, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 
 %fprintf(1,'expanding SIM kernel param-transforms settings:\n');

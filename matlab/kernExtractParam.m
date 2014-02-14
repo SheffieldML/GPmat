@@ -27,7 +27,7 @@ function [params, names] = kernExtractParam(kern)
 %
 % COPYRIGHT : Jaakko Peltonen, 2011.
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([kern.type 'KernExtractParam']);
 names = cell(1, kern.nParams);

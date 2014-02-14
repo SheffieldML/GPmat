@@ -11,7 +11,7 @@ function handle = bvhVisualise(channels, skel, padding)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 3
   padding = 0;

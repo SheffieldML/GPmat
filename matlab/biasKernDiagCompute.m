@@ -13,7 +13,7 @@ function k = biasKernDiagCompute(kern, x)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 k = repmat(kern.variance, size(x, 1), 1);

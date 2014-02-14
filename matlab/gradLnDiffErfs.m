@@ -5,7 +5,7 @@ function [dlnPart, m] = gradLnDiffErfs(x1, x2, fact1, fact2),
 %
 % COPYRIGHT : Antti Honkela, 2007
   
-% SHEFFIELDML
+% GPMAT
 
 m = min(x1.^2, x2.^2);
 dlnPart = 2/sqrt(pi) * (exp(-x1.^2 + m) .* fact1 ...

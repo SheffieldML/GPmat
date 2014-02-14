@@ -21,7 +21,7 @@ function fgplvmVisualise(model, YLbls, ...
 %
 % MODIFICATIONS : Carl Henrik Ek, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 global visualiseInfo
 

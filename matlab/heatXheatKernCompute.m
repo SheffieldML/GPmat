@@ -36,7 +36,7 @@ function [K, sK, sKIC] = heatXheatKernCompute(heatKern1, heatKern2, x1, x2)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 4
     x2 = x1;

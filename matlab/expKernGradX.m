@@ -30,7 +30,7 @@ function gX = expKernGradX(kern, x, x2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 [K, argK, kDiagdMat] = expKernCompute(kern, x, x2);
 gX = kernGradX(kern.argument, x, x2);

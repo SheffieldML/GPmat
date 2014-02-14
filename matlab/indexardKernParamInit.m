@@ -19,7 +19,7 @@ function kern = indexardKernParamInit(kern, indices)
 %
 % COPYRIGHT : Neil D. Lawrence, 2011
 
-% SHEFFIELDML
+% GPMAT
   
   
   kern.indexValues = true;

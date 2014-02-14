@@ -32,7 +32,7 @@ function [g1, g2] = ggXgaussianKernGradient(ggKern, gaussianKern, x, x2, covGrad
 %
 % MODIFICATIONS : Mauricio A. Alvarez, 2009
  
-% SHEFFIELDML
+% GPMAT
  
 if nargin < 5
     covGrad = x2;

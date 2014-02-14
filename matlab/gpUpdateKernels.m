@@ -20,7 +20,7 @@ function model = gpUpdateKernels(model, X, X_u)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2007, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 jitter = 1e-6;
 

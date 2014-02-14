@@ -28,7 +28,7 @@ function K = sdlfmvXsdlfmKernCompute(sdlfmvKern1, sdlfmKern2, t1, t2, covIC)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 4
     t2 = t1;

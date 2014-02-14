@@ -2,7 +2,7 @@ function var = kernGetVariance(kern)
 
 % KERNGETVARIANCE Get the signal associated with a the kernel.
 
-% SHEFFIELDML
+% GPMAT
 
 fhandleStr = ([kern.type 'KernGetVariance']);
 if exist(fhandleStr)==2

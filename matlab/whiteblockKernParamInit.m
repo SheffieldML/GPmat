@@ -16,7 +16,7 @@ function kern = whiteblockKernParamInit(kern)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if isfield(kern, 'options') && isfield(kern.options, 'nout')
     kern.nout = kern.options.nout;

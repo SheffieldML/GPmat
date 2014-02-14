@@ -1,6 +1,6 @@
 % LFMCOMPUTETEST Test the file lfmComputeH.
 
-% SHEFFIELDML
+% GPMAT
 
 t1 = linspace(0, 1, 7)';
 t2 = linspace(0, 1, 7)';

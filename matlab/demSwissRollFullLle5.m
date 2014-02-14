@@ -1,6 +1,6 @@
 % DEMSWISSROLLFULLLLE5 Demonstrate LLE on the oil data.
 
-% SHEFFIELDML
+% GPMAT
 
 [Y, lbls] = lvmLoadData('swissRollFull');
 %Y = Y(1:20, :);

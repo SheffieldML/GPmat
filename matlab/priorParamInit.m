@@ -10,6 +10,6 @@ function prior = priorParamInit(prior)
 %
 % COPYRIGHT : Neil D. Lawrence, 2003
   
-% SHEFFIELDML
+% GPMAT
 
 prior = feval([prior.type 'PriorParamInit'], prior);

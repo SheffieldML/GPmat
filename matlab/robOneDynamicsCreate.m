@@ -2,7 +2,7 @@ function model = robOneDynamicsCreate(q, d, latentVals)
 
 % ROBONEDYNAMICSCREATE Create the dynamics model. 
 
-% SHEFFIELDML
+% GPMAT
 
 if(q~=2)
   error('Robot One Dynamics designed for 2-D latent spaces.');

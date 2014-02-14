@@ -13,7 +13,7 @@ function g = acclaimGradient(skel,channels)
 %
 % MODIFICATIONS : Neil D. Lawrence, 2009
   
-% SHEFFIELDML
+% GPMAT
 
 skelTmp = skel.tree(1);
 g = eye(3);

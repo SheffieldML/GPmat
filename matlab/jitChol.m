@@ -30,7 +30,7 @@ function [UC, jitter] = jitChol(A, maxTries)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 2
   maxTries = 10;

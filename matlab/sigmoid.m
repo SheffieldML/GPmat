@@ -2,6 +2,6 @@ function y = sigmoid(x)
 
 % SIGMOID The sigmoid function
 
-% SHEFFIELDML
+% GPMAT
 
 y = ones(size(x))./(1+exp(-x));

@@ -41,7 +41,7 @@ function g = indexardKernGradient(kern, x, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2011
 
-% SHEFFIELDML
+% GPMAT
 
   g = zeros(1, length(kern.indices));
   covGrad = varargin{end};

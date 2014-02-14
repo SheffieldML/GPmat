@@ -13,7 +13,7 @@ function prior = priorTest(priorType);
 %
 % MODIFICATIONS : Antti Honkela, 2012
 
-% SHEFFIELDML
+% GPMAT
 
 prior.type = priorType;
 prior = priorParamInit(prior);

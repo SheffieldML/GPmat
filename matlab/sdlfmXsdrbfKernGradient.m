@@ -52,7 +52,7 @@ function [g1, g2] = sdlfmXsdrbfKernGradient(sdlfmKern, sdrbfKern, t1, t2, covGra
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 6
     type = 'Pos';

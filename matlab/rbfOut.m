@@ -19,7 +19,7 @@ function [Y, G] = rbfOut(model, X);
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2007, 2008
 
-% SHEFFIELDML
+% GPMAT
 
   if nargout > 1
     [Y, G] = rbffwd(model, X);

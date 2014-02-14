@@ -13,7 +13,7 @@ function isomapInfo = isomapDeconstruct(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 isomapInfo = model;
 removeFields = {'Y'};

@@ -2,7 +2,7 @@ function L = kernPriorLogProb(kern)
 
 % KERNPRIORLOGPROB Compute penalty terms associated with kernel priors.
 
-% SHEFFIELDML
+% GPMAT
 
 L = 0;
 switch kern.type

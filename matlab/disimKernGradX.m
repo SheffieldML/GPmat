@@ -32,6 +32,6 @@ function gX = disimKernGradX(kern, x, x2)
 %
 % COPYRIGHT : Antti Honkela, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 error('disimKernGradX not yet implemented.')

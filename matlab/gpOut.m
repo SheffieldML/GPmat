@@ -13,7 +13,7 @@ function y = gpOut(model, x);
 %
 % COPYRIGHT : Neil D. Lawrence and Carl Ek, 2006
 
-% SHEFFIELDML 
+% GPMAT 
 
 if nargin < 2
   % This implies evaluate for the training data.

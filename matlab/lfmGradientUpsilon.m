@@ -20,7 +20,7 @@ function    g = lfmGradientUpsilon(gamma,sigma2,gradThetaGamma,t1, t2, mode)
 %
 % SEEALSO : lfmKernGradient, lfmXlfmKernGradient, lfmGradientH
 
-% SHEFFIELDML
+% GPMAT
 
 
 %Parameters of the function

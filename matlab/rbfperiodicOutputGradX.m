@@ -12,7 +12,7 @@
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 [ypred, z, n2, sinarg, arg] = rbfperiodicOut(model, X);
 g = zeros(size(X, 1), model.inputDim, model.outputDim);

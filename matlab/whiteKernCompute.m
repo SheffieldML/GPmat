@@ -28,7 +28,7 @@ function [k, sk] = whiteKernCompute(kern, x, x2)
 %
 % COPYRIGHT : Jaakko Peltonen, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 %nargin
 %x

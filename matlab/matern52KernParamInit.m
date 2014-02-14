@@ -24,7 +24,7 @@ function kern = matern52KernParamInit(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 kern.variance = 1;
 kern.lengthScale = 1;

@@ -18,7 +18,7 @@ function kern = whitefixedKernExpandParam(kern, params)
 %
 % COPYRIGHT : Nathaniel J. King, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 kern = kern;

@@ -1,6 +1,6 @@
 % IVMUSPSRESULTS Summarise the USPS result files in LaTeX.
 
-% SHEFFIELDML
+% GPMAT
 
 try 
   load ivmUspsResults

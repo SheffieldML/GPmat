@@ -18,7 +18,7 @@ function x = optimiMinimize(objectiveGradient, params, options, varargin);
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 x = minimize(params', objectiveGradient, options(14), ...
              varargin{:})';

@@ -12,7 +12,7 @@ function dir = datasetsDirectory
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
 
-% SHEFFIELDML
+% GPMAT
 
 % by default return the directory where this file is.
 fullSpec = which('datasetsDirectory');

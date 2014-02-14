@@ -12,7 +12,7 @@ function fgplvmCmu35Animate(experimentNo, missingData)
 %
 % SEEALSO : demCmu35gplvm1, demCmu35SequenceOptimisef
   
-% SHEFFIELDML
+% GPMAT
   
 if nargin < 2
   missingData = 'body';

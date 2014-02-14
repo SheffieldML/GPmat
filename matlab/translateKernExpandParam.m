@@ -18,7 +18,7 @@ function kern = translateKernExpandParam(kern, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 endVal = length(params)-kern.inputDimension;
 kern = cmpndKernExpandParam(kern, params(1, 1:endVal));

@@ -20,7 +20,7 @@ function g = gaussianKernDiagGradient(kern, x, covDiag)
 %
 % COPYRIGHT : Mauricio Alvarez and Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
   
 error('Not yet implemented');
 

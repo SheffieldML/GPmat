@@ -16,7 +16,7 @@ function gX = linard2KernDiagGradX(kern, X)
 %
 % COPYRIGHT : Michalis K. Titsias, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 gX = 2*X.*repmat(kern.inputScales, [size(X, 1), 1]);

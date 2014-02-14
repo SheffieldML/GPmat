@@ -23,7 +23,7 @@ function    g = lfmGradientH31(preFactor, preFactorGrad, gradThetaGamma, ...
 %
 % SEEALSO : lfmKernGradient, lfmXlfmKernGradient, lfmGradientUpsilon
 
-% SHEFFIELDML
+% GPMAT
 
 
 % Gradient evaluation

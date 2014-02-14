@@ -13,7 +13,7 @@ function k = ardKernDiagCompute(kern, x)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004
 
-% SHEFFIELDML
+% GPMAT
 
 
 scales = sparse(diag(sqrt(kern.inputScales)));

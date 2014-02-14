@@ -1,6 +1,6 @@
 % DEMEP1 Demonstrate Expectation propagation on a toy data set..
 
-% SHEFFIELDML
+% GPMAT
 
 % Fix seeds
 randn('seed', 1e5);

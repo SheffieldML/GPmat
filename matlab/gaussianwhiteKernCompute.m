@@ -24,7 +24,7 @@ function [K, P, Kbase,  dist, Factor, precColsInv, Pinv] = ...
 %
 % MODIFICATIONS : Mauricio A. Alvarez, 2009.
 
-% SHEFFIELDML
+% GPMAT
 
 if kern.isArd
     if kern.nIndFunct == 1,

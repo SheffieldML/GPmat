@@ -20,7 +20,7 @@ function [K, sk, sqrtn2wi2] = matern32KernCompute(kern, x, x2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 3
   n2 = dist2(x, x);

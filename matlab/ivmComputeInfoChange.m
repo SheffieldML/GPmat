@@ -17,7 +17,7 @@ function delta = ivmComputeInfoChange(model, add)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 2
   add = true;

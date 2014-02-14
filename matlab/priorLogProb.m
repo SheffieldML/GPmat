@@ -12,7 +12,7 @@ function l = priorLogProb(prior, x)
 %
 % COPYRIGHT : Neil D. Lawrence, 2003, 2004
   
-% SHEFFIELDML
+% GPMAT
 
 % Compute log prior
 fhandle = str2func([prior.type 'PriorLogProb']);

@@ -14,7 +14,7 @@ function gT = simwhiteKernDiagGradX(kern, t)
 %
 % COPYRIGHT : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 if (kern.isStationary == true)

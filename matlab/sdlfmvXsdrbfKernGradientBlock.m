@@ -23,7 +23,7 @@ function [g1, g2, g3] = sdlfmvXsdrbfKernGradientBlock(lfmKern, rbfKern, t1, t2, 
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010.
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin<7
     j = i;

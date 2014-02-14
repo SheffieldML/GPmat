@@ -23,7 +23,7 @@ function model = multimodelCreate(inputDim, outputDim, varargin)
 %
 % MODIFICATIONS : Mauricio A. Alvarez, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 options = varargin{end};
 model.numModels = options.numModels;

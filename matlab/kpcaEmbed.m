@@ -2,7 +2,7 @@ function [X, sigma2] = kpcaEmbed(Y, dims)
 
 % KPCAEMBED Embed data set with kernel PCA.
 
-% SHEFFIELDML
+% GPMAT
 
 
 if any(any(isnan(Y)))

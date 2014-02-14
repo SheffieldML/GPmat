@@ -14,7 +14,7 @@ function tree = treeSwapNode(tree, i, j);
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 storeNodeI = tree(i);
 storeNodeJ = tree(j);

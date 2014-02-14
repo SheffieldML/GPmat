@@ -2,7 +2,7 @@ function handle = plot3Visualise(vals, Y)
 
 % PLOT3VISUALISE  Helper code for plotting a plot3 visualisation.
 
-% SHEFFIELDML
+% GPMAT
 
 if length(vals)>3
   error('plot3Visualise requires output dimension of 3');

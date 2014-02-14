@@ -67,7 +67,7 @@ function [g1, g2, covGradLocal] = sdlfmXsdlfmKernGradient(sdlfmKern1, ...
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin == 5
     covIC = covGrad;

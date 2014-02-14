@@ -11,7 +11,7 @@ function [Y, Phi] = ppcaOut(model, X);
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin<2  

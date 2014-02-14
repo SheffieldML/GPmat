@@ -20,7 +20,7 @@ function factors = kernFactors(kern, factorType)
 %
 % COPYRIGHT : Jaakko Peltonen, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 factors.index = [];
 factors.val = [];

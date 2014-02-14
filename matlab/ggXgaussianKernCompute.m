@@ -27,7 +27,7 @@ function [K, Kbase, Pqrinv, Prinv, P, fSigma2Noise, fSens1, n2] = ...
 %
 % MODIFICATIONS : Mauricio A. Alvarez, 2009
 
-% SHEFFIELDML
+% GPMAT
   
 if nargin < 4
   x2 = x;

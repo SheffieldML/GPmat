@@ -1,6 +1,6 @@
 % DEMSTICKFGPLVM3 Model the stick man using an RBF kernel and RBF kernel based back constraints.
 
-% SHEFFIELDML
+% GPMAT
 
 % Fix seeds
 randn('seed', 1e5);

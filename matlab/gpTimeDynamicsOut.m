@@ -13,6 +13,6 @@ function y = gpTimeDynamicsOut(model, x);
 %
 % COPYRIGHT : Neil D. Lawrence 2007
 
-% SHEFFIELDML
+% GPMAT
 
 y = gpOut(model, x);

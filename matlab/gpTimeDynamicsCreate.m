@@ -29,7 +29,7 @@ function model = gpTimeDynamicsCreate(q, d, latentVals, options, varargin)
 % MODIFICATIONS : Carl Henrik Ek, 2008
 %
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin>4
   t = varargin{1};

@@ -16,7 +16,7 @@ function y = sigmoidTransform(x, transform)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 
 limVal = 36;

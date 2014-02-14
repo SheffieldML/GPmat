@@ -1,6 +1,6 @@
 % DEMSWISSROLL1 Model the face swiss roll with a 2-D GPLVM.
 
-% SHEFFIELDML
+% GPMAT
 
 % Fix seeds
 randn('seed', 1e6);

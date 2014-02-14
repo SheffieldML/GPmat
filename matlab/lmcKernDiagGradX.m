@@ -14,7 +14,7 @@ function gX = lmcKernDiagGradX(kern, X)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
   
 gX = zeros([kern.nout*size(X, 1) size(X,2)]);
 

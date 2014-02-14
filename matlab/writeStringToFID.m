@@ -11,6 +11,6 @@ function writeStringToFID(FID, name, val)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
   
-% SHEFFIELDML
+% GPMAT
   
 fprintf(FID, [name '=' val '\n']);

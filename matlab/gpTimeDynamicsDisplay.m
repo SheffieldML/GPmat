@@ -12,6 +12,6 @@ function gpTimeDynamicsDisplay(model, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 gpDisplay(model, varargin{:});

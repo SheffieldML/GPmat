@@ -13,7 +13,7 @@ function k = velotransKernDiagCompute(kern, x)
 %
 % COPYRIGHT : Neil D. Lawrence, 2011
 
-% SHEFFIELDML
+% GPMAT
   
 t = x(:, end);
 xPass = x(:, 1:end-1);

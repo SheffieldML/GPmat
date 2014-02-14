@@ -19,7 +19,7 @@ function [Y, G] = kbrOut(model, X);
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 numData = size(X, 1);
 if ~isfield(model, 'bias') & isfield(model, 'b')

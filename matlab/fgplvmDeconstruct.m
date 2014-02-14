@@ -15,7 +15,7 @@ function [kern, noise, fgplvmInfo, X] = fgplvmDeconstruct(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
   [kern, noise, fgplvmInfo] = gpDeconstruct(model);
   if isfield(fgplvmInfo, 'back') && ~isempty(fgplvmInfo.back)

@@ -14,7 +14,7 @@ function gX = ardKernDiagGradX(kern, X)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004
 
-% SHEFFIELDML
+% GPMAT
 
 
 gX = 2*kern.linearVariance*X.*repmat(kern.inputScales, [size(X, 1) 1]);

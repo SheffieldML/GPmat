@@ -13,7 +13,7 @@ function model = gpComputeAlpha(model, m)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 2
   m = model.m;

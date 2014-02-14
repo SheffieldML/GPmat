@@ -2,7 +2,7 @@ function ncnmTwoDPlot(model, iter, X, y)
 
 % NCNMTWODPLOT Make a 2-D plot of the null category noise model.
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 4
   X = model.X;

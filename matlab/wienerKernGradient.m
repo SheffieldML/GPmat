@@ -41,7 +41,7 @@ function g = wienerKernGradient(kern, x, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 4
   [K, sk] = wienerKernCompute(kern, x);

@@ -12,7 +12,7 @@ function handle = xyzankurModify(handle,pos, varargin)
 %
 % COPYRIGHT : Carl Henrik Ek and Neil Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 
 joint = xyzankur2joint(pos);

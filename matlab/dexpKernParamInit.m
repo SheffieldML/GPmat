@@ -33,7 +33,7 @@ function kern = dexpKernParamInit(kern)
 % COPYRIGHT : Neil D. Lawrence, 2009
 
   
-% SHEFFIELDML
+% GPMAT
 
 
 % Parameters of the cross-covariance function

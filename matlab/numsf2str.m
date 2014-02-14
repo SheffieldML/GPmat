@@ -13,7 +13,7 @@ function str = numsf2str(num, sf);
 %
 % SEEALSO : num2str, fprintf
 
-% SHEFFIELDML
+% GPMAT
 
   str = num2str(num, sf);
   tail = [];

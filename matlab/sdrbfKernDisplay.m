@@ -17,7 +17,7 @@ function sdrbfKernDisplay(kern, spacing)
 %
 % MODIFICATIONS : Mauricio A. Alvarez, 2010.
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin > 1
   spacing = repmat(32, 1, spacing);

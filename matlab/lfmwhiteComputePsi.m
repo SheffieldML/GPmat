@@ -17,7 +17,7 @@ function psi = lfmwhiteComputePsi(gamma, invWidth, t1, t2, isStationary)
 %
 % SEEALSO : lfmwhiteKernParamInit, lfmwhiteXlfmwhiteKernCompute, W
 
-% SHEFFIELDML
+% GPMAT
 
 
 if size(t1, 2) > 1 | size(t2, 2) > 1

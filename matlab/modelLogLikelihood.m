@@ -11,7 +11,7 @@ function ll = modelLogLikelihood(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([model.type 'LogLikelihood']);
 ll = fhandle(model);

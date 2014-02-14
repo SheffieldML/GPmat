@@ -7,7 +7,7 @@ function answer = isoctave
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
   
 try 
   v = OCTAVE_VERSION;

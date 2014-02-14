@@ -4,7 +4,7 @@ function [params, names] = linearExtractParam(model,dim);
 %
 % MODIFICATIONS : Carl Henrik Ek, 2009
 %
-% SHEFFIELDML
+% GPMAT
 
 if(nargin<2)
   params = [model.W(:)' model.b];

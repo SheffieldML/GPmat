@@ -16,7 +16,7 @@ function [gmu, gsigmavar] = ivmPosteriorGradMeanVar(model, X);
 %
 % COPYRIGHT : Neil D. Lawrence, 2003, 2004
 
-% SHEFFIELDML
+% GPMAT
 
 D = size(model.y, 2);
 if size(X, 1) > 1

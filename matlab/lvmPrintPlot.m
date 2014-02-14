@@ -12,7 +12,7 @@ function lvmPrintPlot(model, lbls, capName, experimentNo, colour)
 % 
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
   if nargin < 5
     colour = 0;

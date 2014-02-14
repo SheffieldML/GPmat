@@ -38,7 +38,7 @@ function [g1, g2] = heatXrbfhKernGradient(heatKern, rbfhKern, x1, x2, covGrad)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 5
     covGrad = x2;

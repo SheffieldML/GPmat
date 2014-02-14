@@ -17,7 +17,7 @@ function kern = expKernExpandParam(kern, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 kern.argument = kernExpandParam(kern.argument, params(2:end));
 kern.variance = params(1);

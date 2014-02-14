@@ -15,7 +15,7 @@ function [params, names] = cmpndKernExtractParam(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 params = zeros(1, kern.nParams);

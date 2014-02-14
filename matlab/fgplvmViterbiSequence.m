@@ -21,7 +21,7 @@ function [Xout, logTrans, logLike] =  fgplvmViterbiSequence(model, ...
 %
 % SEEALSO : fgplvmCreate, fgplvmOptimiseSequence, viterbiAlign
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 4
   for i = 1:size(X, 1)

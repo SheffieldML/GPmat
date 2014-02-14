@@ -18,7 +18,7 @@ function model = kbrCreate(inputDim, outputDim, options)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 model.type = 'kbr';

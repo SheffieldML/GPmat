@@ -15,7 +15,7 @@ function gX = gaussianKernDiagGradX(kern, X)
 %
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
   
 gX = zeros(size(X));
 

@@ -30,7 +30,7 @@ function [params, names] = nddisimKernExtractParam(kern)
 %
 % COPYRIGHT : Jaakko Peltonen, 2011
 %
-% SHEFFIELDML
+% GPMAT
 
 
 params = [kern.inverseWidth, kern.di_variance, kern.decay, kern.variance, kern.delay];

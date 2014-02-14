@@ -43,7 +43,7 @@ function g = multiKernGradient(kern, x, x2, covGrad)
 %
 % COPYRIGHT : Pei Gao, 2007
   
-% SHEFFIELDML
+% GPMAT
 
 if iscell(x)
   if nargin > 3 && ~iscell(x2)

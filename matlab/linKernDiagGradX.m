@@ -13,7 +13,7 @@ function gX = linKernDiagGradX(kern, X)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 gX = 2*X*kern.variance;

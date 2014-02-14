@@ -28,7 +28,7 @@ function [paramtransformsettings, names] = whiteKernExtractParamTransformSetting
 %
 % COPYRIGHT : Jaakko Peltonen, 2011
 %
-% SHEFFIELDML
+% GPMAT
 
 
 % The "white" kernel uses just one transformation, for the variance 

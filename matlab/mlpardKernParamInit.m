@@ -28,7 +28,7 @@ function kern = mlpardKernParamInit(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 kern.weightVariance = 10;

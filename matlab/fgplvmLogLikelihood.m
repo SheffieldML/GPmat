@@ -14,7 +14,7 @@ function ll = fgplvmLogLikelihood(model)
 %
 % MODIFICATIONS : Carl Henrik Ek, 2008, 2009
 %
-% SHEFFIELDML
+% GPMAT
 
  
 ll = gpLogLikelihood(model);

@@ -24,7 +24,7 @@ function kern = linard2KernParamInit(kern)
 %
 % COPYRIGHT : Michalis K. Titsias, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 % These parameters are restricted to positive
 kern.inputScales = 0.999*ones(1, kern.inputDimension);

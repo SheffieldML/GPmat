@@ -11,7 +11,7 @@ function model = mogOptimise(model, display, iters)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 diffll = 1;
 iter = 0;

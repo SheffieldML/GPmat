@@ -10,7 +10,7 @@ function model = mapmodelReadFromFID(FID, varargin)
 %
 % SEEALSO : modelReadFromFID
 
-% SHEFFIELDML
+% GPMAT
 
 modelType = readStringFromFID(FID, 'type');
 feval = str2func([modelType 'ReadFromFID']);

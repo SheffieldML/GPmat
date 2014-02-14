@@ -12,7 +12,7 @@ function model = ivmEpUpdatePoint(model, i)
 %
 % SEEALSO : ivmDowndateNugG, ivmEpUpdateM
 
-% SHEFFIELDML
+% GPMAT
 
 index = find(model.I == i);
 if isempty(index)

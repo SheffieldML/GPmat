@@ -10,7 +10,7 @@ function ll = mogLogLikelihood(model)
 % SEEALSO : mogCreate, mogLowerBound
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2008
-% SHEFFIELDML
+% GPMAT
   
 model = mogEstep(model);
 ll = mogLowerBound(model);

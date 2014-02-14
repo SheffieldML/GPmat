@@ -30,7 +30,7 @@ function kern = ggKernParamInit(kern, isArd)
 %
 % MODIFICATIONS : Mauricio A. Alvarez, 2009, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if isfield(kern, 'options') && isfield(kern.options, 'isArd')
     kern.isArd = kern.options.isArd;

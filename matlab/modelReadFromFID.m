@@ -10,7 +10,7 @@ function [model, lbls] = modelReadFromFID(FID, varargin)
 %
 % SEEALSO : modelReadFromFile
 
-% SHEFFIELDML
+% GPMAT
   
   version = readVersionFromFID(FID);
   if version < 0.2

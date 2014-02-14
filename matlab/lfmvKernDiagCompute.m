@@ -11,7 +11,7 @@ function k = lfmvKernDiagCompute(lfmKern, t)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 % Get length scale out.
 sigma2 = 2/lfmKern.inverseWidth;

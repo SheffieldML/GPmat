@@ -26,7 +26,7 @@ function K = multiKernComputeBlock(kern, X, X2, i, j)
 %
 % MODIFICATIONS: Antti Honkela, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 
 %fprintf(1,'multiKernComputeBlock step1\n');

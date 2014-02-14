@@ -13,7 +13,7 @@ function gX = rbfperiodicKernDiagGradX(kern, X)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 
 gX = zeros(size(X));

@@ -17,6 +17,6 @@ function kern = whiteblockKernExpandParam(kern, params)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 kern.variance = params;

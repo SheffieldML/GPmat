@@ -2,7 +2,7 @@ function fgplvmClassVisualise(call)
 
 % FGPLVMCLASSVISUALISE Callback function for visualising data in 2-D.
 
-% SHEFFIELDML
+% GPMAT
 
 global visualiseInfo
 

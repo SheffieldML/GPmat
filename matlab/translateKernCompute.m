@@ -21,7 +21,7 @@ function K = translateKernCompute(kern, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 for i = 1:length(varargin)
   varargin{i} = varargin{i} - repmat(kern.centre, size(varargin{i}, 1), 1);

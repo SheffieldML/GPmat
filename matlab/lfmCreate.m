@@ -27,7 +27,7 @@ function model = lfmCreate(numDisplacements, numForces, times, displacementVals,
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 if(numDisplacements ~= size(displacementVals, 2))
   error('The number of displacements given does not match the dimension of the displacement values given.')

@@ -37,7 +37,7 @@ function [g1, g2] = ggXggKernGradient(ggKern1, ggKern2, x, x2, covGrad)
 %
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
   
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin < 5

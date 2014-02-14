@@ -18,7 +18,7 @@ function lvmClickVisualise(model, YLbls, visualiseFunction, visualiseModify, var
 %
 % COPYRIGHT : Neil D. Lawrence, 2003, 2004, 2005, 2006, 2008, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 global visualiseInfo
 

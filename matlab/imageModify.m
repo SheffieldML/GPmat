@@ -20,7 +20,7 @@ function handle = imageModify(handle, imageValues, imageSize, transpose, negativ
 %
 % SEEALSO : imageVisualise, fgplvmResultsDynamic
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin < 4

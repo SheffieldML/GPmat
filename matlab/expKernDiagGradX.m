@@ -13,6 +13,6 @@ function gX = expKernDiagGradX(kern, X)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 gX = kernDiagGradX(kern.argument, X);

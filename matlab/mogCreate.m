@@ -15,7 +15,7 @@ function model = mogCreate(latentDim, dataDim, Y, options)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 model.type = 'mog';
 model.covtype = options.covtype;

@@ -3,7 +3,7 @@ function [errStruct] = fgplvmTaylorAngleErrors(model, Y, Ytest, startInd, origBi
 
 % FGPLVMTAYLORANGLEERRORS Helper function for computing angle errors for CMU 35 data.
 
-% SHEFFIELDML
+% GPMAT
 
 origYtest = Ytest;
 

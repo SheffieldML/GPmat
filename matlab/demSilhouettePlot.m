@@ -1,6 +1,6 @@
 % DEMSILHOUETTEPLOT
 
-% SHEFFIELDML
+% GPMAT
 
 % Show prediction for test data.
 yPred = modelOut(model, XTest);

@@ -2,7 +2,7 @@ function scaleNoiseDisplay(noise, spacing)
 
 % SCALENOISEDISPLAY Display the parameters of the scaled noise model.
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin > 1
   spacing = repmat(32, 1, spacing);

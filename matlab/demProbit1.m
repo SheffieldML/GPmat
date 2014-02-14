@@ -2,7 +2,7 @@
 %
 % Recreates the IVM based GPC solution to the toy crescent data.
 
-% SHEFFIELDML
+% GPMAT
 
 
 randn('seed', 1e6)

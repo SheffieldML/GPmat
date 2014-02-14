@@ -16,7 +16,7 @@ function [X, Y, Z, varZ] = ivmMeshVals(model, limx, limy, number)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2004
 
-% SHEFFIELDML
+% GPMAT
 
 x = linspace(limx(1), limx(2), number);
 y = linspace(limy(1), limy(2), number);

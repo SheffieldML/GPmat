@@ -12,7 +12,7 @@
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 index = find(model.I == i);
 if isempty(index)

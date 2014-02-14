@@ -19,7 +19,7 @@ function ndsimKernDisplay(kern, spacing)
 %
 % COPYRIGHT : Antti Honkela, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin > 1
   spacing = repmat(32, 1, spacing);

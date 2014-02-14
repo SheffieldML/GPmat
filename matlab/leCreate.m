@@ -15,7 +15,7 @@ function model = leCreate(inputDim, outputDim, Y, options)
 % SEEALSO : leOptions, modelCreate
 
 
-% SHEFFIELDML
+% GPMAT
 
 model.type = 'le';
 

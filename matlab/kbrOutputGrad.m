@@ -19,7 +19,7 @@ function g = kbrOutputGrad(model, X, dim)
 %
 % MODIFICATIONS : Carl Henrik Ek, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 numData = size(X, 1);
 if(nargin<=2)

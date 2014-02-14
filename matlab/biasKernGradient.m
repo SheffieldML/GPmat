@@ -41,7 +41,7 @@ function g = biasKernGradient(kern, x, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
   g(1, 1) = sum(sum(varargin{end}));

@@ -14,7 +14,7 @@ function y = ncnmNoiseOut(noise, mu, varsigma)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 D = size(mu, 2);
 for i = 1:D

@@ -11,7 +11,7 @@ function m = gpComputeM(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML 
+% GPMAT 
 
 % Remove mean function value from m (if mean function present).
 if isfield(model, 'meanFunction') && ~isempty(model.meanFunction)

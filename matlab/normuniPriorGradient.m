@@ -2,7 +2,7 @@ function g = normuniPriorGradient(prior, x)
 
 % NORMUNIPRIORGRADIENT Gradient wrt x of the log normal uniform prior.
 
-% SHEFFIELDML
+% GPMAT
 
 % Compute gradient of prior
 u = (x+prior.width/2)/prior.sigma;

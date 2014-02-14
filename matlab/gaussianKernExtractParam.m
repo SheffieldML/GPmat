@@ -29,7 +29,7 @@ function [params, names] = gaussianKernExtractParam(kern)
 %
 % MODIFICATIONS : Mauricio A. Alvarez, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 params = kern.precisionU';
 params(end+1) = kern.sigma2Latent;

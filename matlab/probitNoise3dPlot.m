@@ -18,7 +18,7 @@ function h = probitNoise3dPlot(noise, plotType, CX, CY, CZ, CZVar, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 
 fhandle = str2func(plotType);

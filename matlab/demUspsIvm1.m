@@ -1,6 +1,6 @@
 % DEMUSPSIVM1 Try the IVM on the USPS digits data with RBF kernel.
 
-% SHEFFIELDML
+% GPMAT
 
 dataSetName = 'usps';
 experimentNo = 1;

@@ -2,7 +2,7 @@ function ll = gpReversibleDynamicsLogLikelihood(model)
 
 % GPREVERSIBLEDYNAMICSLOGLIKELIHOOD Give the log likelihood of the dynamics part.
 
-% SHEFFIELDML
+% GPMAT
 
 ll = gpLogLikelihood(model);
 

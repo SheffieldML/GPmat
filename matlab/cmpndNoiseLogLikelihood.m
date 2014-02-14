@@ -13,7 +13,7 @@ function L = cmpndNoiseLogLikelihood(noise, mu, varsigma, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 
 L = 0;

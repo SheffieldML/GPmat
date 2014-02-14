@@ -13,7 +13,7 @@ function ppcaInfo = ppcaDeconstruct(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 ppcaInfo = model;
 removeFields = {'y'};

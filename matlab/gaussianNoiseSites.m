@@ -18,7 +18,7 @@ function [m, beta] = gaussianNoiseSites(noise, g, nu, mu, varSigma, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 N = size(y, 1);
 D = length(noise.bias);

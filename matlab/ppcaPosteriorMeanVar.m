@@ -14,7 +14,7 @@ function [mu, varsigma] = ppcaPosteriorMeanVar(model, X);
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 [mu, phi] = ppcaOut(model, X);
 %sqrt(det(phi*model.A*model.A'*phi))

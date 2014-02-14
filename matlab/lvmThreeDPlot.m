@@ -11,7 +11,7 @@ function [returnVal, txtReturnVal] = lvmThreeDPlot(X, lbl, symbol)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006, 2008
 
-% SHEFFIELDML
+% GPMAT
 if nargin < 2
   lbl = [];
 end

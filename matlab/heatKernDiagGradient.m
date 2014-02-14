@@ -19,7 +19,7 @@ function g = heatKernDiagGradient(heatKern, x, covDiag)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if size(x, 2) ~= 2
     error('Input can only have two columns');

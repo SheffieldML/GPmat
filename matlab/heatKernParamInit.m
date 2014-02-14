@@ -30,7 +30,7 @@ function kern = heatKernParamInit(kern)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if kern.inputDimension ~= 2
   error('HEAT kernel only valid for 2-D inputs.')

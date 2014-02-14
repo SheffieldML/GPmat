@@ -15,7 +15,7 @@ function gaussianKernDisplay(kern, spacing)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin > 1
   spacing = repmat(32, 1, spacing);

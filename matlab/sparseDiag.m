@@ -12,7 +12,7 @@ function D = sparseDiag(d)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 if length(size(d)) ~=2
   error('Input must be a vector.');

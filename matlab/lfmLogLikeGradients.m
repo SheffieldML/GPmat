@@ -11,7 +11,7 @@ function g = lfmLogLikeGradients(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 covGrad = -model.invK + model.invK*model.m*model.m'*model.invK;
 covGrad = 0.5*covGrad;

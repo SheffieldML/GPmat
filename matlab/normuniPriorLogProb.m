@@ -2,7 +2,7 @@ function l = normuniPriorLogProb(prior, x)
 
 % NORMUNIPRIORLOGPROB Log probability of a normal uniform.
 
-% SHEFFIELDML
+% GPMAT
 
 % Compute log prior
 u = (x+prior.width/2)/prior.sigma;

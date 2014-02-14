@@ -15,7 +15,7 @@ function gX = gpDynamicsLatentGradients(model);
 %
 % MODIFICATIONS : Carl Henrik Ek, 2006
   
-% SHEFFIELDML
+% GPMAT
 
   
 % The first point in each sequence cannot have dynamics thus the +

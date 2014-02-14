@@ -13,7 +13,7 @@ function err = modelObjective(params, model, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 fhandle = [model.type 'Objective'];

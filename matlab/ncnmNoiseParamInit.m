@@ -20,7 +20,7 @@ function noise = ncnmNoiseParamInit(noise, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 % The likelihood is not log concave.
 noise.logconcave = 0;

@@ -14,7 +14,7 @@ function [mu, varsigma] = gpPosteriorMeanVar(model, X);
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 model.m = gpComputeM(model);
 if ~isfield(model, 'alpha')

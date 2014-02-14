@@ -11,7 +11,7 @@ function [Y, Phi] = dnetOut(model, X);
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin< 2  
   % Assume projection of latent samples is required (model.X_u).

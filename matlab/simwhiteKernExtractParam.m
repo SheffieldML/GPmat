@@ -29,7 +29,7 @@ function [params, names] = simwhiteKernExtractParam(kern)
 %
 % COPYRIGHT : David Luengo, 2009
 %
-% SHEFFIELDML
+% GPMAT
 
 
 params = [kern.decay kern.variance kern.sensitivity];

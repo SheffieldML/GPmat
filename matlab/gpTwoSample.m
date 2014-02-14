@@ -17,7 +17,7 @@ function [llratios, models] = gpTwoSample(t, y)
 %
 % SEEALSO : multimodelCreate, gpCreate
 
-% SHEFFIELDML
+% GPMAT
 maxIters = 500;
 display = 0;
 tTemp = sort(t{1});

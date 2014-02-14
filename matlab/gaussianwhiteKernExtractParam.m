@@ -30,7 +30,7 @@ function [params, names] = gaussianwhiteKernExtractParam(kern)
 %
 % MODIFICATIONS : Mauricio A. Alvarez, 2009.
 
-% SHEFFIELDML
+% GPMAT
 
 if kern.isArd
     if kern.nIndFunct == 1,

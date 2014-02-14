@@ -15,7 +15,7 @@ function k = lfmKernDiagCompute(kern, t)
 
 % COPYRIGHT : Mauricio A. Alvarez, 2008, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if size(t, 2) > 1 
   error('Input can only have one column');

@@ -21,7 +21,7 @@ function k = noneKernCompute(kern, x, x2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 
 

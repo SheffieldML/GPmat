@@ -6,7 +6,7 @@ function [K, wz1, wz2] = srbfhKernCompute(sigmax, lengthX, s1, s2, w, gamma, n)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 sinS1 = sin(w(n)*s1);
 bTerm = sigmax*gamma(n)/2;

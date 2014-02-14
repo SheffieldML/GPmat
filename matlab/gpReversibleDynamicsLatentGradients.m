@@ -2,7 +2,7 @@ function gX = gpReversibleDynamicsLatentGradients(model);
 
 % GPREVERSIBLEDYNAMICSLATENTGRADIENTS Gradients of the X vector given the dynamics model.
 
-% SHEFFIELDML
+% GPMAT
 
 % gX the +1 accounts for the first two points, which cannot have dynamics.
 gX = zeros(model.N+2, model.d);

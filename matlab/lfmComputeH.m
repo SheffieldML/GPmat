@@ -19,7 +19,7 @@ function  h = lfmComputeH(gamma1, gamma2, sigma2, t1, t2, mode)
 %
 % SEEALSO : lfmKernParamInit, lfmXlfmKernCompute
 
-% SHEFFIELDML
+% GPMAT
 
 % Evaluation of h
 

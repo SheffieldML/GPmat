@@ -26,7 +26,7 @@ function [params, names] = simKernExtractParam(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2009
 %
-% SHEFFIELDML
+% GPMAT
 
 if isfield(kern, 'gaussianInitial') && kern.gaussianInitial,
   if isfield(kern, 'isNegativeS') && kern.isNegativeS

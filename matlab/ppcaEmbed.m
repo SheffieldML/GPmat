@@ -14,7 +14,7 @@ function [X, sigma2, W] = ppcaEmbed(Y, dims)
 %
 % SEEALSO : lleEmbed, isomapEmbed
 
-% SHEFFIELDML
+% GPMAT
 
 if ~any(any(isnan(Y)))
   if size(Y, 1)<size(Y, 2)

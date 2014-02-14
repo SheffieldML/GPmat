@@ -15,7 +15,7 @@ function ll = gpPointLogLikelihood(model, x, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 logTwoPi = log(2*pi);
 [mu, varSigma] = gpPosteriorMeanVar(model, x);

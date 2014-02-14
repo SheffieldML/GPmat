@@ -4,7 +4,7 @@ function xyzhumanevaVisualiseModes(Z,Zgt,fid,display)
 %
 % COPYRIGHT : Carl Henrik Ek and Neil Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 
 if(nargin<4)

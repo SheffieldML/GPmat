@@ -27,7 +27,7 @@ function [params, names] = noneKernExtractParam(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 %
-% SHEFFIELDML
+% GPMAT
 
 params = [];
 names = {};

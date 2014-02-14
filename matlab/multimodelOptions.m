@@ -14,7 +14,7 @@ function options = multimodelOptions(modelType, number, varargin);
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 options.type = modelType;
 options.numModels = number;

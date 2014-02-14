@@ -1,6 +1,6 @@
 % LFMSAMPLE Sample from LFM kernel
 
-% SHEFFIELDML
+% GPMAT
 
 colordef white
 randn('seed', 1e8)

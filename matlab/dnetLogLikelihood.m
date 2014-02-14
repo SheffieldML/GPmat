@@ -11,7 +11,7 @@ function ll = dnetLogLikelihood(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
   
 ll = 0.5*model.d*model.N*log(model.beta/(2*pi)) ...

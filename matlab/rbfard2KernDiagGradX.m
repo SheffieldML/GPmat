@@ -15,7 +15,7 @@ function gX = rbfard2KernDiagGradX(kern, X)
 %
 % COPYRIGHT : Michalis K. Titsias, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 gX = zeros(size(X));

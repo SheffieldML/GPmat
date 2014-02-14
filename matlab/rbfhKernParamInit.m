@@ -15,7 +15,7 @@ function kern = rbfhKernParamInit(kern)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if kern.inputDimension ~= 2
   error('RBFH kernel only valid for 2-D inputs.')

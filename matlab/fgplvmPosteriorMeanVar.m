@@ -14,6 +14,6 @@ function [mu, varsigma] = fgplvmPosteriorMeanVar(model, X);
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 [mu, varsigma] = gpPosteriorMeanVar(model, X);

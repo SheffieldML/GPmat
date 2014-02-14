@@ -29,7 +29,7 @@ function kern = rbfKernParamInit(kern)
 %
 % COPYRIGHT : Antti Honkela, 2012
 
-% SHEFFIELDML
+% GPMAT
 
 
 kern.inverseWidth = 1;

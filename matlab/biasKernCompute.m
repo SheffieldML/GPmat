@@ -21,7 +21,7 @@ function [k, sk] = biasKernCompute(kern, x, x2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin< 3

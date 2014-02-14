@@ -13,7 +13,7 @@ function g = ggKernDiagGradient(kern, x, covDiag)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 
 grad_sigma2Latent = (kern.sensitivity^2)*sum(covDiag);

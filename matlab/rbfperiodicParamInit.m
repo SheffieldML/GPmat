@@ -11,7 +11,7 @@ function model = rbfperiodicParamInit(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 model.thetaBar = linspace(0, 2*pi, model.hiddenDim+1);
 model.thetaBar = model.thetaBar(1:end-1);

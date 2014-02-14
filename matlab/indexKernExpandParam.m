@@ -17,7 +17,7 @@ function kern = indexKernExpandParam(kern, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2011
 
-% SHEFFIELDML
+% GPMAT
 
   kern.variance = params(1);
 end

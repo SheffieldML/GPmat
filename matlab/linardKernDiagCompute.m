@@ -13,7 +13,7 @@ function k = linardKernDiagCompute(kern, x)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 scales = sparse(diag(sqrt(kern.inputScales)));

@@ -14,7 +14,7 @@ function y = cmpndNoiseOut(noise, mu, varsigma)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 
 y = zeros(size(mu));

@@ -12,7 +12,7 @@ function connection = skelConnectionMatrix(skel);
 %
 % SEEALSO : skelVisualise, skelModify
   
-% SHEFFIELDML
+% GPMAT
 
 connection = zeros(length(skel.tree));
 for i = 1:length(skel.tree);

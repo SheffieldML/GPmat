@@ -17,6 +17,6 @@ function gX = lmcKernGradX(kern,X, X2)
 %
 % COPYRIGHT : Mauricio A. Alvarez,  2010
 
-% SHEFFIELDML
+% GPMAT
 
 error('Not implemented yet')

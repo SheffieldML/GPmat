@@ -14,7 +14,7 @@ function model = ivmUpdateSites(model, index)
 %
 % SEEALSO : ivmCreate, ivmAddPoint, ivmEpUpdateM
 
-% SHEFFIELDML
+% GPMAT
 
 [model.m(index, :), model.beta(index, :)] = ...
     noiseUpdateSites(model.noise, ...

@@ -2,7 +2,7 @@ function options = gpReversibleDynamicsOptions(approx);
 
 % GPREVERSIBLEDYNAMICSOPTIONS Return default options for GP reversible dynamics model.
 
-% SHEFFIELDML
+% GPMAT
 
 
 options = gpOptions(approx);

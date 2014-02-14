@@ -6,7 +6,7 @@ function model = ivm(X, y, kernelType, noiseType, selectionCriterion, d)
 %
 % SEEALSO : ivmCreate
 
-% SHEFFIELDML
+% GPMAT
 
 model.type = 'ivm';
 model.terminate = 0;

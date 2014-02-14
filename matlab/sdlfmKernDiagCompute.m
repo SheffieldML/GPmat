@@ -15,7 +15,7 @@ function k = sdlfmKernDiagCompute(sdlfmKern, t, covIC, type)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 4
     type = 'PosPos';

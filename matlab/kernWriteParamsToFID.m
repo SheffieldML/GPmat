@@ -10,7 +10,7 @@ function kernWriteParamsToFID(kern, FID)
 %
 % SEEALSO : kernWriteToFID, modelWriteToFID
 
-% SHEFFIELDML
+% GPMAT
 
 if strcmp(kern.type, 'cmpnd') || strcmp(kern.type, 'tensor')
   componentKernWriteParamsToFID(kern, FID);

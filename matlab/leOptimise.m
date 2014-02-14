@@ -10,7 +10,7 @@ function model = leOptimise(model, display, iters)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 switch model.weightType
  case 'constant'

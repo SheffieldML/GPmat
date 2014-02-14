@@ -17,7 +17,7 @@ function g = fgplvmGradient(params, model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 model = fgplvmExpandParam(model, params);
 g = - fgplvmLogLikeGradients(model);

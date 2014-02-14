@@ -19,7 +19,7 @@ function model = mlpCreate(inputDim, outputDim, options)
 % SEEALSO : mlpOptions, mlp
 
 
-% SHEFFIELDML
+% GPMAT
 
 if length(options.hiddenDim) == 1
   % Can use NETLAB implementation.

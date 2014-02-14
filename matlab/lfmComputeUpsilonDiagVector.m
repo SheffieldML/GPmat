@@ -4,6 +4,6 @@ function upsilon = lfmComputeUpsilonDiagVector(gamma, sigma2, t)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 upsilon = exp(-gamma*t).*lfmComputeUpsilonVector(-gamma ,sigma2, t);

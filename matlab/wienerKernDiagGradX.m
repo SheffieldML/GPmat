@@ -13,6 +13,6 @@ function gX = wienerKernDiagGradX(kern, X, X2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 gX = repmat(kern.variance, [1 1 size(X, 1)]);

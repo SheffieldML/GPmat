@@ -19,7 +19,7 @@ function gX = gpTimeDynamicsSequenceLogLikeGradient(model, latentValsRaw, t)
 % COPYRIGHT : Carl Henrik Ek, 2008
 %
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 3
   t = [2:size(latentValsRaw, 1)]';

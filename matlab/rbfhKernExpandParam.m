@@ -17,7 +17,7 @@ function kern = rbfhKernExpandParam(kern, params)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 kern.inverseWidthTime = params(1);
 kern.inverseWidthSpace = params(2);

@@ -2,7 +2,7 @@ function X = rocholForeSub(ch, Y);
 
 % ROCHOLFORESUB Foreward substitute the representation of the rank one Cholesky.
 
-% SHEFFIELDML
+% GPMAT
 
 %/~
 % This would be the long way of doing it.

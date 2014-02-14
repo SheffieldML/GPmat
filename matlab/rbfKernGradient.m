@@ -43,7 +43,7 @@ function g = rbfKernGradient(kern, x, varargin)
 %
 % MODIFICATIONS : Mauricio Alvarez, 2009, David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 % The last argument is covGrad

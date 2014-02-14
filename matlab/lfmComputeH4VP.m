@@ -16,7 +16,7 @@ function  [h, compUpV, compUp] =  lfmComputeH4VP(gamma1_p, gamma1_m, sigma2, t1,
 %
 % SEEALSO : lfmComputeH4Hat, lfmXlfmKernCompute
 
-% SHEFFIELDML
+% GPMAT
 
 % This could also be used with str2func changing between 'lfm' and 'lfmvp'
 

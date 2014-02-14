@@ -20,7 +20,7 @@ function [params, names] = sdlfmvKernExtractParam(kern)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 % This is just a wrapper function that calls the extractParam function for
 % the SDLFM kernel.

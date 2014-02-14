@@ -17,7 +17,7 @@ function kern = sdlfmvKernExpandParam(kern, params)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 % This is just a wrapper function to call the expandParam function of the
 % SDLFM structure.

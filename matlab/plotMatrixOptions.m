@@ -2,7 +2,7 @@ function options = plotMatrixOptions
 
 % PLOTMATRIXOPTIONS Default options for plot matrix.
 
-% SHEFFIELDML
+% GPMAT
 
 options.zoom.on = false;
 options.zoom.row = [];

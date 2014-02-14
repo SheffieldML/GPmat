@@ -27,7 +27,7 @@ function [params, names] = velotransKernExtractParam(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2011
 %
-% SHEFFIELDML
+% GPMAT
 
 kern.nParams = kern.nParams - kern.inputDimension + 1;
 if nargout == 2

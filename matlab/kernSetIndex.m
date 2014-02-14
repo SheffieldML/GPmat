@@ -13,7 +13,7 @@ function kern = kernSetIndex(kern, component, indices)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2011
   
-% SHEFFIELDML
+% GPMAT
 
   fhandle = [kern.type 'KernSetIndex'];
   if exist(fhandle)==2

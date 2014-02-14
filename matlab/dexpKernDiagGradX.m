@@ -15,7 +15,7 @@ function gX = dexpKernDiagGradX(kern, x)
 %
 % COPYRIGHT : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 gX = zeros(size(x));

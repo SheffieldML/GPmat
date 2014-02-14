@@ -32,7 +32,7 @@ function [K, sK, n1] = dexpKernCompute(kern, x1, x2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin < 3

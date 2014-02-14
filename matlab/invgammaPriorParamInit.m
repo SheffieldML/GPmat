@@ -11,7 +11,7 @@ function prior = invgammaPriorParamInit(prior)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 prior.a = 1e-6;

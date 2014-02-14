@@ -13,7 +13,7 @@ function xyz = acclaim2xyz(skel, channels)
 % SEEALSO : skel2xyz, bvh2xyz
 
 
-% SHEFFIELDML
+% GPMAT
 
 rotVal = skel.tree(1).orientation;
 for i = 1:length(skel.tree(1).rotInd)

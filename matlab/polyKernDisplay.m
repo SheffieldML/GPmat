@@ -15,7 +15,7 @@ function polyKernDisplay(kern, spacing)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin > 1

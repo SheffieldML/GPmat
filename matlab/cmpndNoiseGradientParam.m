@@ -20,7 +20,7 @@ function g = cmpndNoiseGradientParam(noise, mu, varsigma, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 
 g = zeros(1, noise.nParams);

@@ -19,7 +19,7 @@ function g = sheatKernDiagGradient(sigmax, lengthX, s, w, gamma, pwz1, pwz2, n, 
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 sinS1 = sin(w(n)*s);
 sinS2 = sin(w(m)*s);

@@ -19,7 +19,7 @@ function handle = imageVisualise(imageVals, imageSize, transpose, negative, ...
 %
 % SEEALSO : imageModify, lvmResultsDynamic
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 3
   transpose = 1;

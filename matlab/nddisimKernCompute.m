@@ -23,7 +23,7 @@ function k = nddisimKernCompute(kern, t1, t2)
 %
 % COPYRIGHT : Jaakko Peltonen, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 3
   t2 = t1;

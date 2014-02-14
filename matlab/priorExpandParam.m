@@ -23,7 +23,7 @@ function prior = priorExpandParam(prior, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2003, 2004
 
-% SHEFFIELDML
+% GPMAT
 
 
 if isfield(prior, 'transforms')

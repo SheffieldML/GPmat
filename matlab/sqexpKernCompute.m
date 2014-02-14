@@ -21,7 +21,7 @@ function [k, rbfPart, n2] = sqexpKernCompute(kern, x, x2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin < 3

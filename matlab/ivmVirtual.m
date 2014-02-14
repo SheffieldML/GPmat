@@ -10,7 +10,7 @@ function [X, y] = ivmVirtual(origX, origy, invariance)
 % FORMAT
 % DESC creates virtual data points for use with a 'virtual IVM'. 
 % ARG X : input data set on which we wish to make the transformation
-% SHEFFIELDML
+% GPMAT
 
 switch invariance
  case 'translate'

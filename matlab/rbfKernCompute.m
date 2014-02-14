@@ -24,7 +24,7 @@ function [k, sk, n2] = rbfKernCompute(kern, x, x2)
 %
 % MODIFICATIONS : Mauricio Alvarez, 2009, David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 3
   n2 = dist2(x, x);

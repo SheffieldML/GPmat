@@ -12,7 +12,7 @@ function [m, C] = mogMeanCov(model)
 %
 % SEEALSO : mogCreate
 
-% SHEFFIELDML
+% GPMAT
 
 m = zeros(1, model.d);
 modelSecondMoment = zeros(model.d);

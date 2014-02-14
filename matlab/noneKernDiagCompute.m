@@ -15,7 +15,7 @@ function k = noneKernDiagCompute(kern, x)
 %
 % MODIFICATIONS : Mauricio A. Alvarez, 2009
 
-% SHEFFIELDML
+% GPMAT
 
   
 k = zeros(size(x,1),1);

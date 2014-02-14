@@ -16,7 +16,7 @@ function xyzankurAnimCompareMultiple(X, X2, fps, names)
 %
 % MODIFICATIONS : Alfredo A. Kalaitzis, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 nDatasets = length(X2);
 more_handles = zeros(nDatasets,19);

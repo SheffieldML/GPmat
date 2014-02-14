@@ -10,7 +10,7 @@ function X = doubleMatrixReadFromFID(FID)
 % 
 % SEEALSO : modelReadFromFile
 
-% SHEFFIELDML
+% GPMAT
   
 numRows = readIntFromFID(FID, 'numRows');
 numCols = readIntFromFID(FID, 'numCols');

@@ -13,7 +13,7 @@ function k = tensorKernDiagCompute(kern, x)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 i = 1;

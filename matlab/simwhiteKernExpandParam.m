@@ -18,7 +18,7 @@ function kern = simwhiteKernExpandParam(kern, params)
 %
 % COPYRIGHT : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 kern.decay = params(1);

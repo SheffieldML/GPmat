@@ -22,7 +22,7 @@ function k = ggwhiteKernCompute(kern, x, x2)
 %
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin < 3

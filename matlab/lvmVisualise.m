@@ -19,7 +19,7 @@ function lvmVisualise(model, YLbls, ...
 %
 % COPYRIGHT : Neil D. Lawrence, 2003, 2004, 2005, 2006, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 global visualiseInfo
 

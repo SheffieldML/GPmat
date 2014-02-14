@@ -16,7 +16,7 @@ function kern = velotransKernParamInit(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 kern = cmpndKernParamInit(kern);
 

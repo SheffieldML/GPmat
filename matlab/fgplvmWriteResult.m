@@ -12,7 +12,7 @@ function fileName = fgplvmWriteResult(model, dataSet, number)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009, 2011
   
-% SHEFFIELDML
+% GPMAT
 
 dataSet(1) = upper(dataSet(1));
 type = model.type;

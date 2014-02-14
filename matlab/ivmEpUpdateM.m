@@ -12,7 +12,7 @@ function model = ivmEpUpdateM(model, index)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 d = length(model.I);
 k = find(model.I == index);

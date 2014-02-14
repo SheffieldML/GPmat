@@ -13,7 +13,7 @@ function  kern = sdlfmKernParamInit(kern)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 % Create the basic structure based on the lfm kernel.
 kern = lfmKernParamInit(kern);

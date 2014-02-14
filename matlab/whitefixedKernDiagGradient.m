@@ -20,7 +20,7 @@ function g = whitefixedKernDiagGradient(kern, x, covDiag)
 %
 % COPYRIGHT : Nathaniel J. King, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 g = [];

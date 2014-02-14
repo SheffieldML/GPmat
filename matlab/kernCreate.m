@@ -33,7 +33,7 @@ function kern = kernCreate(X, kernelType)
 %
 % MODIFICATIONS: Antti Honkela, 2009, Andreas Damianou, 2012
 
-% SHEFFIELDML
+% GPMAT
   
 if iscell(X)  
   for i = 1:length(X)

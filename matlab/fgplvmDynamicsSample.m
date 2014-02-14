@@ -2,7 +2,7 @@ function [ax, data] = fgplvmDynamicsSample(model, points);
 
 % FGPLVMDYNAMICSSAMPLE Sample a field from the GP.
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 2
   points = 20;

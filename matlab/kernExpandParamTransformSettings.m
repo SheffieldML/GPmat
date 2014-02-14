@@ -31,7 +31,7 @@ function kern = kernExpandParamTransformSettings(kern, paramtransformsettings)
 %
 % COPYRIGHT : Antti Honkela, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 %fprintf(1,'kernExpandParamTransformSettings step1\n');
 

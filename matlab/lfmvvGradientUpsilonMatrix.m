@@ -17,7 +17,7 @@ function dUpsilon = lfmvvGradientUpsilonMatrix(gamma, sigma2, t1, ...
 %
 % SEEALSO : lfmvvComputeUpsilonMatrix.m
 
-% SHEFFIELDML
+% GPMAT
 
 sigma = sqrt(sigma2);
 

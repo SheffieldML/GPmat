@@ -33,7 +33,7 @@ function y = sigmoidabTransform(x, transform, varargin)
 %
 % COPYRIGHT : Antti Honkela, 2012
 
-% SHEFFIELDML
+% GPMAT
 
 
 % Get the transformation settings from the varargin structure

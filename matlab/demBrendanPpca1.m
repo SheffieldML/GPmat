@@ -1,6 +1,6 @@
 % DEMBRENDANPPCA1 Use PPCA to model the Frey face data with five latent dimensions.
 
-% SHEFFIELDML
+% GPMAT
 
 % Fix seeds
 randn('seed', 1e5);

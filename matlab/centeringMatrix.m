@@ -10,6 +10,6 @@ function H = centeringMatrix(dim)
 %
 % SEEALSO : eye
   
-% SHEFFIELDML
+% GPMAT
 
 H = -repmat(1./dim, dim, dim) + speye(dim);

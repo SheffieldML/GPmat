@@ -16,7 +16,7 @@ function model = fgplvmExpandParam(model, params)
 % 
 % SEEALSO : fgplvmCreate, fgplvmExtractParam, modelExpandParam
 
-% SHEFFIELDML
+% GPMAT
 
 
 startVal = 1;

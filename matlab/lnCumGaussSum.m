@@ -13,7 +13,7 @@ function y = lnCumGaussSum(u1, u2, w1, w2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004
 
-% SHEFFIELDML
+% GPMAT
 
 y = zeros(size(u1));
 safeCond = u1 > 0 & u2 > 0;

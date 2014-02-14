@@ -17,7 +17,7 @@ function g = dnetGradient(params, model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 model = dnetExpandParam(model, params);
 g = - dnetLogLikeGradients(model);

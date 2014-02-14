@@ -22,7 +22,7 @@ function [k, n2] = rbfard2KernCompute(kern, x, x2)
 %
 % COPYRIGHT : Michalis K. Titsias, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 scales = sparse(diag(sqrt(kern.inputScales)));

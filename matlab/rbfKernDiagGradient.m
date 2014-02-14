@@ -21,7 +21,7 @@ function g = rbfKernDiagGradient(kern, x, covDiag)
 %
 % MODIFICATIONS : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 g = zeros(1, kern.nParams);

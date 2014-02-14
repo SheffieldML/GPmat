@@ -17,7 +17,7 @@ function kern = velotransKernExpandParam(kern, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 endVal = length(params)-kern.inputDimension+1;
 kern = cmpndKernExpandParam(kern, params(1, 1:endVal));

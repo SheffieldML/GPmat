@@ -12,7 +12,7 @@ function model = modelParamInit(model, varargin)
 % 
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([model.type 'ParamInit']);
 options = fhandle(model, varargin{:});

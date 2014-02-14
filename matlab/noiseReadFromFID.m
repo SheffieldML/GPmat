@@ -11,7 +11,7 @@ function noise = noiseReadFromFID(FID)
 %
 % SEEALSO : modelReadFromFID, noiseCreate, noiseReadParamsFromFID
 
-% SHEFFIELDML
+% GPMAT
 
 type = readStringFromFID(FID, 'type');
 noise = noiseReadParamsFromFID(type, FID);

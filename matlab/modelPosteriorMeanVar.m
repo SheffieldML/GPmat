@@ -14,7 +14,7 @@ function [mu, varsigma] = modelPosteriorMeanVar(model, X);
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
   fhandle = str2func([model.type 'PosteriorMeanVar']);
   if str2num(version('-release'))>13

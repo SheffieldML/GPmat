@@ -20,7 +20,7 @@ function kern = ndsimKernExpandParam(kern, params)
 %
 % COPYRIGHT : Jaakko Peltonen, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 kern.inverseWidth = params(1);
 %fprintf(1,'NDSIM kern.inverseWidth=%f\n',kern.inverseWidth);

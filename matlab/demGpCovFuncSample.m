@@ -9,7 +9,7 @@ function demGpCovFuncSample
 %
 % SEEALSO : kernCreate
   
-% SHEFFIELDML
+% GPMAT
 
   global printDiagram
   randn('seed', 1e5)

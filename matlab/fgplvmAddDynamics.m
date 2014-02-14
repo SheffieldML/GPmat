@@ -14,7 +14,7 @@ function model = fgplvmAddDynamics(model, type, varargin)
 %
 % MODIFICATIONS : Carl Henrik Ek, 2008
 %
-% SHEFFIELDML
+% GPMAT
 
 type = [type 'Dynamics'];
 model.dynamics = modelCreate(type, model.q, model.q, model.X, varargin{:});

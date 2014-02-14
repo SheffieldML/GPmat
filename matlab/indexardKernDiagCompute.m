@@ -12,7 +12,7 @@ function k = indexardKernDiagCompute(kern, x)
 %
 % COPYRIGHT : Neil D. Lawrence, 2011
 
-% SHEFFIELDML
+% GPMAT
   k = zeros(size(x, 1), 1);
   for i = 1:length(kern.indices)
     ind = find(round(x)==kern.indices(i));

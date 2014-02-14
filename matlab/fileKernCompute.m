@@ -21,7 +21,7 @@ function [k, sk] = fileKernCompute(kern, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 sk = fileKernRead(kern, varargin{:});
 k = kern.variance*sk;

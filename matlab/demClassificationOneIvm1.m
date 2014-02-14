@@ -1,6 +1,6 @@
 % DEMCLASSIFICATIONIVM1 Test IVM code on a toy feature selection.
 
-% SHEFFIELDML
+% GPMAT
 
 % Fix seeds
 randn('seed', 1e5);

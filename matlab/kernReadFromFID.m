@@ -11,7 +11,7 @@ function kern = kernReadFromFID(FID, version)
 %
 % SEEALSO : modelReadFromFID, kernCreate, kernReadParamsFromFID
 
-% SHEFFIELDML
+% GPMAT
 
   if nargin < 2
     version = 0.2;

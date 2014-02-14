@@ -15,7 +15,7 @@ function model = ivmSelectPoints(model, display)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 tol = 1e-3;
 if nargin < 2

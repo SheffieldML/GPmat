@@ -1,6 +1,6 @@
 % DEMGPTWOSAMPLE Test GP two sample code.
 
-% SHEFFIELDML
+% GPMAT
 
 % Generate artificial data. 
 numSamps = 3;

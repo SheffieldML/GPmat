@@ -26,7 +26,7 @@ function K = whiteXwhiteKernCompute(whiteKern1, whiteKern2, x1, x2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 4
   x2 = x1;

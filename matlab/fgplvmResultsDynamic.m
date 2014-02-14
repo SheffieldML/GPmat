@@ -2,7 +2,7 @@ function fgplvmResultsDynamic(dataSet, number, dataType, varargin)
 
 % FGPLVMRESULTSDYNAMIC Load a results file and visualise them.
 
-% SHEFFIELDML
+% GPMAT
   
 [model, lbls] = fgplvmLoadResult(dataSet, number);
 

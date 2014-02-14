@@ -20,7 +20,7 @@ function g = probitNoiseGradientParam(noise, mu, varsigma, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 
 c = y./sqrt(noise.sigma2 + varsigma);

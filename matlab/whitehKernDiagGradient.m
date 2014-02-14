@@ -19,7 +19,7 @@ function g = whitehKernDiagGradient(kern, x, covDiag)
 %
 % COPYRIGHT : Mauricio A. Alvarez, Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 g(1) = sum(covDiag.*(1./x));
 

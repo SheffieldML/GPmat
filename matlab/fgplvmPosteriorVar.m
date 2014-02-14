@@ -13,6 +13,6 @@ function varsigma = fgplvmPosteriorVar(model, X);
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 varsigma = gpPosteriorVar(model, X);

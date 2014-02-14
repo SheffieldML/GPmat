@@ -11,7 +11,7 @@ function g = linearLogLikeGradients(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 Xo = [model.X ones(size(model.X, 1), 1)];
 W = [model.W; model.b];

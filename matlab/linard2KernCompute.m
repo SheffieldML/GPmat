@@ -23,7 +23,7 @@ function [k, sk] = linard2KernCompute(kern, x, x2)
 %
 % COPYRIGHT : Michalis K. Titsias, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
     

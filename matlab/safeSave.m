@@ -13,7 +13,7 @@ function safeSave(fname, varargin)
 %
 % COPYRIGHT : Antti Honkela, 2010
 
-% SHEFFIELDML
+% GPMAT
 
   saveargs = cell(size(varargin));
   for k=1:length(varargin),

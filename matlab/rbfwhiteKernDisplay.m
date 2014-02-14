@@ -15,7 +15,7 @@ function rbfwhiteKernDisplay(kern, spacing)
 %
 % COPYRIGHT : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin > 1
   spacing = repmat(32, 1, spacing);

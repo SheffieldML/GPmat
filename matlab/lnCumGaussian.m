@@ -12,7 +12,7 @@ function y = lnCumGaussian(x)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 index = find(x< 0);
 if length(index)

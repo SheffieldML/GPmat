@@ -12,7 +12,7 @@ function ll = modelPointLogLikelihood(model, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([model.type 'PointLogLikelihood']);
 ll = fhandle(model, varargin{:});

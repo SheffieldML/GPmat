@@ -2,7 +2,7 @@ function [params, names] = logisticNormalPriorExtractParam(prior)
 
 % LOGISTICNORMALPRIOREXTRACTPARAM Extract params from logistic-normal prior structure.
 
-% SHEFFIELDML
+% GPMAT
 
 params = [prior.mu, prior.sd];
 if nargout > 1

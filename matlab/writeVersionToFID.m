@@ -10,7 +10,7 @@ function writeVersionToFID(FID, val)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
   
-% SHEFFIELDML
+% GPMAT
   
 writeStringToFID(FID, 'version', num2str(val));
   

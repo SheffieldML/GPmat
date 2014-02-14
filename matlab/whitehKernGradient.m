@@ -41,7 +41,7 @@ function g = whitehKernGradient(kern, x, varargin)
 %
 % COPYRIGHT : Mauricio A. Alvarez, Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 4
   g(1, 1) = sum(diag(varargin{end}).*(1./x(:,end)));

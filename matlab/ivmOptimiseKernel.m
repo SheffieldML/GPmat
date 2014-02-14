@@ -14,7 +14,7 @@ function model = ivmOptimiseKernel(model, display, iters);
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 3
   iters = 500;

@@ -24,7 +24,7 @@ function K = ggwhiteXwhiteKernCompute(ggwhiteKern, ...
 %
 % MODIFIED : Mauricio A. Alvarez, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 4
   x2 = x;

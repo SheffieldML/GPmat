@@ -7,7 +7,7 @@ function [g1L, g2L, g3L, g4L] = sdlfmXsdlfmKernGradientICBlock(lfmKern1, ...
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
  
 g1L = cell(2);
 g2L = cell(2);

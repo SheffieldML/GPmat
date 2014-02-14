@@ -41,7 +41,7 @@ function g = gibbsperiodicKernGradient(kern, x, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([kern.lengthScaleTransform, 'Transform']);
 g = zeros(1, kern.nParams);

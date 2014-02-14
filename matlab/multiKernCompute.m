@@ -21,7 +21,7 @@ function K = multiKernCompute(kern, varargin)
 %
 % COPYRIGHT : Pei Gao, 2007
   
-% SHEFFIELDML
+% GPMAT
 
 if iscell(varargin{1})  % If x is a cell array of input points
   if length(varargin{1}) ~= kern.numBlocks

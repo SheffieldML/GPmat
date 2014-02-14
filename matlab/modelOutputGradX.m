@@ -13,7 +13,7 @@ function g = modelOutputGradX(model, X)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([model.type 'OutputGradX']);
 g = fhandle(model, X);

@@ -13,7 +13,7 @@ function [skel, channels, frameLength] = bvhReadFile(fileName)
 % SEEALSO : acclaimReadSkel, bvhPlayFile, bvhWriteFile
 
 
-% SHEFFIELDML
+% GPMAT
 
 % a regular expression for floats
 %  numPat = '(-?[0-9]*\.?[0-9]*)';

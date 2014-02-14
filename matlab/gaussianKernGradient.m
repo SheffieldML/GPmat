@@ -44,7 +44,7 @@ function g = gaussianKernGradient(kern, x, varargin)
 %
 % MODIFICATIONS : Mauricio A. Alvarez, 2009.
 
-% SHEFFIELDML
+% GPMAT
   
 if nargin < 4
     x2 = x;

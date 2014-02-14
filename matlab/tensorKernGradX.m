@@ -30,7 +30,7 @@ function gX = tensorKernGradX(kern, X, X2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin > 2

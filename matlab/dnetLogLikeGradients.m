@@ -11,7 +11,7 @@ function g = dnetLogLikeGradients(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 diffVal = zeros(model.N, model.M);
 Ypred = dnetOut(model, model.X_u);

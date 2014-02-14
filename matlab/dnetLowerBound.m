@@ -11,7 +11,7 @@ function lll = dnetLowerBound(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
   
 lll = 0.5*model.N*model.d*log(model.beta/(2*pi)) ...
       - model.N*log(model.M);

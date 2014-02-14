@@ -16,5 +16,5 @@ function h = mgaussianNoisePointPlot(noise, X, y, fontName, fontSize, markerSize
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 

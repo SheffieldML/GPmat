@@ -12,7 +12,7 @@ function stickModify(handle, values, connect)
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
 
-% SHEFFIELDML
+% GPMAT
 
 vals = reshape(values, size(values, 2)/3, 3);
 

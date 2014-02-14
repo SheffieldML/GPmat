@@ -64,7 +64,7 @@ function [gParam, gX_u, gX, g_beta] = gpLogLikeGradients(model, X, M, X_u)
 %
 % MODIFICATIONS : Carl Henrik Ek, 2008
 
-% SHEFFIELDML
+% GPMAT
 
   if nargin < 4
     if isfield(model, 'X_u')

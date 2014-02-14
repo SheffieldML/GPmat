@@ -12,7 +12,7 @@ function [param, names] = lfmExtractParam(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 if nargout>1
   [param, names] = kernExtractParam(model.kern);

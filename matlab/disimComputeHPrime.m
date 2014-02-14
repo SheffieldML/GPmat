@@ -32,7 +32,7 @@ function [h, dh_ddelta, dh_dD_j, dh_dD_k, dh_dl] = disimComputeHPrime(t1, t2, de
 %
 % SEEALSO : disimKernParamInit, disimComputeH
 
-% SHEFFIELDML
+% GPMAT
 
 if size(t1, 2) > 1 | size(t2, 2) > 1
   error('Input can only have one column');

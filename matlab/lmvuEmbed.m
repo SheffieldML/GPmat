@@ -14,7 +14,7 @@ function X = lmvuEmbed(Y,dims,k,nr_landmark)
 %
 % COPYRIGHT : Carl Henrik Ek, Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 if(nargin<4)
   nr_landmark = 30;

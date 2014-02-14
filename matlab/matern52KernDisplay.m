@@ -15,7 +15,7 @@ function matern52KernDisplay(kern, spacing)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin > 1

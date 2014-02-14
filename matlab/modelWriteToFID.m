@@ -10,7 +10,7 @@ function modelWriteToFID(FID, model)
 %
 % SEEALSO : modelReadFromFID
 
-% SHEFFIELDML
+% GPMAT
 
 writeVersionToFID(FID, 0.2);
 modelType = readStringFromFID(FID, 'baseType');

@@ -10,7 +10,7 @@ function ll = rbfperiodicLogLikelihood(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 ypred = rbfperiodicOut(model, model.X);
 

@@ -18,7 +18,7 @@ function [f, g] = gpObjectiveGradient(params, model)
 % 
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 % Check how the optimiser has given the parameters
 if size(params, 1) > size(params, 2)

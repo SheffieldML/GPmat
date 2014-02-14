@@ -16,7 +16,7 @@ function [area, rocPointX, rocPointY] = rocCurve(outputs, labels)
 % COPYRIGHT : Neil D. Lawrence, 2004
 
 
-% SHEFFIELDML
+% GPMAT
 
 [sOutputs, index] = sort(outputs);
 sLabels = labels(index);

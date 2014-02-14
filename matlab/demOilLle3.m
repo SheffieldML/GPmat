@@ -1,6 +1,6 @@
 % DEMOILLLE3 Demonstrate LLE on the oil data.
 
-% SHEFFIELDML
+% GPMAT
 
 [Y, lbls] = lvmLoadData('oil');
 

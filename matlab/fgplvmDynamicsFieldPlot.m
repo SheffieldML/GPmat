@@ -2,7 +2,7 @@ function [ax, data] = fgplvmDynamicsFieldPlot(model, YLbls, points);
 
 % FGPLVMDYNAMICSFIELDPLOT 2-D field plot of the dynamics.
 
-% SHEFFIELDML
+% GPMAT
 if nargin < 3
   points = 20;
   if nargin < 2

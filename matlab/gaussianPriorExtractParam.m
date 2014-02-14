@@ -2,7 +2,7 @@ function [params, names] = gaussianPriorExtractParam(prior)
 
 % GAUSSIANPRIOREXTRACTPARAM Extract params from Gaussian prior structure.
 
-% SHEFFIELDML
+% GPMAT
 
 params = prior.precision;
 if nargout > 1

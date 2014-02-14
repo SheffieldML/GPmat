@@ -26,7 +26,7 @@ function kern = gaussianwhiteKernParamInit(kern, isArd, nInd)
 % 
 % MODIFICATIONS : Mauricio A. Alvarez, 2009.
 
-% SHEFFIELDML
+% GPMAT
 
 % By default it assumes the kernel is ARD and only have one inducing kernel
 switch nargin

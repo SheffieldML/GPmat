@@ -13,7 +13,7 @@ function [model, I] = ivmReadFromFile(fileName)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 FID = fopen(fileName);
 if FID==-1

@@ -2,9 +2,9 @@ function [nu, g] = orderedNoiseUpdateParams(noise, mu, varsigma, y, index)
 
 % ORDEREDNOISEUPDATEPARAMS Update parameters for ordered categorical noise model.
 
-% SHEFFIELDML
+% GPMAT
 
-% SHEFFIELDML
+% GPMAT
 
 
 [g, dlnZ_dvs] = orderedNoiseGradVals(noise, mu(index, :), ...

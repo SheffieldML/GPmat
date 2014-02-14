@@ -17,6 +17,6 @@ function kern = wienerKernExpandParam(kern, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 kern.variance = params(1);

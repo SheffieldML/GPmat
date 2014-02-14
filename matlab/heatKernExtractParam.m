@@ -25,7 +25,7 @@ function [params, names] = heatKernExtractParam(kern)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 %
-% SHEFFIELDML
+% GPMAT
 
 
 if kern.includeIC

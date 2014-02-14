@@ -15,7 +15,7 @@ function gT = ouKernDiagGradX(kern, t)
 %
 % COPYRIGHT : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 if (kern.isStationary == true)

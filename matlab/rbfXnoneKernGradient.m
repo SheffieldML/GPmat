@@ -34,7 +34,7 @@ function [g1, g2] = rbfXnoneKernGradient(rbfKern, noneKern, x1, x2, covGrad)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 g1 = zeros(1, 2);

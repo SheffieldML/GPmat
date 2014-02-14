@@ -1,6 +1,6 @@
 % DEMSILHOUETTEPLOTTRUE Plot the true poses for the silhouette data.
 
-% SHEFFIELDML
+% GPMAT
 dataSetName = 'silhouette';
 
 % load data

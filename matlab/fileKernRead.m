@@ -27,7 +27,7 @@ function k = fileKernRead(kern, varargin)
 %
 % SEEALSO : fileKernParamInit
 
-% SHEFFIELDML
+% GPMAT
 
 % cache for the kernel.
 persistent K

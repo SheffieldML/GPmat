@@ -17,7 +17,7 @@ function    g = lfmGradientSigmaH4VP(gamma1, gamma2, sigma2, t1, ...
 %
 % SEEALSO : lfmKernGradient, lfmXlfmKernGradient, lfmGradientSigmaUpsilon
 
-% SHEFFIELDML
+% GPMAT
 
 if mode==0
     g =  lfmvpGradientSigmaUpsilonVector(gamma1,sigma2, t1)*( preExp(:,1)/preFactor(1) - preExp(:,2)/preFactor(2)).' ...

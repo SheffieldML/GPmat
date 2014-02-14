@@ -2,7 +2,7 @@ function handle = spectrumModify(handle, spectrumValues, convertFile, width,vara
 
 % SPECTRUMMODIFY Helper code for visualisation of spectrum data.
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 4
   width = 500;

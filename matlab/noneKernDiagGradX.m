@@ -13,6 +13,6 @@ function gX = noneKernDiagGradX(kern, X)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 gX = zeros(size(X));

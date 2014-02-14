@@ -1,6 +1,6 @@
 % DEMUSPSIVM3 Try the ARD IVM on some digits data.
 
-% SHEFFIELDML
+% GPMAT
 
 dataSetName = 'usps';
 experimentNo = 3;

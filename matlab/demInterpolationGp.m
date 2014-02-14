@@ -6,7 +6,7 @@
 % 
 % COPYRIGHT : Neil D. Lawrence, 2006, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 randn('seed', 1e6)
 rand('seed', 1e6)

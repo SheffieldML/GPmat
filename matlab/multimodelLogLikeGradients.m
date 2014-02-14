@@ -14,7 +14,7 @@ function g = multimodelLogLikeGradients(model)
 %
 % MODIFICATIONS : Mauricio Alvarez, 2009
 
-% SHEFFIELDML
+% GPMAT
 
   g = zeros(1, model.numParams);
   if numel(model.outputDim) == 1

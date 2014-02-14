@@ -14,7 +14,7 @@ function k = rbfardjitKernDiagCompute(kern, x)
 %
 % COPYRIGHT : Michalis K. Titsias, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 k = repmat(kern.variance*(1 + kern.jitter), size(x, 1), 1);

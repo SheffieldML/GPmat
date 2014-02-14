@@ -13,7 +13,7 @@ function y = ivmOut(model, x);
 %
 % COPYRIGHT : Neil D. Lawrence, 2003, 2005
 
-% SHEFFIELDML 
+% GPMAT 
 
 if nargin < 2
   % This implies evaluate for the training data.

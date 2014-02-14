@@ -20,7 +20,7 @@ function k = kernCompute(kern, x, x2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([kern.type 'KernCompute']);
 if nargin < 3

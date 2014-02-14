@@ -9,7 +9,7 @@ function lvmSetPlot
 % SEEALSO lvmClassVisualise, lvmVisualise, lvmClickVisualise
 %
 
-% SHEFFIELDML
+% GPMAT
   
 global visualiseInfo
 

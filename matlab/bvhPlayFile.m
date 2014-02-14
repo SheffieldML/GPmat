@@ -9,7 +9,7 @@ function bvhPlayFile(fileName)
 %
 % SEEALSO : acclaimPlayFile, bvhReadFile, skelPlayData
 
-% SHEFFIELDML
+% GPMAT
 
 [skel, channels, frameLength] = bvhReadFile(fileName);
 skelPlayData(skel, channels, frameLength);

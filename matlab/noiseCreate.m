@@ -13,7 +13,7 @@ function noise = noiseCreate(noiseType, y)
 %
 % SEEALSO : noiseParamInit
 
-% SHEFFIELDML
+% GPMAT
 
 if isstruct(noiseType)
   noise = noiseType;

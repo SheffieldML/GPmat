@@ -26,7 +26,7 @@ function [h, dh_dD_i, dh_dD_j, dh_dsigma] = simXsimComputeDiagHStat(t, D_i, D_j,
 %
 % SEEALSO : simXsimComputeDiagH, simKernParamInit, lnDiffErfs
 
-% SHEFFIELDML
+% GPMAT
 
 if delta_i~=delta_j
     [h, dh_dD_i, dh_dD_j, dh_dsigma] = diag(simComputeHStat(t, t, D_i, D_j, delta_i, delta_j, sigma));

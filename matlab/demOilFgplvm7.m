@@ -1,6 +1,6 @@
 % DEMOILFGPLVM7 Oil data with variational sparse approximation.
 
-% SHEFFIELDML
+% GPMAT
 
 % Fix seeds
 randn('seed', 1e5);

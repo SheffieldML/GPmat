@@ -24,7 +24,7 @@ function [K, Kbase, Prinv, Pqrinv, P, n2] = ggKernCompute(kern, x, x2)
 %
 % MODIFICATIONS : Mauricio A. Alvarez, 2009.
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin < 3

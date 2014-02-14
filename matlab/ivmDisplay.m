@@ -14,7 +14,7 @@ function ivmDisplay(model, spacing)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin > 1
   spacing = repmat(32, 1, spacing);

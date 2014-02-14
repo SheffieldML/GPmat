@@ -32,7 +32,7 @@ function gT = simKernGradX(kern, t1, t2);
 %
 % COPYRIGHT : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if (size(t1, 2) > 1) || (size(t2, 2) > 1)
   error('Input can only have one column');

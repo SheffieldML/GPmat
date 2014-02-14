@@ -41,7 +41,7 @@ function g = indexKernGradient(kern, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2011
 
-% SHEFFIELDML
+% GPMAT
 
   covGrad = varargin{end};
   [K, sK] = indexKernCompute(kern, varargin{1:end-1});

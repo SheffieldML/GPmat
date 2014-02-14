@@ -2,7 +2,7 @@ function prior = gammaPriorExpandParam(prior, params)
 
 % GAMMAPRIOREXPANDPARAM Expand gamma prior structure from params.
 
-% SHEFFIELDML
+% GPMAT
 
 prior.a = params(1);
 prior.b = params(2);

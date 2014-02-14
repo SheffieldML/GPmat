@@ -41,7 +41,7 @@ function g = ardKernGradient(kern, x, covGrad)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004
 
-% SHEFFIELDML
+% GPMAT
 
 
 [k, rbfPart, linearPart, dist2xx] = ardKernCompute(kern, x);

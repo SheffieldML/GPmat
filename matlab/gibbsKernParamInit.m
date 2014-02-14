@@ -30,7 +30,7 @@ function kern = gibbsKernParamInit(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 kern.variance = 1;
 options = mlpOptions(5);

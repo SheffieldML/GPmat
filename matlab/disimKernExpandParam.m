@@ -19,7 +19,7 @@ function kern = disimKernExpandParam(kern, params)
 %
 % COPYRIGHT : Antti Honkela, 2007-2009
 
-% SHEFFIELDML
+% GPMAT
 
 kern.di_decay = params(1);
 kern.inverseWidth = params(2);

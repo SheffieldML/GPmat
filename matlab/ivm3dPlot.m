@@ -23,7 +23,7 @@ function [h1, h2] = ivm3dPlot(model, plotType, iter, X, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 h2 = [];
 lineWidth = 2;

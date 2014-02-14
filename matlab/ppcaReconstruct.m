@@ -14,7 +14,7 @@ function model = ppcaReconstruct(ppcaInfo, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
   model = ppcaInfo;
   model.y = y;

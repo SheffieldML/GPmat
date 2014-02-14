@@ -2,7 +2,7 @@ function g = gpReversibleDynamicsLogLikeGradients(model)
 
 % GPREVERSIBLEDYNAMICSLOGLIKEGRADIENTS Gradients of the GP reversible dynamics wrt parameters.
 
-% SHEFFIELDML
+% GPMAT
 
 if model.k ==0 & ~model.learn & ~model.learnScales
   g = [];

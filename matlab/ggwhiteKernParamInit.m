@@ -28,7 +28,7 @@ function kern = ggwhiteKernParamInit(kern, isArd)
 %
 % MODIFICATIONS : Mauricio A Alvarez, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 switch nargin
     case 1

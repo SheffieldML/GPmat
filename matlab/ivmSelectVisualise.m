@@ -14,7 +14,7 @@ function ivmSelectVisualise(model, display, k, dataIndexSelect)
 %
 % SEEALSO : ivmCreate, ivmLogLikelihood, ivmOptions
 
-% SHEFFIELDML
+% GPMAT
 
 logLikelihood = ivmLogLikelihood(model);
 fprintf('%ith inclusion, remaining log Likelihood %2.4f', ...

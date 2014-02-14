@@ -13,7 +13,7 @@ function L = noiseExpectationLogLikelihood(noise, mu, varsigma, y);
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([noise.type 'NoiseExpectationLogLikelihood']);
 L = fhandle(noise, mu, varsigma, y);

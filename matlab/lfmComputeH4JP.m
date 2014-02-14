@@ -16,7 +16,7 @@ function  [h, compUpJP] =  lfmComputeH4JP(gamma1_p, gamma1_m, sigma2, t1, ...
 %
 % SEEALSO : lfmComputeH4.m, lfmComputeH4AP.m
 
-% SHEFFIELDML
+% GPMAT
 
 if mode==0
     if nargout > 1

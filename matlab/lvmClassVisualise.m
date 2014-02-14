@@ -11,7 +11,7 @@ function lvmClassVisualise(call)
 %
 % SEEALSO : lvmResultsDynamic
 
-% SHEFFIELDML 
+% GPMAT 
 
 global visualiseInfo
 

@@ -14,6 +14,6 @@ function gX = disimKernDiagGradX(kern, X)
 % COPYRIGHT : Neil D. Lawrence, 2006
 % COPYRIGHT : Antti Honkela, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 error('disimKernDiagGradX not yet implemented.');

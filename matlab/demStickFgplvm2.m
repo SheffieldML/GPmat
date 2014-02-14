@@ -1,6 +1,6 @@
 % DEMSTICKFGPLVM2 Model the stick man using an RBF kernel and dynamics.
 
-% SHEFFIELDML
+% GPMAT
 
 % Fix seeds
 randn('seed', 1e5);

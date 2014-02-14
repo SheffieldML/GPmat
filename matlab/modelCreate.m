@@ -18,7 +18,7 @@ function model = modelCreate(type, numIn, numOut, varargin)
 % 
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([type, 'Create']);
 model = fhandle(numIn, numOut, varargin{:});

@@ -15,7 +15,7 @@ function whitefixedKernDisplay(kern, spacing)
 %
 % COPYRIGHT : Nathaniel J. King, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin > 1
   spacing = repmat(32, 1, spacing);

@@ -29,7 +29,7 @@ function [params, names] = lfmwhiteKernExtractParam(kern)
 %
 % COPYRIGHT : David Luengo, 2009
 %
-% SHEFFIELDML
+% GPMAT
 
 
 params = [kern.mass kern.spring kern.damper kern.variance kern.sensitivity];

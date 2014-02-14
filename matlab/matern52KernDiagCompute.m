@@ -12,6 +12,6 @@ function k = matern52KernDiagCompute(kern, x)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 k = repmat(kern.variance, size(x, 1), 1);

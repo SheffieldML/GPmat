@@ -12,7 +12,7 @@ function y = gaussSamp(Sigma, numSamps)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 [U, V] = eig(Sigma);
 dims = size(Sigma, 1);

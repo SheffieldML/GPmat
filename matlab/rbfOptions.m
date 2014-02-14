@@ -2,7 +2,7 @@ function options = rbfOptions
 
 % RBFOPTIONS Default options for RBF network.
 
-% SHEFFIELDML
+% GPMAT
 
 options.outFunc = 'linear';
 options.activeFunc = 'gaussian';

@@ -10,7 +10,7 @@ function model = isomapOptimise(model, display, iters)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
   
   % Note: isomap code uses the transpose of a design matrix.

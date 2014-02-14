@@ -21,7 +21,7 @@ function k = polyKernCompute(kern, x, x2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin < 3

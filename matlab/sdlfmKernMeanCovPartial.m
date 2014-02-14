@@ -14,7 +14,7 @@ function covGradLocal = sdlfmKernMeanCovPartial(lfmKern1, lfmKern2, t1, ...
 % ARG typeParam : associated to the type of kernel being computed.
 % RETURN covGradLocal : the partial derivatives of the parameters
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 6
     typeParam = {'sdlfm', 'sdlfm'};

@@ -10,7 +10,7 @@ function [gradAlpha, gradOmega] = getLocalGradAlphaOmega(lfmKern)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 m = lfmKern.mass;           % Par. 1
 D = lfmKern.spring;         % Par. 2

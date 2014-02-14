@@ -44,7 +44,7 @@ function kernRet = multiKernTest(kernType, tieParams, flags);
 %
 % MODIFICATIONS : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 2
     tieParams = {};

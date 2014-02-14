@@ -14,7 +14,7 @@ function [mu, varsigma] = ivmPosteriorMeanVar(model, X);
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 D = size(model.y, 2);
 numData = size(X, 1);

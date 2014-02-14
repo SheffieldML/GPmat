@@ -18,7 +18,7 @@ function kern = polyKernExpandParam(kern, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 %/~

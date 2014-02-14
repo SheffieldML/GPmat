@@ -14,7 +14,7 @@ function dUpsilon = lfmapGradientUpsilonVector(gamma, sigma2, t, upsilon)
 %
 % SEEALSO : lfmapComputeUpsilonVector.m
 
-% SHEFFIELDML
+% GPMAT
 
 sigma = sqrt(sigma2);
 

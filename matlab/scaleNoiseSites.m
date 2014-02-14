@@ -2,7 +2,7 @@ function [m, beta] = scaleNoiseSites(noise, g, nu, mu, varSigma, y)
 
 % SCALENOISESITES Site updates for Scale noise model.
 
-% SHEFFIELDML
+% GPMAT
 
 N = size(y, 1);
 D = length(noise.bias);

@@ -12,7 +12,7 @@ function k = diagKernDiagCompute(kern, x)
 %
 % COPYRIGHT : Neil D. Lawrence, 2011
 
-% SHEFFIELDML
+% GPMAT
 
   if size(x, 2)>1
     error('Diag kernel requires 1-dimensional input.')

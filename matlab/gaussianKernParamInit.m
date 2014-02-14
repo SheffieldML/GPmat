@@ -21,7 +21,7 @@ function kern = gaussianKernParamInit(kern, isArd)
 %
 % MODIFICATIONS : Mauricio A. Alvarez, 2009, 2010
 
-% SHEFFIELDML
+% GPMAT
   
 if kern.inputDimension == 0
    kern.inputDimension = 1; 

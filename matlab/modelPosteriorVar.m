@@ -13,7 +13,7 @@ function varsigma = modelPosteriorVar(model, X);
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
   varExist = false;
   func = [model.type 'PosteriorVar'];
   if exist(func)==2

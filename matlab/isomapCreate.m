@@ -15,7 +15,7 @@ function model = isomapCreate(inputDim, outputDim, Y, options)
 % SEEALSO : isomapOptions, lleCreate, mvuCreate, modelCreate
 
 
-% SHEFFIELDML
+% GPMAT
 
 model.type = 'isomap';
 

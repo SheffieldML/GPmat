@@ -6,7 +6,7 @@ function [g1, g2, g3, g4] = sdlfmXsdlfmKernGradientIC(lfmKern1, lfmKern2, ...
 %
 % COPYRIGHT : Mauricio A. Alvarez
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 18
     typeParam = {'sdlfm', 'sdlfm'};    

@@ -11,7 +11,7 @@ function writeBoolToFID(FID, name, val)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
   
-% SHEFFIELDML
+% GPMAT
   
 if val
   writeStringToFID(FID, name, '1');

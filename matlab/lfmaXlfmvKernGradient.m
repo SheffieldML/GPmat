@@ -60,7 +60,7 @@ function [g1, g2] = lfmaXlfmvKernGradient(lfmKern1, lfmKern2, t1, t2, covGrad, m
 %
 % COPYRIGHT : Mauricio Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 subComponent = false; % This is just a flag that indicates if this kernel is part of a bigger kernel (SDLFM)
 

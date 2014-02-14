@@ -16,6 +16,6 @@ function g = fgplvmPointGradient(x, model, y)
 %
 % COPYRIGHT Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 g = - fgplvmPointLogLikeGradient(model, x, y);

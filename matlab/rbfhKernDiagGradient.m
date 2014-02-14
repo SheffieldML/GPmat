@@ -19,6 +19,6 @@ function g = rbfhKernDiagGradient(kern, x, covDiag)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 error('Not implemented yet')

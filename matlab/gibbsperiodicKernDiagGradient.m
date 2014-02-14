@@ -19,7 +19,7 @@
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 g = zeros(1, kern.nParams);
 g(end) = sum(covDiag);

@@ -15,7 +15,7 @@ function model = kbrExpandParam(model, params,dim);
 %
 % MODIFICATIONS : Carl Henrik Ek, 2008
 %
-% SHEFFIELDML
+% GPMAT
 
 if(nargin<3)
   startVal = 1;

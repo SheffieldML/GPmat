@@ -14,7 +14,7 @@ function prior = logisticNormalPriorParamInit(prior)
 %
 % COPYRIGHT : Antti Honkela, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 prior.mu = 0;
 prior.sd = sqrt(2);

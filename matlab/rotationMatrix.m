@@ -13,7 +13,7 @@ function rotMat = rotationMatrix(xangle, yangle, zangle, order);
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
   
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 4
   order = 'zxy';

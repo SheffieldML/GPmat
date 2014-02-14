@@ -13,7 +13,7 @@ function [upsilonap, upsilon] = lfmapComputeUpsilonVector(gamma, sigma2, t1)
 %
 % SEEALSO : lfmapComputeUpsilonMatrix.m
 
-% SHEFFIELDML
+% GPMAT
 
 sigma = sqrt(sigma2);
 

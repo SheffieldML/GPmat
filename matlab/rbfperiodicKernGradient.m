@@ -41,7 +41,7 @@ function g = rbfperiodicKernGradient(kern, x, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 % The last argument is covGrad

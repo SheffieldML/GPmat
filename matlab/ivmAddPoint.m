@@ -14,7 +14,7 @@ function model = ivmAddPoint(model, i)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 index = find(model.J == i);
 if isempty(index)

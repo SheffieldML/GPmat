@@ -10,7 +10,7 @@ function ll = linearLogLikelihood(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 N = size(model.y, 1);
 centred = model.y - repmat(model.b, N, 1) - model.X* ...

@@ -12,7 +12,7 @@ function [K, labels] = parseNobleKernelFile(fileName)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 fid = fopen(fileName);
 if fid == -1

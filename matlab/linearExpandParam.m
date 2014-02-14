@@ -4,7 +4,7 @@ function model = linearExpandParam(model, params, dim);
 %
 % MODIFICATIONS : Carl Henrik Ek, 2009
 %
-% SHEFFIELDML
+% GPMAT
 
 if(nargin<3)
   startVal = 1;

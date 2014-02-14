@@ -28,7 +28,7 @@ function [paramtransformsettings, names] = ndsimKernExtractParamTransformSetting
 %
 % COPYRIGHT : Jaakko Peltonen, 2011
 %
-% SHEFFIELDML
+% GPMAT
 
 
 if isfield(kern, 'options') ...

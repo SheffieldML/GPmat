@@ -12,7 +12,7 @@ function model = ivmDowndateNuG(model, index)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 if isfield(model.kern, 'whiteVariance')
   subTerm = model.varSigma(index, :)-model.kern.whiteVariance;

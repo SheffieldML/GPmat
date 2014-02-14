@@ -4,7 +4,7 @@ function h = ncnmNoisePointPlot(noise, X, y, ...
 
 % NCNMNOISEPOINTPLOT Plot the data-points for null category noise model.
 
-% SHEFFIELDML
+% GPMAT
 
 
 pointsNeg = plot(X(find(y(:, 1)==-1), 1), ...

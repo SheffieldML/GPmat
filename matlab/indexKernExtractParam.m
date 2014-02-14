@@ -27,7 +27,7 @@ function [params, names] = indexKernExtractParam(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2011
 %
-% SHEFFIELDML
+% GPMAT
 
   params = [kern.variance];
   names{1} = ['index variance'];

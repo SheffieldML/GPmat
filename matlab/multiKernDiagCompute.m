@@ -16,7 +16,7 @@ function k = multiKernDiagCompute(kern, x)
 
 % MODIFICATIONS : Mauricio Alvarez, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 if iscell(x)
   dim = 0;

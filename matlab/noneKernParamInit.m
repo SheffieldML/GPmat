@@ -15,7 +15,7 @@ function kern = noneKernParamInit(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 
 kern.nParams = 0;

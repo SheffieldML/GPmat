@@ -17,7 +17,7 @@ function model = gpDynamicsExpandParam(model, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 % get the current parameter vector

@@ -11,7 +11,7 @@ function k = lfmaKernDiagCompute(lfmKern, t)
 %
 % COPYRIGHT : Mauricio Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 
 

@@ -10,7 +10,7 @@ function priorWriteToFID(FID, prior)
 %
 % SEEALSO : modelWriteToFID, priorCreate, priorWriteParamsToFID
 
-% SHEFFIELDML
+% GPMAT
 
 writeVersionToFID(FID, 0.2);
 writeStringToFID(FID, 'baseType', 'prior');

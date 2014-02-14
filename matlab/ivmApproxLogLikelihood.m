@@ -15,7 +15,7 @@ function L = ivmApproxLogLikelihood(model);
 %
 % SEEALSO : ivmApproxLogLikeKernGrad, ivmApproxGradX
 
-% SHEFFIELDML
+% GPMAT
 
 x = model.X(model.I, :);
 m = model.m(model.I, :);

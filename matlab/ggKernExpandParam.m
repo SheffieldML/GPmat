@@ -19,7 +19,7 @@ function kern = ggKernExpandParam(kern, params)
 %
 % MODIFICATIONS : Mauricio A. Alvarez, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 sizeP = size(kern.precisionU,1);
 kern.precisionU = params(1:sizeP)';

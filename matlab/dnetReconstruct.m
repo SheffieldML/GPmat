@@ -17,7 +17,7 @@ function model = dnetReconstruct(mapping, dnetInfo, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
   model = dnetInfo;
   model.mapping = mapping;

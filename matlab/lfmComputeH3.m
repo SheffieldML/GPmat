@@ -17,7 +17,7 @@ function [h, compUp] =  lfmComputeH3(gamma1_p, gamma1_m, sigma2, t1,t2,preFactor
 %
 % SEEALSO : lfmKernParamInit, lfmXlfmKernCompute
 
-% SHEFFIELDML
+% GPMAT
 
 % Evaluation of h
 

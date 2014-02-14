@@ -14,6 +14,6 @@ function model = rbfExpandParam(model, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 model = rbfunpak(model, params);

@@ -1,6 +1,6 @@
 % DEMOILFGPLVM4 Oil data with deterministic training conditional, and MLP back constraints.
 
-% SHEFFIELDML
+% GPMAT
 
 % Fix seeds
 randn('seed', 1e5);

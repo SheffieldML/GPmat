@@ -16,7 +16,7 @@ function model = dnetCreate(inputDim, outputDim, Y, options)
 % SEEALSO : dnetOptions, mlpCreate, rbfCreate, kbrCreate
 
 
-% SHEFFIELDML
+% GPMAT
 
 model.type = 'dnet';
 

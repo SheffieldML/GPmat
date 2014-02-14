@@ -18,7 +18,7 @@ function kern = invcmpndKernExpandParam(kern, params)
 %
 % COPYRIGHT : Andreas C. Damianou, 2012
 
-% SHEFFIELDML
+% GPMAT
 
 
 kern = cmpndKernExpandParam(kern, params);

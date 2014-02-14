@@ -14,7 +14,7 @@ function k = rbfard2KernDiagCompute(kern, x)
 %
 % COPYRIGHT : Michalis K. Titsias, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 k = repmat(kern.variance, size(x, 1), 1);

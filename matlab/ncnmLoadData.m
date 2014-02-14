@@ -28,7 +28,7 @@ function [X, y, XTest, yTest] = ncnmLoadData(dataSet,seedVal)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 2
   seedVal = 1e5;

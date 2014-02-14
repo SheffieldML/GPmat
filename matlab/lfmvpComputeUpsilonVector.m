@@ -15,7 +15,7 @@ function [upsilonvp, upsilon] = lfmvpComputeUpsilonVector(gamma, sigma2, t1 ,mod
 %
 % SEEALSO : lfmvpComputeUpsilonMatrix.m
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin<4
     mode = 0;

@@ -11,7 +11,7 @@ function symbol = getSymbols(number)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 symbolColour = {'r', 'g', 'b', 'c', 'm'}; %, 'y'};
 symbolShape = {'x', 'o', '+', '*', 's', 'd', 'v', '^', '<', '>', 'p'};

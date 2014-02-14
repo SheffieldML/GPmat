@@ -13,7 +13,7 @@ function kern = invcmpndKernSetIndex(kern, component, indices)
 %
 % COPYRIGHT : Andreas C. Damianou, 2012
 
-% SHEFFIELDML
+% GPMAT
 
 
 kern = cmpndKernSetIndex(kern, component, indices);

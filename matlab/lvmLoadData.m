@@ -21,7 +21,7 @@ function [Y, lbls, Ytest, lblstest] = lvmLoadData(dataset, seedVal)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006, 2008, 2009
 
-% SHEFFIELDML
+% GPMAT
 
   if nargin > 1
     randn('seed', seedVal)

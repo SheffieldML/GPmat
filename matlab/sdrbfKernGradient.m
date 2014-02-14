@@ -40,7 +40,7 @@ function g = sdrbfKernGradient(sdrbfKern, t1, t2, covGrad)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 4
     covGrad = t2;

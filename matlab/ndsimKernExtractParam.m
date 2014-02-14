@@ -28,7 +28,7 @@ function [params, names] = ndsimKernExtractParam(kern)
 %
 % COPYRIGHT : Jaakko Peltonen, 2011
 %
-% SHEFFIELDML
+% GPMAT
 
 if isfield(kern, 'gaussianInitial') && kern.gaussianInitial,
   if isfield(kern, 'isNegativeS') && kern.isNegativeS

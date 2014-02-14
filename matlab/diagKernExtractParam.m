@@ -27,7 +27,7 @@ function [params, names] = diagKernExtractParam(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2011
 %
-% SHEFFIELDML
+% GPMAT
 
 params = kern.variance;
 if nargout > 1

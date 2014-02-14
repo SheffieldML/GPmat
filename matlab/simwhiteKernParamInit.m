@@ -11,7 +11,7 @@ function kern = simwhiteKernParamInit(kern)
 %
 % COPYRIGHT : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 if kern.inputDimension > 1

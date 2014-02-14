@@ -14,7 +14,7 @@ function [u, v] = kernPca(kern, X, numEig)
 %
 % COPYRIGHT : Neil D. Lawrence, 2003, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 K = kernCompute(kern, X);
 [u, v] = eigs(K, numEig);

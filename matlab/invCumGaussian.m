@@ -10,6 +10,6 @@ function y = invCumGaussian(x)
 % 
 % COPYRIGHT : Neil D. Lawrence, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 y = erfinv(x*2 - 1)*2/sqrt(2);

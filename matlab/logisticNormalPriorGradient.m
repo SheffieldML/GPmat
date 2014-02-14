@@ -2,7 +2,7 @@ function g = logisticNormalPriorGradient(prior, x)
 
 % LOGISTICNORMALPRIORGRADIENT Gradient wrt x of the logistic-normal prior.
 
-% SHEFFIELDML
+% GPMAT
 
 % Compute gradient of prior
 x0 = (x - prior.a) / (prior.b - prior.a);

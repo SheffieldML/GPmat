@@ -12,7 +12,7 @@ function upsilon = lfmjpComputeUpsilonVector(gamma, sigma2, t)
 %
 % COPYRIGHT : Mauricio Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 sigma = sqrt(sigma2);
 

@@ -27,7 +27,7 @@ function [params, names] = ratquadKernExtractParam(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
-% SHEFFIELDML
+% GPMAT
 
 params = [kern.alpha kern.lengthScale kern.variance];
 if nargout > 1

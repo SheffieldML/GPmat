@@ -1,12 +1,12 @@
 <head>
-<title>SheffieldML - MATLAB Software</title>
+<title>GPmat - MATLAB Software</title>
 </head>
 
 <body><div class="section">
 
 <h1>Sheffield ML Software</h1>
 
-<p>This page describes examples of how to use the Sheffield ML MATLAB
+<p>This page describes examples of how to use the GPmat MATLAB
 Software.
 
 RELEASEINFORMATION

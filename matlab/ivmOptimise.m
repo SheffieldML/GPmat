@@ -11,7 +11,7 @@ function model = ivmOptimise(model, options);
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
  
-% SHEFFIELDML
+% GPMAT
 
 for i = 1:options.extIters
   if options.kernIters

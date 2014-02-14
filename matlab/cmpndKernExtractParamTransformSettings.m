@@ -18,7 +18,7 @@ function [paramtransformsettings, names] = cmpndKernExtractParamTransformSetting
 %
 % COPYRIGHT : Antti Honkela, 2012
 
-% SHEFFIELDML
+% GPMAT
 
 
 

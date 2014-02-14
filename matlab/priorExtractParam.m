@@ -15,7 +15,7 @@ function [params, names] = priorExtractParam(prior)
 % 
 % COPYRIGHT : Neil D. Lawrence, 2003, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([prior.type 'PriorExtractParam']);
 if nargout < 2

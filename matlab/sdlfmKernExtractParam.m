@@ -20,7 +20,7 @@ function [params, names] = sdlfmKernExtractParam(kern)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 params = [kern.mass, kern.spring, kern.damper, ...
     kern.inverseWidth(:)', kern.switchingTimes, kern.sensitivity(:)'];

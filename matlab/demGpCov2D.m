@@ -13,7 +13,7 @@ function demGpCov2D(ind,bw)
 % SEEALSO : demCovFuncSample, demGPSample
 % COPYRIGHT : Neil D. Lawrence, 2006, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 2
   bw = false;

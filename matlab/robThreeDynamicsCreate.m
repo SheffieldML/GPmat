@@ -2,7 +2,7 @@ function model = robThreeDynamicsCreate(q, d, latentVals)
 
 % ROBTHREEDYNAMICSCREATE Create the dynamics model. 
 
-% SHEFFIELDML
+% GPMAT
 
 if(q~=2)
   error('Robot Three Dynamics designed for 2-D latent spaces.');

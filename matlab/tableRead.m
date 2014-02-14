@@ -14,7 +14,7 @@ function [columnNames, data] = tableRead(fileName, separator)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004
 
-% SHEFFIELDML 
+% GPMAT 
 
 if nargin < 2
   separator = ',';

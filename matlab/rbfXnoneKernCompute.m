@@ -24,7 +24,7 @@ function K = rbfXnoneKernCompute(rbfKern, noneKern, x1, x2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 4
   x2 = x1;

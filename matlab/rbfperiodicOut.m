@@ -12,7 +12,7 @@ function [ypred, z, n2, sinarg, arg] = rbfperiodicOut(model, X)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 arg = 0.5*(repmat(X, 1, model.hiddenDim) - repmat(model.thetaBar, size(X, 1), 1));
 sinarg = 2*sin(arg);

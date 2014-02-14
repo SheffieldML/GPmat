@@ -11,7 +11,7 @@ function printPlot(fileName, directory, directoryHtml)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
   
-% SHEFFIELDML
+% GPMAT
 
   global printDiagram
 

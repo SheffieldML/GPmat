@@ -1,6 +1,6 @@
 % DEMROBOTWIRELESSFGPLVM4 Wireless Robot data from University of Washington with dynamics and back constraints.
 
-% SHEFFIELDML
+% GPMAT
 
 % Fix seeds
 randn('seed', 1e5);

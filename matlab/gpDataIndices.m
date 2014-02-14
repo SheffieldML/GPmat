@@ -24,7 +24,7 @@ function ind = gpDataIndices(model, dimNo, blockNo)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin > 2

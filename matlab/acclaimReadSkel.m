@@ -10,7 +10,7 @@ function skel = acclaimReadSkel(fileName)
 % 
 % SEEALSO : acclaimLoadChannels
 
-% SHEFFIELDML
+% GPMAT
 
 % a regular expression for floats
 numPat = '(-?[0-9]*\.?[0-9]*)';

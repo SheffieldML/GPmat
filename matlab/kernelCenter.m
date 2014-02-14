@@ -10,7 +10,7 @@ function Kc = kernelCenter(K)
 %
 % COPYRIGHT : Carl Henrik Ek, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 if(nargin<1)
   error('To Few Arguments');

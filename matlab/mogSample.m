@@ -11,7 +11,7 @@ function x = mogSample(model, numSamples)
 %
 % SEEALSO : mogCreate
 
-% SHEFFIELDML
+% GPMAT
   
 p = rand(numSamples, 1);
 bins = cumsum(model.prior);

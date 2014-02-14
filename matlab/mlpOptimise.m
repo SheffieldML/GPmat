@@ -14,7 +14,7 @@ function model = mlpOptimise(model, X, Y, display, iters);
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2007
 
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 4
   display = 1;

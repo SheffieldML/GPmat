@@ -16,7 +16,7 @@ function [channels, skel] = acclaimSemiLoadChannels(fileName, skel, iSubset)
 %
 % SEEALSO : acclaimLoadChannels, acclaimReadSkel
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 3 || isempty(iSubset)
     iSubset = 1:acclaimNumberOfFrames(fileName);

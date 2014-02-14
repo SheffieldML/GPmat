@@ -2,9 +2,9 @@ function [g, nu] = cmpndNoiseNuG(noise, mu, varSigma, y)
 
 % CMPNDNOISENUG  Update nu and g parameters associated with compound noise model.
 
-% SHEFFIELDML
+% GPMAT
 
-% SHEFFIELDML
+% GPMAT
 
 
 g = zeros(size(mu));

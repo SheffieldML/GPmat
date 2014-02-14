@@ -12,6 +12,6 @@ function y=invSigmoid(x)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004
 
-% SHEFFIELDML
+% GPMAT
 
 y = log(x./(1-x));

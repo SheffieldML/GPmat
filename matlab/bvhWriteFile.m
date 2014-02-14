@@ -12,7 +12,7 @@ function bvhWriteFile(fileName, skel, channels, frameLength)
 %
 % SEEALSO : bvhReadFile
  
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 4
   frameLength = 0.03333;

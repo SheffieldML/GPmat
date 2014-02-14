@@ -1,6 +1,6 @@
 % FGPLVMTESTMISSING Make sure missing data likelihood match full ones.
 
-% SHEFFIELDML
+% GPMAT
 
 q = 2;
 d = 3;

@@ -41,7 +41,7 @@ function g = matern52KernGradient(kern, x, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 % The last argument is covGrad
 if nargin < 4

@@ -1,6 +1,6 @@
 % DEMCMU35GPLVMRECONSTRUCT Reconstruct right leg and body of CMU 35.
 
-% SHEFFIELDML
+% GPMAT
 
 % Fix seeds
 randn('seed', 1e5);

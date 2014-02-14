@@ -18,7 +18,7 @@ function    g = lfmGradientSigmaH3(gamma1, gamma2, sigma2, t1, t2, preFactor, mo
 
 % SEEALSO : lfmKernGradient, lfmXlfmKernGradient, lfmGradientSigmaUpsilon
 
-% SHEFFIELDML
+% GPMAT
 
 
 % Gradient

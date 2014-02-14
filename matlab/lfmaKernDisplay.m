@@ -15,7 +15,7 @@ function lfmaKernDisplay(varargin)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 
 lfmKernDisplay(varargin{:});

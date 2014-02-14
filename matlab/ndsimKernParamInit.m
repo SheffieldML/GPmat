@@ -35,7 +35,7 @@ function kern = ndsimKernParamInit(kern)
 %
 % COPYRIGHT : Jaakko Peltonen, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 if kern.inputDimension > 1
   error('NDSIM kernel is only valid for one-D input.')

@@ -12,7 +12,7 @@ function modelRet = modelTest(modelType, numIn, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence,  2006
 
-% SHEFFIELDML
+% GPMAT
 
 %if exist([modelType 'Test']) == 2
 %  feval([modelType 'Test'])

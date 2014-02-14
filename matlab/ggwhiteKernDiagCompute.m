@@ -16,6 +16,6 @@ function k = ggwhiteKernDiagCompute(kern, x)
 %
 % MODIFICATIONS : Mauricio A. Alvarez, 2009.
 
-% SHEFFIELDML
+% GPMAT
 
 k = kern.sigma2Noise*kern.variance^2*ones(size(x,1),1);

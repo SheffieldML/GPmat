@@ -14,7 +14,7 @@ function model = ivmComputeLandM(model)
 %
 % SEEALSO : ivmReconstruct
 
-% SHEFFIELDML
+% GPMAT
 
 if model.noise.spherical
   model.Sigma.L = chol(model.kern.Kstore(model.I, :) ...

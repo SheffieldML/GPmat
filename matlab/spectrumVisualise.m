@@ -2,7 +2,7 @@ function handle = spectrumVisualise(spectrumValues, convertFile, ...
                                     width, varargin)
 
 % SPECTRUMVISUALISE Helper code for showing an spectrum during 2-D visualisation.
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 3
   width = 1000;

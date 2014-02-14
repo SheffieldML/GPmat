@@ -4,7 +4,7 @@ function X = xyzhumanevaAlign(X,beta,display)
 %
 % COPYRIGHT : Carl Henrik Ek and Neil Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 
 if(nargin<3)

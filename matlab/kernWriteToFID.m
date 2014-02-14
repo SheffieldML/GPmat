@@ -11,7 +11,7 @@ function kernWriteToFID(kern, FID)
 %
 % SEEALSO : modelReadFromFID, kernCreate, kernReadParamsFromFID
 
-% SHEFFIELDML
+% GPMAT
 
 writeVersionToFID(FID, 0.2);
 writeStringToFID(FID, 'baseType', 'kern');  

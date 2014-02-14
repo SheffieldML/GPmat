@@ -3,7 +3,7 @@ function vivmRunDataSetLearn(dataSetName, invariance, experimentNo, ...
                              
 % VIVMRUNDATASETLEARN Try the virtual IVM on a data set and save the results.
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 6
   seedVal = [];

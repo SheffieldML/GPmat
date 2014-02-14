@@ -26,7 +26,7 @@ function [X, y, XTest, yTest] = mapLoadData(dataset, seedVal)
 %
 % MODIFICATIONS : Mauricio A. Alvarez, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 2
     seedVal = 1e5;
@@ -1631,7 +1631,8 @@ switch dataset
             save([baseDir 'juraDataCdIsotopic.mat'], 'X', 'y', 'XTest', 'yTest');
 
         end
-
+    
+        
     case 'demp53_5genes'
         data = load([baseDir 'dataBarencoOption_0_Genes_5']);
         X = data.data{1}.Xtrain;

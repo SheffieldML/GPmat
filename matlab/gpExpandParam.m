@@ -17,7 +17,7 @@ function model = gpExpandParam(model, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if isfield(model, 'fix')
   for i = 1:length(model.fix)

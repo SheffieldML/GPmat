@@ -41,7 +41,7 @@ function g = diagKernGradient(kern, x, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2011
 
-% SHEFFIELDML
+% GPMAT
 
   if nargin < 4
     trans = str2func([kern.trans, 'Transform']);

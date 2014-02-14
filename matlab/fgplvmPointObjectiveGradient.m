@@ -21,7 +21,7 @@ function f = fgplvmPointObjectiveGradient(x, model, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 % Check how the optimiser has given the parameters
 if size(xvec, 1) > size(xvec, 2)

@@ -13,7 +13,7 @@ function g = modelGradient(params, model, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = [model.type 'Gradient'];
 if exist(fhandle) == 2

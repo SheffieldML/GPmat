@@ -16,6 +16,6 @@ function sdlfmvKernDisplay(kern, spacing)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010.
 
-% SHEFFIELDML
+% GPMAT
 
 sdlfmKernDisplay(kern, spacing);

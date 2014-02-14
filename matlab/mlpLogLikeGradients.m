@@ -13,7 +13,7 @@ function g = mlpLogLikeGradients(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 if length(model.hiddenDim) == 1
   g = -mlpgrad(model, model.X, model.y);

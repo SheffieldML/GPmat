@@ -12,7 +12,7 @@ function k = lmcKernDiagCompute(kern, X)
 %
 % COPYRIGHT : Mauricio A. Alvarez,  2010
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([kern.basicKernelType 'KernDiagCompute']);
 if iscell(X)

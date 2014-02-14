@@ -23,7 +23,7 @@ function g = sheatKernGradient(sigmax, lengthX, s1, s2, w, gamma, pwz1, pwz2, n,
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 13
     isNumeric = false;

@@ -12,7 +12,7 @@ function model = mogProject(model, dimension)
 % 
 % SEEALSO : mogCreate, mogTwoDPlot
 
-% SHEFFIELDML
+% GPMAT
   
   
 [m, C] = mogMeanCov(model);

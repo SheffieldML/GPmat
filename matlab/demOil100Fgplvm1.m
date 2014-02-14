@@ -1,6 +1,6 @@
 % DEMOIL100FGPLVM1 Oil100 data with fully independent training conditional.
 
-% SHEFFIELDML
+% GPMAT
 
 % Fix seeds
 randn('seed', 1e5);

@@ -11,7 +11,7 @@ function gX = invcmpndKernDiagGradX(kern, X)
 %
 % SEEALSO : cmpndKernDiagGradX,invcmpndKernParamInit, kernDiagGradX, cmpndkernGradX
 
-% SHEFFIELDML
+% GPMAT
 
 
 error('invcmpndKernDiagGradX not yet implemented!')

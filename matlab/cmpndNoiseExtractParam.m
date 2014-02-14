@@ -28,7 +28,7 @@ function [params, names] = cmpndNoiseExtractParam(noise)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 %
-% SHEFFIELDML
+% GPMAT
 
 
 params = zeros(1, noise.nParams);

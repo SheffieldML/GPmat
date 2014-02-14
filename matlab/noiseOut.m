@@ -13,7 +13,7 @@ function y = noiseOut(noise, mu, varsigma);
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([noise.type 'NoiseOut']);
 y = fhandle(noise, mu, varsigma);

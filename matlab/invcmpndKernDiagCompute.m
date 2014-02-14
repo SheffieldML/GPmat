@@ -13,7 +13,7 @@ function k = invcmpndKernDiagCompute(kern, x)
 %
 % COPYRIGHT : Andreas C. Damianou, 2012
 
-% SHEFFIELDML
+% GPMAT
 
 
 % Unlike the cmpnd  version, here the nonlinearity of the inverses means

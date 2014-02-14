@@ -14,7 +14,7 @@ function kern = lfmwhiteKernParamInit(kern)
 % COPYRIGHT : Neil D. Lawrence, 2009
 
   
-% SHEFFIELDML
+% GPMAT
 
 
 if kern.inputDimension > 1

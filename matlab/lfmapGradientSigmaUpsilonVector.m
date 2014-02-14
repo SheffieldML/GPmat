@@ -12,7 +12,7 @@ function dUpsilonS = lfmapGradientSigmaUpsilonVector(gamma, sigma2, t)
 %
 % SEEALSO : lfmapComputeUpsilonMatrix.m
 
-% SHEFFIELDML
+% GPMAT
 
 
 dUpsilon = lfmGradientSigmaUpsilonVector(gamma, sigma2, t);

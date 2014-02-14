@@ -8,6 +8,6 @@ function theta = deg2rad(omega)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 theta = omega/180*pi;

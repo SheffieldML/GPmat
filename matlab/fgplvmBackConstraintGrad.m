@@ -14,7 +14,7 @@ function g = fgplvmBackConstraintGrad(model, gX)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 % Check for back constraints.
 if isfield(model, 'back') & ~isempty(model.back)

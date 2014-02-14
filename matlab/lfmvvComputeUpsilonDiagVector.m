@@ -14,7 +14,7 @@ function upsilon = lfmvvComputeUpsilonDiagVector(gamma, sigma2, t, mode)
 %
 % SEEALSO : lfmComputeUpsilonMatrix.F, lfmvpComputeUpsilonMatrix.m
 
-% SHEFFIELDML
+% GPMAT
 
 sigma = sqrt(sigma2);
 

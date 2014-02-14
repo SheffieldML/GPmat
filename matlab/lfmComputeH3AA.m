@@ -15,7 +15,7 @@ function [h, compUpAA, compUpAP] =  lfmComputeH3AA(gamma1_p, gamma1_m, sigma2, t
 %
 % COPYRIGHT : Mauricio Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 % Evaluation of h
 

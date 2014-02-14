@@ -11,7 +11,7 @@ function model = mogUpdatePrior(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 if model.isInfinite
   % First compute expectations of v.

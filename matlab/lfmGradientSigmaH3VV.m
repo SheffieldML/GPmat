@@ -17,7 +17,7 @@ function g =  lfmGradientSigmaH3VV(gamma1_p, gamma1_m, sigma2, t1, ...
 %
 % SEEALSO : lfmKernGradient, lfmXlfmKernGradient, lfmGradientSigmaUpsilon
 
-% SHEFFIELDML
+% GPMAT
 
 g = preFactor(1)*lfmvvGradientSigmaUpsilonMatrix(gamma1_p,sigma2, t1,t2, mode) ...
     + preFactor(2)*lfmvvGradientSigmaUpsilonMatrix(gamma1_m,sigma2, t1,t2, mode);

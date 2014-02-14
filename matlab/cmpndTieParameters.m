@@ -2,7 +2,7 @@ function model = cmpndTieParameters(model, paramsList)
 
 % CMPNDTIEPARAMETERS Tie parameters together.
 
-% SHEFFIELDML
+% GPMAT
 
 colToDelete = [];
 for i = 1:length(paramsList)

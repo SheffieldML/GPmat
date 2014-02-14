@@ -26,7 +26,7 @@ function [params, names] = whiteblockKernExtractParam(kern)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 %
-% SHEFFIELDML
+% GPMAT
 
 params = kern.variance;
 if nargout > 1

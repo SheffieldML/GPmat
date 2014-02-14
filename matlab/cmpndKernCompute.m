@@ -20,7 +20,7 @@ function k = cmpndKernCompute(kern, x, x2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin > 2
   i = 1;

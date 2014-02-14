@@ -38,7 +38,7 @@ function [K, sK] = simXrbfKernCompute(simKern, rbfKern, t1, t2)
 %
 % MODIFICATIONS : Mauricio Alvarez, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 4
   t2 = t1;

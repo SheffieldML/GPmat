@@ -14,7 +14,7 @@ function model = lleReconstruct(lleInfo, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
   model = lleInfo;
   model.Y = y;

@@ -13,7 +13,7 @@ function handle = xyzVisualise(xyzChannels, skel, shadow)
 %
 % MODIFICATIONS : Alfredo A. Kalaitzis, 2012
 
-% SHEFFIELDML
+% GPMAT
 
 if isstruct(skel) == 1
     connect = skelConnectionMatrix(skel);   % Extract connection matrix.

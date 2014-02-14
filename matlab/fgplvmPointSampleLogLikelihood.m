@@ -4,7 +4,7 @@ function out = fgplvmPointSampleLogLikelihood(model,y,N,display)
 %
 % COPYRIGHT : Carl Henrik Ek, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 if(nargin<4)
   display = true;

@@ -15,7 +15,7 @@ function lfmResultsDynamic(dataSet, number, dataType, varargin)
 %
 % MODIFICATIONS : Mauricio Alvarez, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 %[model, lbls] = lvmLoadResult(modelType, dataSet, number);
 capName = dataSet;

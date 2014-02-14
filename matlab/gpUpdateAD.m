@@ -15,7 +15,7 @@ function model = gpUpdateAD(model, X)
 %
 % COPYRIGHT : Neil D. Lawrence 2006, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 2
   X = model.X;

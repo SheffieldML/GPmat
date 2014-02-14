@@ -12,7 +12,7 @@ function k = gibbsperiodicKernDiagCompute(kern, x)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 k = repmat(kern.variance, size(x, 1), 1);
 

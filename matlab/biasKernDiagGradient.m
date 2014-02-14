@@ -20,7 +20,7 @@ function g = biasKernDiagGradient(kern, x, covDiag)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 g(1) = sum(covDiag);

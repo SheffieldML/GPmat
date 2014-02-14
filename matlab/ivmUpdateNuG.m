@@ -13,7 +13,7 @@ function model = ivmUpdateNuG(model, index)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 2
   index = 1:size(model.y, 1);

@@ -12,7 +12,7 @@ function model = ivmDowndateSites(model, index)
 %
 % SEEALSO : ivmEpUpdateM, ivmRemovePoint
 
-% SHEFFIELDML
+% GPMAT
 
 model.m(index, :) = 0;
 model.beta(index, :) = 0;

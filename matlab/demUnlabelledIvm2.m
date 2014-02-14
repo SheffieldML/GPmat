@@ -2,7 +2,7 @@
 %
 % Recreates the toy crescent data example shown in the NIPS paper.
 
-% SHEFFIELDML 
+% GPMAT 
 
 
 randn('seed', 1e6)

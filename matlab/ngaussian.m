@@ -11,7 +11,7 @@ function y = ngaussian(x)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004
 
-% SHEFFIELDML
+% GPMAT
 
 x2 = x.*x;
 y = exp(-.5*x2);

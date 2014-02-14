@@ -19,7 +19,7 @@ function g = lfmKernDiagGradient(lfmKern, t, covDiag)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if size(t, 2) > 1
     error('Input can only have one column');

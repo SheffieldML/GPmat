@@ -18,7 +18,7 @@ function [param, names] = gpTimeDynamicsExtractParam(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if nargout > 1
   returnNames = true;

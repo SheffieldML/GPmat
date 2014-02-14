@@ -2,9 +2,9 @@ function g = invgammaPriorGradient(prior, x)
 
 % INVGAMMAPRIORGRADIENT Gradient wrt x of the log Gaussian prior.
 
-% SHEFFIELDML
+% GPMAT
 
-% SHEFFIELDML
+% GPMAT
 
 
 % Compute gradient of prior

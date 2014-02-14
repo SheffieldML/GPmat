@@ -2,7 +2,7 @@ function modelDisplay(model, varargin)
 
 % MODELDISPLAY Display a text output of a model.
 
-% SHEFFIELDML
+% GPMAT
 
 % Check if the model has display code.
 if exist([model.type 'Display'])==2

@@ -32,7 +32,7 @@ function [params, names] = rbfperiodic2KernExtractParam(kern)
 %
 % MODIFICATIONS : Michalis K. Titsias, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 params = [kern.inverseWidth kern.variance kern.factor];
 if nargout > 1

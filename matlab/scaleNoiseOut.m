@@ -2,7 +2,7 @@ function y = scaleNoiseOut(noise, mu, varSigma)
 
 % SCALENOISEOUT A simple noise model that scales and centres the data.
 
-% SHEFFIELDML
+% GPMAT
 
 y = zeros(size(mu));
 for i = 1:size(mu, 2)

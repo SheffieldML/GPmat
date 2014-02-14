@@ -18,7 +18,7 @@ function springDampers = springDampersModify(springDampers, springDamperVals, st
 %
 % SEEALSO : springDamperVisualise, fgplvmResultsDynamic
 
-% SHEFFIELDML
+% GPMAT
 
 
 for i = 1:length(springDampers)

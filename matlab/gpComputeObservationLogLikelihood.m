@@ -11,7 +11,7 @@ function Obs = gpComputeObservationLogLikelihood(model, X, Y, verbose)
 %
 % COPYRIGHT : Carl Henrik Ek, 2010
 
-% SHEFFIELDML
+% GPMAT
   
   if(verbose)
     handle_waitbar = waitbar(0,'Computing Observation Loglikelihood');

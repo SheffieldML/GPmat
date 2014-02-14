@@ -40,7 +40,7 @@ function g = rbfhKernGradient(kern, x1, x2, covGrad)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 4
     covGrad = x2;

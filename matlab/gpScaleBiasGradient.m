@@ -13,7 +13,7 @@ function g = gpScaleBiasGradient(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 g = [];
 if model.learnScales

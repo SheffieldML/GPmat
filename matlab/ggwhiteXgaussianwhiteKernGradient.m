@@ -35,7 +35,7 @@ function [g1, g2] = ggwhiteXgaussianwhiteKernGradient(ggwhiteKern, gaussianwhite
 % MODIFICATIONS : Mauricio A. Alvarez, 2009.
 
 
-% SHEFFIELDML
+% GPMAT
 
 if ggwhiteKern.isArd ~= gaussianwhiteKern.isArd
     error(['For current implementation of the code, both output kernel' ...

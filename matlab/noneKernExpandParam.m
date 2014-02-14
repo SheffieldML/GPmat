@@ -17,6 +17,6 @@ function kern = noneKernExpandParam(kern, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 kern = kern;

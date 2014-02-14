@@ -19,7 +19,7 @@ function [Y, G, A] = mlpOut(model, X);
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 if length(model.hiddenDim)==1
   if nargout > 1

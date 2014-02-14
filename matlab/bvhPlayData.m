@@ -11,6 +11,6 @@ function bvhPlayData(skel, channels, frameLength)
 %
 % SEEALSO : skelPlayData
   
-% SHEFFIELDML
+% GPMAT
 
 skelPlayData(skel, channels, frameLength);

@@ -11,7 +11,7 @@ function f = gpSample(kernType, numSamps, params, lims, seed, bw)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
   
 if nargin < 6
   bw = false;

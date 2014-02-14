@@ -28,7 +28,7 @@ function [params, names] = disimKernExtractParam(kern)
 %
 % COPYRIGHT : Antti Honkela, 2007-2009
 %
-% SHEFFIELDML
+% GPMAT
 
 if isfield(kern, 'gaussianInitial') && kern.gaussianInitial,
   params = [kern.di_decay kern.inverseWidth kern.di_variance, ...

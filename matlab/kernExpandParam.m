@@ -26,7 +26,7 @@ function kern = kernExpandParam(kern, params)
 %
 % COPYRIGHT : Jaakko Peltonen, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 
 % Check if any parameters are being optimised in a transformed space,

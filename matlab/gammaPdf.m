@@ -13,7 +13,7 @@ function [p, lnp] = gammaPdf(x, a, b)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
   
-% SHEFFIELDML
+% GPMAT
 
 
 lnp = a*log(b) - gammaln(a) + (a-1)*log(x) - b*x;

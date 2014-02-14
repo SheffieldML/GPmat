@@ -13,6 +13,6 @@ function gX = lfmKernDiagGradX(kern, X)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 error('lfmKernDiagGradX not yet implemented.');

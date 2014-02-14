@@ -1,6 +1,6 @@
 % DEMBRENDANFGPLVM1 Use the GP-LVM to model the Frey face data with FITC.
 
-% SHEFFIELDML
+% GPMAT
 
 % Fix seeds
 randn('seed', 1e5);

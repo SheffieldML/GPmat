@@ -41,7 +41,7 @@ function g = fileKernGradient(kern, x, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 % The last argument is covGrad

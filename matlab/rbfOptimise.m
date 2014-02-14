@@ -2,7 +2,7 @@ function model = rbfOptimise(model, X, Y, display, iters);
 
 % RBFOPTIMISE Optimise RBF for given inputs and outputs.
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 4
   display = 1;

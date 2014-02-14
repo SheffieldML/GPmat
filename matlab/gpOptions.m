@@ -14,7 +14,7 @@ function options = gpOptions(approx);
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2007, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 1
   options.approx = 'ftc';

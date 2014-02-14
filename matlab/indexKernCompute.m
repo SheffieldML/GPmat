@@ -20,7 +20,7 @@ function [K, sK] = indexKernCompute(kern, x, x2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2011
 
-% SHEFFIELDML
+% GPMAT
   if size(x, 2)>1
     error('Index kernel requires 1-dimensional input.')
   end

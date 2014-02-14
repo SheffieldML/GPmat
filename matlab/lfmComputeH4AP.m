@@ -16,7 +16,7 @@ function  [h, compUpAP, compUp] =  lfmComputeH4AP(gamma1_p, gamma1_m, sigma2, t1
 %
 % SEEALSO : lfmComputeH4.m, lfmComputeH4VP.m
 
-% SHEFFIELDML
+% GPMAT
 
 if mode==0
     if nargout > 1

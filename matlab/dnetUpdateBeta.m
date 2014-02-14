@@ -10,7 +10,7 @@ function model = dnetUpdateBeta(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
   Ypred = dnetOut(model);
   tot = 0;

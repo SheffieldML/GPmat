@@ -16,7 +16,7 @@ function cmpndNoiseDisplay(noise, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 
 for i = 1:length(noise.comp)

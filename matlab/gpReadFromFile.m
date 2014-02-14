@@ -12,7 +12,7 @@ function model = gpReadFromFile(fileName, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 FID = fopen(fileName);
 if FID==-1

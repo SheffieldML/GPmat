@@ -33,7 +33,7 @@ function [g1,g2] = sdlfmvXsdrbfKernGradient(sdlfmvKern, sdrbfKern, t1, ...
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin == 4
     covGrad = t2;

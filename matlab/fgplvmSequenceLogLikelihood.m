@@ -21,7 +21,7 @@ function ll = fgplvmSequenceLogLikelihood(model, X, Y, varargin)
 %
 % MODIFICATIONS : Carl Henrik Ek, 2007
 
-% SHEFFIELDML
+% GPMAT
 if(nargin<3)
   error('This function requires at least two arguments.');
 end

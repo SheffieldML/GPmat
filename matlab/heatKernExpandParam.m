@@ -16,7 +16,7 @@ function kern = heatKernExpandParam(kern, params)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 kern.decay = params(1);
 kern.diffusion = params(2);

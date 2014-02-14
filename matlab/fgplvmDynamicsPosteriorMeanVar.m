@@ -2,7 +2,7 @@ function [mu, varsigma] = fgplvmDynamicsPosteriorMeanVar(model, X);
 
 % FGPLVMDYNAMICSPOSTERIORMEANVAR Mean and variances of the posterior at points given by X.
 
-% SHEFFIELDML
+% GPMAT
 
 if ~isfield(model, 'alpha')
   if model.dynamics.diff

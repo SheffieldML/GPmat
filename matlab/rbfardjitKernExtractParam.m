@@ -29,7 +29,7 @@ function [params, names] = rbfardjitKernExtractParam(kern)
 %
 % COPYRIGHT : Michalis K. Titsias, 2009
 %
-% SHEFFIELDML
+% GPMAT
 
 
 params = [kern.variance kern.inputScales];

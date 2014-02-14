@@ -2,7 +2,7 @@ function [ax, data] = fgplvmKernDynamicsSample(kern, points, diff);
 
 % FGPLVMKERNDYNAMICSSAMPLE Sample a field from a given kernel.
 
-% SHEFFIELDML
+% GPMAT
 if nargin < 3
   diff = 0;
   if nargin < 2

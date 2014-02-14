@@ -12,7 +12,7 @@ function fileName = modelWriteResult(model, dataset, number)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
   origDataset = dataset;
   dataset(1) = upper(dataset(1));
   type = model.type;

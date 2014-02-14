@@ -12,6 +12,6 @@ function g = rbfOutputGradX(model, X)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 g = rbfjacob(model, X);

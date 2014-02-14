@@ -16,7 +16,7 @@ function k = gaussianwhiteKernDiagCompute(kern, x)
 %
 % MODIFICATIONS : Mauricio A. Alvarez, 2009.
   
-% SHEFFIELDML
+% GPMAT
 
 k = kern.sigma2Noise*ones(size(x,1),1);
 

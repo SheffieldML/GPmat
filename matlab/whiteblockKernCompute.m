@@ -20,7 +20,7 @@ function K = whiteblockKernCompute(kern, x, x2)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 3
   diagk = whiteblockKernDiagCompute(kern, x);  

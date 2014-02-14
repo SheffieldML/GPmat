@@ -13,7 +13,7 @@ function g = mlpLogLikeHessian(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 if length(model.hiddenDim)==1
   g = -mlphess(model, model.X, model.y);

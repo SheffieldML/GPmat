@@ -13,7 +13,7 @@ function [model, origI] = ivmReadFromFID(FID, varargin)
 %
 % SEEALSO : ivmReadFromFile
 
-% SHEFFIELDML
+% GPMAT
 
 numData = readIntFromFID(FID, 'numData');
 numProcesses = readIntFromFID(FID, 'outputDim');

@@ -14,7 +14,7 @@ function lfmVisualise(model, visualiseFunction, visualiseModify, varargin)
 %
 % COPYRIGHT : Mauricio Alvarez and Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 global visualiseInfo
 kernType = model.kernType(1:3);

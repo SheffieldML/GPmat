@@ -41,7 +41,7 @@ function g = sqexpKernGradient(kern, x, covGrad)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004
 
-% SHEFFIELDML
+% GPMAT
 
 
 [k, rbfPart, dist2xx] = sqexpKernCompute(kern, x);

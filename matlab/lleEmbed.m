@@ -2,7 +2,7 @@ function X = lleEmbed(Y, dims, neighbours)
 
 % LLEEMBED Embed data set with LLE.
 
-% SHEFFIELDML
+% GPMAT
 
 % Wrapper for Sam Roweis' LLE code.
 

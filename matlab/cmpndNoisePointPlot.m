@@ -16,5 +16,5 @@ function h = cmpndNoisePointPlot(noise, X, y, fontName, fontSize, markerSize, li
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 

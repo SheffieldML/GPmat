@@ -14,7 +14,7 @@ function h = ivmContour(X, Y, Z, lineWidth)
 %
 % COYRIGHT : Neil D. Lawrence, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 [void, clines1] = contour(X, Y, Z, [0.25 .75], 'b--');
 [void, clines2] = contour(X, Y, Z, [0.5 0.5], 'r-');

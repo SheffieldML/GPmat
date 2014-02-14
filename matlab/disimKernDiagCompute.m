@@ -15,7 +15,7 @@ function k = disimKernDiagCompute(kern, t)
 %
 % COPYRIGHT : Antti Honkela, 2007-2009
 
-% SHEFFIELDML
+% GPMAT
 
 if size(t, 2) > 1 
   error('Input can only have one column');

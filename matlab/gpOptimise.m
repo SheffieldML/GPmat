@@ -17,7 +17,7 @@ function model = gpOptimise(model, display, iters,gradcheck);
 %
 % MODIFICATIONS : Carl Henrik Ek, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 if(nargin<4)
   gradcheck = false;

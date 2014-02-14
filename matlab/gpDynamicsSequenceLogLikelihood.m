@@ -17,7 +17,7 @@ function ll = gpDynamicsSequenceLogLikelihood(model, Xraw, varargin)
 %
 % MODIFICATIONS : Carl Henrik Ek, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 if(isfield(model,'indexIn')&&~isempty(model.indexIn)&&length(model.indexIn)~=size(Xraw,2))
   Xraw = Xraw(:,model.indexIn);

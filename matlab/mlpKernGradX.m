@@ -19,7 +19,7 @@ function gX = mlpKernGradX(kern, X, X2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 gX = zeros(size(X2, 1), size(X2, 2), size(X, 1));

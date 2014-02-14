@@ -18,7 +18,7 @@ function k = sdlfmvKernDiagComputeBlock(lfmKern, t, kyy, kyv, kvy, kvv)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010.
 
-% SHEFFIELDML
+% GPMAT
 
 g1 = sdlfmvMeanCompute(lfmKern(1), t, 'Pos');
 h1 = sdlfmvMeanCompute(lfmKern(1), t, 'Vel');

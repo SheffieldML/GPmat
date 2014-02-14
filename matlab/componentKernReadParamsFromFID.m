@@ -11,7 +11,7 @@ function kern = componentKernReadParamsFromFID(kern, FID, version)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2008
   
-% SHEFFIELDML
+% GPMAT
 
 kern.inputDimension = readIntFromFID(FID, 'inputDim');
 numParams = readIntFromFID(FID, 'numParams');

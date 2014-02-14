@@ -10,7 +10,7 @@ function printLatexText(textString, fileName, directory)
 %
 % COPYRIGHT : Neil D. Lawrence, 2010
   
-% SHEFFIELDML
+% GPMAT
 
   baseName = [directory filesep fileName];
   

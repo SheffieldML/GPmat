@@ -29,7 +29,7 @@ function kern = polyKernParamInit(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 kern.variance = 1;

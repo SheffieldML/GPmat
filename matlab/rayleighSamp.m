@@ -12,7 +12,7 @@ function y = rayleighSamp(sigma, numSamps)
 %
 % COPYRIGHT : Neil D. Lawrence, 2012
 
-% SHEFFIELDML
+% GPMAT
 
 y = rand(numSamps, 1);
 y = sigma.*sqrt(-2*log(y));

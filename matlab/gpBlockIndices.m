@@ -14,7 +14,7 @@ function ind = gpBlockIndices(model, blockNo)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 if ~strcmp(model.approx, 'pitc')

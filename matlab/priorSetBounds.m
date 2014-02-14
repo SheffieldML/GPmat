@@ -14,7 +14,7 @@ function prior = priorSetBounds(prior, bounds)
 %
 % COPYRIGHT : Antti Honkela, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 if iscell(bounds) && numel(bounds)==1,
   bounds = bounds{1};

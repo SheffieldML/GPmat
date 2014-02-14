@@ -18,7 +18,7 @@ function kern = gaussianwhiteKernExpandParam(kern, params)
 %
 % MODIFICATIONS : Mauricio A. Alvarez, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if kern.isArd
     if kern.nIndFunct == 1,

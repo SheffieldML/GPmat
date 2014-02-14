@@ -12,7 +12,7 @@ function g = modelLogLikeGradients(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([model.type 'LogLikeGradients']);
 g = fhandle(model);

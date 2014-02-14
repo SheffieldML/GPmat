@@ -17,7 +17,7 @@ function kern = lfmvKernParamInit(kern)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 % A wrapper that calls lfmKernParamInit to initialize the parameters of the
 % model.

@@ -26,7 +26,7 @@ function [params, names] = ardKernExtractParam(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004
 %
-% SHEFFIELDML
+% GPMAT
 
 
 params = [kern.inverseWidth kern.rbfVariance ...

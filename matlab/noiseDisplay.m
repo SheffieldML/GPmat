@@ -11,7 +11,7 @@ function noiseDisplay(noise, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([noise.type 'NoiseDisplay']);
 fhandle(noise, varargin{:});

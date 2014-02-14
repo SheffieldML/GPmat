@@ -1,4 +1,4 @@
-% SHEFFIELDML toolbox
+% GPMAT toolbox
 % Version 0.01		20-Feb-2013
 % Copyright (c) 2013, Neil D. Lawrence
 % 

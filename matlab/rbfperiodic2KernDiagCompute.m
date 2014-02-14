@@ -16,7 +16,7 @@ function k = rbfperiodic2KernDiagCompute(kern, x)
 %
 % MODIFICATIONS : Michalis K. Titsias, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 
 

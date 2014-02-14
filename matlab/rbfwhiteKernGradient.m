@@ -41,7 +41,7 @@ function g = rbfwhiteKernGradient(kern, t1, varargin)
 %
 % COPYRIGHT : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 if length(varargin)<2

@@ -1,6 +1,6 @@
 % DEMOILFGPLVM2 Oil data with fully independent training conditional, and MLP back constraints.
 
-% SHEFFIELDML
+% GPMAT
 
 % Fix seeds
 randn('seed', 1e5);

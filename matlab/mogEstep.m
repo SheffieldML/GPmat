@@ -11,7 +11,7 @@ function model = mogEstep(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 for i = 1:model.m
   centredY = model.Y - repmat(model.mean(i, :), model.N, 1);

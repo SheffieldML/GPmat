@@ -36,7 +36,7 @@ function [g1, g2] = whitefixedXwhitefixedKernGradient(whiteKern1, whiteKern2, x1
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 arg{1}=x1;
 if nargin < 5

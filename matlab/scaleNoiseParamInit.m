@@ -2,7 +2,7 @@ function noise = scaleNoiseParamInit(noise, y)
 
 % SCALENOISEPARAMINIT Scale noise model's parameter initialisation.
 
-% SHEFFIELDML
+% GPMAT
 
 noise.sigma2 = 1e-6;
 if nargin > 1

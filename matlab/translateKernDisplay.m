@@ -15,7 +15,7 @@ function translateKernDisplay(kern, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin > 1
   spacing = repmat(32, 1, varargin{1});

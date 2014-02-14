@@ -15,7 +15,7 @@ function [params, names] = ncnmNoiseExtractParam(noise)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 if noise.gammaSplit
   params = [noise.bias noise.gamman noise.gammap];

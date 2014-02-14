@@ -12,7 +12,7 @@ function [model, lbls] = lvmLoadResult(modelType, dataSet, number)
 %
 % COPYRIGHT : Neil D. Lawrence, 2003, 2004, 2005, 2006, 2008, 2009
   
-% SHEFFIELDML
+% GPMAT
 
   fhandle = [modelType 'LoadResult'];
   if exist(fhandle) == 2

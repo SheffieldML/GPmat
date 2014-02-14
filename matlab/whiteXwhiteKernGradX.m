@@ -2,7 +2,7 @@ function gX =  whiteXwhiteKernGradX(whiteKern1, whiteKern2, X, X2)
 
 % WHITEXWHITEKERNGRADX
   
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 3,    
     X2 = X;

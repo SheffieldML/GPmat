@@ -18,7 +18,7 @@ function g = lfmGradientH42AP(preFactor, preFactorGrad, gradThetaGamma, ...
 %
 % COPYRIGHT : Mauricio Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 
 % Gradient evaluation

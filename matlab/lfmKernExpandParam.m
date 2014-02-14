@@ -19,7 +19,7 @@ function kern = lfmKernExpandParam(kern, params)
 %
 % MODIFICATIONS : David Luengo, 2008, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 kern.mass = params(1);
 kern.spring = params(2);

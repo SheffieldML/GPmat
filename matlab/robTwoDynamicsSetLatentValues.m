@@ -2,6 +2,6 @@ function model = robTwoDynamicsSetLatentValues(model, X)
 
 % ROBTWODYNAMICSSETLATENTVALUES Set the latent values inside the model.
 
-% SHEFFIELDML
+% GPMAT
 
 model = robOneDynamicsSetLatentValues(model, X);

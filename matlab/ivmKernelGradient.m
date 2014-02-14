@@ -15,7 +15,7 @@ function g = ivmKernelGradient(params, model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 %/~
 if any(isnan(params))

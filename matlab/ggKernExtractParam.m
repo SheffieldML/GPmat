@@ -29,7 +29,7 @@ function [params, names] = ggKernExtractParam(kern)
 %
 % MODIFICATIONS : Mauricio A. Alvarez, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 params = [kern.precisionU(:)' kern.precisionG(:)' ...
     kern.sigma2Latent kern.sensitivity];

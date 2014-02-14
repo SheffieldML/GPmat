@@ -15,7 +15,7 @@ function [widths, maxDepth, nodePositions] = treeGetWidths(tree)
 % 
 % SEEALSO : treeFindParents, treeFindChildren
 
-% SHEFFIELDML
+% GPMAT
 
 maxDepth = 0;
 %widths stores the width at each depth level. Since the max depth isn't yet

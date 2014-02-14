@@ -11,7 +11,7 @@ function model = multimodelParamInit(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 for i = 1:length(model.comp)
   model.comp{i} = modelParamInit(model.comp{i});

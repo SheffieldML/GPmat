@@ -21,7 +21,7 @@ function [v, signs] = lnDiffErfs(x1, x2),
 %
 % SEEALSO : gradLnDiffErfs
 
-% SHEFFIELDML
+% GPMAT
 
 x1 = real(x1);
 x2 = real(x2);

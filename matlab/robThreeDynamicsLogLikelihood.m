@@ -2,7 +2,7 @@ function ll = robThreeDynamicsLogLikelihood(model)
 
 % ROBTHREEDYNAMICSLOGLIKELIHOOD Give the log likelihood of the robot three dynamics part.
 
-% SHEFFIELDML
+% GPMAT
 
 ll = 0;
 for i = 1:size(model.diffX)-1

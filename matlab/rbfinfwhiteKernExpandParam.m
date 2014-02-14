@@ -17,7 +17,7 @@ function kern = rbfinfwhiteKernExpandParam(kern, params)
 %
 % COPYRIGHT : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 kern.inverseWidth = params(1);

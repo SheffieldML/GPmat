@@ -19,7 +19,7 @@ function gX = matern52KernGradX(kern, X, X2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 gX = zeros(size(X2, 1), size(X2, 2), size(X, 1));

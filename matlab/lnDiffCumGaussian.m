@@ -14,7 +14,7 @@ function f = lnDiffCumGaussian(u, uprime)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 f = log(gaussOverDiffCumGaussian(u, uprime, 1)+1e-300) ...
     + .5*u.*u + .5*log(2*pi);

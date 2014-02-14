@@ -16,7 +16,7 @@ function  [h, compUpVP, compUp] =  lfmComputeH4VV(gamma1_p, gamma1_m, sigma2, t1
 %
 % SEEALSO :  lfmvXlfmvKernCompute.m
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargout > 1

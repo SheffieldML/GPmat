@@ -17,7 +17,7 @@ function kern = matern32KernExpandParam(kern, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 kern.lengthScale = params(1);
 kern.variance = params(2);

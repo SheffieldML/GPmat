@@ -24,7 +24,7 @@ function model = ivmRun(XTrain, yTrain, options, kernelTieStructure, noiseTieStr
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 % Intitalise IVM
 model = ivmCreate(size(XTrain, 1), size(yTrain, 2), XTrain, yTrain, options);

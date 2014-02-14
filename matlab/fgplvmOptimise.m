@@ -16,7 +16,7 @@ function model = fgplvmOptimise(model, display, iters, g_check);
 % 
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 if(nargin<4)
   g_check = false;

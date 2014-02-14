@@ -11,7 +11,7 @@ function index = skelReverseLookup(skel, jointName)
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
 
-% SHEFFIELDML
+% GPMAT
 
 for i=1:length(skel.tree)
   if strcmp(skel.tree(i).name, jointName)

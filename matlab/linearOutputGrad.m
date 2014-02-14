@@ -4,7 +4,7 @@ function g = linearOutputGrad(model, X, dim)
 %
 % MODIFICATIONS : Carl Henrik Ek, 2009
 %
-% SHEFFIELDML
+% GPMAT
 
 numData = size(X, 1);
 if(nargin<=2)

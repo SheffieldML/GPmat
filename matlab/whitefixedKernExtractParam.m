@@ -27,7 +27,7 @@ function [params, names] = whitefixedKernExtractParam(kern)
 %
 % COPYRIGHT : Nathaniel J. King, 2006
 %
-% SHEFFIELDML
+% GPMAT
 
 params = [];
 names = {};

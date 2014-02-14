@@ -42,7 +42,7 @@ function g = whitefixedKernGradient(kern, x, varargin)
 % COPYRIGHT : Nathaniel J. King, 2006
 %
 
-% SHEFFIELDML
+% GPMAT
 
   g = [];
 end

@@ -17,7 +17,7 @@ function model = gpReconstruct(kern, noise, gpInfo, X, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007, 2009
 
-% SHEFFIELDML
+% GPMAT
 
   model = gpInfo;
   model.X = X;

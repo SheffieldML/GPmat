@@ -23,7 +23,7 @@ function  gradH = lfmwhiteComputeGradThetaH2(gamma1, gamma2, t1, t2, ...
 % SEEALSO : lfmwhiteKernParamInit, lfmwhiteXlfmwhiteKernGradient,
 % lfmwhiteComputeH, lfmwhiteComputeGradThetaH1
 
-% SHEFFIELDML
+% GPMAT
 
 
 if size(t1, 2) > 1 | size(t2, 2) > 1

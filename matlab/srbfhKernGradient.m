@@ -19,7 +19,7 @@ function g = srbfhKernGradient(sigmax, lengthX, s1, s2, w, gamma, n, covGrad, wz
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 sinS1 = sin(w(n)*s1);
 bTerm = sigmax*gamma(n)/2;

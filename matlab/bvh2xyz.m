@@ -13,7 +13,7 @@ function xyz = bvh2xyz(skel, channels, noOffset)
 %
 % SEEALSO : acclaim2xyz, skel2xyz
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin< 3
   noOffset = false;

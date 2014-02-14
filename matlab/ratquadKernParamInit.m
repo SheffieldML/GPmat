@@ -23,7 +23,7 @@ function kern = ratquadKernParamInit(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 kern.alpha = 1;
 kern.lengthScale = 1;

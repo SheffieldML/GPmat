@@ -13,7 +13,7 @@ function h = ncnmNoise3dPlot(noise, plotType, CX, CY, CZ, CZVar, varargin)
 % ARG P1, P2, ... : optional input arguments to the plot type.
 % RETURN H : handle to contour lines.
 
-% SHEFFIELDML
+% GPMAT
 
 if nargout > 0
   h = feval(plotType, CX, CY, CZ, varargin{:});

@@ -41,7 +41,7 @@ function g = gibbsKernGradient(kern, x, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 %  pretty(simple(diff((2*(l_i*l_j)/(l_i*l_i + l_j*l_j))^(d/2)*exp(-r*r/(l_i*l_i + l_j*l_j)),l_i)))
  

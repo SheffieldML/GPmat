@@ -1,6 +1,6 @@
 % DEMBRENDANFGPLVM4 Use the GP-LVM to model the Frey face data with DTCVAR and back constraints.
 
-% SHEFFIELDML
+% GPMAT
 
 % Fix seeds
 randn('seed', 1e5);

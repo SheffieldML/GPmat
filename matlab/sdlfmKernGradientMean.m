@@ -29,7 +29,7 @@ function [grad1, grad2, gsp1, gsp2] = sdlfmKernGradientMean(lfmKern1, ...
 % RETURN gsp1 : gradient of the switching point of the system 1
 % RETURN gsp2 : gradient of the switching point of the system 2
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin<10
     typeParam{1} = 'sdlfm';

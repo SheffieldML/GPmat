@@ -20,7 +20,7 @@ function g = rbfardKernDiagGradient(kern, x, covDiag)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 g = zeros(1, size(x, 2)+2);

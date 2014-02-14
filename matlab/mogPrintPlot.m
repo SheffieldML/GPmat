@@ -12,7 +12,7 @@ function mogPrintPlot(model, lbls, capName, experimentNo)
 % 
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 if model.d>2
   model = mogProject(model, 2);

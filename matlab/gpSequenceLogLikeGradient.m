@@ -17,7 +17,7 @@ function g = gpSequenceLogLikeGradient(model, X, Y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 logTwoPi = log(2*pi);
 if model.isMissingData

@@ -20,7 +20,7 @@ function g = fgplvmSequenceGradient(xvec, model, Y, varargin)
 %
 % COPYRIGHT Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 X = reshape(xvec, size(Y, 1), model.q);
 g = - fgplvmSequenceLogLikeGradient(model, X, Y, varargin{:});

@@ -10,7 +10,7 @@ function ll = multimodelLogLikelihood(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 ll = 0;
 for i = 1:length(model.comp)

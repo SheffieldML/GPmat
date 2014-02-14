@@ -12,7 +12,7 @@ function options = modelOptions(modelType, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([modelType 'Options']);
 options = fhandle(varargin{:});

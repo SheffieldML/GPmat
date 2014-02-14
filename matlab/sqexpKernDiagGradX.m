@@ -14,7 +14,7 @@ function gX = sqexpKernDiagGradX(kern, x)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004
 
-% SHEFFIELDML
+% GPMAT
 
 
 gX = zeros(size(x));

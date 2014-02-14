@@ -20,7 +20,7 @@ function [K, sk, n2, w2, l, l2] = gibbsKernCompute(kern, x, x2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 fhandle = str2func([kern.lengthScaleTransform, 'Transform']);

@@ -2,7 +2,7 @@ function l = gammaPriorLogProb(prior, x)
 
 % GAMMAPRIORLOGPROB Log probability of Gamma prior.
 
-% SHEFFIELDML
+% GPMAT
 
 % Compute log prior
 D = length(x);

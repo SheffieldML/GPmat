@@ -11,7 +11,7 @@ function prior = priorReadParamsFromFID(prior, FID, version)
 %
 % SEEALSO : priorReadFromFID, modelReadFromFID
 
-% SHEFFIELDML
+% GPMAT
 
   if nargin < 3
     version = [];

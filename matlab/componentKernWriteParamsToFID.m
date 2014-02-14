@@ -10,7 +10,7 @@ function componentKernWriteParamsToFID(kern, FID)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
   
-% SHEFFIELDML
+% GPMAT
 
 writeIntToFID(FID, 'inputDim', kern.inputDimension);
 writeIntToFID(FID, 'numParams', kern.nParams);

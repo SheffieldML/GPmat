@@ -1,6 +1,6 @@
 % DEMCMU35GPLVM4 Learn a GPLVM on CMU 35 data set.
 
-% SHEFFIELDML
+% GPMAT
 
 % Fix seeds
 randn('seed', 1e5);

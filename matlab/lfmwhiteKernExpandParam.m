@@ -18,7 +18,7 @@ function kern = lfmwhiteKernExpandParam(kern, params)
 %
 % COPYRIGHT : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 kern.mass = params(1);

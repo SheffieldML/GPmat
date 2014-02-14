@@ -16,6 +16,6 @@ function f = fgplvmPointObjective(x, model, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 f = - fgplvmPointLogLikelihood(model, x, y);

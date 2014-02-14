@@ -12,7 +12,7 @@ function model = spectralUpdateX(model)
 %
 % SEEALSO : leOptimise, lleOptimise, mvuOptimise
 
-% SHEFFIELDML
+% GPMAT
   
   options.disp = 0; 
   options.isreal = 1; 

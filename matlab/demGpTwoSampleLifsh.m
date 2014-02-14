@@ -1,6 +1,6 @@
 % DEMGPTWOSAMPLELIFSH Run GP two sample code on LifSh.
 
-% SHEFFIELDML
+% GPMAT
 
 % Load data
 load shLIF

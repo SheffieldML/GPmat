@@ -29,7 +29,7 @@ function g = modelOutputGrad(model, X, dim)
 %
 % MODIFICATIONS : Cark Henrik Ek, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 if(nargin>2)
   fhandle = str2func([model.type 'OutputGrad']);

@@ -17,7 +17,7 @@ function noise = gaussianNoiseExpandParam(noise, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 
 noise.bias = params(1:end-1);

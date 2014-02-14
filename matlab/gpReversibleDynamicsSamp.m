@@ -2,7 +2,7 @@ function y = gpReversibleDynamicsSamp(model, X);
 
 % GPREVERSIBLEDYNAMICSSAMP Sample from the dynamics for a given input.
 
-% SHEFFIELDML
+% GPMAT
 
 persistent oldX
 if isempty(oldX)

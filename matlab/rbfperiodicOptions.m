@@ -10,7 +10,7 @@ function options = rbfperiodicOptions(numHidden)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 1
   numHidden = 20;

@@ -1,6 +1,6 @@
 % DEMSTICKFGPLVM4 Model the stick man using an RBF kernel and 3-D latent space.
 
-% SHEFFIELDML
+% GPMAT
 
 % Fix seeds
 randn('seed', 1e5);

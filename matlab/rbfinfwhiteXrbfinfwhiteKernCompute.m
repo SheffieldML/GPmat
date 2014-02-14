@@ -28,7 +28,7 @@ function K = rbfinfwhiteXrbfinfwhiteKernCompute(rbfKern1, rbfKern2, t1, t2)
 %
 % COPYRIGHT : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 4
   t2 = t1;

@@ -4,7 +4,7 @@ function x = identityTransform(x, transform, varargin)
 %
 % COPYRIGHT : Patrick Sauer 2011
 
-% SHEFFIELDML
+% GPMAT
 switch transform
  case 'atox'
   

@@ -29,7 +29,7 @@ function gT = rbfwhiteKernGradX(kern, t1, t2)
 %
 % COPYRIGHT : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 error('rbfwhiteKernGradX not yet implemented.')

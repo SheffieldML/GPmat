@@ -21,7 +21,7 @@ function g = fgplvmSequenceLogLikeGradient(model, X, Y, varargin)
 %
 % MODIFICATIONS : Carl Henrik Ek, 2008
 
-% SHEFFIELDML
+% GPMAT
 if(nargin<3)
   error('This function requires at least two arguments');
 end

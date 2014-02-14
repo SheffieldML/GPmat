@@ -1,6 +1,6 @@
 % DEMSPGP1DPLOT Plot results from 1-D sparse GP.
 
-% SHEFFIELDML
+% GPMAT
 
 fillColor = [0.7 0.7 0.7];
 xTest = linspace(-1.5, 1.5, 200)';

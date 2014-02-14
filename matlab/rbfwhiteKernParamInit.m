@@ -21,7 +21,7 @@ function kern = rbfwhiteKernParamInit(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 % Neil: this is odd as this kernel should be valid for any input.
 if kern.inputDimension > 1

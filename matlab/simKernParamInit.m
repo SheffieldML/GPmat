@@ -33,7 +33,7 @@ function kern = simKernParamInit(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if kern.inputDimension > 1
   error('SIM kernel only valid for one-D input.')

@@ -16,7 +16,7 @@ function [params, names] = mlpExtractParam(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 if length(model.hiddenDim) == 1
   params = mlppak(model);

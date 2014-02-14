@@ -14,7 +14,7 @@ function lmcKernDisplay(kern, spacing)
 %
 % COPYRIGHT : Mauricio A. Alvarez , 2010
  
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([kern.basicKernelType 'KernDisplay']);
 fhandle(kern, spacing);

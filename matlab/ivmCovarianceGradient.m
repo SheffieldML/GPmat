@@ -15,7 +15,7 @@ function g = ivmCovarianceGradient(invK, m)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 invKm = invK*m;
 

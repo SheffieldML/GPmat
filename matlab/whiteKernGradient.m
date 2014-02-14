@@ -55,7 +55,7 @@ function g = whiteKernGradient(kern, x, varargin)
 %
 % COPYRIGHT : Jaakko Peltonen, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 if (isfield(kern,'use_fixedvariance')==1) && (kern.use_fixedvariance==1),
   g(1,1)=0;

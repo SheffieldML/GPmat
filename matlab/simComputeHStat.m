@@ -32,7 +32,7 @@ function [h, dh_dD_i, dh_dD_j, dh_dsigma] = simComputeHStat(t1, t2, D_i, D_j, de
 %
 % SEEALSO : simComputeH, simKernParamInit, lnDiffErfs
 
-% SHEFFIELDML
+% GPMAT
 
 if size(t1, 2) > 1 | size(t2, 2) > 1
   error('Input can only have one column');

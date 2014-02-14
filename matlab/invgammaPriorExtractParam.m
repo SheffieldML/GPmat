@@ -2,9 +2,9 @@ function [params, names] = invgammaPriorExtractParam(prior)
 
 % INVGAMMAPRIOREXTRACTPARAM Extract params from inverse gamma prior structure.
 
-% SHEFFIELDML
+% GPMAT
 
-% SHEFFIELDML
+% GPMAT
 
 
 params = [prior.a prior.b];

@@ -26,7 +26,7 @@ function [params, names] = rbfhKernExtractParam(kern)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 params = [kern.inverseWidthTime kern.inverseWidthSpace];
 if nargout > 1

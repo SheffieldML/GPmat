@@ -33,7 +33,7 @@ function gX = dexpKernGradX(kern, x1, x2)
 %
 % COPYRIGHT : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin < 3

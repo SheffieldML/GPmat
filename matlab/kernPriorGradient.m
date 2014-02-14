@@ -2,7 +2,7 @@ function g = kernPriorGradient(kern)
 
 % KERNPRIORGRADIENT Compute gradient terms associated with kernel priors.
 
-% SHEFFIELDML
+% GPMAT
 
 g = zeros(1, kern.nParams);
 switch kern.type

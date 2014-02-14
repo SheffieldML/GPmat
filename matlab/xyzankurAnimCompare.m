@@ -13,7 +13,7 @@ function xyzankurAnimCompare(X, X2, fps)
 %  
 % COPYRIGHT : Carl Henrik Ek and Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
   
   if(nargin<3)

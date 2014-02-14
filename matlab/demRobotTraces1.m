@@ -1,6 +1,6 @@
 % DEMROBOTTRACES1 Wireless Robot data from University of Washington, with tailored dynamics.
 
-% SHEFFIELDML
+% GPMAT
 
 % Fix seeds
 randn('seed', 1e5);

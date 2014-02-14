@@ -14,7 +14,7 @@ function [mu, varsigma] = dnetPosteriorMeanVar(model, X);
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 mu = dnetOut(model, X);
 

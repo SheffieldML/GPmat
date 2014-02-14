@@ -17,7 +17,7 @@ function [g, nu] = ncnmNoiseNuG(noise, mu, varSigma, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 [g, dlnZ_dvs] = feval([noise.type 'NoiseGradVals'], ...
 		      noise, ...

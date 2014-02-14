@@ -15,7 +15,7 @@ function g =  lfmGradientSigmaH3AA(gamma1_p, gamma1_m, sigma2, t1, ...
 %
 % COPYRIGHT : Mauricio Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 g = preFactor(1)*lfmaaGradientSigmaUpsilonMatrix(gamma1_p,sigma2, t1,t2, mode) ...
     + preFactor(2)*lfmaaGradientSigmaUpsilonMatrix(gamma1_m,sigma2, t1,t2, mode);

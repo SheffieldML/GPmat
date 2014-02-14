@@ -14,7 +14,7 @@ function k = rbfKernDiagCompute(kern, x)
 %
 % MODIFICATIONS : Mauricio Alvarez, 2009, David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if isfield(kern, 'isNormalised') && (kern.isNormalised == true)
     k = repmat(kern.variance * sqrt(kern.inverseWidth/(2*pi)), size(x, 1), 1);

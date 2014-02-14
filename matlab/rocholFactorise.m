@@ -2,7 +2,7 @@ function ch = rocholFactorise(v);
 
 % ROCHOLFACTORISE Rank one Cholesky factorise.
 
-% SHEFFIELDML
+% GPMAT
 
 % Return structure which represents factorisation of I+vv^T
 

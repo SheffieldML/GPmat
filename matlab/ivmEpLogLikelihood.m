@@ -13,7 +13,7 @@ function L = ivmEpLogLikelihood(model, x, y);
 %
 % SEEALSO : ivmCreate, ivmApproxLogLikelihood
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 3
   % This implies evaluate for the training data.

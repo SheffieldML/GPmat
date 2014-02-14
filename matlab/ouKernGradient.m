@@ -41,7 +41,7 @@ function g = ouKernGradient(kern, t1, varargin)
 %
 % COPYRIGHT : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin < 4

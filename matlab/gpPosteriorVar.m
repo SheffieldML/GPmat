@@ -13,7 +13,7 @@ function varsigma = gpPosteriorVar(model, X);
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 maxMemory = 1000000;
@@ -24,7 +24,7 @@ switch model.approx
   chunkSize = ceil(maxMemory/model.k);
 end
 
-if ~isfield(model, 'S') && ~isfield(model, 'DgtN') || model.DgtN==false
+if ~isfield(model, 'S')
   varsigma = zeros(size(X, 1), model.d);
 else
   varsigma = zeros(size(X, 1), 1);
@@ -62,10 +62,11 @@ while startVal <= size(X, 1)
     if isfield(model, 'beta')
       varsig = varsig + (1/model.beta);
     end
-    if ~isfield(model, 'S')  && ~isfield(model, 'DgtN') || model.DgtN==false
-      varsigma(indices, :) = repmat(varsig, 1, model.d);
+    if ~isfield(model, 'S') 
+        varsigma(indices, :) = repmat(varsig, 1, model.d);
     else
-      varsigma(indices, :) = varsig;
+        varsigma(indices, :) = varsig;
+        varsigma = zeros(size(X, 1), 1);
     end
   else
     diagK = kernDiagCompute(model.kern, X(indices, :));
@@ -82,7 +83,7 @@ while startVal <= size(X, 1)
     end
   end
 
-  if ~isfield(model, 'S')  && ~isfield(model, 'DgtN') || model.DgtN==false
+  if  ~isfield(model, 'S') 
     varsigma(indices, :) = varsigma(indices, :).* ...
         repmat(model.scale.*model.scale, length(indices), 1);
   end

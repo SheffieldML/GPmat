@@ -13,7 +13,7 @@ function xyzModify(handle, xyzChannels, skel)
 %
 % MODIFICATIONS : Alfredo A. Kalaitzis, 2012
 
-% SHEFFIELDML
+% GPMAT
 
 % if nargin<4
 %   padding = 0;

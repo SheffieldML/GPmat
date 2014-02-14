@@ -2,7 +2,7 @@ function [ax, data] = fgplvmDynamicsPlot(model, Ylbls, points);
 
 % FGPLVMDYNAMICSPLOT 2-D scatter plot of the latent points.
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 3
   points = 20;

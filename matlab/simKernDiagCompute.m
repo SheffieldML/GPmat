@@ -18,7 +18,7 @@ function k = simKernDiagCompute(kern, t)
 %
 % MODIFICATIONS : Mauricio Alvarez, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if size(t, 2) > 1 
   error('Input can only have one column');

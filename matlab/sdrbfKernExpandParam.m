@@ -17,7 +17,7 @@ function kern = sdrbfKernExpandParam(kern, params)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 kern.inverseWidth = reshape(params(kern.inverseWidthIndx), kern.nlfPerInt, kern.nIntervals);
 kern.switchingTimes = params(kern.switchingTimesIndx);

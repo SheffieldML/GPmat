@@ -15,7 +15,7 @@ function noneKernDisplay(kern, spacing)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin > 1

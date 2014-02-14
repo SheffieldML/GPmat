@@ -2,7 +2,7 @@ function e = negNoiseLogLikelihood(params, model, prior)
 
 % NEGNOISELOGLIKELIHOOD Wrapper function for calling noise likelihoods.
 
-% SHEFFIELDML
+% GPMAT
 
 model.noise = noiseExpandParam(model.noise, params);
 fhandle = str2func([model.noise.type 'NoiseLogLikelihood']);

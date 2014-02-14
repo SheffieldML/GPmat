@@ -13,7 +13,7 @@ function gX = gpTimeDynamicsLatentGradients(model);
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2009
 
-% SHEFFIELDML
+% GPMAT
 
   
 % The first point in each sequence cannot have dynamics thus the +

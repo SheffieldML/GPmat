@@ -14,6 +14,6 @@ function x = stack(X)
 % COPYRIGHT : Neil D. Lawrence, 2004
 
 
-% SHEFFIELDML
+% GPMAT
 
 x = X(:);

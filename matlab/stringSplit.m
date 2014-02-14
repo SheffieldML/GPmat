@@ -12,7 +12,7 @@ function parts = stringSplit(string, separator)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 2
   separator = ',';

@@ -37,7 +37,7 @@ function [g1, g2, g3] = sdlfmXsdlfmKernGradientBlockIEJ(lfmKern1, ...
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010.
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 10
     typeParam{1} = 'lfm';

@@ -11,7 +11,7 @@ function options = mogOptions(numComp)
 % 
 % COPYRIGHT : Neil D. Lawrence, 2006, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 options.numComponents = numComp;
 options.covtype = 'ppca';

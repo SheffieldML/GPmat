@@ -14,7 +14,7 @@ function lfmVisualiseWalking(model, visualiseFunction, visualiseModify, varargin
 %
 % COPYRIGHT : Mauricio Alvarez and Neil D. Lawrence, 2012
 
-% SHEFFIELDML
+% GPMAT
 
 global visualiseInfo
 kernType = model.kernType(1:3);

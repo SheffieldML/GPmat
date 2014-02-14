@@ -15,7 +15,7 @@ function g = gpDynamicsLogLikeGradients(model)
 %
 % MODIFICATIONS : Carl Henrik Ek, 2006
   
-% SHEFFIELDML
+% GPMAT
 
 if model.k ==0 & ~model.learn & ~model.learnScales
   g = [];

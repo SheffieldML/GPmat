@@ -12,7 +12,7 @@ function [ax, data] = swissRollScatter(Y, shade);
 %
 % SEEALSO : fgplvmVisualise, lvmTwoDPlot, lvmScatterPlot
 
-% SHEFFIELDML
+% GPMAT
 
   shade = shade - min(shade)+eps;
   shade = shade/max(shade);

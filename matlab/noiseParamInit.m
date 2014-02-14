@@ -11,7 +11,7 @@ function noise = noiseParamInit(noise, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 % If this flag is set then the noise model leads to constant values of
 % beta (e.g. a Gaussian with constant variance for each data-point &

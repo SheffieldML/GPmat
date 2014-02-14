@@ -17,7 +17,7 @@ function kern = ratquadKernExpandParam(kern, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 kern.alpha = params(1);
 kern.lengthScale = params(2);

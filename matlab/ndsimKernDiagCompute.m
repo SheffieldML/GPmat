@@ -20,7 +20,7 @@ function k = ndsimKernDiagCompute(kern, t)
 %
 % COPYRIGHT : Jaakko Peltonen, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 if size(t, 2) > 1 
   error('Input can only have one column');

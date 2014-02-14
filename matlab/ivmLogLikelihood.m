@@ -13,7 +13,7 @@ function L = ivmLogLikelihood(model, x, y);
 %
 % COPYRIGHT : Neil D. Lawrence
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 3
   % This implies evaluate for the training data.

@@ -36,7 +36,7 @@ function [gmu, gsigmavar, factors] = gpPosteriorGradMeanCovar(model, X);
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 if ~isfield(model, 'alpha')

@@ -41,7 +41,7 @@ function g = simKernGradient(kern, t, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 if length(varargin)<2
   t2 = t;

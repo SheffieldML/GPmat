@@ -30,7 +30,7 @@ function [paramtransformsettings, names] = nddisimKernExtractParamTransformSetti
 %
 % COPYRIGHT : Jaakko Peltonen, 2011
 %
-% SHEFFIELDML
+% GPMAT
 
 
 paramtransformsettings = {kern.transforms(1).transformsettings,kern.transforms(2).transformsettings,kern.transforms(3).transformsettings,kern.transforms(4).transformsettings,kern.transforms(5).transformsettings};

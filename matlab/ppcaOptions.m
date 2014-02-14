@@ -10,6 +10,6 @@ function options = ppcaOptions(mappingType, latentPoints, mappingOptions)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 options = [];

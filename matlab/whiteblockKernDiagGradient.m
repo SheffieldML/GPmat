@@ -19,7 +19,7 @@ function g = whiteblockKernDiagGradient(kern, x, covDiag)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 g = zeros(1, kern.nout);
 startOne = 1;

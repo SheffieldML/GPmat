@@ -2,9 +2,9 @@ function g = pskernelGradient(lntheta, models, prior)
 
 % PSKERNELGRADIENT Gradient on likelihood approximation for point set IVM.
 
-% SHEFFIELDML
+% GPMAT
 
-% SHEFFIELDML
+% GPMAT
 
 % PSIVM
 

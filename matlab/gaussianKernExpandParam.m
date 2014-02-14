@@ -17,7 +17,7 @@ function kern = gaussianKernExpandParam(kern, params)
 %
 % MODIFICATIONS : Mauricio A. Alvarez, 2009
 
-% SHEFFIELDML
+% GPMAT
   
 kern.sigma2Latent = params(end);
 kern.precisionU =  params(1:end-1)';

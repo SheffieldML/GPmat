@@ -2,7 +2,7 @@ function model = robThreeDynamicsSetLatentValues(model, X)
 
 % ROBTHREEDYNAMICSSETLATENTVALUES Set the latent values inside the model.
 
-% SHEFFIELDML
+% GPMAT
 
 model.X = X;
 X1 = X(1:end-1, :);

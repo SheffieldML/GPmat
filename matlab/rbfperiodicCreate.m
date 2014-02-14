@@ -22,7 +22,7 @@ function model = rbfperiodicCreate(inputDim, outputDim, options)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 if inputDim>1
   error(['You may only create a one dimensional input periodic RBF ' ...

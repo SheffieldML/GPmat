@@ -11,7 +11,7 @@ function kern = gibbsKernSetLengthScaleFunc(kern, model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 if model.inputDim ~= kern.inputDimension

@@ -13,7 +13,7 @@ function  kern = sdlfmvKernParamInit(kern)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 % Actually, this works just as a wrapper function to use the same
 % parameters that the SDLFM kernel.

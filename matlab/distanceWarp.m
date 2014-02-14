@@ -9,7 +9,7 @@ function [w, Dist,D,k]=distanceWarp(d)
 % RETURN D : is the accumulated distance matrix
 % RETURN k : is the normalizing factor
 
-% SHEFFIELDML
+% GPMAT
   
   [N, M] = size(d);
 

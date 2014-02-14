@@ -11,7 +11,7 @@ function returnVal = mogTwoDPlot(model, lbl, symbol)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 2
   lbl = [];

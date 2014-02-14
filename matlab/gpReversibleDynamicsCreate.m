@@ -16,7 +16,7 @@ function model = gpReversibleDynamicsCreate(q, d, latentVals, options)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 4
   options = gpReversibleDynamicsOptions('ftc');

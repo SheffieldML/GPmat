@@ -27,7 +27,7 @@ function [ax, data] = lvmScatterPlotNeighbours(model, YLbls, ax);
 %
 % SEEALSO : lvmScatterPlot, lvmTwoDPlot, lvmScatterPlotColor
  
-% SHEFFIELDML
+% GPMAT
 
 if nargin<3
   ax = [];

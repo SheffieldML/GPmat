@@ -22,7 +22,7 @@ function [params, names] = kbrExtractParam(model,dim);
 %
 % MODIFICATIONS : Carl Henrik Ek, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 if(nargin<2)
   params = [model.A(:)' model.bias];

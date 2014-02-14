@@ -17,6 +17,6 @@ function kern = lfmvKernExpandParam(kern, params)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 kern = lfmKernExpandParam(kern, params);

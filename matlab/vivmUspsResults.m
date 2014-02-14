@@ -1,6 +1,6 @@
 % VIVMUSPSRESULTS Summarise the USPS result files in LaTeX.
 
-% SHEFFIELDML
+% GPMAT
 
 invariance = 'translate';
 dVal = 1000;

@@ -28,7 +28,7 @@ function K = disimXdisimKernCompute(disimKern1, disimKern2, t1, t2)
 %
 % COPYRIGHT : Antti Honkela, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 4
   t2 = t1;

@@ -13,7 +13,7 @@ function g = gpMeanFunctionGradient(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if isfield(model, 'isSpherical') & ~model.isSpherical
   error('Currently only implemented for spherical');

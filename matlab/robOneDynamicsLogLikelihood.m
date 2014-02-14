@@ -2,7 +2,7 @@ function ll = robOneDynamicsLogLikelihood(model)
 
 % ROBONEDYNAMICSLOGLIKELIHOOD Give the log likelihood of the robot one dynamics part.
 
-% SHEFFIELDML
+% GPMAT
 
 thetaDiff = model.theta(2:end)-model.theta(1:end-1);
 while any(thetaDiff>pi)

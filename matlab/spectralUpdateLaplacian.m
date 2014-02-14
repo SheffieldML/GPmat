@@ -11,7 +11,7 @@ function model = spectralUpdateLaplacian(model)
 %
 % SEEALSO : spectralUpdateX, leOptimise
 
-% SHEFFIELDML
+% GPMAT
 
   model.L = spalloc(model.N, model.N, model.N*model.k);
   for i = 1:size(model.indices, 1)

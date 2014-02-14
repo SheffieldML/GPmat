@@ -2,7 +2,7 @@ function g = negNoiseGradientParam(params, model, prior)
 
 % NEGNOISEGRADIENTPARAM Wrapper function for calling noise gradients.
 
-% SHEFFIELDML
+% GPMAT
 
 model.noise = noiseExpandParam(model.noise, params);
 fhandle = str2func([model.noise.type 'GradientParam']);

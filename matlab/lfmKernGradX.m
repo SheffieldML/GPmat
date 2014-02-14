@@ -30,6 +30,6 @@ function gX = lfmKernGradX(kern, x, x2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 error('lfmKernGradX not yet implemented.')

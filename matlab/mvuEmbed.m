@@ -12,7 +12,7 @@ function X = mvuEmbed(Y,dims,k)
 %
 % COPYRIGHT : Carl Henrik Ek, Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 if(nargin<3)
   k = 7;

@@ -21,7 +21,7 @@ function gX = linard2KernGradX(kern, X, X2)
 %
 % COPYRIGHT : Michalis K. Titsias, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 scales = sparse(diag(kern.inputScales));

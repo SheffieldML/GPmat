@@ -41,7 +41,7 @@ function g = linKernGradient(kern, x, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin < 4

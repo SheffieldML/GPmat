@@ -19,7 +19,7 @@ function kern = diagKernParamInit(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 kern.variance = exp(-2);
 kern.nParams = 1;

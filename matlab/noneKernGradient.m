@@ -41,6 +41,6 @@ function g = noneKernGradient(kern, x, x2, covGrad)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 g = [];

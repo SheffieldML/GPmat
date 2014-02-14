@@ -25,7 +25,7 @@ function ind = paramNameRegularExpressionLookup(model, pattern, isKernel)
 %
 % SEEALSO : cmpndTieParameters, paramNameReverseLookup
 
-% SHEFFIELDML
+% GPMAT
 
   ind = [];
   

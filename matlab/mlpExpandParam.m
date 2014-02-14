@@ -14,7 +14,7 @@ function model = mlpExpandParam(model, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 if length(model.hiddenDim) == 1
   model = mlpunpak(model, params);

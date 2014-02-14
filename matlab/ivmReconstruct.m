@@ -18,7 +18,7 @@ function model = ivmReconstruct(kern, noise, ivmInfo, X, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 model.type = 'ivm';
 

@@ -23,7 +23,7 @@ function K = velotransKernCompute(kern, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2011
 
-% SHEFFIELDML
+% GPMAT
 
   
 for i = 1:length(varargin)

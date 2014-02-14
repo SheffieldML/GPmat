@@ -10,7 +10,7 @@ function options = ivmOptions(varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 % bog-standard kernel.
 options.kern = {'rbf', 'bias', 'white'};

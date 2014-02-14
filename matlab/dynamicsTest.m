@@ -2,7 +2,7 @@ function dynamics = dynamicsTest(type);
 
 % DYNAMICSTEST Run some tests on the specified dynamics model.
 
-% SHEFFIELDML
+% GPMAT
 
 type = [type 'Dynamics'];
 X = randn(10, 2);

@@ -13,7 +13,7 @@ function [W, b] = modelGetOutputWeights(model)
 % 
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
   
 switch model.type
  case 'mlp'

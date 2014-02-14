@@ -12,7 +12,7 @@ function noise = noiseReadParamsFromFID(type, FID)
 %
 % SEEALSO : noiseReadFromFID
 
-% SHEFFIELDML
+% GPMAT
 
 noise.numProcess = readIntFromFID(FID, 'outputDim');
 noise.nParams = readIntFromFID(FID, 'numParams');

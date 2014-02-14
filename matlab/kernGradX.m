@@ -30,7 +30,7 @@ function g = kernGradX(kern, x, x2)
 %
 % COPYRIGHT : Neil D.Lawrence, 2004, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([kern.type 'KernGradX']);
 if nargin < 3

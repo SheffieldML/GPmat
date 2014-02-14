@@ -41,7 +41,7 @@ function g = tensorKernGradient(kern, x, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
   
 % Last of varargin is covGrad.

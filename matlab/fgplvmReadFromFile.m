@@ -13,7 +13,7 @@ function [model,labels] = fgplvmReadFromFile(fileName)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 FID = fopen(fileName);
 if FID==-1

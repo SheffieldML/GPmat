@@ -20,7 +20,7 @@ function g = ngaussNoiseGradientParam(noise, mu, varsigma, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 
 D = size(y, 2);

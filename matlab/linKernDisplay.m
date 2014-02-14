@@ -15,7 +15,7 @@ function linKernDisplay(kern, spacing)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin > 1

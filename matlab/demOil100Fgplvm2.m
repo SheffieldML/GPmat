@@ -1,6 +1,6 @@
 % DEMOIL100FGPLVM2 Oil100 data with FGPLVM.
 
-% SHEFFIELDML
+% GPMAT
 
 % Fix seeds
 randn('seed', 1e5);

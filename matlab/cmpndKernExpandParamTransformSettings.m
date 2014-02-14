@@ -30,7 +30,7 @@ function kern = cmpndKernExpandParamTransformSettings(kern, paramtransformsettin
 % 
 % COPYRIGHT : Jaakko Peltonen, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 
 %fprintf(1,'cmpndKernExpandParamTransformSettings step1\n');

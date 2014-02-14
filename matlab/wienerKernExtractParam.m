@@ -27,7 +27,7 @@ function [params, names] = wienerKernExtractParam(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 %
-% SHEFFIELDML
+% GPMAT
 
 params = [kern.variance];
 if nargout > 1

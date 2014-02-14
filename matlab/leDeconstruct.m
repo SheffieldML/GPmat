@@ -13,7 +13,7 @@ function leInfo = leDeconstruct(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
   leInfo = model;
   removeFields = {'Y'};

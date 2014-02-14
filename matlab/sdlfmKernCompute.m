@@ -22,7 +22,7 @@ function k = sdlfmKernCompute(kern, t, t2, covIC)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin < 4

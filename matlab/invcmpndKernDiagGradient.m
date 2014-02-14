@@ -19,7 +19,7 @@ function g = invcmpndKernDiagGradient(kern, x, covDiag)
 % SEEALSO : cmpndKernDiagGradient, invcmpndKernParamInit, kernDiagGradient, invcmpndKernExtractParam, invcmpndKernGradient
 %
 
-% SHEFFIELDML
+% GPMAT
 
 
 error('invcmpndKernDiagGradX not yet implemented!')

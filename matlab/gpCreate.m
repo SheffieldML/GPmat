@@ -17,7 +17,7 @@ function model = gpCreate(q, d, X, y, options);
 %
 % MODIFICATIONS : Cark Henrik Ek, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 if size(X, 2) ~= q
   error(['Input matrix X does not have dimension ' num2str(q)]);

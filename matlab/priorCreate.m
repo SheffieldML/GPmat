@@ -11,7 +11,7 @@ function prior = priorCreate(type)
 %
 % COPYRIGHT : Neil D. Lawrence, 2003
 
-% SHEFFIELDML
+% GPMAT
 
 prior.type = type;
 prior = priorParamInit(prior);

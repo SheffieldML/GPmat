@@ -17,7 +17,7 @@ function g = rbfperiodicOutputGrad(model, X)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 [ypred, z, n2, sinarg, arg] = rbfperiodicOut(model, X);
 numData = size(X, 1);

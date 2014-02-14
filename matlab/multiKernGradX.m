@@ -30,7 +30,7 @@ function gX = multiKernGradX(kern, x, x2)
 %
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008  
 
-% SHEFFIELDML
+% GPMAT
 
 if iscell(x)
     if nargin > 3 && ~iscell(x2)

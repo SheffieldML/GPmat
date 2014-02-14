@@ -2,6 +2,6 @@ function param = gpReversibleDynamicsExtractParam(model)
 
 % GPREVERSIBLEDYNAMICSEXTRACTPARAM Extract parameters from the GP reversible dynamics model.
 
-% SHEFFIELDML
+% GPMAT
 
 param = gpDynamicsExtractParam(model);

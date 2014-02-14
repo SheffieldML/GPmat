@@ -41,7 +41,7 @@ function g = ggKernGradient(kern, x, varargin)
 %
 % COPYRIGHT : Mauricio A. Alvarez and Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 if length(varargin)<2
   x2 = x;

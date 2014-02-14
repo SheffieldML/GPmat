@@ -2,7 +2,7 @@ function [ax, data] = fgplvmScatterPlotColor(model, shade);
 
 % FGPLVMSCATTERPLOTCOLOR 2-D scatter plot of the latent points with color - for Swiss Roll data.
 
-% SHEFFIELDML
+% GPMAT
 
 shade = shade - min(shade)+eps;
 shade = shade/max(shade);

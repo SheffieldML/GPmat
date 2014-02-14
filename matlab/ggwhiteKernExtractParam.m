@@ -29,7 +29,7 @@ function [params, names] = ggwhiteKernExtractParam(kern)
 %
 % MODIFICATIONS : Mauricio A Alvarez, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 params = [kern.precisionG' kern.sigma2Noise kern.variance];
 

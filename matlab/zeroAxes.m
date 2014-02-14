@@ -14,7 +14,7 @@ function zeroAxes(axesHandle, tickRatio, fontSize, fontName)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 4
   fontName = [];

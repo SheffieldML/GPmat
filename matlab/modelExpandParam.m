@@ -19,7 +19,7 @@ function model = modelExpandParam(model, params, dim)
 %
 % MODIFICATIONS : Cark Henrik Ek, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 if isfield(model, 'paramGroups')
   params = params*model.paramGroups';

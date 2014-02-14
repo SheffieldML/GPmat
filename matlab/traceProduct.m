@@ -11,6 +11,6 @@ function t = traceProduct(A, B)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004
 
-% SHEFFIELDML
+% GPMAT
 
 t = sum(sum(A.*B'));

@@ -13,7 +13,7 @@ function [model, lbls] = fgplvmReadFromFID(FID)
 %
 % SEEALSO : fgplvmReadFromFile
 
-% SHEFFIELDML
+% GPMAT
 try
   version = readVersionFromFID(FID);
 catch

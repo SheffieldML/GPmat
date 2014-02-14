@@ -16,7 +16,7 @@ function [params, names] = modelExtractParam(model, dim)
 %
 % MODIFICATIONS : Mauricio Alvarez, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([model.type 'ExtractParam']);
 if nargout < 2

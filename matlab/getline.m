@@ -13,7 +13,7 @@ function lineStr = getline(FID, comment)
 %
 % SEEALSO : fgetl, fopen
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin < 2

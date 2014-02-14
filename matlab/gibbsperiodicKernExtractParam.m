@@ -27,7 +27,7 @@ function [params, names] = gibbsperiodicKernExtractParam(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 params = zeros(1, kern.nParams);
 if nargout < 2

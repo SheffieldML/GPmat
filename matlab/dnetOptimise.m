@@ -11,7 +11,7 @@ function model = dnetOptimise(model, display, iters)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
   
   if ~model.basisStored

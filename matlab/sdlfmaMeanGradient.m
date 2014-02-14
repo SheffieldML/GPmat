@@ -27,7 +27,7 @@ function [gradAlpha, gradOmega] = sdlfmaMeanGradient(sdlfmKern, t , option)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 3
     option = 'Pos';

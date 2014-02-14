@@ -16,7 +16,7 @@ function K = ggKernDiagCompute(kern, x)
 %
 % MODIFICATIONS : Mauricio A. Alvarez, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 K = kern.sigma2Latent*kern.sensitivity^2*ones(size(x,1),1);
 

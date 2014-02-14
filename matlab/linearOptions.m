@@ -2,6 +2,6 @@ function options = linearOptions;
 
 % LINEAROPTIONS Options for learning a linear model.
 
-% SHEFFIELDML
+% GPMAT
 
 options.activeFunc = 'linear';

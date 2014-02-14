@@ -10,7 +10,7 @@ function ind = treeFindLeaves(tree)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 ind = [];
 for i = 1:length(tree)

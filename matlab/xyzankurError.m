@@ -13,7 +13,7 @@ function [e E] = xyzankurError(X1,X2,type)
 % COPYRIGHT : Carl Henrik Ek, Andreas Damianou  and Neil Lawrence, 2011
 %
   
-% SHEFFIELDML
+% GPMAT
 
 if(nargin<2)
     error('Too few arguments');

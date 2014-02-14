@@ -22,7 +22,7 @@ function model = modelTieParam(model, paramsList)
 %
 % MODIFICATIONS: Antti Honkela, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if ~isfield(model, 'paramGroups')
   if isfield(model, 'nParams')

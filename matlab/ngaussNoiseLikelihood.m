@@ -13,7 +13,7 @@ function L = ngaussNoiseLikelihood(noise, mu, varsigma, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 
 L = gaussianNoiseLikelihood(noise, mu, varsigma, y);

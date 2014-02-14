@@ -2,7 +2,7 @@ function [x, t] = timeseriesdata(data, nin);
 
 % TIMESERIESDATA make a time series data set with the given window length.
 
-% SHEFFIELDML
+% GPMAT
 
 ndata = length(data);
 alldata = ones(ndata-nin+1, nin+1); % [y_{t-1], ..., y_{t-m]]

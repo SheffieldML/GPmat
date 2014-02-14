@@ -13,7 +13,7 @@ function [upsilonaa, upsilonap] = lfmaaComputeUpsilonMatrix(gamma, sigma2, t1, t
 %
 % COPYRIGHT : Mauricio Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 sigma = sqrt(sigma2);
 gridt1 = repmat(t1, 1, length(t2));

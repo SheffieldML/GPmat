@@ -14,7 +14,7 @@ function ll = gpTimeDynamicsLogLikelihood(model)
 % MODIFICATIONS : Carl Henrik Ek, 2008
 %
 
-% SHEFFIELDML
+% GPMAT
 
 ll = gpLogLikelihood(model);
 

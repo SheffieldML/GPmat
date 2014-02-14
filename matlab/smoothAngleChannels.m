@@ -2,7 +2,7 @@ function channels = smoothAngleChannels(channels, skel);
 
 % SMOOTHANGLECHANNELS Try and remove artificial discontinuities associated with angles.
 
-% SHEFFIELDML
+% GPMAT
 
 for i=1:length(skel.tree)
   for j=1:length(skel.tree(i).rotInd)    

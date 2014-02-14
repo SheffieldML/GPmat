@@ -17,7 +17,7 @@ function kern = sdlfmKernExpandParam(kern, params)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 kern.mass = params(1);
 kern.spring = params(2);

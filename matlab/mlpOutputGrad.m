@@ -19,7 +19,7 @@ function g = mlpOutputGrad(model, X)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 if length(model.hiddenDim) == 1
   g = mlpderiv(model, X);

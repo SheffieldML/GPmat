@@ -12,7 +12,7 @@ function g = ivmApproxLogLikeKernGrad(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 x = model.X(model.I, :);
 m = model.m(model.I, :);

@@ -21,7 +21,7 @@ function [params, names] = rbfperiodicExtractParam(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 %
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([model.widthTransform.type 'Transform']);
 params = [model.thetaBar(:)' ...

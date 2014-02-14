@@ -10,7 +10,7 @@ function options = lleOptions(neighbours)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008, 2009
 
-% SHEFFIELDML
+% GPMAT
 
   if nargin < 1
     neighbours = 7;

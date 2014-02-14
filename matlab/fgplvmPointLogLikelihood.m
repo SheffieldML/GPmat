@@ -15,7 +15,7 @@ function ll = fgplvmPointLogLikelihood(model, x, y)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 ll = gpPointLogLikelihood(model, x, y);
 % check if there is a prior over latent space 

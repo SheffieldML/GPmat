@@ -10,7 +10,7 @@ function model = lleOptimise(model, display, iters)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 
   if isfield(model, 'acyclic') && model.acyclic

@@ -15,7 +15,7 @@ function model = mvuCreate(inputDim, outputDim, Y, options)
 % SEEALSO : mvuOptions, lleCreate, isomapCreate, modelCreate
 
 
-% SHEFFIELDML
+% GPMAT
 
 model.type = 'mvu';
 

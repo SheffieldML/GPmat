@@ -1,6 +1,6 @@
 % DEMTHREEFIVEIVM1 Try the IVM & NCNM on 3 vs 5.
 
-% SHEFFIELDML
+% GPMAT
 
 
 rand('seed', 1e5);

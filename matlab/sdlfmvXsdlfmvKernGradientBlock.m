@@ -32,7 +32,7 @@ function [g1, g2, g3] = sdlfmvXsdlfmvKernGradientBlock(lfmKern1, lfmKern2, ...
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010.
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin<11

@@ -34,7 +34,7 @@ function g = lmcKernGradient(kern, X, X2, covGrad)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010.
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([kern.basicKernelType 'KernCompute']);
 fhandleGrad = str2func([kern.basicKernelType 'KernGradient']);

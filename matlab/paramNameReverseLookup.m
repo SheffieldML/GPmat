@@ -12,7 +12,7 @@ function ind = paramNameReverseLookup(model, name)
 % 
 % SEEALSO : cmpndTieParameters, paramNameRegularExpressionLookup
 
-% SHEFFIELDML
+% GPMAT
   
   ind = [];
   [void, names] = modelExtractParam(model);

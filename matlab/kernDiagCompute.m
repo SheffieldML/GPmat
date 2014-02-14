@@ -12,7 +12,7 @@ function k = kernDiagCompute(kern, x)
 %
 % COPYRIGHT : Neil D. Lawrence, 2003, 2004, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([kern.type 'KernDiagCompute']);
 k = fhandle(kern, x);

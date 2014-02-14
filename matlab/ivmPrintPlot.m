@@ -26,7 +26,7 @@ function [h1, h2] = ivmPrintPlot(model, plotType, iter, X, ...
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 
 ivm3dPlot(model, plotType, iter, X, y);

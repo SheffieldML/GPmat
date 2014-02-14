@@ -14,7 +14,7 @@ function [ax, data] = scatterPlot(X, YLbls, markerSize, ax);
 % 
 % COPYRIGHT : Neil D. Lawrence, 2005, 2010
 
-% SHEFFIELDML
+% GPMAT
 
   if nargin < 4
     ax = [];

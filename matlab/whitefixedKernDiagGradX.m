@@ -14,7 +14,7 @@ function gX = whitefixedKernDiagGradX(kern, X)
 %
 % COPYRIGHT : Nathaniel J. King, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 gX = whiteKernDiagGradX(kern, X);

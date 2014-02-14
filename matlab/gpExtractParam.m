@@ -18,7 +18,7 @@ function [params, names] = gpExtractParam(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2007, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if nargout > 1
   returnNames = true;

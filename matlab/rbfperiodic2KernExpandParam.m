@@ -21,7 +21,7 @@ function kern = rbfperiodic2KernExpandParam(kern, params)
 %
 % MODIFICATIONS : Michalis K. Titsias, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 kern.inverseWidth = params(1);
 kern.variance = params(2);

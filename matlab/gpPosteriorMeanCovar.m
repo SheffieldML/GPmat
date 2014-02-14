@@ -27,7 +27,7 @@ function [mu, covarSigma, factors] = gpPosteriorMeanCovar(model, X);
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 % Just call gpPosteriorMeanVar for means.
 mu = gpPosteriorMeanVar(model, X);

@@ -15,7 +15,7 @@ function rbfperiodicKernDisplay(kern, spacing)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin > 1

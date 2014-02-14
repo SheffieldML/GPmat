@@ -30,7 +30,7 @@ function gX = diagKernGradX(kern, X, X2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2011
 
-% SHEFFIELDML
+% GPMAT
 
   if size(X, 2)>1
     error('Diag kernel requires 1-dimensional input.')

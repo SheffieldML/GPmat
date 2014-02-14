@@ -12,7 +12,7 @@ function handle =  plotMatrix(A, ax, bracketStyle, type, options)
 % COPYRIGHT : Neil D. Lawrence, 2010
   
 
-% SHEFFIELDML
+% GPMAT
 
   if nargin < 5
       options = plotMatrixOptions;

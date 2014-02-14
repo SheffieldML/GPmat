@@ -18,7 +18,7 @@ function D1 = dist1(X, Y)
 %
 % COPYRIGHT : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 [Nx, dimX] = size(X);
 [Ny, dimY] = size(Y);

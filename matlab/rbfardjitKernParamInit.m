@@ -25,7 +25,7 @@ function kern = rbfardjitKernParamInit(kern)
 %
 % COPYRIGHT : Michalis K. Titsias, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 % This parameter is restricted positive.

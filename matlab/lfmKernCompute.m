@@ -20,7 +20,7 @@ function k = lfmKernCompute(kern, t, t2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargin < 3

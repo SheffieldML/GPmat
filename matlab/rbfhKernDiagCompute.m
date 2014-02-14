@@ -13,7 +13,7 @@ function k = rbfhKernDiagCompute(kern, x)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 % Since the variance is on the diagonal is just ones
 

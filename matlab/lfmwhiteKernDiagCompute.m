@@ -14,7 +14,7 @@ function k = lfmwhiteKernDiagCompute(kern, t)
 %
 % COPYRIGHT : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 if size(t, 2) > 1

@@ -23,7 +23,7 @@ function [g1, g2, g3] = sdlfmXsdrbfKernGradientBlockIGJ(lfmKern, rbfKern, ...
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010.
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 10
     typeMeanGrad = {'lfm', 'lfmv'};

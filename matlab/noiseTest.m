@@ -2,7 +2,7 @@ function noise = noiseTest(noiseType);
 
 % NOISETEST Run some tests on the specified noise model.
 
-% SHEFFIELDML
+% GPMAT
 
 if iscell(noiseType)
   % compound noise type

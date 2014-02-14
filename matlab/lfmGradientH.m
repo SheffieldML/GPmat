@@ -23,7 +23,7 @@ function    g = lfmGradientH(gamma1, gamma2, sigma2, gradThetaGamma, t1,t2,...
 %
 % SEEALSO : lfmKernGradient, lfmXlfmKernGradient, lfmGradientUpsilon
 
-% SHEFFIELDML
+% GPMAT
 
 
 % Gradient evaluation

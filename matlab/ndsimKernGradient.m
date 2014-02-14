@@ -49,7 +49,7 @@ function g = ndsimKernGradient(kern, t1, varargin)
 %
 % COPYRIGHT : Jaakko Peltonen, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 if length(varargin)<2
   t2 = t1;

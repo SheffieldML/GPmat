@@ -9,6 +9,6 @@ function options = lfmOptions
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 options.optimiser = 'conjgrad';

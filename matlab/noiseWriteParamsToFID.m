@@ -10,7 +10,7 @@ function noiseWriteParamsToFID(noise, FID)
 %
 % SEEALSO : noiseWriteToFID
 
-% SHEFFIELDML
+% GPMAT
 
 writeIntToFID(FID, 'outputDim', noise.numProcess);
 writeIntToFID(FID, 'numParams', noise.nParams);

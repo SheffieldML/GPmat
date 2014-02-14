@@ -15,7 +15,7 @@ function [g, nu] = noiseUpdateNuG(noise, mu, varSigma, y);
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 if noise.updateNuG
   % The noise model has it's own code for site updates.

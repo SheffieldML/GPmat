@@ -1,6 +1,6 @@
 % DEMGPTWOSAMPLELIF Run GP two sample code on LIF.
 
-% SHEFFIELDML
+% GPMAT
 
 % Load data
 load LIF

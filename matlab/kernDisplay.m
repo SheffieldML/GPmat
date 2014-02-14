@@ -14,7 +14,7 @@ function kernDisplay(kern, varargin)
 %
 % COPYRIGHT Neil D. Lawrence, 2006, 2005, 2004
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([kern.type 'KernDisplay']);
 fhandle(kern, varargin{:});

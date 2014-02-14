@@ -11,7 +11,7 @@ function lll = mogLowerBound(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 lll = -sum(sum(xlogy(model.posterior)));
 

@@ -2,7 +2,7 @@ function l = wangPriorLogProb(prior, x)
 
 % WANGPRIORLOGPROB Log probability of Wang prior.
 
-% SHEFFIELDML
+% GPMAT
 
 % Compute log prior
 D = length(x);

@@ -6,7 +6,7 @@ function lvmSetPlotNoVar(lvmClassVisualiseFunc)
 % SEEALSO lvmSetPlot
 %
 
-% SHEFFIELDML
+% GPMAT
   
 global visualiseInfo
 

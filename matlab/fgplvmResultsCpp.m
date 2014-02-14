@@ -12,7 +12,7 @@ function fgplvmResultsCpp(fileName, dataType, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
   
-% SHEFFIELDML
+% GPMAT
   
 [model, lbls] = fgplvmReadFromFile(fileName);
 

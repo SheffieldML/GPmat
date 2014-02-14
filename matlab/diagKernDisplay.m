@@ -15,7 +15,7 @@ function diagKernDisplay(kern, spacing)
 %
 % COPYRIGHT : Neil D. Lawrence, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 
 

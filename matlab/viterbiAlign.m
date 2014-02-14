@@ -21,7 +21,7 @@ function [states, ll] = viterbiAlign(logTrans, logLike, logPriorProb)
 % COPYRIGHT : Neil D. Lawrence, 2006, 2007
 % 
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 3
   logPriorProb = -log(size(logLike, 1));

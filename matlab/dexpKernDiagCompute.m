@@ -14,7 +14,7 @@ function K = dexpKernDiagCompute(kern, x)
 %
 % COPYRIGHT : David Luengo, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 
 K = 0.5 * kern.variance * kern.decay * ones(size(x));

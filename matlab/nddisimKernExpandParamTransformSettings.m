@@ -21,7 +21,7 @@ function kern = nddisimKernExpandParamTransformSettings(kern, paramtransformsett
 %
 % COPYRIGHT : Jaakko Peltonen, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 for k=1:5,
   kern.transforms(k).transformsettings = paramtransformsettings{k};

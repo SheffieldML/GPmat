@@ -15,7 +15,7 @@ function invcmpndKernDisplay(kern, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, Andreas C. Damianou, 2012
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin > 1
   spacing = repmat(32, 1, varargin{1});

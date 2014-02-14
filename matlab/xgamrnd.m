@@ -15,7 +15,7 @@ function r = xgamrnd(a, b),
 %
 % COPYRIGHT : Antti Honkela, 2010
   
-% SHEFFIELDML
+% GPMAT
 
 % Based on Marsaglia and Tsang, "A Simple Method for generating gamma
 % variables", ACM Transactions on Mathematical Software 26(3):363-372

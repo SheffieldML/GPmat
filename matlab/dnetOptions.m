@@ -19,7 +19,7 @@ function options = dnetOptions(mappingType, latentPoints, mappingOptions)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 1
   % This is the GTM settings

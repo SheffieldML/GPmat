@@ -14,7 +14,7 @@ function str = stringSigFigs(num, sf);
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 val = chop(num, sf);
 str = num2str(val);

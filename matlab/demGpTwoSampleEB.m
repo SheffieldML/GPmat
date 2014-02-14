@@ -1,6 +1,6 @@
 % DEMGPTWOSAMPLEEB Run GP two sample code on EB.
 
-% SHEFFIELDML
+% GPMAT
 
 % Load data
 load EB

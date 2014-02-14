@@ -4,7 +4,7 @@ function alpha = xyzhumanevaHeadingAngle(Z,display)
 %
 % COPYRIGHT : Carl Henrik Ek and Neil Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
   
   
 if(nargin<2)

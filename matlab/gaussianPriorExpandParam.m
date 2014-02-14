@@ -11,6 +11,6 @@ function prior = gaussianPriorExpandParam(prior, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004
 
-% SHEFFIELDML
+% GPMAT
 
 prior.precision = params(1);

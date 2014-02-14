@@ -1,6 +1,6 @@
 % DEMCMU35TAYLORNEARESTNEIGHBOUR Recreate the Nearest Neighbour result from Taylor et al, NIPS 2006.
 
-% SHEFFIELDML
+% GPMAT
 
 datasetName = 'cmu35Taylor';
 [Y, lbls, Ytest, lblsTest] = lvmLoadData(datasetName);

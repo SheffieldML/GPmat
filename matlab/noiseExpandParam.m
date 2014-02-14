@@ -17,7 +17,7 @@ function noise = noiseExpandParam(noise, params)
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 if isfield(noise, 'transforms')
   for i = 1:length(noise.transforms)

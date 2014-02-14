@@ -10,7 +10,7 @@ function X = matrixReadFromFID(FID, varargin)
 % 
 % SEEALSO : modelReadFromFID, doublematrixReadFromFID
 
-% SHEFFIELDML
+% GPMAT
 
 modelType = readStringFromFID(FID, 'type');
 feval = str2func([modelType 'ReadFromFID']);

@@ -12,7 +12,7 @@ function handle = xyzankurDraw(joint, handle)
 %
 % COPYRIGHT : Carl Henrik Ek and Neil Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 
 limb{1} = [2 3;3 4;4 5]; %spine

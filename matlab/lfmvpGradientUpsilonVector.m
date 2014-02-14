@@ -16,7 +16,7 @@ function dUpsilon = lfmvpGradientUpsilonVector(gamma, sigma2, t, upsilon)
 %
 % SEEALSO : lfmvpComputeUpsilonMatrix.m
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin<4
     upsilon = lfmComputeUpsilonVector(gamma, sigma2, t);

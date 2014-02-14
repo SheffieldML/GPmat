@@ -15,7 +15,7 @@ function [upsilonap, upsilon] = lfmapComputeUpsilonMatrix(gamma, sigma2, t1, t2,
 %
 % SEEALSO : lfmComputeUpsilonMatrix.F, lfmComputeH3.m
 
-% SHEFFIELDML
+% GPMAT
 
 sigma = sqrt(sigma2);
 gridt1 = repmat(t1, 1, length(t2));

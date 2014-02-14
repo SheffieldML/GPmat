@@ -2,6 +2,6 @@ function gpReversibleDynamicsDisplay(model, varargin)
 
 % GPREVERSIBLEDYNAMICSDISPLAY Display a GP dynamics model.
 
-% SHEFFIELDML
+% GPMAT
 
 gpDisplay(model, varargin{:});

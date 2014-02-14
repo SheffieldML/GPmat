@@ -24,7 +24,7 @@ function model = gpDynamicsCreate(q, d, latentVals, options, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence and Carl Henrik Ek, 2005, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin>4
   diff = varargin{1};

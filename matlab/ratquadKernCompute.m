@@ -20,7 +20,7 @@ function [k, sk, n2] = ratquadKernCompute(kern, x, x2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 wi2 = .5/(kern.lengthScale*kern.lengthScale*kern.alpha);
 if nargin < 3

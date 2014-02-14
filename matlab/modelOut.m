@@ -26,7 +26,7 @@ function [Y, Phi] = modelOut(model, X, varargin)
 %
 % MODIFICATIONS : Cark Henrik Ek, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 fhandle = str2func([model.type 'Out']);
 if nargout > 1

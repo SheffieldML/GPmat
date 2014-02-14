@@ -20,7 +20,7 @@ function [k, sk, n2] = rbfperiodicKernCompute(kern, x, x2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 factor = 2*pi/kern.period;
 if nargin < 3

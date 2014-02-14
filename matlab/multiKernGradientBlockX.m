@@ -36,7 +36,7 @@ function gX = multiKernGradientBlockX(kern, X, X2, covGrad, i, j)
 %
 % MODIFICATIONS : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 6
   j = i;

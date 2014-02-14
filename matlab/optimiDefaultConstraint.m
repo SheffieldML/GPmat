@@ -17,7 +17,7 @@ function str = optimiDefaultConstraint(constraint)
 % SEEALSO : expTransform, sigmoidTransform, linearTransform, negLogLogitTransform
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 switch constraint
  case 'positive'

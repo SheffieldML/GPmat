@@ -15,7 +15,7 @@ function [params, names] = invcmpndKernExtractParam(kern)
 %
 % COPYRIGHT : Andreas C. Damianou, 2012
 
-% SHEFFIELDML
+% GPMAT
 
 
 if nargout > 1

@@ -19,7 +19,7 @@ function K = lmcKernCompute(kern, X, X2)
 %
 % COPYRIGHT : Mauricio A. Alvarez,  2010
 
-% SHEFFIELDML
+% GPMAT
 
 
 fhandle = str2func([kern.basicKernelType 'KernCompute']);

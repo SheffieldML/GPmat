@@ -20,6 +20,6 @@ function kern = linard2KernExpandParam(kern, params)
 %
 % COPYRIGHT : Michalis K. Titsias, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 kern.inputScales = params(1:end);

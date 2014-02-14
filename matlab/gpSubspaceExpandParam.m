@@ -4,7 +4,7 @@ function model = gpSubspaceExpandParam(model,params)
 %
 % COPYRIGHT : Carl Henrik Ek, 2008
 
-% SHEFFIELDML
+% GPMAT
   
 model = gpExpandParam(model,params);
 

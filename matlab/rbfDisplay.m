@@ -2,7 +2,7 @@ function rbfDisplay(model, spacing)
 
 % RBFDISPLAY Display an RBF network.
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin > 1
   spacing = repmat(32, 1, spacing);

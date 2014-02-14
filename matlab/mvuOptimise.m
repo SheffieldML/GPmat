@@ -10,7 +10,7 @@ function model = mvuOptimise(model, display, iters)
 %
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if(any(any(isnan(model.Y))))
   error('Cannot run MVU when missing data is present.');

@@ -36,7 +36,7 @@ function [g1, g2] = disimXsimKernGradient(disimKern, simKern, t1, t2, covGrad)
 %
 % COPYRIGHT : Antti Honkela, 2007-2009
 
-% SHEFFIELDML
+% GPMAT
 
 arg{1} = t1;
 if nargin < 5

@@ -18,6 +18,6 @@ function g = rbfOutputGrad(model, X)
 % COPYRIGHT : Neil D. Lawrence, 2006
 
 
-% SHEFFIELDML
+% GPMAT
 
 g = rbfderiv(model, X);

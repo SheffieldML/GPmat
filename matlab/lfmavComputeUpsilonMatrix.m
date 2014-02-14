@@ -13,7 +13,7 @@ function [upsilonav, upsilonvp, upsilon] = lfmavComputeUpsilonMatrix(gamma, sigm
 %
 % COPYRIGHT : Mauricio Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 sigma = sqrt(sigma2);
 gridt1 = repmat(t1, 1, length(t2));

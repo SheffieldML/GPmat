@@ -15,7 +15,7 @@ function lfmResultsDynamicWalking(dataSet, number, dataType, varargin)
 %
 % MODIFICATIONS : Mauricio Alvarez, 2012
 
-% SHEFFIELDML
+% GPMAT
 
 %[model, lbls] = lvmLoadResult(modelType, dataSet, number);
 capName = dataSet;

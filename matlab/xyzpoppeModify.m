@@ -4,7 +4,7 @@ function handle = xyzpoppeModify(handle,pos)
 %
 % COPYRIGHT : Carl Henrik Ek and Neil Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 
 joint = xyzpoppe2joint(pos);

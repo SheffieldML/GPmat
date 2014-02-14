@@ -12,7 +12,7 @@ function tokens = tokenise(string, delim)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 2
   delim = ' ';

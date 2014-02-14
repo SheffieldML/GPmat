@@ -55,7 +55,7 @@ function kern = invcmpndKernParamInit(kern)
 %
 % COPYRIGHT : Andreas C. Damianou, 2012
 
-% SHEFFIELDML
+% GPMAT
 
 
 

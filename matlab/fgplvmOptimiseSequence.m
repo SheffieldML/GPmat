@@ -17,7 +17,7 @@ function Xout = fgplvmOptimiseSequence(model, X, Y, display, iters);
 %
 % SEEALSO : fgplvmCreate, fgplvmOptimisePoint, fgplvmSequenceObjective, fgplvmSequenceGradient
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin < 5
   iters = 2000;

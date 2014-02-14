@@ -10,7 +10,7 @@ function out = cell2num(inCell)
 %
 % COPYRIGHT : Neil D. Lawrence, 2010
 
-% SHEFFIELDML
+% GPMAT
 
   if nargin < 3
     before = true;

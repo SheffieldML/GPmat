@@ -30,7 +30,7 @@ function gX = gibbsperiodicKernGradX(kern, X, X2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 
 fhandle = str2func([kern.lengthScaleTransform, 'Transform']);

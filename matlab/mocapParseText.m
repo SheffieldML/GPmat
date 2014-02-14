@@ -13,7 +13,7 @@ function [points, pointNames, times] = mocapParseText(fileName);
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 
 fid = fopen(fileName);

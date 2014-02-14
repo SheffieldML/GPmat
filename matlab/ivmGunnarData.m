@@ -20,7 +20,7 @@ function model = ivmGunnarData(dataSet, dataNum, kernelType, invWidth, dVal)
 %
 % COPYRIGHT : Neil D. Lawrence, 2005
 
-% SHEFFIELDML
+% GPMAT
 
 % Load the data
 HOME = getenv('HOME');

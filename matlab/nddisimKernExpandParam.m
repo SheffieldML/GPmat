@@ -19,7 +19,7 @@ function kern = nddisimKernExpandParam(kern, params)
 %
 % COPYRIGHT : Antti Honkela, 2007-2009
 
-% SHEFFIELDML
+% GPMAT
 
 %fprintf(1,'Expanding DISIM parameters, received these values:\n');
 %params

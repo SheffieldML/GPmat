@@ -15,7 +15,7 @@ function options = fgplvmOptions(varargin);
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 % Get default options from Gaussian process.
 options = gpOptions(varargin{:});

@@ -20,7 +20,7 @@ function [analMu, analCov, diffMu, diffCov] = gpPosteriorMeanCovarTest(model, X)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% SHEFFIELDML
+% GPMAT
 
 [analMu, analCov] = gpPosteriorGradMeanCovar(model, X);
 origX = X;

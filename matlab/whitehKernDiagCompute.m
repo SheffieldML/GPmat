@@ -12,7 +12,7 @@ function k = whitehKernDiagCompute(kern, x)
 %
 % COPYRIGHT : Mauricio A. Alvarez, Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 % /~MAURICIO : Intended for the School Data only
 % ~/

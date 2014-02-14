@@ -1,6 +1,6 @@
 % DEMREGRESSIONIVM1 The data-set is sampled from a GP with known parameters.
 
-% SHEFFIELDML
+% GPMAT
 
 randn('seed', 1e5);
 rand('seed', 1e5);

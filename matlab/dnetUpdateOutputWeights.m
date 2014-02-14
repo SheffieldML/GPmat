@@ -10,7 +10,7 @@ function model = dnetUpdateOutputWeights(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
   if model.basisStored
     G = sparseDiag(sum(model.w, 1)');

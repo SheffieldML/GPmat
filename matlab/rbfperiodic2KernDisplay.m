@@ -19,7 +19,7 @@ function rbfperiodic2KernDisplay(kern, spacing)
 %
 % MODIFICATIONS : Michalis K. Titsias, 2011
 
-% SHEFFIELDML
+% GPMAT
 
 if nargin > 1
   spacing = repmat(32, 1, spacing);

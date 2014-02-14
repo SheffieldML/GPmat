@@ -2,7 +2,7 @@ function l = logisticNormalPriorLogProb(prior, x)
 
 % LOGISTICNORMALPRIORLOGPROB Log probability of logistic-normal prior.
 
-% SHEFFIELDML
+% GPMAT
 
 % Compute log prior
 

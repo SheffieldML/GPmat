@@ -27,7 +27,7 @@ function [params, names] = gibbsKernExtractParam(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
-% SHEFFIELDML
+% GPMAT
 
 params = zeros(1, kern.nParams);
 if nargout < 2

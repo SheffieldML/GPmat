@@ -14,7 +14,7 @@ function g = kernDiagGradient(kern, x, covDiag)
 %
 % SEEALSO : kernDiagGradient, kernExtractParam, kernGradient
 
-% SHEFFIELDML
+% GPMAT
 
 
 fileName = [kern.type 'KernDiagGradient'];

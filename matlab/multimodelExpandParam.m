@@ -19,7 +19,7 @@ function model = multimodelExpandParam(model, params)
 %
 % MODIFICATIONS: Mauricio Alvarez, 2008, 2009
 
-% SHEFFIELDML
+% GPMAT
 
 if numel(model.outputDim) == 1
     endVal = model.numParams - model.numModels*model.numSep;

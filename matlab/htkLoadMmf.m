@@ -11,7 +11,7 @@ function [meanValCell, varValCell] = htkLoadMmf(phoneList, fileName)
 %  
 % COPYRIGHT : Neil D. Lawrence, 2009
 
-% SHEFFIELDML
+% GPMAT
   
   inState = false;
   inMean = false;

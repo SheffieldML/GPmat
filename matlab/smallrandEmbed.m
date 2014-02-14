@@ -11,6 +11,6 @@ function X = smallrandEmbed(Y, dims)
 %
 % SEEALSO : lleEmbed, isomapEmbed, ppcaEmbed
 
-% SHEFFIELDML
+% GPMAT
 
 X = randn(size(Y, 1), dims)*0.0001;

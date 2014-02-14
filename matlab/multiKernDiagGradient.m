@@ -19,7 +19,7 @@
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 if iscell(x)
     dim1 = zeros(1, kern.numBlocks);

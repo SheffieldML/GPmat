@@ -12,7 +12,7 @@ function gpWriteToFile(fileName, model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
 
-% SHEFFIELDML
+% GPMAT
 
 FID = fopen(fileName, 'w');
 if FID==-1

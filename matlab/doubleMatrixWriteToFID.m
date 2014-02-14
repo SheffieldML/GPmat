@@ -10,7 +10,7 @@ function doubleMatrixWriteToFID(val, FID)
 %
 % COPYRIGHT : Neil D. Lawrence, 2008
   
-% SHEFFIELDML
+% GPMAT
   
 writeVersionToFID(FID, 0.2);
 writeStringToFID(FID, 'baseType', 'matrix');

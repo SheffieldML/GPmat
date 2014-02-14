@@ -29,7 +29,7 @@ function [params, names] = rbfwhiteKernExtractParam(kern)
 %
 % COPYRIGHT : David Luengo, 2009
 %
-% SHEFFIELDML
+% GPMAT
 
 
 params = [kern.inverseWidth kern.variance];

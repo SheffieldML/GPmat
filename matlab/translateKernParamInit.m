@@ -19,7 +19,7 @@ function kern = translateKernParamInit(kern)
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% SHEFFIELDML
+% GPMAT
 
 kern = cmpndKernParamInit(kern);
 

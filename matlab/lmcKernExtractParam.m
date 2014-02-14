@@ -25,7 +25,7 @@ function [params,names] = lmcKernExtractParam(kern)
 %
 % COPYRIGHT : Mauricio A. Alvarez, 2010
 
-% SHEFFIELDML
+% GPMAT
 
 % First extract the parameters of the basic kernel
 
