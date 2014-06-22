@@ -525,9 +525,10 @@ Finally we also show results using the variational DTC approximation of Titsias,
 ### Back Constraints and Dynamics
 
 First we will demonstrate the dynamics functionality of the toolbox. We raw x-y-z values from a motion capture data set, the `Figure Run 1` example available <a href="http://accad.osu.edu/research/mocap/mocap_data.htm">from Ohio State University</a>. To run without dynamics use the script:
+
 ```matlab
 >> demStickFgplvm1
-</code>
+```
 
 The results are given on the left of the figure below.
 
@@ -544,7 +545,7 @@ This prior is used in the model to obtain the results below,
 
 ```matlab
 >> demStickFgplvm2
-</code>
+```
 
 <center><img src="demStickFgplvm2.png" width="49%"><br>
 GP-LVM with dynamics. Samples from the dynamics prior used are given in the figure above.</center>
@@ -555,7 +556,7 @@ Back constraints can also be used to achieve a similar effect,
 
 ```matlab
 >> demStickFgplvm3
-</code>
+```
 
 <center><img src="demStickFgplvm3.png" width="49%"><br>
 GP-LVM with back constraints. A RBF kernel mapping was used to form the back constraints with the inverse width set to 1e-4 (<i>i.e.</i>length scale set to 100).</center>
@@ -582,7 +583,7 @@ For <a href="/neill-bin/publications/bibpage.cgi?keyName=Lawrence:larger07&print
 
 ```matlab
 >> demCmu35gplvm1
-</code>
+```
 
 for the four dimensional latent space, `demCmu35gplvm2` for the three dimensional latent space and `demCmu35gplvm3` for the five dimensional latent space. The test data reconstruction can then be performed for all models with `demCmu35gplvmReconstruct`. Taylor <i>et al.</i>'s nearest neighbour results can be recreated using `demCmu35TaylorNearestNeighbour`.
 
@@ -797,7 +798,7 @@ Test Error 0.0183<br>
 
 Model likelihood -56.7120<br>
 
-</code>
+```
 
 
 
@@ -837,7 +838,7 @@ Test Error 0.1129<br>
 
 Model likelihood 175.3588<br>
 
-</code>
+```
 
 
 
@@ -865,7 +866,7 @@ The toy data example in the papers can be recreated using:
 
 >> demUnlabelled1
 
-</code>
+```
 
 
 
@@ -877,7 +878,7 @@ and leads to the decision boundary given below. A standard IVM based classifier 
 
 >> demUnlabelled2
 
-</code>
+```
 
 
 
@@ -895,7 +896,7 @@ The other USPS digit classification example given in the NIPS paper can be re-ru
 
 >> demThreeFive
 
-</code>
+```
 
 
 
@@ -909,7 +910,7 @@ Be aware that this code can take some time to run. The results, in the form of a
 
 >> demThreeFiveResults
 
-</code>
+```
 
 <center><image src="demThreeFive.png"><br>Plot of average area under ROC curve against probability of label being present. The red line is the standard IVM based classifier, the blue dotted line is the null category noise model based classifier, the green dash-dot line is the a normal SVM and the mauve dashed line is the transductive SVM.
 
