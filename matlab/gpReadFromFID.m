@@ -29,7 +29,7 @@ end
 
 if version>0.11
   baseType = readStringFromFID(FID, 'baseType')
-  if ~strcmp(baseType, 'mapmodel')
+    if ~strcmp(baseType, 'dataModel') && ~strcmp(baseType, 'mapmodel')
     error('Incorrect base type in file.')
   end
   type = readStringFromFID(FID, 'type')
