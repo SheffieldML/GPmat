@@ -11,7 +11,7 @@ function prior = priorTest(priorType);
 %
 % COPYRIGHT : Neil D. Lawrence, 2003, 2004
 %
-% MODIFICATIONS : Antti Honkela, 2012
+% MODIFICATIONS : Antti Honkela, 2012, 2014
 
 % GPMAT
 
@@ -23,6 +23,7 @@ params = priorExtractParam(prior);
 params = randn(size(params))./sqrt(randn(size(params)).^2);
 prior = priorExpandParam(prior, params);
 if isfield(prior, 'isBounded') && prior.isBounded,
+  prior.b = 1+9*rand(1);
   x = rand(1, 10) * (prior.b - prior.a) + prior.a;
 else
   x = randn(1, 10);
