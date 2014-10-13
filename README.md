@@ -465,19 +465,19 @@ Release 0.11 is the first release that contains the fully independent training c
 
 Release 0.1 is a pre-release to make some of the model functionality available. The some of the different approximations (such as fully independent training conditional and partially independent training conditional) are not yet implemented and the dynamics currently has no sparse approximations associated.
 
-This toolbox also implements back constraints (joint work with Joaquin Quinonero Candela). The mappings that can be used as back constraints are those described in <a href="http://www.cs.man.ac.uk/~neill/mltools/downloadFiles/">the MLTOOLS toolbox</a>.
+This toolbox also implements back constraints (joint work with Joaquin Quinonero Candela). The mappings that can be used as back constraints are those described in the MLTOOLS toolbox</a>.
 
 Alternative GP-LVM implementations from this site:
 
-The GP-LVM C++ software is available from <a href="http://www.cs.man.ac.uk/~neill/gplvmcpp/">here</a>.
+The GP-LVM C++ software is available from <a href="https://github.com/SheffieldML/GPc/">here</a>.
 
-The original MATLAB version of the toolbox is available here <a href="http://www.cs.man.ac.uk/~neill/gplvm/">here</a>.
+The original MATLAB version of the toolbox is available here <a href="http://staffwww.dcs.shef.ac.uk/people/N.Lawrence/gplvm/">here</a>.
 
 ## Examples
 
 ### GP-LVM
 
-The three approximations outlined above can be used to speed up learning in the GP-LVM. They have the advantage over the IVM approach taken in the <a href="http://www.cs.man.ac.uk/~neill/gplvm/">original GP-LVM toolbox</a> that the algorithm is fully convergent and the final mapping from latent space to data space takes into account all of the data (not just the points in the active set).
+The three approximations outlined above can be used to speed up learning in the GP-LVM. They have the advantage over the IVM approach taken in the <a href="http://staffwww.dcs.shef.ac.uk/people/N.Lawrence/gplvm/">original GP-LVM toolbox</a> that the algorithm is fully convergent and the final mapping from latent space to data space takes into account all of the data (not just the points in the active set).
 
 As well as the new sparse approximation the new toolbox allows the GP-LVM to be run with dynamics as suggested by <a href="http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Wang:gpdm05&printAbstract=1">Wang <i>et al.</i></a>.
 
@@ -487,7 +487,7 @@ Various combinations of back constraints and different approximations are used i
 
 ### Oil Data
 
-The `oil data' is commonly used as a bench mark for visualisation algorithms. For more details on the data see <a href="http://www.ncrg.aston.ac.uk/GTM/3PhaseData.html">this page</a>.
+The 'oil data' is commonly used as a bench mark for visualisation algorithms. For more details on the data see <a href="http://staffwww.dcs.shef.ac.uk/people/N.Lawrence/3PhaseData.html">this page</a>.
 
 The <a href="https://github.com/SheffieldML/GPc/">C++ implementation of the GP-LVM</a> has details on training the full GP-LVM with this data set. Here we will consider the three different approximations outlined above.
 
