@@ -667,7 +667,7 @@ IVM
 The first example given is `demClassification1` which is a simple classification data set, where only one direction of the input is relevant in determining the decision boundary. An ARD MLP kernel is used in combination with a linear kernel. The ARD parameters in the linear and MLP kernel are constrained to be the same by the line:
 
 ```matlab
-% Constrain the ARD parameters in the MLP and linear kernels to be the same.<br>
+% Constrain the ARD parameters in the MLP and linear kernels to be the same.
 
 model.kern = cmpndTieParameters(model.kern, {[4, 7], [5, 8]});
 ```
