@@ -766,37 +766,37 @@ The function `ivmGunnarData` allows you to test the IVM on Gunnar Raetsch's benc
 
 ```matlab
 
->>ivmGunnarData('ringnorm', 1, {'rbf', 'bias', 'white'}, 1, 100)<br>
+>>ivmGunnarData('ringnorm', 1, {'rbf', 'bias', 'white'}, 1, 100)
 
-...<br>
+...
 
-<br>
 
-Final model:<br>
 
-IVM Model:<br>
+Final model:
 
- Noise Model:<br>
+IVM Model:
 
-  Probit bias on process 1: 0.0439<br>
+ Noise Model:
 
-  Probit Sigma2: 0.0000<br>
+  Probit bias on process 1: 0.0439
 
- Kernel:<br>
+  Probit Sigma2: 0.0000
 
-  Compound kernel:<br>
+ Kernel:
 
-    RBF inverse width: 0.0866 (length scale 3.3984)<br>
+  Compound kernel:
 
-    RBF variance: 1.2350<br>
+    RBF inverse width: 0.0866 (length scale 3.3984)
 
-    Bias Variance: 8.2589<br>
+    RBF variance: 1.2350
 
-    White Noise Variance: 0.0000<br>
+    Bias Variance: 8.2589
 
-Test Error 0.0183<br>
+    White Noise Variance: 0.0000
 
-Model likelihood -56.7120<br>
+Test Error 0.0183
+
+Model likelihood -56.7120
 
 ```
 
@@ -808,35 +808,35 @@ You can try any of the data sets by replacing ringnorm with the relevant data se
 
 ```matlab
 
->> ivmGunnarData('banana', 1, {'rbf', 'bias', 'white'}, 1, 200)<br>
+>> ivmGunnarData('banana', 1, {'rbf', 'bias', 'white'}, 1, 200)
 
-...<br><br>
+...
 
-Final model:<br>
+Final model:
 
-IVM Model:<br>
+IVM Model:
 
- Noise Model:<br>
+ Noise Model:
 
-  Probit bias on process 1: 0.1067<br>
+  Probit bias on process 1: 0.1067
 
-  Probit Sigma2: 0.0000<br>
+  Probit Sigma2: 0.0000
 
- Kernel:<br>
+ Kernel:
 
-  Compound kernel:<br>
+  Compound kernel:
 
-    RBF inverse width: 1.6411 (length scale 0.7806)<br>
+    RBF inverse width: 1.6411 (length scale 0.7806)
 
-    RBF variance: 0.2438<br>
+    RBF variance: 0.2438
 
-    Bias Variance: 0.0000<br>
+    Bias Variance: 0.0000
 
-    White Noise Variance: 0.0148<br>
+    White Noise Variance: 0.0148
 
-Test Error 0.1129<br>
+Test Error 0.1129
 
-Model likelihood 175.3588<br>
+Model likelihood 175.3588
 
 ```
 
