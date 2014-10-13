@@ -315,9 +315,9 @@ Notice how the error bars are tight except in the region where the training data
 
 The sparse approximation used in this toolbox is based on the
 Sparse Pseudo-input Gaussian Process model described by <a
-href="/neill-bin/publications/bibpage.cgi?keyName=Snelson:pseudo05&printAbstract=1">Snelson
+href="http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Snelson:pseudo05&printAbstract=1">Snelson
 and Ghahramani</a>. Also provided are the extensions suggested by <a
-href="/neill-bin/publications/bibpage.cgi?keyName=Quinonero:unifying05">Qui&ntilde;onero-Candela
+href="http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Quinonero:unifying05">Qui&ntilde;onero-Candela
 and Rasmussen</a>. They provide a unifying terminology for describing
 these approximations which we shall use in what follows.
 
@@ -325,9 +325,9 @@ There are three demos provided for Gaussian process regression in
 1-D. They each use a different form of likelihood approximation. The
 first demonstration uses the &quot;projected latent variable&quot;
 approach first described by <a
-href="/neill-bin/publications/bibpage.cgi?keyName=Csato:sparse02&printAbstract=1">Csato
+href="http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Csato:sparse02&printAbstract=1">Csato
 and Opper</a> and later used by <a
-href="/neill-bin/publications/bibpage.cgi?keyName=Seeger:fast03&printAbstract=1">Seeger
+href="http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Seeger:fast03&printAbstract=1">Seeger
 <i>et al.</i></a>. In the terminology of Qui&ntilde;onero-Candela and
 Rasmussen (QR-terminology) this is known as the &quot;deterministic
 training conditional&quot; (DTC) approximation.
@@ -369,10 +369,10 @@ approximation, again with nine inducing variables.</center>
 At the <a href="http://www.dcs.shef.ac.uk/ml/gprt/">Sheffield
 Gaussian Process Round Table</a> Lehel Csato pointed out that the
 Bayesian Committee Machine of <a
-href="/neill-bin/publications/bibpage.cgi?group=bcm&printAbstract=1">Schwaighofer
+href="http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?group=bcm&printAbstract=1">Schwaighofer
 and Tresp</a> can also be viewed within the same framework. This idea
 is formalised in <a
-href="/neill-bin/publications/bibpage.cgi?keyName=Quinonero:unifying05&printAbstract=1">Qui&ntilde;onero-Candela
+href="http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Quinonero:unifying05&printAbstract=1">Qui&ntilde;onero-Candela
 and Rasmussen's</a> review. This approximation is known as the
 &quot;partially independent training conditional&quot; (PITC) in
 QR-terminology. To try this approximation run the following script
@@ -429,7 +429,7 @@ Bug fix from fgplvmReadFromFID where the values of model.m weren't being compute
 
 #### Version 0.151
 
-In this version results for the CMU Mocap data set from <a href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Taylor:motion06&printAbstract=1">Taylor et al.</a> of subject 35 running and walking are included, as well as some minor changes to allow hierarchical GP-LVMs to be used.
+In this version results for the CMU Mocap data set from <a href="http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Taylor:motion06&printAbstract=1">Taylor et al.</a> of subject 35 running and walking are included, as well as some minor changes to allow hierarchical GP-LVMs to be used.
 
 
 #### Version 0.15
@@ -479,7 +479,7 @@ The original MATLAB version of the toolbox is available here <a href="http://www
 
 The three approximations outlined above can be used to speed up learning in the GP-LVM. They have the advantage over the IVM approach taken in the <a href="http://www.cs.man.ac.uk/~neill/gplvm/">original GP-LVM toolbox</a> that the algorithm is fully convergent and the final mapping from latent space to data space takes into account all of the data (not just the points in the active set).
 
-As well as the new sparse approximation the new toolbox allows the GP-LVM to be run with dynamics as suggested by <a href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Wang:gpdm05&printAbstract=1">Wang <i>et al.</i></a>.
+As well as the new sparse approximation the new toolbox allows the GP-LVM to be run with dynamics as suggested by <a href="http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Wang:gpdm05&printAbstract=1">Wang <i>et al.</i></a>.
 
 Finally, the new toolbox allows the incorporation of `back constraints' in learning. Back constraints force the latent points to be a smooth function of the data points. This means that points that are close in data space are constrained to be close in latent space. For the standard GP-LVM points close in latent space are constrained to be close in data space, but the converse is not true.
 
@@ -489,7 +489,7 @@ Various combinations of back constraints and different approximations are used i
 
 The `oil data' is commonly used as a bench mark for visualisation algorithms. For more details on the data see <a href="http://www.ncrg.aston.ac.uk/GTM/3PhaseData.html">this page</a>.
 
-The <a href="http://www.cs.man.ac.uk/~neill/gplvmcpp">C++ implementation of the GP-LVM</a> has details on training the full GP-LVM with this data set. Here we will consider the three different approximations outlined above.
+The <a href="../GPc/">C++ implementation of the GP-LVM</a> has details on training the full GP-LVM with this data set. Here we will consider the three different approximations outlined above.
 
 #### FITC Approximation
 
@@ -579,7 +579,7 @@ Another ongoing piece of work with Jeff Bilmes and Jon Malkin involves embedding
 
 ### Larger Human Motion Data Sets
 
-For <a href="/neill-bin/publications/bibpage.cgi?keyName=Lawrence:larger07&printAbstract=1">an AISTATS paper</a> we recreated an experiment from <a href="/neill-bin/publications/bibpage.cgi?keyName=Taylor:motion06&printAbstract=1">Taylor <em>et al.</em>'s NIPS paper</a>. They created a data set from a motion capture data in the <a href="http://mocap.cs.cmu.edu">CMU data base</a> of running and walking. The data set can now be recreated using the <a href="/~neill/datasets/">DATASETS toolbox</a>. We repeated missing data experiments by Taylor et al.. The model learning for these experiments can be recreated with:
+For <a href="http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Lawrence:larger07&printAbstract=1">an AISTATS paper</a> we recreated an experiment from <a href="http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Taylor:motion06&printAbstract=1">Taylor <em>et al.</em>'s NIPS paper</a>. They created a data set from a motion capture data in the <a href="http://mocap.cs.cmu.edu">CMU data base</a> of running and walking. The data set can now be recreated using the <a href="/~neill/datasets/">DATASETS toolbox</a>. We repeated missing data experiments by Taylor et al.. The model learning for these experiments can be recreated with:
 
 ```matlab
 >> demCmu35gplvm1
@@ -653,7 +653,7 @@ process dynamics to fully recreate the data set. There results are given in thei
 Finally we show a plot of reconstructions of two of the angles in the data.
 
 <center><img src="./html/demCmu35gplvmLegReconstruct1_8.png" width="50%"><img src="./html/demCmu35gplvmLegReconstruct1_9.png" width="50%"></center>
-Prediction for first two angles of the right hip joint (see plots in <a href="/neill-bin/publications/bibpage.cgi?keyName=Taylor:motion06&printAbstract=1">Taylor <i>et al.</i></a> for comparison). Dotted line is nearest neighour in scaled space, dashed line is GP-LVM with 4-D latent space.</center>
+Prediction for first two angles of the right hip joint (see plots in <a href="http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Taylor:motion06&printAbstract=1">Taylor <i>et al.</i></a> for comparison). Dotted line is nearest neighour in scaled space, dashed line is GP-LVM with 4-D latent space.</center>
 
 
 IVM
