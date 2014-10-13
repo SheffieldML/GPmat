@@ -489,7 +489,7 @@ Various combinations of back constraints and different approximations are used i
 
 The `oil data' is commonly used as a bench mark for visualisation algorithms. For more details on the data see <a href="http://www.ncrg.aston.ac.uk/GTM/3PhaseData.html">this page</a>.
 
-The <a href="../GPc/">C++ implementation of the GP-LVM</a> has details on training the full GP-LVM with this data set. Here we will consider the three different approximations outlined above.
+The <a href="https://github.com/SheffieldML/GPc/">C++ implementation of the GP-LVM</a> has details on training the full GP-LVM with this data set. Here we will consider the three different approximations outlined above.
 
 #### FITC Approximation
 
@@ -1047,7 +1047,7 @@ In the next examples we use 3000 data points to represent the swiss roll,  `demS
 
 #### Oil Data
 
-The `oil data' is commonly used as a bench mark for visualisation algorithms. For more details on the data see <a href="http://www.ncrg.aston.ac.uk/GTM/3PhaseData.html">this page</a>.
+The `oil data' is commonly used as a bench mark for visualisation algorithms. For more details on the data see <a href="http://staffwww.dcs.shef.ac.uk/people/N.Lawrence/3PhaseData.html">this page</a>.
 
 In these examples we used the 1000 data points from the training data for the oil,  `demOilLle1.m` and  `demOilLle2.m`.
 
