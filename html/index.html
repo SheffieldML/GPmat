@@ -1,0 +1,846 @@
+<head>
+
+<meta name="description" content="">
+
+<meta name="keywords" content="">
+
+<meta name="author" content="">
+
+
+
+
+
+</head>
+
+<body bgcolor="#ffffff" topmargin="0" leftmargin="0" marginheight="0" marginwidth="0">
+
+
+
+
+
+<table border="0" cellpadding="0" cellspacing="0" align="right">
+
+<tr>
+
+<td><!--***************************************************************************************-->
+
+<A onmouseover="window.status&#13;&#10;='Homepage';
+
+ return true"
+
+ onmouseout ="window.status=''; return true" href="/~neill/" >
+
+Neil's homepage</A>&nbsp;&nbsp;<font color="#660099">|</font>&nbsp;&nbsp; <!--***************************************************************************************-->
+
+
+
+</td>
+
+
+
+<td><!--***************************************************************************************-->
+
+<A onmouseover="window.status&#13;&#10;='Research Group';
+
+ return true"
+
+ onmouseout ="window.status=''; return true" href="http://intranet.cs.man.ac.uk/mlo/" >
+
+research group</A>&nbsp;&nbsp;<font color="#660099">|</font>&nbsp;&nbsp; <!--***************************************************************************************-->
+
+</td>
+
+
+
+
+
+<td><!--***************************************************************************************-->
+
+<A onmouseover="window.status&#13;&#10;='People
+
+ in the group'; return true"
+
+ onmouseout ="window.status=''; return true" href="http://intranet.cs.man.ac.uk/mlo/people/" >
+
+MLO Researchers</A>&nbsp;&nbsp;<font color="#660099">|</font>&nbsp;&nbsp; <!--***************************************************************************************-->
+
+</td>
+
+
+
+</tr>
+
+</table>
+
+
+
+<table border="0" cellpadding="0" cellspacing="0" width="436">
+
+
+
+<tr>
+
+<td width="47" valign="top"><!--***************************************************************************************-->&nbsp; 
+
+<!--***************************************************************************************-->
+
+</td>
+
+<td><!--***************************************************************************************-->
+
+<a href="http://www.manchester.ac.uk/"
+
+ onMouseOver 
+
+="window.status='image1'; return true"
+
+ onMouseOut="window.status=''; return true" 
+
+      align="right" valign  ="top" 
+
+     ; <P 
+
+     ><IMG alt="University Logo" title="Manchester Est. 1824" src="http://www.cs.manchester.ac.uk/ai/pictures/icons/est1824.gif"> <!--***************************************************************************************-->
+
+</td></tr></table></body>
+
+<head>
+
+   <link href="http://intranet.cs.man.ac.uk/css/_print.css"
+
+    type="text/css" rel="stylesheet" media="print" />
+
+
+
+    <link href="http://intranet.cs.man.ac.uk/css/_base.css"
+
+    type="text/css" rel="stylesheet" media="screen" />
+
+    <style type="text/css" media="screen">
+
+    /*<![CDATA[*/
+
+    <!--
+
+    @import url(http://intranet.cs.man.ac.uk/css/_layout.css);
+
+    @import url(http://intranet.cs.man.ac.uk/css/_navigation.css);
+
+    @import url(http://intranet.cs.man.ac.uk/css/_forms.css);
+
+    @import url(http://intranet.cs.man.ac.uk/css/_boxes.css);
+
+    -->
+
+    /*]]>*/
+
+
+
+    .currentsection  {
+
+	 background-color: #f0f0ff; 
+
+	 color:#000;
+
+	 display: block; 
+
+	 font-weight:normal;
+
+	 padding: 4px 4px 5px 4px;
+
+	 text-decoration:none; 
+
+    }
+
+    .multilevel-linkdiv-0 {
+
+	 background-color: #f0f0ff; 
+
+	 margin-left: 1.0em;
+
+         text-align: left
+
+    }
+
+    a.greylink:link    { color: #c0c0c0; }
+
+    a.greylink:visited { color: #d0d0d0; }
+
+		
+
+    .lined {
+
+	 border-style: solid;
+
+	 border-color: #006073;
+
+	 border-bottom-width: 0px;
+
+	 border-top-width: 1px;
+
+	 border-left-width: 0px;
+
+	 border-right-width: 0px;
+
+    }
+
+    table, caption {
+
+      font-size: inherit;
+
+      font-weight: inherit;
+
+      font-style: inherit;
+
+      font-variant: inherit;
+
+    }
+
+    </style>
+
+
+
+    <style type="text/css" media="screen">
+
+    /*<![CDATA[*/
+
+    <!--
+
+    .section {margin-left: 4em}
+
+.abstract    { font-size:small }
+
+span.author  { font-weight: bold }
+
+span.regular {  }
+
+span.journal {  font-style: italic}
+
+span.papertitle     { font-style: italic; font-weight: bold }
+
+    body { background-image: url(http://intranet.cs.man.ac.uk/ai//pictures/icons/logoleft.gif); }
+
+    div.locator { background-color: #6666cc; background-image: url(); background-repeat: no-repeat; border: none; margin: 1px 0 0 0; padding: 0; width: 184px; height: 92px; }
+
+    -->
+
+    /*]]>*/
+
+    </style>
+
+<!--  End of Style Sheet CSS -->
+
+</head>
+
+
+
+
+
+<head>
+
+<title>Fast Gaussian Process Latent Variable Model - MATLAB Software</title>
+
+</head>
+
+
+
+<body><div class="section">
+
+
+
+<h1>Fast GP-LVM Software</h1>
+
+
+
+<p>This page describes examples of how to use the fast Gaussian process latent variable model Software (FGPLVM). This toolbox allows for larger GP-LVM models through using the sparse approximations suggested in papers by authors including Titsias, Snelson, Ghahramani, Seeger, and Lawrence.
+
+
+
+
+    <p>The FGPLVM software can be downloaded
+    <a href="/neill-bin/software/downloadForm.cgi?toolbox=fgplvm">here</a>.
+    <h2>Release Information</h2>
+    <p><b>Current release is 0.163</b>.
+    <p>As well as downloading the FGPLVM software you need to obtain the toolboxes specified below. <b>These can be downloaded using the <i>same</i> password you get from registering for the  FGPLVM software.</b>
+    <table>
+    <tr>
+    <td width="65%"><b>Toolbox</b></td>
+    <td width="35%"><b>Version</b></td>
+    </tr><tr><td><a href="/~neill/netlab/downloadFiles/vrs3p3">NETLAB</a></td><td> 3.3</td></tr>
+<tr><td><a href="/~neill/prior/downloadFiles/vrs0p22">PRIOR</a></td><td> 0.22</td></tr>
+<tr><td><a href="/~neill/optimi/downloadFiles/vrs0p132">OPTIMI</a></td><td> 0.132</td></tr>
+<tr><td><a href="/~neill/datasets/downloadFiles/vrs0p1371">DATASETS</a></td><td> 0.1371</td></tr>
+<tr><td><a href="/~neill/kern/downloadFiles/vrs0p225">KERN</a></td><td> 0.225</td></tr>
+<tr><td><a href="/~neill/ndlutil/downloadFiles/vrs0p162">NDLUTIL</a></td><td> 0.162</td></tr>
+<tr><td><a href="/~neill/noise/downloadFiles/vrs0p141">NOISE</a></td><td> 0.141</td></tr>
+<tr><td><a href="/~neill/mocap/downloadFiles/vrs0p136">MOCAP</a></td><td> 0.136</td></tr>
+</table>
+
+
+
+<p>Changes for compatibility with new SGPLVM toolbox by Carl Henrik Ek.
+
+
+
+<h4>Version 0.162</h4>
+
+
+
+<p>Added new files fgplvmWriteResults fgplvmLoadResults for saving smaller model files.
+
+
+
+<H4>Version 0.161</h4>
+
+
+
+<p>Updates for running a GPLVM when the inner produce matrix is used
+
+(i.e. dimensionality much greater than data points).  Minor changes to
+
+fix reading of GPLVM files from latest C++ code.
+
+
+
+<h4>Version 0.16</h4>
+
+
+
+<p>Incorporate varational approximation from Michalis in the code. 
+
+
+
+<h4>Version 0.153</h4>
+
+
+
+<p>Changes to allow compatibility with SGPLVM and NCCA toolboxes.
+
+
+
+
+
+<h4>Version 0.152</h4>
+
+
+
+<p>Bug fix from fgplvmReadFromFID where the values of model.m weren't being computed correctly.
+
+
+
+<h4>Version 0.151</h4>
+
+
+
+<p>In this version results for the CMU Mocap data set from <a href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Taylor:motion06&printAbstract=1">Taylor et al.</a> of subject 35 running and walking are included, as well as some minor changes to allow hierarchical GP-LVMs to be used.
+
+
+
+
+
+<h4>Version 0.15</h4>
+
+
+
+<p>This version splits the Gaussian process portion into a new GP toolbox, the corresponding version is 0.1. Fixed bug in gpDynamicsExpandParam, gpDynamicsExractParam and gpDynamicsLogLikeGradient where 'fixInducing' option  was not being dealt with.
+
+
+
+<p>Fixed bug in fgplvmCreate.m where the back constraints were set up, but the latent positions were not being set according to the back constraints in the returned model.
+
+
+
+<h4>Version 0.141</h4>
+
+
+
+<p>Changed GP-LVM default optimiser to scg rather than conjgrad. Added fgplvmOptimiseSequence and dependent files. This is for optimising a test sequence in the latent space, for the case where there are dynamics on the model.
+
+
+
+<h4>Version 0.14</h4>
+
+
+
+<p>Carl Ek implemented multiple sequences in the gpDynamics model used for dynamics in the GPLVM, this was refined and integrated by Neil.
+
+
+
+<p>Fixed two bugs in gpPosteriorGradMeanVar which appeared if fitc was used or the scales on the outputs were non-zero. This in turn affected fgplvmOptimisePoint.
+
+
+
+<p>Default under back constraints switched to not optimise towards a PCA initialisation.
+
+
+
+<p>Fixed bug in fgplvmReadFromFID where the old form of fgplvmCreate was being called.
+
+
+
+
+
+<h4>Version 0.132</h4>
+
+
+
+<p>Release 0.132 includes two speed improvements on the pitc approximation. Thanks to <a href="http://www.gatsby.ucl.ac.uk/~snelson/">Ed Snelson</a> for pointing out that it was unusually slow! New versions of the NDLUTIL and KERN toolbox are also required.
+
+
+
+<p>Release 0.131 adds the ability to handle missing data and a new reversible dynamics model.
+
+
+
+<p>Release 0.13 is a (hopefully) fairly stable base release for which several results in forthcoming papers will be created. Additional features are better decompartmentalisation of dynamics models, regularisation of inducing variable's inputs and introduction of fgplvmOptions and gpOptions for setting default options for the models.
+
+
+
+<p>Release 0.11 is the first release that contains the fully independent training conditional approximation (Snelson and Ghahramani, Quinonero Candela and Rasmussen).  
+
+
+
+<p>Release 0.1 is a pre-release to make some of the model functionality available. The some of the different approximations (such as fully independent training conditional and partially independent training conditional) are not yet implemented and the dynamics currently has no sparse approximations associated.
+
+
+
+<p>This toolbox also implements back constraints (joint work with Joaquin Quinonero Candela). The mappings that can be used as back constraints are those described in <a href="http://www.cs.man.ac.uk/~neill/mltools/downloadFiles/">the MLTOOLS toolbox</a>.
+
+
+
+<p>Alternative GP-LVM implementations from this site:
+
+
+
+<p>The GP-LVM C++ software is available from <a href="http://www.cs.man.ac.uk/~neill/gplvmcpp/">here</a>.
+
+
+
+<p>The original MATLAB version of the toolbox is available here <a href="http://www.cs.man.ac.uk/~neill/gplvm/">here</a>.
+
+
+
+<h2>Examples</h2>
+
+
+
+<h3>GP-LVM</h3>
+
+
+
+<p>The three approximations outlined above can be used to speed up learning in the GP-LVM. They have the advantage over the IVM approach taken in the <a href="http://www.cs.man.ac.uk/~neill/gplvm/">original GP-LVM toolbox</a> that the algorithm is fully convergent and the final mapping from latent space to data space takes into account all of the data (not just the points in the active set).
+
+
+
+<p>As well as the new sparse approximation the new toolbox allows the GP-LVM to be run with dynamics as suggested by <a href="http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Wang:gpdm05&printAbstract=1">Wang <i>et al.</i></a>.
+
+
+
+<p>Finally, the new toolbox allows the incorporation of `back constraints' in learning. Back constraints force the latent points to be a smooth function of the data points. This means that points that are close in data space are constrained to be close in latent space. For the standard GP-LVM points close in latent space are constrained to be close in data space, but the converse is not true.
+
+
+
+<p>Various combinations of back constraints and different approximations are used in the exmaples below.
+
+
+
+<h3>Oil Data</h3>
+
+
+
+<p>The `oil data' is commonly used as a bench mark for visualisation algorithms. For more details on the data see <a href="http://www.ncrg.aston.ac.uk/GTM/3PhaseData.html">this page</a>.
+
+
+
+<p>The <a href="http://www.cs.man.ac.uk/~neill/gplvmcpp">C++ implementation of the GP-LVM</a> has details on training the full GP-LVM with this data set. Here we will consider the three different approximations outlined above.
+
+
+
+<h4>FITC Approximation</h4>
+
+
+
+In all the examples we give there will be 100 points in the active set. We first considered the FITC approximation. The script <code>demOilFgplvm1.m</code> runs the FITC approximation giving the result on the left of the figure shown below.
+
+
+
+<p><center><img src="demOilFgplvm1.png" width="49%"><img src="demOilFgplvm2.png" width="49%"><br>
+
+<i>Left</i>: GP-LVM on the oil data using the FITC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses.  One hundred inducing variables are used. <i>Right</i>: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.</center>
+
+
+
+<p>Back constraints can be added to each of these approximations. In the example on the right we used a back constraint given by a multi-layer perceptron with 15 hidden nodes. This example can be recreated with <code>demOilFgplvm2.m</code>.
+
+
+
+<h4>DTC Approximation</h4>
+
+
+
+<p>The other approximations can also be used, in the figures below we give results from the DTC approximation. The can be recreated using <code>demOil3.m</code> and <code>demOil4.m</code>.
+
+
+
+<p><center><img src="demOilFgplvm3.png" width="49%"><img src="demOilFgplvm4.png" width="49%"><br>
+
+<i>Left</i>: GP-LVM on the oil data using the DTC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses.  One hundred inducing variables are used. <i>Right</i>: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.</center>
+
+
+
+<h4>PITC Approximation</h4>
+
+
+
+<p>We also show results using the PITC approximation, these results can be recreated using the scripts <code>demOilFgplvm5.m</code> and <code>demOilFgplvm6.m</code>.
+
+
+
+<p><center><img src="demOilFgplvm5.png" width="49%"><img src="demOilFgplvm6.png" width="49%"><br>
+
+<i>Left</i>: GP-LVM on the oil data using the PITC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses.  One hundred inducing variables are used. <i>Right</i>: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.</center>
+
+
+
+<h4>Variational DTC Approximation</h4>
+
+
+
+<p>Finally we also show results using the variational DTC approximation of Titsias, these results can be recreated using the scripts <code>demOilFgplvm7.m</code> and <code>demOilFgplvm8.m</code>.
+
+
+
+<p><center><img src="demOilFgplvm7.png" width="49%"><img src="demOilFgplvm8.png" width="49%"><br>
+
+<i>Left</i>: GP-LVM on the oil data using the variational DTC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses.  One hundred inducing variables are used. <i>Right</i>: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.</center>
+
+
+
+
+
+<h3>Back Constraints and Dynamics</h3>
+
+
+
+First we will demonstrate the dynamics functionality of the toolbox. We raw x-y-z values from a motion capture data set, the <code>Figure Run 1</code> example available <a href="http://accad.osu.edu/research/mocap/mocap_data.htm">from Ohio State University</a>. To run without dynamics use the script:
+
+<p><code>
+
+&gt;&gt; demStickFgplvm1
+
+</code>
+
+
+
+<p>The results are given on the left of the figure below.
+
+
+
+<p><center><img src="demStickFgplvm1.png" width="49%"><br>
+
+GP-LVM on the motion capture data without dynamics in the latent space. </center>
+
+
+
+<p>Notice that the sequence (which is a few strides of a man running) is split into several sub-sequences. These sub-sequences are aligned to the strides of the man. By introducing a dynamics prior, we can force the sequence to link up. Samples from the dynamics prior used are shown in the plot below.
+
+
+
+<p><center><img src="dynamicsSamp1.png" width="49%"><img src="dynamicsSamp2.png" width="49%"><br>
+
+<img src="dynamicsSamp3.png" width="49%"><img src="dynamicsSamp4.png" width="49%">
+
+Samples from the dynamics prior which is placed over the latent space. This prior has <i>Left</i>: GP-LVM on the motion capture data without dynamics in the latent space. <i>Right</i>: GP-LVM with dynamics. Samples from the dynamics prior used are given in the figure above.</center>
+
+
+
+<p>This prior is used in the model to obtain the results below,
+
+
+
+<p><code>
+
+&gt;&gt; demStickFgplvm2
+
+</code>
+
+
+
+<p><center><img src="demStickFgplvm2.png" width="49%"><br>
+
+GP-LVM with dynamics. Samples from the dynamics prior used are given in the figure above.</center>
+
+
+
+Note now the circular form of the latent space. 
+
+
+
+Back constraints can also be used to achieve a similar effect,
+
+
+
+<p><code>
+
+&gt;&gt; demStickFgplvm3
+
+</code>
+
+
+
+<p><center><img src="demStickFgplvm3.png" width="49%"><br>
+
+GP-LVM with back constraints. A RBF kernel mapping was used to form the back constraints with the inverse width set to 1e-4 (<i>i.e.</i>length scale set to 100).</center>
+
+
+
+<h3>Loop Closure in Robotics</h3>
+
+
+
+In on-going work with Dieter Fox and Brian Ferris at the University of Washington we are interested in loop closure for robotic navigation, included as an example is a data set of a robot completing a loop while reading wireless access point signal strengths. To produce a neat track and close the loop it turns out it is necessary to use dynamics and back constraints as seen in the images below. These results can be recreated with <p><code>demRobotWireless1.m</code> through <code>demRobotWireless4.m</code>.
+
+</code>
+
+
+
+<p><center><img src="demRobotWireless1.png" width="49%"><img src="demRobotWireless2.png" width="49%"><br>
+
+<p><img src="demRobotWireless3.png" width="49%"><img src="demRobotWireless4.png" width="49%"><br>
+
+Use of back constraints and dynamics to obtain loop closure in a robot navigation example. <i>Top Left</i>: GP-LVM without back constraints or dynamics, <i>Top right</i>: GP-LVM with back constraints, no dynamics, <i>Bottom Left</i>: GP-LVM with dynamics, no back constraints, <i>Bottom right</i>: GP-LVM with back constraints and dynamics. </center>
+
+
+
+<h3>Vocal Joystick and Vowel Data</h3>
+
+
+
+Another ongoing piece of work with Jeff Bilmes and Jon Malkin involves embedding vowel sounds in a two dimensional space as part of <a href="http://ssli.ee.washington.edu/vj">vocal joystick</a> system. Jon has provided a simple data set of 2,700 examples of different vowels. These are embedded in a two dimensional latent space with and without back constraints.
+
+
+
+<p><center><img src="demVowels2.png" width="49%"><img src="demVowels3.png" width="49%"><br>
+
+<i>Left</i>: embedding of the vowel data without back constraints, <i>Right</i>: embedding of the vowel data with back constraints. <i>/a/</i> - red cross, <i>/ae/</i> - green circle, <i>/ao/</i> - blue plus, <i>/e/</i> - cyan asterix, <i>/i/</i> - magenta square, <i>/ibar/</i> - yellow diamond, <i>/o/</i> - red down triangle, <i>/schwa/</i> - green up triangle, <i>/u/</i> - blue left triangle.
+
+</center>
+
+
+
+<h3>Larger Human Motion Data Sets</h3>
+
+
+
+<p>For <a href="/neill-bin/publications/bibpage.cgi?keyName=Lawrence:larger07&printAbstract=1">an AISTATS paper</a> we recreated an experiment from <a href="/neill-bin/publications/bibpage.cgi?keyName=Taylor:motion06&printAbstract=1">Taylor <em>et al.</em>'s NIPS paper</a>. They created a data set from a motion capture data in the <a href="http://mocap.cs.cmu.edu">CMU data base</a> of running and walking. The data set can now be recreated using the <a href="/~neill/datasets/">DATASETS toolbox</a>. We repeated missing data experiments by Taylor et al.. The model learning for these experiments can be recreated with:
+
+
+
+<p><code>
+
+&gt;&gt; demCmu35gplvm1
+
+</p>
+
+
+
+<p>for the four dimensional latent space, <code>demCmu35gplvm2</code> for the three dimensional latent space and <code>demCmu35gplvm3</code> for the five dimensional latent space. The test data reconstruction can then be performed for all models with <code>demCmu35gplvmReconstruct</code>. Taylor <i>et al.</i>'s nearest neighbour results can be recreated using <code>demCmu35TaylorNearestNeighbour</code>.
+
+
+
+<p>Data was pre-processed by mapping angles to be between -180 and 180 and scaling the data such that the variance of each dimension was one.
+
+<p>The quality of the trained model was evaluated using a missing data problem with a test sequence of data. The model was required to fill in either upper body angles or right leg angles. Results for the GP-LVM and nearest neighbour in both scaled space and original angle space are given in the table below.
+
+<center>
+
+<table>
+
+<tr>
+
+<td></td><td align="center">Leg</td><td align="center">Leg</td><td align="center">Body</td><td align="center">Body</td>
+
+</tr>
+
+<tr>
+
+<td></td><td align="center">Cumulative</td><td align="center">RMS</td><td align="center">Cumulative</td><td align="center">RMS</td>
+
+</tr>
+
+<tr>
+
+<td></td><td align="center">Scaled</td><td align="center">Angles</td><td align="center">Scaled</td><td align="center">Angles</td>
+
+</tr>
+
+<tr>
+
+<td>GP-LVM (<i>q</i>=3)</td><td align="right">11.4</td><td align="right">3.40</td><td align="right"><b>16.9</b></td><td align="right"><b>2.49</b></td>
+
+</tr>
+
+<tr>
+
+<td>GP-LVM (<i>q</i>=4)</td><td align="right"><b>9.7</b></td><td align="right"><b>3.38</b></td><td align="right">20.7</td><td align="right">2.72</td>
+
+</tr>
+
+<tr>
+
+<td>GP-LVM (<i>q</i>=5)</td><td align="right">13.4</b></td><td align="right">4.25</td><td align="right">23.4<td align="right">2.78</td>
+
+</tr>
+
+<tr>
+
+<td>Scaled NN</td><td align="right">13.5</b></td><td align="right">4.44</td><td align="right">20.8<td align="right">2.62</td>
+
+</tr>
+
+<tr>
+
+<td>Nearest Neighbour</td><td align="right">14.0</b></td><td align="right">4.11</td><td align="right">30.9<td align="right">3.20</td>
+
+</tr>
+
+</table>
+
+</center>
+
+<p>The cumulative scaled error is a recreation of the error reported in Taylor <i>et al.</i> which was the average (across angles) cumulative sum (across time) of the squared errors in the down-scaled (<i>i.e.</i> variance one) space of angles. We also present the root mean squared angle error for each joint which we find to be a little easier to interpret.
+
+
+
+<p>Taylor <i>et al.</i> used a slightly different representation of
+
+the data set which included the absolute <i>x</i> and <i>z</i>
+
+position of the root node and rotation around the <i>y</i>-axis. For
+
+this data set, this information does help, principally because the
+
+subject seems to start in roughly the same position at the beginning
+
+of each sequence. However, in general absolute position will not help,
+
+so we discarded it in favour of a representation of these values in
+
+terms of differences between frames. Finally Taylor <i>et al.</i>
+
+concatenated two frames to form each data point for the model. We
+
+chose not to do this as we wanted to test the ability of the Gaussian
+
+process dynamics to fully recreate the data set. There results are given in their paper and summarised below.
+
+
+
+<center>
+
+<table>
+
+<tr>
+
+<td></td><td align="center">Leg</td><td align="center">Body</td>
+
+</tr>
+
+<tr>
+
+<td></td><td align="center">Cumulative</td><td align="center">Cumulative</td>
+
+</tr>
+
+<tr>
+
+<td></td><td align="center">Scaled</td><td align="center">Scaled</td>
+
+</tr>
+
+<td>Binary Latent Variable Model</td><td align="right"><b>11.7</b></td><td align="right"><b>8.8</b></td>
+
+</tr>
+
+<tr>
+
+<td>Scaled NN</td><td align="right">22.2</td><td align="right">20.5</td>
+
+</tr>
+
+</table>
+
+</center>
+
+<p>Finally we show a plot of reconstructions of two of the angles in the data.
+
+
+
+<p><center><img src="demCmu35gplvmLegReconstruct1_8.png" width="50%"><img src="demCmu35gplvmLegReconstruct1_9.png" width="50%"></center>
+
+Prediction for first two angles of the right hip joint (see plots in <a href="/neill-bin/publications/bibpage.cgi?keyName=Taylor:motion06&printAbstract=1">Taylor <i>et al.</i></a> for comparison). Dotted line is nearest neighour in scaled space, dashed line is GP-LVM with 4-D latent space.</center>
+
+</div></body>
+
+<p><center>Page updated on Wed May 19 10:04:54 2010</center><!-- footer -->
+
+
+
+<body>
+
+    <div id="footer">
+
+      <div class="links">
+
+        <p>
+
+          | 
+
+          <a href="http://www.manchester.ac.uk/aboutus/documents/disclaimer/"
+
+             title="Disclaimer">Disclaimer</a> |
+
+             <a href="http://www.manchester.ac.uk/aboutus/documents/privacy/"
+
+             title="Privacy">Privacy</a> |
+
+             <a href="http://www.manchester.ac.uk/aboutus/documents/copyright/"
+
+             title="Copyright Notice">Copyright notice</a> |
+
+             <a href="http://www.manchester.ac.uk/aboutus/documents/accessibility/"
+
+             title="Accessibility">Accessibility</a> |
+
+             <a href="http://www.manchester.ac.uk/aboutus/documents/foi/"
+
+             title="Freedom of information">Freedom of information</a> | 
+
+             <a href="http://www.manchester.ac.uk/aboutus/contact/feedback/"
+
+             title="Feedback">Feedback</a> |
+
+        </p>
+
+
+
+      </div>
+
+      <div class="pagestatus">
+
+        <p>Please contact
+
+          <a href="mailto:webmaster.cs@manchester.ac.uk">webmaster.cs@manchester.ac.uk</a>
+
+          with comments and suggestions
+
+        </p>
+
+      </div>
+
+    </div>
+
+
+
+  </body>
+
