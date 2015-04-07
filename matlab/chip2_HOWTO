@@ -1,0 +1,9 @@
+# Script for processing mef2 data.
+
+cut -f 1,46- ~/Downloads/mef2_ChIP_timecourse_data/mef2_ChIP_timecourse_data.tab > mef2_ChIP_timecourse_summary2.txt
+
+python ~/projects/manchester/code/chip2_filter_mef2.py < mef2_ChIP_timecourse_summary.txt > mef2_chipdata.txt
+
+perl -pi -e 's/\r/\n/g' mef2paper.csv
+
+python2.5 ~/projects/manchester/code/chip2_join_mef2.py mef2paper.csv < mef2_chipdata.txt > mef2_chipdata_fbgn.txt
