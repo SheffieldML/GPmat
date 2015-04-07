@@ -1,0 +1,441 @@
+@String{bioinf = {Bioinformatics}}
+@String{pnasusa = {Proc. Natl. Acad. Sci. USA}}
+@Article{Gao:latent08,
+  author = 	 {Pei Gao and Antti Honkela and Magnus Rattray and Neil D. Lawrence},
+  title = 	 {Gaussian Process Modelling of Latent Chemical Species: Applications to Inferring Transcription Factor Activities},
+  journal = 	 bioinf,
+  year = 	 2008,
+  OPTkey = 	 {},
+  volume =	 24,
+  OPTnumber = 	 {},
+  pages =	 {i70--i75},
+  OPTmonth = 	 {},
+  OPTnote =	 {To appear at ECCB '08},
+  OPTannote = 	 {},
+  OPTpubmedid =  {},
+  doi =		 {10.1093/bioinformatics/btn278},
+  linkpdf =	 {http://bioinformatics.oxfordjournals.org/cgi/reprint/24/16/i70.pdf?ijkey=FauSn114lAUC1Ey&keytype=ref},
+  linksoftware = softwarehttp # {gpsim/},
+  abstract =	 {{\bf Motivation:} Inference of 
+
+                 \emph{latent chemical species} in biochemical
+                 interaction networks is a key problem in estimation
+                 of the structure and parameters of the genetic,
+                 metabolic and protein interaction networks that
+                 underpin all biological processes. We present a
+                 framework for Bayesian marginalisation of these
+                 latent chemical species through Gaussian process
+                 priors.
+
+                 {\bf Results:} We demonstrate our general
+                 approach on three different biological examples of
+                 single input motifs, including both activation and
+                 repression of transcription.  We focus in particular
+                 on the problem of inferring transcription factor
+                 activity when the concentration of active protein
+                 cannot easily be measured. We show how the
+                 uncertainty in the inferred transcription factor
+                 activity can be integrated out in order to derive a
+                 likelihood function that can be used for the
+                 estimation of regulatory model parameters.  An
+                 advantage of our approach is that we avoid the use of
+                 a coarse-grained discretization of continuous-time
+                 functions, which would lead to a large number of
+                 additional parameters to be estimated. We develop
+                 efficient exact and approximate inference schemes,
+                 which are much more efficient than competing
+                 sampling-based schemes and therefore provide us with
+                 a practical toolkit for model-based inference.
+
+                 {\bf Availability:} The software and data for
+                 recreating all the experiments in this paper is
+                 available in MATLAB from
+                 \url{http://www.cs.man.ac.uk/~neill/gpsim}
+
+                 {\bf Contact:} \url{neill@cs.man.ac.uk}},
+  group =	 {gene networks, TFA, gp}
+}
+
+
+@Article{Barenco:ranked06,
+  author =	 {Martino Barenco and Daniela Tomescu and Daniel
+                  Brewer and Robin Callard and Jaroslav Stark and
+                  Michael Hubank},
+  title =	 {Ranked prediction of p53 targets using hidden
+                  variable dynamic modeling},
+  journal =	 {Genome Biology},
+  year =	 2006,
+  volume =	 7,
+  number =	 3,
+  pages =	 {R25},
+  linkpdf =
+                  {http://genomebiology.com/content/pdf/gb-2006-7-3-r25.pdf},
+  linkhtml =	 {http://genomebiology.com/2006/7/3/R25},
+  abstract =	 {Full exploitation of microarray data requires hidden
+                  information that cannot be extracted using current
+                  analysis methodologies. We present a new approach,
+                  hidden variable dynamic modeling (HVDM), which
+                  derives the hidden profile of a transcription factor
+                  from time series microarray data, and generates a
+                  ranked list of predicted targets. We applied HVDM to
+                  the p53 network, validating predictions
+                  experimentally using small interfering RNA. HVDM can
+                  be applied in many systems biology contexts to
+                  predict regulation of gene activity quantitatively.},
+  group =	 {gene networks, network motifs, single input motifs}
+}
+
+@Article{Cirz:inhibition05,
+  author =	 {Ryan T. Cirz and Jodie K. Chin and David R. Andes
+                  and Valérie de Crécy-Lagard and William A. Craig and
+                  Floyd E. Romesberg},
+  title =	 {Inhibition of Mutation and Combating the Evolution
+                  of Antibiotic Resistance},
+  journal =	 {PLoS Biology},
+  year =	 2005,
+  OPTkey =	 {},
+  volume =	 3,
+  number =	 6,
+  OPTpages =	 {},
+  OPTmonth =	 {},
+  OPTnote =	 {},
+  OPTannote =	 {},
+  OPTpubmedid =	 {},
+  OPTdoi =	 {},
+  OPTlinkpdf =	 {},
+  OPTlinkps =	 {},
+  OPTlinkpsgz =	 {},
+  OPTlinksoftware ={},
+  OPTabstract =	 {},
+  OPTgroup =	 {SOS response}
+}
+
+@Article{Courcelle:comparative01,
+  author =	 {Justin Courcelle and Arkady Khodursky and Brian
+                  Peter and Patrick O. Brown and and Philip
+                  C. Hanawalt},
+  title =	 {Comparative Gene Expression Profiles Following {UV}
+                  Exposure in Wild-Type and {SOS}-Deficient
+                  \emph{Escherichia coli}},
+  journal =	 {Genetics},
+  year =	 2001,
+  OPTkey =	 {},
+  volume =	 158,
+  OPTnumber =	 {},
+  pages =	 {41--64},
+  OPTmonth =	 {},
+  OPTnote =	 {},
+  OPTannote =	 {},
+  pubmedid =	 1461638,
+  OPTdoi =	 {},
+  OPTlinkpdf =	 {},
+  OPTlinkps =	 {},
+  OPTlinkpsgz =	 {},
+  OPTlinksoftware ={},
+  abstract =	 {The SOS response in UV-irradiated Escherichia coli
+                  includes the upregulation of several dozen genes
+                  that are negatively regulated by the LexA
+                  repressor. Using DNA microarrays containing
+                  amplified DNA fragments from 95.5\% of all open
+                  reading frames identified on the E. coli chromosome,
+                  we have examined the changes in gene expression
+                  following UV exposure in both wild-type cells and
+                  lexA1 mutants, which are unable to induce genes
+                  under LexA control. We report here the time courses
+                  of expression of the genes surrounding the 26
+                  documented lexA-regulated regions on the E. coli
+                  chromosome. We observed 17 additional sites that
+                  responded in a lexA-dependent manner and a large
+                  number of genes that were upregulated in a
+                  lexA-independent manner although upregulation in
+                  this manner was generally not more than twofold. In
+                  addition, several transcripts were either
+                  downregulated or degraded following UV
+                  irradiation. These newly identified UV-responsive
+                  genes are discussed with respect to their possible
+                  roles in cellular recovery following exposure to UV
+                  irradiation.},
+  group =	 {E. coli, SOS response}
+}
+
+@Article{Khanin:repression06,
+  author = 	 {Raya Khanin and Veronica Viciotti and Ernst Wit},
+  title = 	 {Reconstructing Repressor Protein Levels from Expression of Gene Targets in \emph{E. Coli}},
+  journal = 	 pnasusa,
+  year = 	 2006,
+  OPTkey = 	 {},
+  volume =	 103,
+  number =	 49,
+  pages =	 {18592--18596},
+  OPTmonth = 	 {},
+  OPTnote = 	 {},
+  doi =	 {10.1073/pnas.0603390103},
+  pubmedid =	 17121995,
+  linkpdf =	 {http://www.pnas.org/cgi/reprint/103/49/18592.pdf},
+  OPTlinksoftware = {},
+  abstract =	 {The basic underlying problem in reverse engineering of 
+                 gene regulatory networks from gene expression data is
+                 that the expression of a gene encoding the regulator
+                 provides only limited information about its protein
+                 activity. The proteins, which result from
+                 translation, are subject to stringent
+                 posttranscriptional control and modification. Often,
+                 it is only the modified version of the protein that
+                 is capable of activating or repressing its regulatory
+                 targets. At present there exists no reliable
+                 high-throughput technology to measure the protein
+                 activity levels in real-time, and therefore they are,
+                 so-to-say, lost in translation. However, these
+                 activity levels can be recovered by studying the gene
+                 expression of their targets. Here, we describe a
+                 computational approach to predict temporal regulator
+                 activity levels from the gene expression of its
+                 transcriptional targets in a network motif with one
+                 regulator and many targets. We consider an example of
+                 an SOS repair system, and computationally infer the
+                 regulator activity of its master repressor, LexA. The
+                 reconstructed activity profile of LexA exhibits a
+                 behavior that is similar to the experimentally
+                 measured profile of this repressor: after UV
+                 irradiation, the amount of LexA substantially
+                 decreases within a few minutes, followed by a
+                 recovery to its normal level. Our approach can easily
+                 be applied to known single-input motifs in other
+                 organisms.},
+  group =	 {gene networks, repressor}
+}
+@Article{Lee:target05,
+  author = 	 {Andrew M. Lee and Christian T. Ross and Bu-Bing Zeng and and Scott F. Singleton.},
+  title = 	 {A Molecular Target for Suppression of the Evolution of Antibiotic Resistance: Inhibition of the \emph{Escherichia coli} {RecA} Protein by {N6-(1-Naphthyl)-ADP}},
+  journal = 	 {J. Med. Chem.},
+  year = 	 2005,
+  OPTkey = 	 {},
+  volume =	 48,
+  number =	 17,
+  OPTpages = 	 {5408--5411},
+  OPTmonth = 	 {},
+  OPTnote = 	 {},
+  OPTannote = 	 {},
+  OPTpubmedid =  {},
+  OPTdoi = 	 {},
+  OPTlinkpdf = 	 {},
+  OPTlinkps = 	 {},
+  OPTlinkpsgz =  {},
+  OPTlinksoftware = {},
+  OPTabstract =  {},
+  group =	 {SOS response, E. Coli}
+}
+@Misc{Rogers:model06a,
+  author =	 {Simon Rogers and Mark Girolami},
+  title =	 {Model Based Identification of Transcription Factor Regulatory Activity via {M}arkov Chain {M}onte {C}arlo},
+  howpublished = {Presentation at MASAMB '06},
+  OPTmonth = 	 {},
+  year =	 2006,
+  OPTnote = 	 {},
+  group =	 {gene networks}
+}
+@InProceedings{Williams:infinite96,
+  author = 	 {Christopher K. I. Williams},
+  title = 	 {Computing with Infinite Networks},
+  crossref =	 {Mozer:nips96},
+  linkpsz = 	 {http://www.ncrg.aston.ac.uk/Papers/postscript/NCRG_96_026.ps.zip},
+  abstract = 	 {For neural networks with a wide class of weight priors, it   
+                 can be shown that in the limit of an infinite number
+                 of hidden units the prior over functions tends to a
+                 Gaussian process. In this paper analytic forms are
+                 derived for the covariance function of the Gaussian
+                 processes corresponding to networks with sigmoidal
+                 and Gaussian hidden units. This allows predictions to
+                 be made efficiently using networks with an infinite
+                 number of hidden units, and shows that, somewhat
+                 paradoxically, it may be easier to carry out Bayesian
+                 prediction with infinite networks rather than finite
+                 ones.},
+  group = 	 {gp}
+}
+@string{mit =      {MIT Press}}
+@string{nips =     {Advances in Neural Information Processing Systems}}
+@Proceedings{Mozer:nips96,
+  title =        nips,
+  editor =       {Michael C. Mozer and Michael I. Jordan and Thomas Petsche},
+  booktitle =    nips,
+  volume =       9,
+  publisher =    mit,
+  address =      {Cambridge, MA},
+  year =         1997
+}
+@Article{Rogers07BMCBioinf,
+  author = 	 {Simon Rogers and Raya Khanin and Mark Girolami},
+  title = 	 {Bayesian model-based inference of transcription factor activity},
+  journal = 	 {BMC Bioinformatics},
+  year = 	 {2007},
+  volume = 	 {8},
+  number = 	 {Suppl 2},
+  pages = 	 {S2},
+  linkpdf =      {http://www.biomedcentral.com/content/pdf/1471-2105-8-S2-S2.pdf},
+  doi =          {10.1186/1471-2105-8-S2-S2}
+}
+
+@Book{GPMLBook,
+  author = 	 {Carl E. Rasmussen and Christopher K.I. Williams},
+  title = 	 {Gaussian Processes for Machine Learning},
+  publisher = 	 {MIT Press},
+  year = 	 {2006},
+  address = 	 {Cambridge, MA}
+}
+
+@Book{Carroll05,
+  author = 	 {Sean B. Carroll},
+  title = 	 {Endless Forms Most Beautiful: The New Science of Evo Devo and the Making of the Animal Kingdom},
+  publisher = 	 {W. W. Norton},
+  year = 	 {2005}
+}
+
+@Article{DellaGatta08GenomeRes,
+  author = 	 {Giusy {Della Gatta} and Mukesh Bansal and Alberto Ambesi-Impiombato and Dario Antonini and Caterina Missero and Diego di Bernardo},
+  title = 	 {Direct targets of the {TRP63} transcription factor revealed by a combination of gene expression profiling and reverse engineering},
+  journal = 	 {Genome Res.},
+  year = 	 {2008},
+  volume = 	 {18},
+  number = 	 {6},
+  pages = 	 {939--948},
+  doi =          {10.1101/gr.073601.107}
+}
+
+@Article{Sandmann06,
+  author =	 {Thomas Sandmann and Lars J. Jensen and Janus
+                  S. Jakobsen and Michal M. Karzynski and Michael
+                  P. Eichenlaub and Peer Bork and Eileen E.M. Furlong},
+  title =	 {A Temporal Map of Transcription Factor Activity:
+                  {M}ef2 Directly Regulates Target Genes at All Stages
+                  of Muscle Development},
+  journal =	 {Developmental Cell},
+  year =	 {2006},
+  volume =	 {10},
+  number =	 {6},
+  pages =	 {797--807},
+  doi =          {10.1016/j.devcel.2006.04.009}
+}
+
+@Article{Sandmann07,
+  author =	 {Thomas Sandmann and Charles Girardot and Marc Brehme
+                  and Waraporn Tongprasit and Viktor Stolc and Eileen
+                  E.M. Furlong},
+  title =	 {A core transcriptional network for early mesoderm development in {D}rosophila melanogaster},
+  journal =	 {Genes \& Development},
+  year =	 {2007},
+  volume =	 {21},
+  number =	 {4},
+  pages =	 {436--449},
+  doi =          {10.1101/gad.1509007}
+}
+
+@Article{Tomancak02,
+  author =	 {Pavel Tomancak and Amy Beaton and Richard Weiszmann
+                  and Elaine Kwan and ShengQiang Shu and Suzanna
+                  E. Lewis and Stephen Richards and Michael Ashburner
+                  and Volker Hartenstein and Susan E. Celniker and
+                  Gerald M. Rubin},
+  title =	 {Systematic determination of patterns of gene expression during Drosophila embryogenesis},
+  journal =	 {Genome Biology},
+  year =	 {2002},
+  volume =	 {3},
+  number =	 {12},
+  pages =	 {research0088.1-0088.14},
+  doi =          {10.1186/gb-2002-3-12-research0088}
+}
+
+@ARTICLE{Zinzen2009,
+  author = {Robert P Zinzen and Charles Girardot and Julien Gagneur and Martina
+	Braun and Eileen E M Furlong},
+  title = {Combinatorial binding predicts spatio-temporal cis-regulatory activity.},
+  journal = {Nature},
+  year = {2009},
+  volume = {462},
+  pages = {65--70},
+  number = {7269},
+  month = {Nov},
+  abstract = {Development requires the establishment of precise patterns of gene
+	expression, which are primarily controlled by transcription factors
+	binding to cis-regulatory modules. Although transcription factor
+	occupancy can now be identified at genome-wide scales, decoding this
+	regulatory landscape remains a daunting challenge. Here we used a
+	novel approach to predict spatio-temporal cis-regulatory activity
+	based only on in vivo transcription factor binding and enhancer activity
+	data. We generated a high-resolution atlas of cis-regulatory modules
+	describing their temporal and combinatorial occupancy during Drosophila
+	mesoderm development. The binding profiles of cis-regulatory modules
+	with characterized expression were used to train support vector machines
+	to predict five spatio-temporal expression patterns. In vivo transgenic
+	reporter assays demonstrate the high accuracy of these predictions
+	and reveal an unanticipated plasticity in transcription factor binding
+	leading to similar expression. This data-driven approach does not
+	require previous knowledge of transcription factor sequence affinity,
+	function or expression, making it widely applicable.},
+  doi = {10.1038/nature08531},
+  institution = {European Molecular Biology Laboratory, D-69117 Heidelberg, Germany.},
+  language = {eng},
+  medline-pst = {ppublish},
+  owner = {ahonkela},
+  pii = {nature08531},
+  pmid = {19890324},
+  timestamp = {2009.11.18},
+  url = {http://dx.doi.org/10.1038/nature08531}
+}
+
+@ARTICLE{Honkela2010PNAS,
+  author = {Antti Honkela and Charles Girardot and E. Hilary Gustafson and Ya-Hsin
+	Liu and Eileen E M Furlong and Neil D Lawrence and Magnus Rattray},
+  title = {Model-based method for transcription factor target identification
+	with limited data},
+  journal = {Proc Natl Acad Sci U S A},
+  year = {2010},
+  volume = {107},
+  pages = {7793--7798},
+  number = {17},
+  month = {Apr},
+  __markedentry = {[ahonkela]},
+  abstract = {We present a computational method for identifying potential targets
+	of a transcription factor (TF) using wild-type gene expression time
+	series data. For each putative target gene we fit a simple differential
+	equation model of transcriptional regulation, and the model likelihood
+	serves as a score to rank targets. The expression profile of the
+	TF is modeled as a sample from a Gaussian process prior distribution
+	that is integrated out using a nonparametric Bayesian procedure.
+	This results in a parsimonious model with relatively few parameters
+	that can be applied to short time series datasets without noticeable
+	overfitting. We assess our method using genome-wide chromatin immunoprecipitation
+	(ChIP-chip) and loss-of-function mutant expression data for two TFs,
+	Twist, and Mef2, controlling mesoderm development in Drosophila.
+	Lists of top-ranked genes identified by our method are significantly
+	enriched for genes close to bound regions identified in the ChIP-chip
+	data and for genes that are differentially expressed in loss-of-function
+	mutants. Targets of Twist display diverse expression profiles, and
+	in this case a model-based approach performs significantly better
+	than scoring based on correlation with TF expression. Our approach
+	is found to be comparable or superior to ranking based on mutant
+	differential expression scores. Also, we show how integrating complementary
+	wild-type spatial expression data can further improve target ranking
+	performance.},
+  doi = {10.1073/pnas.0914285107},
+  institution = {Department of Information and Computer Science, Aalto University
+	School of Science and Technology, Helsinki, Finland. antti.honkela@tkk.fi},
+  language = {eng},
+  medline-pst = {ppublish},
+  owner = {ahonkela},
+  pii = {0914285107},
+  pmid = {20385836},
+  timestamp = {2010.05.10},
+  url = {http://dx.doi.org/10.1073/pnas.0914285107}
+}
+
+@Article{Chib95,
+  author = 	 {Siddhartha Chib},
+  title = 	 {Marginal Likelihood from the Gibbs Output},
+  journal = 	 {Journal of the American Statistical Association},
+  year = 	 {1995},
+  volume = 	 {90},
+  number = 	 {432},
+  pages = 	 {1313--1321}
+}
+

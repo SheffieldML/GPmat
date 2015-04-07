@@ -1,0 +1,970 @@
+#LyX 1.5.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 276
+\begin_document
+\begin_header
+\textclass bioinfo
+\begin_preamble
+\usepackage{crop}
+\copyrightyear{2008}
+\pubyear{2008}
+\end_preamble
+\language english
+\inputencoding latin1
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\cite_engine natbib_authoryear
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 2
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+firstpage
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\end_inset
+
+1
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Title
+A Gaussian Process Toolkit for Inference of Latent Chemical Species with
+ Appplications in Inferring Transcription Factor Activities
+\end_layout
+
+\begin_layout Author
+Pei Gao\InsetSpace \thinspace{}
+
+\begin_inset Formula $^{1,*}$
+\end_inset
+
+, Antti Honkela\InsetSpace \thinspace{}
+
+\begin_inset Formula $^{2}$
+\end_inset
+
+, Magnus Rattray\InsetSpace \thinspace{}
+
+\begin_inset Formula $^{1}$
+\end_inset
+
+ and Neil D.
+ Lawrence\InsetSpace \thinspace{}
+
+\begin_inset Formula $^{1,*}$
+\end_inset
+
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Standard
+to whom correspondence should be addressed
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+address{$^{1}$School of Computer Science, University of Manchester, Kilburn
+ Building, Oxford Road, Manchester, M13 9PL
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Standard
+
+$^{2}$Department of XXXXXXXX, Address XXXX etc.}
+\end_layout
+
+\begin_layout Standard
+
+
+\backslash
+history{Received on XXXXX; revised on XXXXX; accepted on XXXXX}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Editor
+Associate Editor: XXXXXXX
+\end_layout
+
+\begin_layout Abstract
+\InsetSpace ~
+
+\end_layout
+
+\begin_deeper
+\begin_layout Section
+Motivation:
+\end_layout
+
+\end_deeper
+\begin_layout Abstract
+Inference of 
+\emph on
+latent chemical species 
+\emph default
+in biochemical interaction networks is a key problem in estimation of the
+ structure and parameters of the genetic, metabolic and protein interaction
+ networks that underpin all biological processes.
+ We present a framework for Bayesian marginalisation of these latent chemical
+ species through Gaussian process priors.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Section
+Results:
+\end_layout
+
+\end_deeper
+\begin_layout Abstract
+We apply our approach to three different biological data sets.
+ We focus on the problem of inference of transcription activity and consider
+ signallying and developmental networks.
+ Our results demonstrate the promise of the methodology ...
+\end_layout
+
+\begin_deeper
+\begin_layout Section
+Availability:
+\end_layout
+
+\end_deeper
+\begin_layout Abstract
+The software and data for recreating all the experiments in this paper is
+ available in MATLAB from 
+\begin_inset LatexCommand htmlurl
+target "http://www.cs.man.ac.uk/~neill/gpsim"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Section
+Contact:
+\end_layout
+
+\end_deeper
+\begin_layout Abstract
+\begin_inset LatexCommand url
+target "neill@cs.man.ac.uk"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+\emph on
+Magnus pointed out that what we do is not just useful for latent functions,
+ but also in the case where the system isn't closed loop.
+ A closed loop system defines the type of function involved at each point,
+ an open system (such as we look at) doesn't.
+ So even if we had observations for all functions involved we would still
+ need our GP priors for continuity.
+ Need to embed this somewhere.
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+The use of ordinary differential equations to model biological subsystems
+ is already a well established approach 
+\backslash
+cite{}.
+ More recently attention has turned to methodologies for fitting the parameters
+ of these equations in the context of a particular experiment or set of
+ experiments 
+\backslash
+cite{ maybe copasi?}.
+\end_layout
+
+\begin_layout Standard
+Ordinary differential equations (ODE) are an approximation to the underlying
+ chemical master equation.
+ In an ODE the intrinsic variability in the reactants is ignored.
+ However, this variability becomes less significant as the size of the system
+ increases.
+ Since most biological experiments cannot isolate expression levels in a
+ single cell we are generally viewing data that is collated from a significant
+ number of cells.
+ Therefore, for many experiments of interest we consider the assumptions
+ behind the approximation to be broadly valid.
+ 
+\end_layout
+
+\begin_layout Standard
+Significant progress has been made on parameter estimation in the context
+ of differential equations and through the use of advanced Monte Carlo technique
+s it is even possible to, given a specific data set, rank model structures
+ through the use of Bayes factors 
+\begin_inset LatexCommand citep
+key "Vyshemirsky:ranking08"
+
+\end_inset
+
+.
+ This shows the potential for these techniques to be closely integrated
+ with biological investigations, informing the process of biological experimenta
+l design.
+\end_layout
+
+\begin_layout Standard
+A remaining problem for these approaches is dealing with the case where
+ one or more of the chemical species in the system are unobserved.
+ This is a common problem, it is a natural consequence of the fact that
+ some quantities are relatively easy to measure in a high throughput manner
+ (
+\emph on
+e.g.
+
+\emph default
+ mRNA concentrations with microarray), whereas others are much more difficult
+ to measure on a large scale (
+\emph on
+e.g.
+
+\emph default
+ protein concentrations such as transcription factors).
+ In this paper we advocate the use of Gaussian processes to define prior
+ distributions over these 
+\emph on
+latent chemical species
+\emph default
+.
+ This allows us to marginalise their contributions in the interaction network
+ of interest.
+ We present a basic toolkit of algorithms based on Gaussian processes which
+ allow us to consider different response models (Michaelis Menten kinetics,
+ repression responses) and cascades of interactions in which chemical species
+ of interest are missing.
+ The application domain we consider is inference of transcription factor
+ (TF) activity in both developmental and signalling networks.
+ Inference of TF activity in a given network is a well studied problem with
+ both genome wide approaches (
+\emph on
+e.g.
+
+\emph default
+ 
+\begin_inset LatexCommand citealp
+key "Liao:nca03,Sanguinetti:chipdyno06,Sanguinetti:chipvar06"
+
+\end_inset
+
+) and algorithms designed for a sub set of genes (
+\emph on
+e.g.
+
+\emph default
+ 
+\begin_inset LatexCommand citealp
+key "Nachman:inferring04,Rogers:model06b,Khanin:repression06,Barenco:ranked06"
+
+\end_inset
+
+).
+ Our approach is most directly inspired by 
+\begin_inset LatexCommand citet
+key "Barenco:ranked06"
+
+\end_inset
+
+ who infer transcription factor activity in a single input module network
+ motif through a differential equation with a linear response.
+ We build on their work to consider simple cascade networks and non-linear
+ response models such as Michaelis Menten kinetics and repression responses
+ 
+\begin_inset LatexCommand citep
+key "Alon:systems06"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Gaussian processes 
+\begin_inset LatexCommand citep
+key "Rasmussen:book06"
+
+\end_inset
+
+ are probabilistic models of functions that encode particular assumptions
+ about the function such as smoothness and timescale.
+ They are commonly applied in the context of regression and interpolation.
+ An attractive characteristic of the Gaussian process (GP) is that the result
+ of any linear operator on the function leads to another GP, we will exploit
+ this when applying GPs in the context of differential equations.
+ 
+\end_layout
+
+\begin_layout Standard
+Our focus in this paper will be the inference of transcription factor activities
+ given mRNA concentrations.
+ We start by considering the model given in 
+\begin_inset LatexCommand citet
+key "Barenco:ranked06"
+
+\end_inset
+
+ and reviewing the work done by 
+\begin_inset LatexCommand citet
+key "Lawrence:transcriptionalGP06"
+
+\end_inset
+
+ who provided the first treatment of this model with Gaussian processes.
+ Then, in Section\InsetSpace ~
+
+\begin_inset LatexCommand ref
+reference "sub:repressionModel"
+
+\end_inset
+
+, we extend our model to the case of repression.
+ We follow 
+\begin_inset LatexCommand citet
+key "Khanin:repression06"
+
+\end_inset
+
+ and apply the model in the context of ...
+ ***brief description of Wit data***.
+ In both these cases, no model of transcription factor translation is included.
+ In our final example (Section\InsetSpace ~
+
+\begin_inset LatexCommand ref
+reference "sub:cascadedDifferentialEquations"
+
+\end_inset
+
+) we show how, in the context of 
+\emph on
+Drosophila mesoderm 
+\emph default
+development a model of translation can be incorporated to improve the quality
+ of the transcription factor inference.
+\end_layout
+
+\begin_layout Section
+Methods
+\end_layout
+
+\begin_layout Standard
+Consider the following simple model of gene regulation proposed by 
+\begin_inset LatexCommand citet
+key "Barenco:ranked06"
+
+\end_inset
+
+, 
+\begin_inset Formula \[
+\frac{\mathrm{d}x_{j}\left(t\right)}{\mathrm{d}t}=B_{j}+S_{j}f\left(t\right)-D_{j}x_{j}\left(t\right),\]
+
+\end_inset
+
+here the changing level of a gene 
+\begin_inset Formula $j$
+\end_inset
+
+'s expression, 
+\begin_inset Formula $x_{j}\left(t\right)$
+\end_inset
+
+, is given by a combination of a basal transctiption rate, 
+\begin_inset Formula $B_{j}$
+\end_inset
+
+, a sensitivity, 
+\begin_inset Formula $S_{j}$
+\end_inset
+
+, to its governing TF's activity, 
+\begin_inset Formula $f\left(t\right)$
+\end_inset
+
+, and the decay rate of the mRNA, 
+\begin_inset Formula $D_{j}$
+\end_inset
+
+.
+ The differential equation can be solved for 
+\begin_inset Formula $x_{j}\left(t\right)$
+\end_inset
+
+ giving
+\begin_inset Formula \begin{equation}
+x_{j}\left(t\right)=\frac{B_{j}}{D_{j}}+S_{i}\int_{0}^{t}\exp\left(-D_{i}\left(t-u\right)\right)f\left(u\right)\mathrm{d}u,\label{eq:linearSolution}\end{equation}
+
+\end_inset
+
+where we have ignored any transient terms.
+\end_layout
+
+\begin_layout Standard
+Our general approach is to assume that 
+\begin_inset Formula $f\left(t\right)$
+\end_inset
+
+ was drawn from a Gaussian process.
+ A Gaussian process (GP) is a prior distribution over functions that leads
+ to highly flexible non-linear functions in which characteristics such as
+ the stationarity, the roughness and the timescale of the signal can be
+ controlled.
+ Gaussian processes are the functional analogue of the Gaussian distribution,
+ they are fully specified by a mean function, 
+\begin_inset Formula $\mu\left(t\right)$
+\end_inset
+
+, and a covariance function, 
+\begin_inset Formula $k\left(t,t^{\prime}\right)$
+\end_inset
+
+.
+ The mean function is an unconstrained function of time, whilst the covariance
+ function is constrained to be a positive definite function.
+ Various covariance functions can be used, we will predominantly make use
+ of the squared exponential covariance (sometimes known as the Gaussian
+ or RBF covariance),
+\begin_inset Formula \[
+k\left(t,t^{\prime}\right)=\exp\left(-\frac{\left(t-t^{\prime}\right)^{2}}{l^{2}}\right).\]
+
+\end_inset
+
+An important characteristic of a GP is that any linear operation applied
+ to the function drawn from a GP leads to a function that is drawn from
+ a related GP.
+ This is the functional analogue of linear operations applied to samples
+ from a Gaussian distribution.
+ We note that (
+\begin_inset LatexCommand ref
+reference "eq:linearSolution"
+
+\end_inset
+
+) is a linear operation on 
+\begin_inset Formula $f\left(t\right)$
+\end_inset
+
+: it only involves integrals sums and products applied to 
+\begin_inset Formula $f\left(t\right)$
+\end_inset
+
+.
+ The properties of GP tell us that if 
+\begin_inset Formula $f\left(t\right)$
+\end_inset
+
+ was drawn from a GP with covariance function 
+\begin_inset Formula $k_{f,f}\left(t,t^{\prime}\right)$
+\end_inset
+
+ then 
+\begin_inset Formula $x_{j}\left(t\right)$
+\end_inset
+
+ will also be drawn from a GP with a covariance function given by
+\begin_inset Formula \[
+k_{x_{j},x_{j}}\left(t,t^{\prime}\right)=S_{j}^{2}\int_{0}^{t}\exp\left(-D_{j}\left(t-u\right)\right)\int_{0}^{t^{\prime}}\exp\left(-D_{j}\left(t^{\prime}-u^{\prime}\right)\right)k_{f,f}\left(t,t^{\prime}\right)\mathrm{d}u^{\prime}\mathrm{d}u.\]
+
+\end_inset
+
+Furthermore, the cross covariances between the 
+\begin_inset Formula $f\left(t\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $x_{j}\left(t\right)$
+\end_inset
+
+ will be given by
+\begin_inset Formula \[
+k_{x_{j},f}\left(t,t^{\prime}\right)=\int_{0}^{t}\exp\left(-D_{i}\left(t-u\right)\right)k_{f,f}\left(t,t^{\prime}\right)\mathrm{d}u.\]
+
+\end_inset
+
+Finally, if our data consist of several genes, 
+\begin_inset Formula $\left\{ x_{j}\left(t\right)\right\} _{j=1}^{N}$
+\end_inset
+
+, cross covariances between the genes can be computed, 
+\begin_inset Formula \[
+k_{x_{i},x_{j}}\left(t,t^{\prime}\right)=S_{i}S_{j}\int_{0}^{t}\exp\left(-D_{i}\left(t-u\right)\right)\int_{0}^{t^{\prime}}\exp\left(-D_{j}\left(t^{\prime}-u^{\prime}\right)\right)k_{f,f}\left(t,t^{\prime}\right)\mathrm{d}u^{\prime}\mathrm{d}u.\]
+
+\end_inset
+
+The basal transcription rate then appears in the mean function to define
+ the mean of the Gaussian process for 
+\begin_inset Formula $x_{j}\left(t\right)$
+\end_inset
+
+ as a constant 
+\begin_inset Formula $\frac{B_{j}}{D_{j}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+As was shown in 
+\begin_inset LatexCommand citet
+key "Lawrence:transcriptionalGP06"
+
+\end_inset
+
+, if 
+\begin_inset Formula $f\left(t\right)$
+\end_inset
+
+ is drawn from a GP with a squared exponential covariance function, we can
+ analytically define a probabilistic model of the expression data for which
+ the parameters of the differential equation, 
+\begin_inset Formula $B_{j},\, S_{j},\, D_{j}$
+\end_inset
+
+ and the timescale 
+\begin_inset Formula $l$
+\end_inset
+
+ can all be determined, either through maximum likelihood or Bayesian sampling.
+ We illustrate this by repeating their results here.
+\end_layout
+
+\begin_layout Subsection
+p53 Activity
+\end_layout
+
+\begin_layout Standard
+The transcription factor p53 is a tumour repressor ...
+ 
+\series bold
+GENERAL PROBLEM DESCRIPTION HERE
+\end_layout
+
+\begin_layout Subsubsection
+Linear Model
+\end_layout
+
+\begin_layout Standard
+In this section we recreate the results presented by 
+\begin_inset LatexCommand citeauthor
+key "Lawrence:transcriptionalGP06"
+
+\end_inset
+
+ for the linear model with several key differences.
+ Firstly, in the original paper 
+\begin_inset LatexCommand citeauthor
+key "Barenco:ranked06"
+
+\end_inset
+
+ constrained 
+\begin_inset Formula $f\left(0\right)$
+\end_inset
+
+ to be zero, forcing the basal transcription rate to account for all transcripti
+on at time 
+\begin_inset Formula $t=0$
+\end_inset
+
+.
+ This constraint was not included in 
+\begin_inset LatexCommand citeauthor
+key "Lawrence:transcriptionalGP06"
+
+\end_inset
+
+ but is included here.
+ Secondly, 
+\begin_inset LatexCommand citeauthor
+key "Lawrence:transcriptionalGP06"
+
+\end_inset
+
+ used an unormalised version of the Affymetrix array data.
+ We found that simple median based normalisation removed the effect of a
+ couple of repeats that were anomalously high.
+ Inspection of the processed data used by 
+\begin_inset LatexCommand citeauthor
+key "Barenco:ranked06"
+
+\end_inset
+
+ showed that they had also dealt with these anomalies so here we considered
+ the normalised array data.
+\end_layout
+
+\begin_layout Standard
+Below we show results of inference ...
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+RESULTS WITH LINEAR MODEL HERE.
+\end_layout
+
+\begin_layout Subsubsection
+MAP Laplace Approximation
+\end_layout
+
+\begin_layout Standard
+The differential equation with a linear response is an attractive model
+ to use in the context of GPs as it allows the joint distribution over the
+ gene expression and TF activity to be determined analytically, given the
+ model parameters.
+ However, as a model, it has some shortcomings.
+ Firstly, it treats both the gene expression and the TF activity as GPs.
+ Since a GP cannot encode the information that a function is constrained
+ positive, this means that the concentrations are 
+\emph on
+a priori 
+\emph default
+allowed to be negative.
+ Whilst the posteriors, in the region where there is data, tend to stay
+ positive (see Figure\InsetSpace ~
+), when the predictions move away from the data they
+ allow the TF activity to become negative.
+ A potential solution to this problem is to place a GP over, for example,
+ the log concentration of the TF activity.
+ However, this, in effect, is a non-linear response in the differential
+ equation.
+ The non-linear response means that it is no longer possible to construct
+ the joint distribution over gene expression and TF activity in a closed
+ form.
+ We must, necessarily, turn to approximations to make progress.
+ In 
+\begin_inset LatexCommand citet
+key "Lawrence:transcriptionalGP06"
+
+\end_inset
+
+ the use of a MAP-Laplace approximation is suggested.
+ They demonstrate how the concentration of the TF activity can be constrained
+ positive by placing the GP in log space.
+ 
+\end_layout
+
+\begin_layout Standard
+Consider the following modification to the model, 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{\mathrm{d}x_{j}\left(t\right)}{\mathrm{d}t}=B_{j}+S_{j}g\left(f\left(t\right)\right)-D_{j}x_{j}\left(t\right),\]
+
+\end_inset
+
+where 
+\begin_inset Formula $g\left(\cdot\right)$
+\end_inset
+
+ is a non-linear function.
+ The differential equation can still be solved, 
+\begin_inset Formula \begin{equation}
+x_{j}\left(t\right)=\frac{B_{j}}{D_{j}}+S_{i}\int_{0}^{t}\exp\left(-D_{i}\left(t-u\right)\right)g\left(f\left(u\right)\right)\mathrm{d}u,\label{eq:linearSolution}\end{equation}
+
+\end_inset
+
+but there is now a non-linear operation on 
+\begin_inset Formula $f\left(t\right)$
+\end_inset
+
+ before the product and integral.
+ The gene expression level is therefore no longer a GP.
+ The MAP-Laplace approach involves finding a maximum 
+\emph on
+a posteriori
+\emph default
+ estimate for the function 
+\begin_inset Formula $f\left(t\right)$
+\end_inset
+
+ and making a second order Taylor approximation at that point to the log
+ likelihood.
+ This approxmation is itself a Gaussian process and leads to an approximation
+ to the marginal likelihood 
+\begin_inset LatexCommand citep
+key "Rasmussen:book06"
+
+\end_inset
+
+.
+ Derivatives can then be taken with respect to the model parameters and
+ the approximation maximised.
+ The MAP-Laplace's approximation becomes exact in the case where 
+\begin_inset Formula $g\left(\cdot\right)$
+\end_inset
+
+ is 
+\emph on
+linear
+\emph default
+.
+ This is also useful in practice, as well as providing a sanity check that
+ the solutions are consistent, the MAP-Laplace approach is unconstrained
+ in the choice of covariance function for 
+\begin_inset Formula $f\left(t\right)$
+\end_inset
+
+.
+ Naive implementation of the linear response model for a general covariance
+ function would require, in general, numerical evaluation of the double
+ integral in () and ().
+ The use of the MAP-Laplace approach involves only a single numerical integral.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+RESULTS ON MLP KERNEL WITH p53 DATA HERE
+\end_layout
+
+\begin_layout Standard
+In this paper we build on the work of 
+\begin_inset LatexCommand citet
+key "Lawrence:transcriptionalGP06"
+
+\end_inset
+
+ in two major ways.
+ We go beyond the simple exponential response model considered exploring
+ a Michaelis-Menten kinetics inspired response and a response that has been
+ suggested as appropriate for repression 
+\begin_inset LatexCommand citep
+key "Alon:systems06"
+
+\end_inset
+
+.
+ We also extend the algorithm to learn the parameters of the differential
+ equation by maximising the approximation to the log likelihood.
+\end_layout
+
+\begin_layout Subsubsection
+Michaelis Menten Kinetics
+\end_layout
+
+\begin_layout Standard
+We implemented Michaelis Menten kinetics for the p53 data by taking the
+ non-linearity to have the following form
+\begin_inset Formula \[
+g\left(f\left(t\right)\right)=\dots.\]
+
+\end_inset
+
+
+\series bold
+DESCRIPTION OF THE RESULTS HERE
+\end_layout
+
+\begin_layout Subsection
+Repression
+\begin_inset LatexCommand label
+name "sub:repressionModel"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+DESCRIPTION OF REPRESSION PROBLEM AND RESULTS
+\end_layout
+
+\begin_layout Subsection
+Cascaded Differential Equations
+\begin_inset LatexCommand label
+name "sub:cascadedDifferentialEquations"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As a final example we consider a simple cascade of differential equations.
+ Returning to the framework of the linear model (although our non-linear
+ approximation can be applied in a straightforward manner here) we consider
+ the case where the TF activity is determined by its own mRNA.
+ In other words we model the process of translation from mRNA to protein
+ for the TF.
+ The simple model we consider would only be appropriate in the case where
+ the TF does not require activation after translation, for example by phosphorol
+ation.
+ The model is, therefore, not appropriate for many signalling pathways,
+ but seems sensible in the context of development where TFs typically can
+ act directly after translation.
+ We therefore considered an example of the development of the mesoderm in
+ 
+\emph on
+Drosophila Melanogaster
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+CASCADE RESULTS GO HERE
+\end_layout
+
+\begin_layout Itemize
+Mention that we are aware that this is a short cascade ...
+ reference Alon for Cascades in developmental networks? pg 90.
+\end_layout
+
+\begin_layout Section
+Discussion
+\end_layout
+
+\begin_layout Section
+Conclusion
+\end_layout
+
+\begin_layout Section*
+Funding
+\end_layout
+
+\begin_layout Standard
+This work is funded by BBSRC Grant.
+ No BBS/B/0076X 
+\begin_inset Quotes eld
+\end_inset
+
+Improved processing of microarray data with probabilistic models
+\begin_inset Quotes erd
+\end_inset
+
+, EPSRC Grant.
+ No EP/F005687/1 
+\begin_inset Quotes eld
+\end_inset
+
+Gaussian Process Models for Systems Identification with Applications in
+ Systems Biology
+\begin_inset Quotes erd
+\end_inset
+
+ and the EU FP6 Network of Excellence PASCAL.
+\end_layout
+
+\begin_layout Section*
+Acknowledgement 
+\end_layout
+
+\begin_layout Standard
+For data provision and assistance with our questions we would like to thank
+ Charles Girardot and Eileen Furlong of EMBL in Heidelberg (mesoderm development
+ in 
+\emph on
+D.
+ Melanogaster
+\emph default
+), Martino Barenco and Mike Hubank at the Institute of Child Health in UCL
+ (p53 pathway) and Raya Khanin and Ernst Wit of the University of Glasgow
+ and the University of Lancaster (
+\emph on
+E.
+ coli
+\emph default
+ repressor system).
+ 
+\begin_inset LatexCommand bibtex
+options "plainnat"
+bibfiles "lawrence,other,zbooks"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

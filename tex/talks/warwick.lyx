@@ -1,0 +1,4749 @@
+#LyX 1.5.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 276
+\begin_document
+\begin_header
+\textclass beamer
+\begin_preamble
+ \setbeamercovered{transparent}
+\usepackage{listings}
+
+\setbeamertemplate{navigation symbols}{} 
+\useoutertheme{infolines} 
+\usecolortheme{manchester}
+%\usetheme{Warsaw}
+% or ...
+%\usetheme{Antibes}	% tree outline, neat
+%\usetheme{JuanLesPins}	% like Antibes, with shading
+%\usetheme{Bergen}	% outline on side
+%\usetheme{Luebeck}	% like Warsaw, square sides
+%\usetheme{Berkeley}	% interesting left bar outline
+%\usetheme{Madrid}	% clean, nice.  7/12 page numbers
+%\usetheme{Berlin}	% dots show slide number
+%\usetheme{Malmoe}	% OK, plain, unshaded
+\usetheme{Boadilla}	% nice, white bg, no top bar
+%\usetheme{Marburg}	% nice, outline on right
+%\usetheme{boxes}	% ???
+%\usetheme{Montpellier}	% tree outline on top, plainish white
+%\usetheme{Copenhagen}	% like Warsaw
+%\usetheme{PaloAlto}	% looks good
+%\usetheme{Darmstadt}	% like Warsaw with circle outline
+%\usetheme{Pittsburgh}
+%\usetheme{default}
+%\usetheme{Rochester}	% like boxy, unshaded warsaw
+%\usetheme{Dresden}	% circle outline on top
+%\usetheme{Singapore}	% purple gradient top
+%\usetheme{Frankfurt}	% like Warsaw with circle outline on top
+%\usetheme{Szeged}
+%\usetheme{Goettingen}	% light purple right bar outline
+%\usetheme{Warsaw}
+%\usetheme{Hannover}	% like Goett with bar on left
+%\usetheme{compatibility}
+%\usetheme{Ilmenau}
+
+\setbeamercovered{transparent}
+% or whatever (possibly just delete it)
+
+%\usecolortheme{seahorse}
+%\usecolortheme{rose}
+
+% seems to fix typewriter font in outline header:
+\usepackage{ae,aecompl}
+
+\newcommand{\newblock}{}
+
+% CVRG Dimensionality Reduction
+
+
+%\mode<article>
+%{
+ %\usepackage{fullpage}
+
+%  \usepackage{pgf}
+
+%  \usepackage{hyperref}
+
+ % \usepackage{multimedia}
+%  \usepackage{url}
+
+%  \usepackage{urlh}
+
+%  \setjobnamebeamerversion{beamerexample2.beamer}
+%}
+
+%\mode<presentation>
+%{
+ %\usetheme{Singapore} % CHANGE THEME
+%  \usetheme{Berkeley}  
+
+%  \setbeamercovered{transparent}
+%}
+
+
+
+
+
+%\institute{Oxford Brookes University
+%  \and University of Manchester}
+\usepackage{xmpmulti}
+
+\usepackage{bm}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+
+
+
+\usepackage{subfigure}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end_preamble
+\language english
+\inputencoding latin9
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize default
+\use_geometry false
+\use_amsmath 0
+\use_esint 0
+\cite_engine natbib_authoryear
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 2
+\tocdepth 2
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Statistical Inference in Systems Biology through Gaussian Processes and
+ Ordinary Differential Equations 
+\begin_inset OptArg
+status open
+
+\begin_layout Standard
+ML Systems Biology
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Author
+
+\series bold
+Neil D.
+ Lawrence
+\series default
+ and Magnus Rattray
+\newline
+Researchers: Pei Gao, Antti Honkela, Jennifer Withers
+\begin_inset OptArg
+status open
+
+\begin_layout Standard
+Neil D.
+ Lawrence
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Institute
+University of Warwick
+\newline
+LICSB Workshop
+\begin_inset OptArg
+status open
+
+\begin_layout Standard
+Warwick LICSB
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Date
+16th June 2008
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\bfdelta}{\boldsymbol{\delta}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfDelta}{\boldsymbol{\Delta}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfbeta}{\boldsymbol{\beta}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfgamma}{\boldsymbol{\gamma}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfmu}{\bm{\mu}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfnu}{\boldsymbol{\nu}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfalpha}{\boldsymbol{\alpha}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfepsilon}{\boldsymbol{\epsilon}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfSigma}{\boldsymbol{\Sigma}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bftau}{\boldsymbol{\tau}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bflambda}{\boldsymbol{\lambda}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfLambda}{\boldsymbol{\Lambda}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfpsi}{\boldsymbol{\psi}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfxi}{\boldsymbol{\xi}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfpi}{\bm{\pi}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfPsi}{\boldsymbol{\Psi}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfphi}{\boldsymbol{\phi}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfPhi}{\boldsymbol{\Phi}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfrho}{\boldsymbol{\rho}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bftheta}{\boldsymbol{\theta}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfTheta}{\boldsymbol{\Theta}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfomega}{\boldsymbol{\omega}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\Bmath}[1]{\boldsymbol{#1}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\bfa}{\mathbf{a}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfb}{\mathbf{b}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfc}{\mathbf{c}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfd}{\mathbf{d}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfe}{\mathbf{e}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bff}{\mathbf{f}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfg}{\mathbf{g}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfh}{\mathbf{h}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfk}{\mathbf{k}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfl}{\mathbf{l}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfm}{\mathbf{m}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfn}{\mathbf{n}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfo}{\mathbf{o}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfp}{\mathbf{p}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfq}{\mathbf{q}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfr}{\mathbf{r}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfs}{\mathbf{s}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bft}{\mathbf{t}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfu}{\mathbf{u}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfv}{\mathbf{v}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfw}{\mathbf{w}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfx}{\mathbf{x}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfy}{\mathbf{y}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfz}{\mathbf{z}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\bfzero}{\mathbf{0}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfone}{\mathbf{1}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\bfA}{\mathbf{A}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfB}{\mathbf{B}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfC}{\mathbf{C}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfD}{\mathbf{D}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfE}{\mathbf{E}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfG}{\mathbf{G}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfH}{\mathbf{H}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfI}{\mathbf{I}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfK}{\mathbf{K}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfL}{\mathbf{L}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfM}{\mathbf{M}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfO}{\mathbf{O}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfP}{\mathbf{P}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfQ}{\mathbf{Q}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfR}{\mathbf{R}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfS}{\mathbf{S}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfT}{\mathbf{T}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfU}{\mathbf{U}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfV}{\mathbf{V}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfW}{\mathbf{W}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfX}{\mathbf{X}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfY}{\mathbf{Y}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bfZ}{\mathbf{Z}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\llangle}{{\langle\vspace{-2mm} \langle}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\rrangle}{{\rangle\vspace{-2mm} \rangle}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\la}{\leftarrow}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\tf}{\tilde{f}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\tg}{\tilde{g}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\tX}{\tilde{X}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\tY}{\tilde{Y}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\tZ}{\tilde{Z}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\bbE}{\mathbb{E}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bbR}{\mathbb{R}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bbP}{\mathbb{P}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bbT}{\mathbb{T}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\bbZ}{\mathbb{Z}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\ois}{2 \pi i s}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\oik}{2 \pi i k}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\oin}{2 \pi i n}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\oim}{2 \pi i m}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\T}{{\rm T}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\Tr}{\mbox{Tr}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\diff}[1]{{\, d#1}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\vgraph}[1]{ \newpage\begin{center} \end{center}{center}{center}{center}{center}{center}{center}{center}{center}{center}{center}{center} {\large{\bf #1}} {center} \vspace{2mm} }
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\high}[1]{\textcolor{blue}{\emph{#1}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\cut}[1]{}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\citeasnoun}[1]{\citeN{#1}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\citemulti}[2]{(#1, \citeyearNP{#2})}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\citemultiN}[2]{#1 (\citeyearNP{#2})}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\Sum}{{\displaystyle \sum}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\defeq}{{\stackrel{def}{=}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\marg}[1]{\marginpar{#1}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\pdt}[2]{\frac{\partial^{2} #1}{\partial{#2}^{2} }}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\pdsd}[3]{\frac{\partial^{2} #1}{\partial{#2} \partial{#3} }}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\pdo}[2]{\frac{\partial{#1}}{\partial{#2}}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\pdol}[2]{\partial{#1}/ \partial{#2}}
+\end_inset
+
+ 
+\begin_inset FormulaMacro
+\newcommand{\pdu}[1]{\frac{\partial}{\partial{#1}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout BeginFrame
+Outline 
+\end_layout
+
+\begin_layout Standard
+\begin_inset LatexCommand tableofcontents
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+[hideallsubsections] 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout BeginFrame
+Outline 
+\end_layout
+
+\begin_layout Standard
+\begin_inset LatexCommand tableofcontents
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+[currentsection,hideallsubsections] 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout BeginFrame
+Talk Outline 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+setbeamercovered
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\end_inset
+
+dynamic
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<2->
+\end_layout
+
+\end_inset
+
+Models of Transcriptional Regulation 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<3->
+\end_layout
+
+\end_inset
+
+Gaussian Processes
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<4->
+\end_layout
+
+\end_inset
+
+Inference for Linear Activation 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+<5>
+\end_layout
+
+\end_inset
+
+Non-linear Response Models 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+<6-> 
+\end_layout
+
+\end_inset
+
+Cascaded Differential Equations 
+\end_layout
+
+\begin_layout Subsection
+ODE Model of Activation 
+\end_layout
+
+\begin_layout BeginFrame
+ODE Model of Activation
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+<1->
+\end_layout
+
+\end_inset
+
+Linear Activation Model (
+\begin_inset LatexCommand citealp
+key "Barenco:ranked06"
+
+\end_inset
+
+, Genome Biology) 
+\begin_inset Formula \[
+\frac{\mathrm{d}x_{j}\left(t\right)}{\mathrm{d}t}=B_{j}+S_{j}f\left(t\right)-D_{j}x_{j}\left(t\right)\]
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<2->
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula $x_{j}(t)$
+\end_inset
+
+ -- concentration of gene 
+\begin_inset Formula $j$
+\end_inset
+
+'s mRNA 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<3->
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula $f(t)$
+\end_inset
+
+ -- concentration of active transcription factor 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<4->
+\end_layout
+
+\end_inset
+
+Model parameters: baseline 
+\begin_inset Formula $B_{j}$
+\end_inset
+
+, sensitivity 
+\begin_inset Formula $S_{j}$
+\end_inset
+
+ and decay 
+\begin_inset Formula $D_{j}$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<5->
+\end_layout
+
+\end_inset
+
+Application: identifying co-regulated genes (targets) 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<6->
+\end_layout
+
+\end_inset
+
+Problem: how do we fit the model when 
+\begin_inset Formula $f(t)$
+\end_inset
+
+ is not observed? 
+\end_layout
+
+\begin_layout Section
+Gaussian Process Inference for Linear Activation
+\end_layout
+
+\begin_layout BeginFrame
+Outline 
+\end_layout
+
+\begin_layout Standard
+\begin_inset LatexCommand tableofcontents
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+[currentsection,hideallsubsections] 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Distributions over Functions
+\end_layout
+
+\begin_layout BeginFrame
+Gaussian Distribution
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\end_inset
+
+
+\series bold
+Zero mean Gaussian distribution
+\series default
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+A multi-variate Gaussian distribution is defined by a mean and a covariance
+ matrix.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Formula \[
+N\left(\mathbf{f}|\mu,\mathbf{K}\right)=\frac{1}{\left(2\pi\right)^{\frac{N}{2}}\left|\mathbf{K}\right|^{\frac{1}{2}}}\exp\left(-\frac{\left(\mathbf{f}-\mu\right)^{\textrm{T}}\mathbf{K}^{-1}\left(\mathbf{f}-\mu\right)}{2}\right).\]
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+We will consider the special case where the mean is zero,
+\begin_inset Formula \[
+N\left(\mathbf{f}|\mathbf{0},\mathbf{K}\right)=\frac{1}{\left(2\pi\right)^{\frac{N}{2}}\left|\mathbf{K}\right|^{\frac{1}{2}}}\exp\left(-\frac{\mathbf{f}^{\textrm{T}}\mathbf{K}^{-1}\mathbf{f}}{2}\right).\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout BeginFrame
+Sampling a Function
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\end_inset
+
+
+\series bold
+Multi-variate Gaussians
+\series default
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+We will consider a Gaussian with a particular structure of covariance matrix.
+\end_layout
+
+\begin_layout Itemize
+Generate a single sample from this 25 dimensional Gaussian distribution,
+ 
+\begin_inset Formula $\mathbf{f=}\left[f_{1},f_{2}\dots f_{25}\right]$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+We will plot these points against their index.
+\end_layout
+
+\begin_layout Subsection
+Samples from a Gaussian Distribution
+\end_layout
+
+\begin_layout BeginFrame
+Gaussian Distribution Sample
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\end_inset
+
+
+\family typewriter
+demGPSample
+\family default
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename ../../../oxford/tex/diagrams/gpSample.eps
+	lyxscale 50
+	width 45text%
+	subcaption
+
+\end_inset
+
+
+\hfill
+
+\begin_inset Graphics
+	filename ../../../oxford/tex/diagrams/gpCovariance.eps
+	lyxscale 50
+	width 45text%
+	subcaption
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+(a) 25 instantiations of a function, 
+\begin_inset Formula $f_{n}$
+\end_inset
+
+, (b) colormap of covariance matrix.
+ 
+\begin_inset LatexCommand label
+name "cap:demGPSample"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout BeginFrame
+Covariance Function
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+The covariance matrix
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<1->
+\end_layout
+
+\end_inset
+
+Covariance matrix shows correlation between points 
+\begin_inset Formula $f_{m}$
+\end_inset
+
+ and 
+\begin_inset Formula $f_{n}$
+\end_inset
+
+ if 
+\begin_inset Formula $n$
+\end_inset
+
+ is near to 
+\begin_inset Formula $m$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<2->
+\end_layout
+
+\end_inset
+
+Less correlation if 
+\begin_inset Formula $n$
+\end_inset
+
+ is distant from 
+\begin_inset Formula $m$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<3->
+\end_layout
+
+\end_inset
+
+Our ordering of points means that the 
+\emph on
+function appears smooth
+\emph default
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+<4->
+\end_layout
+
+\end_inset
+
+Let's focus on the joint distribution of two points form the 25.
+\end_layout
+
+\begin_layout BeginFrame
+Prediction of 
+\begin_inset Formula $f_{2}$
+\end_inset
+
+ from 
+\begin_inset Formula $f_{1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+demGPCov2D([1 2])
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\align center
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<1>[width=0.5
+\backslash
+textwidth]{../../../gp/tex/diagrams/demGPCov2D1_2_1}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<2>[width=0.5
+\backslash
+textwidth]{../../../gp/tex/diagrams/demGPCov2D1_2_2}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<3>[width=0.5
+\backslash
+textwidth]{../../../gp/tex/diagrams/demGPCov2D1_2_3}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+Covariance for 
+\begin_inset Formula $\left[\begin{array}{c}
+f_{1}\\
+f_{2}\end{array}\right]$
+\end_inset
+
+ is 
+\begin_inset Formula $\mathbf{K}_{12}=\left[\begin{array}{cc}
+1 & 0.966\\
+0.966 & 1\end{array}\right]$
+\end_inset
+
+.
+\begin_inset LatexCommand label
+name "cap:joint12"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout BeginFrame
+Prediction of 
+\begin_inset Formula $f_{5}$
+\end_inset
+
+ from 
+\begin_inset Formula $f_{1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+demGPCov2D([1 5])
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\align center
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<1>[width=0.5
+\backslash
+textwidth]{../../../gp/tex/diagrams/demGPCov2D1_5_1}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<2>[width=0.5
+\backslash
+textwidth]{../../../gp/tex/diagrams/demGPCov2D1_5_2}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<3>[width=0.5
+\backslash
+textwidth]{../../../gp/tex/diagrams/demGPCov2D1_5_3}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+Covariance for 
+\begin_inset Formula $\left[\begin{array}{c}
+f_{1}\\
+f_{5}\end{array}\right]$
+\end_inset
+
+ is 
+\begin_inset Formula $\mathbf{K}_{15}=\left[\begin{array}{cc}
+1 & 0.574\\
+0.574 & 1\end{array}\right]$
+\end_inset
+
+.
+\begin_inset LatexCommand label
+name "cap:joint15"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Covariance functions
+\end_layout
+
+\begin_layout BeginFrame
+Covariance Functions
+\end_layout
+
+\begin_layout FrameSubtitle
+Where did this covariance matrix come from?
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+RBF Kernel Function
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+k\left(t,t^{\prime}\right)=\alpha\exp\left(-\frac{\left|\left|t-t^{\prime}\right|\right|^{2}}{2l^{2}}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout ColumnsCenterAligned
+
+\end_layout
+
+\begin_deeper
+\begin_layout Column
+5cm
+\end_layout
+
+\begin_layout Itemize
+Covariance matrix is built using the 
+\emph on
+inputs
+\emph default
+ to the function 
+\begin_inset Formula $t$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+For the example above it was based on Euclidean distance.
+\end_layout
+
+\begin_layout Itemize
+The covariance function is also know as a kernel.
+\end_layout
+
+\begin_layout Column
+5cm
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename ../../../oxford/tex/diagrams/demKernelImages1.eps
+	lyxscale 50
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout BeginFrame
+Covariance Samples
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+demCovFuncSample
+\family default
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<1>[width=0.5
+\backslash
+textwidth]{../../../gp/tex/diagrams/demCovFuncSample1}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<2>[width=0.5
+\backslash
+textwidth]{../../../gp/tex/diagrams/demCovFuncSample2}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<3>[width=0.5
+\backslash
+textwidth]{../../../gp/tex/diagrams/demCovFuncSample3}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+only<1>{
+\end_layout
+
+\end_inset
+
+RBF kernel with 
+\begin_inset Formula $l=10^{-\frac{1}{2}}$
+\end_inset
+
+, 
+\begin_inset Formula $\alpha=1$
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+only<2>{
+\end_layout
+
+\end_inset
+
+ RBF kernel with 
+\begin_inset Formula $l=1$
+\end_inset
+
+, 
+\begin_inset Formula $\alpha=1$
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+only<3>{
+\end_layout
+
+\end_inset
+
+ RBF kernel with 
+\begin_inset Formula $l=0.3$
+\end_inset
+
+, 
+\begin_inset Formula $\alpha=4$
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset LatexCommand label
+name "cap:kernelSamples"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout BeginFrame
+Gaussian Process Regression
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+demRegression
+\family default
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<1>[width=0.5
+\backslash
+textwidth]{../../../gp/tex/diagrams/demRegression1}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<2>[width=0.5
+\backslash
+textwidth]{../../../gp/tex/diagrams/demRegression2}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<3>[width=0.5
+\backslash
+textwidth]{../../../gp/tex/diagrams/demRegression3}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<4>[width=0.5
+\backslash
+textwidth]{../../../gp/tex/diagrams/demRegression4}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<5>[width=0.5
+\backslash
+textwidth]{../../../gp/tex/diagrams/demRegression5}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<6>[width=0.5
+\backslash
+textwidth]{../../../gp/tex/diagrams/demRegression6}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<7>[width=0.5
+\backslash
+textwidth]{../../../gp/tex/diagrams/demRegression7}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<8>[width=0.5
+\backslash
+textwidth]{../../../gp/tex/diagrams/demRegression8}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+Examples include WiFi localization, C14 callibration curve.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Learning Kernel Parameters
+\end_layout
+
+\begin_layout BeginFrame
+Learning Kernel Parameters
+\end_layout
+
+\begin_layout FrameSubtitle
+Can we determine length scales and noise levels from the data?
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+demOptimiseKern
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<1>[width=0.45
+\backslash
+textwidth]{../../../gp/tex/diagrams/demOptimiseKern1}
+\backslash
+only<1>{
+\backslash
+hfill}
+\backslash
+includegraphics<1>[width=0.45
+\backslash
+textwidth]{../../../gp/tex/diagrams/demOptimiseKern2}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<2>[width=0.45
+\backslash
+textwidth]{../../../gp/tex/diagrams/demOptimiseKern3}
+\backslash
+only<2>{
+\backslash
+hfill}
+\backslash
+includegraphics<2>[width=0.45
+\backslash
+textwidth]{../../../gp/tex/diagrams/demOptimiseKern4}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<3>[width=0.45
+\backslash
+textwidth]{../../../gp/tex/diagrams/demOptimiseKern5}
+\backslash
+only<3>{
+\backslash
+hfill}
+\backslash
+includegraphics<3>[width=0.45
+\backslash
+textwidth]{../../../gp/tex/diagrams/demOptimiseKern6}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<4>[width=0.45
+\backslash
+textwidth]{../../../gp/tex/diagrams/demOptimiseKern7}
+\backslash
+only<4>{
+\backslash
+hfill}
+\backslash
+includegraphics<4>[width=0.45
+\backslash
+textwidth]{../../../gp/tex/diagrams/demOptimiseKern8}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<5>[width=0.45
+\backslash
+textwidth]{../../../gp/tex/diagrams/demOptimiseKern9}
+\backslash
+only<5>{
+\backslash
+hfill}
+\backslash
+includegraphics<5>[width=0.45
+\backslash
+textwidth]{../../../gp/tex/diagrams/demOptimiseKern10}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<6>[width=0.45
+\backslash
+textwidth]{../../../gp/tex/diagrams/demOptimiseKern11}
+\backslash
+only<6>{
+\backslash
+hfill}
+\backslash
+includegraphics<6>[width=0.45
+\backslash
+textwidth]{../../../gp/tex/diagrams/demOptimiseKern12}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<7>[width=0.45
+\backslash
+textwidth]{../../../gp/tex/diagrams/demOptimiseKern13}
+\backslash
+only<7>{
+\backslash
+hfill}
+\backslash
+includegraphics<7>[width=0.45
+\backslash
+textwidth]{../../../gp/tex/diagrams/demOptimiseKern14}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<8>[width=0.45
+\backslash
+textwidth]{../../../gp/tex/diagrams/demOptimiseKern15}
+\backslash
+only<8>{
+\backslash
+hfill}
+\backslash
+includegraphics<8>[width=0.45
+\backslash
+textwidth]{../../../gp/tex/diagrams/demOptimiseKern16}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<9>[width=0.45
+\backslash
+textwidth]{../../../gp/tex/diagrams/demOptimiseKern17}
+\backslash
+only<9>{
+\backslash
+hfill}
+\backslash
+includegraphics<9>[width=0.45
+\backslash
+textwidth]{../../../gp/tex/diagrams/demOptimiseKern18}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\log N\left(\mathbf{f}|\mathbf{0},\mathbf{K}\right)=-\frac{N}{2}\log2\pi-\frac{1}{2}\log\left|\mathbf{K}\right|-\frac{\mathbf{f}^{\textrm{T}}\mathbf{K}^{-1}\mathbf{f}}{2}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Linear Activation Model
+\end_layout
+
+\begin_layout BeginFrame
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+[label=skipCovarianceFunctions]
+\end_layout
+
+\end_inset
+
+Linear Activation Model
+\end_layout
+
+\begin_layout Standard
+Recall the linear model 
+\begin_inset Formula \[
+\frac{\mathrm{d}x_{j}\left(t\right)}{\mathrm{d}t}=B_{j}+S_{j}f\left(t\right)-D_{j}x_{j}\left(t\right)\ .\]
+
+\end_inset
+
+ This differential equation can be solved for 
+\begin_inset Formula $x_{j}\left(t\right)$
+\end_inset
+
+ as 
+\begin_inset Formula \[
+x_{j}\left(t\right)=\frac{B_{j}}{D_{j}}+S_{j}\int_{0}^{t}e^{-D_{j}\left(t-u\right)}f\left(u\right)\mathrm{d}u\ .\]
+
+\end_inset
+
+ 
+\emph on
+Note
+\emph default
+: This is a linear operation on 
+\begin_inset Formula $f\left(t\right)$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+If 
+\begin_inset Formula $f\left(t\right)$
+\end_inset
+
+ is a zero mean Gaussian process then 
+\begin_inset Formula $x_{i}\left(t\right)$
+\end_inset
+
+ is also a Gaussian process with mean 
+\begin_inset Formula $\frac{B_{i}}{D_{i}}$
+\end_inset
+
+ .
+\end_layout
+
+\begin_layout BeginFrame
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+[labels=skipGPProperties]
+\end_layout
+
+\end_inset
+
+Covariance for Transcription Model
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+RBF covariance function for 
+\begin_inset Formula $f\left(t\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Formula \[
+x_{i}\left(t\right)=\frac{B_{i}}{D_{i}}+S_{i}\exp\left(-D_{i}t\right)\int_{0}^{t}f\left(u\right)\exp\left(D_{i}u\right)\mathrm{d}u.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout ColumnsCenterAligned
+
+\end_layout
+
+\begin_deeper
+\begin_layout Column
+4cm
+\end_layout
+
+\begin_layout Itemize
+Joint distribution for 
+\begin_inset Formula $x_{1}\left(t\right)$
+\end_inset
+
+, 
+\begin_inset Formula $x_{2}\left(t\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $f\left(t\right)$
+\end_inset
+
+.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Here:
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+vspace{0.1cm}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+\size small
+\begin_inset Tabular
+<lyxtabular version="3" rows="2" columns="4">
+<features>
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\size small
+\begin_inset Formula $D_{1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\size small
+\begin_inset Formula $S_{1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\size small
+\begin_inset Formula $D_{2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\size small
+\begin_inset Formula $S_{2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\size small
+5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\size small
+5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\size small
+0.5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\size small
+0.5
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Column
+6cm
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename ../diagrams/gpsimTestKernelImage.pdf
+	width 80col%
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\align right
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+hyperlink{skipSIMSamples}{
+\backslash
+beamergotobutton{Skip SIM Samples}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout BeginFrame
+Joint Sampling of 
+\begin_inset Formula $x\left(t\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $f\left(t\right)$
+\end_inset
+
+ from Covariance
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+gpsimTest
+\family default
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<1>[width=0.4
+\backslash
+textwidth]{../../../gpsim/tex/diagrams/gpsimTestSamples2}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<1>[width=0.4
+\backslash
+textwidth]{../../../gpsim/tex/diagrams/gpsimTestSamples3}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<2>[width=0.4
+\backslash
+textwidth]{../../../gpsim/tex/diagrams/gpsimTestSamples4}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<2>[width=0.4
+\backslash
+textwidth]{../../../gpsim/tex/diagrams/gpsimTestSamples5}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<3>[width=0.4
+\backslash
+textwidth]{../../../gpsim/tex/diagrams/gpsimTestSamples6}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<3>[width=0.4
+\backslash
+textwidth]{../../../gpsim/tex/diagrams/gpsimTestSamples7}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+
+\emph on
+Left
+\emph default
+: joint samples from the transcription covariance, 
+\emph on
+blue
+\emph default
+: 
+\begin_inset Formula $f\left(t\right)$
+\end_inset
+
+, 
+\emph on
+cyan
+\emph default
+: 
+\begin_inset Formula $x_{1}\left(t\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $red$
+\end_inset
+
+: 
+\begin_inset Formula $x_{2}\left(t\right)$
+\end_inset
+
+.
+ 
+\emph on
+Right
+\emph default
+: numerical solution for 
+\begin_inset Formula $f\left(t\right)$
+\end_inset
+
+ of the differential equation from 
+\begin_inset Formula $x_{1}\left(t\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $x_{2}\left(t\right)$
+\end_inset
+
+ (blue and cyan).
+ True 
+\begin_inset Formula $f\left(t\right)$
+\end_inset
+
+ included for comparison.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Artificial Example
+\end_layout
+
+\begin_layout BeginFrame
+Artificial Example: Inferring 
+\begin_inset Formula $f(t)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+setbeamercovered
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\end_inset
+
+dynamic
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout ColumnsCenterAligned
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Column
+2 in
+\end_layout
+
+\begin_layout Pause
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\align center
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<1>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes1.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<2>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes2.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<3>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes3.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<4>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes4.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<5>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes5.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<6>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes6.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<7>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes7.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<8>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes8.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<9>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes9.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<10>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes10.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<11>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes11.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<12>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes12.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<13>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes13.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<14>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes14.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<15>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes15.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<16>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes16.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<17>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes17.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<18>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes18.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<19>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes19.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<20>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes20.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<21>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes21.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<22>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes22.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<23>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes23.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<24>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes24.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<25>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes25.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<26>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes26.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<27>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes27.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<28>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes28.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<29>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes29.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<30>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes30.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<31>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes31.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<32>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes32.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<33>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes33.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<34>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes34.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<35>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes51.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<36>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes68.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<37>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_genes85.pdf}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Column
+2 in
+\end_layout
+
+\begin_layout Pause
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\align center
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+setbeamercovered
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+{
+\end_layout
+
+\end_inset
+
+invisible
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<1>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered1.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<2>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered2.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<3>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered3.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<4>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered4.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<5>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered5.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<6>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered6.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<7>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered7.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<8>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered8.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<9>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered9.pdf}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<10>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered10.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<11>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered11.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<12>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered12.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<13>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered13.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<14>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered14.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<15>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered15.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<16>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered16.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<17>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered17.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<18>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered18.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<19>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered19.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<20>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered20.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<21>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered21.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<22>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered22.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<23>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered23.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<24>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered24.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<25>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered25.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<26>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered26.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<27>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered27.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<28>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered28.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<29>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered29.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<30>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered30.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<31>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered31.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<32>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered32.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<33>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered33.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<34>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered34.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<35>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered51.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<36>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered68.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+includegraphics<37>[width=5cm]{../../../gpsim/tex/diagrams/demToyProblem2_infered85.pdf
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout BeginFrame
+p53 (RBF covariance)
+\end_layout
+
+\begin_layout Standard
+\align right
+
+\series bold
+Pei Gao
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\align center
+ 
+\begin_inset Graphics
+	filename ../diagrams/demBarenco1_profile2.eps
+	lyxscale 50
+	width 30text%
+
+\end_inset
+
+ 
+\hfill
+
+\begin_inset Graphics
+	filename ../diagrams/demBarenco1_ExprsProfile_Rep2_Gene3.eps
+	lyxscale 50
+	width 30text%
+
+\end_inset
+
+
+\hfill
+
+\begin_inset Graphics
+	filename ../diagrams/demBarenco1_ExprsProfile_Rep2_Gene1.eps
+	lyxscale 50
+	width 30text%
+
+\end_inset
+
+
+\newline
+
+\begin_inset Graphics
+	filename ../diagrams/demBarenco1_ExprsProfile_Rep2_Gene4.eps
+	lyxscale 50
+	width 30text%
+
+\end_inset
+
+ 
+\hfill
+
+\begin_inset Graphics
+	filename ../diagrams/demBarenco1_ExprsProfile_Rep2_Gene2.eps
+	lyxscale 50
+	width 30text%
+
+\end_inset
+
+ 
+\hfill
+
+\begin_inset Graphics
+	filename ../diagrams/demBarenco1_ExprsProfile_Rep2_Gene5.eps
+	lyxscale 50
+	width 30text%
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout BeginFrame
+Ranking with ERK Signalling
+\end_layout
+
+\begin_layout Itemize
+Target Ranking for Elk-1.
+\end_layout
+
+\begin_layout Itemize
+Elk-1 is phosphorylated by ERK from the EGF signalling pathway.
+\end_layout
+
+\begin_layout Itemize
+Predict concentration of Elk-1 from known targets.
+\end_layout
+
+\begin_layout Itemize
+Rank other targets of Elk-1.
+\end_layout
+
+\begin_layout BeginFrame
+Elk-1 (MLP covariance)
+\end_layout
+
+\begin_layout Standard
+\align right
+
+\series bold
+Jennifer Withers
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename ../diagrams/MLP_TFConcentration.eps
+	lyxscale 50
+	width 30text%
+
+\end_inset
+
+
+\hfill
+
+\begin_inset Graphics
+	filename ../diagrams/MLP_TrainingGene1.eps
+	lyxscale 50
+	width 30text%
+
+\end_inset
+
+
+\hfill
+
+\begin_inset Graphics
+	filename ../diagrams/MLP_TrainingGene2.eps
+	lyxscale 50
+	width 30text%
+
+\end_inset
+
+
+\newline
+
+\begin_inset Graphics
+	filename ../diagrams/MLP_TrainingGene3.eps
+	lyxscale 50
+	width 30text%
+
+\end_inset
+
+
+\hfill
+
+\begin_inset Graphics
+	filename ../diagrams/MLP_TrainingGene4.eps
+	lyxscale 50
+	width 30text%
+
+\end_inset
+
+
+\hfill
+
+\begin_inset Graphics
+	filename ../diagrams/MLP_TrainingGene5.eps
+	lyxscale 50
+	width 30text%
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout BeginFrame
+Elk-1 target selection
+\end_layout
+
+\begin_layout Standard
+Fitted model used to rank potential targets of Elk-1
+\end_layout
+
+\begin_layout ColumnsCenterAligned
+
+\end_layout
+
+\begin_deeper
+\begin_layout Column
+2.5 in
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\align center
+ 
+\begin_inset Graphics
+	filename ../diagrams/MLP_GoodFit.eps
+	width 7cm
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Column
+2.5 in
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\align center
+ 
+\begin_inset Graphics
+	filename ../diagrams/MLP_BadFit.eps
+	width 7cm
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Cascaded Differential Equations
+\end_layout
+
+\begin_layout BeginFrame
+Outline 
+\end_layout
+
+\begin_layout Standard
+\begin_inset LatexCommand tableofcontents
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+[currentsection,hideallsubsections] 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout BeginFrame
+Cascaded Differential Equations
+\end_layout
+
+\begin_layout Standard
+\align right
+
+\series bold
+Antti Honkela
+\end_layout
+
+\begin_layout Itemize
+Transcription factor protein also has governing mRNA.
+\end_layout
+
+\begin_layout Itemize
+This mRNA can be measured.
+\end_layout
+
+\begin_layout Itemize
+In signalling systems this measurement can be misleading because it is activated
+ (phosphorylated) transcription factor that counts.
+\end_layout
+
+\begin_layout Itemize
+In development phosphorylation plays less of a role.
+\end_layout
+
+\begin_layout BeginFrame
+Covariance for Translation/Transcription Model
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+RBF covariance function for 
+\begin_inset Formula $y\left(t\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\size footnotesize
+\begin_inset Formula \begin{eqnarray*}
+f\left(t\right) & = & \sigma\exp\left(-\delta t\right)\int_{0}^{t}y(u)\exp\left(\delta u\right)\mathrm{d}u\\
+x_{i}\left(t\right) & = & \frac{B_{i}}{D_{i}}+S_{i}\exp\left(-D_{i}t\right)\int_{0}^{t}f\left(u\right)\exp\left(D_{i}u\right)\mathrm{d}u.\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace -2cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout ColumnsCenterAligned
+
+\end_layout
+
+\begin_deeper
+\begin_layout Column
+4cm
+\end_layout
+
+\begin_layout Itemize
+Joint distribution for 
+\begin_inset Formula $x_{1}\left(t\right)$
+\end_inset
+
+, 
+\begin_inset Formula $x_{2}\left(t\right)$
+\end_inset
+
+, 
+\begin_inset Formula $f\left(t\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $y\left(t\right)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Here:
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+vspace{0.1cm}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+\size small
+\begin_inset Tabular
+<lyxtabular version="3" rows="2" columns="5">
+<features>
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+\begin_inset Formula $\delta$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\size small
+\begin_inset Formula $D_{1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\size small
+\begin_inset Formula $S_{1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\size small
+\begin_inset Formula $D_{2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\size small
+\begin_inset Formula $S_{2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+0.1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\size small
+5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\size small
+0.5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+
+\size small
+0.5
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Column
+6cm
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename ../diagrams/gpdisimTestKernelImage.eps
+	width 80col%
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout BeginFrame
+Results for Mef2 using the Cascade model
+\end_layout
+
+\begin_layout ColumnsCenterAligned
+
+\end_layout
+
+\begin_deeper
+\begin_layout Column
+2 in
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\align center
+ 
+\begin_inset Graphics
+	filename ../diagrams/demMef2_ExprsProfile_Rep1_Gene1.eps
+	width 4cm
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\align center
+ 
+\begin_inset Graphics
+	filename ../diagrams/demMef2TF_profile_Rep1.eps
+	width 4cm
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Column
+2 in
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\align center
+ 
+\begin_inset Graphics
+	filename ../diagrams/demMef2_ExprsProfile_Rep1_Gene2.eps
+	width 4cm
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\align center
+ 
+\begin_inset Graphics
+	filename ../diagrams/demMef2_ExprsProfile_Rep1_Gene4.eps
+	width 4cm
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Discussion and Future Work
+\end_layout
+
+\begin_layout BeginFrame
+Outline 
+\end_layout
+
+\begin_layout Standard
+\begin_inset LatexCommand tableofcontents
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+[currentsection,hideallsubsections] 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout BeginFrame
+Discussion and Future Work 
+\end_layout
+
+\begin_layout Itemize
+Integration of probabilistic inference with mechanistic models.
+\end_layout
+
+\begin_layout Itemize
+These results are small simple systems (we skipped non-linear).
+\end_layout
+
+\begin_layout Itemize
+Ongoing work:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Scaling up to larger systems 
+\end_layout
+
+\begin_layout Itemize
+Applications to other types of system, 
+\emph on
+e.g.
+
+\emph default
+ non-steady-state metabolomics, spatial systems etc.
+ 
+\end_layout
+
+\begin_layout Itemize
+Improved approximations.
+\end_layout
+
+\begin_layout Itemize
+Stochastic differential equations 
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Acknowledgements
+\end_layout
+
+\begin_layout BeginFrame
+Outline 
+\end_layout
+
+\begin_layout Standard
+\begin_inset LatexCommand tableofcontents
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+[currentsection,hideallsubsections] 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout BeginFrame
+Acknowledgements 
+\end_layout
+
+\begin_layout Itemize
+Investigators: Neil Lawrence and Magnus Rattray 
+\end_layout
+
+\begin_layout Itemize
+Researchers: Peo Gao, Antti Honkela, Michalis Titsias and Jennifer Withers
+ 
+\end_layout
+
+\begin_layout Itemize
+Charles Girardot and Eileen Furlong of EMBL in Heidelberg (mesoderm development
+ in 
+\emph on
+D.
+ Melanogaster
+\emph default
+).
+ 
+\end_layout
+
+\begin_layout Itemize
+Martino Barenco and Mike Hubank at the Institute of Child Health in UCL
+ (p53 pathway).
+  
+\end_layout
+
+\begin_layout Standard
+
+\size footnotesize
+Funded by the BBSRC award 
+\begin_inset Quotes eld
+\end_inset
+
+Improved Processing of microarray data using probabilistic models
+\begin_inset Quotes erd
+\end_inset
+
+ and EPSRC award 
+\begin_inset Quotes eld
+\end_inset
+
+Gaussian Processes for Systems Identification with applications in Systems
+ Biology
+\begin_inset Quotes erd
+\end_inset
+
+
+\size default
+ \InsetSpace \space{}
+
+\newline
+ \InsetSpace \space{}
+
+\newline
+
+\end_layout
+
+\begin_layout BeginFrame
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+[allowframebreaks]
+\end_layout
+
+\end_inset
+
+References
+\end_layout
+
+\begin_layout Standard
+
+\size tiny
+\begin_inset LatexCommand bibtex
+options "pdf_abbrvnat"
+bibfiles "lawrence,other,zbooks"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align right
+
+\end_layout
+
+\begin_layout EndFrame
+
+\end_layout
+
+\end_body
+\end_document

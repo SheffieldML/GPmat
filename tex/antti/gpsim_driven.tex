@@ -1,0 +1,1309 @@
+\documentclass[a4paper]{article}
+\usepackage{amsmath}
+
+\title{GPSIM with a driving input (DISIM)}
+\author{Antti Honkela}
+
+\newcommand{\erf}{\operatorname{erf}}
+
+\begin{document}
+
+\maketitle
+
+\section{GPSIM}
+
+The ODE underlying the linear GPSIM model is
+\begin{equation}
+  \label{eq:gpsim_ode}
+  \frac{dx_j}{dt} = B_j + S_j f(t) - D_j x_j(t).
+\end{equation}
+Its solution is
+\begin{equation}
+  \label{eq:gpsim_ode_sol}
+  x_j(t) = \frac{B_j}{D_j} + S_j \exp(-D_j t) \int_0^t f(u) \exp(D_j
+  u) du.
+\end{equation}
+
+In linear GPSIM model, the kernel of the genes is
+\begin{equation}
+  \label{eq:gpsim_genekernel0}
+  k_{x_j x_k}(t, t') = S_j S_k \exp(-D_j t - D_k t') \int_0^t \exp(D_j
+  u)
+  \int_0^{t'} \exp(D_k u') k_{ff}(u, u') du' du.
+\end{equation}
+For the squared exponential kernel
+\begin{equation}
+  \label{eq:sqexp_kernel}
+  k_{ff}(t, t') = \exp\left( -\frac{(t-t')^2}{l^2} \right),
+\end{equation}
+this can be evaluated to yield
+\begin{equation}
+  \label{eq:gpsim_genekernel}
+  k_{x_j x_k}(t, t') = \frac{S_j S_k \sqrt{\pi}l}{2(D_j + D_k)}
+  \exp(-D_j t -D_k t') [ h_{kj}(t', t) +
+  h_{jk}(t, t')],
+\end{equation}
+where
+\begin{multline}
+  \label{eq:gpsim_h}
+  h_{kj}(t', t) = \exp(\gamma_k^2)
+  \bigg\{ \exp[(D_j + D_k) t ] \bigg[
+       \erf\left(\gamma_k + \frac{t}{l} \right) - 
+       \erf\left(\gamma_k + \frac{t-t'}{l} \right) \bigg] \\
+  + \bigg[
+       \erf\left(\gamma_k - \frac{t'}{l} \right) -
+       \erf\left(\gamma_k \right) \bigg] \bigg\}.
+\end{multline}
+
+\section{GPSIM with a driving input (DISIM)}
+
+Assume now that the profile $f(t)$ is driven by the corresponding mRNA
+profile $y(t)$ through
+\begin{equation}
+  \label{eq:gpsim_f_ode}
+  \frac{df}{dt} = \sigma y(t) - \delta f(t).
+\end{equation}
+The solution of this equation is
+\begin{equation}
+  \label{eq:gpsim_f_ode_sol}
+  f(t) = \sigma \exp(-\delta t) \int_0^t y(v) \exp(\delta v) dv.
+\end{equation}
+
+The corresponding solution for $x_i(t)$ is now
+\begin{equation}
+  \label{eq:gpsim_f_x_sol}
+  x_j(t) = \frac{B_j}{D_j} + S_j \exp(-D_j t) \int_0^t \exp(D_j
+  u) \sigma \exp(-\delta u) \int_0^u y(v) \exp(\delta v) dv du.
+\end{equation}
+
+For this model, the kernel between the genes is
+\begin{equation}
+  \label{eq:gpsimy_genekernel0}
+  \begin{split}
+    k_{x_j x_k}(t, t') &= \sigma^2 S_j S_k \exp(-D_j t - D_k t')
+    \int_0^t \exp((D_j - \delta) u)
+    \int_0^{t'} \exp((D_k - \delta) u') \\
+    & \int_0^u \exp(\delta v) \int_0^{u'} \exp(\delta v') k_{yy}(v, v') \, dv'\, dv\, du'\, du.
+  \end{split}
+\end{equation}
+Assuming $k_{yy}$ is a squared exponential of the from
+(\ref{eq:sqexp_kernel}), the quadruple integral can be evaluated to
+yield
+\begin{multline}
+  \label{eq:gpsimy_kernel1}
+  \int_0^t \exp((D_j - \delta) u)
+  \int_0^{t'} \exp((D_k - \delta) u') \\
+  \int_0^u \exp(\delta v) \int_0^{u'} \exp(\delta v') k_{yy}(v,
+  v') \, dv'\, dv\, du'\, du \\
+  = 
+  \int_0^t \exp((D_j - \delta) u)
+  \int_0^{t'} \exp((D_k - \delta) u') \\
+  \int_0^u \exp(\delta v) \int_0^{u'} \exp(\delta v')
+  \exp\left( -\frac{(v-v')^2}{l^2} \right) \, dv'\, dv\, du'\, du \\
+  = 
+  \frac{\sqrt{\pi}l}{2}\exp\left(\left(\frac{\delta l}{2}\right)^2\right)
+  \int_0^t \exp((D_j - \delta) u)
+  \int_0^{t'} \exp((D_k - \delta) u') \\
+  \int_0^u \exp(2 \delta v) 
+  (\erf(\delta l/2 + v/l) - \erf(\delta l/2 + (v-u')/l))
+  \, dv\, du'\, du \\
+  =
+  \frac{\sqrt{\pi}l}{4\delta}\exp\left(\left(\frac{\delta l}{2}\right)^2\right)
+  \int_0^t \exp((D_j - \delta) u)
+  \int_0^{t'} \exp((D_k - \delta) u') \\
+  \bigg(
+  \erf(\delta l/2 - u/l) - \erf(\delta l/2)
+  + \erf(\delta l/2 - u'/l) - \erf(\delta l/2) \\
+  + \exp(2 \delta u) (\erf(\delta l/2 + u/l) - \erf(\delta l/2 +
+  (u-u')/l)) \\
+  + \exp(2 \delta u') (\erf(\delta l/2 + u'/l) - \erf(\delta l/2
+  + (u'-u)/l))
+  \bigg)
+  \, du'\, du
+\end{multline}
+
+\if 0
+Tackling some of the individual terms separately we get
+\begin{multline}
+  \int_0^{t'} \exp((D_k - \delta) u') \\
+  \bigg(
+  \erf(\delta l/2 - u/l) - \erf(\delta l/2)
+  + \erf(\delta l/2 - u'/l) - \erf(\delta l/2) \\
+  + \exp(2 \delta u) (\erf(\delta l/2 + u/l) - \erf(\delta l/2 +
+  (u-u')/l)) \\
+  + \exp(2 \delta u') (\erf(\delta l/2 + u'/l) - \erf(\delta l/2
+  + (u'-u)/l))
+  \bigg)
+  \, du' \\
+  = \int_0^{t'} \exp((D_k - \delta) u')
+  \bigg(
+  \erf(\delta l/2 - u/l) - 2\erf(\delta l/2)
+  + \exp(2 \delta u) \erf(\delta l/2 + u/l)
+  \bigg) du' \\
+  +
+  \int_0^{t'} \exp((D_k - \delta) u')
+  \bigg(
+  \erf(\delta l/2 - u'/l)
+  - \exp(2 \delta u) \erf(\delta l/2 + (u-u')/l))
+  \bigg) du' \\
+  + \int_0^{t'} \exp((D_k + \delta) u')
+  \bigg(
+  (\erf(\delta l/2 + u'/l) - \erf(\delta l/2 + (u'-u)/l))
+  \bigg) du' \\
+  = 
+  \frac{\exp((D_k-\delta) t') - 1}{D_k-\delta}
+  \bigg(
+  \erf(\delta l/2 - u/l) - 2\erf(\delta l/2)
+  + \exp(2 \delta u) \erf(\delta l/2 + u/l)
+  \bigg) \\
+  + \frac{1}{D_k-\delta}
+  \bigg(
+  \exp((D_k-\delta)t') \erf(\delta l/2 - t'/l) - \erf(\delta l/2) \\
+  + \exp((D_k-\delta)(D_k+\delta)l^2/4)
+  (\erf(D_k l/2) - \erf(D_k l/2  - t'/l) ) \\
+  - \exp(2 \delta u)
+  (\exp((D_k-\delta)t') \erf(\delta l/2 + (u - t')/l) - \erf(\delta l/2
+  + u / l) \\
+  + \exp((D_k-\delta)(D_k+\delta)l^2/4 + (D_k - \delta)u)
+  (\erf(D_k l/2 + u/l) - \erf(D_k l/2  + (u - t')/l) ))
+  \bigg) \\
+  + \frac{1}{D_k+\delta}
+  \bigg(
+  \exp((D_k+\delta)t') \erf(\delta l/2 + t'/l) - \erf(\delta l/2) \\
+  + \exp((D_k-\delta)(D_k+\delta)l^2/4)
+  (\erf(D_k l/2  - t'/l) - \erf(D_k l/2)) \\
+  -
+  [\exp((D_k+\delta)t') \erf(\delta l/2 + (t' - u)/l) - \erf(\delta l/2
+  - u / l) \\
+  + \exp((D_k-\delta)(D_k+\delta)l^2/4 + (D_k + \delta)u)
+  (\erf(D_k l/2  + (u - t')/l) - \erf(D_k l/2 + u/l))]
+  \bigg) \\
+\end{multline}
+Leaving a final integral
+\begin{multline}
+  \int_0^t \exp((D_j - \delta) u) \bigg(
+  \frac{\exp((D_k-\delta) t') - 1}{D_k-\delta}
+  \bigg(
+  \erf(\delta l/2 - u/l) - 2\erf(\delta l/2)
+  + \exp(2 \delta u) \erf(\delta l/2 + u/l)
+  \bigg) \\
+  + \frac{1}{D_k-\delta}
+  \bigg(
+  \exp((D_k-\delta)t') \erf(\delta l/2 - t'/l) - \erf(\delta l/2) \\
+  + \exp((D_k-\delta)(D_k+\delta)l^2/4)
+  (\erf(D_k l/2) - \erf(D_k l/2  - t'/l) ) \\
+  - \exp(2 \delta u)
+  (\exp((D_k-\delta)t') \erf(\delta l/2 + (u - t')/l) - \erf(\delta l/2
+  + u / l) \\
+  + \exp((D_k-\delta)(D_k+\delta)l^2/4 + (D_k - \delta)u)
+  (\erf(D_k l/2 + u/l) - \erf(D_k l/2  + (u - t')/l) ))
+  \bigg) \\
+  + \frac{1}{D_k+\delta}
+  \bigg(
+  \exp((D_k+\delta)t') \erf(\delta l/2 + t'/l) - \erf(\delta l/2) \\
+  + \exp((D_k-\delta)(D_k+\delta)l^2/4)
+  (\erf(D_k l/2  - t'/l) - \erf(D_k l/2)) \\
+  -
+  [\exp((D_k+\delta)t') \erf(\delta l/2 + (t' - u)/l) - \erf(\delta l/2
+  - u / l) \\
+  + \exp((D_k-\delta)(D_k+\delta)l^2/4 + (D_k + \delta)u)
+  (\erf(D_k l/2  + (u - t')/l) - \erf(D_k l/2 + u/l))]
+  \bigg)  \bigg) \,du \\
+  = 
+  \frac{\exp((D_j-\delta) t) - 1}{D_j-\delta} \bigg(
+  + \frac{1}{D_k-\delta}
+  \bigg(
+  \exp((D_k-\delta)t') (\erf(\delta l/2 - t'/l) - 2\erf(\delta l/2))
+  + \erf(\delta l/2) \\
+  + \exp((D_k-\delta)(D_k+\delta)l^2/4)
+  (\erf(D_k l/2) - \erf(D_k l/2  - t'/l) )
+  \bigg) \\
+  + \frac{1}{D_k+\delta}
+  \bigg(
+  \exp((D_k+\delta)t') \erf(\delta l/2 + t'/l) - \erf(\delta l/2) \\
+  + \exp((D_k-\delta)(D_k+\delta)l^2/4)
+  (\erf(D_k l/2  - t'/l) - \erf(D_k l/2))
+  \bigg)  
+  \bigg) \\
+  + 
+  \int_0^t \exp((D_j - \delta) u) \bigg(
+  \frac{\exp((D_k-\delta) t') - 1}{D_k-\delta}
+  \bigg(
+  \erf(\delta l/2 - u/l) + \exp(2 \delta u) \erf(\delta l/2 + u/l)
+  \bigg) \\
+  + \frac{1}{D_k-\delta}
+  \bigg(
+  - \exp(2 \delta u)
+  (\exp((D_k-\delta)t') \erf(\delta l/2 + (u - t')/l) - \erf(\delta l/2
+  + u / l) \\
+  + \exp((D_k-\delta)(D_k+\delta)l^2/4 + (D_k - \delta)u)
+  (\erf(D_k l/2 + u/l) - \erf(D_k l/2  + (u - t')/l) ))
+  \bigg) \\
+  + \frac{1}{D_k+\delta}
+  \bigg(
+  \erf(\delta l/2 - u / l)
+  - \exp((D_k+\delta)t') \erf(\delta l/2 + (t' - u)/l) \\
+  + \exp((D_k-\delta)(D_k+\delta)l^2/4 + (D_k + \delta)u)
+  (\erf(D_k l/2 + u/l) - \erf(D_k l/2  + (u - t')/l) )
+  \bigg)  \bigg) \,du
+\end{multline}
+The difficult parts of this are
+\begin{multline}
+  \int_0^t \exp((D_j - \delta) u) \bigg(
+  \frac{\exp((D_k-\delta) t') - 1}{D_k-\delta}
+  \bigg(
+  \erf(\delta l/2 - u/l) + \exp(2 \delta u) \erf(\delta l/2 + u/l)
+  \bigg) \\
+  + \frac{1}{D_k-\delta}
+  \bigg(
+  - \exp(2 \delta u)
+  (\exp((D_k-\delta)t') \erf(\delta l/2 + (u - t')/l) - \erf(\delta l/2
+  + u / l) \\
+  + \exp((D_k-\delta)(D_k+\delta)l^2/4 + (D_k + \delta)u)
+  (\erf(D_k l/2 + u/l) - \erf(D_k l/2  + (u - t')/l) ))
+  \bigg) \\
+  + \frac{1}{D_k+\delta}
+  \bigg(
+  \erf(\delta l/2 - u / l)
+  - \exp((D_k+\delta)t') \erf(\delta l/2 + (t' - u)/l) \\
+  + \exp((D_k-\delta)(D_k+\delta)l^2/4 + (D_k + \delta)u)
+  (\erf(D_k l/2 + u/l) - \erf(D_k l/2  + (u - t')/l) )
+  \bigg)  \bigg) \,du \\
+  =
+  \int_0^t \exp((D_j - \delta) u) \bigg(
+  \bigg(
+  \frac{\exp((D_k-\delta) t') - 1}{D_k-\delta}
+  \erf(\delta l/2 - u/l)
+  \bigg) \\
+  + \frac{\exp(2 \delta u)}{D_k-\delta}
+  \bigg(
+  (\exp((D_k-\delta) t') - 1) \erf(\delta l/2 + u/l)
+  - \exp((D_k-\delta)t') \erf(\delta l/2 + (u - t')/l) + \erf(\delta l/2
+  + u / l) \bigg) \\
+  + \frac{-1}{D_k-\delta} \bigg(
+  \exp((D_k-\delta)(D_k+\delta)l^2/4 + (D_k + \delta)u)
+  (\erf(D_k l/2 + u/l) - \erf(D_k l/2  + (u - t')/l) ))
+  \bigg) \\
+  + \frac{1}{D_k+\delta}
+  \bigg(
+  \erf(\delta l/2 - u / l)
+  - \exp((D_k+\delta)t') \erf(\delta l/2 + (t' - u)/l) \\
+  + \exp((D_k-\delta)(D_k+\delta)l^2/4 + (D_k + \delta)u)
+  (\erf(D_k l/2 + u/l) - \erf(D_k l/2  + (u - t')/l) )
+  \bigg)  \bigg) \,du \\
+  =
+  \int_0^t \exp((D_j - \delta) u) \bigg(
+  \bigg(
+  \frac{\exp((D_k-\delta) t') - 1}{D_k-\delta}
+  \erf(\delta l/2 - u/l)
+  \bigg) \\
+  + \frac{1}{D_k+\delta}
+  \bigg(
+  \erf(\delta l/2 - u / l)
+  - \exp((D_k+\delta)t') \erf(\delta l/2 + (t' - u)/l) \bigg) \\
+  + \frac{\exp(2 \delta u)}{D_k-\delta}
+  \bigg(
+  \exp((D_k-\delta) t')(\erf(\delta l/2 + u/l)
+  - \erf(\delta l/2 + (u - t')/l)) \bigg) \\
+  + \bigg(\frac{1}{D_k+\delta} - \frac{1}{D_k - \delta}\bigg)
+  \bigg(
+  \exp((D_k-\delta)(D_k+\delta)l^2/4 + (D_k + \delta)u)
+  (\erf(D_k l/2 + u/l) - \erf(D_k l/2  + (u - t')/l) )
+  \bigg)
+  \bigg) \,du \\
+  = 
+  \int_0^t \exp((D_j - \delta) u) \bigg(
+  \bigg(
+  \frac{\exp((D_k-\delta) t') - 1}{D_k-\delta} + \frac{1}{D_k+\delta}
+  \bigg)
+  \erf(\delta l/2 - u/l) \\
+  - \frac{\exp((D_k+\delta)t')}{D_k+\delta} \erf(\delta l/2 + (t' - u)/l) \bigg)\,du \\
+  +
+  \frac{\exp((D_k-\delta) t')}{D_k-\delta}
+  \int_0^t \exp((D_j + \delta) u) \bigg(
+  \erf(\delta l/2 + u/l)
+  - \erf(\delta l/2 + (u - t')/l) \bigg) \,du \\
+  +
+  \exp((D_k-\delta)(D_k+\delta)l^2/4)
+  \bigg(\frac{1}{D_k+\delta} - \frac{1}{D_k - \delta}\bigg) \\
+  \int_0^t \exp((D_j + D_k) u)
+  \bigg(
+  (\erf(D_k l/2 + u/l) - \erf(D_k l/2  + (u - t')/l) )
+  \bigg) \,du \\
+\end{multline}
+These can be solved individually to yield
+\begin{multline}
+  \int_0^t \exp((D_j - \delta) u) \bigg(
+  \bigg(
+  \frac{\exp((D_k-\delta) t') - 1}{D_k-\delta} + \frac{1}{D_k+\delta}
+  \bigg)
+  \erf(\delta l/2 - u/l) \\
+  - \frac{\exp((D_k+\delta)t')}{D_k+\delta} \erf(\delta l/2 + (t' - u)/l) \bigg)\,du \\
+  =
+  \frac{1}{D_j - \delta} \bigg(
+  \bigg(
+  \frac{\exp((D_k-\delta) t') - 1}{D_k-\delta} + \frac{1}{D_k+\delta}
+  \bigg)
+  \bigg(\exp((D_j-\delta) t) \erf(\delta l/2 - t/l) - \erf(\delta l/2)
+  \\
+  + \exp((D_j - \delta)(D_j + \delta)l^2/4)[\erf(D_j l/2) - \erf(D_j
+  l/2 - t/l) ]\bigg)
+  \\
+  - \frac{\exp((D_k+\delta)t')}{D_k+\delta} \bigg(
+  \exp((D_j-\delta) t) \erf(\delta l/2 - (t-t')/l) - \erf(\delta l/2 +
+  t'/l) \\
+  + \exp((D_j - \delta)(D_j + \delta)l^2/4)[\erf(D_j l/2 + t'/l) - \erf(D_j
+  l/2 - (t-t')/l) ]
+  \bigg)
+  \bigg)
+\end{multline}
+\begin{multline}
+  \frac{\exp((D_k-\delta) t')}{D_k-\delta}
+  \int_0^t \exp((D_j + \delta) u) \bigg(
+  \erf(\delta l/2 + u/l)
+  - \erf(\delta l/2 + (u - t')/l) \bigg) \,du \\
+  =
+  \frac{\exp((D_k-\delta) t')}{(D_k-\delta)(D_j+\delta)}
+  \bigg(
+  \exp((D_j + \delta) t) \erf(\delta l/2 + t/l) - \erf(\delta l / 2) \\
+  + \exp((D_j + \delta)(D_j - \delta)l^2/4)[\erf(D_j l/2 - t/l) -
+  \erf(D_j l/2)] \\
+  + \erf(\delta l / 2 - t'/l) - 
+  \exp((D_j + \delta) t) \erf(\delta l / 2 - (t'-t)'/l) \\
+  + \exp((D_j + \delta)(D_j - \delta)l^2/4)[\erf(D_j l/2 + t'/l) -
+  \erf(D_j l/2 + (t'-t)/l)]
+  \bigg)
+\end{multline}
+\begin{multline}
+  \exp((D_k-\delta)(D_k+\delta)l^2/4)
+  \bigg(\frac{1}{D_k+\delta} - \frac{1}{D_k - \delta}\bigg) \\
+  \int_0^t \exp((D_j + D_k) u)
+  \bigg(
+  (\erf(D_k l/2 + u/l) - \erf(D_k l/2  + (u - t')/l) )
+  \bigg) \,du \\
+  =
+  \frac{\exp((D_k-\delta)(D_k+\delta)l^2/4)}{D_j + D_k}
+  \bigg(\frac{1}{D_k+\delta} - \frac{1}{D_k - \delta}\bigg) \\
+  \bigg(
+  \exp((D_j + D_k) t) \erf(D_k l/2 + t/l) - \erf(D_k l / 2) \\
+  + \exp((D_j + D_k)(D_j - D_k)l^2/4)[\erf(D_j l/2 - t/l) -
+  \erf(D_j l/2)] \\
+  + \erf(D_k l / 2 - t'/l) - 
+  \exp((D_j + D_k) t) \erf(D_k l / 2 - (t'-t)'/l) \\
+  + \exp((D_j + D_k)(D_j - D_k)l^2/4)[\erf(D_j l/2 + t'/l) -
+  \erf(D_j l/2 + (t'-t)/l)]
+  \bigg)
+\end{multline}
+
+Together, these yield
+\begin{multline}
+  \int_0^t \exp((D_j - \delta) u)
+  \int_0^{t'} \exp((D_k - \delta) u') \\
+  \int_0^u \exp(\delta v) \int_0^{u'} \exp(\delta v') k_{yy}(v,
+  v') \, dv'\, dv\, du'\, du \\
+  = 
+%   \frac{\sqrt{\pi}l}{4\delta}\exp\left(\left(\frac{\delta l}{2}\right)^2\right)
+%   \bigg\{
+%   \frac{\exp((D_j-\delta) t) - 1}{D_j-\delta} \\
+%   \bigg(
+%   \frac{1}{D_k-\delta}
+%   \bigg(
+%   \exp((D_k-\delta)t') (\erf(\delta l/2 - t'/l) - 2\erf(\delta l/2))
+%   + \erf(\delta l/2) \\
+%   + \exp((D_k-\delta)(D_k+\delta)l^2/4)
+%   (\erf(D_k l/2) - \erf(D_k l/2  - t'/l) )
+%   \bigg) \\
+%   + \frac{1}{D_k+\delta}
+%   \bigg(
+%   \exp((D_k+\delta)t') \erf(\delta l/2 + t'/l) - \erf(\delta l/2) \\
+%   + \exp((D_k-\delta)(D_k+\delta)l^2/4)
+%   (\erf(D_k l/2  - t'/l) - \erf(D_k l/2))
+%   \bigg)  
+%   \bigg) \\
+%   +
+%   \frac{1}{D_j - \delta} \bigg(
+%   \bigg(
+%   \frac{\exp((D_k-\delta) t') - 1}{D_k-\delta} + \frac{1}{D_k+\delta}
+%   \bigg)
+%   \bigg(\exp((D_j-\delta) t) \erf(\delta l/2 - t/l) - \erf(\delta l/2)
+%   \\
+%   + \exp((D_j - \delta)(D_j + \delta)l^2/4)[\erf(D_j l/2) - \erf(D_j
+%   l/2 - t/l) ]\bigg)
+%   \\
+%   - \frac{\exp((D_k+\delta)t')}{D_k+\delta} \bigg(
+%   \exp((D_j-\delta) t) \erf(\delta l/2 - (t-t')/l) - \erf(\delta l/2 +
+%   t'/l) \\
+%   + \exp((D_j - \delta)(D_j + \delta)l^2/4)[\erf(D_j l/2 + t'/l) - \erf(D_j
+%   l/2 - (t-t')/l) ]
+%   \bigg)
+%   \bigg) \\
+%   +
+%   \frac{\exp((D_k-\delta) t')}{(D_k-\delta)(D_j+\delta)}
+%   \bigg(
+%   \exp((D_j + \delta) t) \erf(\delta l/2 + t/l) - \erf(\delta l / 2) \\
+%   + \exp((D_j + \delta)(D_j - \delta)l^2/4)[\erf(D_j l/2 - t/l) -
+%   \erf(D_j l/2)] \\
+%   \erf(\delta l / 2 - t'/l) - 
+%   \exp((D_j + \delta) t) \erf(\delta l / 2 - (t'-t)'/l) \\
+%   + \exp((D_j + \delta)(D_j - \delta)l^2/4)[\erf(D_j l/2 + t'/l) -
+%   \erf(D_j l/2 + (t'-t)/l)]
+%   \bigg) \\
+%   +
+%   \frac{\exp((D_k-\delta)(D_k+\delta)l^2/4)}{D_j + D_k}
+%   \bigg(\frac{1}{D_k+\delta} - \frac{1}{D_k-\delta} \bigg) \\
+%   \bigg(
+%   \exp((D_j + D_k) t) \erf(D_k l/2 + t/l) - \erf(D_k l / 2) \\
+%   + \exp((D_j + D_k)(D_j - D_k)l^2/4)[\erf(D_j l/2 - t/l) -
+%   \erf(D_j l/2)] \\
+%   \erf(D_k l / 2 - t'/l) - 
+%   \exp((D_j + D_k) t) \erf(D_k l / 2 - (t'-t)'/l) \\
+%   + \exp((D_j + D_k)(D_j - D_k)l^2/4)[\erf(D_j l/2 + t'/l) -
+%   \erf(D_j l/2 + (t'-t)/l)]
+%   \bigg)
+%   \bigg\} \\
+  ...
+  = 
+  \frac{\sqrt{\pi}l}{4\delta}\exp\left(\left(\frac{\delta l}{2}\right)^2\right)
+  \bigg\{
+  \frac{\exp((D_j-\delta) t) - 1}{D_j-\delta} \\
+  \bigg(
+  \frac{1}{D_k-\delta}
+  \bigg(
+  \exp((D_k-\delta)t') (\erf(\delta l/2 - t'/l) - 2\erf(\delta l/2))
+  + \erf(\delta l/2) \\
+  + \exp((D_k-\delta)(D_k+\delta)l^2/4)
+  (\erf(D_k l/2) - \erf(D_k l/2  - t'/l) )
+  \bigg) \\
+  + \frac{1}{D_k+\delta}
+  \bigg(
+  \exp((D_k+\delta)t') \erf(\delta l/2 + t'/l) - \erf(\delta l/2) \\
+  + \exp((D_k-\delta)(D_k+\delta)l^2/4)
+  (\erf(D_k l/2  - t'/l) - \erf(D_k l/2))
+  \bigg)  
+  \bigg) \\
+  +
+  \frac{1}{D_j - \delta} \bigg(
+  \frac{\exp((D_k-\delta) t') - 1}{D_k-\delta}
+  \bigg(\exp((D_j-\delta) t) \erf(\delta l/2 - t/l) - \erf(\delta l/2)
+  \\
+  + \exp((D_j - \delta)(D_j + \delta)l^2/4)[\erf(D_j l/2) - \erf(D_j
+  l/2 - t/l) ]\bigg) \\
+  +
+  \frac{1}{D_k+\delta}
+  \bigg(\exp((D_j-\delta) t) \erf(\delta l/2 - t/l) - \erf(\delta l/2)
+  \\
+  + \exp((D_j - \delta)(D_j + \delta)l^2/4)[\erf(D_j l/2) - \erf(D_j
+  l/2 - t/l) ]\bigg)
+  \\
+  - \frac{\exp((D_k+\delta)t')}{D_k+\delta} \bigg(
+  \exp((D_j-\delta) t) \erf(\delta l/2 - (t-t')/l) - \erf(\delta l/2 +
+  t'/l) \\
+  + \exp((D_j - \delta)(D_j + \delta)l^2/4)[\erf(D_j l/2 + t'/l) - \erf(D_j
+  l/2 - (t-t')/l) ]
+  \bigg)
+  \bigg) \\
+  +
+  \frac{\exp((D_k-\delta) t')}{(D_k-\delta)(D_j+\delta)}
+  \bigg(
+  \exp((D_j + \delta) t) \erf(\delta l/2 + t/l) - \erf(\delta l / 2) \\
+  + \exp((D_j + \delta)(D_j - \delta)l^2/4)[\erf(D_j l/2 - t/l) -
+  \erf(D_j l/2)] \\
+  + \erf(\delta l / 2 - t'/l) - 
+  \exp((D_j + \delta) t) \erf(\delta l / 2 - (t'-t)'/l) \\
+  + \exp((D_j + \delta)(D_j - \delta)l^2/4)[\erf(D_j l/2 + t'/l) -
+  \erf(D_j l/2 + (t'-t)/l)]
+  \bigg) \\
+  +
+  \frac{\exp((D_k-\delta)(D_k+\delta)l^2/4)}{D_j + D_k}
+  \bigg(\frac{1}{D_k+\delta} - \frac{1}{D_k-\delta} \bigg) \\
+  \bigg(
+  \exp((D_j + D_k) t) \erf(D_k l/2 + t/l) - \erf(D_k l / 2) \\
+  + \exp((D_j + D_k)(D_j - D_k)l^2/4)[\erf(D_j l/2 - t/l) -
+  \erf(D_j l/2)] \\
+  + \erf(D_k l / 2 - t'/l) - 
+  \exp((D_j + D_k) t) \erf(D_k l / 2 - (t'-t)'/l) \\
+  + \exp((D_j + D_k)(D_j - D_k)l^2/4)[\erf(D_j l/2 + t'/l) -
+  \erf(D_j l/2 + (t'-t)/l)]
+  \bigg)
+  \bigg\} \\
+\end{multline}
+\begin{multline}
+  \frac{\sqrt{\pi}l}{4\delta}\exp\left(\left(\frac{\delta l}{2}\right)^2\right)
+  \bigg\{
+  \frac{\exp((D_j-\delta) t) - 1}{D_j-\delta} \\
+  \bigg(
+  \frac{1}{D_k-\delta}
+  \bigg(
+  \exp((D_k-\delta)t') (\erf(\delta l/2 - t'/l) - 2\erf(\delta l/2))
+  + \erf(\delta l/2) \bigg) \\
+  + \frac{1}{D_k+\delta}
+  \bigg(
+  \exp((D_k+\delta)t') \erf(\delta l/2 + t'/l) - \erf(\delta l/2) \bigg)
+  \bigg) \\
+  +
+  \frac{1}{D_j - \delta} \bigg(
+  \frac{\exp((D_k-\delta) t') - 1}{D_k-\delta}
+  \bigg(\exp((D_j-\delta) t) \erf(\delta l/2 - t/l) - \erf(\delta l/2)
+  \bigg) \\
+  +
+  \frac{1}{D_k+\delta}
+  \bigg(\exp((D_j-\delta) t) \erf(\delta l/2 - t/l) - \erf(\delta l/2)
+  \bigg) \\
+  - \frac{\exp((D_k+\delta)t')}{D_k+\delta} \bigg(
+  \exp((D_j-\delta) t) \erf(\delta l/2 - (t-t')/l) - \erf(\delta l/2 +
+  t'/l) 
+  \bigg)
+  \bigg) \\
+  +
+  \frac{\exp((D_k-\delta) t')}{(D_k-\delta)(D_j+\delta)}
+  \bigg(
+  \exp((D_j + \delta) t) \erf(\delta l/2 + t/l) - \erf(\delta l / 2) \\
+  \erf(\delta l / 2 - t'/l) - 
+  \exp((D_j + \delta) t) \erf(\delta l / 2 - (t'-t)'/l)
+  \bigg)
+  \bigg\} \\
+  +
+  \frac{\sqrt{\pi}l}{4\delta}\exp\left(\left(\frac{\delta l}{2}\right)^2\right)
+  \bigg\{
+  \frac{\exp((D_j-\delta) t) - 1}{D_j-\delta} \\
+  \bigg(
+  \frac{1}{D_k-\delta}
+  \bigg(
+  \exp((D_k-\delta)(D_k+\delta)l^2/4)
+  (\erf(D_k l/2) - \erf(D_k l/2  - t'/l) )
+  \bigg) \\
+  + \frac{1}{D_k+\delta}
+  \bigg(
+  \exp((D_k-\delta)(D_k+\delta)l^2/4)
+  (\erf(D_k l/2  - t'/l) - \erf(D_k l/2))
+  \bigg)  
+  \bigg) \\
+  +
+  \frac{1}{D_j - \delta} \bigg(
+  \frac{\exp((D_k-\delta) t') - 1}{D_k-\delta}
+  \bigg(
+  \exp((D_j - \delta)(D_j + \delta)l^2/4)[\erf(D_j l/2) - \erf(D_j
+  l/2 - t/l) ]\bigg) \\
+  +
+  \frac{1}{D_k+\delta}
+  \bigg(
+  \exp((D_j - \delta)(D_j + \delta)l^2/4)[\erf(D_j l/2) - \erf(D_j
+  l/2 - t/l) ]\bigg)
+  \\
+  - \frac{\exp((D_k+\delta)t')}{D_k+\delta} \bigg(
+  \exp((D_j - \delta)(D_j + \delta)l^2/4)[\erf(D_j l/2 + t'/l) - \erf(D_j
+  l/2 - (t-t')/l) ]
+  \bigg)
+  \bigg) \\
+  +
+  \frac{\exp((D_k-\delta) t')}{(D_k-\delta)(D_j+\delta)}
+  \bigg(
+  \exp((D_j + \delta)(D_j - \delta)l^2/4)[\erf(D_j l/2 - t/l) -
+  \erf(D_j l/2)] \\
+  + \exp((D_j + \delta)(D_j - \delta)l^2/4)[\erf(D_j l/2 + t'/l) -
+  \erf(D_j l/2 + (t'-t)/l)]
+  \bigg) \\
+  +
+  \frac{\exp((D_k-\delta)(D_k+\delta)l^2/4)}{D_j + D_k}
+  \bigg(\frac{1}{D_k+\delta} - \frac{1}{D_k-\delta} \bigg) \\
+  \bigg(
+  \exp((D_j + D_k) t) \erf(D_k l/2 + t/l) - \erf(D_k l / 2) \\
+  + \exp((D_j + D_k)(D_j - D_k)l^2/4)[\erf(D_j l/2 - t/l) -
+  \erf(D_j l/2)] \\
+  + \erf(D_k l / 2 - t'/l) - 
+  \exp((D_j + D_k) t) \erf(D_k l / 2 - (t'-t)'/l) \\
+  + \exp((D_j + D_k)(D_j - D_k)l^2/4)[\erf(D_j l/2 + t'/l) -
+  \erf(D_j l/2 + (t'-t)/l)]
+  \bigg)
+  \bigg\} \\
+\end{multline}
+\begin{multline}
+  \frac{\sqrt{\pi}l}{4\delta}\exp\left(\left(\frac{\delta l}{2}\right)^2\right)
+  \bigg\{
+  \frac{\exp((D_j-\delta) t) - 1}{D_j-\delta} \\
+  \bigg(
+  \frac{1}{D_k-\delta}
+  \bigg(
+  \exp((D_k-\delta)t') (\erf(\delta l/2 - t'/l) - 2\erf(\delta l/2))
+  + \erf(\delta l/2) \bigg) \\
+  + \frac{1}{D_k+\delta}
+  \bigg(
+  \exp((D_k+\delta)t') \erf(\delta l/2 + t'/l) - \erf(\delta l/2) \bigg)
+  \bigg) \\
+  +
+  \frac{1}{D_j - \delta} \bigg(
+  \frac{\exp((D_k-\delta) t') - 1}{D_k-\delta}
+  \bigg(\exp((D_j-\delta) t) \erf(\delta l/2 - t/l) - \erf(\delta l/2)
+  \bigg) \\
+  +
+  \frac{1}{D_k+\delta}
+  \bigg(\exp((D_j-\delta) t) \erf(\delta l/2 - t/l) - \erf(\delta l/2)
+  \bigg) \\
+  - \frac{\exp((D_k+\delta)t')}{D_k+\delta} \bigg(
+  \exp((D_j-\delta) t) \erf(\delta l/2 - (t-t')/l) - \erf(\delta l/2 +
+  t'/l) 
+  \bigg)
+  \bigg) \\
+  +
+  \frac{\exp((D_k-\delta) t')}{(D_k-\delta)(D_j+\delta)}
+  \bigg(
+  \exp((D_j + \delta) t) \erf(\delta l/2 + t/l) - \erf(\delta l / 2) \\
+  + \erf(\delta l / 2 - t'/l) - 
+  \exp((D_j + \delta) t) \erf(\delta l / 2 - (t'-t)'/l)
+  \bigg)
+  \bigg\} \\
+  = 
+  \frac{\sqrt{\pi}l}{4\delta}\exp\left(\left(\frac{\delta l}{2}\right)^2\right)
+  \bigg\{ 
+  \frac{1}{(D_k-\delta)(D_j-\delta)} \bigg( \\
+  \exp((D_k-\delta)t') [\exp((D_j-\delta) t) - 1]
+  [\erf(\delta l/2 - t'/l) - \erf(\delta l/2) ]
+  \\
+  +
+  \exp((D_j-\delta) t) [\exp((D_k-\delta) t') - 1]
+  [\erf(\delta l/2 - t/l) - \erf(\delta l/2)]
+  \bigg) \\
+  +
+  \frac{\exp((D_j-\delta) t)}{(D_k+\delta)(D_j-\delta)}
+  \bigg(
+  \erf(\delta l/2 - t/l) - \erf(\delta l/2)
+  \\
+  +
+  \exp((D_k+\delta)t') [\erf(\delta l/2 + t'/l)
+  - \erf(\delta l/2 - (t-t')/l)]
+  \bigg) \\
+  +
+  \frac{\exp((D_k-\delta) t')}{(D_k-\delta)(D_j+\delta)}
+  \bigg(
+  \erf(\delta l / 2 - t'/l) - \erf(\delta l / 2) \\
+  + 
+  \exp((D_j + \delta) t) [\erf(\delta l/2 + t/l)  - 
+  \erf(\delta l / 2 - (t'-t)'/l)]
+  \bigg)
+  \bigg\} \\
+  = h_{kj}(t, t') + h_{jk}(t', t),
+\end{multline}
+where
+\begin{multline}
+  h_{kj}(t, t') = 
+  \frac{\sqrt{\pi}l}{4\delta(D_j - \delta)}\exp\left(\left(\frac{\delta l}{2}\right)^2\right)
+  \exp((D_j-\delta) t)
+  \bigg\{ 
+   \\
+  \bigg(
+  \frac{\exp((D_k-\delta) t') - 1}{(D_k-\delta)}
+  +
+  \frac{1}{(D_k+\delta)}
+  \bigg)
+  [\erf(\delta l/2 - t/l) - \erf(\delta l/2)]
+  \\
+  + \frac{\exp((D_k+\delta)t')}{D_k+\delta}
+  [\erf(\delta l/2 + t'/l)
+  - \erf(\delta l/2 - (t-t')/l)]
+  \bigg\} \\
+\end{multline}
+
+\begin{multline}
+%   \frac{\sqrt{\pi}l}{4\delta}\exp\left(\left(\frac{\delta l}{2}\right)^2\right)
+%   \bigg\{
+%   \frac{\exp((D_j-\delta) t) - 1}{D_j-\delta} \\
+%   \bigg(
+%   \frac{1}{D_k-\delta}
+%   \bigg(
+%   \exp((D_k-\delta)(D_k+\delta)l^2/4)
+%   (\erf(D_k l/2) - \erf(D_k l/2  - t'/l) )
+%   \bigg) \\
+%   + \frac{1}{D_k+\delta}
+%   \bigg(
+%   \exp((D_k-\delta)(D_k+\delta)l^2/4)
+%   (\erf(D_k l/2  - t'/l) - \erf(D_k l/2))
+%   \bigg)  
+%   \bigg) \\
+%   +
+%   \frac{1}{D_j - \delta} \bigg(
+%   \frac{\exp((D_k-\delta) t') - 1}{D_k-\delta}
+%   \bigg(
+%   \exp((D_j - \delta)(D_j + \delta)l^2/4)[\erf(D_j l/2) - \erf(D_j
+%   l/2 - t/l) ]\bigg) \\
+%   +
+%   \frac{1}{D_k+\delta}
+%   \bigg(
+%   \exp((D_j - \delta)(D_j + \delta)l^2/4)[\erf(D_j l/2) - \erf(D_j
+%   l/2 - t/l) ]\bigg)
+%   \\
+%   - \frac{\exp((D_k+\delta)t')}{D_k+\delta} \bigg(
+%   \exp((D_j - \delta)(D_j + \delta)l^2/4)[\erf(D_j l/2 + t'/l) - \erf(D_j
+%   l/2 - (t-t')/l) ]
+%   \bigg)
+%   \bigg) \\
+%   +
+%   \frac{\exp((D_k-\delta) t')}{(D_k-\delta)(D_j+\delta)}
+%   \bigg(
+%   \exp((D_j + \delta)(D_j - \delta)l^2/4)[\erf(D_j l/2 - t/l) -
+%   \erf(D_j l/2)] \\
+%   + \exp((D_j + \delta)(D_j - \delta)l^2/4)[\erf(D_j l/2 + t'/l) -
+%   \erf(D_j l/2 + (t'-t)/l)]
+%   \bigg) \\
+%   +
+%   \frac{\exp((D_k-\delta)(D_k+\delta)l^2/4)}{D_j + D_k}
+%   \bigg(\frac{1}{D_k+\delta} - \frac{1}{D_k-\delta} \bigg) \\
+%   \bigg(
+%   \exp((D_j + D_k) t) \erf(D_k l/2 + t/l) - \erf(D_k l / 2) \\
+%   + \exp((D_j + D_k)(D_j - D_k)l^2/4)[\erf(D_j l/2 - t/l) -
+%   \erf(D_j l/2)] \\
+%   + \erf(D_k l / 2 - t'/l) - 
+%   \exp((D_j + D_k) t) \erf(D_k l / 2 - (t'-t)'/l) \\
+%   + \exp((D_j + D_k)(D_j - D_k)l^2/4)[\erf(D_j l/2 + t'/l) -
+%   \erf(D_j l/2 + (t'-t)/l)]
+%   \bigg)
+%   \bigg\} \\
+  \text{second part}
+  =
+  \frac{\sqrt{\pi}l}{4\delta}\exp\left(\left(\frac{\delta l}{2}\right)^2\right)
+  \bigg\{ \\
+  \exp((D_k-\delta)(D_k+\delta)l^2/4) \bigg[
+  \frac{\exp((D_j-\delta) t)}{(D_k-\delta)(D_j-\delta)}
+  \bigg(
+  \erf(D_k l/2) - \erf(D_k l/2  - t'/l)
+  \bigg) \\
+  + \frac{\exp((D_j-\delta) t)}{(D_k+\delta)(D_j-\delta)}
+  \bigg(
+  \erf(D_k l/2  - t'/l) - \erf(D_k l/2)
+  \bigg) \\
+  - \frac{1}{(D_k-\delta)(D_j-\delta)}
+  \bigg(
+  \erf(D_k l/2) - \erf(D_k l/2  - t'/l)
+  \bigg) \\
+  - \frac{1}{(D_k+\delta)(D_j-\delta)}
+  \bigg(
+  \erf(D_k l/2  - t'/l) - \erf(D_k l/2)
+  \bigg) \\
+  +
+  \frac{\exp((D_j + D_k) t)}{(D_j + D_k)(D_k+\delta)}
+  \bigg(
+  \erf(D_k l/2 + t/l) - \erf(D_k l / 2 - (t'-t)'/l)
+  \bigg) \\
+  +
+  \frac{1}{(D_j + D_k)(D_k+\delta)}
+  \bigg(
+  \erf(D_k l / 2 - t'/l) - \erf(D_k l / 2)
+  \bigg) \\
+  -
+  \frac{\exp((D_j + D_k) t)}{(D_j + D_k)(D_k-\delta)}
+  \bigg(
+  \erf(D_k l/2 + t/l) - \erf(D_k l / 2 - (t'-t)'/l)
+  \bigg) \\
+  -
+  \frac{1}{(D_j + D_k)(D_k-\delta)}
+  \bigg(
+  \erf(D_k l / 2 - t'/l) - \erf(D_k l / 2)
+  \bigg)
+  \bigg] \\
+  +
+  \exp((D_j - \delta)(D_j + \delta)l^2/4) \bigg[
+  \frac{\exp((D_k-\delta) t')}{(D_k-\delta)(D_j - \delta)}
+  \bigg(
+  \erf(D_j l/2) - \erf(D_j l/2 - t/l) \bigg) \\
+  -
+  \frac{1}{(D_k-\delta)(D_j - \delta)}
+  \bigg(
+  \erf(D_j l/2) - \erf(D_j l/2 - t/l) \bigg) \\
+  +
+  \frac{1}{(D_k+\delta)(D_j - \delta)}
+  \bigg(
+  \erf(D_j l/2) - \erf(D_j l/2 - t/l) \bigg)
+  \\
+  +
+  \frac{\exp((D_k-\delta) t')}{(D_k-\delta)(D_j+\delta)}
+  \bigg(
+  \erf(D_j l/2 - t/l) - \erf(D_j l/2)
+  \bigg) \\
+  +
+  \frac{\exp((D_k-\delta) t')}{(D_k-\delta)(D_j+\delta)}
+  \bigg(
+  \erf(D_j l/2 + t'/l) - \erf(D_j l/2 + (t'-t)/l)
+  \bigg) \\
+  -
+  \frac{\exp((D_k+\delta)t')}{(D_k+\delta)(D_j - \delta)} \bigg(
+  \erf(D_j l/2 + t'/l) - \erf(D_j l/2 - (t-t')/l)
+  \bigg) \\
+  +
+  \frac{1}{(D_j + D_k)(D_k+\delta)}
+  \bigg(
+  \erf(D_j l/2 - t/l) - \erf(D_j l/2)
+  \bigg) \\
+  + 
+  \frac{1}{(D_j + D_k)(D_k+\delta)}
+  \bigg(
+  \erf(D_j l/2 + t'/l) - \erf(D_j l/2 + (t'-t)/l)
+  \bigg) \\
+  -
+  \frac{1}{(D_j + D_k)(D_k-\delta)}
+  \bigg(
+  \erf(D_j l/2 - t/l) - \erf(D_j l/2)
+  \bigg) \\
+  -
+  \frac{1}{(D_j + D_k)(D_k-\delta)}
+  \bigg(
+  \erf(D_j l/2 + t'/l) - \erf(D_j l/2 + (t'-t)/l)
+  \bigg)
+  \bigg]
+  \bigg\} \\
+\end{multline}
+
+
+
+
+\begin{equation}
+  \text{second part} = h'_{kj}(t, t') + h'_{jk}(t', t),
+\end{equation}
+where
+\begin{multline}
+  h'_{kj}(t, t') = 
+  \frac{\sqrt{\pi}l}{2 (D_j + D_k)(\delta^2 - D_k^2)}\exp\left(\left(\frac{\delta l}{2}\right)^2\right)
+  \exp\left((D_k^2 - \delta^2) \left(\frac{l}{2}\right)^2\right) \\
+  \bigg\{
+  \frac{\delta - D_j \exp((D_j - \delta) t) + D_k (1 - \exp((D_j - \delta)t))}
+  {\delta - D_j} [\erf(D_k l/2 - t'/l) - \erf(D_k l/2)]
+  \\
+  + \exp((D_j + D_k) t)
+  [\erf(D_k l/2 + t/2) - \erf(D_k l/2 + (t-t')/2)]
+  \bigg\}
+\end{multline}
+
+
+
+
+
+
+
+
+% \begin{multline}
+%   \frac{1}{D_k-\delta}
+%   \int_0^t \exp((D_j - \delta) u)
+%   \bigg(
+%   \exp((D_k-\delta) t') \erf(\delta l/2 - u/l)
+%   - \erf(\delta l/2 - u/l) - \erf(\delta l/2  + u / l)\\
+%   + \exp(2 \delta u) [\exp((D_k-\delta) t') (\erf(\delta l/2 + u/l)
+%   - \erf(\delta l/2 + (u - t')/l))
+%   - \erf(\delta l/2 + u/l) ] \\
+%   + \exp((D_k-\delta)(D_k+\delta)l^2/4 + (D_k - \delta)u)
+%   (\erf(D_k l/2 + u/l) - \erf(D_k l/2  + (u - t')/l) ))
+%   \bigg) \,du \\
+%   + \frac{1}{D_k+\delta} \int_0^t \exp((D_j - \delta) u)
+%   \bigg(
+%   \erf(\delta l/2 - u / l)
+%   - \exp((D_k+\delta)t') \erf(\delta l/2 + (t' - u)/l) \\
+%   + \exp((D_k-\delta)(D_k+\delta)l^2/4 + (D_k + \delta)u)
+%   (\erf(D_k l/2 + u/l) - \erf(D_k l/2  + (u - t')/l) )
+%   \bigg) \,du \\
+%   =
+%   \frac{1}{D_k-\delta}
+%   \int_0^t \exp((D_j - \delta) u)
+%   \bigg(
+%   \exp((D_k-\delta) t') \erf(\delta l/2 - u/l)
+%   - \erf(\delta l/2 - u/l) - \erf(\delta l/2  + u / l)
+%   \bigg) \,du \\
+%   + \frac{1}{D_k-\delta}
+%   \int_0^t \exp((D_j + \delta) u)
+%   \bigg(
+%   \exp((D_k-\delta) t') (\erf(\delta l/2 + u/l)
+%   - \erf(\delta l/2 + (u - t')/l))
+%   - \erf(\delta l/2 + u/l)
+%   \bigg) \,du \\
+%   + \exp((D_k-\delta)(D_k+\delta)l^2/4)(\frac{1}{D_k-\delta} +
+%   \frac{1}{D_k+\delta}) \\
+%   \int_0^t \exp((D_j + D_k - 2\delta) u)
+%   \bigg(
+%   (\erf(D_k l/2 + u/l) - \erf(D_k l/2  + (u - t')/l) ))
+%   \bigg) \,du \\
+%   + \frac{1}{D_k+\delta} \int_0^t \exp((D_j - \delta) u)
+%   \bigg(
+%   \erf(\delta l/2 - u / l)
+%   - \exp((D_k+\delta)t') \erf(\delta l/2 + (t' - u)/l)
+%   \bigg) \,du \\
+%   =
+%   \frac{1}{D_k-\delta}
+%   \int_0^t \exp((D_j - \delta) u)
+%   \bigg(
+%   (\exp((D_k-\delta) t') - 1) \erf(\delta l/2 - u/l)
+%   - \erf(\delta l/2  + u / l)
+%   \bigg) \,du \\
+%   + \frac{\exp((D_k-\delta) t') - 1}{D_k-\delta}
+%   \int_0^t \exp((D_j + \delta) u)
+%   \bigg(
+%   \erf(\delta l/2 + u/l) - \erf(\delta l/2 + (u - t')/l)
+%   \bigg) \,du \\
+%   + \exp((D_k-\delta)(D_k+\delta)l^2/4) \left(\frac{1}{D_k-\delta} +
+%     \frac{1}{D_k+\delta}\right) \\
+%   \int_0^t \exp((D_j + D_k - 2\delta) u)
+%   \bigg(
+%   \erf(D_k l/2 + u/l) - \erf(D_k l/2  + (u - t')/l)
+%   \bigg) \,du \\
+%   + \frac{1}{D_k+\delta} \int_0^t \exp((D_j - \delta) u)
+%   \bigg(
+%   \erf(\delta l/2 - u / l)
+%   - \exp((D_k+\delta)t') \erf(\delta l/2 + (t' - u)/l)
+%   \bigg) \,du
+% \end{multline}
+% Expanding these yields
+% \begin{multline}
+%   \frac{1}{D_k-\delta}
+%   \int_0^t \exp((D_j - \delta) u)
+%   \bigg(
+%   (\exp((D_k-\delta) t') - 1) \erf(\delta l/2 - u/l)
+%   - \erf(\delta l/2  + u / l)
+%   \bigg) \,du \\
+%   = 
+%   \frac{1}{(D_k-\delta)(D_j-\delta)}
+%   \bigg(
+%   (\exp((D_k-\delta) t') - 1)
+%   [\exp((D_j-\delta)t) \erf(\delta l / 2 - t/l) - \erf(\delta l/2) \\
+%   + \exp((D_j+\delta)(D_j-\delta)l^2/4)[\erf(D_j l/2) - \erf(D_j l/2 -
+%   t/l)]] \\
+%   - \exp((D_j-\delta)t) \erf(\delta l / 2 +
+%   t/l) + \erf(\delta l/2) \\
+%   + \exp((D_j - 3 \delta)(D_j - \delta)
+%   l^2/4) [\erf((D_j - 2\delta)l/2) - \erf((D_j - 2\delta)l/2 - t/l)]
+%   \bigg)
+% \end{multline}
+% \begin{multline}
+%   \frac{\exp((D_k-\delta) t') - 1}{D_k-\delta}
+%   \int_0^t \exp((D_j + \delta) u)
+%   \bigg(
+%   \erf(\delta l/2 + u/l) - \erf(\delta l/2 + (u - t')/l)
+%   \bigg) \,du \\
+%   = 
+%   \frac{\exp((D_k-\delta) t') - 1}{(D_k-\delta)(D_j+\delta)}
+%   \bigg(
+%   \exp((D_j+\delta)t) \erf(\delta l/2 +t/l) - \erf(\delta l / 2) \\
+%   + \exp((D_j+\delta)(D_j-\delta)l^2/4)[\erf(D_j l / 2 - t/l) -
+%   \erf(D_j l / 2)] \\
+%   + \erf(\delta l / 2 - t'/l) - \exp((D_j+\delta)t) \erf(\delta l/2 + (t-t')/l) \\
+%   + \exp((D_j+\delta)(D_j-\delta)l^2/4 + (D_j+\delta)t')
+%   [\erf(D_j l / 2 + t'/l) - \erf(D_j l / 2 - (t - t')/l])
+%   \bigg)
+% \end{multline}
+% \begin{multline}
+%   \exp((D_k-\delta)(D_k+\delta)l^2/4) \left(\frac{1}{D_k-\delta} +
+%     \frac{1}{D_k+\delta}\right) \\
+%   \int_0^t \exp((D_j + D_k - 2\delta) u)
+%   \bigg(
+%   \erf(D_k l/2 + u/l) - \erf(D_k l/2  + (u - t')/l)
+%   \bigg) \,du \\
+%   = 
+%   \frac{\exp((D_k-\delta)(D_k+\delta)l^2/4)}{D_j + D_k - 2\delta}
+%   \left(\frac{1}{D_k-\delta} + \frac{1}{D_k+\delta}\right) \\
+%   \bigg(
+%   \exp((D_j + D_k - 2\delta)t) \erf(D_k l/2 + t/l) - \erf(D_k l/2) \\
+%   + \exp((D_j + D_k - 2\delta)(D_j - D_k - 2\delta)l^2/4)
+%   [\erf((D_j - 2\delta)l/2 - t/l) - \erf((D_j - 2\delta)l/2)] \\
+%   \erf(D_k l/2 - t'/l) - 
+%   \exp((D_j + D_k - 2\delta)t) \erf(D_k l/2 + (t-t')/l) \\
+%   + \exp((D_j + D_k - 2\delta)(D_j - D_k - 2\delta)l^2/4 + 
+%   (D_j + D_k - 2\delta) t') \\
+%   [\erf((D_j - 2\delta)l/2 + t'/l) - \erf((D_j - 2\delta)l/2 - (t-t')/l)]
+%   \bigg)
+% \end{multline}
+% \begin{multline}
+%   \frac{1}{D_k+\delta} \int_0^t \exp((D_j - \delta) u)
+%   \bigg(
+%   \erf(\delta l/2 - u / l)
+%   - \exp((D_k+\delta)t') \erf(\delta l/2 + (t' - u)/l)
+%   \bigg) \,du \\
+%   =
+%   \frac{1}{(D_k+\delta)(D_j - \delta)}
+%   \bigg(
+%   \exp((D_j - \delta)t) \erf(\delta l / 2 - t/l) - \erf(\delta l/2) \\
+%   + \exp((D_j - \delta)(D_j + \delta)l^2/4) [\erf(D_j l / 2)
+%   - \erf(D_j l /2 - t/l)] \\
+%   + \exp((D_k+\delta)t')[\erf(\delta l/2 + t'/l)
+%   - \exp((D_j - \delta)t) \erf(\delta l / 2 - (t-t')/l) \\
+%   + \exp((D_j - \delta)(D_j + \delta)l^2/4 + (D_j-\delta)t')
+%   [\erf(D_j l/2 - (t - t')/l) - \erf(D_j l/2 + t'/l)] ]
+%   \bigg)
+% \end{multline}
+% Together, these yield
+% \begin{multline}
+%   \int_0^t \exp((D_j - \delta) u)
+%   \int_0^{t'} \exp((D_k - \delta) u') \\
+%   \int_0^u \exp(\delta v) \int_0^{u'} \exp(\delta v') k_{yy}(v,
+%   v') \, dv'\, dv\, du'\, du \\
+%   = 
+%   \frac{\sqrt{\pi}l}{4\delta}\exp\left(\left(\frac{\delta l}{2}\right)^2\right)
+%   \bigg\{
+%   \frac{\exp((D_j-\delta) t) - 1}{D_j-\delta} \\
+%   \bigg(
+%   \frac{1}{D_k-\delta}
+%   \bigg(
+%   \exp((D_k-\delta)t') (\erf(\delta l/2 - t'/l) - 2\erf(\delta l/2))
+%   + \erf(\delta l/2) \\
+%   + \exp((D_k-\delta)(D_k+\delta)l^2/4)
+%   (\erf(D_k l/2) - \erf(D_k l/2  - t'/l) )
+%   \bigg) \\
+%   + \frac{1}{D_k+\delta}
+%   \bigg(
+%   \exp((D_k+\delta)t') \erf(\delta l/2 + t'/l) - \erf(\delta l/2) \\
+%   + \exp((D_k-\delta)(D_k+\delta)l^2/4)
+%   (\erf(D_k l/2  - t'/l) - \erf(D_k l/2))
+%   \bigg)  
+%   \bigg) \\
+%   +
+%   \frac{1}{(D_k-\delta)(D_j-\delta)}
+%   \bigg(
+%   (\exp((D_k-\delta) t') - 1)
+%   [\exp((D_j-\delta)t) \erf(\delta l / 2 - t/l) - \erf(\delta l/2) \\
+%   + \exp((D_j+\delta)(D_j-\delta)l^2/4)[\erf(D_j l/2) - \erf(D_j l/2 -
+%   t/l)]] \\
+%   - \exp((D_j-\delta)t) \erf(\delta l / 2 +
+%   t/l) + \erf(\delta l/2) \\
+%   + \exp((D_j - 3 \delta)(D_j - \delta)
+%   l^2/4) [\erf((D_j - 2\delta)l/2) - \erf((D_j - 2\delta)l/2 - t/l)]
+%   \bigg) \\
+%   +
+%   \frac{\exp((D_k-\delta) t') - 1}{(D_k-\delta)(D_j+\delta)}
+%   \bigg(
+%   \exp((D_j+\delta)t) \erf(\delta l/2 +t/l) - \erf(\delta l / 2) \\
+%   + \exp((D_j+\delta)(D_j-\delta)l^2/4)[\erf(D_j l / 2 - t/l) -
+%   \erf(D_j l / 2)] \\
+%   + \erf(\delta l / 2 - t'/l) - \exp((D_j+\delta)t) \erf(\delta l/2 + (t-t')/l) \\
+%   + \exp((D_j+\delta)(D_j-\delta)l^2/4 + (D_j+\delta)t')
+%   [\erf(D_j l / 2 + t'/l) - \erf(D_j l / 2 - (t - t')/l])
+%   \bigg) \\
+%   +
+%   \frac{\exp((D_k-\delta)(D_k+\delta)l^2/4)}{D_j + D_k - 2\delta}
+%   \left(\frac{1}{D_k-\delta} + \frac{1}{D_k+\delta}\right) \\
+%   \bigg(
+%   \exp((D_j + D_k - 2\delta)t) \erf(D_k l/2 + t/l) - \erf(D_k l/2) \\
+%   + \exp((D_j + D_k - 2\delta)(D_j - D_k - 2\delta)l^2/4)
+%   [\erf((D_j - 2\delta)l/2 - t/l) - \erf((D_j - 2\delta)l/2)] \\
+%   \erf(D_k l/2 - t'/l) - 
+%   \exp((D_j + D_k - 2\delta)t) \erf(D_k l/2 + (t-t')/l) \\
+%   + \exp((D_j + D_k - 2\delta)(D_j - D_k - 2\delta)l^2/4 + 
+%   (D_j + D_k - 2\delta) t') \\
+%   [\erf((D_j - 2\delta)l/2 + t'/l) - \erf((D_j - 2\delta)l/2 - (t-t')/l)]
+%   \bigg) \\
+%   +
+%   \frac{1}{(D_k+\delta)(D_j - \delta)}
+%   \bigg(
+%   \exp((D_j - \delta)t) \erf(\delta l / 2 - t/l) - \erf(\delta l/2) \\
+%   + \exp((D_j - \delta)(D_j + \delta)l^2/4) [\erf(D_j l / 2)
+%   - \erf(D_j l /2 - t/l)] \\
+%   + \exp((D_k+\delta)t')[\erf(\delta l/2 + t'/l)
+%   - \exp((D_j - \delta)t) \erf(\delta l / 2 - (t-t')/l) \\
+%   + \exp((D_j - \delta)(D_j + \delta)l^2/4 + (D_j-\delta)t')
+%   [\erf(D_j l/2 - (t - t')/l) - \erf(D_j l/2 + t'/l)] ]
+%   \bigg)
+%   \bigg\}
+% \end{multline}
+\fi
+
+After some more straightforward integration using the identity
+\begin{multline}
+  \label{eq:gpsim_identity}
+  \int_0^t \exp(D u) \erf(u/l + E)\,du =
+  \frac{1}{D} \bigg(
+  \exp(Dt) \erf(E + t/l) - \erf(E) \\
+  + \exp\left(\left( \frac{Dl}{2}\right)^2 -E Dl \right)
+  [ \erf(E - Dl/2) - \erf(E-Dl/2+t/l) ]
+  \bigg),
+\end{multline}
+we get
+\begin{multline}
+  k_{x_j x_k}(t, t') = \sigma^2 S_j S_k \exp(-D_j t - D_k t')
+  \int_0^t \exp((D_j - \delta) u)
+  \int_0^{t'} \exp((D_k - \delta) u') \\
+  \int_0^u \exp(\delta v) \int_0^{u'} \exp(\delta v') k_{yy}(v, v') \, dv'\, dv\, du'\, du \\
+  = \frac{\sqrt{\pi} l \sigma^2 S_j S_k}{2} \bigg(
+  h_{kj}(t, t') + h_{jk}(t', t) 
+  +
+  h'_{kj}(t, t') + h'_{jk}(t', t)
+  \bigg)
+\end{multline}
+where
+\begin{multline}
+  h_{kj}(t, t') = 
+  \frac{1}{2\delta}\exp\left(\left(\frac{\delta l}{2}\right)^2\right)
+  \frac{\exp(- D_k t' -\delta t)}{(D_j - \delta)}
+  \bigg\{ 
+   \\
+  \frac{(D_k + \delta)\exp((D_k-\delta) t') - 2\delta}{(D_k^2-\delta^2)}
+  [\erf(\delta l/2 - t/l) - \erf(\delta l/2)]
+  \\
+  + \frac{\exp((D_k+\delta)t')}{D_k+\delta}
+  [\erf(\delta l/2 + t'/l)
+  - \erf(\delta l/2 - (t-t')/l)]
+  \bigg\} \\
+\end{multline}
+\begin{multline}
+  h'_{kj}(t, t') = 
+  \frac{\exp(-D_j t - D_k t')}{D_j + D_k}
+  \frac{1}{(\delta^2 - D_k^2)}
+  \exp\left(\left(\frac{D_k l}{2}\right)^2\right) \\
+  \bigg\{
+  \frac{D_k + \delta - (D_j + D_k) \exp((D_j - \delta) t)}
+  {\delta - D_j} [\erf(D_k l/2 - t'/l) - \erf(D_k l/2)]
+  \\
+  + \exp((D_j + D_k) t)
+  [\erf(D_k l/2 + t/l) - \erf(D_k l/2 + (t-t')/l)]
+  \bigg\}
+\end{multline}
+
+\subsection{Other kernels}
+
+In addition to $k_{x_j x_k}$, kernels $k_{f x_k}$ and $k_{y x_k}$ are
+also needed for learning and inference.  The integrals needed to
+evaluate these are
+\begin{multline}
+  \frac{k_{f x_k}(t, t')}{\sigma^2 S_k \exp(-\delta t - D_k t')} =  \\
+  \int_0^{t'} \exp((D_k - \delta) u') \int_0^t \exp(\delta v) \int_0^{u'}
+  \exp(\delta v') k_{yy}(v, v')\, dv'\, dv\, du' \\
+  = 
+  \frac{\sqrt{\pi}l}{4\delta}\exp\left(\left(\frac{\delta l}{2}\right)^2\right)
+  \int_0^{t'} \exp((D_k - \delta) u') \\
+  \bigg(
+  \erf(\delta l/2 - t/l)
+  + \erf(\delta l/2 - u'/l) - 2 \erf(\delta l/2) \\
+  + \exp(2 \delta t) (\erf(\delta l/2 + t/l) - \erf(\delta l/2 +
+  (t-u')/l)) \\
+  + \exp(2 \delta u') (\erf(\delta l/2 + u'/l) - \erf(\delta l/2
+  + (u'-t)/l))
+  \bigg)
+  \, du' \\
+%   = 
+%   \frac{\sqrt{\pi}l}{4\delta}\exp\left(\left(\frac{\delta l}{2}\right)^2\right)
+%   \bigg(
+%   2 \frac{D_k + \delta - \delta \exp((D_k - \delta)t')}{\delta^2 - D_k^2}
+%   \erf(\delta l / 2) \\
+%   +
+%   \frac{2 \delta - (D_k + \delta) \exp((D_k - \delta)t')}{\delta^2 - D_k^2}
+%   \erf(\delta l / 2 - t/l) \\
+%   -
+%   \frac{\exp(2 \delta t + (D_k - \delta)t')}{\delta - D_k}
+%   \erf(\delta l / 2 + t/l) \\
+%   -
+%   \frac{\exp((D_k - \delta)t')}{\delta - D_k}
+%   \erf(\delta l / 2 - t'/l) \\
+%   +
+%   \frac{\exp((D_k + \delta)t')}{\delta + D_k}
+%   \erf(\delta l / 2 + t'/l) \\
+%   -
+%   \frac{\exp((D_k + \delta)t')}{\delta + D_k}
+%   \erf(\delta l / 2 + (t-t')/l) \\
+%   +
+%   \frac{\exp(2\delta t + (D_k - \delta)t')}{\delta - D_k}
+%   \erf(\delta l / 2 + (t'-t)/l)
+%   \bigg) \\
+%   + \frac{\sqrt{\pi}l}{2(\delta^2 - D_k^2)}
+%   \exp\left(\left(\frac{D_k l}{2}\right)^2\right)
+%   \bigg(
+%   \erf(D_k l/2 - t/l) - \erf(D_k l/2) \\
+%   + \exp((D_k + \delta) t) [\erf(D_k l/2 + t/l) - \erf(D_k l/2 + (t-t')/l)]
+%   \bigg)
+%   = 
+%   \frac{\sqrt{\pi}l}{4\delta}\exp\left(\left(\frac{\delta l}{2}\right)^2\right)
+%   \bigg(
+%   \frac{2 \delta}{\delta^2 - D_k^2}
+%   [\erf(\delta l / 2 - t/l) - \erf(\delta l / 2)]\\
+%   +
+%   \frac{\exp((D_k - \delta)t')}{\delta - D_k}
+%   [2\erf(\delta l / 2) - \erf(\delta l / 2 - t'/l) - \erf(\delta l / 2 - t/l)] \\
+%   +
+%   \frac{\exp((D_k + \delta)t')}{\delta + D_k}
+%   [\erf(\delta l / 2 + t'/l) - \erf(\delta l / 2 + (t-t')/l)]\\
+%   +
+%   \frac{\exp(2\delta t + (D_k - \delta)t')}{\delta - D_k}
+%   [\erf(\delta l / 2 - (t-t')/l) - \erf(\delta l / 2 + t/l)]
+%   \bigg) \\
+%   + \frac{\sqrt{\pi}l}{2(\delta^2 - D_k^2)}
+%   \exp\left(\left(\frac{D_k l}{2}\right)^2\right)
+%   \bigg(
+%   \erf(D_k l/2 - t/l) - \erf(D_k l/2) \\
+%   + \exp((D_k + \delta) t) [\erf(D_k l/2 + t/l) - \erf(D_k l/2 + (t-t')/l)]
+%   \bigg)
+%   = 
+%   \frac{\sqrt{\pi}l}{4\delta}\exp\left(\left(\frac{\delta l}{2}\right)^2\right)
+%   \bigg(
+%   %2 \frac{D_k + \delta - \delta \exp((D_k - \delta)t')}{\delta^2 - D_k^2}
+%   %\erf(\delta l / 2) \\
+%   2 \frac{\exp((D_k - \delta)t')}{\delta - D_k}
+%   \erf(\delta l / 2) \\
+%   -
+%   2 \frac{\delta}{\delta^2 - D_k^2}
+%   \erf(\delta l / 2) \\
+%   +
+%   \frac{2 \delta - (D_k + \delta) \exp((D_k - \delta)t')}{\delta^2 - D_k^2}
+%   \erf(\delta l / 2 - t/l) \\
+%   -
+%   \frac{\exp(2 \delta t + (D_k - \delta)t')}{\delta - D_k}
+%   \erf(\delta l / 2 + t/l) \\
+%   -
+%   \frac{\exp((D_k - \delta)t')}{\delta - D_k}
+%   \erf(\delta l / 2 - t'/l) \\
+%   +
+%   \frac{\exp((D_k + \delta)t')}{\delta + D_k}
+%   \erf(\delta l / 2 + t'/l) \\
+%   -
+%   \frac{\exp((D_k + \delta)t')}{\delta + D_k}
+%   \erf(\delta l / 2 - (t-t')/l) \\
+%   +
+%   \frac{\exp(2\delta t + (D_k - \delta)t')}{\delta - D_k}
+%   \erf(\delta l / 2 + (t-t')/l)
+%   \bigg) \\
+%   + \frac{\sqrt{\pi}l}{2(\delta^2 - D_k^2)}
+%   \exp\left(\left(\frac{D_k l}{2}\right)^2\right)
+%   \bigg(
+%   \erf(D_k l/2 - t'/l) - \erf(D_k l/2) \\
+%   + \exp((D_k + \delta) t) [\erf(D_k l/2 + t/l) - \erf(D_k l/2 + (t-t')/l)]
+%   \bigg) \\
+  = 
+  \frac{\sqrt{\pi}l}{4\delta}\exp\left(\left(\frac{\delta l}{2}\right)^2\right)
+  \bigg(
+  \frac{2 \delta}{\delta^2 - D_k^2}
+  [\erf(\delta l / 2 - t/l) - \erf(\delta l / 2)]\\
+  +
+  \frac{\exp((D_k - \delta)t')}{\delta - D_k}
+  [2\erf(\delta l / 2) - \erf(\delta l / 2 - t'/l) - \erf(\delta l / 2 - t/l)] \\
+  +
+  \frac{\exp((D_k + \delta)t')}{\delta + D_k}
+  [\erf(\delta l / 2 + t'/l) - \erf(\delta l / 2 - (t-t')/l)]\\
+  +
+  \frac{\exp(2\delta t + (D_k - \delta)t')}{\delta - D_k}
+  [\erf(\delta l / 2 + (t-t')/l) - \erf(\delta l / 2 + t/l)]
+  \bigg) \\
+  + \frac{\sqrt{\pi}l}{2(\delta^2 - D_k^2)}
+  \exp\left(\left(\frac{D_k l}{2}\right)^2\right)
+  \bigg(
+  \erf(D_k l/2 - t'/l) - \erf(D_k l/2) \\
+  + \exp((D_k + \delta) t) [\erf(D_k l/2 + t/l) - \erf(D_k l/2 + (t-t')/l)]
+  \bigg)
+\end{multline}
+and
+% \begin{multline}
+%   k_{y x_k}(t, t') = \sigma S_k \exp(-D_k t') \int_0^{t'}
+%   \exp((D_k - \delta) u) \int_0^u \exp(\delta v) k_{yy}(t, v)\, dv\, du \\
+%   = \sigma S_k \frac{\sqrt{\pi} l}{2(\delta - D_k)} \exp(D_k (t-t'))
+%   \bigg(
+%   \exp\left(\left(\frac{\delta l}{2}\right)^2\right)
+%   [\erf(\delta l / 2) - \erf(\delta l / 2 + t/l)] \\
+%   +
+%   \exp\left(\left(\frac{D_k l}{2}\right)^2\right)
+%   [\erf(D_k l / 2 + t/l) - \erf(D_k l / 2)]
+%   \bigg)
+% \end{multline}
+\begin{multline}
+  k_{y x_k}(t, t') = \sigma S_k \exp(-D_k t') \int_0^{t'}
+  \exp((D_k - \delta) u) \int_0^u \exp(\delta v) k_{yy}(t, v)\, dv\, du \\
+  = \sigma S_k \frac{\sqrt{\pi} l}{2(\delta - D_k)} \exp(-(D_k+\delta) t')) \\
+  \bigg(
+  \exp\left(\left(\frac{\delta l}{2}\right)^2 + \delta t + D_k t'\right)
+  [\erf(\delta l / 2 + t/l) - \erf(\delta l / 2 + (t-t')/l)] \\
+  +
+  \exp\left(\left(\frac{D_k l}{2}\right)^2 + D_k t + \delta t' \right)
+  [\erf(D_k l / 2 + t/l) - \erf(D_k l / 2 + (t-t')/l)]
+  \bigg)
+\end{multline}
+
+
+
+\end{document}

@@ -1,0 +1,3 @@
+Our apologies for the brevity on the details of functional analysis, this was do to space constraints. We are working on a longer version of the paper which gives full details of the derivations.
+
+As far as the base level initialisation goes, we believe this is most likely to be a normalisation issue, Barenco et al describe a quite complex preprocessing of the array data which we found to be unecessary when using the multi-mgMOS approach to dealing with array data. However, the difference in preprocessing is certainly likely to affect the basal transcription level. We are happy to add a brief discussion of this issue to the paper. Apologies for the omission of this point in the original paper.

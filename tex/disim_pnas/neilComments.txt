@@ -1,0 +1,10 @@
+Suggest change caption from Fig 1. from "It should be noted that the ..." to "Note that the ..."
+
+I have trouble seeing the yellow line in Fig. 3 on the print out ... although I am slightly colour blind.
+
+Odd that Figure 4 references ahead to Figure 5 in the caption.
+
+Results section, another "It is worth noting" should be "Note"
+
+
+"Are similar to the first two from the left" maybe "Are similar to the profiles in the first two columns of the figure" or similar

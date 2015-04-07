@@ -1,0 +1,227 @@
+#LyX 1.4.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 245
+\begin_document
+\begin_header
+\textclass article
+\begin_preamble
+
+
+\usepackage{subfigure}
+
+
+\usepackage{bm}
+\end_preamble
+\language english
+\inputencoding latin1
+\fontscheme default
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\cite_engine natbib_authoryear
+\use_bibtopic false
+\paperorientation portrait
+\leftmargin 2cm
+\topmargin 2cm
+\rightmargin 2cm
+\bottommargin 2cm
+\headheight 2cm
+\headsep 2cm
+\footskip 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Modelling Transcriptional Regulation with Gaussian Processes
+\end_layout
+
+\begin_layout Author
+Neil D.
+ Lawrence, Guido Sanguinetti and Magnus Rattray
+\end_layout
+
+\begin_layout Standard
+Modelling the dynamics of transcriptional processes in the cell requires
+ the knowledge of a number of key biological quantities.
+ While some of them are relatively easy to measure, such as mRNA decay rates
+ and mRNA abundance levels, it is still very hard to measure the active
+ concentration levels of the transcription factor proteins that drive the
+ process and the sensitivity of target genes to these concentrations.
+ In this paper we show how these quantities for a given transcription factor
+ can be inferred from gene expression levels of a set of known target genes.
+ We treat the protein concentration as a latent function with a Gaussian
+ process prior, and include the sensitivities, mRNA decay rates and baseline
+ expression levels as hyperparameters.
+ We apply this procedure to a human leukemia dataset, focusing on the tumour
+ repressor p53 and obtaining results in good accordance with recent biological
+ studies.
+ 
+\end_layout
+
+\begin_layout Standard
+A full quantitative description of the regulatory mechanism of transcription
+ requires the knowledge of a number of biological quantities including concentra
+tion levels of active transcription factor proteins and a number of gene-specifi
+c constants such as the baseline expression level for a gene, the rate of
+ decay of its mRNA and the sensitivity with which target genes react to
+ a given transcription factor protein concentration.
+ Some of these quantities can be measured (
+\emph on
+e.g.
+
+\emph default
+ mRNA decay rates), most of them are very hard to measure with current technique
+s, and have therefore to be inferred from the available data.
+ 
+\end_layout
+
+\begin_layout Standard
+We follow 
+\begin_inset LatexCommand \citet{Barenco:ranked06}
+
+\end_inset
+
+ and 
+\begin_inset LatexCommand \citet{Rogers:model06b}
+
+\end_inset
+
+ in formulating a realistic ordinary differential equation model of a small
+ subnetwork where few transcription factors regulate a small number of establish
+ed target genes, trying to include the finer points of the dynamics of transcrip
+tional regulation.
+ Our model is based on Gaussian processes and allows inference of concentration
+ levels and parameters much quicker than has previously been possible.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement ht
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\align center
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+subfigure{
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../diagrams/demBarencoMap3RbfExp_profile1_slide.eps
+	width 35text%
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+subfigure{
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../diagrams/demBarencoMap4MlpExp_profile1_slide.eps
+	width 35text%
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Caption
+
+\size small
+Predicted protein concentration for p53 using an exponential response: (a)
+ shows results of using a squared exponential prior covariance on 
+\begin_inset Formula $f$
+\end_inset
+
+; (b) shows results of using an MLP prior covariance on 
+\begin_inset Formula $f$
+\end_inset
+
+.
+ Solid line is mean prediction, dashed lines show 95% credibility intervals.
+ The results shown are for 
+\begin_inset Formula $\textrm{exp}(f)$
+\end_inset
+
+, hence the asymmetry of the credibility intervals.
+ The prediction of Barenco 
+\emph on
+et al.
+
+\emph default
+ was pointwise and is shown as crosses.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\size small
+ 
+\begin_inset LatexCommand \bibtex[abbrvnat]{gpip}
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

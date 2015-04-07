@@ -1,0 +1,220 @@
+#LyX 1.4.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 245
+\begin_document
+\begin_header
+\textclass article
+\language english
+\inputencoding auto
+\fontscheme default
+\graphics default
+\float_placement h
+\paperfontsize default
+\spacing single
+\papersize a4paper
+\use_geometry true
+\use_amsmath 2
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\paperwidth 594mm
+\paperheight 841mm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes true
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+Euler Lagrange for non-linear response in a transcription factor - transcription
+ factor network.
+\end_layout
+
+\begin_layout Standard
+At the workshop on stochastic/dynamic systems, Eric Mjolsness suggested
+ a model for transcription factor networks.
+ We consider modelling the concentration of the transcription factors over
+ time, 
+\begin_inset Formula $x_{j}\left(t\right)$
+\end_inset
+
+.
+ The model contained a stochastic component, but stripping it of this, the
+ rate of production for each transcription factor was given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\dot{\mathbf{x}}\left(t\right)=\mathbf{b}+\mathbf{S}g\left(\mathbf{x}\left(t\right);\mathbf{T},\mathbf{h}\right)-\mathbf{D}\mathbf{x}\left(t\right),\]
+
+\end_inset
+
+where
+\series bold
+ 
+\series default
+
+\begin_inset Formula $\mathbf{b}\in\Re^{N\times1}$
+\end_inset
+
+
+\series bold
+ 
+\series default
+is a vector of basal transcription rates, 
+\begin_inset Formula $\mathbf{S}\in\Re^{N\times N}$
+\end_inset
+
+, is a diagonal matrix, with elements from the diagonal given by the vector
+ 
+\begin_inset Formula $\mathbf{d}$
+\end_inset
+
+, 
+\begin_inset Formula $\mathbf{D}\in\Re^{N\times N}$
+\end_inset
+
+ is a diagonal matrix with elements from the diagonal given by the vector
+ 
+\begin_inset Formula $\mathbf{d}\in\Re^{N\times1}$
+\end_inset
+
+
+\series bold
+ 
+\series default
+and the function 
+\begin_inset Formula $g\left(\mathbf{x}\left(t\right);\mathbf{T},\mathbf{h}\right)$
+\end_inset
+
+ applies the sigmoid to each element of a vector 
+\begin_inset Formula $\mathbf{z}\left(t\right)=\mathbf{T}\mathbf{x}\left(t\right)+\mathbf{h}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Our approach will be to place a Gaussian process prior over 
+\begin_inset Formula $\mathbf{x}\left(t\right)$
+\end_inset
+
+.
+ We will then combine observations of 
+\begin_inset Formula $\mathbf{x}\left(t\right)$
+\end_inset
+
+ with our GP prior to obtain a posterior distribution over 
+\begin_inset Formula $\mathbf{x}\left(t\right)$
+\end_inset
+
+.
+ Unfortunately, the posterior distribution will not be a Gaussian process.
+ However, we can find the MAP solution for the posterior using Euler-Lagrange
+ equations.
+\end_layout
+
+\begin_layout Standard
+Euler-Lagrange equations give the solutions to the extrema of the following
+ integral 
+\series bold
+\emph on
+Need to fix the notation here as the integral is actually multi-variate
+\series default
+\emph default
+,
+\begin_inset Formula \[
+I=\int_{a}^{b}L\left(t,\mathbf{x}\left(t\right),\dot{\mathbf{x}}\left(t\right)\right)\mbox{d}t,\]
+
+\end_inset
+
+the solution is given when 
+\begin_inset Formula \[
+\frac{\mbox{d}L}{\mbox{d}\mathbf{x}\left(t\right)}-\frac{\mbox{d}L}{\mbox{d}\dot{\mathbf{x}}\left(t\right)}\odot\frac{\mbox{d}\mathbf{x}\left(t\right)}{\mbox{d}t}=\mathbf{0},\]
+
+\end_inset
+
+where 
+\begin_inset Formula $ $
+\end_inset
+
+ represents the Hadarmard product
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+The Hadamard product is an elementwise multiplication.
+\end_layout
+
+\end_inset
+
+.
+ The integral to maximise will emerge from the log-likelihood of the data
+ given 
+\begin_inset Formula $\mathbf{x}\left(t\right)$
+\end_inset
+
+ with a constraint imposed to ensure that the above differential equation
+ is satisfied.
+ Firstly, the log-likelihood of the observed protein expressions, 
+\begin_inset Formula $\hat{\mathbf{X}}$
+\end_inset
+
+, is given by a log normal model, 
+\series bold
+\emph on
+needs to be some term in here arising from the normalisation of the log
+ normal
+\series default
+\emph default
+
+\begin_inset Formula \[
+\log p\left(\hat{\mathbf{X}}|\mathbf{x}\left(t\right),\mathbf{B}\right)=\frac{1}{2}\sum_{ij}\log\beta_{ij}-\sum_{ij}\frac{\beta_{ij}}{2}\left(\log\left(x_{j}\left(\hat{t}_{i}\right)\right)-\log\left(\hat{x}_{ij}\right)\right)^{2}\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\beta_{ij}$
+\end_inset
+
+ is the precision (inverse variance) of each protein expression measurement,
+ 
+\begin_inset Formula $\hat{x}_{ij}$
+\end_inset
+
+ is the measurement of the 
+\begin_inset Formula \[
+\]
+
+\end_inset
+
+The optimisation will with a constraint such that we will find the solution
+ with respect to 
+\begin_inset Formula $\mathbf{x}\left(t\right)$
+\end_inset
+
+ of this equation through gradient based, iterative, optimisation.
+ 
+\begin_inset Formula \[
+\]
+
+\end_inset
+
+ 
+\begin_inset Formula \[
+\]
+
+\end_inset
+
+ 
+\end_layout
+
+\end_body
+\end_document

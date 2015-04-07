@@ -1,0 +1,102 @@
+#LyX 1.4.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 245
+\begin_document
+\begin_header
+\textclass article
+\language english
+\inputencoding auto
+\fontscheme default
+\graphics default
+\float_placement h
+\paperfontsize default
+\spacing single
+\papersize a4paper
+\use_geometry true
+\use_amsmath 2
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\paperwidth 594mm
+\paperheight 841mm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes true
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+The solution to the differential equation is given by
+\begin_inset Formula \[
+y_{i}\left(t\right)=\frac{B_{i}}{D_{i}}+S_{i}e^{-D_{i}t}\int_{0}^{t}g\left(f\left(u\right)\right)\exp\left(-D_{i}u\right)du\]
+
+\end_inset
+
+The second moment of the process 
+\begin_inset Formula $x_{i}\left(t\right)=\left(y_{i}\left(t\right)-\frac{B_{i}}{D_{i}}\right)\frac{e^{D_{i}t}}{S_{i}}$
+\end_inset
+
+ is given by
+\begin_inset Formula \[
+\left\langle \int_{0}^{t}\int_{0}^{t^{\prime}}g\left(f\left(u\right)\right)g\left(f\left(u^{\prime}\right)\right)\exp\left(-D_{i}u-D_{j}u^{\prime}\right)dudu^{\prime}\right\rangle _{p\left(f\left(t\right)\right)}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\left\langle x_{i}x_{i}^{\mbox{T}}\right\rangle =\int_{0}^{t}\int_{0}^{t^{\prime}}\left\langle g\left(f\left(u\right)\right)g\left(f\left(u^{\prime}\right)\right)\right\rangle _{p\left(f\right)}\exp\left(-D_{i}u-D_{j}u^{\prime}\right)dudu^{\prime}\]
+
+\end_inset
+
+So the relevant integral is 
+\begin_inset Formula $\int g\left(\mathbf{f}\right)g\left(\mathbf{f}^{\mbox{T}}\right)N\left(\mathbf{f}|\mathbf{0},\mathbf{K}\right)d\mathbf{f}$
+\end_inset
+
+ which we transform to
+\begin_inset Formula \[
+\int\]
+
+\end_inset
+
+so the 
+\begin_inset Formula $i,j$
+\end_inset
+
+th element of the intergral is
+\begin_inset Formula \begin{align*}
+ & \int g\left(f_{i}\right)g\left(f_{j}\right)N\left(\left[f_{i}\, f_{j}\right]|\mathbf{0},\mathbf{C}\right)\\
+ & \frac{1}{\left(2\pi\right)\left|\mathbf{C}\right|^{\frac{1}{2}}}\int\exp\left(-\frac{1}{2}\left[f_{i}\, f_{j}\right]\mathbf{C}^{-1}\left[f_{i}\, f_{j}\right]^{\mbox{T}}+\mathbf{a}^{\mbox{T}}\left[f_{i}\, f_{j}\right]^{\mbox{T}}\right)df_{i}df_{j}=\exp\left(\frac{\alpha^{2}}{2}\mathbf{1}^{\mbox{T}}\mathbf{C}\mathbf{1}\right)\end{align*}
+
+\end_inset
+
+But the process will also have a mean
+\begin_inset Formula \begin{align*}
+ & =\int g\left(f_{i}\right)N\left(f_{i}|\mathbf{0},k_{ii}\right)df_{1}\\
+ & =\int\exp\left(-\frac{1}{2k_{ii}}f_{i}^{2}+\alpha f_{i}\right)=\exp\left(\frac{1}{2}k_{ii}\alpha^{2}\right)\end{align*}
+
+\end_inset
+
+where 
+\begin_inset Formula \[
+\mbox{cov}\left(g_{i},g_{j}\right)=\exp\left(\frac{\alpha^{2}}{2}\left(k_{ii}+k_{jj}+2k_{ij}\right)\right)-\exp\left(\frac{\alpha^{2}}{2}\left(k_{ii}+k_{jj}\right)\right)\]
+
+\end_inset
+
+for stationary (normalised) kernels this simplifies to 
+\begin_inset Formula \[
+\mbox{cov}\left(g_{i},g_{j}\right)=\exp\left(\alpha^{2}\left(1+k_{ij}\right)\right)-\exp\left(\alpha^{2}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

@@ -1,0 +1,475 @@
+#LyX 1.4.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 245
+\begin_document
+\begin_header
+\textclass article
+\begin_preamble
+
+
+\textwidth16.5cm
+\textheight25.8cm
+\topmargin-2.0cm
+\footskip1.3cm
+\oddsidemargin-0.3cm
+\evensidemargin-0.3cm
+\setlength{\parindent}{0.3cm}
+\usepackage{bm}
+ %boldmath
+
+\bibliographystyle{apalike}
+
+\bibsep0.0cm
+\end_preamble
+\language english
+\inputencoding latin1
+\fontscheme default
+\graphics default
+\paperfontsize 10
+\spacing single
+\papersize default
+\use_geometry false
+\use_amsmath 0
+\cite_engine natbib_authoryear
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Laplace approximation calculations
+\end_layout
+
+\begin_layout Author
+Magnus Rattray
+\end_layout
+
+\begin_layout Section*
+Notation
+\end_layout
+
+\begin_layout Standard
+We use lower case for functions, e.g.
+ 
+\begin_inset Formula $k$
+\end_inset
+
+ and 
+\begin_inset Formula $w$
+\end_inset
+
+, and upper case for the corresponding matrices in the numerical implementation,
+ e.g.
+ 
+\begin_inset Formula $K$
+\end_inset
+
+ and 
+\begin_inset Formula $W$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Gradient and Hessian
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\frac{dx_{j}}{dt}=B_{j}+g(f(t),\theta_{j})-D_{j}x_{j}\ .\]
+
+\end_inset
+
+ We set the initial conditions 
+\begin_inset Formula $x_{j}(0)=B_{j}/D_{j}$
+\end_inset
+
+ so that, 
+\begin_inset Formula \[
+x_{j}(t)=\frac{B_{j}}{D_{j}}+\mathrm{e}^{-D_{j}t}\int_{0}^{t}\mathrm{d}u\,\, g(f(u),\theta_{j})\,\mathrm{e}^{D_{j}u}\ .\]
+
+\end_inset
+
+ The log-likelihood of data 
+\begin_inset Formula $D=\{ y_{ij}\}$
+\end_inset
+
+ for gene 
+\begin_inset Formula $j$
+\end_inset
+
+ at times 
+\begin_inset Formula $t_{i}$
+\end_inset
+
+ is, 
+\begin_inset Formula \[
+p(D|f,\{ B_{j},\theta_{j},D_{j}\})=-\frac{1}{2}\sum_{i=1}^{T}\sum_{j=1}^{m}\left[\lambda_{ij}\left(x_{j}(t_{i})-y_{ij}\right)^{2}+\log\left(\lambda_{ij}\right)\right]-\frac{mT}{2}\log(2\pi)\ .\]
+
+\end_inset
+
+ The functional gradient of the log-likelihood with respect to 
+\begin_inset Formula $f$
+\end_inset
+
+ is, 
+\begin_inset Formula \[
+\frac{\delta\log p(D|f)}{\delta f}=-\sum_{i=1}^{T}\Theta(t_{i}-t)\sum_{j=1}^{m}\lambda_{ij}(x_{j}(t_{i})-y_{ij})\frac{\partial g(f,\theta_{j})}{\partial f}\mathrm{e}^{-D_{j}(t_{i}-t)}dt\]
+
+\end_inset
+
+ The -ve Hessian of the log-likelihood with respect to 
+\begin_inset Formula $f$
+\end_inset
+
+ is, 
+\begin_inset Formula \begin{eqnarray}
+w & = & -\frac{\delta^{2}\log p(D|f)}{\delta f^{2}}=\sum_{i=1}^{T}\Theta(t_{i}-t)\sum_{j=1}^{m}\lambda_{ij}(x_{j}(t_{i})-y_{ij})g''(f(t),\theta_{j})\mathrm{e}^{-D_{j}(t_{i}-t)}dt\nonumber \\
+ &  & +\sum_{i=1}^{T}\Theta(t_{i}-t)\Theta(t_{i}-s)\sum_{j=1}^{m}\lambda_{ij}g'(f(t),\theta_{j})g'(f(s),\theta_{j})\mathrm{e}^{-D_{j}(2t_{i}-t-s)}dtds\end{eqnarray}
+
+\end_inset
+
+ where 
+\begin_inset Formula $g'(f)=\partial g/\partial f$
+\end_inset
+
+ and 
+\begin_inset Formula $g''(f)=\partial^{2}g/\partial f$
+\end_inset
+
+.
+ The gradient and Hessian of the unnormalised log posterior are, 
+\begin_inset Formula \begin{eqnarray}
+\frac{\delta\log p(f|D)}{\delta f} & = & \frac{\delta\log p(D|f)}{\delta f}-k^{-1}f\\
+\frac{\delta^{2}\log p(f|D)}{\delta f^{2}} & = & -w-k^{-1}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Numerical implementation
+\end_layout
+
+\begin_layout Standard
+We discretize time 
+\begin_inset Formula $t_{k}$
+\end_inset
+
+ with 
+\begin_inset Formula $\tau=t_{k}-t_{k-1}$
+\end_inset
+
+ constant.
+ We write 
+\begin_inset Formula $\bm f=[f_{k}]$
+\end_inset
+
+ to be the vector realisation of the function 
+\begin_inset Formula $f$
+\end_inset
+
+.
+ The gradient of the log-likelihood is then given by, 
+\begin_inset Formula \[
+\nabla_{k}\log p(D|\bm f)=\frac{\partial\log p(D|\bm f)}{\partial f_{k}}=-\tau\sum_{i=1}^{T}\Theta(t_{i}-t_{k})\sum_{j=1}^{m}\lambda_{ij}(x_{j}(t_{i})-y_{ij})\partial g'(f_{k},\theta_{j})\mathrm{e}^{-D_{j}(t_{i}-t_{k})}\]
+
+\end_inset
+
+ and the -ve Hessian of the log-likelihood is, 
+\begin_inset Formula \begin{eqnarray}
+W_{kl} & = & -\nabla_{k}\nabla_{l}\log p(D|\bm f)=\delta_{kl}\tau\sum_{i=1}^{T}\Theta(t_{i}-t_{k})\sum_{j=1}^{m}\lambda_{ij}(x_{j}(t_{i})-y_{ij})g''(f_{k},\theta_{j})\mathrm{e}^{-D_{j}(t_{i}-t_{k})}\nonumber \\
+ &  & +\tau^{2}\sum_{i=1}^{T}\Theta(t_{i}-t_{k})\Theta(t_{i}-t_{l})\sum_{j=1}^{m}\lambda_{ij}g'(f_{k},\theta_{j})g'(f_{l},\theta_{j})\mathrm{e}^{-D_{j}(2t_{i}-t_{k}-t_{l})}\end{eqnarray}
+
+\end_inset
+
+ where 
+\begin_inset Formula $\delta_{kl}$
+\end_inset
+
+ is the Kronecker delta.
+\end_layout
+
+\begin_layout Section
+MAP solution and Laplace approximation
+\end_layout
+
+\begin_layout Standard
+The gradient and Hessian of the unnormalised log posterior 
+\begin_inset Formula $\Psi(\bm f)=\log p(D|\bm f)+\log p(\bm f)$
+\end_inset
+
+ are, 
+\begin_inset Formula \begin{eqnarray}
+\nabla\Psi(\bm f) & = & \nabla\log p(D|\bm f)-K^{-1}{\bm f}\ ,\label{eqn_MAP}\\
+\nabla\nabla\Psi(\bm f) & = & -(W+K^{-1})\ .\end{eqnarray}
+
+\end_inset
+
+ We use this matrix to find the Newton direction for optimisation, 
+\begin_inset Formula \begin{equation}
+\Delta f=-\eta(W+K^{-1})^{-1}(\nabla L-K^{-1}\bm f)\end{equation}
+
+\end_inset
+
+ where 
+\begin_inset Formula $L=\log p(D|\bm f)$
+\end_inset
+
+.
+ Doing a full Newton up-date one finds, 
+\begin_inset Formula \begin{equation}
+{\bm f}\leftarrow(W+K^{-1})^{-1}(W\bm{f}+\nabla L)\end{equation}
+
+\end_inset
+
+ which converges quickly.
+ The matrix inversion lemma can be used to speed up the inversion of 
+\begin_inset Formula $I+KW$
+\end_inset
+
+, since 
+\begin_inset Formula $W$
+\end_inset
+
+ can be written as a sum of outer-products, but I haven't bothered with
+ that yet.
+ The Laplace approximation to the log marginal likelihood is (ignoring terms
+ that do not involve model parameters), 
+\begin_inset Formula \begin{eqnarray}
+\log p(D|\{ B_{j},\theta_{j},D_{j}\},\gamma) & \simeq & \log p(D|\hat{\bm f})-\mbox{$\frac{1}{2}$}\hat{\bm f}^{T}K^{-1}\hat{\bm f}-\mbox{$\frac{1}{2}$}\log|W+K^{-1}|-\mbox{$\frac{1}{2}$}\log|K|\nonumber \\
+ & = & \log p(D|\hat{\bm f})-\mbox{$\frac{1}{2}$}\hat{\bm f}^{T}K^{-1}\hat{\bm f}-\mbox{$\frac{1}{2}$}\log|I+KW|\label{eqn_marginal}\end{eqnarray}
+
+\end_inset
+
+ where 
+\begin_inset Formula $\hat{\bm f}$
+\end_inset
+
+ is the MAP solution and 
+\begin_inset Formula $\gamma$
+\end_inset
+
+ are the kernel parameters.
+\end_layout
+
+\begin_layout Subsection
+Linear case
+\end_layout
+
+\begin_layout Standard
+We first check the results for the simplest case, 
+\begin_inset Formula \begin{equation}
+g(f,S_{j})=S_{j}\, f\ ,\qquad k(t,t')=\exp\left(\frac{-\gamma(t-t')^{2}}{2}\right)\ .\end{equation}
+
+\end_inset
+
+ We will treat the noise as known and ignore noise propagation for now,
+ so 
+\begin_inset Formula $\lambda_{ij}$
+\end_inset
+
+ does not have to be estimated.
+ The gradients we have to work out are, 
+\begin_inset Formula \begin{eqnarray*}
+\frac{\partial x_{j}(t)}{\partial B_{j}} & = & \frac{1}{D_{j}}\\
+\frac{\partial x_{j}(t)}{\partial S_{j}} & = & \mathrm{e}^{-D_{j}t}\int_{0}^{t}\mathrm{d}u\, f(u)\mathrm{e}^{D_{j}u}=\frac{x_{j}(t)-B_{j}/D_{j}}{S_{j}}\\
+\frac{\partial x_{j}(t)}{\partial D_{j}} & = & -\frac{B_{j}}{D_{j}^{2}}+S_{j}\,\mathrm{e}^{-D_{j}t}\int_{0}^{t}\mathrm{d}u\, f(u)(u-t)\mathrm{e}^{D_{j}u}\end{eqnarray*}
+
+\end_inset
+
+ and then for any parameter 
+\begin_inset Formula $z_{j}$
+\end_inset
+
+, 
+\begin_inset Formula \[
+\frac{\partial\log p(D|f)}{\partial z_{j}}=-\sum_{i=1}^{T}\lambda_{ij}(x_{j}(t_{i})-y_{ij})\frac{\partial x_{j}(t_{i})}{\partial z_{j}}\]
+
+\end_inset
+
+ The Hessian has no dependence on 
+\begin_inset Formula $f$
+\end_inset
+
+, it only depends on the parameters 
+\begin_inset Formula $D_{j}$
+\end_inset
+
+ and 
+\begin_inset Formula $S_{j}$
+\end_inset
+
+, 
+\begin_inset Formula \[
+W_{kl}=\tau^{2}\sum_{i=1}^{T}\Theta(t_{i}-t_{k})\Theta(t_{i}-t_{l})\sum_{j=1}^{m}\lambda_{ij}S_{j}^{2}\mathrm{e}^{-D_{j}(2t_{i}-t_{k}-t_{l})}\ .\]
+
+\end_inset
+
+ The gradients with respect to these parameters are, 
+\begin_inset Formula \begin{eqnarray*}
+\frac{\partial W_{kl}}{\partial S_{j}} & = & 2\tau^{2}\sum_{i=1}^{T}\Theta(t_{i}-t_{k})\Theta(t_{i}-t_{l})\lambda_{ij}S_{j}\mathrm{e}^{-D_{j}(2t_{i}-t_{k}-t_{l})}\\
+\frac{\partial W_{kl}}{\partial D_{j}} & = & -\tau^{2}\sum_{i=1}^{T}\Theta(t_{i}-t_{k})\Theta(t_{i}-t_{l})\lambda_{ij}S_{j}^{2}(2t_{i}-t_{k}-t_{l})\mathrm{e}^{-D_{j}(2t_{i}-t_{k}-t_{l})}\end{eqnarray*}
+
+\end_inset
+
+ and then for any parameter 
+\begin_inset Formula $z$
+\end_inset
+
+, 
+\begin_inset Formula \[
+\frac{\partial}{\partial z}\log|I+KW|=\mbox{tr}\left[(I+KW)^{-1}K\frac{\partial W}{\partial z}\right]\]
+
+\end_inset
+
+ The gradient of the kernel with respect to its parameter is, 
+\begin_inset Formula \[
+\frac{\partial K_{kl}}{\partial\gamma}=-\mbox{$\frac{1}{2}$}(t_{k}-t_{l})^{2}K_{kl}\]
+
+\end_inset
+
+ and we have, 
+\begin_inset Formula \begin{eqnarray*}
+\frac{\partial}{\partial\gamma}\log|I+KW| & = & \mbox{tr}\left[(I+KW)^{-1}W\frac{\partial K}{\partial\gamma}\right]\ ,\\
+\frac{\partial K^{-1}}{\partial\gamma} & = & -K^{-1}\frac{\partial K}{\partial\gamma}K^{-1}\ .\end{eqnarray*}
+
+\end_inset
+
+ So we find, 
+\begin_inset Formula \[
+\frac{\partial\log p(D|\gamma)}{\partial\gamma}=-\mbox{$\frac{1}{2}$}\hat{\bm f}^{T}K^{-1}\frac{\partial K}{\partial\gamma}K^{-1}\hat{\bm f}-\mbox{$\frac{1}{2}$}\mbox{tr}\left((W^{-1}+K)^{-1}\frac{\partial K}{\partial\gamma}\right)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Constraining the TF concentrations to be positive
+\end_layout
+
+\begin_layout Standard
+We constrain the function to be positive, 
+\begin_inset Formula \[
+g(f,S_{j})=S_{j}\,\mathrm{e}^{f}\ ,\qquad k(t,t')=\exp\left(\frac{-\gamma(t-t')^{2}}{2}\right)\ .\]
+
+\end_inset
+
+ I will only consider optimisation of 
+\begin_inset Formula $\bm f$
+\end_inset
+
+ by MAP learning and the kernel parameters by MAP-Laplace.
+ The gradient and Hessian are, 
+\begin_inset Formula \begin{eqnarray}
+\nabla_{k}\log p(D|\bm f)=\frac{\partial\log p(D|\bm f)}{\partial f_{k}}=-\tau\sum_{i=1}^{T}\Theta(t_{i}-t_{k})\sum_{j=1}^{m}\lambda_{ij}(x_{j}(t_{i})-y_{ij})S_{j}\mathrm{e}^{f_{k}-D_{j}(t_{i}-t_{k})}\\
+W_{kl}=-\nabla_{k}\nabla_{l}\log p(D|\bm f)=\delta_{kl}\tau\sum_{i=1}^{T}\Theta(t_{i}-t_{k})\sum_{j=1}^{m}\lambda_{ij}(x_{j}(t_{i})-y_{ij})S_{j}\mathrm{e}^{f_{k}-D_{j}(t_{i}-t_{k})}\nonumber \\
++\tau^{2}\sum_{i=1}^{T}\Theta(t_{i}-t_{k})\Theta(t_{i}-t_{l})\sum_{j=1}^{m}\lambda_{ij}S_{j}^{2}\mathrm{e}^{f_{k}+f_{l}-D_{j}(2t_{i}-t_{k}-t_{l})}\nonumber \\
+=-\delta_{kl}\nabla_{k}\log p(D|\bm f)+\tau^{2}\sum_{i=1}^{T}\Theta(t_{i}-t_{k})\Theta(t_{i}-t_{l})\sum_{j=1}^{m}\lambda_{ij}S_{j}^{2}\mathrm{e}^{f_{k}+f_{l}-D_{j}(2t_{i}-t_{k}-t_{l})}\ .\label{eqn_hessian_pos}\end{eqnarray}
+
+\end_inset
+
+ The term in the Hessian proportional to the gradient vanishes at the MAP
+ solution.
+ As before the gradient of the kernel with respect to its parameter is,
+ 
+\begin_inset Formula \[
+\frac{\partial K_{kl}}{\partial\gamma}=-\mbox{$\frac{1}{2}$}(t_{k}-t_{l})^{2}K_{kl}\ .\]
+
+\end_inset
+
+ The gradient of the log-marginal with respect to 
+\begin_inset Formula $\gamma$
+\end_inset
+
+ is, 
+\begin_inset Formula \[
+\frac{\partial\log p(D|\gamma)}{\partial\gamma}=-\mbox{$\frac{1}{2}$}\hat{\bm f}^{T}K^{-1}\frac{\partial K}{\partial\gamma}K^{-1}\hat{\bm f}-\mbox{$\frac{1}{2}$}\mbox{tr}\left((W^{-1}+K)^{-1}\frac{\partial K}{\partial\gamma}\right)+\sum_{k}\frac{\partial\log p(D|\gamma)}{\partial\hat{f}_{k}}\frac{\hat{f}_{k}}{\partial\gamma}\]
+
+\end_inset
+
+ where 
+\begin_inset Formula $\hat{\bm f}$
+\end_inset
+
+ is the MAP solution and the final term is due to the implicit dependence
+ of 
+\begin_inset Formula $\hat{\bm f}$
+\end_inset
+
+ on 
+\begin_inset Formula $\gamma$
+\end_inset
+
+.
+ The only term that contributes to this is the final one in equation\InsetSpace ~
+(
+\begin_inset LatexCommand \ref{eqn_marginal}
+
+\end_inset
+
+) which involves 
+\begin_inset Formula $W$
+\end_inset
+
+.
+ We find, 
+\begin_inset Formula \[
+\frac{\partial\log p(D|\gamma)}{\partial\hat{f}_{k}}=-\frac{1}{2}\mbox{tr}\left((K^{-1}+W)^{-1}\frac{\partial W}{\partial\hat{f}_{k}}\right)\]
+
+\end_inset
+
+ At the MAP solution we find, 
+\begin_inset Formula \[
+\frac{\partial W_{pq}}{\partial\hat{f}_{k}}=(\delta_{kp}+\delta_{kq})W_{pq}\ .\]
+
+\end_inset
+
+ where we have used the self-consistent condition that the first term in
+ equation\InsetSpace ~
+(
+\begin_inset LatexCommand \ref{eqn_hessian_pos}
+
+\end_inset
+
+) vanishes at the MAP solution.
+ This then simplifies to, 
+\begin_inset Formula \[
+\frac{\partial\log p(D|\gamma)}{\partial\hat{f}_{k}}=-((W+K^{-1})^{-1}W)_{kk}\ .\]
+
+\end_inset
+
+ >From equation\InsetSpace ~
+(
+\begin_inset LatexCommand \ref{eqn_hessian_pos}
+
+\end_inset
+
+) we have the self-consistent equation 
+\begin_inset Formula $\hat{\bm f}=K\nabla\log p(D|\hat{\bm f})$
+\end_inset
+
+ and differentiating that we get, 
+\begin_inset Formula \[
+\frac{\partial\hat{\bm f}}{\partial\gamma}=(W+K^{-1})^{-1}K^{-1}\frac{\partial K}{\partial\gamma}\nabla\log p(D|\hat{\bm f})\ .\]
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

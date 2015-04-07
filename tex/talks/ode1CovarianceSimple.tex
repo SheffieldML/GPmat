@@ -1,0 +1,36 @@
+\begin{frame}[labels=skipGPProperties]
+  \frametitle{Covariance for Transcription Model}
+%   {\textbf{RBF covariance function for $f\left(t\right)$}}
+%   \begin{center}
+%     \begin{align*}
+%       \only<1,3>{x_{i}\left(t\right)=\frac{B_{i}}{D_{i}}+S_{i}\exp\left(-D_{i}t\right)\int_{0}^{t}f\left(u\right)\exp\left(D_{i}u\right)\text{d}u.}
+%       \only<2>{x &= b/d +\sum_i\mathbf{e}_i^\top\mathbf{f}\quad \mathbf{f} \sim \mathcal{N}\left(\mathbf{0},\Sigma_i\right)\rightarrow x \sim \mathcal{N}\left(b/d, \sum_i\mathbf{e}_i^\top\Sigma_i\mathbf{e}_i\right)}
+%   \end{align*}
+%     \end{center}
+% \vspace{-2cm}
+  \begin{columns}[c]
+    \column{4cm}
+    \begin{itemize}
+    \item Joint distribution for $x_{1}\left(t\right)$, $x_{2}\left(t\right)$, $x_{3}\left(t\right)$,
+      and $f\left(t\right)$.
+
+    \item Here:\vspace{0.1cm}
+      {\tiny 
+        \begin{tabular}{|c|c|c|c|c|c|}
+          \hline 
+          $D_{1}$ & $S_{1}$ & $D_{2}$ & $S_{2}$ & $D_3$ &  $S_3$\\
+          \hline
+          \hline 
+          5 & 5& 1 & 1& 0.5 & 0.5\\
+          \hline
+        \end{tabular}
+      }
+    \end{itemize}
+
+    \column{6cm}
+
+    \begin{center}
+      \includegraphics[width=\columnwidth]{../../../kern/tex/diagrams/simTestKernelImage}
+    \end{center}
+  \end{columns}
+\end{frame}

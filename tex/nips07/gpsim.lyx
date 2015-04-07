@@ -1,0 +1,1644 @@
+#LyX file created by  tex2lyx 0.1.2
+\lyxformat 245
+\begin_document
+\begin_header
+\textclass article
+\begin_preamble
+
+\usepackage{nips06}
+\usepackage{times}
+
+
+\usepackage{subfigure}
+
+
+\usepackage{bm}
+
+
+
+\IfFileExists{url.sty}{\usepackage{url}
+}
+                      {\newcommand{\url}{\texttt}}
+
+
+\makeatletter
+
+
+\title{Modelling transcriptional regulation using Gaussian processes}
+
+% for the submission only, the author's names are replaced by the style file
+% with an anonymous version
+\author{
+Neil D. Lawrence \\
+School of Computer Science\\
+University of Manchester, U.K.\\
+\texttt{neill@cs.man.ac.uk} \\
+\And
+Guido Sanguinetti\\
+Department of Computer Science\\
+University of Sheffield, U.K. \\
+\texttt{guido@dcs.shef.ac.uk} \\
+\And
+Magnus Rattray\\
+School of Computer Science\\
+University of Manchester, U.K. \\
+\texttt{magnus@cs.man.ac.uk} \\
+}
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to \LaTeX{} to determine where to break
+% the lines. Using \AND forces a linebreak at that point. So, if \LaTeX{}
+% puts 3 of 4 authors names on the first line, and the last on the second
+% line, try using \AND instead of \And before the third author name.
+
+
+\end_preamble
+\language english
+\inputencoding latin1
+\fontscheme default
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\cite_engine natbib_authoryear
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\end_header
+
+\begin_body
+
+\begin_layout Abstract
+
+Modelling the dynamics of transcriptional processes in the cell requires the knowledge of a number of key biological quantities. While some of them are relatively easy to measure, such as mRNA decay rates and mRNA abundance levels, it is still very hard to measure the active concentration levels of the transcription factor proteins that drive the process and the sensitivity of target genes to these concentrations. In this paper we show how these quantities for a given transcription factor can be inferred from gene expression levels of a set of known target genes. We treat the protein concentration as a latent function with a Gaussian process prior, and include the sensitivities, mRNA decay rates and baseline expression levels as hyperparameters. We apply this procedure to a human leukemia dataset, focusing on the tumour repressor p53 and obtaining results in good accordance with recent biological studies. 
+\end_layout
+
+\begin_layout Section*
+
+Introduction
+\end_layout
+
+\begin_layout Standard
+
+Recent advances in molecular biology have brought about a revolution in our understanding of cellular processes. Microarray technology now allows measurement of mRNA abundance on a genome-wide scale, and techniques such as chromatin immunoprecipitation (ChIP) have largely unveiled the wiring of the cellular transcriptional regulatory network, identifying which genes are bound by which transcription factors. However, a full quantitative description of the regulatory mechanism of transcription requires the knowledge of a number of other biological quantities: first of all the concentration levels of active transcription factor proteins, but also a number of gene-specific constants such as the baseline expression level for a gene, the rate of decay of its mRNA and the sensitivity with which target genes react to a given transcription factor protein concentration. While some of these quantities can be measured (
+\emph on
+e.g.
+\emph default
+ mRNA decay rates), most of them are very hard to measure with current techniques, and have therefore to be inferred from the available data. This is often done following one of two complementary approaches. One can formulate a large scale simplified model of regulation (for example assuming a linear response to protein concentrations) and then combine network architecture data and gene expression data to infer transcription factors' protein concentrations on a genome-wide scale. This line of research was started in 
+\begin_inset LatexCommand \citet{Liao:nca03}
+
+\end_inset
+
+ and then extended further to include gene-specific effects in 
+\begin_inset LatexCommand \citet{Sabatti06,Sanguinetti:chipdyno06}
+
+\end_inset
+
+. Alternatively, one can formulate a realistic model of a small subnetwork where few transcription factors regulate a small number of established target genes, trying to include the finer points of the dynamics of transcriptional regulation. In this paper we follow the second approach, focussing on the simplest subnetwork consisting of one transcription factor regulating its target genes, but using a detailed model of the interaction dynamics to infer the transcription factor concentrations and the gene specific constants. This problem was recently studied by Barenco 
+\emph on
+et al.
+\emph default
+ 
+\begin_inset LatexCommand \citet{Barenco:ranked06}
+
+\end_inset
+
+ and by Rogers 
+\emph on
+et al.
+\emph default
+ 
+\begin_inset LatexCommand \citet{Rogers:model06b}
+
+\end_inset
+
+. In these studies, parametric models were developed describing the rate of production of certain genes as a function of the concentration of transcription factor protein at some specified time points. Markov chain Monte Carlo (MCMC) methods were then used to carry out Bayesian inference of the protein concentrations, requiring substantial computational resources and limiting the inference to the discrete time-points where the data was collected.
+\end_layout
+
+\begin_layout Standard
+
+We show here how a Gaussian process model provides a simple and computationally efficient method for Bayesian inference of continuous transcription factor concentration profiles and associated model parameters. Gaussian processes have been used effectively in a number of machine learning and statistical applications 
+\begin_inset LatexCommand \citet{Rasmussen:book05}
+
+\end_inset
+
+ (see also 
+\begin_inset LatexCommand \citet{Graepel:gpdiff03,Murray-Smith:transformations05}
+
+\end_inset
+
+ for the work that is most closely related to ours). Their use in this context is novel, as far as we know, and leads to several advantages. Firstly, it allows for the inference of continuous quantities (concentration profiles) without discretization, therefore accounting naturally for the temporal structure of the data. Secondly, it avoids the use of cumbersome interpolation techniques to estimate mRNA production rates from mRNA abundance data, and it allows us to deal naturally with the noise inherent in the measurements. Finally, it greatly outstrips MCMC techniques in terms of computational efficiency, which we expect to be crucial in future extensions to more complex (and realistic) regulatory networks.
+\end_layout
+
+\begin_layout Standard
+
+The paper is organised as follows: in the first section we discuss linear response models. These are simplified models in which the mRNA production rate depends linearly on the transcription factor protein concentration. Although the linear assumption is not verified in practice, it has the advantage of giving rise to an exactly tractable inference problem. We then discuss how to extend the formalism to model cases where the dependence of mRNA production rate on transcription factor protein concentration is not linear, and propose a MAP-Laplace approach to carry out Bayesian inference. In the third section we test our model on the leukemia data set studied in 
+\begin_inset LatexCommand \citet{Barenco:ranked06}
+
+\end_inset
+
+. Finally, we discuss further extensions of our work. MATLAB code to recreate the experiments is available on-line. 
+\end_layout
+
+\begin_layout Section
+
+Linear Response Model
+\end_layout
+
+\begin_layout Standard
+
+Let the data set under consideration consist of 
+\begin_inset Formula $T$
+\end_inset
+
+ measurements of the mRNA abundance of 
+\begin_inset Formula $N$
+\end_inset
+
+ genes. We consider a linear differential equation that relates a given gene 
+\begin_inset Formula $j$
+\end_inset
+
+'s expression level 
+\begin_inset Formula $x_{j}(t)$
+\end_inset
+
+ at time 
+\begin_inset Formula $t$
+\end_inset
+
+ to the concentration of the regulating transcription factor protein 
+\begin_inset Formula $f(t)$
+\end_inset
+
+,
+\begin_inset Formula \begin{equation}
+\frac{dx_{j}}{dt}=B_{j}+S_{j}f\left(t\right)-D_{j}x_{j}\left(t\right)
+. \label{eq:diffEqn}\end{equation}
+\end_inset
+
+ Here, 
+\begin_inset Formula $B_{j}$
+\end_inset
+
+ is the basal transcription rate of gene 
+\begin_inset Formula $j$
+\end_inset
+
+, 
+\begin_inset Formula $S_{j}$
+\end_inset
+
+ is the sensitivity of gene 
+\begin_inset Formula $j$
+\end_inset
+
+ to the transcription factor and 
+\begin_inset Formula $D_{j}$
+\end_inset
+
+ is the decay rate of the mRNA. Crucially, the dependence of the mRNA transcription rate on the protein concentration (response) is linear. Assuming a linear response is a crude simplification, but it can still lead to interesting results in certain modelling situations. Equation (
+\begin_inset LatexCommand \ref{eq:diffEqn}
+
+\end_inset
+
+) was used by Barenco 
+\emph on
+et al.
+\emph default
+ 
+\begin_inset LatexCommand \citet{Barenco:ranked06}
+
+\end_inset
+
+ to model a simple network consisting of the tumour suppressor transcription factor p53 and five of its target genes. We will consider more general models in section\InsetSpace ~
+
+\begin_inset LatexCommand \ref{sec:nonlinear}
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+
+The equation given in (
+\begin_inset LatexCommand \ref{eq:diffEqn}
+
+\end_inset
+
+) can be solved to recover
+\begin_inset Formula \begin{equation}
+x_{j}\left(t\right)=\frac{B_{j}}{D_{j}}+k_{j}\exp\left(-D_{j}t\right)+S_{j}
+\exp\left(-D_{j}t\right)\int_{0}^{t}f\left(u\right)\exp\left(D_{j}u\right)du
+\label{solution}\end{equation}
+\end_inset
+
+ where 
+\begin_inset Formula $k_{j}$
+\end_inset
+
+ arises from the initial conditions, and is zero if we assume an initial baseline expression level 
+\begin_inset Formula $x_j(0)=B_{j}/D_{j}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+
+We will model the protein concentration 
+\begin_inset Formula $f$
+\end_inset
+
+ as a latent function drawn from a Gaussian process prior distribution. It is important to notice that equation (
+\begin_inset LatexCommand \ref{solution}
+
+\end_inset
+
+) involves only linear operations on the function 
+\begin_inset Formula $f\left(t\right)$
+\end_inset
+
+. This implies immediately that the mRNA abundance levels will also be modelled as a Gaussian process, and the covariance function of the marginal distribution 
+\begin_inset Formula $p\left(x_1,\ldots,x_N\right)$
+\end_inset
+
+ can be worked out explicitly from the covariance function of the latent function 
+\begin_inset Formula $f$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+
+Let us rewrite equation (
+\begin_inset LatexCommand \ref{solution}
+
+\end_inset
+
+) as
+\begin_inset Formula \[
+x_j\left(t\right) = \frac{B_j}{D_j}+L_j\left[f\right]\left(t\right)\]
+\end_inset
+
+ where we have set the initial conditions such that 
+\begin_inset Formula $k_j$
+\end_inset
+
+ in equation (
+\begin_inset LatexCommand \ref{solution}
+
+\end_inset
+
+) is equal to zero and 
+\begin_inset Formula \begin{equation}L_j\left[f\right]\left(t\right) = S_{j}
+\exp\left(-D_{j}t\right)\int_{0}^{t}f\left(u\right)\exp\left(D_{j}u\right)du
+\label{operators}\end{equation}
+\end_inset
+
+ is the linear operator relating the latent function 
+\begin_inset Formula $f$
+\end_inset
+
+ to the mRNA abundance of gene 
+\begin_inset Formula $j$
+\end_inset
+
+, 
+\begin_inset Formula $x_j\left(t\right)$
+\end_inset
+
+. If the covariance function associated with 
+\begin_inset Formula $f\left(t\right)$
+\end_inset
+
+ is given by 
+\begin_inset Formula $k_{ff}\left(t,t^{\prime}\right)$
+\end_inset
+
+ then elementary functional analysis yields that 
+\begin_inset Formula \[
+\textrm{cov}\left(L_j\left[f\right]\left(t\right),L_k\left[f\right]\left(
+t^\prime\right)\right) = L_j\otimes L_k\left[k_{ff}\right]\left(t, t^\prime
+\right).\]
+\end_inset
+
+ Explicitly, this is given by the following formula 
+\begin_inset Formula \begin{equation}
+k_{x_{j}x_{k}}\left(t,t^{\prime}\right) =  S_{j}S_{k}\exp\left(-D_{j}t-D_{k}t^{\prime}\right)\int_{0}^{t}\exp\left(D_{j}u\right)\int_{0}^{t^{\prime}}\exp\left(D_{k}u^{\prime}\right)k_{ff}\left(u,u^{\prime}\right)du^{\prime}du.
+\label{margCov}\end{equation}
+\end_inset
+
+ If the process prior over 
+\begin_inset Formula $f\left(t\right)$
+\end_inset
+
+ is taken to be a squared exponential kernel, 
+\begin_inset Formula \[
+k_{ff}\left(t,t^{\prime}\right) = \exp\left(-\frac{\left(t-t^{\prime}\right)^{2}}{l^{2}}\right),\]
+\end_inset
+
+ where 
+\begin_inset Formula $l$
+\end_inset
+
+ controls the width of the basis functions
+\begin_inset Foot
+status collapsed
+
+
+\begin_layout Standard
+
+The scale of the process is ignored to avoid a parameterisation ambiguity with the sensitivities.
+\end_layout
+
+\end_inset
+
+, the integrals in equation (
+\begin_inset LatexCommand \ref{margCov}
+
+\end_inset
+
+) can be computed analytically. The resulting covariances are obtained as 
+\begin_inset Formula \begin{equation}
+k_{x_jx_k}\left( t,t^{\prime}\right) = S_jS_k\frac{\sqrt{\pi}\l}{2} 
+\left[h_{kj}\left(t^{\prime},t\right)+h_{jk}\left(t,t^{\prime}\right)\right]
+\end{equation}
+\end_inset
+
+ where 
+\begin_inset Formula \begin{equation*}\begin{split}
+&h_{kj}\left(t^{\prime},t\right) =
+\frac{\textrm{exp}\left(\gamma_k\right)^2}{D_j+D_k}
+\left\{\textrm{exp}\left[-D_k\left(t^{\prime}-t\right)\right]
+\left[\textrm{erf}\left(\frac{t^{\prime}-t}{l}-\gamma_k\right)+\textrm{erf}\left(\frac{t}{l}+\gamma_k\right)\right]\right. \\
+&\left. -\textrm{exp}\left[-\left(D_kt^{\prime}+D_j\right)\right]\left[\textrm{erf}\left(\frac{t^{\prime}}{l}-\gamma_k\right)+\textrm{erf}\left(\gamma_k\right)\right]\right\}.
+\end{split}\end{equation*}
+\end_inset
+
+ Here 
+\begin_inset Formula $\textrm{erf}(x) = \frac{2}{\sqrt{\pi}}\int_0^x\textrm{exp}\left(-y^2\right)dy$
+\end_inset
+
+ and 
+\begin_inset Formula $\gamma_k=\frac{D_kl}{2}$
+\end_inset
+
+. We can therefore compute a likelihood which relates instantiations from all the observed genes, 
+\begin_inset Formula $\left\{ x_{j}\left(t\right)\right\} _{j=1}^{N}$
+\end_inset
+
+, through dependencies on the parameters 
+\begin_inset Formula $\left\{ B_{j},S_{j},D_{j}\right\} _{j=1}^{N}$
+\end_inset
+
+. The effect of 
+\begin_inset Formula $f\left(t\right)$
+\end_inset
+
+ has been marginalised.
+\end_layout
+
+\begin_layout Standard
+
+To infer the protein concentration levels, one also needs the 
+\begin_inset Quotes eld
+\end_inset
+
+cross-covariance
+\begin_inset Quotes erd
+\end_inset
+
+ terms between 
+\begin_inset Formula $x_j\left(t\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $f\left(t^{\prime}\right)$
+\end_inset
+
+, which is obtained as 
+\begin_inset Formula \begin{equation}k_{x_{j}f}\left(t,t^{\prime}\right) = S_{j}\exp\left(-D_{j}t\right)\int_{0}^{t}\exp\left(D_{j}u\right)k_{ff}\left(u,t^{\prime}\right)du
+ .
+\end{equation}
+\end_inset
+
+ Again, this can be obtained explicitly for squared exponential priors on the latent function 
+\begin_inset Formula $f$
+\end_inset
+
+ as
+\begin_inset Formula \[
+k_{x_jf}\left(t^{\prime},t\right) = \frac{\sqrt{\pi}l S_j}{2}
+\textrm{exp}\left(\gamma_j\right)^2\textrm{exp}\left[-D_j\left(t^{\prime}-t\right)
+\right]\left[\textrm{erf}\left(\frac{t^{\prime}-t}{l}-\gamma_j\right)+
+\textrm{erf}\left(\frac{t}{l}+\gamma_j\right)\right].\]
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+Standard Gaussian process regression techniques 
+\begin_inset LatexCommand \citep[][see \emph{e.g.}]{Rasmussen:book05}
+
+\end_inset
+
+ then yield the mean and covariance function of the posterior process on 
+\begin_inset Formula $f$
+\end_inset
+
+ as 
+\begin_inset Formula \begin{equation}\begin{split}
+&\langle f\rangle_{{\textrm{\tiny post}}} = K_{f\mathbf{x}}K_{\mathbf{x}\mathbf{x}}^{-1}\mathbf{x}\\
+&K_{ff}^{{\textrm{\tiny post}}} = K_{ff}-K_{f\mathbf{x}}K_{\mathbf{x}\mathbf{x}}^{-1}K_{\mathbf{x}f}\label{posterior}\end{split}
+\end{equation}
+\end_inset
+
+ where 
+\begin_inset Formula $\mathbf{x}$
+\end_inset
+
+ denotes collectively the 
+\begin_inset Formula $x_j\left(t\right)$
+\end_inset
+
+ observed variables and capital 
+\begin_inset Formula $K$
+\end_inset
+
+ denotes the matrix obtained by evaluating the covariance function of the processes on every pair of observed time points. The model parameters 
+\begin_inset Formula $B_j$
+\end_inset
+
+, 
+\begin_inset Formula $D_j$
+\end_inset
+
+ and 
+\begin_inset Formula $S_j$
+\end_inset
+
+ can be estimated by type II maximum likelihood. Alternatively, they can be assigned vague gamma prior distributions and estimated 
+\emph on
+a posteriori
+\emph default
+ using MCMC sampling.
+\end_layout
+
+\begin_layout Standard
+
+In practice, we will allow the mRNA abundance of each gene at each time point to be corrupted by some noise, so that we can model the observations at times 
+\begin_inset Formula $t_i$
+\end_inset
+
+ for 
+\begin_inset Formula $i=1,\ldots,T$
+\end_inset
+
+ as, 
+\begin_inset Formula \begin{equation}
+y_j\left(t_i\right) = x_j\left(t_i\right)+\epsilon_j\left(t_i\right)
+\label{noisyData}\end{equation}
+\end_inset
+
+ with 
+\begin_inset Formula $\epsilon_j\left(t_i\right)\sim\mathcal{N}\left(0,\sigma^2_{ji}\right)$
+\end_inset
+
+. Estimates of the confidence levels associated with each mRNA measurement can be obtained for Affymetrix microarrays using probe-level processing techniques such as the mmgMOS model of 
+\begin_inset LatexCommand \citet{Liu:mmgMOS05}
+
+\end_inset
+
+. The covariance of the noisy process is simply obtained as 
+\begin_inset Formula $K_{\mathbf{y}\mathbf{y}}=\Sigma+
+K_{\mathbf{x}\mathbf{x}}$
+\end_inset
+
+, with 
+\begin_inset Formula $\Sigma=\textrm{diag}\left(\sigma^2_{11},\ldots,\sigma^2_{1T},\ldots,\sigma^2_{N1},\ldots,\sigma^2_{NT}\right)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+
+Non-linear Response Model
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset LatexCommand \label{sec:nonlinear}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+While the linear response model presents the advantage of being exactly tractable in the important squared exponential case, a realistic model of transcription should account for effects such as saturation and ultrasensitivity which cannot be captured by a linear function. Also, all the quantities in equation (
+\begin_inset LatexCommand \ref{eq:diffEqn}
+
+\end_inset
+
+) are positive, but one cannot constrain samples from a Gaussian process to be positive. Modelling the response of the transcription rate to protein concentration using a positive nonlinear function is an elegant way to enforce this constraint. 
+\end_layout
+
+\begin_layout Subsection
+
+Formalism
+\end_layout
+
+\begin_layout Standard
+
+Let the response of the mRNA transcription rate to transcription factor protein concentration levels be modelled by a nonlinear function 
+\begin_inset Formula $g$
+\end_inset
+
+ with a target-specific vector 
+\begin_inset Formula $\bm{\theta}_j$
+\end_inset
+
+ of parameters, so that, 
+\begin_inset Formula \begin{equation}\begin{split}
+&\frac{dx_j}{dt} = B_j + g(f(t),\bm{\theta}_j) - D_j
+x_j \\ & x_j(t) = \frac{B_j}{D_j} + \textrm{exp}\left(-D_j t\right)\int_{0}^t \mathrm{d}u
+\, g(f(u),\bm\theta_j) \, \textrm{exp}\left(D_j u\right) \ ,
+\end{split}\end{equation}
+\end_inset
+
+ where we again set 
+\begin_inset Formula $x_j(0) = B_j/D_j$
+\end_inset
+
+ and assign a Gaussian process prior distribution to 
+\begin_inset Formula $f(t)$
+\end_inset
+
+. In this case the induced distribution of 
+\begin_inset Formula $x_j(t)$
+\end_inset
+
+ is no longer a Gaussian process. However, we can derive the functional gradient of the likelihood and prior, and use this to learn the Maximum a Posteriori (MAP) solution for 
+\begin_inset Formula $f(t)$
+\end_inset
+
+ and the parameters by (functional) gradient descent. Given noise-corrupted data 
+\begin_inset Formula $y_{j}\left(t_i\right)$
+\end_inset
+
+ as above, the log-likelihood of the data 
+\begin_inset Formula $Y = \{y_{j}
+\left(t_i\right)\}$
+\end_inset
+
+ is given by 
+\begin_inset Formula \begin{equation}
+p(Y|f,\{B_j,\theta_j,D_j,\Xi\}) = -\frac{1}{2}\sum_{i=1}^T \sum_{j=1}^N 
+\left[ 
+\frac{\left( x_j(t_i) - y_{j}\left(t_i\right) \right)^2}{\sigma^2_{ji}} - \log\left(\sigma^2_{ji}\right)\right] - \frac{NT}{2}\log(2\pi) 
+\end{equation}
+\end_inset
+
+ where 
+\begin_inset Formula $\Xi$
+\end_inset
+
+ denotes collectively the parameters of the prior covariance on 
+\begin_inset Formula $f$
+\end_inset
+
+ (in the squared exponential case, 
+\begin_inset Formula $\Xi=l^2$
+\end_inset
+
+). The functional derivative of the log-likelihood with respect to 
+\begin_inset Formula $f$
+\end_inset
+
+ is then obtained as 
+\begin_inset Formula \begin{equation}
+\frac{\delta \log p(Y|f)}{\delta f\left(t\right)} = -\sum_{i=1}^T \Theta(t_i -
+ t)\sum_{j=1}^N 
+\frac{(x_j(t_i) - y_{j}\left(t_i\right))}{\sigma^2_{ji} }g'(f(t))\mathrm{e}^{-D_j(t_i-t)}
+\end{equation}
+\end_inset
+
+ where 
+\begin_inset Formula $\Theta(x)$
+\end_inset
+
+ is the Heaviside step function and we have omitted the model parameters for brevity. The negative Hessian of the log-likelihood with respect to 
+\begin_inset Formula $f$
+\end_inset
+
+ is given by 
+\begin_inset Formula \begin{equation}\begin{split}
+w(t,t^{\prime}) = &- \frac{\delta^2 \log p(Y|f)}{\delta f\left(t\right) 
+\delta f\left(t^{\prime}
+\right)} =\sum_{i=1}^T\Theta(t_i - t)\delta\left(t-t^{\prime}\right)
+\sum_{j=1}^N 
+\frac{\left(x_j(t_i) - y_{j}\left(t_i\right)\right)}{\sigma^2_{ji} } g''(f(t))\mathrm{e}^{-D_j(t_i-t)} \\
+& +\sum_{i=1}^T \Theta(t_i-t)\Theta\left(t_i-t^{\prime}\right)
+\sum_{j=1}^N \sigma_{ji}^{-2}
+g'\left(f(t)\right) g'\left(f(t^{\prime})\right) 
+\mathrm{e}^{-D_j(2t_i-t-t^{\prime})}
+\end{split}\end{equation}
+\end_inset
+
+ where 
+\begin_inset Formula $g'(f)=\partial g/\partial f$
+\end_inset
+
+ and 
+\begin_inset Formula $g^{\prime\prime}(f)=\partial^2 g/\partial f^2$
+\end_inset
+
+. 
+\end_layout
+
+\begin_layout Subsection
+
+Implementation
+\end_layout
+
+\begin_layout Standard
+
+We discretise in time 
+\begin_inset Formula $t$
+\end_inset
+
+ and compute the gradient and Hessian on a grid using approximate Riemann quadrature. In the simplest case, we choose a uniform grid 
+\begin_inset Formula $\left[t_p\right]\quad p=1,\ldots,M$
+\end_inset
+
+ so that 
+\begin_inset Formula $\Delta=t_p-t_{p-1}$
+\end_inset
+
+ is constant. We write 
+\begin_inset Formula $\bm f=\left[f_p\right]$
+\end_inset
+
+ to be the vector realisation of the function 
+\begin_inset Formula $f$
+\end_inset
+
+ at the grid points. The gradient of the log-likelihood is then given by, 
+\begin_inset Formula \begin{equation}
+\frac{\partial \log p(Y|\bm f)}{\partial f_p} =\\ 
+-\Delta\sum_{i=1}^T \Theta\left(t_i- t_p\right)\sum_{j=1}^N  
+\frac{\left(x_j\left(t_i\right) - y_{j}\left(t_i\right)\right)}{\sigma^2_{ji} }g'\left(f_p\right) \mathrm{e}^{-D_j\left(t_i-t_p\right)}\label{funcGrad}
+\end{equation}
+\end_inset
+
+ and the negative Hessian of the log-likelihood is, 
+\begin_inset Formula \begin{equation}\begin{split}
+&W_{pq} = -\frac{\partial^2\log p(Y|\bm f)}{\partial f_p\partial f_q} = \delta_{pq}\Delta  \sum_{i=1}^T
+\Theta\left(t_i-t_q\right)\sum_{j=1}^N \frac{\left(x_j\left(t_i\right) - y_{j}\left(t_i\right)\right)}{\sigma^2_{ji} }
+g''\left(f_q\right)
+ \mathrm{e}^{-D_j\left(t_i-t_q\right)} \\
+&+ \:\Delta ^2\sum_{i=1}^T \Theta\left(t_i-t_p\right)\Theta\left(t_i-t_q\right)\sum_{j=1}^N \sigma_{ji}^{-2} 
+g'\left(f_q\right) g'\left(f_p\right)
+\mathrm{e}^{-D_j\left(2t_i-t_p-t_q\right)} \label{funcHess}
+\end{split}\end{equation}
+\end_inset
+
+ where 
+\begin_inset Formula $\delta_{pq}$
+\end_inset
+
+ is the Kronecker delta. In these and the following formulae 
+\begin_inset Formula $t_i$
+\end_inset
+
+ is understood to mean the index of the grid point corresponding to the 
+\begin_inset Formula $i$
+\end_inset
+
+th data point, whereas 
+\begin_inset Formula $t_p$
+\end_inset
+
+ and 
+\begin_inset Formula $t_q$
+\end_inset
+
+ correspond to the grid points themselves.
+\end_layout
+
+\begin_layout Standard
+
+We can then compute the gradient and Hessian of the (discretised) un-normalised log posterior 
+\begin_inset Formula $\Psi(\bm f) = \log p(Y|\bm f) + \log p(\bm f)$
+\end_inset
+
+ 
+\begin_inset LatexCommand \citep[chapter 3][see]{Rasmussen:book05}
+
+\end_inset
+
+ 
+\begin_inset Formula \begin{equation}\begin{split}
+&\nabla \Psi(\bm f)  = \nabla \log p(Y|\bm f) -K^{-1}{\bm f} \\
+&\nabla\nabla \Psi(\bm f) = - (W + K^{-1})\label{postGrid}
+\end{split}\end{equation}
+\end_inset
+
+ where 
+\begin_inset Formula $K$
+\end_inset
+
+ is the prior covariance matrix evaluated at the grid points. These can be used to find the MAP solution 
+\begin_inset Formula $\hat{\bm f}$
+\end_inset
+
+ using Newton's method. The Laplace approximation to the log-marginal likelihood is then (ignoring terms that do not involve model parameters) 
+\begin_inset Formula \begin{equation}
+\log p(Y)  \simeq   \log p(Y|\hat{\bm f}) - \mbox{$\frac{1}{2}$}\hat{\bm f}^T K^{-1}
+\hat{\bm f} - \mbox{$\frac{1}{2}$}\log|I+KW|. 
+\label{eqn_marginal}
+\end{equation}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+We can also optimise the log-marginal with respect to the model and kernel parameters. The gradient of the log-marginal with respect to the kernel parameters is\InsetSpace ~
+
+\begin_inset LatexCommand \citet{Rasmussen:book05}
+
+\end_inset
+
+ 
+\begin_inset Formula \begin{equation}
+\frac{\partial \log p(Y|\Xi)}{\partial \Xi} = 
+\mbox{$\frac{1}{2}$}\hat{\bm f}^T K^{-1}\frac{\partial K}{\partial \Xi} K^{-1}\hat{\bm f} - 
+\mbox{$\frac{1}{2}$}\mbox{tr}\left((I+KW)^{-1}W\frac{\partial
+  K}{\partial \Xi}\right) + \sum_p \frac{\partial \log p(Y|\Xi)}{\partial \hat{f}_p}\frac{\partial\hat{f}_p}{\partial \Xi}
+\label{eqn_marginal_gradient}
+\end{equation}
+\end_inset
+
+ where the final term is due to the implicit dependence of 
+\begin_inset Formula $\hat{\bm f}$
+\end_inset
+
+ on 
+\begin_inset Formula $\Xi$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+
+Example: exponential response
+\end_layout
+
+\begin_layout Standard
+
+As an example, we consider the case in which 
+\begin_inset Formula \begin{equation}
+g\left(f\left(t\right),\theta_j\right)=S_j\textrm{exp}\left(f\left(t\right)
+\right)
+\label{expResp}\end{equation}
+\end_inset
+
+ which provides a useful way of constraining the protein concentration to be positive. Substituting equation (
+\begin_inset LatexCommand \ref{expResp}
+
+\end_inset
+
+) in equations (
+\begin_inset LatexCommand \ref{funcGrad}
+
+\end_inset
+
+) and (
+\begin_inset LatexCommand \ref{funcHess}
+
+\end_inset
+
+) one obtains 
+\begin_inset Formula \begin{equation*}\begin{split}
+&\frac{\partial\log p(Y|\bm f)}{\partial f_p} = -\Delta\sum_{i=1}^T \Theta\left(t_i - t_p\right)\sum_{j=1}^N 
+\frac{\left(x_j(t_i) - y_{j}\left(t_i\right)\right)}{\sigma^2_{ji} }S_j \mathrm{e}^{f_p-D_j(t_i-t_p)} \\
+&W_{pq} = -\delta_{pq}\frac{\partial\log p(Y|\bm f)}{\partial f_p} + \Delta^2\sum_{i=1}^T 
+\Theta\left(t_i-t_p\right)\Theta\left(t_i-t_q\right)\sum_{j=1}^N \sigma_{ji}^{-2} 
+S_j^2 \mathrm{e}^{f_p+f_q-D_j(2t_i-t_p-t_q)} \ .
+\end{split}\end{equation*}
+\end_inset
+
+ The terms required in equation\InsetSpace ~
+(
+\begin_inset LatexCommand \ref{eqn_marginal_gradient}
+
+\end_inset
+
+) are, 
+\begin_inset Formula \[
+\frac{\partial \log p(Y|\Xi)}{\partial \hat{f}_p} = -(AW)_{pp} - 
+\frac{1}{2}\sum_q A_{qq}W_{qp} \qquad \frac{\partial \hat{\bm f}}{\partial \Xi} 
+= AK^{-1}\frac{\partial K}{\partial \Xi}\nabla \log p(Y|\hat{\bm f})\ ,
+\]
+\end_inset
+
+ where 
+\begin_inset Formula $A=(W+K^{-1})^{-1}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+
+Results
+\end_layout
+
+\begin_layout Standard
+
+To test the efficacy of our method, we used a recently published biological data set which was studied using a linear response model by Barenco 
+\emph on
+et al.
+\emph default
+ 
+\begin_inset LatexCommand \citet{Barenco:ranked06}
+
+\end_inset
+
+. This study focused on the tumour suppressor protein p53. mRNA abundance was measured at regular intervals in three independent human cell lines using Affymetrix U133A oligonucleotide microarrays. The authors then restricted their interest to five known target genes of p53: 
+\emph on
+DDB2
+\emph default
+, 
+\emph on
+p21
+\emph default
+, 
+\emph on
+SESN1/hPA26
+\emph default
+, 
+\emph on
+BIK
+\emph default
+ and 
+\emph on
+TNFRSF10b
+\emph default
+. They estimated the mRNA production rates by using quadratic interpolation between any three consecutive time points. They then discretised the model and used MCMC sampling (assuming a log-normal noise model) to obtain estimates of the model parameters 
+\begin_inset Formula $B_j$
+\end_inset
+
+, 
+\begin_inset Formula $S_j$
+\end_inset
+
+, 
+\begin_inset Formula $D_j$
+\end_inset
+
+ and 
+\begin_inset Formula $f(t)$
+\end_inset
+
+. To make the model identifiable, the value of the mRNA decay of one of the target genes, p21, was measured experimentally. Also, the scale of the sensitivities was fixed by choosing p21's sensitivity to be equal to one, and 
+\begin_inset Formula $f(0)$
+\end_inset
+
+ was constrained to be zero. Their predictions were then validated by doing explicit protein concentration measurements and growing mutant cell lines where the p53 gene had been knocked out. 
+\end_layout
+
+\begin_layout Subsection
+
+Linear response analysis
+\end_layout
+
+\begin_layout Standard
+
+We first analysed the data using the simple linear response model used by Barenco 
+\emph on
+et al.
+\emph default
+ 
+\begin_inset LatexCommand \citet{Barenco:ranked06}
+
+\end_inset
+
+. Raw data was processed using the mmgMOS model of 
+\begin_inset LatexCommand \citet{Liu:mmgMOS05}
+
+\end_inset
+
+, which also provides estimates of the credibility associated with each measurement. Data from the different cell lines were treated as independent instantiations of 
+\begin_inset Formula $f$
+\end_inset
+
+ but sharing the model parameters 
+\begin_inset Formula $\{B_j,S_j,D_j,\Xi\}$
+\end_inset
+
+. We used a squared exponential covariance function for the prior distribution on the latent function 
+\begin_inset Formula $f$
+\end_inset
+
+. The inferred posterior mean function for 
+\begin_inset Formula $f$
+\end_inset
+
+, together with 95% confidence intervals, is shown in Figure\InsetSpace ~
+
+\begin_inset LatexCommand \ref{cap:barencoComparisonProfile}
+
+\end_inset
+
+(a). The pointwise estimates inferred by Barenco 
+\emph on
+et al.
+\emph default
+ are shown as crosses in the plot. The posterior mean function matches well the prediction obtained by Barenco 
+\emph on
+et al.
+\emph default
+
+\begin_inset Foot
+status collapsed
+
+
+\begin_layout Standard
+
+Barenco 
+\emph on
+et al.
+\emph default
+ also constrained the latent function to be zero at time zero.
+\end_layout
+
+\end_inset
+
+ Notice that the right hand tail of the inferred mean function shows an oscillatory behaviour. We believe that this is an artifact caused by the squared exponential covariance; the steep rise between time zero and time two forces the length scale of the function to be small, hence giving rise to wavy functions 
+\begin_inset LatexCommand \citep[][see page 123 in]{Rasmussen:book05}
+
+\end_inset
+
+. To avoid this, we repeated the experiment using the 
+\begin_inset Quotes eld
+\end_inset
+
+MLP
+\begin_inset Quotes erd
+\end_inset
+
+ covariance function for the prior distribution over 
+\begin_inset Formula $f$
+\end_inset
+
+ 
+\begin_inset LatexCommand \citet{Williams:computation98}
+
+\end_inset
+
+. Posterior estimation cannot be obtained analytically in this case so we resorted to the MAP-Laplace approximation described in section 
+\begin_inset LatexCommand \ref{sec:nonlinear}
+
+\end_inset
+
+. The MLP covariance is obtained as the limiting case of an infinite number of sigmoidal neural networks and has the following covariance function
+\begin_inset Formula \begin{equation}
+\begin{split}
+k\left(t,t'\right)=
+\textrm{arcsin}\left(\frac{w t t'+b}
+{\sqrt{\left(w t^2+b+1\right)
+\left(w t'^2+b+1\right)}}\right)
+\end{split}\end{equation}
+\end_inset
+
+ where 
+\begin_inset Formula $w$
+\end_inset
+
+ and 
+\begin_inset Formula $b$
+\end_inset
+
+ are parameters known as the weight and the bias variance. The results using this covariance function are shown in Figure 
+\begin_inset LatexCommand \ref{cap:barencoComparisonProfile}
+
+\end_inset
+
+(b). The resulting profile does not show the unexpected oscillatory behaviour and has tighter credibility intervals.
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset Float figure
+placement ht
+wide false
+sideways false
+status open
+
+
+\begin_layout Standard
+
+
+\begin_inset VSpace -0.4cm
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+subfigure{
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics 
+	filename ../diagrams/demBarenco1_profile1_slides.eps
+	width 45text%
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+subfigure{
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics 
+	filename ../diagrams/demBarencoMap2MlpLinear_profile1_slide.eps
+	width 45text%
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset VSpace -0.4cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Caption
+
+
+\size small
+Predicted protein concentration for p53 using a linear response model: (a) squared exponential prior on 
+\begin_inset Formula $f$
+\end_inset
+
+; (b) MLP prior on 
+\begin_inset Formula $f$
+\end_inset
+
+. Solid line is mean prediction, dashed lines are 95% credibility intervals. The prediction of Barenco 
+\emph on
+et al.
+\emph default
+ was pointwise and is shown as crosses.
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset LatexCommand \label{cap:barencoComparisonProfile}
+
+\end_inset
+
+
+\begin_inset VSpace -0.3cm
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset Float figure
+placement ht
+wide false
+sideways false
+status open
+
+
+\begin_layout Standard
+
+
+\begin_inset VSpace -0.2cm
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+subfigure{
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics 
+	filename ../diagrams/HMCBaseErrBars.eps
+	width 30text%
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\hfill
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+subfigure{
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics 
+	filename ../diagrams/HMCSensErrBars.eps
+	width 30text%
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\hfill
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+subfigure{
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics 
+	filename ../diagrams/HMCDecayErrBars.eps
+	width 30text%
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset VSpace -0.8cm
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Caption
+
+
+\size small
+Results of inference on the hyperparameters for p53 data studied in 
+\begin_inset LatexCommand \citet{Barenco:ranked06}
+
+\end_inset
+
+. The bar charts show (a) Basal transcription rates from our model and that of Barenco 
+\emph on
+et al.
+\emph default
+. Grey are estimates obtained with our model, white are the estimates obtained by Barenco 
+\emph on
+et al.
+\emph default
+ (b) Similar for sensitivities. (c) Similar for decay rates.
+\begin_inset LatexCommand \label{cap:barencoComparisonBar}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset VSpace -0.3cm
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+Figure\InsetSpace ~
+
+\begin_inset LatexCommand \ref{cap:barencoComparisonBar}
+
+\end_inset
+
+ shows the results of inference on the values of the hyperparameters 
+\begin_inset Formula $B_j$
+\end_inset
+
+, 
+\begin_inset Formula $S_j$
+\end_inset
+
+ and 
+\begin_inset Formula $D_j$
+\end_inset
+
+. The columns on the left, shaded grey, show results from our model and the white columns are the estimates obtained in 
+\begin_inset LatexCommand \citet{Barenco:ranked06}
+
+\end_inset
+
+. The hyperparameters were assigned a vague gamma prior distribution (
+\begin_inset Formula $a=b=0.1$
+\end_inset
+
+, corresponding to a mean of 1 and a variance of 10). Samples from the posterior distribution were obtained using Hybrid Monte Carlo 
+\begin_inset LatexCommand \citep[][see \emph{e.g.}]{Neal:book96}
+
+\end_inset
+
+. The results are in good accordance with the results obtained by Barenco 
+\emph on
+et al.
+\emph default
+ Differences in the estimates of the basal transcription rates are probably due to the different methods used for probe-level processing of the microarray data. 
+\end_layout
+
+\begin_layout Subsection
+
+Non-linear response analysis
+\end_layout
+
+\begin_layout Standard
+
+We then used the non-linear response model of section 
+\begin_inset LatexCommand \ref{sec:nonlinear}
+
+\end_inset
+
+ in order to constrain the protein concentrations inferred to be positive. We achieved this by using an exponential response of the transcription rate to the logged protein concentration. The inferred MAP solutions for the latent function 
+\begin_inset Formula $f$
+\end_inset
+
+ are plotted in Figure 
+\begin_inset LatexCommand \ref{nonlinearInf}
+
+\end_inset
+
+ for the squared exponential prior (a) and for the MLP prior (b).
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset Float figure
+placement ht
+wide false
+sideways false
+status open
+
+
+\begin_layout Standard
+
+
+\begin_inset VSpace -0.4cm
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+subfigure{
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics 
+	filename ../diagrams/demBarencoMap3RbfExp_profile1_slide.eps
+	width 45text%
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+subfigure{
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics 
+	filename ../diagrams/demBarencoMap4MlpExp_profile1_slide.eps
+	width 45text%
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset VSpace -0.4cm
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Caption
+
+
+\size small
+Predicted protein concentration for p53 using an exponential response: (a) shows results of using a squared exponential prior covariance on 
+\begin_inset Formula $f$
+\end_inset
+
+; (b) shows results of using an MLP prior covariance on 
+\begin_inset Formula $f$
+\end_inset
+
+. Solid line is mean prediction, dashed lines show 95% credibility intervals. The results shown are for 
+\begin_inset Formula $\textrm{exp}(f)$
+\end_inset
+
+, hence the asymmetry of the credibility intervals. The prediction of Barenco 
+\emph on
+et al.
+\emph default
+ was pointwise and is shown as crosses.
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset LatexCommand \label{nonlinearInf}
+
+\end_inset
+
+
+\begin_inset VSpace -0.3cm
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+
+Discussion
+\end_layout
+
+\begin_layout Standard
+
+In this paper we showed how Gaussian processes can be used effectively in modelling the dynamics of a very simple regulatory network motif. This approach has many advantages over standard parametric approaches: first of all, there is no need to restrict the inference to the observed time points, and the temporal continuity of the inferred functions is accounted for naturally. Secondly, Gaussian processes allow noise information to be accounted for in a natural way. It is well known that biological data exhibits a large variability, partly because of technical noise (due to the difficulty to measure mRNA abundance for low expressed genes, for example), and partly because of the difference between different cell lines. Accounting for these sources of noise in a parametric model can be difficult (particularly when estimates of the derivatives of the measured quantities are required), while Gaussian Processes can incorporate this information naturally. Finally, MCMC parameter estimation in a discretised model can be computationally expensive due to the high correlations between variables. This is a consequence of treating the protein concentrations as parameters, and results in many MCMC iterations to obtain reliable samples. Parameter estimation can be achieved easily in our framework by type II maximum likelihood or by using efficient Monte Carlo sampling techniques only on the model hyperparameters.
+\end_layout
+
+\begin_layout Standard
+
+While the results shown in the paper are encouraging, this is still a very simple modelling situation. For example, it is well known that transcriptional delays can play a significant role in determining the dynamics of many cellular processes 
+\begin_inset LatexCommand \citet{Monk03}
+
+\end_inset
+
+. These effects can be introduced naturally in a Gaussian process model; however, the data must be sampled at a reasonably high frequency in order for delays to become identifiable in a stochastic model, which is often not the case with microarray data sets. Another natural extension of our work would be to consider more biologically meaningful nonlinearities, such as the popular Michaelis-Menten model of transcription used in 
+\begin_inset LatexCommand \citet{Rogers:model06b}
+
+\end_inset
+
+. Finally, networks consisting of a single transcription factor are very useful to study small systems of particular interest such as p53. However, our ultimate goal would be to describe regulatory pathways consisting of more genes. These can be dealt with in the general framework described in this paper, but careful thought will be needed to overcome the greater computational difficulties.
+\end_layout
+
+\begin_layout Subsection*
+
+Acknowledgements
+\end_layout
+
+\begin_layout Standard
+
+We thank Martino Barenco for useful discussions and for providing the data. We gratefully acknowledge support from BBSRC Grant No BBS/B/0076X 
+\begin_inset Quotes eld
+\end_inset
+
+Improved processing of microarray data with probabilistic models
+\begin_inset Quotes erd
+\end_inset
+
+. 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+%
+\backslash
+bibliographystyle{plainnat}
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\size small
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+bibliographystyle{abbrv}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset LatexCommand \bibtex[abbrv]{gpip}
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

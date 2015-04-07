@@ -1,0 +1,100 @@
+\begin{frame}
+  \frametitle{Radiation Damage in the Cell}
+  \begin{itemize}
+  \item Radiation can damages molecules including DNA.
+  \item Most DNA damage is quickly repaired---single strand breaks,
+    backbone break.
+  \item Double strand breaks are more serious---a complete disconnect along
+    the chromosome.
+  \item Cell cycle stages: 
+    
+    \begin{itemize}
+    \item $\text{G}_{1}$: Cell is not dividing.
+    \item $\text{G}_{2}$: Cell is preparing for meitosis, chromosomes have
+      divided.
+    \item S: Cell is undergoing meitosis (DNA synthesis).
+    \end{itemize}
+  \item Main problem is in $\text{G}_1$. In $\text{G}_2$ there are two
+    copies of the chromosome.  In $\text{G}_1$ only one copy.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{p53 ``Guardian of the Cell''}
+  \begin{itemize}
+  \item Responsible for Repairing DNA damage
+  \item Activates DNA Repair proteins
+  \item Pauses the Cell Cycle (prevents replication of damage DNA)
+  \item Initiates \emph{apoptosis} (cell death) in the case where damage can't
+    be repaired.
+  \item Large scale feeback loop with NF-$\kappa$B.
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{p53 DNA Damage Repair}
+
+  % 
+  \begin{figure}
+    \includegraphics[width=0.45\textwidth]{../../../sysbio/tex/diagrams/p53-unbound}\hfill\includegraphics[width=0.4\textwidth]{../../../sysbio/tex/diagrams/p53-bound}
+
+    \caption{p53. \emph{Left} unbound, \emph{Right }bound to DNA. Images by David
+      S. Goodsell from \protect\url{http://www.rcsb.org/} (see the``Molecule
+      of the Month'' feature).}
+
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{p53}
+
+  % 
+  \begin{figure}
+    \begin{centering}
+      \includegraphics[angle=90,width=0.6\textwidth]{../../../sysbio/tex/diagrams/f013802.jpeg}
+      \par\end{centering}
+
+    \caption{Repair of DNA damage by p53. Image from \citet{Goodsell:p53tumor99}.}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Some p53 Targets}
+  \begin{description}
+  \item [{\emph{DDB2}}] DNA Damage Specific DNA Binding Protein 2. (also
+    governed by C/ EBP-beta, E2F1, E2F3,...).
+  \item [{\emph{p21}}] Cycline-dependent kinase inhibitor 1A (CDKN1A). A
+    regulator of cell cycle progression. (also governed by SREBP-1a,
+    Sp1, Sp3,... ).
+  \item [{\emph{hPA26/SESN1}}] sestrin 1 Cell Cycle arrest.
+  \item [{\emph{BIK}}] BCL2-interacting killer. Induces cell death (apoptosis)
+  \item [{\emph{TNFRSF10b}}] tumor necrosis factor receptor superfamily,
+    member 10b. A transducer of apoptosis signals.
+  \end{description}
+  
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Modelling Assumption}
+  \begin{itemize}
+  \item Assume p53 affects targets as a single input module network motif
+    (SIM).
+  \end{itemize}
+  % 
+  \begin{figure}
+
+
+    \begin{centering}
+      \includegraphics[width=0.4\textwidth]{../../../sysbio/tex/diagrams/p53_sim}
+    \end{centering}
+    
+    \caption{p53 SIM network motif as modelled by \citealt{Barenco:ranked06}.}
+    
+  \end{figure}
+\end{frame}

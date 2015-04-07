@@ -1,0 +1,13 @@
+It is misleading to suggest we are 'removed from the data',we are well aware of the details of the data, but, given space constraints and the broader interests of the NIPS community,we chose to focus on the methodology for learning, which is our main novel contribution. 
+
+Barenco-et-al is a paper containing experiment and analysis,the characterisation of this paper as 'a theory paper' is highly misleading (certainly from the perspective of the NIPS community). 
+
+We validated to the Barenco paper,because they verified their model predictions experimentally (see pg R25.9 of their paper).
+
+The implication that we have an excessive number of free parameters is misleading. When we perform maximum likelihood we have 15 free parameters and 105 data-points (7 time-points 5 target-genes and 3 non-technical replicates).Furthermore we assess how well-determined the parameters are through a Bayesian approach (HMC sampling).
+
+The implication that we are using 'massive' GPs is misleading.The GPs in this paper are relatively small.
+
+We would appreciate the reference to the textbook that contains the mathematical ideas to which the reviewer refers.We spent a lot of time performing bespoke derivations for this work and this text would obviously be very useful for us in the future.
+
+The summary suggests we are fitting 'someone else's theory'.The use of a differential equation model (as by Barenco) is standard,not 'a theory'.Our paper is significant precisely because differential equation models are so widely used and the techniques we describe are a very promising way forward to perform learning and inference with these models.
