@@ -1,0 +1,16 @@
+function [nu, g] = cmpndNoiseUpdateParams(noise, mu, varsigma, y, index)
+
+% CMPNDNOISEUPDATEPARAMS Update parameters for compound noise model.
+
+% IVM
+
+nu = zeros(length(index), length(noise.comp));
+g = zeros(length(index), length(noise.comp));
+for i = 1:length(noise.comp)
+  [nu(:, i), g(:, i)] = feval([noise.comp{i}.type 'NoiseUpdateParams'], ...
+                              noise.comp{i}, ...
+                              mu(:, i), ...
+                              varsigma(:, i), ...
+                              y(:, i), ...
+                              index);
+end
