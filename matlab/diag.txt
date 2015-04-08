@@ -1,0 +1,7 @@
+% The diag covariance function takes a one dimensional input and outputs a diagonal noise that is provided by an exponentiated and scaled version of the input.
+%
+% k(x_i, x_j) = delta_ij sigma2 exp(x_i)
+%
+% The only parameter is sigma2, the process variance (kern.variance).
+%
+% SEEALSO : whiteKernParamInit
