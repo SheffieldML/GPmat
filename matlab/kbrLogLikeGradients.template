@@ -1,0 +1,17 @@
+function gX = kbrLogLikeGradients(model, x, x2)
+
+% KBRLOGLIKEGRADIENTS Gradient of KBR model log likelihood with respect to parameters.
+% FORMAT
+% DESC computes the gradient of the kernel based regression
+% model's log likelihood with respect to the parameters.
+% ARG model : model structure for which gradients are being
+% computed.
+% RETURN g : the returned gradients. 
+%
+% SEEALSO kbrCreate, modelLogLikeGradients
+%
+% COPYRIGHT : Neil D. Lawrence, 2007
+
+% MLTOOLS
+
+

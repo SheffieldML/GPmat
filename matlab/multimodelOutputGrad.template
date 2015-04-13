@@ -1,0 +1,21 @@
+ function g = multimodelOutputGrad(model, X)
+
+% MULTIMODELOUTPUTGRAD Evaluate derivatives of MULTIMODEL model outputs with respect to parameters.
+% FORMAT
+% DESC evaluates the derivates of a multi-task learning wrapper model
+% outputs with respect to the parameters of the multi-task learning wrapper
+% ARG model : the model for which the derivatives are to be
+% computed.
+% ARG X : the input data locations where the gradients are to be
+% computed.
+% RETURN g : the gradient of the outputs of the multi-task learning wrapper
+% with respect to each of the parameters. The size of
+% the matrix is number of data x number of parameters x number of
+% outputs of the model.
+%
+% SEEALSO : multimodelCreate, multimodelLogLikeGradients
+%
+% COPYRIGHT : Neil D. Lawrence, 2007
+
+% MLTOOLS
+
