@@ -1,0 +1,19 @@
+function [g, nu] = mgaussianNoiseNuG(noise, x)
+
+% MGAUSSIANNOISENUG Compute nu and g for MGAUSSIAN noise model.
+% FORMAT
+% DESC computes the values nu and g for the multiple output Gaussian noise given the mean and variance inputs as well as the output of the noise model.
+% ARG noise : the noise structure for which the nu and g are computed.
+% ARG mu : input mean to the noise model.
+% ARG varSigma : input variance to the noise model.
+% ARG y : target output for the noise model.
+% RETURN g : the vector g, which is the gradient of log Z with respect to the input mean.
+% ARG y : target output for the noise model.
+% RETURN nu : the vector nu, see equation 10 of "Extensions of the Informative Vector Machine".
+%
+% SEEALSO : mgaussianNoiseParamInit, noiseUpdateNuG, noiseCreate
+%
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005
+
+% NOISE
+

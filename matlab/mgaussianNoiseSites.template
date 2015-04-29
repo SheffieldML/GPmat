@@ -1,0 +1,22 @@
+ function [m, beta] = mgaussianNoiseSites(noise, g, nu, mu, varSigma, y)
+
+% MGAUSSIANNOISESITES Update the site parameters for the MGAUSSIAN noise mode.
+% FORMAT
+% DESC updates the site parameters for the multiple output Gaussian
+% noise model. 
+% ARG noise : the noise structure for which the site parameters are to
+% be updated. 
+% ARG g : values of g as retuned by mgaussianNoiseNuG.
+% ARG nu : values of nu as retuned by mgaussianNoiseNuG.
+% ARG mu : the mean value of the Gaussian input to the noise structure.
+% ARG varSigma : the variance of the Gaussian input to the noise structure.
+% ARG y : the target value.
+% RETURN m : the site mean parameters.
+% RETURN beta : the site precision parameters.
+%
+% SEEALSO : mgaussianNoiseParamInit, noiseUpdateSites
+%
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005
+
+% NOISE
+

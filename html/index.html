@@ -1,0 +1,361 @@
+<head>
+
+<meta name="description" content="">
+
+<meta name="keywords" content="">
+
+<meta name="author" content="">
+
+
+
+
+
+</head>
+
+<body bgcolor="#ffffff" topmargin="0" leftmargin="0" marginheight="0" marginwidth="0">
+
+
+
+
+
+<table border="0" cellpadding="0" cellspacing="0" align="right">
+
+<tr>
+
+<td><!--***************************************************************************************-->
+
+<A onmouseover="window.status&#13;&#10;='Homepage';
+
+ return true"
+
+ onmouseout ="window.status=''; return true" href="/~neill/" >
+
+Neil's homepage</A>&nbsp;&nbsp;<font color="#660099">|</font>&nbsp;&nbsp; <!--***************************************************************************************-->
+
+
+
+</td>
+
+
+
+<td><!--***************************************************************************************-->
+
+<A onmouseover="window.status&#13;&#10;='Research Group';
+
+ return true"
+
+ onmouseout ="window.status=''; return true" href="http://intranet.cs.man.ac.uk/mlo/" >
+
+research group</A>&nbsp;&nbsp;<font color="#660099">|</font>&nbsp;&nbsp; <!--***************************************************************************************-->
+
+</td>
+
+
+
+
+
+<td><!--***************************************************************************************-->
+
+<A onmouseover="window.status&#13;&#10;='People
+
+ in the group'; return true"
+
+ onmouseout ="window.status=''; return true" href="http://intranet.cs.man.ac.uk/mlo/people/" >
+
+MLO Researchers</A>&nbsp;&nbsp;<font color="#660099">|</font>&nbsp;&nbsp; <!--***************************************************************************************-->
+
+</td>
+
+
+
+</tr>
+
+</table>
+
+
+
+<table border="0" cellpadding="0" cellspacing="0" width="436">
+
+
+
+<tr>
+
+<td width="47" valign="top"><!--***************************************************************************************-->&nbsp; 
+
+<!--***************************************************************************************-->
+
+</td>
+
+<td><!--***************************************************************************************-->
+
+<a href="http://www.manchester.ac.uk/"
+
+ onMouseOver 
+
+="window.status='image1'; return true"
+
+ onMouseOut="window.status=''; return true" 
+
+      align="right" valign  ="top" 
+
+     ; <P 
+
+     ><IMG alt="University Logo" title="Manchester Est. 1824" src="http://www.cs.manchester.ac.uk/ai/pictures/icons/est1824.gif"> <!--***************************************************************************************-->
+
+</td></tr></table></body>
+
+<head>
+
+   <link href="http://intranet.cs.man.ac.uk/css/_print.css"
+
+    type="text/css" rel="stylesheet" media="print" />
+
+
+
+    <link href="http://intranet.cs.man.ac.uk/css/_base.css"
+
+    type="text/css" rel="stylesheet" media="screen" />
+
+    <style type="text/css" media="screen">
+
+    /*<![CDATA[*/
+
+    <!--
+
+    @import url(http://intranet.cs.man.ac.uk/css/_layout.css);
+
+    @import url(http://intranet.cs.man.ac.uk/css/_navigation.css);
+
+    @import url(http://intranet.cs.man.ac.uk/css/_forms.css);
+
+    @import url(http://intranet.cs.man.ac.uk/css/_boxes.css);
+
+    -->
+
+    /*]]>*/
+
+
+
+    .currentsection  {
+
+	 background-color: #f0f0ff; 
+
+	 color:#000;
+
+	 display: block; 
+
+	 font-weight:normal;
+
+	 padding: 4px 4px 5px 4px;
+
+	 text-decoration:none; 
+
+    }
+
+    .multilevel-linkdiv-0 {
+
+	 background-color: #f0f0ff; 
+
+	 margin-left: 1.0em;
+
+         text-align: left
+
+    }
+
+    a.greylink:link    { color: #c0c0c0; }
+
+    a.greylink:visited { color: #d0d0d0; }
+
+		
+
+    .lined {
+
+	 border-style: solid;
+
+	 border-color: #006073;
+
+	 border-bottom-width: 0px;
+
+	 border-top-width: 1px;
+
+	 border-left-width: 0px;
+
+	 border-right-width: 0px;
+
+    }
+
+    table, caption {
+
+      font-size: inherit;
+
+      font-weight: inherit;
+
+      font-style: inherit;
+
+      font-variant: inherit;
+
+    }
+
+    </style>
+
+
+
+    <style type="text/css" media="screen">
+
+    /*<![CDATA[*/
+
+    <!--
+
+    .section {margin-left: 4em}
+
+.abstract    { font-size:small }
+
+span.author  { font-weight: bold }
+
+span.regular {  }
+
+span.journal {  font-style: italic}
+
+span.papertitle     { font-style: italic; font-weight: bold }
+
+    body { background-image: url(http://intranet.cs.man.ac.uk/ai//pictures/icons/logoleft.gif); }
+
+    div.locator { background-color: #6666cc; background-image: url(); background-repeat: no-repeat; border: none; margin: 1px 0 0 0; padding: 0; width: 184px; height: 92px; }
+
+    -->
+
+    /*]]>*/
+
+    </style>
+
+<!--  End of Style Sheet CSS -->
+
+</head>
+
+
+
+<head>
+
+<title>Matlab Noise Models Toolbox - Examples</title>
+
+</head>
+
+
+
+<body><div class="section">
+
+
+
+<h1>Matlab Noise Models Toolbox</h1>
+
+
+
+
+    <p>The NOISE software can be downloaded
+    <a href="/neill-bin/software/downloadForm.cgi?toolbox=noise">here</a>.
+    <h2>Release Information</h2>
+    <p><b>Current release is 0.141</b>.
+    </table>
+
+
+
+<p>Added noiseReadFromFile and noiseReadFromFID for compatability with CPP releases.
+
+
+
+<h4>Version 0.14</h4>
+
+
+
+<p>As of version 0.14, the NCNM noise model has been incorporated into this toolbox.
+
+
+
+<p>This toolbox allows computation of several different noise models and their gradients. You can add noise models to the toolbox by creating versions of the relevant files. Once added, they can be tested using the <code>noiseTest</code>. For example you can test the probit noise model by writing
+
+
+
+<p><code>&gt;&gt; noiseTest('probit')</code>
+
+
+
+<p>There are several noise models implemented, the mains ones that are being maintained for the latest release are:
+
+
+
+<p><code>gaussian
+
+ordered
+
+probit
+
+ncnm
+
+</code>
+
+
+
+These noise models are Gaussian (standard Gaussian noise), probistic regression for binary classificaiton and ordered categorical for ordered categories (ordinal regression).</div></body>
+
+<p><center>Page updated on Tue Oct  6 17:28:55 2009</center><!-- footer -->
+
+
+
+<body>
+
+    <div id="footer">
+
+      <div class="links">
+
+        <p>
+
+          | 
+
+          <a href="http://www.manchester.ac.uk/aboutus/documents/disclaimer/"
+
+             title="Disclaimer">Disclaimer</a> |
+
+             <a href="http://www.manchester.ac.uk/aboutus/documents/privacy/"
+
+             title="Privacy">Privacy</a> |
+
+             <a href="http://www.manchester.ac.uk/aboutus/documents/copyright/"
+
+             title="Copyright Notice">Copyright notice</a> |
+
+             <a href="http://www.manchester.ac.uk/aboutus/documents/accessibility/"
+
+             title="Accessibility">Accessibility</a> |
+
+             <a href="http://www.manchester.ac.uk/aboutus/documents/foi/"
+
+             title="Freedom of information">Freedom of information</a> | 
+
+             <a href="http://www.manchester.ac.uk/aboutus/contact/feedback/"
+
+             title="Feedback">Feedback</a> |
+
+        </p>
+
+
+
+      </div>
+
+      <div class="pagestatus">
+
+        <p>Please contact
+
+          <a href="mailto:webmaster.cs@manchester.ac.uk">webmaster.cs@manchester.ac.uk</a>
+
+          with comments and suggestions
+
+        </p>
+
+      </div>
+
+    </div>
+
+
+
+  </body>
+
