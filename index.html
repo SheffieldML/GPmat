@@ -1,0 +1,1056 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>GPmat by SheffieldML</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">GPmat</h1>
+        <p class="header">Matlab implementations of Gaussian processes and other machine learning tools.</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/SheffieldML/GPmat/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/SheffieldML/GPmat/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/SheffieldML/GPmat">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/SheffieldML">SheffieldML</a></p>
+
+
+      </header>
+      <section>
+        <h1>
+<a id="gpmat" class="anchor" href="#gpmat" aria-hidden="true"><span class="octicon octicon-link"></span></a>GPmat</h1>
+
+<p>Matlab implementations of Gaussian processes and other machine learning tools.</p>
+
+<h1>
+<a id="gp" class="anchor" href="#gp" aria-hidden="true"><span class="octicon octicon-link"></span></a>GP</h1>
+
+<h3>
+<a id="version-0136" class="anchor" href="#version-0136" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.136</h3>
+
+<p>Changes to gpReadFromFID for compatibility with C++ code.</p>
+
+<h4>
+<a id="version-0135" class="anchor" href="#version-0135" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.135</h4>
+
+<p>Modifications by Carl Henrik Ek for compatability with the SGPLVM toolbox.</p>
+
+<h4>
+<a id="version-0134" class="anchor" href="#version-0134" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.134</h4>
+
+<p>Updates to allow deconstruction of model files when writing to disk (gpWriteResult, gpLoadResult, gpDeconstruct, gpReconstruct).</p>
+
+<h4>
+<a id="version-0133" class="anchor" href="#version-0133" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.133</h4>
+
+<p>Updates for running a GPLVM/GP using the data's inner product matrix for Interspeech synthesis demos.</p>
+
+<h4>
+<a id="version-0132" class="anchor" href="#version-0132" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.132</h4>
+
+<p>Examples transfered from oxford toolbox, variational approximation from Titsias added as an option with 'dtcvar'.</p>
+
+<h4>
+<a id="version-0131" class="anchor" href="#version-0131" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.131</h4>
+
+<p>Changes to allow compatibility with SGPLVM and NCCA toolboxes.</p>
+
+<h4>
+<a id="version-013" class="anchor" href="#version-013" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.13</h4>
+
+<p>Changes to allow more flexibility in optimisation of beta.</p>
+
+<h4>
+<a id="version-012" class="anchor" href="#version-012" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.12</h4>
+
+<p>Various minor changes for enabling back constraints in hierarchical
+GP-LVM models.</p>
+
+<h4>
+<a id="version-011" class="anchor" href="#version-011" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.11</h4>
+
+<p>Changes include the use of the optimiDefaultConstraint('positive') to
+obtain the function to constrain beta to be positive (which now
+returns 'exp' rather than 'negLogLogit' which was previously the
+default). Similarly default optimiser is now given by a command in
+optimiDefaultOptimiser.</p>
+
+<h4>
+<a id="version-01" class="anchor" href="#version-01" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.1</h4>
+
+<p>The first version which is spun out of the FGPLVM toolbox. The
+corresponding FGPLVM toolbox is 0.15.</p>
+
+<p>Release 0.1 splits away the Gaussian process section of the FGPLVM
+toolbox into this separate toolbox.</p>
+
+<h2>
+<a id="other-gp-related-software" class="anchor" href="#other-gp-related-software" aria-hidden="true"><span class="octicon octicon-link"></span></a>Other GP related software</h2>
+
+<p>The GP-LVM C++ software is available from <a href="/~neill/gplvmcpp/">here</a>.</p>
+
+<p>The IVM C++ software is available from <a href="/~neill/ivmcpp/">here</a>.</p>
+
+<p>The MATLAB IVM toolbox is available here <a href="/~neill/ivm/">here</a>.</p>
+
+<p>The original MATLAB GP-LVM toolbox is available here <a href="/~neill/gplvm/">here</a>.</p>
+
+<h2>
+<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h2>
+
+<h3>
+<a id="functions-from-gaussians" class="anchor" href="#functions-from-gaussians" aria-hidden="true"><span class="octicon octicon-link"></span></a>Functions from Gaussians</h3>
+
+<p>This example shows how points which look like they come from a
+function to be sampled from a Gaussian distribution. The sample is 25
+dimensional and is from a Gaussian with a particular covariance.</p>
+
+<div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt; </span>demGpSample</pre></div>
+
+<p></p><img src="./html/gpSample.png" width="50%"><img src="./html/gpCovariance.png" width="50%"><br> <i>Left</i> A single, 25
+dimensional, sample from a Gaussian distribution. <i>Right</i> the
+covariance matrix of the Gaussian distribution..  
+
+<h3>
+<a id="joint-distribution-over-two-variables" class="anchor" href="#joint-distribution-over-two-variables" aria-hidden="true"><span class="octicon octicon-link"></span></a>Joint Distribution over two Variables</h3>
+
+<p>Gaussian processes are about conditioning a Gaussian distribution
+on the training data to make the test predictions. To illustrate this
+process, we can look at the joint distribution over two variables.</p>
+
+<div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt; </span>demGpCov2D([<span class="pl-c1">1</span> <span class="pl-c1">2</span>])</pre></div>
+
+<p>Gives the joint distribution for <i>f</i><sub>1</sub> and
+<i>f</i><sub>2</sub>. The plots show the joint distributions as well
+as the conditional for <i>f</i><sub>2</sub> given
+<i>f</i><sub>1</sub>.</p>
+
+<p></p><img src="./html/demGpCov2D1_2_3.png" width="50%"><img src="./html/demGpCov2D1_5_3.png" width="50%"><br> <i>Left</i> Blue line is
+contour of joint distribution over the variables <i>f</i><sub>1</sub>
+and <i>f</i><sub>2</sub>. Green line indicates an observation of
+<i>f</i><sub>1</sub>. Red line is conditional distribution of
+<i>f</i><sub>2</sub> given <i>f</i><sub>1</sub>. <i>Right</i> Similar
+for <i>f</i><sub>1</sub> and <i>f</i><sub>5</sub>.  
+
+<h3>
+<a id="different-samples-from-gaussian-processes" class="anchor" href="#different-samples-from-gaussian-processes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Different Samples from Gaussian Processes</h3>
+
+<p>A script is provided which samples from a Gaussian process with the
+provided covariance function.</p>
+
+<div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt; </span>gpSample(<span class="pl-s"><span class="pl-pds">'</span>rbf<span class="pl-pds">'</span></span>, <span class="pl-c1">10</span>, [<span class="pl-c1">1</span> <span class="pl-c1">1</span>], [<span class="pl-k">-</span><span class="pl-c1">3</span> <span class="pl-c1">3</span>], <span class="pl-c1">1e5</span>)</pre></div>
+
+<p>will give 10 samples from an RBF covariance function with a
+parameter vector given by <a href="inverse%20width%201,%20variance%201">1 1</a> across
+the range -3 to 3 on the <i>x</i>-axis. The random seed will be set to
+1e5.</p>
+
+<div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt; </span>gpSample(<span class="pl-s"><span class="pl-pds">'</span>rbf<span class="pl-pds">'</span></span>, <span class="pl-c1">10</span>, [<span class="pl-c1">16</span> <span class="pl-c1">1</span>], [<span class="pl-k">-</span><span class="pl-c1">3</span> <span class="pl-c1">3</span>], <span class="pl-c1">1e5</span>)</pre></div>
+
+<p>is similar, but the inverse width is now set to 16 (length scale 0.25).</p>
+
+<p></p><img src="./html/gpSampleRbfSamples10Seed100000InverseWidth1Variance1.png" width="50%"><img src="./html/gpSampleRbfSamples10Seed100000InverseWidth16Variance1.png" width="50%"><br> <i>Left</i> samples from an RBF style covariance function
+with length scale 1. <i>Right</i> samples from an RBF style covariance
+function with length scale 0.25.  
+
+<p>Other covariance functions can be sampled, an interesting one is
+the MLP covariance which is non stationary and can produce point
+symmetric functions,</p>
+
+<div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt; </span>gpSample(<span class="pl-s"><span class="pl-pds">'</span>mlp<span class="pl-pds">'</span></span>, <span class="pl-c1">10</span>, [<span class="pl-c1">100</span> <span class="pl-c1">100</span> <span class="pl-c1">1</span>], [<span class="pl-k">-</span><span class="pl-c1">1</span> <span class="pl-c1">1</span>], <span class="pl-c1">1e5</span>)</pre></div>
+
+<p>gives 10 samples from the MLP covariance function where the "bias
+variance" is 100 (basis functions are centered around the origin
+with standard deviation of 10) and the "weight variance" is
+100.</p>
+
+<div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt; </span>gpSample(<span class="pl-s"><span class="pl-pds">'</span>mlp<span class="pl-pds">'</span></span>, <span class="pl-c1">10</span>, [<span class="pl-c1">100</span> 1e<span class="pl-k">-</span><span class="pl-c1">16</span> <span class="pl-c1">1</span>], [<span class="pl-k">-</span><span class="pl-c1">1</span> <span class="pl-c1">1</span>], <span class="pl-c1">1e5</span>)</pre></div>
+
+<p>gives 10 samples from the MLP covariance function where the "bias
+variance" is approximately zero (basis functions are placed on
+the origin) and the "weight variance" is 100.</p>
+
+<p></p><img src="./html/gpSampleMlpSamples10Seed100000WeightVariance100BiasVariance100Variance1.png" width="50%"><img src="./html/gpSampleMlpSamples10Seed100000WeightVariance100BiasVariance1e-16Variance1.png" width="50%"><br> <i>Left</i> samples from an MLP style covariance
+function with bias and weight variances set to 100. <i>Right</i>
+samples from an MLP style covariance function with weight variance 100
+and bias variance approximately zero.  
+
+<h3>
+<a id="posterior-samples" class="anchor" href="#posterior-samples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Posterior Samples</h3>
+
+<p>Gaussian processes are non-parametric models. They are specified by their covariance function and a mean function. When combined with data observations a posterior Gaussian process is induced. The demos below show samples from that posterior.</p>
+
+<div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt;  </span>gpPosteriorSample(<span class="pl-s"><span class="pl-pds">'</span>rbf<span class="pl-pds">'</span></span>, <span class="pl-c1">5</span>, [<span class="pl-c1">1</span> <span class="pl-c1">1</span>], [<span class="pl-k">-</span><span class="pl-c1">3</span> <span class="pl-c1">3</span>], <span class="pl-c1">1e5</span>)</pre></div>
+
+<p>and </p>
+
+<div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt;  </span>gpPosteriorSample(<span class="pl-s"><span class="pl-pds">'</span>rbf<span class="pl-pds">'</span></span>, <span class="pl-c1">5</span>, [<span class="pl-c1">16</span> <span class="pl-c1">1</span>], [<span class="pl-k">-</span><span class="pl-c1">3</span> <span class="pl-c1">3</span>], <span class="pl-c1">1e5</span>)</pre></div>
+
+<p></p><img src="./html/gpPosteriorSampleRbfSamples5Seed100000InverseWidth1Variance1bw.png" width="50%"><img src="./html/gpPosteriorSampleRbfSamples5Seed100000InverseWidth16Variance1bw.png" width="50%"><br> <i>Left</i> samples from the posterior induced by an RBF style covariance function
+with length scale 1 and 5 "training" data points taken from a sine wave. <i>Right</i> Similar but for a length scale of 0.25.  
+
+<h3>
+<a id="simple-interpolation-demo" class="anchor" href="#simple-interpolation-demo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Simple Interpolation Demo</h3>
+
+<p>This simple demonstration plots, consecutively, an increasing
+number of data points, followed by an interpolated fit through the
+data points using a Gaussian process. This is a noiseless system, and
+the data is sampled from a GP with a known covariance function. The
+curve is then recovered with minimal uncertainty after only nine data
+points are included. The code is run with</p>
+
+<div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt; </span>demInterpolation</pre></div>
+
+<p></p><img src="./html/demInterpolation3.png" width="50%"><img src="./html/demInterpolation4.png" width="50%"><br>
+
+<p>Gaussian process prediction <i>left</i> after two points with a new
+data point sampled <i>right</i> after the new data point is included
+in the prediction.<br> </p>
+
+<p><img src="./html/demInterpolation7.png" width="50%"><img src="./html/demInterpolation8.png" width="50%"><br></p>
+
+<p>Gaussian process prediction <i>left</i> after five points with a four
+new data point sampled <i>right</i> after all nine data points are
+included.<br> </p>
+
+<h3>
+<a id="simple-regression-demo" class="anchor" href="#simple-regression-demo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Simple Regression Demo</h3>
+
+<p>The regression demo very much follows the format of the
+interpolation demo. Here the difference is that the data is sampled
+with noise. Fitting a model with noise means that the regression will
+not necessarily pass right through each data point.</p>
+
+<p>The code is run with</p>
+
+<div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt; </span>demRegression</pre></div>
+
+<p></p><img src="./html/demRegression3.png" width="50%"><img src="./html/demRegression4.png" width="50%"><br>
+
+<p>Gaussian process prediction <i>left</i> after two points with a new
+data point sampled <i>right</i> after the new data point is included
+in the prediction.<br> <img src="./html/demRegression7.png" width="50%"><img src="./html/demRegression8.png" width="50%"><br></p>
+
+<p>Gaussian process prediction <i>left</i> after five points with a four
+new data point sampled <i>right</i> after all nine data points are
+included.<br> </p>
+
+<h3>
+<a id="optimizing-hyper-parameters" class="anchor" href="#optimizing-hyper-parameters" aria-hidden="true"><span class="octicon octicon-link"></span></a>Optimizing Hyper Parameters</h3>
+
+<p>One of the advantages of Gaussian processes over pure kernel
+interpretations of regression is the ability to select the hyper
+parameters of the kernel automatically. The demo</p>
+
+<div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt; </span>demOptimiseGp</pre></div>
+
+<p>shows a series of plots of a Gaussian process with different length
+scales fitted to six data points. For each plot there is a
+corresponding plot of the log likelihood. The log likelihood peaks for
+a length scale equal to 1. This was the length scale used to generate
+the data.</p>
+
+<p></p><img src="./html/demOptimiseGp1.png" width="33%"><img src="./html/demOptimiseGp3.png" width="33%"><img src="./html/demOptimiseGp5.png" width="33%"><br><img src="./html/demOptimiseGp7.png" width="33%"><img src="./html/demOptimiseGp9.png" width="33%"><img src="./html/demOptimiseGp11.png" width="33%"><br><img src="./html/demOptimiseGp13.png" width="33%"><img src="./html/demOptimiseGp15.png" width="33%"><img src="./html/demOptimiseGp17.png" width="33%"><br>From top left to bottom right, Gaussian process
+regression applied to the data with an increasing length scale. The
+length scales used were 0.05, 0.1, 0.25, 0.5, 1, 2, 4, 8 and
+16.<br><img src="./html/demOptimiseGp18.png" width="50%"><br>Log-log plot of
+the log likelihood of the data against the length scales. The log
+likelihood is shown as a solid line. The log likelihood is made up of
+a data fit term (the quadratic form) shown by a dashed line and a
+complexity term (the log determinant) shown by a dotted line. The data
+fit is larger for short length scales, the complexity is larger for
+long length scales. The combination leads to a maximum around the true
+length scale value of 1.
+
+<h3>
+<a id="regression-over-motion-capture-markers" class="anchor" href="#regression-over-motion-capture-markers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Regression over Motion Capture Markers</h3>
+
+<p>As a simple example of regression for real data we consider a motion capture data set. The data is <a href="http://accad.osu.edu/research/mocap/mocap_data.htm">from Ohio State University</a>. In the example script we perform Gaussian process regression with time as the input and the x,y,z position of the marker attached to the left ankle. To demonstrate the behavior of the model when the marker is lost, we remove data from This code can be run with</p>
+
+<div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt; </span>demStickGp1 </pre></div>
+
+<p>The code will optimize hyper parameters and show plots of the posterior process through the training data and the missing test points.</p>
+
+<p>The result of the script is given in the plot below.  </p>
+
+<p></p><img src="./html/demStickGp1Out1.png" width="30%"> <img src="./html/demStickGp1Out2.png" width="30%"> <img src="./html/demStickGp1Out3.png" width="30%"><br> Gaussian process regression through the x (left), y (middle) and z (right) position of the left ankle. Training data is shown as black spots, test points removed to simulate a lost marker are shown as circles, posterior mean
+prediction is shown as a black line and two standard deviations are
+given as grey shading.
+
+<p>Notice how the error bars are tight except in the region where the training data is missing and in the region where the training data disappears.</p>
+
+<h3>
+<a id="sparse-pseudo-input-gaussian-processes" class="anchor" href="#sparse-pseudo-input-gaussian-processes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sparse Pseudo-input Gaussian Processes</h3>
+
+<p>The sparse approximation used in this toolbox is based on the
+Sparse Pseudo-input Gaussian Process model described by <a href="http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Snelson:pseudo05&amp;printAbstract=1">Snelson
+and Ghahramani</a>. Also provided are the extensions suggested by <a href="http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Quinonero:unifying05">Quiñonero-Candela
+and Rasmussen</a>. They provide a unifying terminology for describing
+these approximations which we shall use in what follows.</p>
+
+<p>There are three demos provided for Gaussian process regression in
+1-D. They each use a different form of likelihood approximation. The
+first demonstration uses the "projected latent variable"
+approach first described by <a href="http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Csato:sparse02&amp;printAbstract=1">Csato
+and Opper</a> and later used by <a href="http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Seeger:fast03&amp;printAbstract=1">Seeger
+<i>et al.</i></a>. In the terminology of Quiñonero-Candela and
+Rasmussen (QR-terminology) this is known as the "deterministic
+training conditional" (DTC) approximation.</p>
+
+<p>To use this approximation the following script can be run.</p>
+
+<div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt; </span>demSpgp1dGp1 </pre></div>
+
+<p>The result of the script is
+given in the plot below.  </p>
+
+<p></p><img src="./html/demSpgp1dGp1.png" width="50%"><br> Gaussian process using the DTC approximation with nine
+inducing variables. Data is shown as black spots, posterior mean
+prediction is shown as a black line and two standard deviations are
+given as grey shading.
+
+<p>The improved approximation suggested by Snelson and Ghahramani, in
+QR-terminology this is known as the fully independent training
+conditional (FITC). To try this approximation run the following script</p>
+
+<div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt; </span>demSpgp1dGp2 </pre></div>
+
+<p>The result of the script is given on the left of the plot below.</p>
+
+<p></p><img src="./html/demSpgp1dGp2.png" width="49%"><img src="./html/demSpgp1dGp3.png" width="49%"><br>
+
+<p><i>Left</i>: Gaussian process using the FITC approximation with nine
+inducing variables. Data is shown as black spots, posterior mean
+prediction is shown as a black line and two standard deviations are
+given as grey shading. <i>Right</i>: Similar but for the PITC
+approximation, again with nine inducing variables.</p>
+
+<p>At the <a href="http://www.dcs.shef.ac.uk/ml/gprt/">Sheffield
+Gaussian Process Round Table</a> Lehel Csato pointed out that the
+Bayesian Committee Machine of <a href="http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?group=bcm&amp;printAbstract=1">Schwaighofer
+and Tresp</a> can also be viewed within the same framework. This idea
+is formalised in <a href="http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Quinonero:unifying05&amp;printAbstract=1">Quiñonero-Candela
+and Rasmussen's</a> review. This approximation is known as the
+"partially independent training conditional" (PITC) in
+QR-terminology. To try this approximation run the following script</p>
+
+<div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt; </span>demSpgp1dGp3</pre></div>
+
+<p>The result of the script is given on the right of the plot above.</p>
+
+<p>Finally we can compare these results to the result from the full
+Gaussian process on the data with the correct hyper-parameters. To do
+this the following script can be run.</p>
+
+<div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt; </span>demSpgp1dGp4</pre></div>
+
+<p>The result of the script is given in the plot below.</p>
+
+<p></p><img src="./html/demSpgp1dGp4.png" width="50%"><br> Full Gaussian
+process on the toy data with the correct hyper-parameters. Data is
+shown as black spots, posterior mean prediction is shown as a black
+line and two standard deviations are given as grey shaded
+area.
+
+<h1>
+<a id="gp-lvm" class="anchor" href="#gp-lvm" aria-hidden="true"><span class="octicon octicon-link"></span></a>GP-LVM</h1>
+
+<p>Changes for compatibility with new SGPLVM toolbox by Carl Henrik Ek.</p>
+
+<h4>
+<a id="version-0162" class="anchor" href="#version-0162" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.162</h4>
+
+<p>Added new files fgplvmWriteResults fgplvmLoadResults for saving smaller model files.</p>
+
+<h4>
+<a id="version-0161" class="anchor" href="#version-0161" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.161</h4>
+
+<p>Updates for running a GPLVM when the inner produce matrix is used
+(i.e. dimensionality much greater than data points).  Minor changes to
+fix reading of GPLVM files from latest C++ code.</p>
+
+<h4>
+<a id="version-016" class="anchor" href="#version-016" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.16</h4>
+
+<p>Incorporate varational approximation from Michalis in the code. </p>
+
+<h4>
+<a id="version-0153" class="anchor" href="#version-0153" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.153</h4>
+
+<p>Changes to allow compatibility with SGPLVM and NCCA toolboxes.</p>
+
+<h4>
+<a id="version-0152" class="anchor" href="#version-0152" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.152</h4>
+
+<p>Bug fix from fgplvmReadFromFID where the values of model.m weren't being computed correctly.</p>
+
+<h4>
+<a id="version-0151" class="anchor" href="#version-0151" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.151</h4>
+
+<p>In this version results for the CMU Mocap data set from <a href="http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Taylor:motion06&amp;printAbstract=1">Taylor et al.</a> of subject 35 running and walking are included, as well as some minor changes to allow hierarchical GP-LVMs to be used.</p>
+
+<h4>
+<a id="version-015" class="anchor" href="#version-015" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.15</h4>
+
+<p>This version splits the Gaussian process portion into a new GP toolbox, the corresponding version is 0.1. Fixed bug in gpDynamicsExpandParam, gpDynamicsExractParam and gpDynamicsLogLikeGradient where 'fixInducing' option  was not being dealt with.</p>
+
+<p>Fixed bug in fgplvmCreate.m where the back constraints were set up, but the latent positions were not being set according to the back constraints in the returned model.</p>
+
+<h4>
+<a id="version-0141" class="anchor" href="#version-0141" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.141</h4>
+
+<p>Changed GP-LVM default optimiser to scg rather than conjgrad. Added fgplvmOptimiseSequence and dependent files. This is for optimising a test sequence in the latent space, for the case where there are dynamics on the model.</p>
+
+<h4>
+<a id="version-014" class="anchor" href="#version-014" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.14</h4>
+
+<p>Carl Ek implemented multiple sequences in the gpDynamics model used for dynamics in the GPLVM, this was refined and integrated by Neil.</p>
+
+<p>Fixed two bugs in gpPosteriorGradMeanVar which appeared if fitc was used or the scales on the outputs were non-zero. This in turn affected fgplvmOptimisePoint.</p>
+
+<p>Default under back constraints switched to not optimise towards a PCA initialisation.</p>
+
+<p>Fixed bug in fgplvmReadFromFID where the old form of fgplvmCreate was being called.</p>
+
+<h4>
+<a id="version-0132-1" class="anchor" href="#version-0132-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.132</h4>
+
+<p>Release 0.132 includes two speed improvements on the pitc approximation. Thanks to <a href="http://www.gatsby.ucl.ac.uk/~snelson/">Ed Snelson</a> for pointing out that it was unusually slow! New versions of the NDLUTIL and KERN toolbox are also required.</p>
+
+<p>Release 0.131 adds the ability to handle missing data and a new reversible dynamics model.</p>
+
+<p>Release 0.13 is a (hopefully) fairly stable base release for which several results in forthcoming papers will be created. Additional features are better decompartmentalisation of dynamics models, regularisation of inducing variable's inputs and introduction of fgplvmOptions and gpOptions for setting default options for the models.</p>
+
+<p>Release 0.11 is the first release that contains the fully independent training conditional approximation (Snelson and Ghahramani, Quinonero Candela and Rasmussen).  </p>
+
+<p>Release 0.1 is a pre-release to make some of the model functionality available. The some of the different approximations (such as fully independent training conditional and partially independent training conditional) are not yet implemented and the dynamics currently has no sparse approximations associated.</p>
+
+<p>This toolbox also implements back constraints (joint work with Joaquin Quinonero Candela). The mappings that can be used as back constraints are those described in the MLTOOLS toolbox.</p>
+
+<p>Alternative GP-LVM implementations from this site:</p>
+
+<p>The GP-LVM C++ software is available from <a href="https://github.com/SheffieldML/GPc/">here</a>.</p>
+
+<p>The original MATLAB version of the toolbox is available here <a href="http://staffwww.dcs.shef.ac.uk/people/N.Lawrence/gplvm/">here</a>.</p>
+
+<h2>
+<a id="examples-1" class="anchor" href="#examples-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h2>
+
+<h3>
+<a id="gp-lvm-1" class="anchor" href="#gp-lvm-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>GP-LVM</h3>
+
+<p>The three approximations outlined above can be used to speed up learning in the GP-LVM. They have the advantage over the IVM approach taken in the <a href="http://staffwww.dcs.shef.ac.uk/people/N.Lawrence/gplvm/">original GP-LVM toolbox</a> that the algorithm is fully convergent and the final mapping from latent space to data space takes into account all of the data (not just the points in the active set).</p>
+
+<p>As well as the new sparse approximation the new toolbox allows the GP-LVM to be run with dynamics as suggested by <a href="http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Wang:gpdm05&amp;printAbstract=1">Wang <i>et al.</i></a>.</p>
+
+<p>Finally, the new toolbox allows the incorporation of `back constraints' in learning. Back constraints force the latent points to be a smooth function of the data points. This means that points that are close in data space are constrained to be close in latent space. For the standard GP-LVM points close in latent space are constrained to be close in data space, but the converse is not true.</p>
+
+<p>Various combinations of back constraints and different approximations are used in the exmaples below.</p>
+
+<h3>
+<a id="oil-data" class="anchor" href="#oil-data" aria-hidden="true"><span class="octicon octicon-link"></span></a>Oil Data</h3>
+
+<p>The 'oil data' is commonly used as a bench mark for visualisation algorithms. For more details on the data see <a href="http://staffwww.dcs.shef.ac.uk/people/N.Lawrence/3PhaseData.html">this page</a>.</p>
+
+<p>The <a href="https://github.com/SheffieldML/GPc/">C++ implementation of the GP-LVM</a> has details on training the full GP-LVM with this data set. Here we will consider the three different approximations outlined above.</p>
+
+<h4>
+<a id="fitc-approximation" class="anchor" href="#fitc-approximation" aria-hidden="true"><span class="octicon octicon-link"></span></a>FITC Approximation</h4>
+
+<p>In all the examples we give there will be 100 points in the active set. We first considered the FITC approximation. The script <code>demOilFgplvm1.m</code> runs the FITC approximation giving the result on the left of the figure shown below.</p>
+
+<p></p><img src="./html/demOilFgplvm1.png" width="49%"><img src="./html/demOilFgplvm2.png" width="49%"><br>
+<i>Left</i>: GP-LVM on the oil data using the FITC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses.  One hundred inducing variables are used. <i>Right</i>: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.
+
+<p>Back constraints can be added to each of these approximations. In the example on the right we used a back constraint given by a multi-layer perceptron with 15 hidden nodes. This example can be recreated with <code>demOilFgplvm2.m</code>.</p>
+
+<h4>
+<a id="dtc-approximation" class="anchor" href="#dtc-approximation" aria-hidden="true"><span class="octicon octicon-link"></span></a>DTC Approximation</h4>
+
+<p>The other approximations can also be used, in the figures below we give results from the DTC approximation. The can be recreated using <code>demOil3.m</code> and <code>demOil4.m</code>.</p>
+
+<p></p><img src="./html/demOilFgplvm3.png" width="49%"><img src="./html/demOilFgplvm4.png" width="49%"><br>
+<i>Left</i>: GP-LVM on the oil data using the DTC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses.  One hundred inducing variables are used. <i>Right</i>: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.
+
+<h4>
+<a id="pitc-approximation" class="anchor" href="#pitc-approximation" aria-hidden="true"><span class="octicon octicon-link"></span></a>PITC Approximation</h4>
+
+<p>We also show results using the PITC approximation, these results can be recreated using the scripts <code>demOilFgplvm5.m</code> and <code>demOilFgplvm6.m</code>.</p>
+
+<p></p><img src="./html/demOilFgplvm5.png" width="49%"><img src="./html/demOilFgplvm6.png" width="49%"><br>
+<i>Left</i>: GP-LVM on the oil data using the PITC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses.  One hundred inducing variables are used. <i>Right</i>: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.
+
+<h4>
+<a id="variational-dtc-approximation" class="anchor" href="#variational-dtc-approximation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Variational DTC Approximation</h4>
+
+<p>Finally we also show results using the variational DTC approximation of Titsias, these results can be recreated using the scripts <code>demOilFgplvm7.m</code> and <code>demOilFgplvm8.m</code>.</p>
+
+<p></p><img src="./html/demOilFgplvm7.png" width="49%"><img src="./html/demOilFgplvm8.png" width="49%"><br>
+<i>Left</i>: GP-LVM on the oil data using the variational DTC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses.  One hundred inducing variables are used. <i>Right</i>: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.
+
+<h3>
+<a id="back-constraints-and-dynamics" class="anchor" href="#back-constraints-and-dynamics" aria-hidden="true"><span class="octicon octicon-link"></span></a>Back Constraints and Dynamics</h3>
+
+<p>First we will demonstrate the dynamics functionality of the toolbox. We raw x-y-z values from a motion capture data set, the <code>Figure Run 1</code> example available <a href="http://accad.osu.edu/research/mocap/mocap_data.htm">from Ohio State University</a>. To run without dynamics use the script:</p>
+
+<div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt; </span>demStickFgplvm1</pre></div>
+
+<p>The results are given on the left of the figure below.</p>
+
+<p></p><img src="./html/demStickFgplvm1.png" width="49%"><br>
+GP-LVM on the motion capture data without dynamics in the latent space. 
+
+<p>Notice that the sequence (which is a few strides of a man running) is split into several sub-sequences. These sub-sequences are aligned to the strides of the man. By introducing a dynamics prior, we can force the sequence to link up. Samples from the dynamics prior used are shown in the plot below.</p>
+
+<p></p><img src="./html/dynamicsSamp1.png" width="49%"><img src="./html/dynamicsSamp2.png" width="49%"><br>
+<img src="./html/dynamicsSamp3.png" width="49%"><img src="./html/dynamicsSamp4.png" width="49%">
+Samples from the dynamics prior which is placed over the latent space. This prior has <i>Left</i>: GP-LVM on the motion capture data without dynamics in the latent space. <i>Right</i>: GP-LVM with dynamics. Samples from the dynamics prior used are given in the figure above.
+
+<p>This prior is used in the model to obtain the results below,</p>
+
+<div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt; </span>demStickFgplvm2</pre></div>
+
+<p></p><img src="./html/demStickFgplvm2.png" width="49%"><br>
+GP-LVM with dynamics. Samples from the dynamics prior used are given in the figure above.
+
+<p>Note now the circular form of the latent space. </p>
+
+<p>Back constraints can also be used to achieve a similar effect,</p>
+
+<div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt; </span>demStickFgplvm3</pre></div>
+
+<p></p><img src="./html/demStickFgplvm3.png" width="49%"><br>
+GP-LVM with back constraints. A RBF kernel mapping was used to form the back constraints with the inverse width set to 1e-4 (<i>i.e.</i>length scale set to 100).
+
+<h3>
+<a id="loop-closure-in-robotics" class="anchor" href="#loop-closure-in-robotics" aria-hidden="true"><span class="octicon octicon-link"></span></a>Loop Closure in Robotics</h3>
+
+<p>In on-going work with Dieter Fox and Brian Ferris at the University of Washington we are interested in loop closure for robotic navigation, included as an example is a data set of a robot completing a loop while reading wireless access point signal strengths. To produce a neat track and close the loop it turns out it is necessary to use dynamics and back constraints as seen in the images below. These results can be recreated with <code>demRobotWireless1.m</code> through <code>demRobotWireless4.m</code>.</p>
+
+<p></p><img src="./html/demRobotWireless1.png" width="49%"><img src="./html/demRobotWireless2.png" width="49%"><br>
+<img src="./html/demRobotWireless3.png" width="49%"><img src="./html/demRobotWireless4.png" width="49%"><br>
+Use of back constraints and dynamics to obtain loop closure in a robot navigation example. <i>Top Left</i>: GP-LVM without back constraints or dynamics, <i>Top right</i>: GP-LVM with back constraints, no dynamics, <i>Bottom Left</i>: GP-LVM with dynamics, no back constraints, <i>Bottom right</i>: GP-LVM with back constraints and dynamics. 
+
+<h3>
+<a id="vocal-joystick-and-vowel-data" class="anchor" href="#vocal-joystick-and-vowel-data" aria-hidden="true"><span class="octicon octicon-link"></span></a>Vocal Joystick and Vowel Data</h3>
+
+<p>Another ongoing piece of work with Jeff Bilmes and Jon Malkin involves embedding vowel sounds in a two dimensional space as part of <a href="http://ssli.ee.washington.edu/vj">vocal joystick</a> system. Jon has provided a simple data set of 2,700 examples of different vowels. These are embedded in a two dimensional latent space with and without back constraints.</p>
+
+<p></p><img src="./html/demVowels2.png" width="49%"><img src="./html/demVowels3.png" width="49%"><br>
+<i>Left</i>: embedding of the vowel data without back constraints, <i>Right</i>: embedding of the vowel data with back constraints. <i>/a/</i> - red cross, <i>/ae/</i> - green circle, <i>/ao/</i> - blue plus, <i>/e/</i> - cyan asterix, <i>/i/</i> - magenta square, <i>/ibar/</i> - yellow diamond, <i>/o/</i> - red down triangle, <i>/schwa/</i> - green up triangle, <i>/u/</i> - blue left triangle.
+
+
+<h3>
+<a id="larger-human-motion-data-sets" class="anchor" href="#larger-human-motion-data-sets" aria-hidden="true"><span class="octicon octicon-link"></span></a>Larger Human Motion Data Sets</h3>
+
+<p>For <a href="http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Lawrence:larger07&amp;printAbstract=1">an AISTATS paper</a> we recreated an experiment from <a href="http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Taylor:motion06&amp;printAbstract=1">Taylor <em>et al.</em>'s NIPS paper</a>. They created a data set from a motion capture data in the <a href="http://mocap.cs.cmu.edu">CMU data base</a> of running and walking. The data set can now be recreated using the <a href="/~neill/datasets/">DATASETS toolbox</a>. We repeated missing data experiments by Taylor et al.. The model learning for these experiments can be recreated with:</p>
+
+<div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt; </span>demCmu35gplvm1</pre></div>
+
+<p>for the four dimensional latent space, <code>demCmu35gplvm2</code> for the three dimensional latent space and <code>demCmu35gplvm3</code> for the five dimensional latent space. The test data reconstruction can then be performed for all models with <code>demCmu35gplvmReconstruct</code>. Taylor <i>et al.</i>'s nearest neighbour results can be recreated using <code>demCmu35TaylorNearestNeighbour</code>.</p>
+
+<p>Data was pre-processed by mapping angles to be between -180 and 180 and scaling the data such that the variance of each dimension was one.
+The quality of the trained model was evaluated using a missing data problem with a test sequence of data. The model was required to fill in either upper body angles or right leg angles. Results for the GP-LVM and nearest neighbour in both scaled space and original angle space are given in the table below.
+</p>
+
+<table>
+<tr>
+<td></td>
+<td align="center">Leg</td>
+<td align="center">Leg</td>
+<td align="center">Body</td>
+<td align="center">Body</td>
+</tr>
+<tr>
+<td></td>
+<td align="center">Cumulative</td>
+<td align="center">RMS</td>
+<td align="center">Cumulative</td>
+<td align="center">RMS</td>
+</tr>
+<tr>
+<td></td>
+<td align="center">Scaled</td>
+<td align="center">Angles</td>
+<td align="center">Scaled</td>
+<td align="center">Angles</td>
+</tr>
+<tr>
+<td>GP-LVM (<i>q</i>=3)</td>
+<td align="right">11.4</td>
+<td align="right">3.40</td>
+<td align="right"><b>16.9</b></td>
+<td align="right"><b>2.49</b></td>
+</tr>
+<tr>
+<td>GP-LVM (<i>q</i>=4)</td>
+<td align="right"><b>9.7</b></td>
+<td align="right"><b>3.38</b></td>
+<td align="right">20.7</td>
+<td align="right">2.72</td>
+</tr>
+<tr>
+<td>GP-LVM (<i>q</i>=5)</td>
+<td align="right">13.4</td>
+<td align="right">4.25</td>
+<td align="right">23.4</td>
+<td align="right">2.78</td>
+</tr>
+<tr>
+<td>Scaled NN</td>
+<td align="right">13.5</td>
+<td align="right">4.44</td>
+<td align="right">20.8</td>
+<td align="right">2.62</td>
+</tr>
+<tr>
+<td>Nearest Neighbour</td>
+<td align="right">14.0</td>
+<td align="right">4.11</td>
+<td align="right">30.9</td>
+<td align="right">3.20</td>
+</tr>
+</table>
+
+<p></p>
+
+<p>The cumulative scaled error is a recreation of the error reported in Taylor <i>et al.</i> which was the average (across angles) cumulative sum (across time) of the squared errors in the down-scaled (<i>i.e.</i> variance one) space of angles. We also present the root mean squared angle error for each joint which we find to be a little easier to interpret.</p>
+
+<p>Taylor <i>et al.</i> used a slightly different representation of
+the data set which included the absolute <i>x</i> and <i>z</i>
+position of the root node and rotation around the <i>y</i>-axis. For
+this data set, this information does help, principally because the
+subject seems to start in roughly the same position at the beginning
+of each sequence. However, in general absolute position will not help,
+so we discarded it in favour of a representation of these values in
+terms of differences between frames. Finally Taylor <i>et al.</i>
+concatenated two frames to form each data point for the model. We
+chose not to do this as we wanted to test the ability of the Gaussian
+process dynamics to fully recreate the data set. There results are given in their paper and summarised below.</p>
+
+<p></p>
+
+<table>
+<tr>
+<td></td>
+<td align="center">Leg</td>
+<td align="center">Body</td>
+</tr>
+<tr>
+<td></td>
+<td align="center">Cumulative</td>
+<td align="center">Cumulative</td>
+</tr>
+<tr>
+<td></td>
+<td align="center">Scaled</td>
+<td align="center">Scaled</td>
+</tr>
+<td>Binary Latent Variable Model</td>
+<td align="right"><b>11.7</b></td>
+<td align="right"><b>8.8</b></td>
+
+<tr>
+<td>Scaled NN</td>
+<td align="right">22.2</td>
+<td align="right">20.5</td>
+</tr>
+</table>
+
+<p></p>
+Finally we show a plot of reconstructions of two of the angles in the data.
+
+<p></p><img src="./html/demCmu35gplvmLegReconstruct1_8.png" width="50%"><img src="./html/demCmu35gplvmLegReconstruct1_9.png" width="50%">
+Prediction for first two angles of the right hip joint (see plots in <a href="http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Taylor:motion06&amp;printAbstract=1">Taylor <i>et al.</i></a> for comparison). Dotted line is nearest neighour in scaled space, dashed line is GP-LVM with 4-D latent space.
+
+<h1>
+<a id="ivm" class="anchor" href="#ivm" aria-hidden="true"><span class="octicon octicon-link"></span></a>IVM</h1>
+
+<h2>
+<a id="examples-2" class="anchor" href="#examples-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h2>
+
+<h2>
+<a id="demclassification1" class="anchor" href="#demclassification1" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>demClassification1</code>
+</h2>
+
+<p>The first example given is <code>demClassification1</code> which is a simple classification data set, where only one direction of the input is relevant in determining the decision boundary. An ARD MLP kernel is used in combination with a linear kernel. The ARD parameters in the linear and MLP kernel are constrained to be the same by the line:</p>
+
+<div class="highlight highlight-matlab"><pre><span class="pl-c">% Constrain the ARD parameters in the MLP and linear kernels to be the same.</span>
+
+model.kern = cmpndTieParameters(model.kern, {[<span class="pl-c1">4</span>, <span class="pl-c1">7</span>], [<span class="pl-c1">5</span>, <span class="pl-c1">8</span>]});</pre></div>
+
+<p>The resulting classification is shown below.</p>
+
+<p></p><img src="./html/demClassificationOne1.png"><br>
+
+<p>Decision boundary from the <code>demClassification1.m</code> example. Postive class is red circles, negative class green crosses and active points are yellow dots. Decision boundary shown in red, contours at 0.25 and 0.75 probability shown in blue.</p>
+
+<h2>
+<a id="demclassification2" class="anchor" href="#demclassification2" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>demClassification2</code>
+</h2>
+
+<p>The second example attempts to learn a Gaussian process give data that is sampled from a Gaussian process. The code is <code>demClassification2</code>. The underlying Gaussian process is based on an RBF kernel with variance inverse width 10. The IVM learns an inverse width of 15 and gives the classification is shown below.</p>
+
+<p></p><img src="./html/demClassificationTwo2.png"><br>
+
+<p>Decision boundary from the <code>demClassification2.m</code> example. Postive class is red circles, negative class green crosses and active points are yellow dots. Decision boundary shown in red, contours at 0.25 and 0.75 probability shown in blue.</p>
+
+<h2>
+<a id="demclassification3" class="anchor" href="#demclassification3" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>demClassification3</code>
+</h2>
+
+<p>This example is similar to <code>demClassification2</code>, only now there is a null category region in the data (a region of low data density between the classes). The example is for comparison with the null category noise model.</p>
+
+<p></p><img src="./html/demClassificationThree3.png"><br>
+
+<p>Decision boundary from the <code>demClassification3.m</code> example. Postive class is red circles, negative class green crosses and active points are yellow dots. Decision boundary shown in red, contours at 0.25 and 0.75 probability shown in blue.</p>
+
+<h2>
+<a id="demordered1" class="anchor" href="#demordered1" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>demOrdered1</code>
+</h2>
+
+<p>In this example the ordered categorical noise model is used (ordinal regression). The data is a simple data set for which a linear one dimensional model suffices. The IVM is given a combination of an RBF and linear kernel with ARD.For the ordered categorical case there are several parameters associated with the noise model (in particular the category widths), these are learnt too. The model learns that the system is linear and only one direction is important. The resulting classification is given below.</p>
+
+<p></p><img src="./html/demOrderedOne1.png"><br>
+
+<p>Decision boundary from the <code>demOrdered1.m</code> example. Class 0 - red cross, Class 1 - green circles, Class 2 - blue crosses, Class 3 - cyan asterisks, Class 4 - pink squares, Class 5 - yellow diamonds. Class 6 - red triangles. Active points are yellow dots, note that because the kernel is linear by now the most informative points tend to be at the extrema. Decision boundaries shown in red, contours at 0.25 and 0.75 probability shown in blue.</p>
+
+<h2>
+<a id="demordered2" class="anchor" href="#demordered2" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>demOrdered2</code>
+</h2>
+
+<p>Another example with the ordered categorical noise model, here the data is radial, the categories being along the radius of a circle. The IVM is given a combination of an RBF and linear kernel with ARD. Again there are several parameters associated with the noise model, and these are learnt using <code>ivmOptimiseNoise</code>. The resulting classification is given below.</p>
+
+<p></p><img src="./html/demOrderedTwo2.png"><br>
+
+<p>Decision boundary from the <code>demOrdered1.m</code> example. Class 0 - red cross, Class 1 - green circles, Class 2 - blue crosses, Class 3 - cyan asterisks, Class 4 - pink squares, Class 5 - yellow diamonds. Class 6 - red triangles. Active points are yellow dots, note that because the kernel is linear by now the most informative points tend to be at the extrema. Decision boundaries shown in red, contours at 0.25 and 0.75 probability shown in blue.</p>
+
+<h2>
+<a id="demregression1" class="anchor" href="#demregression1" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>demRegression1</code>
+</h2>
+
+<p>In this example the Gaussian noise model is used (standard regression). The data is sampled from a Gaussian process, only one input dimension is important. The IVM is given a combination of an RBF and linear kernel with ARD. The resulting regression is given below.</p>
+
+<p></p><img src="./html/demRegressionOne1.png"><br>
+
+<p>Regression from the example <code>demRegression1.m</code>. Targets are red dots and active points are yellow dots.</p>
+
+<h2>
+<a id="demregression2" class="anchor" href="#demregression2" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>demRegression2</code>
+</h2>
+
+<p>A second example with Gaussian noise, sampled from a Gaussian process, but this time with differing length scales.</p>
+
+<p></p><img src="./html/demRegressionTwo2.png"><br>
+
+<p>Regression from the example <code>demRegression2.m</code>. Targets are red dots and active points are yellow dots.</p>
+
+<h2>
+<a id="benchmark-data-sets" class="anchor" href="#benchmark-data-sets" aria-hidden="true"><span class="octicon octicon-link"></span></a>Benchmark Data Sets</h2>
+
+<p>The function <code>ivmGunnarData</code> allows you to test the IVM on Gunnar Raetsch's benchmark data sets. Download the data sets, <a href="http://ida.first.fraunhofer.de/projects/bench/benchmarks.htm">from here</a> and expand the ringnorm data set into '$DATASETSDIRECTORY/gunnar/ringnorm'. Then run the following script.</p>
+
+<div class="highlight highlight-matlab"><pre>
+<span class="pl-k">&gt;&gt;</span>ivmGunnarData(<span class="pl-s"><span class="pl-pds">'</span>ringnorm<span class="pl-pds">'</span></span>, <span class="pl-c1">1</span>, {<span class="pl-s"><span class="pl-pds">'</span>rbf<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>bias<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>white<span class="pl-pds">'</span></span>}, <span class="pl-c1">1</span>, <span class="pl-c1">100</span>)
+
+...
+
+
+
+Final model<span class="pl-k">:</span>
+
+IVM <span class="pl-c1">Model</span><span class="pl-k">:</span>
+
+ Noise <span class="pl-c1">Model</span><span class="pl-k">:</span>
+
+  Probit bias <span class="pl-c1">on</span> process <span class="pl-c1">1</span><span class="pl-k">: </span><span class="pl-c1">0.0439</span>
+
+  Probit Sigma2<span class="pl-k">: </span><span class="pl-c1">0.0000</span>
+
+ Kernel<span class="pl-k">:</span>
+
+  Compound kernel<span class="pl-k">:</span>
+
+    RBF inverse <span class="pl-c1">width</span><span class="pl-k">: </span><span class="pl-c1">0.0866</span> (<span class="pl-k">length</span> <span class="pl-c1">scale</span> <span class="pl-c1">3.3984</span>)
+
+    RBF variance<span class="pl-k">: </span><span class="pl-c1">1.2350</span>
+
+    Bias Variance<span class="pl-k">: </span><span class="pl-c1">8.2589</span>
+
+    White Noise Variance<span class="pl-k">: </span><span class="pl-c1">0.0000</span>
+
+Test Error <span class="pl-c1">0.0183</span>
+
+<span class="pl-c1">Model</span> likelihood<span class="pl-k"> -</span><span class="pl-c1">56.7120</span>
+</pre></div>
+
+<p>You can try any of the data sets by replacing ringnorm with the relevant data set (note that they don't all work with only 100 active points inas in the example above, for example the 'banana' data set needs 200 active points to get a reasonable result,</p>
+
+<div class="highlight highlight-matlab"><pre>
+<span class="pl-k">&gt;&gt; </span>ivmGunnarData(<span class="pl-s"><span class="pl-pds">'</span>banana<span class="pl-pds">'</span></span>, <span class="pl-c1">1</span>, {<span class="pl-s"><span class="pl-pds">'</span>rbf<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>bias<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>white<span class="pl-pds">'</span></span>}, <span class="pl-c1">1</span>, <span class="pl-c1">200</span>)
+
+...
+
+Final model<span class="pl-k">:</span>
+
+IVM <span class="pl-c1">Model</span><span class="pl-k">:</span>
+
+ Noise <span class="pl-c1">Model</span><span class="pl-k">:</span>
+
+  Probit bias <span class="pl-c1">on</span> process <span class="pl-c1">1</span><span class="pl-k">: </span><span class="pl-c1">0.1067</span>
+
+  Probit Sigma2<span class="pl-k">: </span><span class="pl-c1">0.0000</span>
+
+ Kernel<span class="pl-k">:</span>
+
+  Compound kernel<span class="pl-k">:</span>
+
+    RBF inverse <span class="pl-c1">width</span><span class="pl-k">: </span><span class="pl-c1">1.6411</span> (<span class="pl-k">length</span> <span class="pl-c1">scale</span> <span class="pl-c1">0.7806</span>)
+
+    RBF variance<span class="pl-k">: </span><span class="pl-c1">0.2438</span>
+
+    Bias Variance<span class="pl-k">: </span><span class="pl-c1">0.0000</span>
+
+    White Noise Variance<span class="pl-k">: </span><span class="pl-c1">0.0148</span>
+
+Test Error <span class="pl-c1">0.1129</span>
+
+<span class="pl-c1">Model</span> likelihood <span class="pl-c1">175.3588</span>
+</pre></div>
+
+<p></p><img src="./html/demBanana1.png"><br>
+
+<p>Decision boundary from the banana example. Postive class is red circles, negative class green crosses and active points are yellow dots. Decision boundary shown in red, contours at 0.25 and 0.75 probability shown in blue.</p>
+
+<h2>
+<a id="null-category-noise-model" class="anchor" href="#null-category-noise-model" aria-hidden="true"><span class="octicon octicon-link"></span></a>Null Category Noise Model</h2>
+
+<h2>
+<a id="examples-3" class="anchor" href="#examples-3" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h2>
+
+<p>The toy data example in the papers can be recreated using:</p>
+
+<div class="highlight highlight-matlab"><pre>
+<span class="pl-k">&gt;&gt; </span>demUnlabelled1
+</pre></div>
+
+<p>and leads to the decision boundary given below. A standard IVM based classifier can be run on the data using</p>
+
+<div class="highlight highlight-matlab"><pre>
+<span class="pl-k">&gt;&gt; </span>demUnlabelled2
+</pre></div>
+
+<p></p><img src="./html/demUnlabelledOne1.png"><img src="./html/demUnlabelledOne2.png"><br>
+
+<p>The null category noise model run on toy data. <i>Top</i>: using the null category, the true nature of the decision boundary is recovered. <i>Bottom</i>: the standard IVM, does not recover the true decision boundary.</p>
+
+<p>The other USPS digit classification example given in the NIPS paper can be re-run with:</p>
+
+<div class="highlight highlight-matlab"><pre>
+<span class="pl-k">&gt;&gt; </span>demThreeFive
+</pre></div>
+
+<p>Be aware that this code can take some time to run. The results, in the form of averaged area under ROC curve against probability of missing label, can be plotted using</p>
+
+<div class="highlight highlight-matlab"><pre>
+<span class="pl-k">&gt;&gt; </span>demThreeFiveResults
+</pre></div>
+
+<p></p><br>Plot of average area under ROC curve against probability of label being present. The red line is the standard IVM based classifier, the blue dotted line is the null category noise model based classifier, the green dash-dot line is the a normal SVM and the mauve dashed line is the transductive SVM.
+
+<p></p>
+
+<h1>
+<a id="mltools" class="anchor" href="#mltools" aria-hidden="true"><span class="octicon octicon-link"></span></a>MLTOOLS</h1>
+
+<p>Fix to re-enable HGPLVM visualization.</p>
+
+<h4>
+<a id="version-0138" class="anchor" href="#version-0138" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.138</h4>
+
+<p>Minor tweak of model write result and model load result to allow specification of the data loading function.</p>
+
+<h4>
+<a id="version-0137" class="anchor" href="#version-0137" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.137</h4>
+
+<p>Release for release of VARGPLVM with dynamics.</p>
+
+<h4>
+<a id="version-0136-1" class="anchor" href="#version-0136-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.136</h4>
+
+<p>Minor mods.</p>
+
+<h4>
+<a id="version-0135-1" class="anchor" href="#version-0135-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.135</h4>
+
+<p>Minor mods.</p>
+
+<h4>
+<a id="version-0134-1" class="anchor" href="#version-0134-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.134</h4>
+
+<p>Added pmvu model.</p>
+
+<h4>
+<a id="version-0133-1" class="anchor" href="#version-0133-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.133</h4>
+
+<p>Added functionality for writing model files using modelDeconstruct commands to keep written files smaller.</p>
+
+<h4>
+<a id="version-0132-2" class="anchor" href="#version-0132-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.132</h4>
+
+<p>Add click visualise functionality for LVM visualization, Laplacian eigenmaps and wrapper for MVU. </p>
+
+<h4>
+<a id="version-01311" class="anchor" href="#version-01311" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.1311</h4>
+
+<p>Minor change to lvmScatterPlot to fix bug caused when minimum values were positive.</p>
+
+<h4>
+<a id="version-0131-1" class="anchor" href="#version-0131-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.131</h4>
+
+<p>Minor changes to toolbox to fix reading in of C++ code.</p>
+
+<h4>
+<a id="version-013-1" class="anchor" href="#version-013-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.13</h4>
+
+<p>Added paramNameRegularExpressionLookup.m to regular expression match a parameter name in a model and return the associated indices. paramNameReverseLookup.m does the same thing but for the specific parameter name. Also added multimodel type, which allows for multi-task style learning of existing models. Added linear mapping type of model. </p>
+
+<h4>
+<a id="version-01291" class="anchor" href="#version-01291" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.1291</h4>
+
+<p>Changes to modelOutputGrad.m, modelOut.m, kbrOutputGrad.m, kbrExpandParam.m, modelOptimise.m to allow compatibility with SGPLVM and NCCA toolboxes. Added a preliminary coding of LLE. </p>
+
+<p>Note that to run the LLE code you will need to download the file "eigs_r11.m"</p>
+
+<h4>
+<a id="version-0129" class="anchor" href="#version-0129" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.129</h4>
+
+<p>Several changes for ICML dimensionality reduction tutorial, including adding density networks and GTM code as well as various latent variable visualisation code such as lvmTwoDPlot and lvmVisualise.</p>
+
+<p>Added dnet type model for GTM and density networks. Added various lvm helper files for doing nearest neighbour and plotting results for latent variable models. Added lmvu and mvu embedding wrapper. Added ppca model type. Added output gradients for model out functions (for magnification factor computation in dnet models). Added helpers for reading various models from FID mapmodel, matrix etc.).
+Added rbfOutputGradX and visualisation for spring dampers type.</p>
+
+<h4>
+<a id="version-0128" class="anchor" href="#version-0128" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.128</h4>
+
+<p>Fixed Viterbi alignment algorithm, thanks to Raquel Urtasun for pointing out the problems with it.</p>
+
+<p>Carl Henrik Ek added embeddings with maximum variance unfolding (landmark and normal) to the toolbox. Also several files modified by Carl Henrik to allow a single output dimension of a model to be manipulated.</p>
+
+<h4>
+<a id="version-0127" class="anchor" href="#version-0127" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.127</h4>
+
+<p>Minor modifications including adding file modelAddDynamics to replace fgplvmAddDynamics.</p>
+
+<h4>
+<a id="version-0126" class="anchor" href="#version-0126" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.126</h4>
+
+<p>Modified kbrParamInit to scale alpha weights and biases by number of data. Added 'dynamicsSliderChange' to lvmClassVisualise to allow visulisation of models with 'gpTime' style-dynamics.</p>
+
+<h4>
+<a id="version-0125" class="anchor" href="#version-0125" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.125</h4>
+
+<p>Added multimodel for learning multiple indepedent models with shared parameters.</p>
+
+<h4>
+<a id="version-0124" class="anchor" href="#version-0124" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.124</h4>
+
+<p>Added periodic RBF network and model gradient checker.</p>
+
+<h4>
+<a id="version-0123" class="anchor" href="#version-0123" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.123</h4>
+
+<p>Minor release in line with IVM toolbox 0.4.</p>
+
+<h4>
+<a id="version-0122" class="anchor" href="#version-0122" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.122</h4>
+
+<p>Added Hessian code for base model type and for MLP. Added Viterbi alignment code, viterbiAlign.</p>
+
+<h4>
+<a id="version-0121" class="anchor" href="#version-0121" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.121</h4>
+
+<p>Various minor bug fixes and changes which seem to have gone undocumented.</p>
+
+<h4>
+<a id="version-012-1" class="anchor" href="#version-012-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.12</h4>
+
+<p>Extended model type to be a generic container module for optimising any model. Added model test for testing a created model. The code is still in a bit of flux though with some design decisions not made and some code untested.</p>
+
+<h4>
+<a id="version-0111" class="anchor" href="#version-0111" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.111</h4>
+
+<p>Fixed bug in kbr where bias parameter fields where still being referred to as b.Also acknowledged the fact that the isomap graph may not be fully connected in isomapEmbed, but don't yet deal with it properly. Finally added lleEmbed.m for wrapping the lle code.</p>
+
+<h4>
+<a id="version-011-1" class="anchor" href="#version-011-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.11</h4>
+
+<p>Updated release for operation with FGPLVM toolbox 0.13. Structure of model creation changed and functions of the form modelOptions.m included for setting default options of the various machine learning models.</p>
+
+<h4>
+<a id="version-01-1" class="anchor" href="#version-01-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.1</h4>
+
+<p>The first release of the toolbox with various wrappers for NETLAB functions. Also latent variable model visualisation code was moved into this toolbox.</p>
+
+<h2>
+<a id="examples-4" class="anchor" href="#examples-4" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h2>
+
+<h3>
+<a id="lle" class="anchor" href="#lle" aria-hidden="true"><span class="octicon octicon-link"></span></a>LLE</h3>
+
+<h4>
+<a id="the-swiss-roll" class="anchor" href="#the-swiss-roll" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Swiss Roll</h4>
+
+<p>The `swiss roll data' is often used to illustrate dimensionality reduction algorithms despite the fact that it is very unrepresentative of real data sets.</p>
+
+<p>In the first examples we use 1000 data points to represent the swiss roll,  <code>demSwissRollLle1.m</code> and  <code>demSwissRollLle2.m</code>.</p>
+
+<p></p><img src="./html/demSwissRollLle1.png" width="49%"><img src="./html/demSwissRollLle2.png" width="49%"><br>
+<i>Left</i>:  LLE on the swiss roll data using 4 neighbours. <i>Right</i>: LLE on the swiss roll data using 8 neighbours.
+
+<p>In the next examples we use 3000 data points to represent the swiss roll,  <code>demSwissRollFullLle1.m</code> and  <code>demSwissRollFullLle2.m</code>.</p>
+
+<p></p><img src="./html/demSwissRollFullLle1.png" width="49%"><img src="./html/demSwissRollFullLle2.png" width="49%"><br>
+<i>Left</i>:  LLE on the full swiss roll data using 4 neighbours. <i>Right</i>: LLE on the full swiss roll data using 8 neighbours.
+
+<h4>
+<a id="oil-data-1" class="anchor" href="#oil-data-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Oil Data</h4>
+
+<p>The `oil data' is commonly used as a bench mark for visualisation algorithms. For more details on the data see <a href="http://staffwww.dcs.shef.ac.uk/people/N.Lawrence/3PhaseData.html">this page</a>.</p>
+
+<p>In these examples we used the 1000 data points from the training data for the oil,  <code>demOilLle1.m</code> and  <code>demOilLle2.m</code>.</p>
+
+<p></p><img src="./html/demOilLle1.png" width="49%"><img src="./html/demOilLle2.png" width="49%"><br>
+<i>Left</i>:  LLE on the oil data using 4 neighbours, 9 errors when using classification by nearest neighbour in the latent space. <i>Right</i>: LLE on the oil data using 8 neighbours, 151 errors when using classification by nearest neighbour in the latent space.
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		          <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-62971049-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
