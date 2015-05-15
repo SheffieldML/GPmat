@@ -4,7 +4,7 @@ MATLAB Motion Capture Toolbox
 
 The MATLAB motion capture toolbox allows loading and playing of BVH and acclaim files in MATLAB.
 
-Warning this toolbox seems to be affected by a possible bug in MATLAB 7.4, see [here](../matlabBug.html) for details.
+Warning this toolbox seems to be affected by a possible bug in MATLAB 7.4, see [here](http://inverseprobability.com/2009/02/04/note-on-a-bug-in-matlab/) for details.
 
 
 Release Information
@@ -14,7 +14,7 @@ Release Information
 
 As well as downloading the MOCAP software you need to obtain the toolboxes specified below. **These can be downloaded using the *same* password you get from registering for the MOCAP software.**
 
-**Toolbox**           | **Version** |
+**Toolbox**           | **Version** |  
 [NDLUTIL](../ndultil) | 0.161       |
 
 Missing a file for reading the poser data.
@@ -49,17 +49,28 @@ Examples
 --------
 
 Once downloaded you can try loading a BVH data set from the examples directory.
-`>> [skel, channels, frameLength] = bvhReadFile('examples/Swagger.bvh');  >>`
+
+```matlab
+>> [skel, channels, frameLength] = bvhReadFile('examples/Swagger.bvh');
+>>
+```
 
 This motion capture data was taken from Ohio State University's [ACCAD](http://accad.osu.edu/research/mocap/mocap_data.htm) centre.
 
 You can now play the data using the command
 
-`>> skelPlayData(skel, channels, frameLength);`
+```matlab
+>> skelPlayData(skel, channels, frameLength);
+```
 
 You can also download and read data in the Acclaim format (asf/amc). In the example below we load a nd play data from the [CMU Graphics Lab Motion Capture Database](http://mocap.cs.cmu.edu). We use the tenth example from the 86th subject. We have assumed that you have placed the files in the `examples` subdirectory.
 
-`>> skel = acclaimReadSkel('examples/86.asf');  >> [channels, skel] = acclaimLoadChannels('examples/86_10.amc', skel);  >> skelPlayData(skel, channels, 1/120);  >> `
+```matlab
+>> skel = acclaimReadSkel('examples/86.asf');
+>> [channels, skel] = acclaimLoadChannels('examples/86_10.amc', skel);
+>> skelPlayData(skel, channels, 1/120);
+>>
+```
 
 Where the frames per second is given on the CMU site as 120.
 
