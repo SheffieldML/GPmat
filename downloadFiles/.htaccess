@@ -1,5 +1,0 @@
-AuthName 'Sheffield ML Group Software Access'
-AuthUserFile  /home/neil/.htpasswd
-AuthType Basic
-
-Require valid-user
