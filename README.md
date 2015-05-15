@@ -15,7 +15,7 @@ Release Information
 As well as downloading the MOCAP software you need to obtain the toolboxes specified below. **These can be downloaded using the *same* password you get from registering for the MOCAP software.**
 
 **Toolbox**           | **Version** |  
-[NDLUTIL](../ndultil) | 0.161       |
+[NDLUTIL](https://github.com/lawrennd/ndlutil) | 0.161       |
 
 Missing a file for reading the poser data.
 

@@ -1,0 +1,3 @@
+[submodule "ndlutil"]
+	path = ndlutil
+	url = https://github.com/lawrennd/ndlutil.git
