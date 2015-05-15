@@ -1,0 +1,46 @@
+ y = cumGaussian(x)
+
+ options = defaultOptions;
+
+ y = gaussOverDiffCumGaussian(x, xp, order)
+
+ y = gaussSamp(Sigma, numSamps)
+
+ symbol = getSymbols(number)
+
+ y = gradLogCumGaussian(x)
+
+ y = invCumGaussian(x)
+
+ y=invSigmoid(x)
+
+ y = lnCumGaussian(x)
+
+ f = lnDiffCumGaussian(u, uprime)
+
+ [ld, U] = logdet(A, U)
+
+ [vers, depend] = ndlutilVers
+
+ y = ngaussian(x)
+
+ str = numsf2str(num, sf);
+
+ [Ainv, UC] = pdinv(A, UC);
+
+ prepareplot(limitVal, figNo)
+
+ [area, rocPointX, rocPointY] = rocCurve(outputs, labels)
+
+ y = sigmoid(x)
+
+ str = num2strSigFig(num, sf);
+
+ parts = stringSplit(string, separator)
+
+ [columnNames, data] = tableRead(fileName, separator)
+
+ t = traceProduct(A, B)
+
+ zeroAxes(axesHandle, tickRatio, fontSize, fontName)
+

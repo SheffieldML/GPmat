@@ -1,0 +1,24 @@
+ y = cumGaussian(x)
+
+ y = gaussOverDiffCumGaussian(x, xp, order)
+
+ y = gradLogCumGaussian(x)
+
+ y = invCumGaussian(x)
+
+ y=invsigmoid(x)
+
+ y = lnCumGaussian(x)
+
+ [ld, U] = logdet(A, U)
+
+ y = ngaussian(x)
+
+ [Ainv, UC] = pdinv(A, UC);
+
+ prepareplot(limitVal, figNo)
+
+ [area, rocPointX, rocPointY] = rocCurve(outputs, labels)
+
+ y = sigmoid(x)
+

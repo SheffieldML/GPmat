@@ -1,0 +1,116 @@
+NDLUTIL software
+Version 0.156		Saturday 03 Feb 2007 at 13:32
+Copyright (c) 2007 Neil D. Lawrence
+
+This toolbox implements some generic functions used by other toolboxes. Originally it was spun out of the IVM 0.221 toolbox.
+
+Version 0.156
+-------------
+
+Moved treeFindParents, treeFindChildren and treeSwapNode into this toolbox from MOCAP toolbox.
+
+Version 0.155
+-------------
+
+Moved lnCumGaussSum from NCNM toolbox to this toolbox as part of merge of NCNM toolbox into NOISE and IVM toolboxes.
+
+
+Version 0.154
+-------------
+
+Added code for checking Hessian matrices.
+
+Version 0.153
+-------------
+
+Added comments to files and changed jitChol, pdinv and logdet so that
+they can return any jitter added. If the return the jitter then they don't emit a warning.
+
+Version 0.152
+-------------
+
+There was a sign error in lnDiffCumGaussian. This has been fixed. The sign error was replicated in the NOISE and PRIOR toolboxes (a case of two wrongs making a 'right'). This means that earlier versions of this toolbox are incompatible with versions of PRIOR before 0.131 and versions of NOISE before 0.131.
+
+Version 0.151
+-------------
+
+Sped up the sparseDiag command using spdiag, this makes the FGPLVM code run much faster.
+
+Version 0.15
+------------
+
+Fixed inconsistencies in logdet and pdinv and corrected the amount of jitter that is added at first try. Placed the jitter addition in a new file jitChol which is called by both functions. 
+
+Added kldivGaussian for computing Gaussian Kullback-Leibler divergences.
+
+Added deg2rad for converting degrees to radians.
+
+Version 0.142
+-------------
+
+Added sparseDiag and moved data loading methods into the new DATASETS toolbox. 
+
+Version 0.14
+------------
+
+Moved in lvmLoadData and mappingLoadData as generic methods of loading in data sets. 
+
+Version 0.131 Release Notes
+---------------------------
+
+Added files getline.m and tokenise.m which are string utilities for reading and processing files.
+
+Version 0.13 Release Notes
+--------------------------
+
+pdinv now adds jitter which is proportional to the mean of the diagonal elements of the matrix.
+
+
+
+
+MATLAB Files
+------------
+
+Matlab files associated with the toolbox are:
+
+cumGaussian.m: Cumulative distribution for Gaussian.
+defaultOptions.m: The default options for optimisation.
+deg2rad.m: Transform degrees to radians.
+gaussOverDiffCumGaussian.m: A Gaussian over difference of cumulative Gaussians.
+gaussSamp.m: Sample from a Gaussian with a given covariance.
+getline.m: Get a line from a file.
+getSymbols.m: Get a cell array of different plot symbols.
+gradientCheck.m: Check gradients of objective function.
+gradLogCumGaussian.m: Gradient of the log of the cumulative Gaussian.
+hessianCheck.m: Check Hessian of objective function.
+invCumGaussian.m: Computes inverse of the cumulative Gaussian.
+invSigmoid.m: The inverse of the sigmoid function.
+jitChol.m: Do a Cholesky decomposition with jitter.
+kldivGaussian.m: Give the KL divergence between two Gaussians.
+lnCumGaussian.m: log cumulative distribution for the normalised Gaussian.
+lnCumGaussSum.m: The log of the weighted sum of two cumulative Gaussians.
+lnDiffCumGaussian.m: Log of the difference between two cumulative Gaussians.
+logdet.m: The log of the determinant when argument is positive definite.
+ndlutilToolboxes.m: Loads in toolboxes for NDLUTIL.
+negLogLogit.m: Function which returns the negative log of the logistic function.
+ngaussian.m: Compute a Gaussian with mean 0 and variance 1.
+numsf2str.m: Convert number to a string with a number of significant digits.
+pdinv.m: Invert a positive definite matrix.
+preparePlot.m: Helper function for tidying up the plot before printing.
+rocCurve.m: Draw ROC curve and return labels.
+scatterPlot.m: 2-D scatter plot of labelled points.
+sigmoid.m: The sigmoid function
+sparseDiag.m: Create a diagonal matrix that is sparse from a vector.
+stack.m: Return column stacked vector of given matrix.
+stringSigFigs.m: Convert number to a string with a number of significant digits.
+stringSplit.m: Return separate parts of a string.
+tableRead.m: Read in data which has column titles in the first line and separated values in each other line.
+tokenise.m: Split a string into separate tokens.
+traceProduct.m: Returns the trace of the product of two matrices.
+treeFindChildren.m: Given a tree that lists only parents, add children.
+treeFindParents.m: Given a tree that lists only children, add parents.
+treeFindRoots.m: Return indices of all root nodes in a tree structure.
+treeGetWidths.m: give width of each level of tree.
+treeSwapNode.m: Swap two nodes in the tree structure array.
+xlogy.m: z = x*log(y) returns zero if x=y=0
+zeroAxes.m: A function to move the axes crossing point to the origin.
