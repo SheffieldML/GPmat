@@ -1,8 +1,3 @@
-|----------------------------------|----------------------------------------------------------|------------------------------------------------------------------|
-| [Neil's homepage](/~neill/)  |   | [research group](http://intranet.cs.man.ac.uk/mlo/)  |   | [MLO Researchers](http://intranet.cs.man.ac.uk/mlo/people/)  |   |
-
-|-----|---------------------------------------------------------------------------------------------------------|
-|     | ![University Logo](http://www.cs.manchester.ac.uk/ai/pictures/icons/est1824.gif "Manchester Est. 1824") |
 
 MATLAB Motion Capture Toolbox
 =============================
@@ -11,7 +6,6 @@ The MATLAB motion capture toolbox allows loading and playing of BVH and acclaim 
 
 Warning this toolbox seems to be affected by a possible bug in MATLAB 7.4, see [here](../matlabBug.html) for details.
 
-The MOCAP software can be downloaded [here](/neill-bin/software/downloadForm.cgi?toolbox=mocap).
 
 Release Information
 -------------------
@@ -20,9 +14,8 @@ Release Information
 
 As well as downloading the MOCAP software you need to obtain the toolboxes specified below. **These can be downloaded using the *same* password you get from registering for the MOCAP software.**
 
-|---------------------------------------------------|-------------|
-| **Toolbox**                                       | **Version** |
-| [NDLUTIL](/~neill/ndlutil/downloadFiles/vrs0p161) | 0.161       |
+**Toolbox**           | **Version** |
+[NDLUTIL](../ndultil) | 0.161       |
 
 Missing a file for reading the poser data.
 
@@ -71,8 +64,4 @@ You can also download and read data in the Acclaim format (asf/amc). In the exam
 Where the frames per second is given on the CMU site as 120.
 
 Page updated on Tue Oct 6 17:26:28 2009
-| [Disclaimer](http://www.manchester.ac.uk/aboutus/documents/disclaimer/ "Disclaimer") | [Privacy](http://www.manchester.ac.uk/aboutus/documents/privacy/ "Privacy") | [Copyright notice](http://www.manchester.ac.uk/aboutus/documents/copyright/ "Copyright Notice") | [Accessibility](http://www.manchester.ac.uk/aboutus/documents/accessibility/ "Accessibility") | [Freedom of information](http://www.manchester.ac.uk/aboutus/documents/foi/ "Freedom of information") | [Feedback](http://www.manchester.ac.uk/aboutus/contact/feedback/ "Feedback") |
-
-Please contact <webmaster.cs@manchester.ac.uk> with comments and suggestions
-
 
