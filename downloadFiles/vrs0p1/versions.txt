@@ -1,4 +1,0 @@
-File versionlist for the MOCAP toolbox version 0.1 Friday, Jul 29, 2005 at 13:29:08
-
-stickModify.m	 vs 1.1	 Sat Jan  1 19:31:47 2005
-stickVisualise.m	 vs 1.1	 Fri Dec 31 00:01:30 2004
