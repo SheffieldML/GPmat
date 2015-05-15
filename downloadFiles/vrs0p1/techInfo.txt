@@ -1,0 +1,29 @@
+ xyz = bvh2xyz(bvhStruct, channels)
+ function theta = deg2rad(omega)
+
+ connection = bvhConnectionMatrix(bvhStruct);
+
+ bvhModify(handle, channels, bvhStruct, padding)
+ function [vals, connect] = wrapAround(vals, lim, connect);
+
+ bvhPlayData(bvhStruct, channels, frameLength)
+
+ bvhPlayFile(fileName, position)
+
+ [bvhStruct, channels, frameLength] = bvhReadFile(fileName)
+ function tree = findChildren(tree)
+ function channels = channelsAngles(channels, bvhStruct);
+
+ handle = bvhVisualise(channels, bvhStruct, padding)
+
+ bvhWriteFile(fileName, bvhStruct, channels, frameLength)
+ function printedNodes = printNode(fid, j, bvhStruct, printedNodes, ...
+                                   depth, channels);
+ function prePart = computePrePart(depth);
+
+ rotMat = rotationMatrix(xangle, yangle, zangle, order);
+
+ stickModify(handle, values, connect)
+
+ handle = stickVisualise(vals, connect)
+
