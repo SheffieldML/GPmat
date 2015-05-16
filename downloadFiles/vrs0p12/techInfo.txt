@@ -1,0 +1,11 @@
+ model = cmpndTieParameters(model, paramsList)
+
+ y = expTransform(x, transform)
+
+ y = negLogLogitTransform(x, transform)
+
+ model = optimiseParams(component, optimiser, objective, ...
+%                                 gradient, options, model);
+
+ y = sigmoidTransform(x, transform)
+

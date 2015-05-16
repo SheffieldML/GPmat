@@ -1,0 +1,21 @@
+ model = cmpndTieParameters(model, paramsList)
+
+ y = expBound(x, transform)
+
+ y = expTransform(x, transform)
+
+ y = gradFactLinearBound(x)
+
+ y = invLinearBound(x)
+
+ y = linearBound(x, transform)
+
+ y = negLogLogitTransform(x, transform)
+
+ model = optimiseParams(component, optimiser, objective, ...
+%                                 gradient, options, model, prior);
+
+ y = sigmoidBound(x)
+
+ y = sigmoidTransform(x, transform)
+
