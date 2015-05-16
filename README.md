@@ -10,39 +10,47 @@ Release Information
 
 As well as downloading the KERN software you need to obtain the toolboxes specified below. **These can be downloaded using the *same* password you get from registering for the KERN software.**
 
-|--------------------------------------------------------------------------|-------------|
-| **Toolbox**                                                              | **Version** |
-| [OPTIMI](http://www.cs.man.ac.uk/~neill/optimi/downloadFiles/vrs0p132)   | 0.132       |
-| [NDLUTIL](http://www.cs.man.ac.uk/~neill/ndlutil/downloadFiles/vrs0p162) | 0.162       |
-| [NETLAB](http://www.cs.man.ac.uk/~neill/netlab/downloadFiles/vrs3p3)     | 3.3         |
-| [ERFCXZ](http://www.cs.man.ac.uk/~neill/erfcxz/downloadFiles/vrs0p001)   | 0.001       |
-| [ERFZ](http://www.cs.man.ac.uk/~neill/erfz/downloadFiles/vrs0p001)       | 0.001       |
+|--------------------------------------------|-------------|
+| **Toolbox**                                | **Version** |
+| [OPTIMI](/optimi/downloadFiles/vrs0p132)   | 0.132       |
+| [NDLUTIL](/ndlutil/downloadFiles/vrs0p162) | 0.162       |
+| [NETLAB](/netlab/downloadFiles/vrs3p3)     | 3.3         |
+| [ERFCXZ](/erfcxz/downloadFiles/vrs0p001)   | 0.001       |
+| [ERFZ](/erfz/downloadFiles/vrs0p001)       | 0.001       |
 
 Added diag covariance which uses the inputs as a diagonal covariance function (takes a one dimensional input only). Useful for having heteroschedastic noise. And index covariance functions which return a value if the two input indices are identical, and zero otherwise. Also includes Jaakko's NDDISIM and NDSIM covariance functions.
+
 ### Version 0.226
 
 Added velotrans covariance function which allows a moving field type covariance function with a constant velocity. Added rbfperiodic2 for periodic covariances with learnable period. Added various multioutput covariance functions for switched latent force models.
+
 ### Version 0.225
 
 Updates from Mauricio for the latest release of the MULTIGP toolbox.
+
 ### Version 0.224
 
 Added disimSample and simSample for sampling from these multioutput covariance functions. Michalis added kernel types rbfard2 and linard2 which use a slightly different formulation of the ARD parameters.
+
 ### Version 0.223
 
 Minor fix of "ard" kernel which somehow had a kernel computation bit placed in the parameter initialization --- cut and past mistake at some point.
 ### Version 0.222
 
 Removed division by kernel variance in kernels for computing the variance of the kernel. It causes numerical problems when the variance is small. Also changed mlp kernels so that the default variance distant from the origin is 1 instead of pi/2.
+
 ### Version 0.221
 
 Fixed code for reading in kernels from C++ files.
+
 ### Version 0.22
 
 Added Wiener kernel and various kernels for multi output kernels including white noise being propagated through the first and second order differential equation.
+
 ### Version 0.21
 
 Compatibility changes for NCCA and SGPLVM toolboxes.
+
 ### Version 0.2
 
 Further minor updates to kern for working with the new gpsim code (corrected handling of white kernel in multiKern).
@@ -90,7 +98,9 @@ Examples
 
 This toolbox allows computation of several different kernels and their gradients. You can add kernels to the toolbox by creating versions of the relevant files. Once added, they can be tested using the `kernTest`. For example you can test the RBF kernel by writing
 
-`>> kernTest('rbf')`
+```matlab
+>> kernTest('rbf')
+```
 
 There are several kernels implemented, the ones that are being maintained for the latest release are:
 
@@ -109,7 +119,9 @@ Go to <http://www.g95.org/downloads.shtml> and download the binary version suita
 
 In MATLAB, write
 
-`  >>  mex -setup `
+```matlab
+>>  mex -setup
+```
 
 Then choose option 1 and make a copy `mexopts.sh` in your local directory. Change the name to `g95opts.sh` or whatever you prefer.
 
@@ -117,7 +129,8 @@ Modify myopts.sh following the instructions in <http://www.g95.org/howto.shtml#m
 
 When compiling in MATLAB, use the -f command to use your local `g95opts.sh` file, for example:
 
-`  >> mex -f myopts.sh lfmComputeUpsilonMatrix.f `
+```
+>> mex -f myopts.sh lfmComputeUpsilonMatrix.f
+```
 
 Page updated on Tue Aug 9 20:39:05 2011
-
