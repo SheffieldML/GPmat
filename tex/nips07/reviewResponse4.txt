@@ -1,4 +1,0 @@
-We will add some extra comments on type-II ML in the methods section - we agree it is a little hidden from view in section 2.3. 
-
-For NIPS we have focussed on describing the methodology, which is the most novel aspect of our work.  We agree that we now need to spend more time on validation of the results in collaboration with biologists. We expect a proper and rigorous evaluation of the approach to require a much longer exposition written in with our biological collaborators. The main point we wanted to get across in this paper is that there is a framework for learning the parameters in much less time than the bioinformatics literature currently suggests is necessary.
-

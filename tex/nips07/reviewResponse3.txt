@@ -1,5 +1,0 @@
-As far as computational advantage goes in the non-linear case, a key advantage of our approach is that our likelihood is differentiable. This allows us to make use of fast HMC sampling which Barenco et al couldn't use. 
-
-With regard to the MAP approximation, we fully agree that this is a very important point, but (in our opinion) it was beyond the scope of this paper in which our aim was to introduce the philosophy of the approach. We do have on-going work where we are implementing the full sampler mentioned.
-
-With regards to the toy problem, we agree that such examples very much improve the clarity of papers. In this case though,  we wanted to use as much space as possible to describe the methodology. In a longer paper we will present results from comparisons with simulated systems.
