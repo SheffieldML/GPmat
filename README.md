@@ -22,7 +22,7 @@ As well as downloading the IVM software you need to obtain the toolboxes specifi
 | [DATASETS](/datasets/downloadFiles/vrs0p131) | 0.131       |
 | [NOISE](/noise/downloadFiles/vrs0p14)        | 0.14        |
 
-Finally you will also need the [NETLAB toolbox](http://www.ncrg.aston.ac.uk/netlab/index.php) in your path and Anton Schwaighofer's SVM light MATLAB interface, available [here](http://ida.first.fraunhofer.de/~anton/software.html) to run the `demThreeFive` example which compares with [SVM light](http://svmlight.joachims.org/) version 5.00.
+Finally you will also need the [NETLAB toolbox](http://www.aston.ac.uk/eas/research/groups/ncrg/resources/netlab/downloads/) in your path and Anton Schwaighofer's SVM light MATLAB interface, available [here](http://staffwww.dcs.shef.ac.uk/people/N.Lawrence/software/svml_toolbox.html) to run the `demThreeFive` example which compares with [SVM light](http://svmlight.joachims.org/) version 5.00.
 
 Examples
 --------
