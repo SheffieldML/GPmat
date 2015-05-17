@@ -11,7 +11,7 @@ If you are looking for general Gaussian process implementations please check [he
 
 **Current release is 0.1211**.
 
-As well as downloading the GPSIM software you need to obtain the toolboxes specified below. **These can be downloaded using the *same* password you get from registering for the GPSIM software.**
+As well as downloading the GPSIM software you need to obtain the toolboxes specified below. 
 
 | **Toolbox**                                 | **Version** |
 |---------------------------------------------|-------------|
