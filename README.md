@@ -4,7 +4,7 @@ GP Single Input Motif Module Software
 
 This page describes examples of how to use the Gaussian process single input motif module modelling software (GPSIM).
 
-If you are looking for general Gaussian process implementations please check [here](http://inverseprobability.com/gpsoftware.html).
+If you are looking for general Gaussian process implementations please check [here](/gpsoftware.html).
 
 ### Release Information
 
@@ -13,20 +13,21 @@ If you are looking for general Gaussian process implementations please check [he
 
 As well as downloading the GPSIM software you need to obtain the toolboxes specified below. **These can be downloaded using the *same* password you get from registering for the GPSIM software.**
 
-|--------------------------------------------------------------------------|-------------|
-| **Toolbox**                                                              | **Version** |
-| [NETLAB](http://inverseprobability.com/netlab/downloadFiles/vrs3p3)      | 3.3         |
-| [OPTIMI](http://inverseprobability.com/optimi/downloadFiles/vrs0p132)    | 0.132       |
-| [NDLUTIL](http://inverseprobability.com/ndlutil/downloadFiles/vrs0p161)  | 0.161       |
-| [MLTOOLS](http://inverseprobability.com/mltools/downloadFiles/vrs0p1311) | 0.1311      |
-| [KERN](http://inverseprobability.com/kern/downloadFiles/vrs0p221)        | 0.221       |
-| [MINIMIZE](http://inverseprobability.com/minimize/downloadFiles/vrs0p2)  | 0.2         |
+| **Toolbox**                                 | **Version** |
+|---------------------------------------------|-------------|
+| [NETLAB](/netlab/downloadFiles/vrs3p3)      | 3.3         |
+| [OPTIMI](/optimi/downloadFiles/vrs0p132)    | 0.132       |
+| [NDLUTIL](/ndlutil/downloadFiles/vrs0p161)  | 0.161       |
+| [MLTOOLS](/mltools/downloadFiles/vrs0p1311) | 0.1311      |
+| [KERN](/kern/downloadFiles/vrs0p221)        | 0.221       |
+| [MINIMIZE](/minimize/downloadFiles/vrs0p2)  | 0.2         |
 
 Minor bug fix in demBarenco1.m
 
 #### Release 0.121
 
 Minor fixes of the code for dealing with white noise handling in multiKern.
+
 #### Release 0.12
 
 Release with scripts to recreate results in prepared journal paper.
@@ -49,7 +50,9 @@ For the moment there are two examples of the linear solution given in the toolbo
 
 To run the example write
 
-`>> demBarenco1 `
+```matlab
+>> demBarenco1
+```
 
 At the first time of running, it will take some time to load in the data from the excel spreadsheet files. The excel spreadsheets contain mmgMOS processed versions of the .cel files. This gives us a standard deviation associated with the expression level as well as the expression level itself. The .cel files are available on [ArrayExpress](http://www.ebi.ac.uk/arrayexpress/). Since they are in log space, they must first be transfered to non-log space. Once this process has been done, relevant profiles are extracted they are saved in a file called `./data/barencoPUMAdata.mat`. (Similarly, the associated data file for MAS5 pre-processing are saved in a file called `./data/barencoMASdata.mat`.) The variances and means computed are therefore the variance and mean of a log normal distribution. Obviously a Gaussian process can go negative but because the expressions are not in log space they can't go negative. This is clearly a weakness with this model.
 
@@ -75,7 +78,9 @@ There are three examples of the use of the MAP approximation, the first is `demB
 
 To run the example write
 
-`>> demBarencoMap1 `
+```matlab
+>> demBarencoMap1 
+```
 
 ![](./demBarencoMapMLPAct3Mlpmulti_profile1_slide.png)
  ![](./demBarencoMapMLPAct3Mlpmulti_profile2_slide.png)
@@ -90,7 +95,9 @@ For the moment there is only one example of the repression case given in the too
 
 To run the example write
 
-`>> demEcoliMap1 `
+```matlab
+>> demEcoliMap1 
+```
 
 ![](./demMapFullEcoliOptimInit4Translatemulti_profile1_slide.png)
 Plots of the predicted TF profile. Solid lines are mean predictions, dashed lines are two standard deviations of error.
@@ -116,7 +123,9 @@ The last example shows a simple cascade of differential equations. We applied th
 
 To run the example write
 
-`>> demGpdisimMef2 `
+```matlab
+>> demGpdisimMef2 
+```
 
 ![](./demMef2Dros2TF_profile_Rep1.png)
  ![](./demMef2Dros2TF_profile_Rep2.png)
