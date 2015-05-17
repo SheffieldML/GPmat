@@ -7,35 +7,40 @@ Background details for submitted software.
 
 We made use of software available from the University of Manchester. To operate our software you must also download the following toolboxes from that site.
 
-|-----------------------------------------------------------------------------|-------------|
-| **Toolbox**                                                                 | **Version** |
-| [DATASETS](http://www.cs.man.ac.uk/~neill/datasets/downloadFiles/vrs0p1371) | 0.1371      |
-| [OPTIMI](http://www.cs.man.ac.uk/~neill/optimi/downloadFiles/vrs0p132)      | 0.132       |
-| [NDLUTIL](http://www.cs.man.ac.uk/~neill/ndlutil/downloadFiles/vrs0p163)    | 0.163       |
-| [NETLAB](http://www.cs.man.ac.uk/~neill/netlab/downloadFiles/vrs3p3)        | 3.3         |
-| [MVU](http://www.cs.man.ac.uk/~neill/mvu/downloadFiles/vrs1p3)              | 1.3         |
-| [LMVU](http://www.cs.man.ac.uk/~neill/lmvu/downloadFiles/vrs1p3)            | 1.3         |
-| [LLE](http://www.cs.man.ac.uk/~neill/lle/downloadFiles/vrs1p0)              | 1.0         |
-| [JDQR](http://www.cs.man.ac.uk/~neill/jdqr/downloadFiles/vrs1p0)            | 1.0         |
-| [ISOMAP](http://www.cs.man.ac.uk/~neill/isomap/downloadFiles/vrs1p0)        | 1.0         |
-| [SEDUMI](http://www.cs.man.ac.uk/~neill/sedumi/downloadFiles/vrs1p21)       | 1.21        |
+| **Toolbox**                                   | **Version** |
+|-----------------------------------------------|-------------|
+| [DATASETS](/datasets/downloadFiles/vrs0p1371) | 0.1371      |
+| [OPTIMI](/optimi/downloadFiles/vrs0p132)      | 0.132       |
+| [NDLUTIL](/ndlutil/downloadFiles/vrs0p163)    | 0.163       |
+| [NETLAB](/netlab/downloadFiles/vrs3p3)        | 3.3         |
+| [MVU](/mvu/downloadFiles/vrs1p3)              | 1.3         |
+| [LMVU](/lmvu/downloadFiles/vrs1p3)            | 1.3         |
+| [LLE](/lle/downloadFiles/vrs1p0)              | 1.0         |
+| [JDQR](/jdqr/downloadFiles/vrs1p0)            | 1.0         |
+| [ISOMAP](/isomap/downloadFiles/vrs1p0)        | 1.0         |
+| [SEDUMI](/sedumi/downloadFiles/vrs1p21)       | 1.21        |
 
 Fix to re-enable HGPLVM visualization.
 #### Version 0.138
 
 Minor tweak of model write result and model load result to allow specification of the data loading function.
+
 #### Version 0.137
 
 Release for release of VARGPLVM with dynamics.
+
 #### Version 0.136
 
 Minor mods.
+
 #### Version 0.135
 
 Minor mods.
+
 #### Version 0.134
 
 Added pmvu model.
+
 #### Version 0.133
 
 Added functionality for writing model files using modelDeconstruct commands to keep written files smaller.
@@ -125,7 +130,7 @@ Examples
 
 #### The Swiss Roll
 
-The \`swiss roll data' is often used to illustrate dimensionality reduction algorithms despite the fact that it is very unrepresentative of real data sets.
+The 'swiss roll data' is often used to illustrate dimensionality reduction algorithms despite the fact that it is very unrepresentative of real data sets.
 
 In the first examples we use 1000 data points to represent the swiss roll, `demSwissRollLle1.m` and `demSwissRollLle2.m`.
 
@@ -137,7 +142,7 @@ In the next examples we use 3000 data points to represent the swiss roll, `demSw
  *Left*: LLE on the full swiss roll data using 4 neighbours. *Right*: LLE on the full swiss roll data using 8 neighbours.
 #### Oil Data
 
-The \`oil data' is commonly used as a bench mark for visualisation algorithms. For more details on the data see [this page](http://www.ncrg.aston.ac.uk/GTM/3PhaseData.html).
+The 'oil data' is commonly used as a bench mark for visualisation algorithms. For more details on the data see [this page](http://www.ncrg.aston.ac.uk/GTM/3PhaseData.html).
 
 In these examples we used the 1000 data points from the training data for the oil, `demOilLle1.m` and `demOilLle2.m`.
 
