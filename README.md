@@ -1,17 +1,16 @@
 Matlab Kernel Toolbox
 =====================
 
-The KERN software can be downloaded [here](http://www.cs.man.ac.uk/neill-bin/software/downloadForm.cgi?toolbox=kern).
 
 Release Information
 -------------------
 
 **Current release is 0.227**.
 
-As well as downloading the KERN software you need to obtain the toolboxes specified below. **These can be downloaded using the *same* password you get from registering for the KERN software.**
+As well as downloading the KERN software you need to obtain the toolboxes specified below. 
 
-|--------------------------------------------|-------------|
 | **Toolbox**                                | **Version** |
+|--------------------------------------------|-------------|
 | [OPTIMI](/optimi/downloadFiles/vrs0p132)   | 0.132       |
 | [NDLUTIL](/ndlutil/downloadFiles/vrs0p162) | 0.162       |
 | [NETLAB](/netlab/downloadFiles/vrs3p3)     | 3.3         |
@@ -35,6 +34,7 @@ Added disimSample and simSample for sampling from these multioutput covariance f
 ### Version 0.223
 
 Minor fix of "ard" kernel which somehow had a kernel computation bit placed in the parameter initialization --- cut and past mistake at some point.
+
 ### Version 0.222
 
 Removed division by kernel variance in kernels for computing the variance of the kernel. It causes numerical problems when the variance is small. Also changed mlp kernels so that the default variance distant from the origin is 1 instead of pi/2.
