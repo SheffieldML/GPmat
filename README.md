@@ -4,7 +4,7 @@ MATLAB Motion Capture Toolbox
 
 The MATLAB motion capture toolbox allows loading and playing of BVH and acclaim files in MATLAB.
 
-Warning this toolbox seems to be affected by a possible bug in MATLAB 7.4, see [here](http://inverseprobability.com/2009/02/04/note-on-a-bug-in-matlab/) for details.
+Warning this toolbox seems to be affected by a possible bug in MATLAB 7.4, see [here](/2009/02/04/note-on-a-bug-in-matlab/) for details.
 
 
 Release Information
@@ -12,10 +12,11 @@ Release Information
 
 **Current release is 0.136**.
 
-As well as downloading the MOCAP software you need to obtain the toolboxes specified below. **These can be downloaded using the *same* password you get from registering for the MOCAP software.**
+As well as downloading the MOCAP software you need to obtain the toolboxes specified below. 
 
-**Toolbox**           | **Version** |  
-[NDLUTIL](https://github.com/lawrennd/ndlutil) | 0.161       |
+| **Toolbox**                                | **Version** |  
+|--------------------------------------------|-------------|
+| [NDLUTIL](/ndlutil/downloadFiles/vrs0p161) | 0.161       |
 
 Missing a file for reading the poser data.
 
