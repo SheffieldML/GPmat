@@ -221,24 +221,10 @@ The quality of the trained model was evaluated using a missing data problem with
 <tbody>
 <tr class="odd">
 <td align="left"></td>
-<td align="left">Leg</td>
-<td align="left">Leg</td>
-<td align="left">Body</td>
-<td align="left">Body</td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="left">Cumulative</td>
-<td align="left">RMS</td>
-<td align="left">Cumulative</td>
-<td align="left">RMS</td>
-</tr>
-<tr class="odd">
-<td align="left"></td>
-<td align="left">Scaled</td>
-<td align="left">Angles</td>
-<td align="left">Scaled</td>
-<td align="left">Angles</td>
+<td align="left">Leg Cumulative Scaled</td>
+<td align="left">Leg RMS Angles</td>
+<td align="left">Body Cumulative Scaled</td>
+<td align="left">Body RMS Angles</td>
 </tr>
 <tr class="even">
 <td align="left">GP-LVM (<em>q</em>=3)</td>
@@ -290,18 +276,8 @@ Taylor *et al.* used a slightly different representation of the data set which i
 <tbody>
 <tr class="odd">
 <td align="left"></td>
-<td align="left">Leg</td>
-<td align="left">Body</td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="left">Cumulative</td>
-<td align="left">Cumulative</td>
-</tr>
-<tr class="odd">
-<td align="left"></td>
-<td align="left">Scaled</td>
-<td align="left">Scaled</td>
+<td align="left">Leg Cumulative Scaled</td>
+<td align="left">Body Cumulative Scaled</td>
 </tr>
 <tr class="even">
 <td align="left">Binary Latent Variable Model</td>
