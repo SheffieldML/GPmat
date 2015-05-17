@@ -655,121 +655,93 @@ Another ongoing piece of work with Jeff Bilmes and Jon Malkin involves embedding
 <center>
 
 <table>
-
-<tr>
-
-<td></td><td align="center">Leg</td><td align="center">Leg</td><td align="center">Body</td><td align="center">Body</td>
-
-</tr>
-
-<tr>
-
-<td></td><td align="center">Cumulative</td><td align="center">RMS</td><td align="center">Cumulative</td><td align="center">RMS</td>
-
-</tr>
-
-<tr>
-
-<td></td><td align="center">Scaled</td><td align="center">Angles</td><td align="center">Scaled</td><td align="center">Angles</td>
-
-</tr>
-
-<tr>
-
-<td>GP-LVM (<i>q</i>=3)</td><td align="right">11.4</td><td align="right">3.40</td><td align="right"><b>16.9</b></td><td align="right"><b>2.49</b></td>
-
-</tr>
-
-<tr>
-
-<td>GP-LVM (<i>q</i>=4)</td><td align="right"><b>9.7</b></td><td align="right"><b>3.38</b></td><td align="right">20.7</td><td align="right">2.72</td>
-
-</tr>
-
-<tr>
-
-<td>GP-LVM (<i>q</i>=5)</td><td align="right">13.4</b></td><td align="right">4.25</td><td align="right">23.4<td align="right">2.78</td>
-
-</tr>
-
-<tr>
-
-<td>Scaled NN</td><td align="right">13.5</b></td><td align="right">4.44</td><td align="right">20.8<td align="right">2.62</td>
-
-</tr>
-
-<tr>
-
-<td>Nearest Neighbour</td><td align="right">14.0</b></td><td align="right">4.11</td><td align="right">30.9<td align="right">3.20</td>
-
-</tr>
-
+  <tr>
+    <td></td>
+    <td align="center">Leg</td>
+    <td align="center">Leg</td>
+    <td align="center">Body</td>
+    <td align="center">Body</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td align="center">Cumulative</td>
+    <td align="center">RMS</td>
+    <td align="center">Cumulative</td>
+    <td align="center">RMS</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td align="center">Scaled</td>
+    <td align="center">Angles</td>
+    <td align="center">Scaled</td>
+    <td align="center">Angles</td>
+  </tr>
+  <tr>
+    <td>GP-LVM (<i>q</i>=3)</td>
+    <td align="right">11.4</td>
+    <td align="right">3.40</td>
+    <td align="right"><b>16.9</b></td>
+    <td align="right"><b>2.49</b></td>
+  </tr>
+  <tr>
+    <td>GP-LVM (<i>q</i>=4)</td>
+    <td align="right"><b>9.7</b></td>
+    <td align="right"><b>3.38</b></td>
+    <td align="right">20.7</td>
+    <td align="right">2.72</td>
+  </tr>
+  <tr>
+    <td>GP-LVM (<i>q</i>=5)</td>
+    <td align="right"><b>13.4</b></td>
+    <td align="right">4.25</td>
+    <td align="right">23.4</td>
+    <td align="right">2.78</td>
+  </tr>
+  <tr>
+    <td>Scaled NN</td><td align="right"><b>13.5</b></td><td align="right">4.44</td><td align="right">20.8</td><td align="right">2.62</td>
+  </tr>
+  <tr>
+    <td>Nearest Neighbour</td>
+    <td align="right"><b>14.0</b></td>
+    <td align="right">4.11</td>
+    <td align="right">30.9</td>
+    <td align="right">3.20</td>
+  </tr>
 </table>
-
 </center>
 
 <p>The cumulative scaled error is a recreation of the error reported in Taylor <i>et al.</i> which was the average (across angles) cumulative sum (across time) of the squared errors in the down-scaled (<i>i.e.</i> variance one) space of angles. We also present the root mean squared angle error for each joint which we find to be a little easier to interpret.
 
-
-
 <p>Taylor <i>et al.</i> used a slightly different representation of
-
 the data set which included the absolute <i>x</i> and <i>z</i>
-
 position of the root node and rotation around the <i>y</i>-axis. For
-
 this data set, this information does help, principally because the
-
 subject seems to start in roughly the same position at the beginning
-
 of each sequence. However, in general absolute position will not help,
-
 so we discarded it in favour of a representation of these values in
-
 terms of differences between frames. Finally Taylor <i>et al.</i>
-
 concatenated two frames to form each data point for the model. We
-
 chose not to do this as we wanted to test the ability of the Gaussian
-
 process dynamics to fully recreate the data set. There results are given in their paper and summarised below.
 
-
-
 <center>
-
 <table>
-
-<tr>
-
-<td></td><td align="center">Leg</td><td align="center">Body</td>
-
-</tr>
-
-<tr>
-
-<td></td><td align="center">Cumulative</td><td align="center">Cumulative</td>
-
-</tr>
-
-<tr>
-
-<td></td><td align="center">Scaled</td><td align="center">Scaled</td>
-
-</tr>
-
-<td>Binary Latent Variable Model</td><td align="right"><b>11.7</b></td><td align="right"><b>8.8</b></td>
-
-</tr>
-
-<tr>
-
-<td>Scaled NN</td><td align="right">22.2</td><td align="right">20.5</td>
-
-</tr>
-
+  <tr>
+    <td></td><td align="center">Leg</td><td align="center">Body</td>
+  </tr>
+  <tr>
+    <td></td><td align="center">Cumulative</td><td align="center">Cumulative</td>
+  </tr>
+  <tr>
+    <td></td><td align="center">Scaled</td><td align="center">Scaled</td>
+  </tr>
+  <tr>
+    <td>Binary Latent Variable Model</td><td align="right"><b>11.7</b></td><td align="right"><b>8.8</b></td>
+  </tr>
+  <tr>
+    <td>Scaled NN</td><td align="right">22.2</td><td align="right">20.5</td>
+  </tr>
 </table>
-
 </center>
 
 <p>Finally we show a plot of reconstructions of two of the angles in the data.
