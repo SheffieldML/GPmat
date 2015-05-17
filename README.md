@@ -11,8 +11,8 @@ Current release is 0.4.
 
 As well as downloading the IVM software you need to obtain the toolboxes specified below.
 
-|----------------------------------------------|-------------|
 | **Toolbox**                                  | **Version** |
+|----------------------------------------------|-------------|
 | [KERN](/kern/downloadFiles/vrs0p165)         | 0.165       |
 | [PRIOR](/prior/downloadFiles/vrs0p131)       | 0.131       |
 | [OPTIMI](/optimi/downloadFiles/vrs0p132)     | 0.132       |
