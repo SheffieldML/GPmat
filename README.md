@@ -8,10 +8,10 @@ Release Information
 
 **Current release is 0.1371**.
 
-As well as downloading the DATASETS software you need to obtain the toolboxes specified below. **These can be downloaded using the *same* password you get from registering for the DATASETS software.**
+As well as downloading the DATASETS software you need to obtain the toolboxes specified below. 
 
-|---------------------------------------------------|-------------|
-| **Toolbox**                                       | **Version** |
+| **Toolbox**                                | **Version** |
+|--------------------------------------------|-------------|
 | [NDLUTIL](/ndlutil/downloadFiles/vrs0p162) | 0.162       |
 
 Minor mods to lvmLoadData for Spellman data.
