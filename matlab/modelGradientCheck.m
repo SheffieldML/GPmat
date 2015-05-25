@@ -17,7 +17,6 @@ function modelGradientCheck(model, varargin)
 
 % MLTOOLS
 
-
 [params, names] = modelExtractParam(model);
 if length(names) == 0
   for i = 1:model.numParams
@@ -45,8 +44,6 @@ anal = modelGradient(origParams, model, varargin{:});
 
 delta = anal-diff;
 
-
-
 paramMaxDiff = max(max(abs(diff-anal)));
 if paramMaxDiff > 100*change
   l = 0;
@@ -69,6 +66,3 @@ if paramMaxDiff > 100*change
 
 end
 fprintf('Param max diff: %2.6f.\n', paramMaxDiff);
-
-
-

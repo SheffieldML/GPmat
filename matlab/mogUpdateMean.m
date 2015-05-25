@@ -14,9 +14,16 @@ function model = mogUpdateMean(model)
 % MLTOOLS
 
 for i = 1:model.m
-  for j = 1:model.d
-    model.mean(i, j) = model.posterior(:, i)'*model.Y(:, ...
-                                                      j)/sum(model.posterior(:, i));
-  end    
+  if sum(model.posterior(:, i)) ~= 0
+    for j = 1:model.d
+      model.mean(i, j) = model.posterior(:, i)'*model.Y(:, ...
+                                                        j)/sum(model.posterior(:, i));
+    end    
+  else
+    p = exp(model.lnposterior(:, i) - max(model.lnposterior(:, i)));
+    for j = 1:model.d
+      model.mean(i, j) = p'*model.Y(:, j)/sum(p);
+    end
+  end
 end
 

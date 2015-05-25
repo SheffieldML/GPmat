@@ -24,4 +24,5 @@ if model.isInfinite
   model.prior(2:end) = model.prior(2:end).*tmp(1:end-1);
 else
   model.prior = mean(model.posterior);
+  model.prior(find(model.prior==0))=1e-100;
 end

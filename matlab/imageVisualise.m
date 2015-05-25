@@ -17,7 +17,7 @@ function handle = imageVisualise(imageVals, imageSize, transpose, negative, ...
 %
 % COPYRIGHT : Neil D. Lawrence, 2003, 2004, 2006
 %
-% SEEALSO : imageModify, fgplvmResultsDynamic
+% SEEALSO : imageModify, lvmResultsDynamic
 
 % MLTOOLS
 
@@ -42,3 +42,4 @@ if scale
 else
   handle = image(imageData);
 end
+colormap gray

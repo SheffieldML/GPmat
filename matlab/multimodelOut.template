@@ -1,0 +1,16 @@
+function y = multimodelOut(model, x)
+
+% MULTIMODELOUT Compute the output of a MULTIMODEL model given the structure and input X.
+% FORMAT
+% DESC computes the model parameters for the multi-task learning wrapper
+% model given inputs associated with rows and columns.
+% ARG model : the model structure for which the output is computed.
+% ARG x : the input data.
+% RETURN y : the output results.
+%
+% SEEALSO : multimodelCreate, modelCompute, modelCreate, multimodelExpandParam, multimodelExtractParam
+%
+% COPYRIGHT : Neil D. Lawrence, 2007
+
+% MLTOOLS
+

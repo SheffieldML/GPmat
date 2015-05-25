@@ -20,6 +20,7 @@ function g = mlpOutputGrad(model, X)
 % COPYRIGHT : Neil D. Lawrence, 2006
 
 % MLTOOLS
+
 if length(model.hiddenDim) == 1
   g = mlpderiv(model, X);
 else

@@ -11,23 +11,53 @@ function model = modelTieParam(model, paramsList)
 % contains a vector of indices of parameters that should be
 % considered as one parameter. Each group of parameters in each
 % cell should obviously be mutually exclusive.
+% Alternatively each element of the cell array can be a string which
+% is interpreted as a regular expression of names of parameters
+% (as returned by modelExtractParam) to be tied.
 % RETURN model : the model with the parameters grouped together.
 %
 % SEEALSO : modelExtractParam, modeExpandParam, modelLogLikeGradients
 % 
-% COPYRIGHT : Neil D. Lawrence, 2003, 2006
+% COPYRIGHT : Neil D. Lawrence, 2003, 2006, 2008
+%
+% MODIFICATIONS: Antti Honkela, 2009
 
 % MLTOOLS
 
+if ~isfield(model, 'paramGroups')
+  if isfield(model, 'nParams')
+    model.paramGroups = speye(model.nParams);
+  elseif isfield(model, 'numParams')
+    model.paramGroups = speye(model.numParams);
+  else
+    error('Model does not list number of parameters.');
+  end
+end
 colToDelete = [];
-for i = 1:length(paramsList)
+try,
+  [params, names] = modelExtractParam(model);
+catch
+  try,
+    [params, names] = kernExtractParam(model);
+  catch
+    names = {};
+  end
+end
 
-  paramIndices=sort(paramsList{i});
+for i = 1:length(paramsList)
+  if ischar(paramsList{i}),
+    paramIndices=find(~cellfun('isempty', regexp(names, paramsList{i})));
+    if isempty(paramIndices),
+      warning(['No matches for parameter tie spec: ', paramsList{i}])
+    end
+  else
+    paramIndices=sort(paramsList{i});
+  end
   if any(paramIndices(1) == colToDelete)
     error('Parameter is already being tied')
   end
-  for j = 2:length(paramIndices)
 
+  for j = 2:length(paramIndices)
     model.paramGroups(paramIndices(j), paramIndices(1)) = 1;
     if any(paramIndices(j) == colToDelete)
       error('Parameter has already been tied')
@@ -35,7 +65,7 @@ for i = 1:length(paramsList)
     colToDelete = [colToDelete paramIndices(j)];
   end
 end
-
+  
 model.paramGroups(:, colToDelete) = [];
 if isfield(model, 'nParams')
   % Update to the new number of parameters.

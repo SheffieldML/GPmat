@@ -1,5 +1,73 @@
 This toolbox provides various machine learning tools, either through wrapping other toolboxes (such as NETLAB) or providing the tool directly. It was designed originally as part of splitting the GPLVM and FGPLVM toolboxes.
 
+Version 0.139
+-------------
+
+Fix to re-enable HGPLVM visualization.
+
+Version 0.138
+-------------
+
+Minor tweak of model write result and model load result to allow specification of the data loading function.
+
+Version 0.137
+-------------
+
+Release for latest version of VARGPLVM toolbox.
+
+Version 0.136
+-------------
+
+Minor Mods.
+
+Version 0.135
+-------------
+
+Minor mods.
+
+
+Version 0.134
+-------------
+
+Added pmvu model.
+
+Version 0.133
+-------------
+
+Added functionality for writing model files using modelDeconstruct commands to keep written files smaller.
+
+Version 0.132
+-------------
+
+Add click visualise functionality for LVM visualization, Laplacian eigenmaps and wrapper for MVU. 
+
+Version 0.1311
+--------------
+
+Minor change to lvmScatterPlot to fix bug caused when minimum values were positive.
+
+Version 0.131
+-------------
+
+Minor changes to toolbox to fix reading in of files written by C++ code.
+
+Version 0.13
+------------
+
+Added paramNameRegularExpressionLookup.m to regular expression match a parameter name in a model and return the associated indices. paramNameReverseLookup.m does the same thing but for the specific parameter name. Also added multimodel type, which allows for multi-task style learning of existing models. Added linear mapping type of model. 
+
+Version 0.1291
+--------------
+
+Changes to modelOutputGrad.m, modelOut.m, kbrOutputGrad.m, kbrExpandParam.m, modelOptimise.m to allow compatibility with SGPLVM and NCCA toolboxes. Added a preliminary coding of LLE.
+
+
+Version 0.129
+-------------
+
+Added dnet type model for GTM and density networks. Added various lvm helper files for doing nearest neighbour and plotting results for latent variable models. Added lmvu and mvu embedding wrapper. Added ppca model type. Added output gradients for model out functions (for magnification factor computation in dnet models). Added helpers for reading various models from FID mapmodel, matrix etc.).
+Added rbfOutputGradX and visualisation for spring dampers type.
+
 Version 0.128
 -------------
 

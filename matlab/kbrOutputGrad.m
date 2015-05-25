@@ -1,31 +1,25 @@
 function g = kbrOutputGrad(model, X, dim)
 
 % KBROUTPUTGRAD Evaluate derivatives of KBR model outputs with respect to parameters.
+% FORMAT
+% DESC evaluates the derivates of a kernel based regression
+% outputs with respect to the parameters of the multi-layer
+% perceptron. 
+% ARG model : the model for which the derivatives are to be
+% computed.
+% ARG X : the input data locations where the gradients are to be
+% computed.
+% RETURN g : the gradient of the outputs of the kernel based regression with
+% respect to each of the parameters. The size of the matrix is number of
+% data x number of parameters x number of outputs of the model.
 %
-%	Description:
+% SEEALSO : kbrCreate, kbrderiv
 %
-%	G = KBROUTPUTGRAD(MODEL, X) evaluates the derivates of a kernel
-%	based regression model outputs with respect to the parameters of the
-%	kernel based regression
-%	 Returns:
-%	  G - the gradient of the outputs of the kernel based regression
-%	   with respect to each of the parameters. The size of the matrix is
-%	   number of data x number of parameters x number of outputs of the
-%	   model.
-%	 Arguments:
-%	  MODEL - the model for which the derivatives are to be computed.
-%	  X - the input data locations where the gradients are to be
-%	   computed.
-%	
+% COPYRIGHT : Neil D. Lawrence, 2008
 %
-%	See also
-%	KBRCREATE, KBRLOGLIKEGRADIENTS
+% MODIFICATIONS : Carl Henrik Ek, 2008
 
-
-%	Copyright (c) 2005, 2006 Neil D. Lawrence
-% 	kbrOutputGrad.m version 1.4
-
-
+% MLTOOLS
 
 numData = size(X, 1);
 if(nargin<=2)

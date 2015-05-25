@@ -1,30 +1,21 @@
 function model = kbrExpandParam(model, params,dim);
 
 % KBREXPANDPARAM Create model structure from KBR model's parameters.
+% FORMAT
+% DESC takes a vector of KBR weights and centres and places them in their
+% respective positions in the KBR model. 
+% ARG model : the model in which the weights are to be placed.
+% ARG params : a vector of the weights to be placed in the model.
+% RETURN model : the model with the weights distributed in the
+% correct places.
 %
-%	Description:
+% SEEALSO : kbrunpak, kbrCreate, kbrExtractParam
 %
-%	MODEL = KBREXPANDPARAM(MODEL, PARAM) returns a kernel based
-%	regression model structure filled with the parameters in the given
-%	vector. This is used as a helper function to enable parameters to be
-%	optimised in, for example, the NETLAB optimisation functions.
-%	 Returns:
-%	  MODEL - model structure with the given parameters in the relevant
-%	   locations.
-%	 Arguments:
-%	  MODEL - the model structure in which the parameters are to be
-%	   placed.
-%	  PARAM - vector of parameters which are to be placed in the model
-%	   structure.
-%	
+% COPYRIGHT : Neil D. Lawrence, 2008
 %
-%	See also
-%	KBRCREATE, KBREXTRACTPARAM, MODELEXPANDPARAM
-
-
-%	Copyright (c) 2005, 2006 Neil D. Lawrence
-% 	kbrExpandParam.m version 1.4
-
+% MODIFICATIONS : Carl Henrik Ek, 2008
+%
+% MLTOOLS
 
 if(nargin<3)
   startVal = 1;
