@@ -9,7 +9,7 @@ function ll = gpLogLikelihood(model)
 %
 % SEEALSO : gpCreate, gpLogLikeGradients, modelLogLikelihood
 %
-% COPYRIGHT : Neil D. Lawrence, 2005, 2006
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2009
 
 % GP
 
@@ -17,6 +17,13 @@ function ll = gpLogLikelihood(model)
 switch model.approx
  case 'ftc'
   % No approximation, just do a full computation on K.
+
+  % For very high D, we use the matrix S which is M*M'
+  if isfield(model, 'S')
+    ll = -0.5*(model.d*model.logDetK_uu + sum(sum(model.invK_uu.* ...
+                                                  model.S)));
+    return;
+  end
   ll = 0;
   for i = 1:size(model.m, 2)
     if ~isfield(model, 'isSpherical') | model.isSpherical
@@ -30,7 +37,7 @@ switch model.approx
       ll = ll - .5*model.logDetK_uu(i) - .5*m'*model.invK_uu{i}*m;
     end
   end
- case 'dtc'
+ case {'dtc', 'dtcvar'}
   % Deterministic training conditional
   if ~isfield(model, 'isSpherical') | model.isSpherical
     E = model.K_uf*model.m;
@@ -40,6 +47,9 @@ switch model.approx
                            - model.logDetK_uu +model.logdetA) ...
                   - (sum(sum(model.Ainv.*EET)) ...
                      -sum(sum(model.m.*model.m)))*model.beta);
+      if strcmp(model.approx, 'dtcvar')
+        ll = ll - model.d*0.5*sum(model.diagD);
+      end
     else
       error('Not implemented variable length beta yet.');
     end
@@ -56,6 +66,9 @@ switch model.approx
                        model.beta);
         if(isnan(ll))
           error('Log likelihood is NaN')
+        end
+        if strcmp(model.approx, 'dtcvar')
+          error('Not implemented dtcvar for non-spherical yet.');
         end
       else
         error('Not implemented variable length beta yet.');
@@ -177,3 +190,4 @@ end
 if model.learnScales
   ll = ll - sum(log(model.scale));
 end
+ll = ll - model.d*model.N/2*log(2*pi);

@@ -5,7 +5,7 @@ function m = gpComputeM(model)
 % DESC computes the matrix m (the scaled, bias and mean function
 % removed matrix of the targets), given the model.
 % ARG model : the model for which the values are to be computed.
-% ARG m : the scaled, bias and mean function removed values.
+% RETURN m : the scaled, bias and mean function removed values.
 %
 % SEEALSO : gpCreate, gpComputeAlpha, gpUpdateAD
 %
@@ -14,7 +14,7 @@ function m = gpComputeM(model)
 % GP 
 
 % Remove mean function value from m (if mean function present).
-if isfield(model, 'meanFunction') & ~isempty(model.meanFunction)
+if isfield(model, 'meanFunction') && ~isempty(model.meanFunction)
   m = model.y - modelOut(model.meanFunction, model.X);
 else
   m = model.y;

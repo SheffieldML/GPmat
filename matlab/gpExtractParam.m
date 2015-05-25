@@ -16,7 +16,7 @@ function [params, names] = gpExtractParam(model)
 %
 % SEEALSO : gpCreate, gpExpandParam, modelExtractParam
 %
-% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2007
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2007, 2009
 
 % GP
 
@@ -41,7 +41,7 @@ else
 end
 
 % Check if there is a mean function.
-if isfield(model, 'meanFunction') & ~isempty(model.meanFunction)
+if isfield(model, 'meanFunction') && ~isempty(model.meanFunction)
   if returnNames
     [meanFuncParams, meanFuncParamNames] = modelExtractParam(model.meanFunction);
     for i = 1:length(meanFuncParamNames)
@@ -79,8 +79,8 @@ switch model.approx
       names = {names{:}, betaParamNames{:}};
     end
   end
- case {'dtc', 'fitc', 'pitc'}
-  paramPart = [kernParams scaleParams meanFuncParams];
+ case {'dtc', 'dtcvar', 'fitc', 'pitc'}
+  paramPart = [kernParams meanFuncParams scaleParams];
   if returnNames
     names = {kernParamNames{:}, meanFuncParamNames{:}, ...
              scaleParamNames{:}};

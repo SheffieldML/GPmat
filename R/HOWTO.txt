@@ -1,0 +1,86 @@
+## The following is a list of packages necessary to run the gpToolkit
+## (gpLoadToolkit.R) in R, indented by dependency level, eg. bitops
+## should be installed first. Make sure to have installed the latest
+## version of each package from bottom to top (see instructions below):
+##	spam
+##	tigre
+##		mclust
+##		gplots
+##			gdata
+##				gtools
+##			caTools
+##				bitops
+
+## In a terminal, open an R session with sudo priviledges:
+sudo R
+
+## Then, enter the following in the R session:
+## NOTE: If spam cannot install due to a problem finding the gnu fortran compiler:
+## SESSION-WIDE:
+## > LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/4.6
+## > export LIBRARY_PATH
+## SYSTEM-WIDE:
+## > sudo kate /etc/environment ## then add LIBRARY_PATH="/usr/lib/gcc/x86_64-linux-gnu/4.6"
+install.packages("spam", dependencies=TRUE) 
+source("http://bioconductor.org/biocLite.R")
+biocLite("puma")
+biocLite("tigre")
+require(Matrix)
+
+install.packages("gptk", dependencies=TRUE) ## To load the latest released version of GPTK.
+## OR
+source("~/Dropbox/mlprojects/gp/R/R/gpLoadToolkit.R") ## ... include the internal version of the source code manually.
+gpLoadToolkit('~/Dropbox/mlprojects/gp/R/R/')
+gpTest() # run some tests
+demInterpolation() # run demo
+demRegression() # another demo
+demOptimiseGp() # and another demo
+demAutoOptimiseGp() # last demo
+
+####################################################################################
+#### To build the gptk R package from the 'mlprojects/gp/R/' folder: ######
+## First make sure documentation is complete. Antti's python function might help in that respect.
+## Edit '~/mlprojects/R/general/matlab_to_R_doc_converter.py' so that, for instance, BASEPATH='~/mlprojects/gp/matlab/.'
+## is the base path of the matlab code you wish to translate documentation for, and MANPATH='~/mlprojects/gp/R/man'
+## is the target path you want for the translated R manuals.
+## Then in a terminal, do for example:
+
+python ~/mlprojects/R/general/matlab_to_R_doc_converter.py -o gpCreate
+
+## Potential issues with the documentation files:
+## Make sure not to leave any latex-style comments in the .Rd files before package build via 'build'.
+## R 2.13.0 or higher does not like assignments in \usage sections.
+## Make sure all examples in \usage sections match exactly with the code, e.g. use  'only.values=TRUE', not 'only.values'.
+
+## Now, in an R session:
+
+source('~/Dropbox/mlprojects/gp/R/R/gpLoadToolkit.R')
+gpLoadToolkit('~/Dropbox/mlprojects/gp/R/R/') ## This will load up in memory all the package-related source files in 'mlprojects/gp/R/R/'.
+system('rm -R -f ~/gptk/') ## Remove any previous copies of '~/gptk/'.
+package.skeleton(name='gptk', path='~') ## The package skeleton folder [name] will be created in [path].
+system('rm ~/gptk/R/gpLoadToolkit.R') ## Remove gpLoadTookit() from '~/gptk/R/'.
+system('rm -R -f ~/gptk/man/') ## Overwrite skeleton man '~/gptk/man/' with proper man 'man/'.
+system('cp -R ~/Dropbox/mlprojects/gp/R/man/ ~/gptk/')
+system('cp -R ~/Dropbox/mlprojects/gp/R/inst/ ~/gptk/') ## Make sure to keep 'inst/doc/index.html' up-to-date. Then we place a copy of 'inst/' in '~/gptk/'.
+
+## Clean up.
+
+system('rm -R -f ~/gptk/man/.svn/') ## Remove hidden files related to the svn from every copied folder.
+system('rm -R -f ~/gptk/inst/.svn/')
+system('rm -R -f ~/gptk/inst/doc/.svn/')
+system('rm ~/gptk/R/*~') ## Remove backup files.
+system('rm ~/gptk/man/*~')
+system('rm ~/gptk/inst/doc/*~')
+system('rm ~/gptk/inst/doc/*.eps') ## Remove unnecessary .eps files.
+system('cp ~/Dropbox/mlprojects/gp/R/DESCRIPTION ~/gptk/') ## Make sure to keep 'DESCRIPTION' up-to-date. Then copy it over to '~/gptk/'.
+system('rm ~/gptk/Read-and-delete-me') ## Read, then remove 'Read-and-delete-me'.
+system('rm -R ~/gptk/data/') ## Remove 'data/'.
+q('no') ## Exit; no saving.
+
+## - In a terminal:
+cd ~
+rm -R gptk.Rcheck/
+R CMD build gptk ## Builds package.
+R CMD Rd2pdf --no-clean gptk 			## Takes care of some latex errors.
+R CMD check gptk ## Validates package.
+R CMD check --as-cran gptk

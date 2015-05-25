@@ -25,7 +25,7 @@ function [mu, covarSigma, factors] = gpPosteriorMeanCovar(model, X);
 %
 % SEEALSO : gpCreate, gpPosteriorMeanVar
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
+% COPYRIGHT : Neil D. Lawrence, 2006, 2009
 
 % GP
 
@@ -44,7 +44,7 @@ end
 switch model.approx
  case 'ftc'
   KX_star = kernCompute(model.kern, model.X, X);  
- case {'dtc', 'fitc', 'pitc'}
+ case {'dtc', 'dtcvar', 'fitc', 'pitc'}
   KX_star = kernCompute(model.kern, model.X_u, X);  
 end
 
@@ -56,7 +56,7 @@ if nargout > 1
     switch model.approx
      case 'ftc'
       Kinvk = model.invK_uu*KX_star;
-     case {'dtc', 'fitc', 'pitc'}
+     case {'dtc', 'dtcvar', 'fitc', 'pitc'}
       Kinvk = (model.invK_uu - (1/model.beta)*model.Ainv)*KX_star;
     end
     
@@ -77,7 +77,7 @@ if nargout > 1
       switch model.approx
        case 'ftc'
         Kinvk{i} = model.invK_uu{i}*KX_star;
-       case {'dtc', 'fitc', 'pitc'}
+       case {'dtc', 'dtcvar', 'fitc', 'pitc'}
         Kinvk{i} = (model.invK_uu - (1/model.beta)*model.Ainv{i})*KX_star;
       end      
       covarsig{i} = K - KX_star'*Kinvk{i};

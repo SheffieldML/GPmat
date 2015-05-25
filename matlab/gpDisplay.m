@@ -10,7 +10,7 @@ function gpDisplay(model, spaceNum)
 %
 % SEEALSO : gpCreate, modelDisplay.
 %
-% COPYRIGHT : Neil D. Lawrence, 2005, 2006
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2009
 
 % GP
 
@@ -57,6 +57,10 @@ switch model.approx
  case 'dtc'
   fprintf(spacing);
   fprintf('Deterministic training conditional approximation.\n')
+  fprintf('  Number of inducing variables: %d\n', model.k)
+ case 'dtcvar'
+  fprintf(spacing);
+  fprintf('Sparse variational approximation.\n')
   fprintf('  Number of inducing variables: %d\n', model.k)
  case 'fitc'
   fprintf(spacing);

@@ -9,15 +9,17 @@ function model = gpCovGradsTest(model)
 %
 % SEEALSO : gpCreate, gpCovGrads
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
+% COPYRIGHT : Neil D. Lawrence, 2006, 2009
 
 % GP
 
-changeVal = 1e-9;
+% WARNING --- this isn't testing g_Lambda in gpCovGrads
+  
+changeVal = 1e-6;
 switch model.approx
  case 'ftc'
   
- case {'dtc', 'fitc', 'pitc'}
+ case {'dtc', 'dtcvar', 'fitc', 'pitc'}
   for i =1 :size(model.K_uu, 1)
     for j=1:i
       origK = model.K_uu(i, j);

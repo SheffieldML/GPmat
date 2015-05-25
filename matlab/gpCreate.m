@@ -13,7 +13,7 @@ function model = gpCreate(q, d, X, y, options);
 %
 % SEEALSO : gpOptions, modelCreate
 %
-% COPYRIGHT : Neil D. Lawrence, 2005, 2006
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2009
 %
 % MODIFICATIONS : Cark Henrik Ek, 2007
 
@@ -34,6 +34,9 @@ if options.isMissingData & options.isSpherical
 end
 
 model.type = 'gp';
+
+
+
 model.approx = options.approx;
   
 model.learnScales = options.learnScales;
@@ -44,6 +47,9 @@ model.betaTransform =  optimiDefaultConstraint('positive');
 
 model.X = X;
 model.y = y;
+
+
+
 
 model.q = size(X, 2);
 model.d = size(y, 2);
@@ -88,16 +94,32 @@ else
 end
 if(isfield(options,'scale2var1'))
   if(options.scale2var1)
-    model.scale = std(model.y);
+    for i = 1:size(model.y, 2)
+      model.scale(i) = std(model.y(find(~isnan(model.y(:, i))), i));
+    end
     model.scale(find(model.scale==0)) = 1;
     if(model.learnScales)
       warning('Both learn scales and scale2var1 set for GP');
     end
+    if(isfield(options, 'scaleVal'))
+      warning('Both scale2var1 and scaleVal set for GP');
+    end
+  end
+end
+if(isfield(options, 'scaleVal'))
+  model.scale = repmat(options.scaleVal, 1, model.d);
+end
+
+model.m = gpComputeM(model);
+model.computeS = false;
+if options.computeS 
+  model.computeS = true;
+  model.S = model.m*model.m';
+  if ~strcmp(model.approx, 'ftc')
+    error('If compute S is set, approximation type must be ''ftc''')
   end
 end
 
-
-model.m = gpComputeM(model);
 
 if isstruct(options.kern) 
   model.kern = options.kern;
@@ -123,7 +145,7 @@ if isfield(options, 'noise')
   % Set up storage for the expectations
   model.expectations.f = model.y;
   model.expectations.ff = ones(size(model.y));
-  model.expectations.fBar =ones(size(model.y));
+  model.expectations.fBar = ones(size(model.y));
   model.expectations.fBarfBar = ones(numData, ...
                                      numData, ...
                                      size(model.y, 2));
@@ -141,7 +163,7 @@ switch options.approx
       error('options.beta cannot be empty if it is being optimised.');
     end
   end
- case {'dtc', 'fitc', 'pitc'}
+ case {'dtc', 'dtcvar', 'fitc', 'pitc'}
   % Sub-sample inducing variables.
   model.k = options.numActive;
   model.fixInducing = options.fixInducing;

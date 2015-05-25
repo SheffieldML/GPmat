@@ -11,7 +11,7 @@ function model = gpComputeAlpha(model, m)
 %
 % SEEALSO : gpCreate, gpUpdateAD, gpUpdateKernels
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
+% COPYRIGHT : Neil D. Lawrence, 2006, 2009
 
 % GP
 
@@ -32,7 +32,7 @@ switch model.approx
     end
   end
  
- case 'dtc'
+ case {'dtc', 'dtcvar'}
   model.alpha = zeros(model.k, model.d);
   if ~isfield(model, 'isSpherical') | model.isSpherical
     model.alpha = model.Ainv*model.K_uf*m;

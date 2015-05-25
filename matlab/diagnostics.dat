@@ -1,0 +1,12 @@
+Files not tagged as in toolbox: 
+
+Files not commented:
+
+Files not in CVS or SVN:
+
+Dependent toolbox problems
+importTool('ndlutil');
+
+File Comments Removed
+
+ removed from exported demSpgp1dPlot.m

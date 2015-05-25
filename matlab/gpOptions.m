@@ -4,15 +4,15 @@ function options = gpOptions(approx);
 % FORMAT
 % DESC returns the default options in a structure for a GP model.
 % ARG approx : approximation type, either 'ftc' (no approximation),
-% 'dtc' (deterministic training conditional), 'fitc' (fully
-% independent training conditional) or 'pitc' (partially
-% independent training conditional.
+% 'dtcvar' (variational sparse approximation) 'dtc' (deterministic training
+% conditional), 'fitc' (fully independent training conditional) or 'pitc'
+% (partially independent training conditional).
 % RETURN options : structure containing the default options for the
 % given approximation type.
 %
 % SEEALSO : gpCreate
 %
-% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2007
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2007, 2009
 
 % GP
 
@@ -27,6 +27,9 @@ options.optimiser = optimiDefaultOptimiser;
 
 % Set to true to learn output scales.
 options.learnScales = false;
+
+% Set to true to scale outputs to variance 1.
+options.scale2var1 = false;
 
 % Set to true to optimise beta.
 switch approx
@@ -53,7 +56,7 @@ switch options.approx
   options.kern = {'rbf', 'bias', 'white'};
   options.numActive = 0;
   options.beta = [];
- case {'fitc', 'pitc', 'dtc'}
+ case {'fitc', 'pitc', 'dtc', 'dtcvar'}
   options.kern = {'rbf', 'bias', 'white'};
   options.numActive = 100;
   options.beta = 1e3;
@@ -63,3 +66,4 @@ switch options.approx
   options.fixIndices = [];
 end
 
+options.computeS = false;

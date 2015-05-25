@@ -15,12 +15,17 @@ function model = gpExpandParam(model, params)
 % 
 % SEEALSO : gpCreate, gpExtractParam, modelExtractParam, gpUpdateKernels
 %
-% COPYRIGHT : Neil D. Lawrence, 2005, 2006
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2009
 
 % GP
 
+if isfield(model, 'fix')
+  for i = 1:length(model.fix)
+    params(model.fix(i).index) = model.fix(i).value;
+  end
+end
 
-if strcmp(model.approx, 'ftc') | model.fixInducing
+if strcmp(model.approx, 'ftc') || model.fixInducing
   endVal = 0;
 else
   startVal = 1;
@@ -32,7 +37,7 @@ endVal = endVal + model.kern.nParams;
 model.kern = kernExpandParam(model.kern, params(startVal:endVal));
 
 % Check if there is a mean function.
-if isfield(model, 'meanFunction') & ~isempty(model.meanFunction)
+if isfield(model, 'meanFunction') && ~isempty(model.meanFunction)
   startVal = endVal + 1;
   endVal = endVal + model.meanFunction.numParams;
   model.meanFunction = modelExpandParam(model.meanFunction, ...
@@ -63,7 +68,7 @@ model.nParams = endVal;
 switch model.approx
  case 'ftc'
   model = gpUpdateKernels(model, model.X, model.X_u);
- case {'dtc', 'fitc', 'pitc'}
+ case {'dtc', 'dtcvar', 'fitc', 'pitc'}
   model = gpUpdateKernels(model, model.X, model.X_u);
  otherwise
   error('Unknown approximation type.')
@@ -73,6 +78,3 @@ end
 if isfield(model, 'alpha')
   model = gpComputeAlpha(model);
 end
-
-
-

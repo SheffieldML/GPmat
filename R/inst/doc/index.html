@@ -1,0 +1,195 @@
+<head>
+<title>Gaussian Processes ToolKit - R Package</title>
+</head>
+
+<body><div class="section">
+
+<h1>Gaussian Processes ToolKit - R Package</h1>
+
+<p>This page describes examples of how to use the Gaussian Processes
+Toolkit (gptk).
+
+</br></br>
+RELEASEINFORMATION
+
+<h4>Version 1.0</h4>
+R implementation of the original Matlab GP toolkit written by Neil D. Lawrence.
+Implemented in R by Alfredo A. Kalaitzis. Contributions by Antti Honkela, Pei Gao, Neil D. Lawrence.
+
+<h4>Version 1.01</h4>
+Demos no longer enforce creation of png and gif files.
+
+<h4>Version 1.02</h4>
+Removed assignments from .Rd files.
+
+<h4>Version 1.03</h4>
+Fixed error that cmpndKernParamInit gave on profiles on zero data variance.
+Now using the Matrix sparse matrix class to handle this (dependency on Matrix).
+
+<h4>Version 1.06</h4>
+Replaced all occurences of is.real() (deprecated) to is.double() .
+
+<h2>Examples</h2>
+
+<h3>Functions from Gaussians</h3>
+
+<p>This example shows how points which look like they come from a
+function to be sampled from a Gaussian distribution. The sample is 25
+dimensional and is from a Gaussian with a particular covariance.
+
+<p><code>
+&gt; demGpSample()
+</code>
+
+<p><center><img src="gpSample.png" width ="30%"><img
+src="gpCovariance.png" width ="30%"><br> <i>Left</i> A single, 25
+dimensional, sample from a Gaussian distribution. <i>Right</i> the
+covariance matrix of the Gaussian distribution.  </center>
+
+
+<h3>Joint Distribution over two Variables</h3>
+
+<p>Gaussian processes are about conditioning a Gaussian distribution
+on the training data to make the test predictions. To illustrate this
+process, we can look at the joint distribution over two variables.
+
+<p>&gt; demGpCov2D(c(1,2))
+
+<p>Gives the joint distribution for <i>f</i><sub>1</sub> and
+<i>f</i><sub>2</sub>. The plots show the joint distributions as well
+as the conditional for <i>f</i><sub>2</sub> given
+<i>f</i><sub>1</sub>.
+
+<p><center><img src="demGpCov2D1_2.gif" width ="30%"><img
+src="demGpCov2D1_5.gif" width ="30%"><br> <i>Left</i> Blue line is
+contour of joint distribution over the variables <i>f</i><sub>1</sub>
+and <i>f</i><sub>2</sub>. Green line indicates an observation of
+<i>f</i><sub>1</sub>. Red line is conditional distribution of
+<i>f</i><sub>2</sub> given <i>f</i><sub>1</sub>. <i>Right</i> Similar
+for <i>f</i><sub>1</sub> and <i>f</i><sub>5</sub>.  </center>
+
+
+
+<h3>Different Samples from Gaussian Processes</h3>
+
+A script is provided which samples from a Gaussian process with the
+provided covariance function.
+
+<p><code>
+&gt; gpSample('rbf', 10, c(1,1), c(-3,3))
+</code>
+
+<p>will give 10 samples from an RBF covariance function with a
+parameter vector given by [1 1] (inverse width 1, variance 1) across
+the range -3 to 3 on the <i>x</i>-axis. The random seed will be set to
+1e5.
+
+<p><code>
+&gt; gpSample('rbf', 10, c(16,1), c(-3,3))
+</code>
+
+<p>is similar, but the inverse width is now set to 16 (length scale 0.25).
+
+<p><center><img src="gpSampleRbfSamples10InverseWidth1Variance1.png" width ="30%"><img
+src="gpSampleRbfSamples10InverseWidth16Variance1.png" width ="30%"><br>
+<i>Left</i> samples from an RBF style covariance function
+with length scale 1. <i>Right</i> samples from an RBF style covariance
+function with length scale 0.25.  </center>
+
+
+<h3>Posterior Samples</h3>
+
+<p>Gaussian processes are non-parametric models. They are specified by their covariance function and a mean function. When combined with data observations a posterior Gaussian process is induced. The demos below show samples from that posterior.
+
+<p><code>
+&gt; gpPosteriorSample('rbf', 5, c(1,1), c(-3,3))
+</p>
+
+and 
+
+<p><code>
+&gt; gpPosteriorSample('rbf', 5, c(16,1), c(-3,3))
+</p>
+
+<p><center><img
+src="gpPosteriorSampleRbfSamples5InverseWidth1Variance1.png" width
+="30%"><img
+src="gpPosteriorSampleRbfSamples5InverseWidth16Variance1.png" width
+="30%"><br> <i>Left</i> samples from the posterior induced by an RBF style covariance function
+with length scale 1 and 5 &quot;training&quot; data points taken from a sine wave. <i>Right</i> Similar but for a length scale of 0.25.  </center>
+
+
+
+
+
+<h3>Simple Interpolation Demo</h3>
+
+
+<p>This simple demonstration plots, consecutively, an increasing
+number of data points, followed by an interpolated fit through the
+data points using a Gaussian process. This is a noiseless system, and
+the data is sampled from a GP with a known covariance function. The
+curve is then recovered with minimal uncertainty after only nine data
+points are included. The code is run with
+
+<p><code>
+&gt; demInterpolation()
+</code>
+
+<p><center><img src="demInterpolation.gif" width ="30%"><br>
+
+Gaussian process prediction after one/three/seven/ points with a new
+data point sampled and after the new data points are included
+in the prediction.<br></center>
+
+<h3>Simple Regression Demo</h3>
+
+<p>The regression demo very much follows the format of the
+interpolation demo. Here the difference is that the data is sampled
+with noise. Fitting a model with noise means that the regression will
+not necessarily pass right through each data point.
+
+The code is run with
+
+<p><code>
+&gt; demRegression()
+</code>
+
+
+<p><center><img src="demRegression.gif" width ="30%"><br>
+
+Gaussian process prediction after one/three/seven/ points with a new
+data point sampled and after the new data points are included
+in the prediction.<br></center>
+
+<h3>Optimizing Hyper Parameters</h3>
+
+<p>One of the advantages of Gaussian processes over pure kernel
+interpretations of regression is the ability to select the hyper
+parameters of the kernel automatically. The demo
+
+<p><code>
+&gt; demOptimiseGp()
+</code>
+
+<p>shows a series of plots of a Gaussian process with different length
+scales fitted to six data points. For each plot there is a
+corresponding plot of the log likelihood. The log likelihood peaks for
+a length scale close to 1. This was the length scale used to generate
+the data.
+
+<p><center><img src="demOptimiseGp1.gif" width ="30%"> <img src="demOptimiseGp2.gif" width ="30%">
+
+<br><i>Left</i> Gaussian process regression applied to the data with an increasing length scale. The
+length scales used were 0.05, 0.1, 0.25, 0.5, 1, 2, 4, 8 and
+16. <br> <i>Right</i> Log-log plot of
+the log likelihood of the data against the length scales. The log-likelihood
+is shown as a black line. The log-likelihood is made up of
+a data fit term (the quadratic form) shown by a green line and a
+complexity term (the log determinant) shown by a red line. The data
+fit is larger for short length scales, the complexity is larger for
+long length scales. The combination leads to a maximum around the true
+length scale value of 1.</center>
+
+</div>
+</body>

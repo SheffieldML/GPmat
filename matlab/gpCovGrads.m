@@ -18,15 +18,20 @@ function [gK_uu, gK_uf, g_Lambda, gBeta] = gpCovGrads(model, M)
 % RETURN gBeta : the gradient with respect to the beta term in the
 % covariance structure.
 % 
-% COPYRIGHT : Neil D. Lawrence, 2005, 2006
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2009
 %
 % SEEALSO : gpCreate, gpLogLikeGradient
 
 % GP
 
 switch model.approx
- case 'dtc'
+ case {'dtc', 'dtcvar'}
   % Deterministic training conditional.
+  if strcmp(model.approx, 'dtcvar')
+    dtcvar = true;
+  else
+    dtcvar = false;
+  end
   if ~isfield(model, 'isSpherical') | model.isSpherical
     E = model.K_uf*M;
     EET = E*E';
@@ -34,18 +39,30 @@ switch model.approx
     AinvEETAinv = AinvEET*model.Ainv;
     gK_uu = 0.5*(model.d*(model.invK_uu-(1/model.beta)*model.Ainv) ...
                  - AinvEETAinv);
-    
+    if dtcvar
+      K_uuInvK_uf = model.invK_uu*model.K_uf;
+      gK_uu = gK_uu - 0.5*model.d*model.beta...
+              *K_uuInvK_uf*K_uuInvK_uf';
+    end
     AinvK_uf = model.Ainv*model.K_uf;
     gK_uf = -model.d*AinvK_uf-model.beta*(AinvEET*AinvK_uf-(model.Ainv*E*M'));
-    
+    if dtcvar
+      gK_uf = gK_uf + model.d*model.beta*K_uuInvK_uf;
+    end
     gBeta = 0.5*(model.d*((model.N-model.k)/model.beta ...
                               +sum(sum(model.Ainv.*model.K_uu))/(model.beta*model.beta))...
                      +sum(sum(AinvEETAinv.*model.K_uu))/model.beta ...
                      +(trace(AinvEET)-sum(sum(M.*M))));
-    
+    if dtcvar
+      gBeta = gBeta -0.5*model.d*sum(model.diagD)/model.beta;
+    end
     fhandle = str2func([model.betaTransform 'Transform']);
     gBeta = gBeta*fhandle(model.beta, 'gradfact');
-    g_Lambda = [];
+    if dtcvar
+      g_Lambda = repmat(-0.5*model.beta*model.d, 1, model.N);
+    else
+      g_Lambda = [];
+    end
   else
     gK_uu = zeros(model.k, model.k);
     gK_uf = zeros(model.k, model.N);

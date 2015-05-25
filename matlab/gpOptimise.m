@@ -1,4 +1,4 @@
-function model = gpOptimise(model, display, iters);
+function model = gpOptimise(model, display, iters,gradcheck);
 
 % GPOPTIMISE Optimise the inducing variable based kernel.
 % FORMAT
@@ -14,14 +14,18 @@ function model = gpOptimise(model, display, iters);
 % SEEALSO : scg, conjgrad, gpCreate, gpGradient, gpObjective
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
+%
+% MODIFICATIONS : Carl Henrik Ek, 2008
 
 % GP
 
-
-if nargin < 3
-  iters = 2000;
-  if nargin < 2
-    display = 1;
+if(nargin<4)
+  gradcheck = false;
+  if nargin < 3
+    iters = 2000;
+    if nargin < 2
+      display = 1;
+    end
   end
 end
 
@@ -31,7 +35,7 @@ params = gpExtractParam(model);
 options = optOptions;
 if display
   options(1) = 1;
-  if length(params) <= 100
+  if length(params) <= 100 && gradcheck
     options(9) = 1;
   end
 end
