@@ -24,5 +24,6 @@ fhandle = str2func([noise.type 'NoisePointPlot']);
 h = fhandle(noise, X, y, ...
       fontName, fontSize, ...
       markerSize, lineWidth);
-
-set(gca, 'fontname', fontName, 'fontsize', fontSize);
+if ~isoctave
+  set(gca, 'fontname', fontName, 'fontsize', fontSize);
+end

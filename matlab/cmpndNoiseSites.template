@@ -1,0 +1,22 @@
+ function [m, beta] = cmpndNoiseSites(noise, g, nu, mu, varSigma, y)
+
+% CMPNDNOISESITES Update the site parameters for the CMPND noise mode.
+% FORMAT
+% DESC updates the site parameters for the compound
+% noise model. 
+% ARG noise : the noise structure for which the site parameters are to
+% be updated. 
+% ARG g : values of g as retuned by cmpndNoiseNuG.
+% ARG nu : values of nu as retuned by cmpndNoiseNuG.
+% ARG mu : the mean value of the Gaussian input to the noise structure.
+% ARG varSigma : the variance of the Gaussian input to the noise structure.
+% ARG y : the target value.
+% RETURN m : the site mean parameters.
+% RETURN beta : the site precision parameters.
+%
+% SEEALSO : cmpndNoiseParamInit, noiseUpdateSites
+%
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005
+
+% NOISE
+

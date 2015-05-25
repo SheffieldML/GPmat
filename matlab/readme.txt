@@ -1,3 +1,8 @@
+Version 0.141 Release Notes
+---------------------------
+
+Added noiseReadFromFile and noiseReadFromFID for compatability with CPP releases.
+
 Version 0.14 Release Notes
 --------------------------
 

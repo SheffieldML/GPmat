@@ -40,9 +40,9 @@ class CNoise : public CTransformable, public COptimisable, public CStreamInterfa
   virtual void getGradInputs(CMatrix& dlnZ_dmu, CMatrix& dlnZ_dvs) const
   {
     // gradient with respect to mu and varSigma of log likelihood.  
-    assert(dlnZ_dmu.dimensionsMatch(dlnZ_dvs));
-    assert(dlnZ_dmu.getRows()==nData);
-    assert(dlnZ_dmu.getCols()==nProcesses);
+    DIMENSIONMATCH(dlnZ_dmu.dimensionsMatch(dlnZ_dvs));
+    DIMENSIONMATCH(dlnZ_dmu.getRows()==nData);
+    DIMENSIONMATCH(dlnZ_dmu.getCols()==nProcesses);
     
     double gmu;
     double gvs;
@@ -97,7 +97,7 @@ class CNoise : public CTransformable, public COptimisable, public CStreamInterfa
     noiseName = name;
   }
   
-  void getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
+  //void getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
   
   // Functions arising from optimisable.
   unsigned int getOptNumParams() const
@@ -150,14 +150,14 @@ class CNoise : public CTransformable, public COptimisable, public CStreamInterfa
   }
   virtual string getParamName(unsigned int index) const
   {
-    assert(index>=0);
-    assert(index<paramNames.size());
+    BOUNDCHECK(index>=0);
+    BOUNDCHECK(index<paramNames.size());
     return paramNames[index];
   }
   void setParamName(const string paramName, unsigned int index)
   {
-    assert(index>=0);
-    assert(index<getNumParams());
+    BOUNDCHECK(index>=0);
+    BOUNDCHECK(index<getNumParams());
     if(paramNames.size() == index)
       paramNames.push_back(paramName);
     else 
@@ -197,16 +197,16 @@ class CNoise : public CTransformable, public COptimisable, public CStreamInterfa
   
   virtual void setMus(const CMatrix& vals)
   {
-    assert(vals.getRows()==getNumData());
-    assert(vals.getCols()==getOutputDim());
+    DIMENSIONMATCH(vals.getRows()==getNumData());
+    DIMENSIONMATCH(vals.getCols()==getOutputDim());
     for(unsigned int i=0; i<getNumData(); i++)
       for(unsigned int j=0; j<getOutputDim(); j++)
 	setMu(vals.getVal(i, j), i, j);
   }
   virtual void setVarSigmas(const CMatrix& vals)
   {
-    assert(vals.getRows()==getNumData());
-    assert(vals.getCols()==getOutputDim());
+    DIMENSIONMATCH(vals.getRows()==getNumData());
+    DIMENSIONMATCH(vals.getCols()==getOutputDim());
     for(unsigned int i=0; i<getNumData(); i++)
       for(unsigned int j=0; j<getOutputDim(); j++)
 	setVarSigma(vals.getVal(i, j), i, j);
@@ -298,6 +298,7 @@ class CGaussianNoise : public CNoise {
   {
     _init();
     setTarget(pyin);
+    initNames();
     initVals();
     initParams();
   }
@@ -326,7 +327,7 @@ class CGaussianNoise : public CNoise {
   {
     return logLikelihood(mu, varSigma, *py);
   }
-  void  getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
+  //void  getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
   
   inline double getMu(unsigned int i, unsigned int j) const 
   {
@@ -342,8 +343,8 @@ class CGaussianNoise : public CNoise {
   }
   inline void setVarSigma(double val, unsigned int i, unsigned int j) 
   {
-    assert(!isnan(val));
-    assert(val>=0);
+    SANITYCHECK(!isnan(val));
+    SANITYCHECK(val>=0);
     varSigma.setVal(val, i, j);
   }
   inline double getTarget(unsigned int i, unsigned int j) const 
@@ -352,20 +353,20 @@ class CGaussianNoise : public CNoise {
   }
   double getBiasVal(unsigned int index) const 
   {
-    assert(index<getOutputDim());
-    assert(index>=0);
+    BOUNDCHECK(index<getOutputDim());
+    BOUNDCHECK(index>=0);
     return bias.getVal(0, index);
   }
   void setBiasVal(double val, unsigned int index) 
   {
-    assert(index<getOutputDim());
-    assert(index>=0);
+    BOUNDCHECK(index<getOutputDim());
+    BOUNDCHECK(index>=0);
     bias.setVal(val, 0, index);
   }
   void setBias(const CMatrix& bia) 
   {
-    assert(bia.getRows()==1);
-    assert(bia.getCols()==getOutputDim());
+    DIMENSIONMATCH(bia.getRows()==1);
+    DIMENSIONMATCH(bia.getCols()==getOutputDim());
     bias.deepCopy(bia);
   }
   
@@ -402,22 +403,22 @@ class CScaleNoise : public CNoise {
   
   double getScale(unsigned int index) const
   {
-    assert(index<getOutputDim()&&index>=0);
+    BOUNDCHECK(index<getOutputDim()&&index>=0);
     return scale.getVal(index);
   }
   void setScale(double val, unsigned int index)
   {
-    assert(index<getOutputDim()&&index>=0);
+    BOUNDCHECK(index<getOutputDim()&&index>=0);
     scale.setVal(val, index);
   }
   double getBias(unsigned int index) const
   {
-    assert(index<getOutputDim()&&index>=0);
+    BOUNDCHECK(index<getOutputDim()&&index>=0);
     return bias.getVal(index);
   }
   void setBias(double val, unsigned int index)
   {
-    assert(index<getOutputDim()&&index>=0);
+    BOUNDCHECK(index<getOutputDim()&&index>=0);
     bias.setVal(val, index);
   }
   void initStoreage();
@@ -443,7 +444,7 @@ class CScaleNoise : public CNoise {
   {
     return logLikelihood(mu, varSigma, *py);
   }
-  void  getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
+  //void  getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
   
   inline double getMu(unsigned int i, unsigned int j) const
   {
@@ -459,8 +460,8 @@ class CScaleNoise : public CNoise {
   }
   inline void setVarSigma(double val, unsigned int i, unsigned int j) 
   {
-    assert(!isnan(val));
-    assert(val>=0);
+    SANITYCHECK(!isnan(val));
+    SANITYCHECK(val>=0);
     varSigma.setVal(val, i, j);
   }
   inline double getTarget(unsigned int i, unsigned int j) const
@@ -520,7 +521,7 @@ class CProbitNoise : public CNoise
   {
     return logLikelihood(mu, varSigma, *py);
   }
-  void  getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
+  //void  getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
   
   inline double getMu(unsigned int i, unsigned int j) const
   {
@@ -536,8 +537,8 @@ class CProbitNoise : public CNoise
   }
   inline void setVarSigma(double val, unsigned int i, unsigned int j) 
   {
-    assert(!isnan(val));
-    assert(val>=0);
+    SANITYCHECK(!isnan(val));
+    SANITYCHECK(val>=0);
     varSigma.setVal(val, i, j);
   }
   inline double getTarget(unsigned int i, unsigned int j) const
@@ -598,7 +599,7 @@ class CNcnmNoise : public CNoise {
   {
     return logLikelihood(mu, varSigma, *py);
   }
-  void  getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
+  //void  getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
   
   inline double getMu(unsigned int i, unsigned int j) const
   {
@@ -614,9 +615,8 @@ class CNcnmNoise : public CNoise {
   }
   inline void setVarSigma(double val, unsigned int i, unsigned int j) 
   {
-    if(isnan(val))
-      throw ndlexceptions::Error("varSigma is being set with value NaN.");
-    assert(val>=0);
+    SANITYCHECK(!isnan(val));
+    SANITYCHECK(val>=0);
     varSigma.setVal(val, i, j);
   }
   inline void setSplitGamma(const bool val)
@@ -681,7 +681,7 @@ class COrderedNoise : public CNoise {
   }
   void setNumCategories(unsigned int val)
   {
-    assert(val>1);
+    SANITYCHECK(val>1);
     numCats=val;
     initStoreage();
   }
@@ -709,7 +709,7 @@ class COrderedNoise : public CNoise {
   {
     return logLikelihood(mu, varSigma, *py);
   }
-  void  getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
+  //void  getGradX(CMatrix& gX, const CMatrix& dmu, const CMatrix& cvs);
   
   inline double getMu(unsigned int i, unsigned int j) const
   {
@@ -725,9 +725,8 @@ class COrderedNoise : public CNoise {
   }
   inline void setVarSigma(double val, unsigned int i, unsigned int j) 
   {
-    if(isnan(val))
-      throw ndlexceptions::Error("varSigma is being set with value NaN.");
-    assert(val>=0);
+    SANITYCHECK(!isnan(val));
+    SANITYCHECK(val>=0);
     varSigma.setVal(val, i, j);
   }
   inline double getTarget(unsigned int i, unsigned int j) const

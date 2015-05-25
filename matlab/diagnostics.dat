@@ -1,0 +1,57 @@
+Files not tagged as in toolbox: 
+gaussianNoiseExpectationLogLikelihood.m
+
+Files not commented:
+
+Files not in CVS or SVN:
+
+Dependent toolbox problems
+File Comments Removed
+if any(isnan(dlnZ_dmu))
+ removed from exported ncnmNoiseGradVals.m
+  warning('dlnZ_dmu is NaN')
+ removed from exported ncnmNoiseGradVals.m
+end
+ removed from exported ncnmNoiseGradVals.m
+if any(isnan(dlnZ_dvs))
+ removed from exported ncnmNoiseGradVals.m
+  warning('dlnZ_dvs is NaN')
+ removed from exported ncnmNoiseGradVals.m
+end
+ removed from exported ncnmNoiseGradVals.m
+if any(isnan(dlnZ_dmu))
+ removed from exported orderedNoiseGradVals.m
+  warning('dlnZ_dmu is NaN')
+ removed from exported orderedNoiseGradVals.m
+end
+ removed from exported orderedNoiseGradVals.m
+if any(isnan(dlnZ_dvs))
+ removed from exported orderedNoiseGradVals.m
+  warning('dlnZ_dvs is NaN')
+ removed from exported orderedNoiseGradVals.m
+end
+ removed from exported orderedNoiseGradVals.m
+if any(isnan(dlnZ_dmu))
+ removed from exported noiseGradVals.m
+  warning('Gradient of mu is NaN')
+ removed from exported noiseGradVals.m
+end
+ removed from exported noiseGradVals.m
+if any(isnan(dlnZ_dvs))
+ removed from exported noiseGradVals.m
+  warning('Gradient of varsigma is NaN')
+ removed from exported noiseGradVals.m
+end
+ removed from exported noiseGradVals.m
+if any(isnan(dlnZ_dmu))
+ removed from exported mgaussianNoiseGradVals.m
+  warning('dlnZ_dmu is NaN')
+ removed from exported mgaussianNoiseGradVals.m
+end
+ removed from exported mgaussianNoiseGradVals.m
+if any(isnan(dlnZ_dvs))
+ removed from exported mgaussianNoiseGradVals.m
+  warning('dlnZ_dvs is NaN')
+ removed from exported mgaussianNoiseGradVals.m
+end
+ removed from exported mgaussianNoiseGradVals.m

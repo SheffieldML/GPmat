@@ -3,11 +3,11 @@
 using namespace std;
 void CNoise::getNuG(CMatrix& g, CMatrix& nu, unsigned int index) const
 {
-  assert(g.dimensionsMatch(nu));
-  assert(g.getRows()==nData);
-  assert(g.getCols()==nProcesses);
-  assert(index>=0);
-  assert(index<nData);
+  DIMENSIONMATCH(g.dimensionsMatch(nu));
+  DIMENSIONMATCH(g.getRows()==nData);
+  DIMENSIONMATCH(g.getCols()==nProcesses);
+  BOUNDCHECK(index>=0);
+  BOUNDCHECK(index<nData);
   double nuval=0.0;
   double gval=0.0;
   
@@ -40,13 +40,13 @@ void CNoise::updateSites(CMatrix& m, CMatrix& beta, unsigned int actIndex,
 			 const CMatrix& g, const CMatrix& nu, 
 			 unsigned int index) const
 {
-  assert(index>=0);
-  assert(index<nData);
-  assert(m.dimensionsMatch(beta));
-  assert(actIndex>=0);
-  assert(actIndex<m.getRows());
-  assert(g.dimensionsMatch(nu));
-  assert(m.getCols()==g.getCols());
+  BOUNDCHECK(index>=0);
+  BOUNDCHECK(index<nData);
+  DIMENSIONMATCH(m.dimensionsMatch(beta));
+  BOUNDCHECK(actIndex>=0);
+  BOUNDCHECK(actIndex<m.getRows());
+  DIMENSIONMATCH(g.dimensionsMatch(nu));
+  DIMENSIONMATCH(m.getCols()==g.getCols());
   double nuVal=0.0;
   for(unsigned int j=0; j<m.getCols(); j++)
   {
@@ -284,13 +284,13 @@ void CNoise::writeParamsToStream(ostream& out) const
 }
 void CNoise::readParamsFromStream(istream& in)
 {
-  //setNumData(readIntFromStream(in, "numData"));
-  string tbaseType = getBaseTypeStream(in);
-  if(tbaseType != getBaseType())
-    throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
-  string ttype = getTypeStream(in);
-  if(ttype != getType())
-    throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
+//   //setNumData(readIntFromStream(in, "numData"));
+//   string tbaseType = getBaseTypeStream(in);
+//   if(tbaseType != getBaseType())
+//     throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
+//   string ttype = getTypeStream(in);
+//   if(ttype != getType())
+//     throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
   setOutputDim(readIntFromStream(in, "outputDim"));
   unsigned int numPar = readIntFromStream(in, "numParams");
   CMatrix par(1, numPar);
@@ -315,12 +315,12 @@ void CGaussianNoise::initStoreage()
   clearTransforms();
   // transform sigma2 (the last parameter).
   addTransform(CTransform::defaultPositive(), getNumParams()-1);
-  sigma2 = 1e-6;
   setLogConcave(true);
   setSpherical(true);
   setMissing(false);
 
 }
+
 void CGaussianNoise::_init()
 {
   setType("gaussian");
@@ -340,6 +340,8 @@ void CGaussianNoise::initVals()
 {
   mu.zeros();
   varSigma.zeros();
+  bias.zeros();
+  sigma2 = 1e-6;
 }
 
 ostream& CGaussianNoise::display(ostream& os)
@@ -356,8 +358,8 @@ ostream& CGaussianNoise::display(ostream& os)
 }
 void CGaussianNoise::setParam(double val, unsigned int index)
 {
-  assert(index>=0);
-  assert(index<getNumParams());
+  BOUNDCHECK(index>=0);
+  BOUNDCHECK(index<getNumParams());
   if(index<getOutputDim())
     bias.setVal(val, index);
   else
@@ -365,10 +367,10 @@ void CGaussianNoise::setParam(double val, unsigned int index)
 }  
 void CGaussianNoise::setParams(const CMatrix& params)
 {
-  assert(getNumParams()==getOutputDim()+1);
-  assert(params.getCols()==getNumParams());
-  assert(params.getRows()==1);
-  assert(getOutputDim()==bias.getCols());
+  DIMENSIONMATCH(getNumParams()==getOutputDim()+1);
+  DIMENSIONMATCH(params.getCols()==getNumParams());
+  DIMENSIONMATCH(params.getRows()==1);
+  DIMENSIONMATCH(getOutputDim()==bias.getCols());
   for(unsigned int j=0; j<bias.getCols(); j++)
   {
     bias.setVal(params.getVal(j), j);
@@ -377,8 +379,8 @@ void CGaussianNoise::setParams(const CMatrix& params)
 }
 double CGaussianNoise::getParam(unsigned int index) const
 {
-  assert(index>=0);
-  assert(index<getNumParams());
+  BOUNDCHECK(index>=0);
+  BOUNDCHECK(index<getNumParams());
   if(index<getOutputDim())
     return bias.getVal(index);
   else
@@ -387,10 +389,10 @@ double CGaussianNoise::getParam(unsigned int index) const
 }
 void CGaussianNoise::getParams(CMatrix& params) const
 {
-  assert(getNumParams()==getOutputDim()+1);
-  assert(params.getCols()==getNumParams());
-  assert(params.getRows()==1);
-  assert(getOutputDim()==bias.getCols());
+  DIMENSIONMATCH(getNumParams()==getOutputDim()+1);
+  DIMENSIONMATCH(params.getCols()==getNumParams());
+  DIMENSIONMATCH(params.getRows()==1);
+  DIMENSIONMATCH(getOutputDim()==bias.getCols());
   for(unsigned int j=0; j<getOutputDim(); j++)
     params.setVal(bias.getVal(j), j);
   params.setVal(sigma2, getNumParams()-1);
@@ -398,8 +400,8 @@ void CGaussianNoise::getParams(CMatrix& params) const
  
 void CGaussianNoise::getGradParams(CMatrix& g) const
 {
-  assert(g.getCols()==getNumParams());
-  assert(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==getNumParams());
+  DIMENSIONMATCH(g.getRows()==1);
   double nu=0.0;
   double u=0.0;
   double gsigma2=0.0;
@@ -442,7 +444,7 @@ void CGaussianNoise::getNuG(CMatrix& g, CMatrix& nu, unsigned int index) const
       cout << "Sigma2 " << sigma2 << endl;
       cout << "varSigma " << getVarSigma(index, j) << endl;
     }
-    assert(!isnan(nuval));
+    SANITYCHECK(!isnan(nuval));
     nu.setVal(nuval, index, j);
     gval=getTarget(index, j)-getMu(index, j)-bias.getVal(j);
     g.setVal(gval*nuval, index, j);
@@ -460,9 +462,9 @@ void CGaussianNoise::updateSites(CMatrix& m, CMatrix& beta, unsigned int actInde
 }
 void CGaussianNoise::test(const CMatrix& muout, const CMatrix& varSigmaOut, const CMatrix& yTest) const
 {
-  assert(yTest.dimensionsMatch(muout));
-  assert(muout.dimensionsMatch(varSigmaOut));
-  assert(yTest.getCols()==getOutputDim());
+  DIMENSIONMATCH(yTest.dimensionsMatch(muout));
+  DIMENSIONMATCH(muout.dimensionsMatch(varSigmaOut));
+  DIMENSIONMATCH(yTest.getCols()==getOutputDim());
   CMatrix yPred(yTest.getRows(), yTest.getCols());
   out(yPred, muout, varSigmaOut);
   for(unsigned int i=0; i<getOutputDim(); i++)
@@ -471,15 +473,15 @@ void CGaussianNoise::test(const CMatrix& muout, const CMatrix& varSigmaOut, cons
 
 void CGaussianNoise::out(CMatrix& yPred, const CMatrix& muTest, const CMatrix& varSigmaTest) const
 {
-  assert(yPred.dimensionsMatch(muTest));
-  assert(muTest.dimensionsMatch(varSigmaTest));
+  DIMENSIONMATCH(yPred.dimensionsMatch(muTest));
+  DIMENSIONMATCH(muTest.dimensionsMatch(varSigmaTest));
   yPred.deepCopy(muTest);
   for(unsigned int j=0; j<getOutputDim(); j++)
     yPred.addCol(j,bias.getVal(j));
 }
 void CGaussianNoise::out(CMatrix& yPred, CMatrix& errorBars, const CMatrix& muTest, const CMatrix& varSigmaTest) const
 {
-  assert(yPred.dimensionsMatch(errorBars));
+  DIMENSIONMATCH(yPred.dimensionsMatch(errorBars));
   out(yPred, muTest, varSigmaTest);
   for(unsigned int i=0; i<errorBars.getRows(); i++)
     for(unsigned int j=0; j<errorBars.getCols(); j++)
@@ -488,10 +490,10 @@ void CGaussianNoise::out(CMatrix& yPred, CMatrix& errorBars, const CMatrix& muTe
 void CGaussianNoise::likelihoods(CMatrix& L, const CMatrix& muTest, const CMatrix& varSigmaTest, 
 				 const CMatrix& yTest) const
 {
-  assert(yTest.getCols()==getOutputDim());
-  assert(L.dimensionsMatch(muTest));
-  assert(yTest.dimensionsMatch(muTest));
-  assert(muTest.dimensionsMatch(varSigmaTest));
+  DIMENSIONMATCH(yTest.getCols()==getOutputDim());
+  DIMENSIONMATCH(L.dimensionsMatch(muTest));
+  DIMENSIONMATCH(yTest.dimensionsMatch(muTest));
+  DIMENSIONMATCH(muTest.dimensionsMatch(varSigmaTest));
   double arg=0.0;
   double var=0.0;
   for(unsigned int i=0; i<muTest.getRows(); i++)
@@ -510,9 +512,9 @@ void CGaussianNoise::likelihoods(CMatrix& L, const CMatrix& muTest, const CMatri
 double CGaussianNoise::logLikelihood(const CMatrix& muTest, const CMatrix& varSigmaTest, 
 				     const CMatrix& yTest) const
 {
-  assert(yTest.getCols()==getOutputDim());
-  assert(yTest.dimensionsMatch(muTest));
-  assert(yTest.dimensionsMatch(varSigmaTest));
+  DIMENSIONMATCH(yTest.getCols()==getOutputDim());
+  DIMENSIONMATCH(yTest.dimensionsMatch(muTest));
+  DIMENSIONMATCH(yTest.dimensionsMatch(varSigmaTest));
   double arg=0.0;
   double var=0.0;
   double L=0.0;
@@ -598,8 +600,8 @@ ostream& CScaleNoise::display(ostream& os)
 }
 void CScaleNoise::setParam(double val, unsigned int index)
 {
-  assert(index>=0);
-  assert(index<2*getNumParams()-1);
+  BOUNDCHECK(index>=0);
+  BOUNDCHECK(index<2*getNumParams()-1);
   if(index<getOutputDim())
     bias.setVal(val, index);
   else if(index<2*getOutputDim())
@@ -607,10 +609,10 @@ void CScaleNoise::setParam(double val, unsigned int index)
 }  
 void CScaleNoise::setParams(const CMatrix& params)
 {
-  assert(getNumParams()==2*getOutputDim());
-  assert(params.getCols()==getNumParams());
-  assert(params.getRows()==1);
-  assert(getOutputDim()==bias.getCols());
+  DIMENSIONMATCH(getNumParams()==2*getOutputDim());
+  DIMENSIONMATCH(params.getCols()==getNumParams());
+  DIMENSIONMATCH(params.getRows()==1);
+  DIMENSIONMATCH(getOutputDim()==bias.getCols());
   for(unsigned int j=0; j<bias.getCols(); j++)
   {
     bias.setVal(params.getVal(j), j);
@@ -622,8 +624,8 @@ void CScaleNoise::setParams(const CMatrix& params)
 }
 double CScaleNoise::getParam(unsigned int index) const
 {
-  assert(index>=0);
-  assert(index<2*getNumParams());
+  BOUNDCHECK(index>=0);
+  BOUNDCHECK(index<2*getNumParams());
   if(index<getOutputDim())
     return bias.getVal(index);
   else
@@ -632,10 +634,10 @@ double CScaleNoise::getParam(unsigned int index) const
 }
 void CScaleNoise::getParams(CMatrix& params) const
 {
-  assert(getNumParams()==2*getOutputDim());
-  assert(params.getCols()==getNumParams());
-  assert(params.getRows()==1);
-  assert(getOutputDim()==bias.getCols());
+  DIMENSIONMATCH(getNumParams()==2*getOutputDim());
+  DIMENSIONMATCH(params.getCols()==getNumParams());
+  DIMENSIONMATCH(params.getRows()==1);
+  DIMENSIONMATCH(getOutputDim()==bias.getCols());
   for(unsigned int j=0; j<getOutputDim(); j++)
     params.setVal(bias.getVal(j), j);
   for(unsigned int j=0; j<getOutputDim(); j++)
@@ -646,8 +648,8 @@ void CScaleNoise::getGradParams(CMatrix& g) const
 {
   throw ndlexceptions::Error("ScaleNoise doesn't have gradients implemented.");
   /*~
-    assert(g.getCols()==getNumParams());
-    assert(g.getRows()==1);
+    DIMENSIONMATCH(g.getCols()==getNumParams());
+    DIMENSIONMATCH(g.getRows()==1);
     double nu=0.0;
     double u=0.0;
     double gsigma2=0.0;
@@ -697,7 +699,7 @@ void CScaleNoise::getNuG(CMatrix& g, CMatrix& nu, unsigned int index) const
     cout << "Sigma2 " << sigma2 << endl;
     cout << "varSigma " << getVarSigma(index, j) << endl;
     }
-    assert(!isnan(nuval));
+    SANITYCHECK(!isnan(nuval));
     nu.setVal(nuval, index, j);
     gval=getTarget(index, j)-getMu(index, j)-bias.getVal(j);
     g.setVal(gval*nuval, index, j);
@@ -720,9 +722,9 @@ void CScaleNoise::test(const CMatrix& muout, const CMatrix& varSigmaOut, const C
 {
   throw ndlexceptions::Error("ScaleNoise doesn't have site updates implemented.");
   /*~
-    assert(yTest.dimensionsMatch(muout));
-    assert(muout.dimensionsMatch(varSigmaOut));
-    assert(yTest.getCols()==getOutputDim());
+    DIMENSIONMATCH(yTest.dimensionsMatch(muout));
+    DIMENSIONMATCH(muout.dimensionsMatch(varSigmaOut));
+    DIMENSIONMATCH(yTest.getCols()==getOutputDim());
     CMatrix yPred(yTest.getRows(), yTest.getCols());
     out(yPred, muout, varSigmaOut);
     for(unsigned int i=0; i<getOutputDim(); i++)
@@ -732,8 +734,8 @@ void CScaleNoise::test(const CMatrix& muout, const CMatrix& varSigmaOut, const C
 
 void CScaleNoise::out(CMatrix& yPred, const CMatrix& muTest, const CMatrix& varSigmaTest) const
 {
-  assert(yPred.dimensionsMatch(muTest));
-  assert(muTest.dimensionsMatch(varSigmaTest));
+  DIMENSIONMATCH(yPred.dimensionsMatch(muTest));
+  DIMENSIONMATCH(muTest.dimensionsMatch(varSigmaTest));
   yPred.deepCopy(muTest);
   for(unsigned int j=0; j<getOutputDim(); j++)
   {
@@ -743,7 +745,7 @@ void CScaleNoise::out(CMatrix& yPred, const CMatrix& muTest, const CMatrix& varS
 }
 void CScaleNoise::out(CMatrix& yPred, CMatrix& errorBars, const CMatrix& muTest, const CMatrix& varSigmaTest) const
 {
-  assert(yPred.dimensionsMatch(errorBars));
+  DIMENSIONMATCH(yPred.dimensionsMatch(errorBars));
   out(yPred, muTest, varSigmaTest);
   for(unsigned int i=0; i<errorBars.getRows(); i++)
     for(unsigned int j=0; j<errorBars.getCols(); j++)
@@ -754,10 +756,10 @@ void CScaleNoise::likelihoods(CMatrix& L, const CMatrix& muTest, const CMatrix& 
 {
   throw ndlexceptions::Error("ScaleNoise doesn't have site likelihoods implemented.");
   /*~
-    assert(yTest.getCols()==getOutputDim());
-    assert(L.dimensionsMatch(muTest));
-    assert(yTest.dimensionsMatch(muTest));
-    assert(muTest.dimensionsMatch(varSigmaTest));
+    DIMENSIONMATCH(yTest.getCols()==getOutputDim());
+    DIMENSIONMATCH(L.dimensionsMatch(muTest));
+    DIMENSIONMATCH(yTest.dimensionsMatch(muTest));
+    DIMENSIONMATCH(muTest.dimensionsMatch(varSigmaTest));
     double arg=0.0;
     double var=0.0;
     for(unsigned int i=0; i<muTest.getRows(); i++)
@@ -779,9 +781,9 @@ double CScaleNoise::logLikelihood(const CMatrix& muTest, const CMatrix& varSigma
 {
   throw ndlexceptions::Error("ScaleNoise doesn't have site loglikelihoods implemented.");
   /*~
-    assert(yTest.getCols()==getOutputDim());
-    assert(yTest.dimensionsMatch(muTest));
-    assert(yTest.dimensionsMatch(varSigmaTest));
+    DIMENSIONMATCH(yTest.getCols()==getOutputDim());
+    DIMENSIONMATCH(yTest.dimensionsMatch(muTest));
+    DIMENSIONMATCH(yTest.dimensionsMatch(varSigmaTest));
     double arg=0.0;
     double var=0.0;
     double L=0.0;
@@ -866,16 +868,16 @@ ostream& CProbitNoise::display(ostream& os)
 }
 void CProbitNoise::setParam(double val, unsigned int index)
 {
-  assert(index>=0);
-  assert(index<getNumParams());
+  BOUNDCHECK(index>=0);
+  BOUNDCHECK(index<getNumParams());
   bias.setVal(val, index);
 }  
 void CProbitNoise::setParams(const CMatrix& params)
 {
-  assert(getNumParams()==getOutputDim());
-  assert(params.getCols()==getNumParams());
-  assert(params.getRows()==1);
-  assert(getOutputDim()==bias.getCols());
+  DIMENSIONMATCH(getNumParams()==getOutputDim());
+  DIMENSIONMATCH(params.getCols()==getNumParams());
+  DIMENSIONMATCH(params.getRows()==1);
+  DIMENSIONMATCH(getOutputDim()==bias.getCols());
   for(unsigned int j=0; j<bias.getCols(); j++)
   {
     bias.setVal(params.getVal(j), j);
@@ -883,26 +885,26 @@ void CProbitNoise::setParams(const CMatrix& params)
 }
 double CProbitNoise::getParam(unsigned int index) const
 {
-  assert(index>=0);
-  assert(index<getNumParams());
+  BOUNDCHECK(index>=0);
+  BOUNDCHECK(index<getNumParams());
   if(index<getOutputDim())
     return bias.getVal(index);
   return 0;
 }
 void CProbitNoise::getParams(CMatrix& params) const
 {
-  assert(getNumParams()==getOutputDim());
-  assert(params.getCols()==getNumParams());
-  assert(params.getRows()==1);
-  assert(getOutputDim()==bias.getCols());
+  DIMENSIONMATCH(getNumParams()==getOutputDim());
+  DIMENSIONMATCH(params.getCols()==getNumParams());
+  DIMENSIONMATCH(params.getRows()==1);
+  DIMENSIONMATCH(getOutputDim()==bias.getCols());
   for(unsigned int j=0; j<getOutputDim(); j++)
     params.setVal(bias.getVal(j), j);
 }
  
 void CProbitNoise::getGradParams(CMatrix& g) const
 {
-  assert(g.getCols()==getNumParams());
-  assert(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==getNumParams());
+  DIMENSIONMATCH(g.getRows()==1);
   double c=0.0;
   double u=0.0;
   double b=0.0;
@@ -931,9 +933,9 @@ void CProbitNoise::getGradInputs(double& gmu, double& gvs, unsigned int i, unsig
 
 void CProbitNoise::test(const CMatrix& muout, const CMatrix& varSigmaOut, const CMatrix& yTest) const
 {
-  assert(yTest.dimensionsMatch(muout));
-  assert(muout.dimensionsMatch(varSigmaOut));
-  assert(yTest.getCols()==getOutputDim());
+  DIMENSIONMATCH(yTest.dimensionsMatch(muout));
+  DIMENSIONMATCH(muout.dimensionsMatch(varSigmaOut));
+  DIMENSIONMATCH(yTest.getCols()==getOutputDim());
   CMatrix yPred(yTest.getRows(), yTest.getCols());
   out(yPred, muout, varSigmaOut);
   for(unsigned int j=0; j<getOutputDim(); j++)
@@ -951,15 +953,15 @@ void CProbitNoise::test(const CMatrix& muout, const CMatrix& varSigmaOut, const 
 }
 void CProbitNoise::out(CMatrix& yOut, CMatrix& probOut, const CMatrix& muTest, const CMatrix& varSigmaTest) const
 {
-  assert(yOut.dimensionsMatch(probOut));
+  DIMENSIONMATCH(yOut.dimensionsMatch(probOut));
   out(yOut, muTest, varSigmaTest);
   likelihoods(probOut, muTest, varSigmaTest, yOut);
 }
 
 void CProbitNoise::out(CMatrix& yOut, const CMatrix& muTest, const CMatrix& varSigmaTest) const
 {
-  assert(yOut.dimensionsMatch(muTest));
-  assert(muTest.dimensionsMatch(varSigmaTest));
+  DIMENSIONMATCH(yOut.dimensionsMatch(muTest));
+  DIMENSIONMATCH(muTest.dimensionsMatch(varSigmaTest));
   for(unsigned int j=0; j<yOut.getCols(); j++)
   {
     double b = bias.getVal(j);
@@ -975,10 +977,10 @@ void CProbitNoise::out(CMatrix& yOut, const CMatrix& muTest, const CMatrix& varS
 void CProbitNoise::likelihoods(CMatrix& L, const CMatrix& muTest, const CMatrix& varSigmaTest, 
 			       const CMatrix& yTest) const
 {
-  assert(yTest.getCols()==getOutputDim());
-  assert(L.dimensionsMatch(muTest));
-  assert(yTest.dimensionsMatch(muTest));
-  assert(muTest.dimensionsMatch(varSigmaTest));
+  DIMENSIONMATCH(yTest.getCols()==getOutputDim());
+  DIMENSIONMATCH(L.dimensionsMatch(muTest));
+  DIMENSIONMATCH(yTest.dimensionsMatch(muTest));
+  DIMENSIONMATCH(muTest.dimensionsMatch(varSigmaTest));
   double arg=0.0;
   for(unsigned int j=0; j<muTest.getCols(); j++)
   {
@@ -995,9 +997,9 @@ void CProbitNoise::likelihoods(CMatrix& L, const CMatrix& muTest, const CMatrix&
 double CProbitNoise::logLikelihood(const CMatrix& muTest, const CMatrix& varSigmaTest, 
 				   const CMatrix& yTest) const
 {
-  assert(yTest.getCols()==getOutputDim());
-  assert(yTest.dimensionsMatch(muTest));
-  assert(yTest.dimensionsMatch(varSigmaTest));
+  DIMENSIONMATCH(yTest.getCols()==getOutputDim());
+  DIMENSIONMATCH(yTest.dimensionsMatch(muTest));
+  DIMENSIONMATCH(yTest.dimensionsMatch(varSigmaTest));
   double arg=0.0;
   double var=0.0;
   double L=0.0;
@@ -1094,8 +1096,8 @@ ostream& CNcnmNoise::display(ostream& os)
 }
 void CNcnmNoise::setParam(double val, unsigned int index)
 {
-  assert(index>=0);
-  assert(index<getNumParams());
+  BOUNDCHECK(index>=0);
+  BOUNDCHECK(index<getNumParams());
   if(index<getOutputDim())
   {
     bias.setVal(val, index);
@@ -1114,8 +1116,8 @@ void CNcnmNoise::setParam(double val, unsigned int index)
 }  
 void CNcnmNoise::setParams(const CMatrix& params)
 {
-  assert(params.getCols()==getNumParams());
-  assert(params.getRows()==1);
+  DIMENSIONMATCH(params.getCols()==getNumParams());
+  DIMENSIONMATCH(params.getRows()==1);
   unsigned int nProc = getOutputDim();
   for(unsigned int j=0; j<nProc; j++)
   {
@@ -1129,8 +1131,8 @@ void CNcnmNoise::setParams(const CMatrix& params)
 }
 double CNcnmNoise::getParam(unsigned int index) const
 {
-  assert(index>=0);
-  assert(index<getNumParams());
+  BOUNDCHECK(index>=0);
+  BOUNDCHECK(index<getNumParams());
   if(index<getOutputDim())
     return bias.getVal(index);
   if(index==getOutputDim())
@@ -1141,8 +1143,8 @@ double CNcnmNoise::getParam(unsigned int index) const
 }
 void CNcnmNoise::getParams(CMatrix& params) const
 {
-  assert(params.getCols()==getNumParams());
-  assert(params.getRows()==1);
+  DIMENSIONMATCH(params.getCols()==getNumParams());
+  DIMENSIONMATCH(params.getRows()==1);
   unsigned int nProc=getOutputDim();
   for(unsigned int j=0; j<nProc; j++)
     params.setVal(bias.getVal(j), j);
@@ -1153,8 +1155,8 @@ void CNcnmNoise::getParams(CMatrix& params) const
  
 void CNcnmNoise::getGradParams(CMatrix& g) const
 {
-  assert(g.getCols()==getNumParams());
-  assert(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==getNumParams());
+  DIMENSIONMATCH(g.getRows()==1);
   double ggamman=0.0;
   double ggammap=0.0;
   double halfWidth = width/2.0;
@@ -1250,9 +1252,9 @@ void CNcnmNoise::getGradInputs(double& gmu, double& gvs, unsigned int i, unsigne
 }  
 void CNcnmNoise::test(const CMatrix& muout, const CMatrix& varSigmaOut, const CMatrix& yTest) const
 {
-  assert(yTest.dimensionsMatch(muout));
-  assert(muout.dimensionsMatch(varSigmaOut));
-  assert(yTest.getCols()==getOutputDim());
+  DIMENSIONMATCH(yTest.dimensionsMatch(muout));
+  DIMENSIONMATCH(muout.dimensionsMatch(varSigmaOut));
+  DIMENSIONMATCH(yTest.getCols()==getOutputDim());
   CMatrix yPred(yTest.getRows(), yTest.getCols());
   out(yPred, muout, varSigmaOut);
   for(unsigned int j=0; j<getOutputDim(); j++)
@@ -1278,8 +1280,8 @@ void CNcnmNoise::test(const CMatrix& muout, const CMatrix& varSigmaOut, const CM
   
 void CNcnmNoise::out(CMatrix& yOut, const CMatrix& muTest, const CMatrix& varSigmaTest) const
 {
-  assert(yOut.dimensionsMatch(muTest));
-  assert(muTest.dimensionsMatch(varSigmaTest));
+  DIMENSIONMATCH(yOut.dimensionsMatch(muTest));
+  DIMENSIONMATCH(muTest.dimensionsMatch(varSigmaTest));
   for(unsigned int j=0; j<yOut.getCols(); j++)
   {
     double b = bias.getVal(j);
@@ -1295,17 +1297,17 @@ void CNcnmNoise::out(CMatrix& yOut, const CMatrix& muTest, const CMatrix& varSig
 }
 void CNcnmNoise::out(CMatrix& yOut, CMatrix& probOut, const CMatrix& muTest, const CMatrix& varSigmaTest) const
 {
-  assert(yOut.dimensionsMatch(probOut));
+  DIMENSIONMATCH(yOut.dimensionsMatch(probOut));
   out(yOut, muTest, varSigmaTest);
   likelihoods(probOut, muTest, varSigmaTest, yOut);
 }
 void CNcnmNoise::likelihoods(CMatrix& L, const CMatrix& muTest, const CMatrix& varSigmaTest, 
 			     const CMatrix& yTest) const
 {
-  assert(yTest.getCols()==getOutputDim());
-  assert(L.dimensionsMatch(muTest));
-  assert(yTest.dimensionsMatch(muTest));
-  assert(muTest.dimensionsMatch(varSigmaTest));
+  DIMENSIONMATCH(yTest.getCols()==getOutputDim());
+  DIMENSIONMATCH(L.dimensionsMatch(muTest));
+  DIMENSIONMATCH(yTest.dimensionsMatch(muTest));
+  DIMENSIONMATCH(muTest.dimensionsMatch(varSigmaTest));
   for(unsigned int j=0; j<muTest.getCols(); j++)
   {
     double b = bias.getVal(j);
@@ -1331,9 +1333,9 @@ void CNcnmNoise::likelihoods(CMatrix& L, const CMatrix& muTest, const CMatrix& v
 double CNcnmNoise::logLikelihood(const CMatrix& muTest, const CMatrix& varSigmaTest, 
 				 const CMatrix& yTest) const
 {
-  assert(yTest.getCols()==getOutputDim());
-  assert(yTest.dimensionsMatch(muTest));
-  assert(yTest.dimensionsMatch(varSigmaTest));
+  DIMENSIONMATCH(yTest.getCols()==getOutputDim());
+  DIMENSIONMATCH(yTest.dimensionsMatch(muTest));
+  DIMENSIONMATCH(yTest.dimensionsMatch(varSigmaTest));
   double L=0.0;
   double halfWidth = width/2.0;
   double logPosGamma = log(1.0-gammap);
@@ -1385,12 +1387,12 @@ void CNcnmNoise::writeParamsToStream(ostream& out) const
 
 void CNcnmNoise::readParamsFromStream(istream& in)
 {
-  string tbaseType = getBaseTypeStream(in);
-  if(tbaseType != getBaseType())
-    throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
-  string ttype = getTypeStream(in);
-  if(ttype != getType())
-    throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
+//   string tbaseType = getBaseTypeStream(in);
+//   if(tbaseType != getBaseType())
+//     throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
+//   string ttype = getTypeStream(in);
+//   if(ttype != getType())
+//     throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
   setNumData(readIntFromStream(in, "numData"));
   setOutputDim(readIntFromStream(in, "outputDim"));
   int numPar = readIntFromStream(in, "numParams");
@@ -1471,8 +1473,8 @@ ostream& COrderedNoise::display(ostream& os)
 }
 void COrderedNoise::setParam(double val, unsigned int index)
 {
-  assert(index>=0);
-  assert(index<getNumParams());
+  BOUNDCHECK(index>=0);
+  BOUNDCHECK(index<getNumParams());
   if(index<getOutputDim())
   {
     bias.setVal(val, index);
@@ -1486,8 +1488,8 @@ void COrderedNoise::setParam(double val, unsigned int index)
 }  
 void COrderedNoise::setParams(const CMatrix& params)
 {
-  assert(params.getCols()==getNumParams());
-  assert(params.getRows()==1);
+  DIMENSIONMATCH(params.getCols()==getNumParams());
+  DIMENSIONMATCH(params.getRows()==1);
   unsigned int nProc = getOutputDim();
   for(unsigned int j=0; j<nProc; j++)
   {
@@ -1498,8 +1500,8 @@ void COrderedNoise::setParams(const CMatrix& params)
 }
 double COrderedNoise::getParam(unsigned int index) const
 {
-  assert(index>=0);
-  assert(index<getNumParams());
+  BOUNDCHECK(index>=0);
+  BOUNDCHECK(index<getNumParams());
   if(index<getOutputDim())
     return bias.getVal(index);
   if(index>=getOutputDim())
@@ -1508,8 +1510,8 @@ double COrderedNoise::getParam(unsigned int index) const
 }
 void COrderedNoise::getParams(CMatrix& params) const
 {
-  assert(params.getCols()==getNumParams());
-  assert(params.getRows()==1);
+  DIMENSIONMATCH(params.getCols()==getNumParams());
+  DIMENSIONMATCH(params.getRows()==1);
   int nProc=getOutputDim();
   for(unsigned int j=0; j<nProc; j++)
     params.setVal(bias.getVal(j), j);
@@ -1519,8 +1521,8 @@ void COrderedNoise::getParams(CMatrix& params) const
  
 void COrderedNoise::getGradParams(CMatrix& g) const
 {
-  assert(g.getCols()==getNumParams());
-  assert(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==getNumParams());
+  DIMENSIONMATCH(g.getRows()==1);
   g.zeros();
   gwidth.zeros();
   for(unsigned int j=0; j<getOutputDim(); j++)
@@ -1531,7 +1533,7 @@ void COrderedNoise::getGradParams(CMatrix& g) const
     {
       double muAdj = getMu(i, j)+b;
       int targVal = (int)getTarget(i, j);
-      assert(isnan(getTarget(i, j)) || getTarget(i, j)==(double)targVal);
+      SANITYCHECK(isnan(getTarget(i, j)) || getTarget(i, j)==(double)targVal);
       double c = 1/sqrt(sigma2+getVarSigma(i, j));
       if(targVal==0)
       {
@@ -1584,7 +1586,7 @@ void COrderedNoise::getGradInputs(double& gmu, double& gvs, unsigned int i, unsi
   double c = 1.0/sqrt(sigma2+getVarSigma(i, j));
   double muAdj = getMu(i, j)+b;
   int targ = (int)getTarget(i, j);
-  assert(isnan(getTarget(i, j)) || getTarget(i, j)==(double)targ);
+  SANITYCHECK(isnan(getTarget(i, j)) || getTarget(i, j)==(double)targ);
   if(targ==0)
   {
     muAdj*=c;
@@ -1622,9 +1624,9 @@ void COrderedNoise::getGradInputs(double& gmu, double& gvs, unsigned int i, unsi
 }  
 void COrderedNoise::test(const CMatrix& muout, const CMatrix& varSigmaOut, const CMatrix& yTest) const
 {
-  assert(yTest.dimensionsMatch(muout));
-  assert(muout.dimensionsMatch(varSigmaOut));
-  assert(yTest.getCols()==getOutputDim());
+  DIMENSIONMATCH(yTest.dimensionsMatch(muout));
+  DIMENSIONMATCH(muout.dimensionsMatch(varSigmaOut));
+  DIMENSIONMATCH(yTest.getCols()==getOutputDim());
   CMatrix yPred(yTest.getRows(), yTest.getCols());
   out(yPred, muout, varSigmaOut);
   for(unsigned int j=0; j<getOutputDim(); j++)
@@ -1643,8 +1645,8 @@ void COrderedNoise::test(const CMatrix& muout, const CMatrix& varSigmaOut, const
   
 void COrderedNoise::out(CMatrix& yOut, const CMatrix& muTest, const CMatrix& varSigmaTest) const
 {
-  assert(yOut.dimensionsMatch(muTest));
-  assert(muTest.dimensionsMatch(varSigmaTest));
+  DIMENSIONMATCH(yOut.dimensionsMatch(muTest));
+  DIMENSIONMATCH(muTest.dimensionsMatch(varSigmaTest));
   for(unsigned int j=0; j<yOut.getCols(); j++)
   {
     double b = bias.getVal(j);
@@ -1675,17 +1677,17 @@ void COrderedNoise::out(CMatrix& yOut, const CMatrix& muTest, const CMatrix& var
 }
 void COrderedNoise::out(CMatrix& yOut, CMatrix& probOut, const CMatrix& muTest, const CMatrix& varSigmaTest) const
 {
-  assert(yOut.dimensionsMatch(probOut));
+  DIMENSIONMATCH(yOut.dimensionsMatch(probOut));
   out(yOut, muTest, varSigmaTest);
   likelihoods(probOut, muTest, varSigmaTest, yOut);
 }
 void COrderedNoise::likelihoods(CMatrix& L, const CMatrix& muTest, const CMatrix& varSigmaTest, 
 				const CMatrix& yTest) const
 {
-  assert(yTest.getCols()==getOutputDim());
-  assert(L.dimensionsMatch(muTest));
-  assert(yTest.dimensionsMatch(muTest));
-  assert(muTest.dimensionsMatch(varSigmaTest));
+  DIMENSIONMATCH(yTest.getCols()==getOutputDim());
+  DIMENSIONMATCH(L.dimensionsMatch(muTest));
+  DIMENSIONMATCH(yTest.dimensionsMatch(muTest));
+  DIMENSIONMATCH(muTest.dimensionsMatch(varSigmaTest));
   for(unsigned int j=0; j<muTest.getCols(); j++)
   {
     double b = bias.getVal(j);
@@ -1694,7 +1696,7 @@ void COrderedNoise::likelihoods(CMatrix& L, const CMatrix& muTest, const CMatrix
       double muAdj=muTest.getVal(i, j) + b;
       double c=1/sqrt(sigma2+varSigmaTest.getVal(i, j));	  
       int targVal=(int)yTest.getVal(i, j);
-      assert(isnan(getTarget(i, j)) || getTarget(i, j)==(double)targVal);
+      SANITYCHECK(isnan(getTarget(i, j)) || getTarget(i, j)==(double)targVal);
       if(targVal==0)
       {
 	L.setVal(ndlutil::cumGaussian(-muAdj*c), i, j);
@@ -1724,9 +1726,9 @@ void COrderedNoise::likelihoods(CMatrix& L, const CMatrix& muTest, const CMatrix
 double COrderedNoise::logLikelihood(const CMatrix& muTest, const CMatrix& varSigmaTest, 
 				    const CMatrix& yTest) const
 {
-  assert(yTest.getCols()==getOutputDim());
-  assert(yTest.dimensionsMatch(muTest));
-  assert(yTest.dimensionsMatch(varSigmaTest));
+  DIMENSIONMATCH(yTest.getCols()==getOutputDim());
+  DIMENSIONMATCH(yTest.dimensionsMatch(muTest));
+  DIMENSIONMATCH(yTest.dimensionsMatch(varSigmaTest));
   double L=0.0;
   for(unsigned int j=0; j<muTest.getCols(); j++)
   {
@@ -1736,7 +1738,7 @@ double COrderedNoise::logLikelihood(const CMatrix& muTest, const CMatrix& varSig
       double muAdj=muTest.getVal(i, j) + b;
       double c=1/sqrt(sigma2+varSigmaTest.getVal(i, j));	  
       int targVal=(int)yTest.getVal(i, j);
-      assert(isnan(getTarget(i, j)) || getTarget(i, j)==(double)targVal);
+      SANITYCHECK(isnan(getTarget(i, j)) || getTarget(i, j)==(double)targVal);
       if(targVal==0)
       {
 	L+=ndlutil::lnCumGaussian(-muAdj*c);
@@ -1779,12 +1781,12 @@ void COrderedNoise::writeParamsToStream(ostream& out) const
 
 void COrderedNoise::readParamsFromStream(istream& in)
 {
-  string tbaseType = getBaseTypeStream(in);
-  if(tbaseType != getBaseType())
-    throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
-  string ttype = getTypeStream(in);
-  if(ttype != getType())
-    throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
+//   string tbaseType = getBaseTypeStream(in);
+//   if(tbaseType != getBaseType())
+//     throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
+//   string ttype = getTypeStream(in);
+//   if(ttype != getType())
+//     throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
   setNumData(readIntFromStream(in, "numData"));
   setOutputDim(readIntFromStream(in, "outputDim"));
   unsigned int numPar = readIntFromStream(in, "numParams");
@@ -1831,3 +1833,4 @@ CNoise* readNoiseFromStream(istream& in)
   pnoise->readParamsFromStream(in);  
   return pnoise;
 }
+ 
