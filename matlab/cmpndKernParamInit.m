@@ -53,7 +53,7 @@ end
 for i = 1:length(kern.comp)
   
   % Set up the component kernels.
-  kern.comp{i} = kernParamInit(kern.comp{i});
+  %kern.comp{i} = kernParamInit(kern.comp{i});
   kern.nParams = kern.nParams + kern.comp{i}.nParams;
   kern.comp{i}.index = [];
   

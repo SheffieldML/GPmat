@@ -39,9 +39,10 @@ function g = biasKernGradient(kern, x, varargin)
 %
 % SEEALSO biasKernParamInit, kernGradient, biasKernDiagGradient, kernGradX
 %
-% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006, 2009
 
 % KERN
 
 
-g = sum(sum(varargin{end}));
+  g(1, 1) = sum(sum(varargin{end}));
+end

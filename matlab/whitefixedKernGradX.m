@@ -32,5 +32,4 @@ function gX = whitefixedKernGradX(kern, X, X2)
 
 % KERN
 
-
-gX = whiteKernGradX(kern, X, X2);
+gX = zeros(size(X2, 1), size(X2, 2), size(X, 1));

@@ -1,6 +1,5 @@
 function gX = whiteKernDiagGradX(kern, X)
 
-
 % WHITEKERNDIAGGRADX Gradient of WHITE kernel's diagonal with respect to X.
 % FORMAT
 % DESC computes the gradient of the diagonal of the white noise kernel matrix with

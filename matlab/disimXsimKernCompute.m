@@ -26,7 +26,7 @@ function K = disimXsimKernCompute(disimKern, simKern, t1, t2)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
-% COPYRIGHT : Antti Honkela, 2007
+% COPYRIGHT : Antti Honkela, 2007-2009
   
 % KERN
 
@@ -45,12 +45,15 @@ end
 if disimKern.di_variance ~= simKern.variance
   error('Kernels cannot be cross combined if they have different driving input variances.');
 end
+if disimKern.rbf_variance ~= 1
+  warning('KERN:simRBFVariance', ...
+	  'Warning: copying non-unit RBF variance from DISIM to SIM kernel')
+end
 
 dim1 = size(t1, 1);
 dim2 = size(t2, 1);
-t1 = t1;
-t1Mat = repmat(t1, [1 dim2]);
-t2Mat = repmat(t2', [dim1 1]);
+t1Mat = t1(:, ones(1, dim2));
+t2Mat = t2(:, ones(1, dim1))';
 diffT = (t1Mat - t2Mat);
 
 l = sqrt(2/disimKern.inverseWidth);
@@ -61,19 +64,19 @@ invLDiffT = 1/l*diffT;
 halfLD_i = 0.5*l*D_i;
 halfLDelta = 0.5*l*delta;
 
-lnCommon1 = - log(2*delta) -delta * t2Mat - D_i * t1Mat + halfLDelta.^2;
+lnCommon1 = - log(2*delta) + halfLDelta.^2;
 
-lnFact1 = log(2 * delta) - log(delta^2 - D_i^2);
+lnFact1 = log(2 * delta) - log(delta^2 - D_i^2) -delta * t2Mat - D_i * t1Mat;
 lnPart1 = lnDiffErfs(halfLDelta - t2Mat/l, halfLDelta);
 
-lnFact2 = (D_i - delta) * t1Mat - log(delta - D_i);
+lnFact2 = -delta * (t1Mat+t2Mat) - log(delta - D_i);
 lnPart2a = lnDiffErfs(halfLDelta, halfLDelta - t1Mat/l);
 lnPart2b = lnDiffErfs(halfLDelta, halfLDelta - t2Mat/l);
 
-lnFact3 = (D_i + delta) * t1Mat - log(delta + D_i);
+lnFact3 = delta * diffT - log(delta + D_i);
 lnPart3 = lnDiffErfs(halfLDelta + t1Mat/l, halfLDelta + invLDiffT);
 
-lnFact4 = 2*delta*t2Mat + (D_i - delta) * t1Mat - log(delta - D_i);
+lnFact4 = -delta*diffT - log(delta - D_i);
 lnPart4 = lnDiffErfs(halfLDelta - invLDiffT, halfLDelta + t2Mat/l);
 
 lnCommon2 = - log(delta^2 - D_i^2) - delta * t2Mat - D_i * t1Mat + halfLD_i^2;
@@ -90,5 +93,24 @@ K = exp(lnCommon1 + lnFact1 + lnPart1) ...
     +exp(lnCommon2           + lnPart5) ...
     +exp(lnCommon2 + lnFact6 + lnPart6);
 K = 0.5*K*sqrt(pi)*l;
-K = disimKern.di_variance*sqrt(disimKern.variance)*K;
+K = disimKern.rbf_variance*disimKern.di_variance*sqrt(disimKern.variance)*K;
 K = real(K);
+
+if isfield(disimKern, 'gaussianInitial') && disimKern.gaussianInitial && ...
+  isfield(simKern, 'gaussianInitial') && simKern.gaussianInitial,
+  if disimKern.initialVariance ~= simKern.initialVariance
+    error('Kernels cannot be cross combined if they have different initial variances.');
+  end
+  
+  dim1 = size(t1, 1);
+  dim2 = size(t2, 1);
+  t1Mat = t1(:, ones(1, dim2));
+  t2Mat = t2(:, ones(1, dim1))';
+
+  delta = disimKern.di_decay;
+  D = disimKern.decay;
+  
+  K = K + disimKern.initialVariance * sqrt(disimKern.variance) * ...
+      (exp(-delta * t1Mat) - exp(-D * t1Mat)) ./ (D - delta) .* ...
+      exp(-delta * t2Mat);
+end

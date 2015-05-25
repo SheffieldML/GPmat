@@ -1,4 +1,4 @@
-function K = matern52KernCompute(kern, x, x2)
+function [K, sk] = matern52KernCompute(kern, x, x2)
 
 % MATERN52KERNCOMPUTE Compute the MATERN52 kernel given the parameters and X.
 % FORMAT
@@ -18,7 +18,7 @@ function K = matern52KernCompute(kern, x, x2)
 %
 % SEEALSO : matern52KernParamInit, kernCompute, kernCreate, matern52KernDiagCompute
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
+% COPYRIGHT : Neil D. Lawrence, 2006, 2009
 
 % KERN
 
@@ -30,4 +30,5 @@ end
 wi2 = (5/(kern.lengthScale*kern.lengthScale));
 n2wi2 = n2*wi2;
 sqrtn2wi2 = sqrt(n2wi2);
-K = kern.variance*(1+sqrtn2wi2+n2wi2/3).*exp(-sqrtn2wi2);
+sk = (1+sqrtn2wi2+n2wi2/3).*exp(-sqrtn2wi2);
+K = kern.variance*sk;

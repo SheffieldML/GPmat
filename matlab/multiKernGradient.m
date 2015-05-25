@@ -52,38 +52,62 @@ if iscell(x)
   
   % Collate arguments.
   for i=1:kern.numBlocks
+    % The vector dim1 contains the row size of each block,
+    % and arg{i}{1} contains the row inputs of the ith block
     dim1(i) = size(x{i}, 1);
     arg{i}{1} = x{i};
     if nargin > 3
+      % The vector dim2 contains the column size of each block,
+      % and arg{i}{1} contains the column inputs of the ith block
       dim2(i) = size(x2{i}, 1);
       arg{i}{2} = x2{i};
     else
+      % If separate column inputs are not given they are the same
+      % as the row inputs
       dim2(i) = dim1(i);
       arg{i}{2} = arg{i}{1};
+
+      % If the column inputs were not given, then covGrad was given in the x2 parameter
       covGrad = x2;
     end
   end
+
+  %x
+  %x2
+  %dim1
+  %dim2
   
   g = zeros(1, size(kern.paramGroups, 1));
   startVal = 1;
   endVal = 0;
   
   for i = 1:kern.numBlocks
+    % Compute contribution of the ith diagonal block to the gradient
     endVal = endVal + kern.comp{i}.nParams;
     
     startOne = sum(dim1(1:(i-1)))+1;
     endOne = sum(dim1(1:i));
     startThree = sum(dim2(1:(i-1))) + 1;
     endThree = sum(dim2(1:i));
-    if nargin > 3
-      g(1, startVal:endVal) = multiKernGradientBlock(kern, ...
-                            arg{i}{:}, covGrad(startOne:endOne, ...
-                            startThree:endThree), i, i);
+
+    % Compute the contribution of the block if it has nonzero rows and columns
+    if ((endOne >= startOne) && (endThree >= startThree)),
+      if nargin > 3  % If x2 has been provided use those indices
+        g(1, startVal:endVal) = multiKernGradientBlock(kern, ...
+                              arg{i}{:}, covGrad(startOne:endOne, ...
+                              startThree:endThree), i, i);
+      else
+        g(1, startVal:endVal) = multiKernGradientBlock(kern, ...
+                              arg{i}{1}, covGrad(startOne:endOne, ...
+                              startThree:endThree), i, i);
+      end
     else
-      g(1, startVal:endVal) = multiKernGradientBlock(kern, ...
-                            arg{i}{1}, covGrad(startOne:endOne, ...
-                            startThree:endThree), i, i);
-    end
+      % If the block has zero rows or columns then its gradient is all zero
+      g(1, startVal:endVal) = 0;
+    end;
+
+    % Compute gradient contributions of the off-diagonal blocks in the
+    % same row/column as the ith diagonal block
     startVal2 = 1;
     endVal2 = 0;
     for j = 1:i-1
@@ -91,12 +115,16 @@ if iscell(x)
       if ~isempty(kern.block{i}.cross{j})
         startTwo = sum(dim2(1:(j-1))) + 1;
         endTwo =  sum(dim2(1:j));
-        [g1, g2] = multiKernGradientBlock(kern, arg{i}{1}, ...
-                            arg{j}{2}, covGrad(startOne:endOne, ...
-                            startTwo:endTwo), i, j);
+
+        % Compute the contribution of the block if it has nonzero rows and columns
+        if ((endOne >= startOne) && (endTwo >= startTwo)),
+          [g1, g2] = multiKernGradientBlock(kern, arg{i}{1}, ...
+                              arg{j}{2}, covGrad(startOne:endOne, ...
+                              startTwo:endTwo), i, j);
         
-        g(1, startVal:endVal) = g(1, startVal:endVal) + 2*g1;
-        g(1, startVal2:endVal2) = g(1, startVal2:endVal2) + 2*g2;
+          g(1, startVal:endVal) = g(1, startVal:endVal) + 2*g1;
+          g(1, startVal2:endVal2) = g(1, startVal2:endVal2) + 2*g2;
+        end;
       end
       startVal2 = endVal2 + 1;
     end

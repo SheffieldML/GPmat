@@ -26,6 +26,8 @@ function kern = rbfKernParamInit(kern)
 % SEEALSO : kernCreate, kernParamInit
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
+%
+% COPYRIGHT : Antti Honkela, 2012
 
 % KERN
 
@@ -35,6 +37,16 @@ kern.variance = 1;
 kern.nParams = 2;
 
 % Constrains parameters positive for optimisation.
-kern.transforms.index = [1 2];
-kern.transforms.type = optimiDefaultConstraint('positive');
+if (isfield(kern,'options')) && ...
+   (isfield(kern.options,'boundedParam')) && kern.options.boundedParam,
+  for k=1:2,
+    kern.transforms(k).index = k;
+    kern.transforms(k).type = optimiDefaultConstraint('bounded');
+    kern.transforms(k).transformsettings = [0 1e6];
+  end
+else
+  kern.transforms.index = [1 2];
+  kern.transforms.type = optimiDefaultConstraint('positive');
+end
 kern.isStationary = true;
+kern.isNormalised = false;

@@ -45,8 +45,8 @@ if nargin < 5
 else
   arg{2}=x2;
 end
-if size(x1, 2) > 1 | size(x2, 2) > 1
-  error('Input can only have one column');
-end
+% if size(x1, 2) > 1 | size(x2, 2) > 1
+%   error('Input can only have one column');
+% end
 g1 = 0;
 g2 = 0;

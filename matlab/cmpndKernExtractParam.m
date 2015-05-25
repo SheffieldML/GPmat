@@ -19,13 +19,16 @@ function [params, names] = cmpndKernExtractParam(kern)
 
 
 params = zeros(1, kern.nParams);
+if nargout > 1
+  namesTemp = cell(1, kern.nParams);
+end
 startVal = 1;
 endVal = 0;
 storedTypes = cell(0);
 for i = 1:length(kern.comp)
   endVal = endVal + kern.comp{i}.nParams;
   if nargout > 1
-    [params(1, startVal:endVal), namesTemp(1, startVal:endVal)] = kernExtractParam(kern.comp{i});
+    [params(1, startVal:endVal), namesTemp(startVal:endVal)] = kernExtractParam(kern.comp{i});
     instNum = sum(strcmp(kern.comp{i}.type, storedTypes)) + 1;
     for j = startVal:endVal
       namesTemp{1, j} = [kern.comp{i}.type ' ' num2str(instNum) ' ' ...

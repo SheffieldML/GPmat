@@ -1,4 +1,4 @@
-function kern = componentKernReadParamsFromFID(kern, FID)
+function kern = componentKernReadParamsFromFID(kern, FID, version)
 
 % COMPONENTKERNREADPARAMSFROMFID Read a component based kernel from a C++ file.
 % FORMAT
@@ -18,7 +18,11 @@ numParams = readIntFromFID(FID, 'numParams');
 numKerns = readIntFromFID(FID, 'numKerns');
 
 for i=1:numKerns
-  kern.comp{i} = modelReadFromFID(FID);
+  if version > 0.11
+    kern.comp{i} = modelReadFromFID(FID);
+  else
+    kern.comp{i} = kernReadFromFID(FID, version);
+  end
 end
 
 for i = 1:length(kern.comp)

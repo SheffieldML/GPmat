@@ -17,7 +17,7 @@ function gX = mlpKernGradX(kern, X, X2)
 %
 % SEEALSO mlpKernParamInit, kernGradX, mlpKernDiagGradX
 %
-% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006, 2009
 
 % KERN
 
@@ -39,8 +39,9 @@ vec2 = sum(X2.*X2, 2)*kern.weightVariance + kern.biasVariance + 1;
 denom = sqrt(vec2*vec1');
 arg = numer./denom;
 gX = zeros(size(X2));
+twooverpi = 2/pi;
 for j = 1:size(X2, 2)
-  gX(:, j)=X2(:, j)./denom...
-           - vec2.*x(:, j).*numer./denom.^3;
-  gX(:, j) = kern.weightVariance*kern.variance*gX(:, j)./sqrt(1-arg.*arg);
+  gX(:, j)=X2(:, j)./denom - vec2.*x(:, j).*numer./denom.^3;
+  gX(:, j) = twooverpi*kern.weightVariance*kern.variance*gX(:, j)./sqrt(1-arg.*arg);
 end
+

@@ -31,8 +31,9 @@ numer = innerProd*kern.weightVariance + kern.biasVariance;
 denom = numer + 1;
 arg = numer./denom;
 gX = zeros(size(x));
+twooverpi = 2/pi;
 for j = 1:size(x, 2)
   gX(:, j)=1./denom...
            - numer./denom.^2;
-  gX(:, j) = 2*x(:, j)*kern.weightVariance*kern.variance*gX(:, j)./sqrt(1-arg.*arg);
+  gX(:, j) = 2*x(:, j)*kern.weightVariance*twooverpi*kern.variance*gX(:, j)./sqrt(1-arg.*arg);
 end

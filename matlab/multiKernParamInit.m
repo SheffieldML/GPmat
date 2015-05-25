@@ -59,7 +59,7 @@ for i = 1:length(kern.comp)
         kern.block{i}.cross{j} = func;
         kern.block{i}.transpose(j) = true;
       else
-        warning(['No cross covariance found between ' kern.comp{i}.type ...
+        warning('multiKernParamInit:noCrossKernel',['No cross covariance found between ' kern.comp{i}.type ...
                  ' and ' kern.comp{j}.type ' assuming independence.'])
         kern.block{i}.cross{j} = [];
         kern.block{i}.transpose(j) = 0;
@@ -69,3 +69,18 @@ for i = 1:length(kern.comp)
 end
 kern.paramGroups = speye(kern.nParams);
 
+if isfield(kern, 'options') && isfield(kern.options, 'fixBlocks'),
+  try,
+    uuid = char(java.util.UUID.randomUUID);
+    uuid = ['a' uuid(~(uuid=='-'))];
+  catch,
+    uuid = sprintf('%.30f', now);
+    uuid = ['a' uuid(~(uuid=='.'))];
+  end
+
+  kern.fixedBlocks = zeros(1, kern.numBlocks);
+  kern.fixedBlocks(options.fixBlocks) = 1;
+  kern.uuid = uuid;
+
+  multiKernCacheBlock(kern);
+end

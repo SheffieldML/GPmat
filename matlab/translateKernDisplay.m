@@ -1,4 +1,4 @@
-function translateKernDisplay(kern, spacing)
+function translateKernDisplay(kern, varargin)
 
 % TRANSLATEKERNDISPLAY Display parameters of the TRANSLATE kernel.
 % FORMAT
@@ -28,7 +28,8 @@ spacing = char(spacing);
 fprintf(spacing);
 fprintf('Translate kernel:\n')
 for i = 1:length(kern.centre)
-fprintf(' Centre %d: %2.4f\n', i, kern.centre(i));
+  fprintf(spacing);
+  fprintf(' Centre %d: %2.4f\n', i, kern.centre(i));
 end
 for i = 1:length(kern.comp)
   kernDisplay(kern.comp{i}, varargin{:});

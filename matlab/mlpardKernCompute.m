@@ -1,4 +1,4 @@
-function [k, innerProd, arg, denom, numer, vec1, vec2] = mlpardKernCompute(kern, x, x2)
+function [k, sk, innerProd, arg, denom, numer, vec1, vec2] = mlpardKernCompute(kern, x, x2)
 
 
 % MLPARDKERNCOMPUTE Compute the MLPARD kernel given the parameters and X.
@@ -19,7 +19,7 @@ function [k, innerProd, arg, denom, numer, vec1, vec2] = mlpardKernCompute(kern,
 %
 % SEEALSO : mlpardKernParamInit, kernCompute, kernCreate, mlpardKernDiagCompute
 %
-% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006, 2009
 
 % KERN
 
@@ -33,7 +33,8 @@ if nargin < 3
   vec1 = diag(numer) + 1;
   denom = sqrt(vec1*vec1');
   arg = numer./denom;
-  k = kern.variance*asin(arg);
+  sk = 2/pi*asin(arg);
+  k = kern.variance*sk;
 else
   x2 = x2*scales;
   innerProd = x*x2';  
@@ -42,5 +43,6 @@ else
   vec2 = sum(x2.*x2, 2)*kern.weightVariance + kern.biasVariance + 1;
   denom = sqrt(vec1*vec2');
   arg = numer./denom;
-  k = kern.variance*asin(arg);
+  sk = 2/pi*asin(arg);
+  k = kern.variance*sk;
 end

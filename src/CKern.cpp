@@ -35,8 +35,8 @@ void CKern::getPriorLogProb(CMatrix& G) const
 
 void CKern::getGradTransParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& cvGrd, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==getNumParams());
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==getNumParams());
   getGradParams(g, X, X2, cvGrd, regularise);
   double val;
   double param;
@@ -49,8 +49,8 @@ void CKern::getGradTransParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, 
 }
 void CKern::getGradTransParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==getNumParams());
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==getNumParams());
   getGradParams(g, X, cvGrd, regularise);
   double val;
   double param;
@@ -63,8 +63,8 @@ void CKern::getGradTransParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGr
 }
 void CKern::getDiagGradTransParams(CMatrix& g, const CMatrix& X, const CMatrix& cvGrd, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==getNumParams());
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==getNumParams());
   getDiagGradParams(g, X, cvGrd, regularise);
   double val;
   double param;
@@ -92,12 +92,12 @@ bool CKern::equals(const CKern& kern, double tol) const
 // The Component kernel
 void CComponentKern::readParamsFromStream(istream& in) 
 {
-  string tbaseType = getBaseTypeStream(in);
-  if(tbaseType != getBaseType())
-    throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
-  string ttype = getTypeStream(in);
-  if(ttype != getType())
-    throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
+//   string tbaseType = getBaseTypeStream(in);
+//   if(tbaseType != getBaseType())
+//     throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
+//   string ttype = getTypeStream(in);
+//   if(ttype != getType())
+//     throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
   setInputDim(readIntFromStream(in, "inputDim"));
   unsigned int nPar = readIntFromStream(in, "numParams");
   unsigned int numKerns = readIntFromStream(in, "numKerns");
@@ -116,7 +116,7 @@ void CComponentKern::writeParamsToStream(ostream& out) const
   writeToStream(out, "type", getType());
   writeToStream(out, "inputDim", getInputDim());
   writeToStream(out, "numParams", getNumParams());
-  writeToStream(out, "numKerns", components.size());
+  writeToStream(out, "numKerns", (unsigned int)components.size());
   for(unsigned int i=0; i<components.size(); i++)
   {
     components[i]->toStream(out);
@@ -125,16 +125,16 @@ void CComponentKern::writeParamsToStream(ostream& out) const
 
 
 // The Compound kernel.
-CCmpndKern::CCmpndKern()
+CCmpndKern::CCmpndKern() : CComponentKern()
 {
   _init();
 }
-CCmpndKern::CCmpndKern(unsigned int inDim)
+CCmpndKern::CCmpndKern(unsigned int inDim) : CComponentKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CCmpndKern::CCmpndKern(const CMatrix& X) 
+CCmpndKern::CCmpndKern(const CMatrix& X) : CComponentKern(X)
 {
   _init();
   setInputDim(X.getCols());
@@ -145,7 +145,6 @@ CCmpndKern::CCmpndKern(const CCmpndKern& kern) : CComponentKern(kern)
   setInputDim(kern.getInputDim());
   for(size_t i=0; i<components.size(); i++)
     addKern(components[i]->clone()); 
-  //  components(kern.components);// = kern.components;
 }
 // Class destructor
 CCmpndKern::~CCmpndKern()
@@ -172,8 +171,8 @@ double CCmpndKern::diagComputeElement(const CMatrix& X, unsigned int index) cons
 }
 void CCmpndKern::diagCompute(CMatrix& d, const CMatrix& X) const
 {
-  assert(d.getCols()==1);
-  assert(X.rowsMatch(d));
+  DIMENSIONMATCH(d.getCols()==1);
+  DIMENSIONMATCH(X.rowsMatch(d));
   d.zeros();
   CMatrix dStore(d.getRows(), d.getCols(), 0.0);
   for(size_t i=0; i < components.size(); i++)
@@ -184,9 +183,9 @@ void CCmpndKern::diagCompute(CMatrix& d, const CMatrix& X) const
 }
 void CCmpndKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, const CMatrix& X2, bool addG) const
 {
-  assert(gX.getRows() == X2.getRows());
-  assert(row>=0 && row < X.getRows());
-  assert(X.getCols()==X2.getCols());
+  DIMENSIONMATCH(gX.getRows() == X2.getRows());
+  BOUNDCHECK(row < X.getRows());
+  DIMENSIONMATCH(X.getCols()==X2.getCols());
   if(!addG)
     gX.zeros();
   for(size_t i=0; i<components.size(); i++)
@@ -194,7 +193,7 @@ void CCmpndKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, const
 }
 void CCmpndKern::getDiagGradX(CMatrix& gX, const CMatrix& X, bool addG) const
 {
-  assert(gX.dimensionsMatch(X));
+  DIMENSIONMATCH(gX.dimensionsMatch(X));
   if(!addG)
     gX.zeros();
   for(size_t i=0; i<components.size(); i++)
@@ -226,51 +225,51 @@ double CCmpndKern::computeElement(const CMatrix& X1, unsigned int index1,
   return y;
 }
 
-void CCmpndKern::compute(CMatrix& K, const CMatrix& X) const
-{
-  assert(K.rowsMatch(X));
-  assert(K.isSquare());
-  K.zeros();
-  CMatrix K2(K.getRows(), K.getCols());
-  for(size_t i=0; i<components.size(); i++)
-  {
-    components[i]->compute(K2, X);
-    K.axpy(K2, 1.0);
-  }
-}
-void CCmpndKern::compute(CMatrix& K, const CMatrix& X, const CMatrix& X2, unsigned int row) const
-{
-  assert(K.rowsMatch(X));
-  assert(K.getCols()==1);
-  //CMatrix K2(K.getRows(), K.getCols());
-  for(unsigned int i=0; i<X.getRows(); i++)
-  {
-    double kval=0.0;
-    for(unsigned int k=0; k<components.size(); k++)
-      kval+=components[k]->computeElement(X, i, X2, row);
-    K.setVal(kval, i, row);
-  }
-}
-void CCmpndKern::compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const
-{
-  assert(K.rowsMatch(X));
-  assert(K.getCols()==X2.getRows());
-  //CMatrix K2(K.getRows(), K.getCols());
-  for(unsigned int i=0; i<X.getRows(); i++)
-  {
-    for(unsigned int j=0; j<X2.getRows(); j++)
-    {
-      double kval=0.0;
-      for(unsigned int k=0; k<components.size(); k++)
-	kval+=components[k]->computeElement(X, i, X2, j);
-      K.setVal(kval, i, j);
-    }
-  }
-}
+// void CCmpndKern::compute(CMatrix& K, const CMatrix& X) const
+// {
+//   DIMENSIONMATCH(K.rowsMatch(X));
+//   MATRIXPROPERTIES(K.isSquare());
+//   K.zeros();
+//   CMatrix K2(K.getRows(), K.getCols());
+//   for(size_t i=0; i<components.size(); i++)
+//   {
+//     components[i]->compute(K2, X);
+//     K.axpy(K2, 1.0);
+//   }
+// }
+// void CCmpndKern::compute(CMatrix& K, const CMatrix& X, const CMatrix& X2, unsigned int row) const
+// {
+//   DIMENSIONMATCH(K.rowsMatch(X));
+//   DIMENSIONMATCH(K.getCols()==1);
+//   //CMatrix K2(K.getRows(), K.getCols());
+//   for(unsigned int i=0; i<X.getRows(); i++)
+//   {
+//     double kval=0.0;
+//     for(unsigned int k=0; k<components.size(); k++)
+//       kval+=components[k]->computeElement(X, i, X2, row);
+//     K.setVal(kval, i, row);
+//   }
+// }
+// void CCmpndKern::compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const
+// {
+//   DIMENSIONMATCH(K.rowsMatch(X));
+//   DIMENSIONMATCH(K.getCols()==X2.getRows());
+//   //CMatrix K2(K.getRows(), K.getCols());
+//   for(unsigned int i=0; i<X.getRows(); i++)
+//   {
+//     for(unsigned int j=0; j<X2.getRows(); j++)
+//     {
+//       double kval=0.0;
+//       for(unsigned int k=0; k<components.size(); k++)
+// 	kval+=components[k]->computeElement(X, i, X2, j);
+//       K.setVal(kval, i, j);
+//     }
+//   }
+// }
 void CCmpndKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==getNumParams());
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==getNumParams());
   unsigned int start = 0;
   unsigned int end = 0;
   for(size_t i=0; i<components.size(); i++)
@@ -284,8 +283,8 @@ void CCmpndKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, 
 }
 void CCmpndKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==getNumParams());
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==getNumParams());
   unsigned int start = 0;
   unsigned int end = 0;
   for(size_t i=0; i<components.size(); i++)
@@ -299,8 +298,8 @@ void CCmpndKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covG
 }
 double CCmpndKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
 {
-  assert(index>=0);
-  assert(index<nParams);
+  
+  BOUNDCHECK(index<nParams);
   unsigned int start=0;
   unsigned int end=0;
   for(size_t i=0; i<components.size(); i++)
@@ -314,8 +313,8 @@ double CCmpndKern::getGradParam(unsigned int index, const CMatrix& X, const CMat
 }
 double CCmpndKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& covGrad) const
 {
-  assert(index>=0);
-  assert(index<nParams);
+  
+  BOUNDCHECK(index<nParams);
   unsigned int start=0;
   unsigned int end=0;
   for(size_t i=0; i<components.size(); i++)
@@ -329,48 +328,51 @@ double CCmpndKern::getGradParam(unsigned int index, const CMatrix& X, const CMat
 }
 
 // The Tensor kernel.
-CTensorKern::CTensorKern()
+CTensorKern::CTensorKern() : CComponentKern()
 {
   _init();
 }
-CTensorKern::CTensorKern(unsigned int inDim)
+CTensorKern::CTensorKern(unsigned int inDim) : CComponentKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CTensorKern::CTensorKern(const CMatrix& X) 
+CTensorKern::CTensorKern(const CMatrix& X) : CComponentKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
 CTensorKern::CTensorKern(const CTensorKern& kern) : CComponentKern(kern)
 {
+
   _init();
   setInputDim(kern.getInputDim());
   for(size_t i=0; i<components.size(); i++)
+  {
     addKern(components[i]->clone()); 
+  }
 }
-CTensorKern::CTensorKern(const CTensorKern& kern, unsigned int comp) 
+CTensorKern::CTensorKern(const CTensorKern& kern, unsigned int comp) : CComponentKern(kern)
 {
   _init();
-  assert(comp>=0 && comp<kern.components.size());
+  BOUNDCHECK(comp<kern.components.size());
   setInputDim(kern.getInputDim());
   setInitParam();
   nParams = kern.getNumParams();
   nParams -= kern.components[comp]->getNumParams();
   for(size_t i=0; i<comp; i++)
   {
-    addKern(kern.components[i]);
+    addKern(kern.components[i]->clone());
   }
   for(size_t i=comp+1; i<kern.components.size(); i++)
   {
-    addKern(kern.components[i]);
+    addKern(kern.components[i]->clone());
   }
 }
 // Class destructor
 CTensorKern::~CTensorKern()
 {
-   for(size_t i=0; i<components.size(); i++)
+  for(size_t i=0; i<components.size(); i++)
     delete components[i];
 
 }
@@ -384,7 +386,7 @@ void CTensorKern::_init()
 void CTensorKern::setInitParam()
 {
 }
-unsigned int CTensorKern::addKern(CKern* kern)
+unsigned int CTensorKern::addKern(const CKern* kern)
 {
   if(kern->getWhite())
   {
@@ -402,8 +404,8 @@ double CTensorKern::diagComputeElement(const CMatrix& X, unsigned int index) con
 }
 void CTensorKern::diagCompute(CMatrix& d, const CMatrix& X) const
 {
-  assert(d.getCols()==1);
-  assert(X.rowsMatch(d));
+  DIMENSIONMATCH(d.getCols()==1);
+  DIMENSIONMATCH(X.rowsMatch(d));
   d.ones();
   CMatrix dStore(d.getRows(), d.getCols(), 0.0);
   for(size_t i=0; i < components.size(); i++)
@@ -433,53 +435,53 @@ double CTensorKern::computeElement(const CMatrix& X1, unsigned int index1,
   return y;
 }
 
-void CTensorKern::compute(CMatrix& K, const CMatrix& X) const
-{
-  assert(K.rowsMatch(X));
-  assert(K.isSquare());
-  K.ones();
-  CMatrix K2(K.getRows(), K.getCols());
-  for(size_t i=0; i<components.size(); i++)
-  {
-    components[i]->compute(K2, X);
-    K.dotMultiply(K2);
-  }
-}
+// void CTensorKern::compute(CMatrix& K, const CMatrix& X) const
+// {
+//   DIMENSIONMATCH(K.rowsMatch(X));
+//   DIMENSIONMATCH(K.isSquare());
+//   K.ones();
+//   CMatrix K2(K.getRows(), K.getCols());
+//   for(size_t i=0; i<components.size(); i++)
+//   {
+//     components[i]->compute(K2, X);
+//     K.dotMultiply(K2);
+//   }
+// }
 
-void CTensorKern::compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const
-{
-  assert(K.rowsMatch(X));
-  assert(K.getCols()==X2.getRows());
-  //CMatrix K2(K.getRows(), K.getCols());
-  for(unsigned int i=0; i<X.getRows(); i++)
-  {
-    for(unsigned int j=0; j<X2.getRows(); j++)
-    {
-      double kval=1.0;
-      for(size_t k=0; k<components.size(); k++)
-	kval*=components[k]->computeElement(X, i, X2, j);
-      K.setVal(kval, i, j);
-    }
-  }
-}
-void CTensorKern::compute(CMatrix& K, const CMatrix& X, const CMatrix& X2, unsigned int row) const
-{
-  assert(K.rowsMatch(X));
-  assert(K.getCols()==1);
-  //CMatrix K2(K.getRows(), K.getCols());
-  for(unsigned int i=0; i<X.getRows(); i++)
-  {
-    double kval=1.0;
-    for(size_t k=0; k<components.size(); k++)
-      kval*=components[k]->computeElement(X, i, X2, row);
-    K.setVal(kval, i, row);
-  }
-}
+// void CTensorKern::compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const
+// {
+//   DIMENSIONMATCH(K.rowsMatch(X));
+//   DIMENSIONMATCH(K.getCols()==X2.getRows());
+//   //CMatrix K2(K.getRows(), K.getCols());
+//   for(unsigned int i=0; i<X.getRows(); i++)
+//   {
+//     for(unsigned int j=0; j<X2.getRows(); j++)
+//     {
+//       double kval=1.0;
+//       for(size_t k=0; k<components.size(); k++)
+// 	kval*=components[k]->computeElement(X, i, X2, j);
+//       K.setVal(kval, i, j);
+//     }
+//   }
+// }
+// void CTensorKern::compute(CMatrix& K, const CMatrix& X, const CMatrix& X2, unsigned int row) const
+// {
+//   DIMENSIONMATCH(K.rowsMatch(X));
+//   DIMENSIONMATCH(K.getCols()==1);
+//   //CMatrix K2(K.getRows(), K.getCols());
+//   for(unsigned int i=0; i<X.getRows(); i++)
+//   {
+//     double kval=1.0;
+//     for(size_t k=0; k<components.size(); k++)
+//       kval*=components[k]->computeElement(X, i, X2, row);
+//     K.setVal(kval, i, row);
+//   }
+// }
 void CTensorKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, const CMatrix& X2, bool addG) const
 {
-  assert(gX.getRows() == X2.getRows());
-  assert(row>=0 && row < X.getRows());
-  assert(X.getCols()==X2.getCols());
+  DIMENSIONMATCH(gX.getRows() == X2.getRows());
+  BOUNDCHECK(row < X.getRows());
+  DIMENSIONMATCH(X.getCols()==X2.getCols());
   if(!addG)
     gX.zeros();
   CMatrix gXTemp(gX.getRows(), gX.getCols());
@@ -498,7 +500,7 @@ void CTensorKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, cons
 }
 void CTensorKern::getDiagGradX(CMatrix& gX, const CMatrix& X, bool addG) const
 {
-  assert(gX.dimensionsMatch(X));
+  DIMENSIONMATCH(gX.dimensionsMatch(X));
   if(!addG)
     gX.zeros();
   CMatrix gXTemp(gX.getRows(), gX.getCols());
@@ -517,8 +519,8 @@ void CTensorKern::getDiagGradX(CMatrix& gX, const CMatrix& X, bool addG) const
 }
 void CTensorKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==getNumParams());
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==getNumParams());
   unsigned int start = 0;
   unsigned int end = 0;
   CMatrix tempCovGrad(covGrad.getRows(), covGrad.getCols());
@@ -536,8 +538,8 @@ void CTensorKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2,
 }
 void CTensorKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==getNumParams());
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==getNumParams());
   unsigned int start = 0;
   unsigned int end = 0;
   CMatrix tempCovGrad(covGrad.getRows(), covGrad.getCols());
@@ -556,8 +558,8 @@ void CTensorKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cov
 }
 double CTensorKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
 {
-  assert(index>=0);
-  assert(index<nParams);
+  
+  BOUNDCHECK(index<nParams);
   unsigned int start=0;
   unsigned int end=0;
   CMatrix tempCovGrad(covGrad.getRows(), covGrad.getCols());
@@ -577,8 +579,8 @@ double CTensorKern::getGradParam(unsigned int index, const CMatrix& X, const CMa
 }
 double CTensorKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& covGrad) const
 {
-  assert(index>=0);
-  assert(index<nParams);
+  
+  BOUNDCHECK(index<nParams);
   unsigned int start=0;
   unsigned int end=0;
   CMatrix tempCovGrad(covGrad.getRows(), covGrad.getCols());
@@ -599,21 +601,21 @@ double CTensorKern::getGradParam(unsigned int index, const CMatrix& X, const CMa
   return -1;
 }
 // the white noise kernel.
-CWhiteKern::CWhiteKern()
+CWhiteKern::CWhiteKern() : CKern()
 {
   _init();
 }
-CWhiteKern::CWhiteKern(unsigned int inDim)
+CWhiteKern::CWhiteKern(unsigned int inDim) : CKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CWhiteKern::CWhiteKern(const CMatrix& X)
+CWhiteKern::CWhiteKern(const CMatrix& X) : CKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
-CWhiteKern::CWhiteKern(const CWhiteKern& kern)
+CWhiteKern::CWhiteKern(const CWhiteKern& kern) : CKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -647,13 +649,13 @@ inline double CWhiteKern::diagComputeElement(const CMatrix& X, unsigned int inde
 }
 void CWhiteKern::diagCompute(CMatrix& d, const CMatrix& X) const
 {
-  assert(d.getCols()==1);
-  assert(X.rowsMatch(d));
+  DIMENSIONMATCH(d.getCols()==1);
+  DIMENSIONMATCH(X.rowsMatch(d));
   d.setVals(variance);
 }
 void CWhiteKern::setParam(double val, unsigned int paramNo)
 {
-  assert(paramNo==0);
+  DIMENSIONMATCH(paramNo==0);
   switch(paramNo)
   {
   case 0:
@@ -666,7 +668,7 @@ void CWhiteKern::setParam(double val, unsigned int paramNo)
 // Parameters are kernel parameters
 double CWhiteKern::getParam(unsigned int paramNo) const
 {
-  assert(paramNo==0);
+  BOUNDCHECK(paramNo==0);
   switch(paramNo)
   {
   case 0:
@@ -678,9 +680,9 @@ double CWhiteKern::getParam(unsigned int paramNo) const
 }
 void CWhiteKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, const CMatrix& X2,  bool addG) const
 {
-  assert(gX.getRows() == X2.getRows());
-  assert(row>=0 && row < X.getRows());
-  assert(X.getCols()==X2.getCols());
+  DIMENSIONMATCH(gX.getRows() == X2.getRows());
+  BOUNDCHECK(row < X.getRows());
+  DIMENSIONMATCH(X.getCols()==X2.getCols());
   if(!addG)
   {
     gX.zeros();
@@ -688,7 +690,7 @@ void CWhiteKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, const
 }
 void CWhiteKern::getDiagGradX(CMatrix& gX, const CMatrix& X, bool addG) const
 {
-  assert(gX.dimensionsMatch(X));
+  DIMENSIONMATCH(gX.dimensionsMatch(X));
   if(!addG)
     gX.zeros();
 }
@@ -705,8 +707,8 @@ inline double CWhiteKern::computeElement(const CMatrix& X1, unsigned int index1,
 
 void CWhiteKern::compute(CMatrix& K, const CMatrix& X) const
 {
-  assert(K.rowsMatch(X));
-  assert(K.isSquare());
+  DIMENSIONMATCH(K.rowsMatch(X));
+  MATRIXPROPERTIES(K.isSquare());
   K.zeros();
   for(unsigned int i=0; i<K.getRows(); i++)
     K.setVal(variance, i, i);
@@ -715,43 +717,190 @@ void CWhiteKern::compute(CMatrix& K, const CMatrix& X) const
 
 void CWhiteKern::compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const
 {
-  assert(K.rowsMatch(X));
-  assert(K.getCols()==X2.getRows());
+  DIMENSIONMATCH(K.rowsMatch(X));
+  DIMENSIONMATCH(K.getCols()==X2.getRows());
   K.zeros();
 }
 void CWhiteKern::compute(CMatrix& K, const CMatrix& X, const CMatrix& X2, unsigned int row) const
 {
-  assert(K.rowsMatch(X));
-  assert(K.getCols()==1);
+  DIMENSIONMATCH(K.rowsMatch(X));
+  DIMENSIONMATCH(K.getCols()==1);
   K.zeros();
 }
 double CWhiteKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
 {
-  assert(index==0);
+  BOUNDCHECK(index==0);
   return 0.0;
 }
 double CWhiteKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& covGrad) const
 {
-  assert(index==0);
+  BOUNDCHECK(index==0);
   return trace(covGrad);
 }
 
-// the bias kernel.
-CBiasKern::CBiasKern()
+// the white noise kernel.
+CWhitefixedKern::CWhitefixedKern() : CKern()
 {
   _init();
 }
-CBiasKern::CBiasKern(unsigned int inDim)
+CWhitefixedKern::CWhitefixedKern(unsigned int inDim) : CKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CBiasKern::CBiasKern(const CMatrix& X)
+CWhitefixedKern::CWhitefixedKern(const CMatrix& X) : CKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
-CBiasKern::CBiasKern(const CBiasKern& kern)
+CWhitefixedKern::CWhitefixedKern(const CWhitefixedKern& kern) : CKern(kern)
+{
+  _init();
+  setInputDim(kern.getInputDim());
+  variance = kern.variance;
+}
+// Class destructor
+CWhitefixedKern::~CWhitefixedKern()
+{
+}
+ostream& CWhitefixedKern::display(ostream& os) const
+{
+  os << getName() << " kernel:" << endl;
+  os << "variance: " << variance << endl;
+  return os;
+}
+
+void CWhitefixedKern::writeParamsToStream(ostream& out) const
+{
+  writeToStream(out, "baseType", getBaseType());
+  writeToStream(out, "type", getType());
+  writeToStream(out, "inputDim", getInputDim());
+  writeToStream(out, "numParams", getNumParams());
+  writeToStream(out, "variance", variance);
+}
+void CWhitefixedKern::readParamsFromStream(istream& in)
+{
+//   string tbaseType = getBaseTypeStream(in);
+//   if(tbaseType != getBaseType())
+//     throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
+//   string ttype = getTypeStream(in);
+//   if(ttype != getType())
+//     throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
+  setInputDim(readIntFromStream(in, "inputDim"));
+  unsigned int numParams=readIntFromStream(in, "numParams");
+  setVariance(readDoubleFromStream(in, "variance"));
+}
+
+double CWhitefixedKern::getVariance() const
+{
+  return variance;
+}
+void CWhitefixedKern::_init()
+{
+  nParams = 0;
+  setType("whitefixed");
+  setName("fixed white noise");
+  setStationary(true);
+}
+void CWhitefixedKern::setInitParam()
+{
+  variance = exp(-2.0);  
+}
+
+inline double CWhitefixedKern::diagComputeElement(const CMatrix& X, unsigned int index) const
+{
+  return variance;
+}
+void CWhitefixedKern::diagCompute(CMatrix& d, const CMatrix& X) const
+{
+  DIMENSIONMATCH(d.getCols()==1);
+  DIMENSIONMATCH(X.rowsMatch(d));
+  d.setVals(variance);
+}
+void CWhitefixedKern::setParam(double val, unsigned int paramNo)
+{
+  throw ndlexceptions::Error("Requested parameter doesn't exist.");
+}
+// Parameters are kernel parameters
+double CWhitefixedKern::getParam(unsigned int paramNo) const
+{
+  throw ndlexceptions::Error("Requested parameter doesn't exist.");
+}
+void CWhitefixedKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, const CMatrix& X2,  bool addG) const
+{
+  DIMENSIONMATCH(gX.getRows() == X2.getRows());
+  BOUNDCHECK(row < X.getRows());
+  DIMENSIONMATCH(X.getCols()==X2.getCols());
+  if(!addG)
+  {
+    gX.zeros();
+  }
+}
+void CWhitefixedKern::getDiagGradX(CMatrix& gX, const CMatrix& X, bool addG) const
+{
+  DIMENSIONMATCH(gX.dimensionsMatch(X));
+  if(!addG)
+    gX.zeros();
+}
+double CWhitefixedKern::getWhite() const
+{
+  return variance;
+}
+
+inline double CWhitefixedKern::computeElement(const CMatrix& X1, unsigned int index1,
+					 const CMatrix& X2, unsigned int index2) const
+{
+  return 0.0;
+}
+
+void CWhitefixedKern::compute(CMatrix& K, const CMatrix& X) const
+{
+  DIMENSIONMATCH(K.rowsMatch(X));
+  MATRIXPROPERTIES(K.isSquare());
+  K.zeros();
+  for(unsigned int i=0; i<K.getRows(); i++)
+    K.setVal(variance, i, i);
+  K.setSymmetric(true);
+}
+
+void CWhitefixedKern::compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const
+{
+  DIMENSIONMATCH(K.rowsMatch(X));
+  DIMENSIONMATCH(K.getCols()==X2.getRows());
+  K.zeros();
+}
+void CWhitefixedKern::compute(CMatrix& K, const CMatrix& X, const CMatrix& X2, unsigned int row) const
+{
+  DIMENSIONMATCH(K.rowsMatch(X));
+  DIMENSIONMATCH(K.getCols()==1);
+  K.zeros();
+}
+double CWhitefixedKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
+{
+  throw ndlexceptions::Error("Requested parameter doesn't exist.");
+
+}
+double CWhitefixedKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& covGrad) const
+{
+  throw ndlexceptions::Error("Requested parameter doesn't exist.");
+}
+
+// the bias kernel.
+CBiasKern::CBiasKern() : CKern()
+{
+  _init();
+}
+CBiasKern::CBiasKern(unsigned int inDim) : CKern(inDim)
+{
+  _init();
+  setInputDim(inDim);
+}
+CBiasKern::CBiasKern(const CMatrix& X) : CKern(X)
+{
+  _init();
+  setInputDim(X.getCols());
+}  
+CBiasKern::CBiasKern(const CBiasKern& kern) : CKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -787,14 +936,14 @@ double CBiasKern::diagComputeElement(const CMatrix& X, unsigned int index) const
 }
 void CBiasKern::diagCompute(CMatrix& d, const CMatrix& X) const
 {
-  assert(d.getCols()==1);
-  assert(X.rowsMatch(d));
+  DIMENSIONMATCH(d.getCols()==1);
+  DIMENSIONMATCH(X.rowsMatch(d));
   d.setVals(variance);
 }
 // Parameters are kernel parameters
 void CBiasKern::setParam(double val, unsigned int paramNo)
 {
-  assert(paramNo==0);
+  BOUNDCHECK(paramNo==0);
   switch(paramNo)
   {
   case 0:
@@ -806,7 +955,7 @@ void CBiasKern::setParam(double val, unsigned int paramNo)
 }
 double CBiasKern::getParam(unsigned int paramNo) const
 {
-  assert(paramNo==0);
+  BOUNDCHECK(paramNo==0);
   switch(paramNo)
   {
   case 0:
@@ -818,9 +967,9 @@ double CBiasKern::getParam(unsigned int paramNo) const
 }
 void CBiasKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, const CMatrix& X2, bool addG) const
 {
-  assert(gX.getRows() == X2.getRows());
-  assert(row>=0 && row < X.getRows());
-  assert(X.getCols()==X2.getCols());
+  DIMENSIONMATCH(gX.getRows() == X2.getRows());
+  BOUNDCHECK(row < X.getRows());
+  DIMENSIONMATCH(X.getCols()==X2.getCols());
   if(!addG)
   {
     gX.zeros();
@@ -828,7 +977,7 @@ void CBiasKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, const 
 }
 void CBiasKern::getDiagGradX(CMatrix& gX, const CMatrix& X, bool addG) const
 {
-  assert(gX.dimensionsMatch(X));
+  DIMENSIONMATCH(gX.dimensionsMatch(X));
   if(!addG)
     gX.zeros();
 }
@@ -845,50 +994,50 @@ inline double CBiasKern::computeElement(const CMatrix& X1, unsigned int index1,
 
 void CBiasKern::compute(CMatrix& K, const CMatrix& X) const
 {
-  assert(K.rowsMatch(X));
-  assert(K.isSquare());
+  DIMENSIONMATCH(K.rowsMatch(X));
+  MATRIXPROPERTIES(K.isSquare());
   K.setVals(variance);
   K.setSymmetric(true);
 }
 
 void CBiasKern::compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const
 {
-  assert(K.rowsMatch(X));
-  assert(K.getCols()==X2.getRows());
+  DIMENSIONMATCH(K.rowsMatch(X));
+  DIMENSIONMATCH(K.getCols()==X2.getRows());
   K.setVals(variance);
 }
 void CBiasKern::compute(CMatrix& K, const CMatrix& X, const CMatrix& X2, unsigned int row) const
 {
-  assert(K.rowsMatch(X));
-  assert(K.getCols()==1);
+  DIMENSIONMATCH(K.rowsMatch(X));
+  DIMENSIONMATCH(K.getCols()==1);
   K.setVals(variance);
 }
 double CBiasKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const 
 {
-  assert(index==0);
+  BOUNDCHECK(index==0);
   return covGrad.sum();
 }
 double CBiasKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& covGrad) const 
 {
-  assert(index==0);
+  BOUNDCHECK(index==0);
   return covGrad.sum();
 }
 // the RBF kernel.
-CRbfKern::CRbfKern() : updateXused(false)
+CRbfKern::CRbfKern() : CKern()
 {
   _init();
 }
-CRbfKern::CRbfKern(unsigned int inDim) : updateXused(false)
+CRbfKern::CRbfKern(unsigned int inDim) : CKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CRbfKern::CRbfKern(const CMatrix& X) : updateXused(false)
+CRbfKern::CRbfKern(const CMatrix& X) : CKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
-CRbfKern::CRbfKern(const CRbfKern& kern)
+CRbfKern::CRbfKern(const CRbfKern& kern) : CKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -918,7 +1067,6 @@ void CRbfKern::setInitParam()
 {
   inverseWidth = 1.0;
   variance = 1.0;
-  
 }
 
 inline double CRbfKern::diagComputeElement(const CMatrix& X, unsigned int index) const
@@ -927,14 +1075,14 @@ inline double CRbfKern::diagComputeElement(const CMatrix& X, unsigned int index)
 }
 void CRbfKern::diagCompute(CMatrix& d, const CMatrix& X) const
 {
-  assert(d.getCols()==1);
-  assert(X.rowsMatch(d));
+  DIMENSIONMATCH(d.getCols()==1);
+  DIMENSIONMATCH(X.rowsMatch(d));
   d.setVals(variance);
 }
 // Parameters are kernel parameters
 void CRbfKern::setParam(double val, unsigned int paramNo)
 {
-  assert(paramNo < nParams);
+  BOUNDCHECK(paramNo < nParams);
   switch(paramNo)
   {
   case 0:
@@ -949,7 +1097,7 @@ void CRbfKern::setParam(double val, unsigned int paramNo)
 }
 double CRbfKern::getParam(unsigned int paramNo) const
 {
-  assert(paramNo < nParams);
+  BOUNDCHECK(paramNo < nParams);
   switch(paramNo)
   {
   case 0:
@@ -964,12 +1112,12 @@ double CRbfKern::getParam(unsigned int paramNo) const
 }
 void CRbfKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, const CMatrix& X2, bool addG) const
 {
-  assert(gX.getRows() == X2.getRows());
-  assert(row>=0 && row < X.getRows());
-  assert(X.getCols()==X2.getCols());
+  DIMENSIONMATCH(gX.getRows() == X2.getRows());
+  BOUNDCHECK(row < X.getRows());
+  DIMENSIONMATCH(X.getCols()==X2.getCols());
   double wi2 = 0.5*inverseWidth;
   double pf = variance*inverseWidth;
-  assert(gX.getCols()==X2.getCols());
+  DIMENSIONMATCH(gX.getCols()==X2.getCols());
   for(unsigned int k=0; k<X2.getRows(); k++)
   {
     double n2 = X.dist2Row(row, X2, k);
@@ -985,7 +1133,7 @@ void CRbfKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, const C
 }
 void CRbfKern::getDiagGradX(CMatrix& gX, const CMatrix& X, bool addG) const
 {
-  assert(gX.dimensionsMatch(X));
+  DIMENSIONMATCH(gX.dimensionsMatch(X));
   if(!addG)
     gX.zeros();
 }
@@ -1005,7 +1153,7 @@ double CRbfKern::computeElement(const CMatrix& X1, unsigned int index1,
 
 void CRbfKern::updateX(const CMatrix& X)
 {
-  updateXused = true;
+  setUpdateXused(true);
   Xdists.resize(X.getRows(),X.getRows());
   double halfInverseWidth=0.5*inverseWidth;
   unsigned int nrows = X.getRows();
@@ -1022,10 +1170,10 @@ void CRbfKern::updateX(const CMatrix& X)
 }
 void CRbfKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==nParams);
-  assert(X.getRows()==covGrad.getRows());
-  assert(X2.getRows()==covGrad.getCols());
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==nParams);
+  DIMENSIONMATCH(X.getRows()==covGrad.getRows());
+  DIMENSIONMATCH(X2.getRows()==covGrad.getCols());
   double g1=0.0;
   double g2=0.0;
   double halfInverseWidth=0.5*inverseWidth;
@@ -1053,9 +1201,9 @@ void CRbfKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, co
 
 void CRbfKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==nParams);
-  assert(covGrad.isSymmetric());
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==nParams);
+  MATRIXPROPERTIES(covGrad.isSymmetric());
   double g1=0.0;
   double g2=0.0;
   double halfInverseWidth=0.5*inverseWidth;
@@ -1069,7 +1217,7 @@ void CRbfKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGra
     {
       double k = 0;
       double dist2 = 0;
-      if(updateXused) // WVB's mod for precomputing parts of the kernel.
+      if(isUpdateXused()) // WVB's mod for precomputing parts of the kernel.
       {
 	dist2 = Xdists.getVal(i,j);
 	k = Xdists.getVal(j,i);
@@ -1092,35 +1240,35 @@ void CRbfKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGra
 
 double CRbfKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
 {
-  assert(index>=0);
-  assert(index<nParams);
+  
+  BOUNDCHECK(index<nParams);
   throw ndlexceptions::NotImplementedError( "Error getGradParam is not currently implemented for CRbfKern");
   
 }
 double CRbfKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& covGrad) const
 {
-  assert(index>=0);
-  assert(index<nParams);
+  
+  BOUNDCHECK(index<nParams);
   throw ndlexceptions::NotImplementedError( "Error getGradParam is not currently implemented for CRbfKern");
   
 }
 
 // the Rational Quadratic kernel.
-CRatQuadKern::CRatQuadKern() : updateXused(false)
+CRatQuadKern::CRatQuadKern() : CKern()
 {
   _init();
 }
-CRatQuadKern::CRatQuadKern(unsigned int inDim) : updateXused(false)
+CRatQuadKern::CRatQuadKern(unsigned int inDim) : CKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CRatQuadKern::CRatQuadKern(const CMatrix& X) : updateXused(false)
+CRatQuadKern::CRatQuadKern(const CMatrix& X) : CKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
-CRatQuadKern::CRatQuadKern(const CRatQuadKern& kern)
+CRatQuadKern::CRatQuadKern(const CRatQuadKern& kern) : CKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -1162,14 +1310,14 @@ inline double CRatQuadKern::diagComputeElement(const CMatrix& X, unsigned int in
 }
 void CRatQuadKern::diagCompute(CMatrix& d, const CMatrix& X) const
 {
-  assert(d.getCols()==1);
-  assert(X.rowsMatch(d));
+  DIMENSIONMATCH(d.getCols()==1);
+  DIMENSIONMATCH(X.rowsMatch(d));
   d.setVals(variance);
 }
 // Parameters are kernel parameters
 void CRatQuadKern::setParam(double val, unsigned int paramNo)
 {
-  assert(paramNo < nParams);
+  BOUNDCHECK(paramNo < nParams);
   switch(paramNo)
   {
   case 0:
@@ -1187,7 +1335,7 @@ void CRatQuadKern::setParam(double val, unsigned int paramNo)
 }
 double CRatQuadKern::getParam(unsigned int paramNo) const
 {
-  assert(paramNo < nParams);
+  BOUNDCHECK(paramNo < nParams);
   switch(paramNo)
   {
   case 0:
@@ -1206,9 +1354,9 @@ double CRatQuadKern::getParam(unsigned int paramNo) const
 
 void CRatQuadKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, const CMatrix& X2, bool addG) const
 {
-  assert(gX.getRows() == X2.getRows());
-  assert(row>=0 && row < X.getRows());
-  assert(X.getCols()==X2.getCols());
+  DIMENSIONMATCH(gX.getRows() == X2.getRows());
+  BOUNDCHECK(row < X.getRows());
+  DIMENSIONMATCH(X.getCols()==X2.getCols());
   double wi2 = 0.5/(lengthScale*lengthScale*alpha);
   for(unsigned int k=0; k<X2.getRows(); k++)
   {
@@ -1226,7 +1374,7 @@ void CRatQuadKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, con
 }
 void CRatQuadKern::getDiagGradX(CMatrix& gX, const CMatrix& X, bool addG) const
 {
-  assert(gX.dimensionsMatch(X));
+  DIMENSIONMATCH(gX.dimensionsMatch(X));
   if(!addG)
     gX.zeros();
 }
@@ -1246,7 +1394,7 @@ double CRatQuadKern::computeElement(const CMatrix& X1, unsigned int index1,
 
 void CRatQuadKern::updateX(const CMatrix& X)
 {
-  updateXused = true;
+  setUpdateXused(true);
   Xdists.resize(X.getRows(),X.getRows());
   double wi2=0.5/(lengthScale*lengthScale*alpha);
   unsigned int nrows = X.getRows();
@@ -1263,10 +1411,10 @@ void CRatQuadKern::updateX(const CMatrix& X)
 }
 void CRatQuadKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==nParams);
-  assert(X.getRows()==covGrad.getRows());
-  assert(X2.getRows()==covGrad.getCols());
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==nParams);
+  DIMENSIONMATCH(X.getRows()==covGrad.getRows());
+  DIMENSIONMATCH(X2.getRows()==covGrad.getCols());
   double g1=0.0;
   double g2=0.0;
   double g3=0.0;
@@ -1297,9 +1445,9 @@ void CRatQuadKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2
 
 void CRatQuadKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==nParams);
-  assert(covGrad.isSymmetric());
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==nParams);
+  MATRIXPROPERTIES(covGrad.isSymmetric());
   double g1=0.0;
   double g2=0.0;
   double g3=0.0;
@@ -1314,7 +1462,7 @@ void CRatQuadKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& co
     double dist2 = 0.0;
     for(unsigned int i=0; i<j; i++)
     {
-      if(updateXused) // WVB's mod for precomputing parts of the kernel.
+      if(isUpdateXused()) // WVB's mod for precomputing parts of the kernel.
       {
 	dist2 = Xdists.getVal(i,j);
 	baseVal = (1+dist2*wi2);
@@ -1344,34 +1492,34 @@ void CRatQuadKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& co
 
 double CRatQuadKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
 {
-  assert(index>=0);
-  assert(index<nParams);
+  
+  BOUNDCHECK(index<nParams);
   throw ndlexceptions::NotImplementedError("getGradParam is not currently implemented for CRatQuadKern.");
 }
 double CRatQuadKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& covGrad) const
 {
-  assert(index>=0);
-  assert(index<nParams);
+  
+  BOUNDCHECK(index<nParams);
   throw ndlexceptions::NotImplementedError("getGradParam is not currently implemented for CRatQuadKern.");
 }
 
 
 // the Matern 3/2 kernel.
-CMatern32Kern::CMatern32Kern() : updateXused(false)
+CMatern32Kern::CMatern32Kern() : CKern()
 {
   _init();
 }
-CMatern32Kern::CMatern32Kern(unsigned int inDim) : updateXused(false)
+CMatern32Kern::CMatern32Kern(unsigned int inDim) : CKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CMatern32Kern::CMatern32Kern(const CMatrix& X) : updateXused(false)
+CMatern32Kern::CMatern32Kern(const CMatrix& X) : CKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
-CMatern32Kern::CMatern32Kern(const CMatern32Kern& kern)
+CMatern32Kern::CMatern32Kern(const CMatern32Kern& kern) : CKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -1409,14 +1557,14 @@ inline double CMatern32Kern::diagComputeElement(const CMatrix& X, unsigned int i
 }
 void CMatern32Kern::diagCompute(CMatrix& d, const CMatrix& X) const
 {
-  assert(d.getCols()==1);
-  assert(X.rowsMatch(d));
+  DIMENSIONMATCH(d.getCols()==1);
+  DIMENSIONMATCH(X.rowsMatch(d));
   d.setVals(variance);
 }
 // Parameters are kernel parameters
 void CMatern32Kern::setParam(double val, unsigned int paramNo)
 {
-  assert(paramNo < nParams);
+  BOUNDCHECK(paramNo < nParams);
   switch(paramNo)
   {
   case 0:
@@ -1431,7 +1579,7 @@ void CMatern32Kern::setParam(double val, unsigned int paramNo)
 }
 double CMatern32Kern::getParam(unsigned int paramNo) const
 {
-  assert(paramNo < nParams);
+  BOUNDCHECK(paramNo < nParams);
   switch(paramNo)
   {
   case 0:
@@ -1447,9 +1595,9 @@ double CMatern32Kern::getParam(unsigned int paramNo) const
 
 void CMatern32Kern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, const CMatrix& X2, bool addG) const
 {
-  assert(gX.getRows() == X2.getRows());
-  assert(row>=0 && row < X.getRows());
-  assert(X.getCols()==X2.getCols());
+  DIMENSIONMATCH(gX.getRows() == X2.getRows());
+  BOUNDCHECK(row < X.getRows());
+  DIMENSIONMATCH(X.getCols()==X2.getCols());
   double wi2= 3.0/(lengthScale*lengthScale);
   for(unsigned int k=0; k<X2.getRows(); k++)
   {
@@ -1474,7 +1622,7 @@ void CMatern32Kern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, co
 }
 void CMatern32Kern::getDiagGradX(CMatrix& gX, const CMatrix& X, bool addG) const
 {
-  assert(gX.dimensionsMatch(X));
+  DIMENSIONMATCH(gX.dimensionsMatch(X));
   if(!addG)
     gX.zeros();
 }
@@ -1495,7 +1643,7 @@ double CMatern32Kern::computeElement(const CMatrix& X1, unsigned int index1,
 
 void CMatern32Kern::updateX(const CMatrix& X)
 {
-  updateXused = true;
+  setUpdateXused(true);
   Xdists.resize(X.getRows(),X.getRows());
   double wi2=3.0/(lengthScale*lengthScale);
   unsigned int nrows = X.getRows();
@@ -1512,10 +1660,10 @@ void CMatern32Kern::updateX(const CMatrix& X)
 }
 void CMatern32Kern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==nParams);
-  assert(X.getRows()==covGrad.getRows());
-  assert(X2.getRows()==covGrad.getCols());
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==nParams);
+  DIMENSIONMATCH(X.getRows()==covGrad.getRows());
+  DIMENSIONMATCH(X2.getRows()==covGrad.getCols());
   double g1=0.0;
   double g2=0.0;
   double wi2=3.0/(lengthScale*lengthScale);
@@ -1546,9 +1694,9 @@ void CMatern32Kern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X
 
 void CMatern32Kern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==nParams);
-  assert(covGrad.isSymmetric());
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==nParams);
+  MATRIXPROPERTIES(covGrad.isSymmetric());
   double g1=0.0;
   double g2=0.0;
   double wi2=3.0/(lengthScale*lengthScale);
@@ -1561,7 +1709,7 @@ void CMatern32Kern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& c
   {
     for(unsigned int i=0; i<j; i++)
     {
-      if(updateXused) // WVB's mod for precomputing parts of the kernel.
+      if(isUpdateXused()) // WVB's mod for precomputing parts of the kernel.
       {
 	n2 = Xdists.getVal(i,j);
 	sqrtwi2n2 = Xdists.getVal(j,i);
@@ -1591,34 +1739,34 @@ void CMatern32Kern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& c
 
 double CMatern32Kern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
 {
-  assert(index>=0);
-  assert(index<nParams);
+  
+  BOUNDCHECK(index<nParams);
   throw ndlexceptions::NotImplementedError("Error getGradParam is not currently implemented for CMatern32Kern");
   
 }
 double CMatern32Kern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& covGrad) const
 {
-  assert(index>=0);
-  assert(index<nParams);
+  
+  BOUNDCHECK(index<nParams);
   throw ndlexceptions::NotImplementedError("Error getGradParam is not currently implemented for CMatern32Kern"); 
 }
 
 // the Matern 5/2 kernel.
-CMatern52Kern::CMatern52Kern() : updateXused(false)
+CMatern52Kern::CMatern52Kern() : CKern()
 {
   _init();
 }
-CMatern52Kern::CMatern52Kern(unsigned int inDim) : updateXused(false)
+CMatern52Kern::CMatern52Kern(unsigned int inDim) : CKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CMatern52Kern::CMatern52Kern(const CMatrix& X) : updateXused(false)
+CMatern52Kern::CMatern52Kern(const CMatrix& X) : CKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
-CMatern52Kern::CMatern52Kern(const CMatern52Kern& kern)
+CMatern52Kern::CMatern52Kern(const CMatern52Kern& kern) : CKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -1656,14 +1804,14 @@ inline double CMatern52Kern::diagComputeElement(const CMatrix& X, unsigned int i
 }
 void CMatern52Kern::diagCompute(CMatrix& d, const CMatrix& X) const
 {
-  assert(d.getCols()==1);
-  assert(X.rowsMatch(d));
+  DIMENSIONMATCH(d.getCols()==1);
+  DIMENSIONMATCH(X.rowsMatch(d));
   d.setVals(variance);
 }
 // Parameters are kernel parameters
 void CMatern52Kern::setParam(double val, unsigned int paramNo)
 {
-  assert(paramNo < nParams);
+  BOUNDCHECK(paramNo < nParams);
   switch(paramNo)
   {
   case 0:
@@ -1678,7 +1826,7 @@ void CMatern52Kern::setParam(double val, unsigned int paramNo)
 }
 double CMatern52Kern::getParam(unsigned int paramNo) const
 {
-  assert(paramNo < nParams);
+  BOUNDCHECK(paramNo < nParams);
   switch(paramNo)
   {
   case 0:
@@ -1693,9 +1841,9 @@ double CMatern52Kern::getParam(unsigned int paramNo) const
 }
 void CMatern52Kern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, const CMatrix& X2, bool addG) const
 {
-  assert(gX.getRows() == X2.getRows());
-  assert(row>=0 && row < X.getRows());
-  assert(X.getCols()==X2.getCols());
+  DIMENSIONMATCH(gX.getRows() == X2.getRows());
+  BOUNDCHECK(row < X.getRows());
+  DIMENSIONMATCH(X.getCols()==X2.getCols());
   double wi2= 5.0/(lengthScale*lengthScale);
   double n2 = 0.0;
   double n2wi2 = 0.0;
@@ -1727,7 +1875,7 @@ void CMatern52Kern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, co
 }
 void CMatern52Kern::getDiagGradX(CMatrix& gX, const CMatrix& X, bool addG) const
 {
-  assert(gX.dimensionsMatch(X));
+  DIMENSIONMATCH(gX.dimensionsMatch(X));
   if(!addG)
     gX.zeros();
 }
@@ -1749,7 +1897,7 @@ double CMatern52Kern::computeElement(const CMatrix& X1, unsigned int index1,
 
 void CMatern52Kern::updateX(const CMatrix& X)
 {
-  updateXused = true;
+  setUpdateXused(true);
   Xdists.resize(X.getRows(),X.getRows());
   double wi2=5.0/(lengthScale*lengthScale);
   unsigned int nrows = X.getRows();
@@ -1766,10 +1914,10 @@ void CMatern52Kern::updateX(const CMatrix& X)
 }
 void CMatern52Kern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==nParams);
-  assert(X.getRows()==covGrad.getRows());
-  assert(X2.getRows()==covGrad.getCols());
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==nParams);
+  DIMENSIONMATCH(X.getRows()==covGrad.getRows());
+  DIMENSIONMATCH(X2.getRows()==covGrad.getCols());
   double g1=0.0;
   double g2=0.0;
   double wi2=5.0/(lengthScale*lengthScale);
@@ -1807,9 +1955,9 @@ void CMatern52Kern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X
 
 void CMatern52Kern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==nParams);
-  assert(covGrad.isSymmetric());
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==nParams);
+  MATRIXPROPERTIES(covGrad.isSymmetric());
   double g1=0.0;
   double g2=0.0;
   double wi2=5.0/(lengthScale*lengthScale);
@@ -1823,7 +1971,7 @@ void CMatern52Kern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& c
   {
     for(unsigned int i=0; i<j; i++)
     {
-      if(updateXused) // WVB's mod for precomputing parts of the kernel.
+      if(isUpdateXused()) // WVB's mod for precomputing parts of the kernel.
       {
 	n2 = Xdists.getVal(i,j);
 	n2wi2 = n2*wi2;
@@ -1855,35 +2003,35 @@ void CMatern52Kern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& c
 
 double CMatern52Kern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
 {
-  assert(index>=0);
-  assert(index<nParams);
+  
+  BOUNDCHECK(index<nParams);
   throw ndlexceptions::NotImplementedError("Error getGradParam is not currently implemented for CMatern52Kern");
   
 }
 double CMatern52Kern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& covGrad) const
 {
-  assert(index>=0);
-  assert(index<nParams);
+  
+  BOUNDCHECK(index<nParams);
   throw ndlexceptions::NotImplementedError("Error getGradParam is not currently implemented for CMatern52Kern"); 
 }
 
 
 // the Linear kernel.
-CLinKern::CLinKern()
+CLinKern::CLinKern() : CKern()
 {
   _init();
 }
-CLinKern::CLinKern(unsigned int inDim)
+CLinKern::CLinKern(unsigned int inDim) : CKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CLinKern::CLinKern(const CMatrix& X)
+CLinKern::CLinKern(const CMatrix& X) : CKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
-CLinKern::CLinKern(const CLinKern& kern)
+CLinKern::CLinKern(const CLinKern& kern) : CKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -1918,7 +2066,7 @@ double CLinKern::diagComputeElement(const CMatrix& X, unsigned int index1) const
 // Parameters are kernel parameters
 void CLinKern::setParam(double val, unsigned int paramNo)
 {
-  assert(paramNo==0);
+  BOUNDCHECK(paramNo==0);
   switch(paramNo)
   {
   case 0:
@@ -1930,7 +2078,7 @@ void CLinKern::setParam(double val, unsigned int paramNo)
 }
 double CLinKern::getParam(unsigned int paramNo) const
 {
-  assert(paramNo==0);
+  BOUNDCHECK(paramNo==0);
   switch(paramNo)
   {
   case 0:
@@ -1942,9 +2090,9 @@ double CLinKern::getParam(unsigned int paramNo) const
 }
 void CLinKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, const CMatrix& X2, bool addG) const
 {
-  assert(gX.getRows() == X2.getRows());
-  assert(row>=0 && row < X.getRows());
-  assert(X.getCols()==X2.getCols());  
+  DIMENSIONMATCH(gX.getRows() == X2.getRows());
+  BOUNDCHECK(row < X.getRows());
+  DIMENSIONMATCH(X.getCols()==X2.getCols());  
 
   for(unsigned int k=0; k<X2.getRows(); k++)
   {
@@ -1961,7 +2109,7 @@ void CLinKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, const C
 
 void CLinKern::getDiagGradX(CMatrix& gX, const CMatrix& X, bool addG) const
 {
-  assert(gX.dimensionsMatch(X));
+  DIMENSIONMATCH(gX.dimensionsMatch(X));
   if(!addG)
   {
     gX.deepCopy(X);
@@ -1985,29 +2133,29 @@ double CLinKern::computeElement(const CMatrix& X1, unsigned int index1,
 
 void CLinKern::compute(CMatrix& K, const CMatrix& X) const
 {
-  assert(K.rowsMatch(X));
-  assert(K.isSquare());
+  DIMENSIONMATCH(K.rowsMatch(X));
+  MATRIXPROPERTIES(K.isSquare());
   K.setSymmetric(true);
   K.syrk(X, variance, 0.0, "u", "n");
 }
 
 void CLinKern::compute(CMatrix& K, const CMatrix& X, const CMatrix& X2) const
 {
-  assert(K.rowsMatch(X));
-  assert(K.getCols()==X2.getRows());
+  DIMENSIONMATCH(K.rowsMatch(X));
+  DIMENSIONMATCH(K.getCols()==X2.getRows());
   K.gemm(X, X2, variance, 0.0, "n", "t");
 }
 void CLinKern::compute(CMatrix& K, const CMatrix& X, const CMatrix& X2, unsigned int row) const
 {
-  assert(K.rowsMatch(X));
-  assert(K.getCols()==1);
+  DIMENSIONMATCH(K.rowsMatch(X));
+  DIMENSIONMATCH(K.getCols()==1);
   K.gemvRowRow(0, X, X2, row, variance, 0.0, "n");
 }
 double CLinKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
 {
-  assert(index==0);
-  assert(X.getRows()==covGrad.getRows());
-  assert(X2.getRows()==covGrad.getCols());
+  BOUNDCHECK(index==0);
+  DIMENSIONMATCH(X.getRows()==covGrad.getRows());
+  DIMENSIONMATCH(X2.getRows()==covGrad.getCols());
   double dot;
   double g1=0.0;
   for(unsigned int i=0; i<X.getRows(); i++)
@@ -2020,9 +2168,9 @@ double CLinKern::getGradParam(unsigned int index, const CMatrix& X, const CMatri
 }
 double CLinKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& covGrad) const
 {
-  assert(index==0);
-  assert(X.rowsMatch(covGrad));
-  assert(covGrad.isSquare());
+  BOUNDCHECK(index==0);
+  DIMENSIONMATCH(X.rowsMatch(covGrad));
+  MATRIXPROPERTIES(covGrad.isSquare());
   double dot;
   double g1=0.0;
   for(unsigned int i=0; i<X.getRows(); i++)
@@ -2035,21 +2183,21 @@ double CLinKern::getGradParam(unsigned int index, const CMatrix& X, const CMatri
 }
   
 
-CMlpKern::CMlpKern()
+CMlpKern::CMlpKern() : CKern()
 {
   _init();
 }
-CMlpKern::CMlpKern(unsigned int inDim)
+CMlpKern::CMlpKern(unsigned int inDim) : CKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CMlpKern::CMlpKern(const CMatrix& X)
+CMlpKern::CMlpKern(const CMatrix& X) : CKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
-CMlpKern::CMlpKern(const CMlpKern& kern)
+CMlpKern::CMlpKern(const CMlpKern& kern) : CKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -2094,7 +2242,7 @@ inline double CMlpKern::diagComputeElement(const CMatrix& X, unsigned int index)
 // Parameters are kernel parameters
 void CMlpKern::setParam(double val, unsigned int paramNo)
 {
-  assert(paramNo < nParams);
+  BOUNDCHECK(paramNo < nParams);
   switch(paramNo)
   {
   case 0:
@@ -2112,7 +2260,7 @@ void CMlpKern::setParam(double val, unsigned int paramNo)
 }
 double CMlpKern::getParam(unsigned int paramNo) const
 {
-  assert(paramNo < nParams);
+  BOUNDCHECK(paramNo < nParams);
   switch(paramNo)
   {
   case 0:
@@ -2131,9 +2279,9 @@ double CMlpKern::getParam(unsigned int paramNo) const
 
 void CMlpKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, const CMatrix& X2, bool addG) const
 {
-  assert(gX.getRows() == X2.getRows());
-  assert(row>=0 && row < X.getRows());
-  assert(X.getCols()==X2.getCols());
+  DIMENSIONMATCH(gX.getRows() == X2.getRows());
+  BOUNDCHECK(row < X.getRows());
+  DIMENSIONMATCH(X.getCols()==X2.getCols());
   double denomPart1 = weightVariance*X.norm2Row(row) + biasVariance + 1.0;
   for(unsigned int k=0; k<X2.getRows(); k++)
   {
@@ -2155,7 +2303,7 @@ void CMlpKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, const C
 }
 void CMlpKern::getDiagGradX(CMatrix& gX, const CMatrix& X, bool addG) const
 {
-  assert(gX.dimensionsMatch(X));
+  DIMENSIONMATCH(gX.dimensionsMatch(X));
   for(unsigned int i=0; i<X.getRows(); i++)
   {
     double numer=weightVariance*X.norm2Row(i) + biasVariance;
@@ -2187,8 +2335,8 @@ double CMlpKern::computeElement(const CMatrix& X1, unsigned int index1,
 }
 void CMlpKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==nParams);
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==nParams);
   double g1=0.0;
   double g2=0.0;
   double g3=0.0;
@@ -2224,8 +2372,8 @@ void CMlpKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, co
 }
 void CMlpKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==nParams);
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==nParams);
   double g1=0.0;
   double g2=0.0;
   double g3=0.0;
@@ -2277,34 +2425,34 @@ void CMlpKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGra
 }
 double CMlpKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
 {
-  assert(index>=0);
-  assert(index<nParams);
+  
+  BOUNDCHECK(index<nParams);
   throw ndlexceptions::NotImplementedError( "Error getGradParam is not currently implemented for CMlpKern");
   
 }
 double CMlpKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& covGrad) const
 {
-  assert(index>=0);
-  assert(index<nParams);
+  
+  BOUNDCHECK(index<nParams);
   throw ndlexceptions::NotImplementedError( "Error getGradParam is not currently implemented for CMlpKern");
   
 }
 
-CPolyKern::CPolyKern()
+CPolyKern::CPolyKern() : CKern()
 {
   _init();
 }
-CPolyKern::CPolyKern(unsigned int inDim)
+CPolyKern::CPolyKern(unsigned int inDim) : CKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CPolyKern::CPolyKern(const CMatrix& X)
+CPolyKern::CPolyKern(const CMatrix& X) : CKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
-CPolyKern::CPolyKern(const CPolyKern& kern)
+CPolyKern::CPolyKern(const CPolyKern& kern) : CKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -2336,12 +2484,12 @@ void CPolyKern::writeParamsToStream(ostream& out) const
 }
 void CPolyKern::readParamsFromStream(istream& in)
 {
-  string tbaseType = getBaseTypeStream(in);
-  if(tbaseType != getBaseType())
-    throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
-  string ttype = getTypeStream(in);
-  if(ttype != getType())
-    throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
+//   string tbaseType = getBaseTypeStream(in);
+//   if(tbaseType != getBaseType())
+//     throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
+//   string ttype = getTypeStream(in);
+//   if(ttype != getType())
+//     throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
   setInputDim(readIntFromStream(in, "inputDim"));
   unsigned int numParams=readIntFromStream(in, "numParams");
   setDegree(readDoubleFromStream(in, "degree"));
@@ -2388,7 +2536,7 @@ inline double CPolyKern::diagComputeElement(const CMatrix& X, unsigned int index
 // Parameters are kernel parameters
 void CPolyKern::setParam(double val, unsigned int paramNo)
 {
-  assert(paramNo < nParams);
+  BOUNDCHECK(paramNo < nParams);
   switch(paramNo)
   {
   case 0:
@@ -2406,7 +2554,7 @@ void CPolyKern::setParam(double val, unsigned int paramNo)
 }
 double CPolyKern::getParam(unsigned int paramNo) const
 {
-  assert(paramNo < nParams);
+  BOUNDCHECK(paramNo < nParams);
   switch(paramNo)
   {
   case 0:
@@ -2425,9 +2573,9 @@ double CPolyKern::getParam(unsigned int paramNo) const
 
 void CPolyKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, const CMatrix& X2, bool addG) const
 {
-  assert(gX.getRows() == X2.getRows());
-  assert(row>=0 && row < X.getRows());
-  assert(X.getCols()==X2.getCols());
+  DIMENSIONMATCH(gX.getRows() == X2.getRows());
+  BOUNDCHECK(row < X.getRows());
+  DIMENSIONMATCH(X.getCols()==X2.getCols());
   for(unsigned int k=0; k<X2.getRows(); k++)
   {
     double arg=weightVariance*X.dotRowRow(row, X2, k) + biasVariance;
@@ -2444,7 +2592,7 @@ void CPolyKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, const 
 }
 void CPolyKern::getDiagGradX(CMatrix& gX, const CMatrix& X, bool addG) const
 {
-  assert(gX.dimensionsMatch(X));
+  DIMENSIONMATCH(gX.dimensionsMatch(X));
   for(unsigned int i=0; i<X.getRows(); i++)
   {
     double arg=weightVariance*X.norm2Row(i) + biasVariance;
@@ -2472,8 +2620,8 @@ double CPolyKern::computeElement(const CMatrix& X1, unsigned int index1,
 }
 void CPolyKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==nParams);
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==nParams);
   double g1=0.0;
   double g2=0.0;
   double g3=0.0;
@@ -2499,8 +2647,8 @@ void CPolyKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, c
 }
 void CPolyKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==nParams);
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==nParams);
   double g1=0.0;
   double g2=0.0;
   double g3=0.0;
@@ -2543,15 +2691,15 @@ void CPolyKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGr
 }
 double CPolyKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
 {
-  assert(index>=0);
-  assert(index<nParams);
+  
+  BOUNDCHECK(index<nParams);
   throw ndlexceptions::NotImplementedError( "Error getGradParam is not currently implemented for CPolyKern");
   
 }
 double CPolyKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& covGrad) const
 {
-  assert(index>=0);
-  assert(index<nParams);
+  
+  BOUNDCHECK(index<nParams);
   throw ndlexceptions::NotImplementedError( "Error getGradParam is not currently implemented for CPolyKern");
   
 }
@@ -2570,21 +2718,21 @@ void CPolyKern::extractParamFromMxArray(const mxArray* matlabArray)
 #endif
 
 // the Linear ARD kernel.
-CLinardKern::CLinardKern()
+CLinardKern::CLinardKern() : CArdKern()
 {
   _init();
 }
-CLinardKern::CLinardKern(unsigned int inDim)
+CLinardKern::CLinardKern(unsigned int inDim) : CArdKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CLinardKern::CLinardKern(const CMatrix& X)
+CLinardKern::CLinardKern(const CMatrix& X) : CArdKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
-CLinardKern::CLinardKern(const CLinardKern& kern)
+CLinardKern::CLinardKern(const CLinardKern& kern) : CArdKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -2638,8 +2786,7 @@ double CLinardKern::diagComputeElement(const CMatrix& X, unsigned int index1) co
 // Parameters are kernel parameters
 void CLinardKern::setParam(double val, unsigned int paramNo)
 {
-  assert(paramNo>=0);
-  assert(paramNo<nParams);
+  BOUNDCHECK(paramNo<nParams);
   switch(paramNo)
   {
   case 0:
@@ -2656,8 +2803,8 @@ void CLinardKern::setParam(double val, unsigned int paramNo)
 }
 double CLinardKern::getParam(unsigned int paramNo) const
 {
-  assert(paramNo>=0);
-  assert(paramNo<nParams);
+  
+  BOUNDCHECK(paramNo<nParams);
   switch(paramNo)
   {
   case 0:
@@ -2674,9 +2821,9 @@ double CLinardKern::getParam(unsigned int paramNo) const
 }
 void CLinardKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, const CMatrix& X2, bool addG) const
 {
-  assert(gX.getRows() == X2.getRows());
-  assert(row>=0 && row < X.getRows());
-  assert(X.getCols()==X2.getCols());
+  DIMENSIONMATCH(gX.getRows() == X2.getRows());
+  BOUNDCHECK(row < X.getRows());
+  DIMENSIONMATCH(X.getCols()==X2.getCols());
   for(unsigned int k=0; k<X2.getRows(); k++)
   {
     for(unsigned int j=0; j<X2.getCols(); j++)
@@ -2691,7 +2838,7 @@ void CLinardKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, cons
 }
 void CLinardKern::getDiagGradX(CMatrix& gX, const CMatrix& X, bool addG) const
 {
-  assert(gX.dimensionsMatch(X));
+  DIMENSIONMATCH(gX.dimensionsMatch(X));
   if(!addG)
   {
     gX.deepCopy(X);
@@ -2723,8 +2870,8 @@ double CLinardKern::computeElement(const CMatrix& X1, unsigned int index1,
 }
 void CLinardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==nParams);
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==nParams);
   double g1=0.0;
   for(unsigned int i=0; i<X.getRows(); i++) {
     for(unsigned int j=0; j<X2.getRows(); j++) {
@@ -2751,8 +2898,8 @@ void CLinardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2,
 }
 void CLinardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==nParams);
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==nParams);
   double g1=0.0;
   for(unsigned int i=0; i<X.getRows(); i++)
   {
@@ -2795,34 +2942,34 @@ void CLinardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cov
 }
 double CLinardKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
 {
-  assert(index>=0);
-  assert(index<nParams);
+  
+  BOUNDCHECK(index<nParams);
   throw ndlexceptions::NotImplementedError( "Error getGradParam is not currently implemented for CLinardKern");
   
 }
 double CLinardKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& covGrad) const
 {
-  assert(index>=0);
-  assert(index<nParams);
+  
+  BOUNDCHECK(index<nParams);
   throw ndlexceptions::NotImplementedError( "Error getGradParam is not currently implemented for CLinardKern");
   
 }
 // the RBF ARD kernel.
-CRbfardKern::CRbfardKern()
+CRbfardKern::CRbfardKern() : CArdKern()
 {
   _init();
 }
-CRbfardKern::CRbfardKern(unsigned int inDim)
+CRbfardKern::CRbfardKern(unsigned int inDim) : CArdKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CRbfardKern::CRbfardKern(const CMatrix& X)
+CRbfardKern::CRbfardKern(const CMatrix& X) : CArdKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
-CRbfardKern::CRbfardKern(const CRbfardKern& kern)
+CRbfardKern::CRbfardKern(const CRbfardKern& kern) : CArdKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -2878,8 +3025,8 @@ double CRbfardKern::diagComputeElement(const CMatrix& X, unsigned int index1) co
 // Parameters are kernel parameters
 void CRbfardKern::setParam(double val, unsigned int paramNo)
 {
-  assert(paramNo>=0);
-  assert(paramNo<nParams);
+  
+  BOUNDCHECK(paramNo<nParams);
   switch(paramNo)
   {
   case 0:
@@ -2899,8 +3046,8 @@ void CRbfardKern::setParam(double val, unsigned int paramNo)
 }
 double CRbfardKern::getParam(unsigned int paramNo) const
 {
-  assert(paramNo>=0);
-  assert(paramNo<nParams);
+  
+  BOUNDCHECK(paramNo<nParams);
   switch(paramNo)
   {
   case 0:
@@ -2920,9 +3067,9 @@ double CRbfardKern::getParam(unsigned int paramNo) const
 }
 void CRbfardKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, const CMatrix& X2, bool addG) const
 {
-  assert(gX.getRows() == X2.getRows());
-  assert(row>=0 && row < X.getRows());
-  assert(X.getCols()==X2.getCols());
+  DIMENSIONMATCH(gX.getRows() == X2.getRows());
+  BOUNDCHECK(row < X.getRows());
+  DIMENSIONMATCH(X.getCols()==X2.getCols());
   double wi2 = 0.5*inverseWidth;
   double pf = variance*inverseWidth;
   for(unsigned int k=0; k<X2.getRows(); k++)
@@ -2946,7 +3093,7 @@ void CRbfardKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, cons
 }
 void CRbfardKern::getDiagGradX(CMatrix& gX, const CMatrix& X, bool addG) const
 {
-  assert(gX.dimensionsMatch(X));
+  DIMENSIONMATCH(gX.dimensionsMatch(X));
   if(!addG)
     gX.zeros();
 }
@@ -2970,8 +3117,8 @@ double CRbfardKern::computeElement(const CMatrix& X1, unsigned int index1,
 
 void CRbfardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==nParams);
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==nParams);
   double g1=0.0;
   double g2=0.0;
   gscales.zeros();
@@ -3011,8 +3158,8 @@ void CRbfardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2,
 
 void CRbfardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==nParams);
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==nParams);
   double g1=0.0;
   double g2=0.0;
   gscales.zeros();
@@ -3056,34 +3203,34 @@ void CRbfardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cov
 }
 double CRbfardKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
 {
-  assert(index>=0);
-  assert(index<nParams);
+  
+  BOUNDCHECK(index<nParams);
   throw ndlexceptions::NotImplementedError( "Error getGradParam is not currently implemented for CRbfardKern");
   
 }
 double CRbfardKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& covGrad) const
 {
-  assert(index>=0);
-  assert(index<nParams);
+  
+  BOUNDCHECK(index<nParams);
   throw ndlexceptions::NotImplementedError( "Error getGradParam is not currently implemented for CRbfardKern");
   
 }
 
 // the MLP ARD kernel.
-CMlpardKern::CMlpardKern()
+CMlpardKern::CMlpardKern() : CArdKern()
 {
 }
-CMlpardKern::CMlpardKern(unsigned int inDim)
+CMlpardKern::CMlpardKern(unsigned int inDim) : CArdKern(inDim)
 {
   _init();
   setInputDim(inDim);
 }
-CMlpardKern::CMlpardKern(const CMatrix& X)
+CMlpardKern::CMlpardKern(const CMatrix& X) : CArdKern(X) 
 {
   _init();
   setInputDim(X.getCols());
 }  
-CMlpardKern::CMlpardKern(const CMlpardKern& kern)
+CMlpardKern::CMlpardKern(const CMlpardKern& kern) : CArdKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -3149,8 +3296,8 @@ double CMlpardKern::diagComputeElement(const CMatrix& X, unsigned int index) con
 // Parameters are kernel parameters
 void CMlpardKern::setParam(double val, unsigned int paramNo)
 {
-  assert(paramNo>=0);
-  assert(paramNo<nParams);
+  
+  BOUNDCHECK(paramNo<nParams);
   switch(paramNo)
   {
   case 0:
@@ -3173,8 +3320,8 @@ void CMlpardKern::setParam(double val, unsigned int paramNo)
 }
 double CMlpardKern::getParam(unsigned int paramNo) const
 {
-  assert(paramNo>=0);
-  assert(paramNo<nParams);
+  
+  BOUNDCHECK(paramNo<nParams);
   switch(paramNo)
   {
   case 0:
@@ -3198,9 +3345,9 @@ double CMlpardKern::getParam(unsigned int paramNo) const
 
 void CMlpardKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, const CMatrix& X2, bool addG) const
 {
-  assert(gX.getRows() == X2.getRows());
-  assert(row>=0 && row < X.getRows());
-  assert(X.getCols()==X2.getCols());
+  DIMENSIONMATCH(gX.getRows() == X2.getRows());
+  BOUNDCHECK(row < X.getRows());
+  DIMENSIONMATCH(X.getCols()==X2.getCols());
   double val=0.0;
   for(unsigned int j=0; j<getInputDim(); j++)
   {
@@ -3238,7 +3385,7 @@ void CMlpardKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, cons
 }
 void CMlpardKern::getDiagGradX(CMatrix& gX, const CMatrix& X, bool addG) const
 {
-  assert(gX.dimensionsMatch(X));
+  DIMENSIONMATCH(gX.dimensionsMatch(X));
   for(unsigned int i=0; i<X.getRows(); i++)
   {
     double val=0.0;
@@ -3288,8 +3435,8 @@ double CMlpardKern::computeElement(const CMatrix& X1, unsigned int index1,
 
 void CMlpardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==nParams);
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==nParams);
   double g1=0.0;
   double g2=0.0;
   double g3=0.0;
@@ -3362,8 +3509,8 @@ void CMlpardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2,
 }
 void CMlpardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==nParams);
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==nParams);
   double g1=0.0;
   double g2=0.0;
   double g3=0.0;
@@ -3451,36 +3598,36 @@ void CMlpardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& cov
 }
 double CMlpardKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& covGrad) const
 {
-  assert(index>=0);
-  assert(index<nParams);
+  
+  BOUNDCHECK(index<nParams);
   throw ndlexceptions::NotImplementedError( "Error getGradParam is not currently implemented for CMlpardKern");
   
 }
 double CMlpardKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
 {
-  assert(index>=0);
-  assert(index<nParams);
+  
+  BOUNDCHECK(index<nParams);
   throw ndlexceptions::NotImplementedError( "Error getGradParam is not currently implemented for CMlpardKern");
   
 }
 
 // the POLY ARD kernel.
-CPolyardKern::CPolyardKern()
+CPolyardKern::CPolyardKern() : CArdKern()
 {
   _init();
 }
-CPolyardKern::CPolyardKern(unsigned int inDim)
+CPolyardKern::CPolyardKern(unsigned int inDim) : CArdKern(inDim)
 {
   _init();
   setInputDim(inDim);
   
 }
-CPolyardKern::CPolyardKern(const CMatrix& X)
+CPolyardKern::CPolyardKern(const CMatrix& X) : CArdKern(X)
 {
   _init();
   setInputDim(X.getCols());
 }  
-CPolyardKern::CPolyardKern(const CPolyardKern& kern)
+CPolyardKern::CPolyardKern(const CPolyardKern& kern) : CArdKern(kern)
 {
   _init();
   setInputDim(kern.getInputDim());
@@ -3515,12 +3662,12 @@ void CPolyardKern::writeParamsToStream(ostream& out) const
 }
 void CPolyardKern::readParamsFromStream(istream& in)
 {
-  string tbaseType = getBaseTypeStream(in);
-  if(tbaseType != getBaseType())
-    throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
-  string ttype = getTypeStream(in);
-  if(ttype != getType())
-    throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
+//   string tbaseType = getBaseTypeStream(in);
+//   if(tbaseType != getBaseType())
+//     throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
+//   string ttype = getTypeStream(in);
+//   if(ttype != getType())
+//     throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
   setInputDim(readIntFromStream(in, "inputDim"));
   unsigned int numParams=readIntFromStream(in, "numParams");
   setDegree(readDoubleFromStream(in, "degree"));
@@ -3587,8 +3734,8 @@ double CPolyardKern::diagComputeElement(const CMatrix& X, unsigned int index) co
 // Parameters are kernel parameters
 void CPolyardKern::setParam(double val, unsigned int paramNo)
 {
-  assert(paramNo>=0);
-  assert(paramNo<nParams);
+  
+  BOUNDCHECK(paramNo<nParams);
   switch(paramNo)
   {
   case 0:
@@ -3611,8 +3758,8 @@ void CPolyardKern::setParam(double val, unsigned int paramNo)
 }
 double CPolyardKern::getParam(unsigned int paramNo) const
 {
-  assert(paramNo>=0);
-  assert(paramNo<nParams);
+  
+  BOUNDCHECK(paramNo<nParams);
   switch(paramNo)
   {
   case 0:
@@ -3635,9 +3782,9 @@ double CPolyardKern::getParam(unsigned int paramNo) const
 }
 void CPolyardKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, const CMatrix& X2, bool addG) const
 {
-  assert(gX.getRows() == X2.getRows());
-  assert(row>=0 && row < X.getRows());
-  assert(X.getCols()==X2.getCols());
+  DIMENSIONMATCH(gX.getRows() == X2.getRows());
+  BOUNDCHECK(row < X.getRows());
+  DIMENSIONMATCH(X.getCols()==X2.getCols());
   for(unsigned int k=0; k<X2.getRows(); k++)
   {
     double valik=0.0;
@@ -3659,7 +3806,7 @@ void CPolyardKern::getGradX(CMatrix& gX, const CMatrix& X, unsigned int row, con
 }
 void CPolyardKern::getDiagGradX(CMatrix& gX, const CMatrix& X, bool addG) const
 {
-  assert(gX.dimensionsMatch(X));
+  DIMENSIONMATCH(gX.dimensionsMatch(X));
   for(unsigned int i=0; i<X.getRows(); i++)
   {
     double val=0.0;
@@ -3699,8 +3846,8 @@ double CPolyardKern::computeElement(const CMatrix& X1, unsigned int index1,
 
 void CPolyardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==nParams);
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==nParams);
   double g1=0.0;
   double g2=0.0;
   double g3=0.0;
@@ -3742,8 +3889,8 @@ void CPolyardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& X2
 }
 void CPolyardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& covGrad, bool regularise) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==nParams);
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==nParams);
   double g1=0.0;
   double g2=0.0;
   double g3=0.0;
@@ -3819,15 +3966,15 @@ void CPolyardKern::getGradParams(CMatrix& g, const CMatrix& X, const CMatrix& co
 }
 double CPolyardKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& covGrad) const
 {
-  assert(index>=0);
-  assert(index<nParams);
+  
+  BOUNDCHECK(index<nParams);
   throw ndlexceptions::NotImplementedError( "Error getGradParam is not currently implemented for CPolyardKern");
   
 }
 double CPolyardKern::getGradParam(unsigned int index, const CMatrix& X, const CMatrix& X2, const CMatrix& covGrad) const
 {
-  assert(index>=0);
-  assert(index<nParams);
+  
+  BOUNDCHECK(index<nParams);
   throw ndlexceptions::NotImplementedError( "Error getGradParam is not currently implemented for CPolyardKern");
   
 }
@@ -3853,6 +4000,8 @@ CKern* readKernFromStream(istream& in)
   string type = CStreamInterface::getTypeStream(in);
   if(type=="white")
     pkern = new CWhiteKern();
+  else if(type=="whitefixed")
+    pkern = new CWhitefixedKern();
   else if(type=="bias")
     pkern = new CBiasKern();
 
@@ -3908,12 +4057,12 @@ CKern* readKernFromStream(istream& in)
 }
 void CKern::readParamsFromStream(istream& in)
 {
-  string tbaseType = getBaseTypeStream(in);
-  if(tbaseType != getBaseType())
-    throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
-  string ttype = getTypeStream(in);
-  if(ttype != getType())
-    throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
+//   string tbaseType = getBaseTypeStream(in);
+//   if(tbaseType != getBaseType())
+//     throw ndlexceptions::StreamFormatError("baseType", "Error mismatch between saved base type, " + tbaseType + ", and Class base type, " + getType() + ".");
+//   string ttype = getTypeStream(in);
+//   if(ttype != getType())
+//     throw ndlexceptions::StreamFormatError("type", "Error mismatch between saved type, " + ttype + ", and Class type, " + getType() + ".");
   setInputDim(readIntFromStream(in, "inputDim"));
   unsigned int nPars = readIntFromStream(in, "numParams");
   CMatrix par(1, nPars);
@@ -4001,7 +4150,7 @@ void CKern::addParamToMxArray(mxArray* matlabArray) const
 void CArdKern::extractParamFromMxArray(const mxArray* matlabArray)
 {
   setInputDim(mxArrayExtractIntField(matlabArray, "inputDimension"));
-  assert(nParams == mxArrayExtractIntField(matlabArray, "nParams"));
+  DIMENSIONMATCH(nParams == mxArrayExtractIntField(matlabArray, "nParams"));
   string pName;
   for(unsigned int i=0; i<nParams; i++)
   {

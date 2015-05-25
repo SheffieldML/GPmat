@@ -1,4 +1,4 @@
-function [K, n2, w2, l, l2] = gibbsperiodicKernCompute(kern, x, x2)
+function [K, sk, n2, w2, l, l2] = gibbsperiodicKernCompute(kern, x, x2)
 
 % GIBBSPERIODICKERNCOMPUTE Compute the GIBBSPERIODIC kernel given the parameters and X.
 % FORMAT
@@ -18,7 +18,7 @@ function [K, n2, w2, l, l2] = gibbsperiodicKernCompute(kern, x, x2)
 %
 % SEEALSO : gibbsperiodicKernParamInit, kernCompute, kernCreate, gibbsperiodicKernDiagCompute
 %
-% COPYRIGHT : Neil D. Lawrence, 2007
+% COPYRIGHT : Neil D. Lawrence, 2007, 2009
 
 % KERN
 
@@ -30,11 +30,12 @@ if nargin < 3
   n2 = 4*n2.*n2;
   L = repmat(l.*l, 1, size(l, 1));
   w2 = L + L';
-  K = kern.variance*((2*l*l')./w2).*exp(-n2./w2);
+  sk = ((2*l*l')./w2).*exp(-n2./w2);
 else
   n2 = sin(0.5*(repmat(x, 1, size(x2, 1)) - repmat(x2', size(x, 1), 1)));  
   n2 = 4*n2.*n2;
   l2 = fhandle(modelOut(kern.lengthScaleFunc, x2), 'atox');
   w2 = repmat(l.*l, 1, size(l2, 1))+repmat(l2.*l2, 1, size(l, 1))';
-  K = kern.variance*((2*l*l2')./w2).*exp(-n2./w2);
+  sk = ((2*l*l2')./w2).*exp(-n2./w2);
 end
+K = kern.variance*sk;

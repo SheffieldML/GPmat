@@ -1,4 +1,4 @@
-function k = whitefixedKernCompute(kern, x, x2)
+function [k, sk] = whitefixedKernCompute(kern, x, x2)
 
 
 % WHITEFIXEDKERNCOMPUTE Compute the WHITEFIXED kernel given the parameters and X.
@@ -20,7 +20,9 @@ function k = whitefixedKernCompute(kern, x, x2)
 % SEEALSO : whitefixedKernParamInit, kernCompute, kernCreate, whitefixedKernDiagCompute
 %
 % COPYRIGHT : Nathaniel J. King, 2006
-
+%
+% MODIFICATIONS : Neil D. Lawrence, 2009
+  
 % KERN
 
 
@@ -28,4 +30,7 @@ if nargin < 3
   k = whiteKernCompute(kern, x);
 else
   k = whiteKernCompute(kern, x, x2);
+end
+if nargout > 1 
+  sk = k;
 end

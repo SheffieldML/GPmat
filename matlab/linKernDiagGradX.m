@@ -1,6 +1,5 @@
 function gX = linKernDiagGradX(kern, X)
 
-
 % LINKERNDIAGGRADX Gradient of LIN kernel's diagonal with respect to X.
 % FORMAT
 % DESC computes the gradient of the diagonal of the linear kernel matrix with

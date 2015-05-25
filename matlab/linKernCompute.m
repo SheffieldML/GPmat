@@ -1,4 +1,4 @@
-function k = linKernCompute(kern, x, x2)
+function [k, sk] = linKernCompute(kern, x, x2)
 
 
 % LINKERNCOMPUTE Compute the LIN kernel given the parameters and X.
@@ -19,16 +19,17 @@ function k = linKernCompute(kern, x, x2)
 %
 % SEEALSO : linKernParamInit, kernCompute, kernCreate, linKernDiagCompute
 %
-% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
+% COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006, 2009
 
 % KERN
 
 
 if nargin < 3
-  k = x*x'*kern.variance;
+  sk = x*x'; 
 else
-  k = x*x2'*kern.variance;
+  sk = x*x2';
 end
+k = sk*kern.variance;
 if issparse(x)
   k = full(k);
 end

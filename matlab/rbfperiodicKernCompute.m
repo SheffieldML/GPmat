@@ -1,4 +1,4 @@
-function [k, n2] = rbfperiodicKernCompute(kern, x, x2)
+function [k, sk, n2] = rbfperiodicKernCompute(kern, x, x2)
 
 % RBFPERIODICKERNCOMPUTE Compute the RBFPERIODIC kernel given the parameters and X.
 % FORMAT
@@ -18,7 +18,7 @@ function [k, n2] = rbfperiodicKernCompute(kern, x, x2)
 %
 % SEEALSO : rbfperiodicKernParamInit, kernCompute, kernCreate, rbfperiodicKernDiagCompute
 %
-% COPYRIGHT : Neil D. Lawrence, 2007
+% COPYRIGHT : Neil D. Lawrence, 2007, 2009
 
 % KERN
 
@@ -27,10 +27,12 @@ if nargin < 3
   n2 = sin(0.5*factor*(repmat(x, 1, size(x, 1)) - repmat(x', size(x, 1), 1)));
   n2 = n2.*n2;
   wi2 = (2 .* kern.inverseWidth);
-  k = kern.variance*exp(-n2*wi2);
+  sk = exp(-n2*wi2);
 else
   n2 = sin(0.5*factor*(repmat(x, 1, size(x2, 1)) - repmat(x2', size(x, 1), 1)));  
   n2 = n2.*n2;
   wi2 = (2 .* kern.inverseWidth);
-  k = kern.variance*exp(-n2*wi2);
+  sk = exp(-n2*wi2);
 end
+k = kern.variance*sk;
+  

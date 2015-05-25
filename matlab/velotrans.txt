@@ -1,0 +1,4 @@
+% This kernel allows you to take any other kernel in the tool box and
+% translate with respect to the input space with respect to time. The translation allows a moving field such as clouds moving over a land surface.
+%
+% SEEALSO : cmpndKernCreate

@@ -43,26 +43,26 @@ function g = tensorKernGradient(kern, x, varargin)
 
 % KERN
 
-
+  
 % Last of varargin is covGrad.
-g = zeros(1, kern.nParams);
-startVal = 1;
-endVal = 0;
-twoXin = 0;
-if length(varargin) > 1
-  twoXin = 1;
-  x2 = varargin{1};
-  covGrad = varargin{end};
-else
-  covGrad = varargin{end};
-end
-
-for i = 1:length(kern.comp)
-  tempKern = tensorKernSlash(kern, i);
-  if twoXin
-    tempCovGrad = covGrad.*kernCompute(tempKern, x, x2);
+  g = zeros(1, kern.nParams);
+  startVal = 1;
+  endVal = 0;
+  twoXin = 0;
+  if length(varargin) > 1
+    twoXin = 1;
+    x2 = varargin{1};
+    covGrad = varargin{end};
   else
-    tempCovGrad = covGrad.*kernCompute(tempKern, x);
+    covGrad = varargin{end};
+  end
+  
+  for i = 1:length(kern.comp)
+    tempKern = tensorKernSlash(kern, i);
+    if twoXin
+      tempCovGrad = covGrad.*kernCompute(tempKern, x, x2);
+    else
+      tempCovGrad = covGrad.*kernCompute(tempKern, x);
   end
   endVal = endVal + kern.comp{i}.nParams;
   if ~isempty(kern.comp{i}.index)

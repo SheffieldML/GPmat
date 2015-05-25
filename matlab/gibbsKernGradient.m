@@ -39,7 +39,7 @@ function g = gibbsKernGradient(kern, x, varargin)
 %
 % SEEALSO gibbsKernParamInit, kernGradient, gibbsKernDiagGradient, kernGradX
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
+% COPYRIGHT : Neil D. Lawrence, 2006, 2009
 
 % KERN
 
@@ -70,7 +70,7 @@ fhandle = str2func([kern.lengthScaleTransform, 'Transform']);
 g = zeros(1, kern.nParams);
 % The last argument is covGrad
 if length(varargin)<2
-  [k, n2, w2, l] = gibbsKernCompute(kern, x);
+  [k, sk, n2, w2, l] = gibbsKernCompute(kern, x);
   gOut = modelOutputGrad(kern.lengthScaleFunc, x);
   gradFact = fhandle(l, 'gradfact');
   L1 = repmat(l, 1, size(l, 1));
@@ -97,7 +97,7 @@ if length(varargin)<2
 %  end
 %~/
 else
-  [k, n2, w2, l, l2] = gibbsKernCompute(kern, x, varargin{1});
+  [k, sk, n2, w2, l, l2] = gibbsKernCompute(kern, x, varargin{1});
   gOut = modelOutputGrad(kern.lengthScaleFunc, x);
   gradFact = fhandle(l, 'gradfact');
   gOut2 = modelOutputGrad(kern.lengthScaleFunc, varargin{1});
@@ -118,4 +118,4 @@ else
   end
   
 end
-g(end) =  sum(sum(varargin{end}.*k))/kern.variance;
+g(end) =  sum(sum(varargin{end}.*sk));

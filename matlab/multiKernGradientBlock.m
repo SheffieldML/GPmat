@@ -42,6 +42,15 @@ if nargin < 6
   covGrad = X2;
   X2 = [];
 end  
+
+% There is no gradient with respect to fixed blocks.
+if isfield(kern, 'fixedBlocks') && kern.fixedBlocks(i) && ...
+      kern.fixedBlocks(j),
+  g1 = 0;
+  g2 = 0;
+  return;
+end
+
 outArg = 2;
 if i == j
   fhandle = [kern.comp{i}.type 'KernGradient'];

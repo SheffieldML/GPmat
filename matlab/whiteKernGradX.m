@@ -21,5 +21,8 @@ function gX = whiteKernGradX(kern, X, X2)
 
 % KERN
 
+if nargin<3
+    X2 = X;
+end
 
 gX = zeros(size(X2, 1), size(X2, 2), size(X, 1));

@@ -17,7 +17,6 @@ function whitefixedKernDisplay(kern, spacing)
 
 % KERN
 
-
 if nargin > 1
   spacing = repmat(32, 1, spacing);
 else

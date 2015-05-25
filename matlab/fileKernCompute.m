@@ -1,4 +1,4 @@
-function [k, n2] = fileKernCompute(kern, varargin)
+function [k, sk] = fileKernCompute(kern, varargin)
 
 
 % FILEKERNCOMPUTE Compute the FILE kernel given the parameters and X.
@@ -23,5 +23,5 @@ function [k, n2] = fileKernCompute(kern, varargin)
 
 % KERN
 
-
-k = kern.variance*fileKernRead(kern, varargin{:});
+sk = fileKernRead(kern, varargin{:});
+k = kern.variance*sk;

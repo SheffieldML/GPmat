@@ -1,4 +1,4 @@
-function kernRet = kernTest(kernType, numIn, tieParamNames);
+function kernRet = kernTest(kernType, numIn, tieParamNames, flags);
 
 % KERNTEST Run some tests on the specified kernel.
 % FORMAT
@@ -9,6 +9,13 @@ function kernRet = kernTest(kernType, numIn, tieParamNames);
 % ARG numIn : the number of input dimensions (default is 4).
 % ARG tieParamNames : cell array of regular expressions for parameter
 % names that should be tied (default is none).
+% ARG flags : vector with a series of binary flags indicating the type of
+% the kernel used. Currently there are only two flags indicating: (1) the
+% normalisation of the kernel; (2) its stationarity. Note that for some
+% kernels these flags may be pointless (e.g. there is not a normalised
+% version of the white kernel and it is always stationary). In these cases
+% the kernel computation should simply ignore the flags. By default they
+% are set to false.
 % RETURN kern : the kernel that was generated for the tests.
 % 
 % FORMAT
@@ -18,13 +25,22 @@ function kernRet = kernTest(kernType, numIn, tieParamNames);
 % ARG numIn : the number of input dimensions (default is 4).
 % ARG tieParamNames : cell array of regular expressions for parameter
 % names that should be tied (default is none).
+% ARG flags : vector with a series of binary flags indicating the type of
+% the kernel used. Currently there are only two flags indicating: (1) the
+% normalisation of the kernel; (2) its stationarity. Note that for some
+% kernels these flags may be pointless (e.g. there is not a normalised
+% version of the white kernel and it is always stationary). In these cases
+% the kernel computation should simply ignore the flags. By default they
+% are set to false.
 % RETURN kern : the kernel as it was used in the tests.
 % 
 % SEEALSO : kernCreate
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2007
 %
-% COPYRIGHT : Antti Honkela, 2007
+% MODIFICATIONS : Antti Honkela, 2007
+%
+% MODIFICATIONS : David Luengo, 2009
 
 % KERN
 
@@ -34,15 +50,24 @@ end
 if nargin < 3
   tieParamNames = {};
 end
+if nargin < 4
+    isNormalised = false;
+    isStationary = false;
+else
+    isNormalised = flags(1);
+    isStationary = flags(2);
+end
 numData = 20;
 
-% Generate some x positions.
-x = randn(numData, numIn);
-x2 = randn(numData/2, numIn);
 if isstruct(kernType)
   kern = kernType;
+  kernType = kern.type;
+  [params, paramnames] = kernExtractParam(kern);
+  paramExpand = eye(length(params));
+  paramPack = paramExpand;
+  toRemove = [];
 else
-  kern = kernCreate(x, kernType);
+  kern = kernCreate(numIn, kernType);
   if exist([kern.type 'KernSetIndex'])==2 
     for i = 1:length(kern.comp)
       if rand(1)>0.5
@@ -52,7 +77,21 @@ else
       end
     end
   end
+  if isfield(kern, 'positiveTime') && kern.positiveTime 
+    % For convolutional kernels starting at t=0 it does not make sense to use
+    % negative inputs...
+    x = abs(randn(numData, numIn));
+    x2 = abs(randn(numData/2, numIn));
+  elseif isfield(kern, 'indexValues') && kern.indexValues
+    % For index covariance function.
+    x = kern.indices(randi(length(kern.indices), numData, 1))';
+    x2 = kern.indices(randi(length(kern.indices), numData, 1))';
+  else
+    x = randn(numData, numIn);
+    x2 = randn(numData/2, numIn);
+  end
   
+
   % Set the parameters randomly.
   [params, paramnames] = kernExtractParam(kern);
   if iscell(tieParamNames),
@@ -86,6 +125,14 @@ else
   params = params * paramPack';
   params = randn(size(params))./sqrt(randn(size(params)).^2);
   kern = kernExpandParam(kern, params * paramExpand');
+end
+% Setting the normalisation and stationarity of the kernel according to the
+% flags.
+if isfield(kern, 'isNormalised')
+    kern.isNormalised = isNormalised;
+end
+if isfield(kern, 'isStationary')
+    kern.isStationary = isStationary;
 end
 
 % Test for positive definiteness
@@ -179,6 +226,7 @@ try
   end
 catch
   fprintf('kernGradX has an error.\n')
+  warning(lasterr)
   xMaxDiff = 0;
   xDiagMaxDiff = 0;
 end
@@ -232,6 +280,7 @@ if param2MaxDiff > 2*epsilon
     fprintf([space names{i} ':\t%4.6g\t%4.6g\t%4.6g\n'], ...
             g(i), gL2Diff(i), gL2Diff(i) - g(i));
   end
+  pause(0);
 end
 
 

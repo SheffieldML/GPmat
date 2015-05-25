@@ -23,8 +23,19 @@ function K = multiKernComputeBlock(kern, X, X2, i, j)
 % SEEALSO : multiKernCreate, multiKernCompute, multiKernGradientBlock
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
+%
+% MODIFICATIONS: Antti Honkela, 2008
 
 % KERN
+
+
+%fprintf(1,'multiKernComputeBlock step1\n');
+%X
+%X2
+%i
+%j
+%nargin
+
 
 if nargin < 5
   j = i;
@@ -52,10 +63,18 @@ else
   end
 end
 fhandle = str2func(fhandle);
-if isempty(X2)
-  K = fhandle(arg{:}, X);
+
+if isfield(kern, 'fixedBlocks') && kern.fixedBlocks(i) && ...
+      kern.fixedBlocks(j),
+  K = multiKernCacheBlock(kern, fhandle, arg, i, j, X, X2);
 else
-  K = fhandle(arg{:}, X, X2);
+  % PROBLEM: inconsistent behavior!
+
+  if isempty(X2)
+    K = fhandle(arg{:}, X);
+  else
+    K = fhandle(arg{:}, X, X2);
+  end
 end
 %if transpose
 %  K = K';

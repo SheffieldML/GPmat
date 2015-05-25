@@ -40,8 +40,9 @@ function g = whitefixedKernGradient(kern, x, varargin)
 % SEEALSO whitefixedKernParamInit, kernGradient, whitefixedKernDiagGradient, kernGradX
 %
 % COPYRIGHT : Nathaniel J. King, 2006
+%
 
 % KERN
 
-
-g = [];
+  g = [];
+end

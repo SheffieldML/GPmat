@@ -14,6 +14,8 @@ function simKernDisplay(kern, spacing)
 % SEEALSO : simKernParamInit, modelDisplay, kernDisplay
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
+%
+% MODIFICATIONS : David Luengo, 2009
 
 % KERN
 
@@ -24,12 +26,37 @@ else
 end
 spacing = char(spacing);
 fprintf(spacing);
-fprintf('SIM Variance: %2.4f\n', kern.variance)
+if kern.isStationary
+    fprintf('Stationary version of the kernel\n');
+else
+    fprintf('Non-stationary version of the kernel\n');
+end
+fprintf(spacing);
+if isfield(kern, 'isNormalised') && kern.isNormalised
+    fprintf('Normalised version of the kernel\n');
+else
+    fprintf('Unnormalised version of the kernel\n');
+end
+fprintf(spacing);
+if isfield(kern, 'isNegativeS') && kern.isNegativeS
+    fprintf('Sensitivities allowed to be negative.\n');
+else
+    fprintf('Sensitivities constrained positive.\n');
+end
+fprintf(spacing);
+fprintf('SIM decay: %2.4f\n', kern.decay)
 fprintf(spacing);
 fprintf('SIM inverse width: %2.4f (length scale %2.4f)\n', ...
         kern.inverseWidth, 1/sqrt(kern.inverseWidth));
+fprintf(spacing);
+fprintf('SIM Variance: %2.4f\n', kern.variance)
+if isfield(kern, 'gaussianInitial') && kern.gaussianInitial,
+  fprintf(spacing);
+  fprintf('SIM Initial Variance: %2.4f\n', kern.initialVariance)
+end
+if isfield(kern, 'isNegativeS') && kern.isNegativeS
+  fprintf(spacing);
+  fprintf('SIM Sensitivity: %2.4f\n', kern.sensitivity)
+end
 %fprintf(spacing);
 %fprintf('SIM delay: %2.4f\n', kern.delay)
-fprintf(spacing);
-fprintf('SIM decay: %2.4f\n', kern.decay)
-

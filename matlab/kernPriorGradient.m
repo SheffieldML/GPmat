@@ -19,18 +19,20 @@ switch kern.type
   if isfield(kern, 'priors')
     fhandle = str2func([kern.type 'KernExtractParam']);
     params = fhandle(kern);
-    for i = 1:length(kern.priors)
-      index = kern.priors(i).index;
-      g(index) = g(index) + priorGradient(kern.priors(i), params(index));
-    end
-    % Check if parameters are being optimised in a transformed space.
-    if isfield(kern, 'transforms')
-      for i = 1:length(kern.transforms)
-        index = kern.transforms(i).index;
-        fhandle = str2func([kern.transforms(i).type 'Transform']);
-        g(index) = g(index).*fhandle(params(index), 'gradfact');
+    if iscell(kern.priors),
+      for i = 1:length(kern.priors)
+	index = kern.priors{i}.index;
+	g(index) = g(index) + priorGradient(kern.priors{i}, params(index));
+      end
+    else
+      for i = 1:length(kern.priors)
+	index = kern.priors(i).index;
+	g(index) = g(index) + priorGradient(kern.priors(i), params(index));
       end
     end
+
+    factors = kernFactors(kern, 'gradfact');
+    g(factors.index) = g(factors.index).*factors.val;
   end
 end
 

@@ -34,7 +34,7 @@ function [g1, g2] = disimXsimKernGradient(disimKern, simKern, t1, t2, covGrad)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
-% COPYRIGHT : Antti Honkela, 2007  
+% COPYRIGHT : Antti Honkela, 2007-2009
 
 % KERN
 
@@ -60,13 +60,14 @@ end
 
 dim1 = size(t1, 1);
 dim2 = size(t2, 1);
-t1Mat = repmat(t1, [1 dim2]);
-t2Mat = repmat(t2', [dim1 1]);
+t1Mat = t1(:, ones(1, dim2));
+t2Mat = t2(:, ones(1, dim1))';
 diffT = (t1Mat - t2Mat);
 l = sqrt(2/disimKern.inverseWidth);
 l2 = l*l;
 C_0 = sqrt(disimKern.di_variance);
 C_i = sqrt(disimKern.variance);
+C_r = disimKern.rbf_variance;
 
 D_i = disimKern.decay;
 delta = disimKern.di_decay;
@@ -105,7 +106,7 @@ K1 = exp( lnCommon1 + lnFact1 + lnPart1) ...
 K2 = exp( lnCommon2           + lnPart5) ...
      +exp(lnCommon2 + lnFact6 + lnPart6);
 
-prefact = 0.5*sqrt(pi)*l*disimKern.di_variance*sqrt(disimKern.variance);
+prefact = 0.5*sqrt(pi)*l*disimKern.rbf_variance*disimKern.di_variance*sqrt(disimKern.variance);
 K = prefact*real(K1+K2);
 
 %Kp = disimXsimKernCompute(disimKern, simKern, arg{:});
@@ -205,6 +206,7 @@ dk_dl = sum(sum(dK_dl.*covGrad));
 dk_dD = sum(sum(dK_dD.*covGrad));
 
 
+dk_dRBFVariance = sum(sum(K.*covGrad))/disimKern.rbf_variance;
 dk_dDIVariance = sum(sum(K.*covGrad))/disimKern.di_variance;
 dk_dSimVariance = .5 * sum(sum(K.*covGrad))/disimKern.variance;
 
@@ -212,7 +214,47 @@ dk_dinvWidth = -0.5*sqrt(2)/(disimKern.inverseWidth* ...
                              sqrt(disimKern.inverseWidth))*dk_dl;
 
 
-% only pass the gradient with respect to the inverse width to one
-% of the gradient vectors ... otherwise it is counted twice.
-g1 = real([dk_ddelta dk_dinvWidth dk_dDIVariance dk_dD dk_dSimVariance]);
-g2 = [0 0 0];
+if isfield(disimKern, 'gaussianInitial') && disimKern.gaussianInitial && ...
+  isfield(simKern, 'gaussianInitial') && simKern.gaussianInitial,
+  if disimKern.initialVariance ~= simKern.initialVariance
+    error('Kernels cannot be cross combined if they have different initial variances.');
+  end
+  
+  dim1 = size(t1, 1);
+  dim2 = size(t2, 1);
+  t1Mat = t1(:, ones(1, dim2));
+  t2Mat = t2(:, ones(1, dim1))';
+  
+  delta = disimKern.di_decay;
+  D = disimKern.decay;
+
+  the_rest = (exp(-delta*t1Mat) - exp(-D*t1Mat)) ./ (D-delta) .* ...
+      exp(-delta*t2Mat);
+  
+  dk_dinitVariance = ...
+      sum(sum((sqrt(disimKern.variance) * the_rest) .* covGrad));
+
+  dk_dSimVariance = dk_dSimVariance + ...
+      sum(sum((.5 ./ sqrt(disimKern.variance) * ...
+	       disimKern.initialVariance * the_rest) .* covGrad));
+
+  dk_dD = dk_dD + ...
+	   sum(sum((disimKern.initialVariance * sqrt(disimKern.variance) * ...
+		    (t1Mat*(D-delta).*exp(-D*t1Mat) - exp(-delta*t1Mat) + exp(-D*t1Mat)) ./ (D-delta).^2 .* ...
+		    exp(-delta*t2Mat)).*covGrad));
+  
+  dk_ddelta = dk_ddelta + ...
+      sum(sum((disimKern.initialVariance * sqrt(disimKern.variance) * ...
+	       (-t2Mat.*exp(-delta*t2Mat) .* ...
+		(exp(-delta*t1Mat) - exp(-D*t1Mat)) ./ (D-delta) + ...
+		(-t1Mat*(D-delta).*exp(-delta*t1Mat) + exp(-delta*t1Mat) - exp(-D*t1Mat)) ./ (D-delta).^2 .* ...
+		exp(-delta*t2Mat))).*covGrad));
+  
+  g1 = real([dk_ddelta dk_dinvWidth dk_dDIVariance dk_dD dk_dSimVariance dk_dRBFVariance dk_dinitVariance]);
+  g2 = [0 0 0 0];
+else
+  % only pass the gradient with respect to the inverse width to one
+  % of the gradient vectors ... otherwise it is counted twice.
+  g1 = real([dk_ddelta dk_dinvWidth dk_dDIVariance dk_dD dk_dSimVariance dk_dRBFVariance]);
+  g2 = [0 0 0];
+end
