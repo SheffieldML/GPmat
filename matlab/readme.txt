@@ -1,5 +1,45 @@
 This toolbox stores datasets and gives commands for accessing them.
 
+Version 0.1372
+--------------
+
+Added missa and osr data set.
+
+Version 0.1371
+--------------
+
+Minor mods to lvmLoadData for Spellman data.
+
+Version 0.137
+-------------
+
+Added loaders for speech grid corpus data.
+
+Version 0.136
+-------------
+
+Added loader for  Agarwal and Triggs silhouette data back in, slight modifications of robot wireless datasets.
+
+Version 0.135
+-------------
+
+Added loader for Swiss Jura data and toy data for multiple output GPs.
+
+Version 0.134
+-------------
+
+Added movielens data loaders.
+
+Version 0.133
+-------------
+
+Added variants of swiss roll data.
+
+Version 0.132
+-------------
+
+Added loader for Spellman data and Ripley's crabs data. 
+
 Version 0.131
 -------------
 
