@@ -39,12 +39,17 @@ yFullVar = zeros(36, N);
 
 rawExp = drosexp.mean(genes, :)';
 rawVar = (drosexp.se(genes, :)').^2;
-for k=1:N,
-  prof = squeeze(drosexp.pctiles(genes(k), :, :));
-  for l=1:36,
-    t = distfit(exp(prof(l, :)), 'normal');
-    yFull(l, k) = t(1);
-    yFullVar(l, k) = t(2) .^ 2;
+if isfield(drosexp, 'fitmean'),
+  yFull = drosexp.fitmean(genes, :)';
+  yFullVar = drosexp.fitvar(genes, :)';
+else
+  for k=1:N,
+    prof = squeeze(drosexp.pctiles(genes(k), :, :));
+    for l=1:36,
+      t = distfit(exp(prof(l, :)), 'normal');
+      yFull(l, k) = t(1);
+      yFullVar(l, k) = t(2) .^ 2;
+    end
   end
 end
   

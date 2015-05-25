@@ -8,7 +8,6 @@ function genes = drosTargets(tf),
 %
 % COPYRIGHT : Antti Honkela, 2007
   
-% GPSIM
 
 % 'FBgn0029082', 'FBgn0036459', 
 tingenes1 = {'FBgn0003117', 'FBgn0033459', 'FBgn0051368'};

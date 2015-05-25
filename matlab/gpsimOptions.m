@@ -7,9 +7,12 @@ function options = gpsimOptions
 % 
 % SEEALSO : gpsimCreate
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
-
+% COPYRIGHT : Neil D. Lawrence, 2006, 2008
+%
+% MODIFICATIONS : Pei Gao, 2008
+  
 % GPSIM
 
 options.optimiser = 'conjgrad';
 options.includeNoise = 0;
+options.singleNoise = false;

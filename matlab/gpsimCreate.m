@@ -1,5 +1,5 @@
 function model = gpsimCreate(numGenes, numProteins, times, geneVals, ...
-                             geneVars, options)
+                             geneVars, options, annotation)
 
 % GPSIMCREATE Create a GPSIM model.
 % The GPSIM model is a model for estimating the protein
@@ -20,9 +20,11 @@ function model = gpsimCreate(numGenes, numProteins, times, geneVals, ...
 % system.
 % ARG times : the time points where the data is to be modelled.
 % ARG geneVals : the values of each gene at the different time points.
-% ARG geneVars : the varuabces of each gene at the different time points.
+% ARG geneVars : the variances of each gene at the different time points.
 % ARG options : options structure, the default options can be
 % generated using gpsimOptions.
+% ARG annotation : annotation for the data (gene names, etc.) that
+% is stored with the model. (Optional)
 % RETURN model : model structure containing default
 % parameterisation.
 %
@@ -31,6 +33,7 @@ function model = gpsimCreate(numGenes, numProteins, times, geneVals, ...
 % COPYRIGHT : Neil D. Lawrence, 2006, 2007
 %
 % MODIFIED : Pei Gao, 2008
+% MODIFIED : Antti Honkela, 2008, 2009
 
 % GPSIM
 
@@ -58,24 +61,21 @@ if isfield(options, 'proteinPrior') && ~isempty(options.proteinPrior)
   else
     timesCell{1} = times;
   end
-  tieParam{1} = [1];                    % RBF kernel parameters: inverse
-                                        % widths and variance.
   for i = 1:numGenes
     kernType1{i+2} = 'sim';
     timesCell{i+1} = times; 
-    tieParam{1} = [tieParam{1} tieParam{1}(end)+3];
   end  
   model.timesCell = timesCell;
 else
   timesCell = times;                     % Non-cell structure in this case
-  tieParam{1} = [2]; % These are the indices of the inverse widths which
-                % need to be constrained to be equal.
   for i = 1:numGenes
     kernType1{i+1} = 'sim';
-    if i>1
-      tieParam{1} = [tieParam{1} tieParam{1}(end)+3];
-    end
   end
+end
+tieParam = {'inverse width'};
+
+if isfield(options, 'fixBlocks') && ~isempty(options.fixBlocks),
+  kernType1 = {'parametric', struct('fixBlocks', {options.fixBlocks}), kernType1};
 end
 
 model.y = geneVals(:);
@@ -92,30 +92,23 @@ model.includeNoise = options.includeNoise;
 if model.includeNoise
   % Create a new multi kernel to contain the noise term.
   kernType2{1} = 'multi';
-  % NEIL: Need to set up tie param to hold the variances of the white kernels
-  % the same ... perhaps have an option that determines to do this or not.
-  % tieParam{2} = INDEX OF FIRST NOISE VARIANCE; % These are the indices of the variances.
 
   % Set the new multi kernel to just contain 'white' kernels.
   if isfield(model, 'proteinPrior') && ~isempty(model.proteinPrior)
-    for i = 1:(numGenes+1)
+    kernType2{2}='whitefixed';
+    for i = 2:(numGenes+1)
       kernType2{i+1} = 'white';
-      % NEIL Again, need to get the right indices on tie param if the
-      % variances are to be 'tied'.
-      %if i>1
-      %  tieParam = [tieParam{2} tieParam{2}(end)+1];
-      %end
     end    
   else
     for i = 1:numGenes
       kernType2{i+1} = 'white';
-      % NEIL Again, need to get the right indices on tie param if the
-      % variances are to be 'tied'.
-      %if i>1
-      %  tieParam = [tieParam{2} tieParam{2}(end)+1];
-      %end
     end
   end
+  if isfield(options, 'singleNoise') & options.singleNoise
+    tieParam{2} = 'white . variance';
+  end
+            
+  
   % Now create model with a 'cmpnd' (compound) kernel build from two
   % multi-kernels. The first multi-kernel is the sim-sim one the next
   % multi-kernel is the white-white one. 
@@ -149,6 +142,7 @@ if isfield(options, 'addPriors') && options.addPriors,
 end
 
 model.kern = modelTieParam(model.kern, tieParam);
+model.kern.comp{2}.comp{1}.variance = 1e-6;
 
 % The decays and sensitivities are actually stored in the kernel.
 % We'll put them here as well for convenience.
@@ -195,6 +189,10 @@ end
 
 % The basal transcriptions rates must be postitive.
 model.bTransform = optimiDefaultConstraint('positive');
+
+if nargin > 6,
+  model.annotation = annotation;
+end
 
 % This forces kernel compute.
 params = gpsimExtractParam(model);

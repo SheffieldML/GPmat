@@ -32,26 +32,26 @@ end
 
 gmuFull = model.m'*model.invK;
 
-if isfield(model, 'proteinPrior') && ~isempty(model.proteinPrior)
-  if model.includeNoise
-    ind = model.kern.comp{1}.diagBlockDim{1} + (1:model.kern.comp{1}.diagBlockDim{2});
-    gmu = zeros(size(1, model.numGenes));
+% if isfield(model, 'proteinPrior') && ~isempty(model.proteinPrior)
+%   if model.includeNoise
+%     ind = model.kern.comp{1}.diagBlockDim{1} + (1:model.kern.comp{1}.diagBlockDim{2});
+%     gmu = zeros(size(1, model.numGenes));
 
-    for i = 1:model.numGenes
-      gmu(i) = sum(gmuFull(ind));
-      ind = ind + model.kern.comp{1}.diagBlockDim{i+1};
-    end
-  else
-    ind = model.kern.diagBlockDim{1} + (1:model.kern.diagBlockDim{2});
-    gmu = zeros(size(1, model.numGenes));
+%     for i = 1:model.numGenes
+%       gmu(i) = sum(gmuFull(ind));
+%       ind = ind + model.kern.comp{1}.diagBlockDim{i+1};
+%     end
+%   else
+%     ind = model.kern.diagBlockDim{1} + (1:model.kern.diagBlockDim{2});
+%     gmu = zeros(size(1, model.numGenes));
 
-    for i = 1:model.numGenes
-      gmu(i) = sum(gmuFull(ind));
-      ind = ind + model.kern.diagBlockDim{i+1};
-    end
-  end
+%     for i = 1:model.numGenes
+%       gmu(i) = sum(gmuFull(ind));
+%       ind = ind + model.kern.diagBlockDim{i+1};
+%     end
+%   end
   
-else
+% else
   numData = size(model.t, 1);
   ind = 1:numData;
   ind = ind + numData;
@@ -60,7 +60,7 @@ else
     gmu(i) = sum(gmuFull(ind));
     ind = ind + numData;
   end
-end
+%end
 
 gb = gmu./model.D;
 fhandle = str2func([model.bTransform 'Transform']);

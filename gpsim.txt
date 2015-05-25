@@ -1,0 +1,1 @@
+Gaussian Process Single Input Motif modelling software. This is the original software for modelling single input motifs with Gaussian processes. The long term aim is to move this functionality to MULTIGP.

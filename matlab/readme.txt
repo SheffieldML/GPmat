@@ -1,5 +1,15 @@
+Version 0.1212
+--------------
+
+Change dependencies to the GPmat toolbox.
+
+Version 0.1211
+--------------
+
+Minor bug fix in demBarenco1.m
+
 Version 0.121
-------------
+-------------
 
 Minor fixes of the code for dealing with white noise handling in multiKern.
 
