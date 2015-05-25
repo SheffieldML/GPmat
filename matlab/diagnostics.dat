@@ -1,0 +1,58 @@
+Files not tagged as in toolbox: 
+
+Files not commented:
+
+Files not in CVS or SVN:
+
+Dependent toolbox problems
+File Comments Removed
+            if isinf(model.W(k, l)) | isnan(model.W(k, l))
+ removed from exported gpsimMapFunctionalUpdateW.m
+                warning('model.W is inf/nan')
+ removed from exported gpsimMapFunctionalUpdateW.m
+            end
+ removed from exported gpsimMapFunctionalUpdateW.m
+        if isinf(model.W(k, k)) | isnan(model.W(k, k))
+ removed from exported gpsimMapFunctionalUpdateW.m
+            warning('model.W is inf/nan')
+ removed from exported gpsimMapFunctionalUpdateW.m
+        end
+ removed from exported gpsimMapFunctionalUpdateW.m
+if exist('./data/mef2Data.mat') == 2 
+ removed from exported demGpdisimMef2.m
+else
+ removed from exported demGpdisimMef2.m
+  
+ removed from exported demGpdisimMef2.m
+  drosLoadMef2Data;
+ removed from exported demGpdisimMef2.m
+  targetsFull = drosFindTargets(drosmef2chip);
+ removed from exported demGpdisimMef2.m
+  selection = [25 34 19 37 21 40];
+ removed from exported demGpdisimMef2.m
+  targets = targetsFull(selection)';
+ removed from exported demGpdisimMef2.m
+  
+ removed from exported demGpdisimMef2.m
+  tflabel = drosTF.labels(strcmp(tf, drosTF.names));
+ removed from exported demGpdisimMef2.m
+  
+ removed from exported demGpdisimMef2.m
+  genes = [tflabel, targets];
+ removed from exported demGpdisimMef2.m
+  
+ removed from exported demGpdisimMef2.m
+  [y, yvar, gene, times, scale, rawExp, rawVar] = gpdisimGetDrosData(drosexp, ...
+ removed from exported demGpdisimMef2.m
+                                                    genes);
+ removed from exported demGpdisimMef2.m
+  
+ removed from exported demGpdisimMef2.m
+  save('./data/mef2Data.mat', 'y', 'yvar', 'gene', 'times', 'scale', 'rawVar', ...
+ removed from exported demGpdisimMef2.m
+       'rawExp', 'genes', 'targets');
+ removed from exported demGpdisimMef2.m
+  
+ removed from exported demGpdisimMef2.m
+end
+ removed from exported demGpdisimMef2.m

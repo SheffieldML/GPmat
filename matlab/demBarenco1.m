@@ -3,7 +3,9 @@
 
 % GPSIM
 clear,clc
-colordef white
+if ~isoctave
+  colordef('white');
+end
 [y, yvar, gene, times, scale] = gpsimLoadBarencoPUMAData;
 iniTime = 0;
 times = times + iniTime;
@@ -38,9 +40,12 @@ saveFigures = 0;
 model.type = 'cgpsim';  % This new model type is a hack to run
                         % the model in a hierarchical manner.
                         % need to do this more elegantly later.
+s = warning('query', 'multiKernParamInit:noCrossKernel');
+warning('off', 'multiKernParamInit:noCrossKernel');
 for i =1:3          %% 3 original
   model.comp{i} = gpsimCreate(5, 1, times, y{i}, yvar{i}, options);
 end
+warning(s.state, 'multiKernParamInit:noCrossKernel');
 
 % Learn the model.
 model = modelOptimise(model, [], [], 1, 3000);
@@ -52,8 +57,8 @@ model = modelOptimise(model, [], [], 1, 3000);
 % basal rate and sensitivity parameters are all shared).
 
 % load PUMA variance
-var595 = importdata('./data/5-95variance.txt');
-varExp = exp(var595.data);
+var595 = dlmread(['.' filesep 'data' filesep '5-95variance.txt'], ' ', 0, 1);
+varExp = exp(var595([1:5, 10:14], :));
 scaleMat = scale'*ones(1,21);
 varExp(1:5,:) = varExp(1:5,:)./scaleMat;
 varExp(6:10,:) = varExp(6:10,:)./scaleMat;
@@ -80,6 +85,8 @@ for j = 1:length(model.comp)
   % (simXrbfKernCompute does this for us).
 
   if isfield(model.comp{j}, 'proteinPrior') && ~isempty(model.comp{j}.proteinPrior)
+    meanPredX = ones(length(predt),1)*(model.comp{j}.B./ ...
+				       model.comp{j}.D);
     if model.comp{j}.includeNoise
       for i=1:model.comp{j}.kern.comp{1}.numBlocks
         predTimeCell{i} = predt;
@@ -88,13 +95,12 @@ for j = 1:length(model.comp)
       Kxx = multiKernCompute(model.comp{j}.kern.comp{1}, predTimeCell, ...
                              model.comp{j}.timesCell);
       diagKxx = kernDiagCompute(model.comp{j}.kern.comp{1}, predTimeCell);     
-      x = [model.comp{j}.proteinPrior; model.comp{j}.y];
       
       ind = 1:length(predTimeCell{1});
       for indBlock=1:model.comp{j}.kern.comp{1}.numBlocks
         K = Kxx(ind, :);
         diagK = diagKxx(ind,:);
-        predFull{indBlock} = real(K*model.comp{j}.invK*x);
+        predFull{indBlock} = real(K*model.comp{j}.invK*model.comp{j}.m);
         varFull{indBlock} = real(diagK - sum(K'.*(model.comp{j}.invK*K'), 1)');
         ind = ind + length(predTimeCell{indBlock});
       end
@@ -106,14 +112,13 @@ for j = 1:length(model.comp)
       Kxx = multiKernCompute(model.comp{j}.kern, predTimeCell, ...
                              model.comp{j}.timesCell);
       diagKxx = kernDiagCompute(model.comp{j}.kern, predTimeCell);
-      x = [model.comp{j}.proteinPrior; model.comp{j}.y];
       
       ind = 1:length(predTimeCell{1});
       
       for indBlock=1:model.comp{j}.kern.numBlocks
         K = Kxx(ind, :);
         diagK = diagKxx(ind,:);
-        predFull{indBlock} = real(K*model.comp{j}.invK*x);
+        predFull{indBlock} = real(K*model.comp{j}.invK*model.comp{j}.m);
         varFull{indBlock} = real(diagK - sum(K'.*(model.comp{j}.invK*K'), 1)');
         ind = ind + length(predTimeCell{indBlock});
       end
@@ -124,7 +129,7 @@ for j = 1:length(model.comp)
     predExprs = [];
     varExprs = [];
     for i = 1:model.comp{j}.numGenes
-      predExprs(:,i) = predFull{i+1};
+      predExprs(:,i) = predFull{i+1} + meanPredX(:, i);
       varExprs(:,i) = varFull{i+1};
     end
     predExprs(end-6:end,:) = [];   
@@ -151,23 +156,26 @@ for j = 1:length(model.comp)
       end
     end
   
-    predF = real(K'*model.comp{j}.invK*model.comp{j}.y);
+    predF = real(K'*model.comp{j}.invK*model.comp{j}.m);
     varF = real(kernDiagCompute(proteinKern, predt) - sum(K.*(model.comp{j}.invK*K), ...
                                                    1)');
+    meanPredX = reshape(ones(length(predt),1)*(model.comp{j}.B./ ...
+      model.comp{j}.D), length(predt)*(numGenes), 1);
     
     if model.comp{j}.includeNoise
       Kxx = multiKernCompute(model.comp{j}.kern.comp{1}, predt, times);
-      predX = real(Kxx*model.comp{j}.invK*model.comp{j}.y);
+      predX = real(Kxx*model.comp{j}.invK*model.comp{j}.m);
       varX = real(kernDiagCompute(model.comp{j}.kern.comp{1}, predt) - sum(Kxx'.* ...
                                                     (model.comp{j}.invK*Kxx'), ...
                                                     1)');
     else
       Kxx = multiKernCompute(model.comp{j}.kern, predt, times);
-      predX = real(Kxx*model.comp{j}.invK*model.comp{j}.y);
+      predX = real(Kxx*model.comp{j}.invK*model.comp{j}.m);
       varX = real(kernDiagCompute(model.comp{j}.kern, predt) - sum(Kxx'.* ...
                                                     (model.comp{j}.invK*Kxx'), ...
                                                     1)');
     end
+    predX = predX + meanPredX;
     numGenes = model.comp{j}.numGenes;
     numTimes = length(predX)/numGenes;
     predExprs = reshape(predX, numTimes, numGenes);
@@ -227,7 +235,7 @@ for j = 1:length(model.comp)
   set(gca, 'fontname', 'arial', 'fontsize', 24, 'xlim', xlim)
   if saveFigures==1
     fileName = ['demBarenco1_profile' num2str(j)];
-    print('-deps', ['./results/' fileName]);
+    print('-deps', ['.' filesep 'results' filesep fileName]);
     pos = get(gcf, 'paperposition');
     origpos = pos;
     pos(3) = pos(3)/2;
@@ -235,7 +243,7 @@ for j = 1:length(model.comp)
     set(gcf, 'paperposition', pos);
     lineWidth = get(gca, 'lineWidth');
     set(gca, 'lineWidth', lineWidth);
-    print('-dpng', ['./results/' fileName])
+    print('-dpng', ['.' filesep 'results' filesep fileName])
     set(gca, 'lineWidth', lineWidth);
     set(gcf, 'paperposition', origpos);
   end
@@ -275,7 +283,7 @@ for j = 1:length(model.comp)
   
     if saveFigures==1
       fileName = ['demBarenco1_ExprsProfile_Rep' num2str(j) '_Gene' num2str(index)];
-      print('-deps', ['./results/' fileName]);
+      print('-deps', ['.' filesep 'results' filesep fileName]);
       pos = get(gcf, 'paperposition');
       origpos = pos;
       pos(3) = pos(3);
@@ -283,7 +291,7 @@ for j = 1:length(model.comp)
       set(gcf, 'paperposition', pos);
       lineWidth = get(gca, 'lineWidth');
       set(gca, 'lineWidth', lineWidth*2);
-      print('-dpng', ['./results/' fileName]);
+      print('-dpng', ['.' filesep 'results' filesep fileName]);
       set(gca, 'lineWidth', lineWidth);
       set(gcf, 'paperposition', origpos);
     end
@@ -299,7 +307,7 @@ bar([modelB(order); B]', 0.6); colormap([0 0 0; 1 1 1]);
 set(gca, 'xticklabel', {'DDB2', 'hPA26', 'TNFRSF20b', 'p21', 'BIK'})
 if saveFigures==1
   fileName = ['demBarenco1_basal'];
-  print('-deps', ['./results/' fileName]);
+  print('-deps', ['.' filesep 'results' filesep fileName]);
   pos = get(gcf, 'paperposition');
   origpos = pos;
   pos(3) = pos(3)/2;
@@ -307,7 +315,7 @@ if saveFigures==1
   set(gcf, 'paperposition', pos);
   lineWidth = get(gca, 'lineWidth');
   set(gca, 'lineWidth', lineWidth*2);
-  print('-dpng', ['./results/' fileName])
+  print('-dpng', ['.' filesep 'results' filesep fileName])
   set(gcf, 'paperposition', origpos)
   set(gca, 'lineWidth', lineWidth);
 end
@@ -319,7 +327,7 @@ set(gca, 'xticklabel', {'DDB2', 'hPA26', 'TNFRSF20b', 'p21', ...
                     'BIK'})
 if saveFigures==1
   fileName = ['demBarenco1_sensitivity'];
-  print('-deps', ['./results/' fileName]);
+  print('-deps', ['.' filesep 'results' filesep fileName]);
   pos = get(gcf, 'paperposition');
   origpos = pos;
   pos(3) = pos(3)/2;
@@ -327,7 +335,7 @@ if saveFigures==1
   set(gcf, 'paperposition', pos);
   lineWidth = get(gca, 'lineWidth');
   set(gca, 'lineWidth', lineWidth*2);
-  print('-dpng', ['./results/' fileName])
+  print('-dpng', ['.' filesep 'results' filesep fileName])
   set(gcf, 'paperposition', origpos)
   set(gca, 'lineWidth', lineWidth);
 end
@@ -339,7 +347,7 @@ set(gca, 'xticklabel', {'DDB2', 'hPA26', 'TNFRSF20b', 'p21', ...
                     'BIK'})
 if saveFigures==1
   fileName = ['demBarenco1_decay'];
-  print('-deps', ['./results/' fileName]);
+  print('-deps', ['.' filesep 'results' filesep fileName]);
   pos = get(gcf, 'paperposition');
   origpos = pos;
   pos(3) = pos(3)/2;
@@ -347,7 +355,7 @@ if saveFigures==1
   set(gcf, 'paperposition', pos);
   lineWidth = get(gca, 'lineWidth');
   set(gca, 'lineWidth', lineWidth*2);
-  print('-dpng', ['./results/' fileName])
+  print('-dpng', ['.' filesep 'results' filesep fileName])
   set(gcf, 'paperposition', origpos)
   set(gca, 'lineWidth', lineWidth);
 end
