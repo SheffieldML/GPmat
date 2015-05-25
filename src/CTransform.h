@@ -19,6 +19,8 @@ class CTransform
     transform = 0;
   }
   virtual ~CTransform() {}
+  CTransform(const CTransform& rhs) : type(rhs.type) {}
+  virtual CTransform* clone() const=0;
   virtual double atox(double x) const=0;
   virtual double xtoa(double x) const=0;
   virtual double gradfact(double x) const=0;
@@ -38,7 +40,12 @@ class CTransform
   string type;
  protected:
   bool transform;
+  #ifndef SWIG 
+  // swig gives an error here
   const static double eps;
+  #else 
+  static double eps;
+  #endif
 };
 
 // This transform transforms from real to positive numbers.
@@ -46,6 +53,8 @@ class CExpTransform : public CTransform
 {
  public:
   CExpTransform();
+ CExpTransform(const CExpTransform& rhs) : CTransform(rhs), transform(rhs.transform) {}
+  CTransform* clone() const {return new CExpTransform(*this);}
   double atox(double a) const;
   double xtoa(double x) const;
   double gradfact(double x) const;
@@ -59,6 +68,8 @@ class CNegLogLogitTransform : public CTransform
 {
  public:
   CNegLogLogitTransform();
+ CNegLogLogitTransform(const CNegLogLogitTransform& rhs) : CTransform(rhs), transform(rhs.transform) {}
+  CTransform* clone() const {return new CNegLogLogitTransform(*this);}
   double atox(double a) const;
   double xtoa(double x) const;
   double gradfact(double x) const;
@@ -77,6 +88,8 @@ class CLinearTransform : public CTransform
     m = 1.0;
     c = 0.0;
   }
+ CLinearTransform(const CLinearTransform& rhs) : CTransform(rhs), transform(rhs.transform), m(rhs.m), c(rhs.c) {}
+  CTransform* clone() const {return new CLinearTransform(*this);}
   
   double atox(double a) const
   {
@@ -118,6 +131,8 @@ class CSigmoidTransform : public CTransform
 {
  public:
   CSigmoidTransform();  
+ CSigmoidTransform(const CSigmoidTransform& rhs) : CTransform(rhs), transform(rhs.transform) {}
+  CTransform* clone() const {return new CSigmoidTransform(*this);}
   double atox(double a) const;
   double xtoa(double x) const;
   double gradfact(double x) const;
@@ -148,11 +163,11 @@ class CParamTransforms : public CMatInterface, public CStreamInterface
   mxArray* toMxArray() const;
   void fromMxArray(const mxArray* transformArray);
 #endif
-  void addTransform(CTransform* trans, unsigned int index) 
+  void addTransform(const CTransform* trans, unsigned int index) 
   {
-    assert(index>=0);
+    
     transIndex.push_back(index);
-    transforms.push_back(trans);
+    transforms.push_back(trans->clone());
   }
 
   void clearTransforms() 
@@ -162,14 +177,14 @@ class CParamTransforms : public CMatInterface, public CStreamInterface
   }
   inline string getTransformType(unsigned int ind) const 
   {
-    assert(ind>=0);
-    assert(ind<getNumTransforms());
+    
+    BOUNDCHECK(ind<getNumTransforms());
     return transforms[ind]->getType();
   }
   inline unsigned int getTransformIndex(unsigned int ind) const 
   {
-    assert(ind>=0);
-    assert(ind<getNumTransforms());
+    
+    BOUNDCHECK(ind<getNumTransforms());
     return transIndex[ind];
   }
   inline unsigned int getNumTransforms() const 
@@ -201,23 +216,26 @@ class CTransformable
   // these are default implementations.
   virtual void getParams(CMatrix& params) const 
   {
-    assert(params.getRows()==1);
-    assert(params.getCols()==getNumParams());
+    if(params.getRows()!=1)
+      throw ndlexceptions::RuntimeError("getParams(): Dimension match check failed, numbers of rows should be 1, currently it is " + ndlstrutil::itoa(params.getRows()));
+    if(params.getCols()!=getNumParams())
+      throw ndlexceptions::RuntimeError("getParams(): Dimension match check failed, numbers of columns should be " + ndlstrutil::itoa(getNumParams()) + ", currently it is " + ndlstrutil::itoa(params.getRows()));
     for(unsigned int i=0; i<params.getCols(); i++)
       params.setVal(getParam(i), i);
   }
   virtual void setParams(const CMatrix& params) 
   {
-    assert(params.getRows()==1);
-    assert(params.getCols()==getNumParams());
+    if(params.getRows()!=1)
+      throw ndlexceptions::RuntimeError("setParams(): Dimension match check failed, numbers of rows should be 1, currently it is " + ndlstrutil::itoa(params.getRows()));
+    if(params.getCols()!=getNumParams())
+      throw ndlexceptions::RuntimeError("setParams(): Dimension match check failed, numbers of columns should be " + ndlstrutil::itoa(getNumParams()) + ", currently it is " + ndlstrutil::itoa(params.getRows()));
     for(unsigned int i=0; i<params.getCols(); i++)
       setParam(params.getVal(i), i);
   }
   
   virtual double getTransParam(unsigned int paramNo) const 
   {
-    assert(paramNo>=0);
-    assert(paramNo<getNumParams());
+    BOUNDCHECK(paramNo<getNumParams());
     double param = getParam(paramNo);
     vector<unsigned int>::const_iterator pos = find(transArray.transIndex.begin(), 
 					   transArray.transIndex.end(), 
@@ -232,24 +250,24 @@ class CTransformable
   }
   virtual void getTransParams(CMatrix& transParam) const 
   {
-    assert(transParam.getRows()==1);
-    assert(transParam.getCols()==getNumParams());
+    if(transParam.getRows()!=1)
+      throw ndlexceptions::RuntimeError("getTransParams(): Dimension match check failed, numbers of rows should be 1, currently it is " + ndlstrutil::itoa(transParam.getRows()));
+    if(transParam.getCols()!=getNumParams())
+      throw ndlexceptions::RuntimeError("getTransParams(): Dimension match check failed, numbers of columns should be " + ndlstrutil::itoa(getNumParams()) + ", currently it is " + ndlstrutil::itoa(transParam.getRows()));
     getParams(transParam);
     double val;
-    for(unsigned int i=0; i<transArray.transIndex.size(); i++) 
-    {
+    for(unsigned int i=0; i<transArray.transIndex.size(); i++) {
       val=transParam.getVal(transArray.transIndex[i]);
       transParam.setVal(transArray.transforms[i]->xtoa(val), transArray.transIndex[i]);
     }  
   }
   virtual void setTransParam(double val, unsigned int paramNo) 
   {
-    assert(paramNo>=0);
-    assert(paramNo<getNumParams());
+    BOUNDCHECK(paramNo<getNumParams());
     // this casting is required under solaris for some reason
     vector<unsigned int>::iterator pos=find(transArray.transIndex.begin(), 
-				   transArray.transIndex.end(), 
-				   paramNo);
+					    transArray.transIndex.end(), 
+					    paramNo);
     if(pos==transArray.transIndex.end())
       setParam(val, paramNo);
     else {
@@ -259,8 +277,10 @@ class CTransformable
   }
   virtual void setTransParams(const CMatrix& transParam) 
   {
-    assert(transParam.getRows()==1);
-    assert(transParam.getCols()==getNumParams());
+    if(transParam.getRows()!=1)
+      throw ndlexceptions::RuntimeError("setTransParams(): Dimension match check failed, numbers of rows should be 1, currently it is " + ndlstrutil::itoa(transParam.getRows()));
+    if(transParam.getCols()!=getNumParams())
+      throw ndlexceptions::RuntimeError("setTransParams(): Dimension match check failed, numbers of columns should be " + ndlstrutil::itoa(getNumParams()) + ", currently it is " + ndlstrutil::itoa(transParam.getRows()));
     CMatrix param(transParam);
     double val = 0.0;
     for(unsigned int i=0; i<transArray.transIndex.size(); i++) 
@@ -272,8 +292,10 @@ class CTransformable
   }
   virtual void getGradTransParams(CMatrix& g) const 
   {
-    assert(g.getRows()==1);
-    assert(g.getCols()==getNumParams());
+    if(g.getRows()!=1)
+      throw ndlexceptions::RuntimeError("getGradTransParams(): Dimension match check failed, numbers of rows should be 1, currently it is " + ndlstrutil::itoa(g.getRows()));
+    if(g.getCols()!=getNumParams())
+      throw ndlexceptions::RuntimeError("getGradTransParams(): Dimension match check failed, numbers of columns should be " + ndlstrutil::itoa(getNumParams()) + ", currently it is " + ndlstrutil::itoa(g.getRows()));
     getGradParams(g);
     double val;
     double param;
@@ -290,10 +312,10 @@ class CTransformable
   {
     return transArray.getNumTransforms();
   }
-  inline CTransform* getTransform(unsigned int ind) const 
+  inline const CTransform* getTransform(unsigned int ind) const 
   {
-    assert(ind>=0);
-    assert(ind<getNumTransforms());
+    
+    BOUNDCHECK(ind<getNumTransforms());
     return transArray.transforms[ind];
   }
   inline string getTransformType(unsigned int ind) const 
@@ -308,16 +330,18 @@ class CTransformable
   {
     return transArray.transforms[ind]->gradfact(val);
   }
-  void addTransform(CTransform* trans, unsigned int index) 
+  void addTransform(const CTransform* trans, unsigned int index) 
   {
-    assert(index>=0);
-    assert(index<getNumParams());
+    
+    BOUNDCHECK(index<getNumParams());
     transArray.transIndex.push_back(index);
-    transArray.transforms.push_back(trans);
+    transArray.transforms.push_back(trans->clone());
   }
   
   void clearTransforms() 
   {
+    for(size_t i = 0; i<transArray.transforms.size(); i++)
+      delete transArray.transforms[i];
     transArray.transIndex.clear();
     transArray.transforms.clear();
   }

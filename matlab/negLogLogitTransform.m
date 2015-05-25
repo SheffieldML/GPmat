@@ -3,7 +3,7 @@ function y = negLogLogitTransform(x, transform)
 % NEGLOGLOGITTRANSFORM Constrains a parameter to be positive.
 % FORMAT
 % DESC contains commands to constrain parameters to be positive via
-% 1/(1+exp(x)).
+% log(1+exp(x)).
 % ARG x : input argument.
 % ARG y : return argument.
 % ARG transform : type of transform, 'atox' maps a value into

@@ -49,28 +49,28 @@ class COptimisable {
 
   inline void setDirection(const CMatrix& vals)
   {
-    assert(vals.getCols()==getOptNumParams());
-    assert(vals.getRows()==1);
+    DIMENSIONMATCH(vals.getCols()==getOptNumParams());
+    DIMENSIONMATCH(vals.getRows()==1);
     direction.deepCopy(vals);
   }
   inline void getDirection(CMatrix& vals) const
   {
-    assert(vals.getCols()==getOptNumParams());
-    assert(vals.getRows()==1);
-    assert(direction.dimensionsMatch(vals));
+    DIMENSIONMATCH(vals.getCols()==getOptNumParams());
+    DIMENSIONMATCH(vals.getRows()==1);
+    DIMENSIONMATCH(direction.dimensionsMatch(vals));
     vals.deepCopy(direction);
   }
   void checkGradients();  
   void gdOptimise();
   void gdPullbackOptimise();
-  void netlabScgOptimise();
+  //void netlabScgOptimise();
   void lbfgsOptimise();
   void scgOptimise();
   void cgOptimise();
-  void lineMinimisation(const CMatrix& direction);
+  //void lineMinimisation(const CMatrix& direction);
   double oneDObjectiveVal(double val);
-  void lineMinimisation();
-  void bracketMinimum(double& a, double& b, double& c, double& fa, unsigned int maxStep);
+  //void lineMinimisation();
+  //void bracketMinimum(double& a, double& b, double& c, double& fa, unsigned int maxStep);
   void setLearnRate(double val)
   {
     learnRate = val;
@@ -191,19 +191,25 @@ class COptimisable {
       break;
     default:
       throw ndlexceptions::NotImplementedError("Unknown optimisation.");
-
+      
     }
   }
  private:
   
   double objectiveTol;
   double parameterTol;
-
-  const static bool evalFunc=true;
-  const static double phi;
-  const static double cphi;
-  const static double smallNum;
-
+  
+  #ifndef SWIG
+    const static bool evalFunc=true;
+    const static double phi;
+    const static double cphi;
+    const static double smallNum;
+  #else
+    static bool evalFunc=true;
+    static double phi;
+    static double cphi;
+    static double smallNum;
+  #endif
   double learnRate;
   double momentum;
 

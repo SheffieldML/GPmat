@@ -45,10 +45,10 @@ void COptimisable::checkGradients()
 
 void COptimisable::gdOptimise()
 {
-      if(getVerbosity()>2)
-	{
-	  cout << "Gradient Descent Optimisation." << endl;
-	}
+  if(getVerbosity()>2)
+  {
+    cout << "Gradient Descent Optimisation." << endl;
+  }
   int nParams = getOptNumParams();
   double objectiveVal = 0.0;
   double oldObjective = 0.0;
@@ -123,45 +123,45 @@ void COptimisable::gdPullbackOptimise()
   getOptParams(params);
   objectiveVal = computeObjectiveVal();
   for(iter=0; iter<getMaxIters(); iter++)     
+  {
+    while(1)
     {
-      while(1)
-	{
-	  oldParams.deepCopy(params);
-	  computeObjectiveGradParams(gradParams);
-	  params.axpy(gradParams, -learnRate);	    
-	  setOptParams(params);
-	  oldObjective = objectiveVal;
-	  objectiveVal = computeObjectiveVal();
-	  diffObjective = oldObjective-objectiveVal;
-	  if(diffObjective<0)
-	    {
-	      params.deepCopy(oldParams);
-	      learnRate = learnRate/2;
-	      objectiveVal=oldObjective;
-	      setOptParams(params);
-	      if(getVerbosity()>2)
-		cout << "Back tracking, learning rate: " << learnRate << endl;
-	    }
-	  else
-	    {
-	      learnRate = learnRate*1.1;
-	      break;
-	    }
-	}
-      if(getVerbosity()>2)
-	{
-	  cout << "Iteration: " << iter << ", objective function: " << objectiveVal << endl;
-	}
-      diffParam = params.maxAbsDiff(oldParams);
-      if(diffObjective<objectiveTol && diffParam<parameterTol)
-	{
-	  cout << "Param difference: " << diffParam << endl;
-	  cout << "Objective difference: " << diffObjective << endl;
-	  cout << "Converged .." << endl;
-	  break;
-	}
-      
-    } 
+      oldParams.deepCopy(params);
+      computeObjectiveGradParams(gradParams);
+      params.axpy(gradParams, -learnRate);	    
+      setOptParams(params);
+      oldObjective = objectiveVal;
+      objectiveVal = computeObjectiveVal();
+      diffObjective = oldObjective-objectiveVal;
+      if(diffObjective<0)
+      {
+	params.deepCopy(oldParams);
+	learnRate = learnRate/2;
+	objectiveVal=oldObjective;
+	setOptParams(params);
+	if(getVerbosity()>2)
+	  cout << "Back tracking, learning rate: " << learnRate << endl;
+      }
+      else
+      {
+	learnRate = learnRate*1.1;
+	break;
+      }
+    }
+    if(getVerbosity()>2)
+    {
+      cout << "Iteration: " << iter << ", objective function: " << objectiveVal << endl;
+    }
+    diffParam = params.maxAbsDiff(oldParams);
+    if(diffObjective<objectiveTol && diffParam<parameterTol)
+    {
+      cout << "Param difference: " << diffParam << endl;
+      cout << "Objective difference: " << diffObjective << endl;
+      cout << "Converged .." << endl;
+      break;
+    }
+    
+  } 
   cout << "Parameters: " << endl;
   cout << params << endl;
   /*       if(iter>=getMaxIters()) */
@@ -169,10 +169,10 @@ void COptimisable::gdPullbackOptimise()
 }
 double COptimisable::oneDObjectiveVal(const double val)
 {
-  assert(paramStoreOne.getRows()==1);
-  assert(paramStoreTwo.getRows()==1);
-  assert(paramStoreOne.getCols()==getOptNumParams());
-  assert(paramStoreTwo.getCols()==getOptNumParams());
+  DIMENSIONMATCH(paramStoreOne.getRows()==1);
+  DIMENSIONMATCH(paramStoreTwo.getRows()==1);
+  DIMENSIONMATCH(paramStoreOne.getCols()==getOptNumParams());
+  DIMENSIONMATCH(paramStoreTwo.getCols()==getOptNumParams());
   getOptParams(paramStoreOne);
   paramStoreTwo.deepCopy(paramStoreOne);
   // add val times direction to the parameters.
@@ -184,72 +184,72 @@ double COptimisable::oneDObjectiveVal(const double val)
 }
 void COptimisable::lbfgsOptimise()
 {
-	if(getVerbosity()>2)
-	{
-	  cout << "Limited Memory BFGS Optimisation." << endl;
-	}
-	int nParams = getOptNumParams();
-	int iflag = 0;
-	int memSize = 10;
-    double* Xvals = new double[nParams];
-	double* work = new double[nParams*(2*memSize+1) + 2*memSize];
-    double* gvals = new double[nParams];
-	double* diagVals = new double[nParams];
-
-    CMatrix X(1, nParams);
-    CMatrix g(1, nParams);
-	int iPrint[2] ={-1, 0};
-	if(getVerbosity()>2)
-	{
-	  iPrint[0] = 1;
-	}
-	double f = 0.0;
-	getOptParams(X);
-    while(true)
-	{
-	  f = computeObjectiveGradParams(g);
-	  X.toArray(Xvals);
-      g.toArray(gvals);
-	  lbfgs_(nParams, memSize, Xvals, f, gvals, 0, diagVals, iPrint, getObjectiveTol(), getParamTol(), work, iflag);
-	  if(iflag<=0)
-	  {
-		  if(iflag==-1)
-		  {
-			  cout << "Warning: lbfgsOptimise: linesearch failed." << endl;
-			  break;
-		  }
-		  else if(iflag == -2)
-		  {
-			  throw ndlexceptions::Error("An element of the inverse Hessian provided is not positive.");
-		  }
-		  else if(iflag == -3)
-		  {
-			  throw ndlexceptions::Error("Inproper input to lbfgs_.");
-		  }
-	  }
-	  else if(iflag==0)
-	  {
-		  break;
-	  }
-	  else if(iflag==1)
-	  {
-		X.fromArray(Xvals);
-	    setOptParams(X);
-		funcEval++;
-	  }
-	  else
-	  {
-		throw ndlexceptions::Error("Unhandled iflag.");
-	  }
-	}
+  if(getVerbosity()>2)
+  {
+    cout << "Limited Memory BFGS Optimisation." << endl;
+  }
+  int nParams = getOptNumParams();
+  int iflag = 0;
+  int memSize = 10;
+  double* Xvals = new double[nParams];
+  double* work = new double[nParams*(2*memSize+1) + 2*memSize];
+  double* gvals = new double[nParams];
+  double* diagVals = new double[nParams];
+  
+  CMatrix X(1, nParams);
+  CMatrix g(1, nParams);
+  int iPrint[2] ={-1, 0};
+  if(getVerbosity()>2)
+  {
+    iPrint[0] = 1;
+  }
+  double f = 0.0;
+  getOptParams(X);
+  while(true)
+  {
+    f = computeObjectiveGradParams(g);
+    X.toArray(Xvals);
+    g.toArray(gvals);
+    lbfgs_(nParams, memSize, Xvals, f, gvals, 0, diagVals, iPrint, getObjectiveTol(), getParamTol(), work, iflag);
+    if(iflag<=0)
+    {
+      if(iflag==-1)
+      {
+	cout << "Warning: lbfgsOptimise: linesearch failed." << endl;
+	break;
+      }
+      else if(iflag == -2)
+      {
+	throw ndlexceptions::Error("An element of the inverse Hessian provided is not positive.");
+      }
+      else if(iflag == -3)
+      {
+	throw ndlexceptions::Error("Inproper input to lbfgs_.");
+      }
+    }
+    else if(iflag==0)
+    {
+      break;
+    }
+    else if(iflag==1)
+    {
+      X.fromArray(Xvals);
+      setOptParams(X);
+      funcEval++;
+    }
+    else
+    {
+      throw ndlexceptions::Error("Unhandled iflag.");
+    }
+  }
 }
 void COptimisable::scgOptimise()
 {
   // taken from the paper by Martin Moller: "A scaled conjugate gradient algorithm for fast supervised learning".
-      if(getVerbosity()>2)
-	{
-	  cout << "Scaled Conjugate Gradient Optimisation." << endl;
-	}
+  if(getVerbosity()>2)
+  {
+    cout << "Scaled Conjugate Gradient Optimisation." << endl;
+  }
   int nParams = getOptNumParams();
   //double objectiveVal = 0.0;
   //double oldObjective = 0.0;
@@ -385,10 +385,10 @@ void COptimisable::scgOptimise()
     if (success && fabs(p.max()*alpha) < getParamTol() && max(fabs(newObj-oldObj)) < getObjectiveTol())
       {
 	if(getVerbosity()>2)
-	  {
-	    cout << "Convergence criterion for parameters and objective met" << endl;
-	    cout << "Largest tolerance " << fabs(newObj - oldObj) << endl;
-	  }
+	{
+	  cout << "Convergence criterion for parameters and objective met" << endl;
+	  cout << "Largest tolerance " << fabs(newObj - oldObj) << endl;
+	}
 	return;
       }
   }
@@ -397,10 +397,10 @@ void COptimisable::scgOptimise()
 void COptimisable::cgOptimise()
 {
   if(getVerbosity()>2)
-	{
-	  cout << "Conjugate Gradient Optimisation." << endl;
-	}
-
+  {
+    cout << "Conjugate Gradient Optimisation." << endl;
+  }
+  
   // a C++ translation of Carl Rasmussen's minimize function
   int nParams = getOptNumParams();
   bool success = true;
@@ -424,7 +424,7 @@ void COptimisable::cgOptimise()
   iter = 0;  // start with zero iterations.
   funcEval = 0; // start with zero function evaluations.
   bool ls_failed = false;  // no previous line search has failed.
-
+  
   // compute initial gradient and function value.
   double f0 = computeObjectiveGradParams(df0);
   funcEval++;  // add to functional computation tally.
@@ -449,11 +449,13 @@ void COptimisable::cgOptimise()
   double A = 0.0;
   double B = 0.0;
   vector<double> fX;
-
+  
   CMatrix df3(1, nParams);
   int M = 0;	 
-  while((isIterTerminate() && iter<getMaxIters())  
-	|| (isFuncEvalTerminate() && funcEval<getMaxFuncEvals()))
+  while((isIterTerminate() 
+	 && iter<getMaxIters())  
+	|| (isFuncEvalTerminate() 
+	    && funcEval<getMaxFuncEvals()))
   {
     iter++; //update number if iterations
     // make a copy of current values
@@ -483,10 +485,10 @@ void COptimisable::cgOptimise()
 	  M--;
 	  funcEval++;
 	  // compute gradient
-      wPlus.deepCopy(X);
-      wPlus.axpy(s, x3);
-      setOptParams(wPlus);  
-      f3 = computeObjectiveGradParams(df3);
+	  wPlus.deepCopy(X);
+	  wPlus.axpy(s, x3);
+	  setOptParams(wPlus);  
+	  f3 = computeObjectiveGradParams(df3);
 	  if(!(isnan(f3) || isinf(f3) || df3.isAnyNan() || df3.isAnyInf()))
 	  {
 	    // clean computation of gradients, success!

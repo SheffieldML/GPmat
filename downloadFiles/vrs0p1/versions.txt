@@ -1,0 +1,12 @@
+File versionlist for the OPTIMI toolbox version 0.1 Saturday, June 12, 2004 at 14:02:28
+
+cmpndTieParameters.m	 vs 1.1	 Wed Jun  9 18:59:47 2004
+expBound.m	 vs 1.1	 Thu Apr 15 23:36:09 2004
+expTransform.m	 vs 1.1	 Fri Apr 16 01:06:01 2004
+gradFactLinearBound.m	 vs 1.1	 Thu Apr 22 02:42:48 2004
+invLinearBound.m	 vs 1.1	 Wed Jun  9 17:25:41 2004
+linearBound.m	 vs 1.1	 Thu Apr 15 23:33:16 2004
+negLogLogitTransform.m	 vs 1.1	 Thu Apr 15 23:33:50 2004
+optimiseParams.m	 vs 1.1	 Wed Jun  9 18:52:00 2004
+sigmoidBound.m	 vs 1.1	 Thu Apr 22 02:40:52 2004
+sigmoidTransform.m	 vs 1.1	 Fri Apr 16 01:11:41 2004

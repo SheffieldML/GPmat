@@ -17,12 +17,14 @@ CTransform* CTransform::getNewTransformPointer(const string transformType)
     return new CSigmoidTransform();
   else if(transformType=="exp")
     return new CExpTransform();
+  else if(transformType=="linear")
+    return new CLinearTransform();
   else
     throw ndlexceptions::Error("Transform type " + transformType + " is currently unknown.");
 }
 CExpTransform::CExpTransform()
 {
-  transform = 1;
+  transform = true;
   setType("exp");
 }
   
@@ -35,14 +37,14 @@ double CExpTransform::atox(double a) const
     x=exp(a);
   else
     x = exp(limVal);
-  assert(!isnan(x));
+  SANITYCHECK(!isnan(x));
   return x;
 }
 double CExpTransform::xtoa(double x) const
 {
-  assert(x>0);
+  SANITYCHECK(x>0);
   double a=log(x);
-  assert(!isnan(a));
+  SANITYCHECK(!isnan(a));
   return a;
 }
 double CExpTransform::gradfact(double x) const
@@ -63,16 +65,16 @@ double CNegLogLogitTransform::atox(double a) const
     x = exp(-limVal);
   else if(a<limVal)
     x=log(1+exp(a));
-  assert(!isnan(x));
+  SANITYCHECK(!isnan(x));
   return x;
 }
 double CNegLogLogitTransform::xtoa(double x) const
 {
   double a=x;
-  assert(a>-limVal);
+  SANITYCHECK(a>-limVal);
   if(a<limVal)
     a=log(exp(x)-1);
-  assert(!isnan(a));
+  SANITYCHECK(!isnan(a));
   return a;
 }
 double CNegLogLogitTransform::gradfact(double x) const

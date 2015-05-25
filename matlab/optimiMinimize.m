@@ -5,8 +5,8 @@ function x = optimiMinimize(objectiveGradient, params, options, varargin);
 % DESC is a nother wrapper for Carl Rasmussen's minimize function,
 % but this time using functions which return the gradient and the
 % function value together (such as gpObjectiveGradient). 
-% ARG params : the initial parameters to be optimised.
 % ARG objectiveGradient : function that returns the value (as a
+% ARG params : the initial parameters to be optimised.
 % scalar) and the gradients (as a row vector) of the function to be
 % optimised.
 % ARG options : a NETLAB style options vector.
