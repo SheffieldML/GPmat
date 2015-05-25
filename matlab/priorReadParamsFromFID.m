@@ -1,4 +1,4 @@
-function prior = priorReadParamsFromFID(prior, FID)
+function prior = priorReadParamsFromFID(prior, FID, version)
 
 % PRIORREADPARAMSFROMFID Read prior params from C++ written FID.
 % FORMAT
@@ -13,8 +13,11 @@ function prior = priorReadParamsFromFID(prior, FID)
 
 % PRIOR
 
+  if nargin < 3
+    version = [];
+  end
 numParams = readIntFromFID(FID, 'numParams');
-params = modelReadFromFID(FID);
+params = modelReadFromFID(FID, version);
 fhandle = str2func([prior.type 'PriorExpandParam']);
 prior = fhandle(prior, params);
 

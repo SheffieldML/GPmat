@@ -112,8 +112,8 @@ CGaussianDist::~CGaussianDist()
 // Gaussian prior.
 void CGaussianDist::setParam(double val, unsigned int index)
 {
-  assert(index>=0);
-  assert(index<getNumParams());
+  
+  BOUNDCHECK(index<getNumParams());
   switch(index)
   {
   case 0:
@@ -125,8 +125,8 @@ void CGaussianDist::setParam(double val, unsigned int index)
 }
 double CGaussianDist::getParam(unsigned int index) const
 {
-  assert(index>=0);
-  assert(index<getNumParams());
+  
+  BOUNDCHECK(index<getNumParams());
   switch(index)
   {
   case 0:
@@ -171,8 +171,8 @@ CGammaDist::~CGammaDist()
 }
 void CGammaDist::setParam( double val,  unsigned int index)
 {
-  assert(index>=0);
-  assert(index<getNumParams());
+  
+  BOUNDCHECK(index<getNumParams());
   switch(index)
   {
   case 0:
@@ -187,8 +187,8 @@ void CGammaDist::setParam( double val,  unsigned int index)
 }
 double CGammaDist::getParam(unsigned int index) const
 {
-  assert(index>=0);
-  assert(index<getNumParams());
+  
+  BOUNDCHECK(index<getNumParams());
   switch(index)
   {
   case 0:
@@ -238,8 +238,8 @@ CWangDist::~CWangDist()
 }
 void CWangDist::setParam( double val,  unsigned int index)
 {
-  assert(index>=0);
-  assert(index<getNumParams());
+  
+  BOUNDCHECK(index<getNumParams());
   switch(index)
   {
   case 0:
@@ -251,8 +251,8 @@ void CWangDist::setParam( double val,  unsigned int index)
 }
 double CWangDist::getParam(unsigned int index) const
 {
-  assert(index>=0);
-  assert(index<getNumParams());
+  
+  BOUNDCHECK(index<getNumParams());
   switch(index)
   {
   case 0:

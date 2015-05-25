@@ -10,20 +10,34 @@ function prior = priorTest(priorType);
 % priorLogProb, priorGradient
 %
 % COPYRIGHT : Neil D. Lawrence, 2003, 2004
-  
+%
+% MODIFICATIONS : Antti Honkela, 2012
+
 % PRIOR
 
-prior.type = priorType;
-prior = priorParamInit(prior);
+if ~isstruct(priorType),
+  prior.type = priorType;
+  prior = priorParamInit(prior);
+else
+  prior = priorType;
+end
 
 % Set the parameters randomly.
 params = priorExtractParam(prior);
 params = randn(size(params))./sqrt(randn(size(params)).^2);
 prior = priorExpandParam(prior, params);
-x = randn(1, 10);
+if isfield(prior, 'isBounded') && prior.isBounded,
+  if isfield(prior, 'lbound'),
+    x = rand(1, 10) * (prior.ubound - prior.lbound) + prior.lbound;
+  else
+    x = rand(1, 10) * (prior.b - prior.a) + prior.a;
+  end
+else
+  x = randn(1, 10);
+end
 epsilon = 1e-6;
 
-if exist([priorType 'PriorGradientParams'])
+if exist([prior.type 'PriorGradientParams'])
   params = priorExtractParam(prior);
   origParams = params;
   for i = 1:length(params);
@@ -59,7 +73,7 @@ if exist([priorType 'PriorGradientParams'])
     end
   end
 end
-if exist([priorType 'PriorGradient'])
+if exist([prior.type 'PriorGradient'])
   origX = x;
   for i = 1:length(x);
     x = origX;

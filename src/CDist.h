@@ -3,6 +3,7 @@
 #include <cmath>
 #include <vector>
 #include "CMatrix.h"
+#include "CNdlInterfaces.h"
 #include "CTransform.h"
 #include "ndlutil.h"
               
@@ -56,13 +57,13 @@ class CDist : public CMatInterface, public CStreamInterface, public CTransformab
   // get the gradient with respect to a matrix of inputs
   virtual void getGradInputs(CMatrix& g, const CMatrix& x)
     {
-      assert(g.getRows()==x.getRows());
-      assert(g.getCols()==x.getCols());
+      DIMENSIONMATCH(g.getRows()==x.getRows());
+      DIMENSIONMATCH(g.getCols()==x.getCols());
       for(unsigned int i=0; i<g.getRows(); i++)
 	for(unsigned int j=0; j<g.getCols(); j++)
 	  g.setVal(getGradInput(x.getVal(i, j)), i, j);
     }
-  void setInitParam();
+  virtual void setInitParam()=0;
   // Get log probability at a particualar value
   virtual double logProb(double val) const=0;
   virtual double logProb(const CMatrix& x) const
@@ -75,8 +76,8 @@ class CDist : public CMatInterface, public CStreamInterface, public CTransformab
     }
   void setParamName(const string name, unsigned int index)
     {
-      assert(index>=0);
-      assert(index<nParams);
+      
+      BOUNDCHECK(index<nParams);
       if(paramNames.size() == index)
 	paramNames.push_back(name);
       else 
@@ -88,8 +89,8 @@ class CDist : public CMatInterface, public CStreamInterface, public CTransformab
     }
   virtual string getParamName(unsigned int index) const
     {
-      assert(index>=0);
-      assert(index<paramNames.size());
+      
+      BOUNDCHECK(index<paramNames.size());
       return paramNames[index];
     }
 
@@ -198,7 +199,7 @@ class CParamPriors : CMatInterface {
 #endif
   void addDist(CDist* dist, unsigned int index)
     {
-      assert(index>=0);
+      
       distIndex.push_back(index);
       dists.push_back(dist);
     }
@@ -210,14 +211,14 @@ class CParamPriors : CMatInterface {
     }
   inline string getDistType(unsigned int ind) const
     {
-      assert(ind>=0);
-      assert(ind<getNumDists());
+      
+      BOUNDCHECK(ind<getNumDists());
       return dists[ind]->getType();
     }
   inline unsigned int getDistIndex(unsigned int ind) const
     {
-      assert(ind>=0);
-      assert(ind<getNumDists());
+      
+      BOUNDCHECK(ind<getNumDists());
       return distIndex[ind];
     }
   inline unsigned int getNumDists() const
@@ -244,23 +245,23 @@ class CRegularisable {
   // these are default implementations.
   virtual void getParams(CMatrix& params) const
     {
-      assert(params.getRows()==1);
-      assert(params.getCols()==getNumParams());
+      DIMENSIONMATCH(params.getRows()==1);
+      DIMENSIONMATCH(params.getCols()==getNumParams());
       for(unsigned int i=0; i<params.getCols(); i++)
 	params.setVal(getParam(i), i);
     }
   virtual void setParams(const CMatrix& params)
     {
-      assert(params.getRows()==1);
-      assert(params.getCols()==getNumParams());
+      DIMENSIONMATCH(params.getRows()==1);
+      DIMENSIONMATCH(params.getCols()==getNumParams());
       for(unsigned int i=0; i<params.getCols(); i++)
 	setParam(params.getVal(i), i);
     }
   
   virtual void addPriorGrad(CMatrix& g) const
     {
-      assert(g.getRows()==1);
-      assert(g.getCols()==getNumParams());
+      DIMENSIONMATCH(g.getRows()==1);
+      DIMENSIONMATCH(g.getCols()==getNumParams());
       double param=0.0;
       for(unsigned int i=0; i<distArray.distIndex.size(); i++)
 	{
@@ -314,8 +315,8 @@ class CRegularisable {
     }
   inline CDist* getPrior(unsigned int ind) const
     {
-      assert(ind>=0);
-      assert(ind<getNumPriors());
+      
+      BOUNDCHECK(ind<getNumPriors());
       return distArray.dists[ind];
     }
   inline string getPriorType(unsigned int ind) const
@@ -332,8 +333,8 @@ class CRegularisable {
     }
   void addPrior(CDist* dist, unsigned int index)
     {
-      assert(index>=0);
-      assert(index<getNumParams());
+      
+      BOUNDCHECK(index<getNumParams());
       distArray.distIndex.push_back(index);
       distArray.dists.push_back(dist);
     }
