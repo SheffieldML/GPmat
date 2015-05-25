@@ -1,4 +1,3 @@
-
 #include "CClctrl.h"
 
 CClctrl::CClctrl(int arc, char** arv) : argc(arc), argv(arv)
@@ -64,53 +63,53 @@ int CClctrl::readSvmlDataFile(CMatrix& X, CMatrix& y, const string fileName)
   int numData=0;
   int maxFeat=0;
   while(getline(in, line))
+  {
+    featureRead=false;
+    
+    if(line[line.size()-1]=='\r')
+      line.erase(line.size()-1);
+    if(line[0]=='#')
+      continue;
+    numData++;
+    int pos=0;
+    while(pos<line.size())
     {
-      featureRead=false;
-      
-      if(line[line.size()-1]=='\r')
-	line.erase(line.size()-1);
-      if(line[0]=='#')
-	continue;
-      numData++;
-      int pos=0;
-      while(pos<line.size())
-	{
-	  token.erase();
-	  while(pos<line.size() && line[pos]!=' ')
-	    {
-	      token+=line[pos];
-	      pos++;
-	    }
-	  pos++;
-	  if(token.size()>0)
-	    {
-	      // deal with token.
-	      if(featureRead)
-		{
-		  int ind = token.find(':');
-		  if(ind==std::string::npos || ind < 0)
+      token.erase();
+      while(pos<line.size() && line[pos]!=' ')
       {
-        ndlexceptions::StreamFormatError err("");
-        throw ndlexceptions::FileFormatError(fileName, err);
+	token+=line[pos];
+	pos++;
       }
-		  string featStr=token.substr(0, ind);
-		  int featNum = atoi(featStr.c_str());
-		  if(featNum>maxFeat)
-		    maxFeat=featNum;
-		}
-	      else
-		{
-		  featureRead=true;
-		}
-	    }
+      pos++;
+      if(token.size()>0)
+      {
+	// deal with token.
+	if(featureRead)
+	{
+	  int ind = token.find(':');
+	  if(ind==std::string::npos || ind < 0)
+	  {
+	    ndlexceptions::StreamFormatError err("");
+	    throw ndlexceptions::FileFormatError(fileName, err);
+	  }
+	  string featStr=token.substr(0, ind);
+	  int featNum = atoi(featStr.c_str());
+	  if(featNum>maxFeat)
+	    maxFeat=featNum;
 	}
-      
+	else
+	{
+	  featureRead=true;
+	}
+      }
     }
+    
+  }
   if(verbosity>1)
-    {
-      cout << "Data number of features: " << maxFeat << endl;
-      cout << "Number of data: " << numData << endl;
-    }
+  {
+    cout << "Data number of features: " << maxFeat << endl;
+    cout << "Number of data: " << numData << endl;
+  }
   X.resize(numData, maxFeat);
   X.zeros();
   y.resize(numData, 1);
@@ -119,56 +118,56 @@ int CClctrl::readSvmlDataFile(CMatrix& X, CMatrix& y, const string fileName)
   ifstream inToo(fileName.c_str());
   int pointNo=0;
   while(getline(inToo, line))
+  {
+    if(line[line.size()-1]=='\r')
+      line.erase(line.size()-1);
+    featureRead=false;
+    if(line[0]=='#')
+      continue;
+    else
     {
-      if(line[line.size()-1]=='\r')
-	line.erase(line.size()-1);
-      featureRead=false;
-      if(line[0]=='#')
-	continue;
-      else
+      int pos=0;
+      while(pos<line.size())
+      {
+	token.erase();
+	while(pos<line.size() && line[pos]!=' ')
 	{
-	  int pos=0;
-	  while(pos<line.size())
-	    {
-	      token.erase();
-	      while(pos<line.size() && line[pos]!=' ')
-		{
-		  token+=line[pos];
-		  pos++;
-		}
-	      pos++;
-	      if(token.size()>0)
-		{
-		  // deal with token.
-		  if(featureRead)
-		    {
-		      int ind = token.find(':');		      
-		      // TODO Check that : is in the string.
-		      string featStr=token.substr(0, ind);
-		      string featValStr=token.substr(ind+1, token.size()-ind);
-		      int featNum = atoi(featStr.c_str());
-		      if(featNum<1 || featNum>maxFeat || pointNo<0 || pointNo>=numData)
-          {
-            ndlexceptions::StreamFormatError err("");
-			throw ndlexceptions::FileFormatError(fileName, err);
-          }
-		      
-		      double featVal = atof(featValStr.c_str());
-		      X.setVal(featVal, pointNo, featNum-1);
-		    }
-		  else
-		    {
-		      y.setVal(atof(token.c_str()), pointNo);
-		      featureRead=true;
-		    }
-		}
-	    }
-	  
+	  token+=line[pos];
+	  pos++;
 	}
-      pointNo++;
+	pos++;
+	if(token.size()>0)
+	{
+	  // deal with token.
+	  if(featureRead)
+	  {
+	    int ind = token.find(':');		      
+	    // TODO Check that : is in the string.
+	    string featStr=token.substr(0, ind);
+	    string featValStr=token.substr(ind+1, token.size()-ind);
+	    int featNum = atoi(featStr.c_str());
+	    if(featNum<1 || featNum>maxFeat || pointNo<0 || pointNo>=numData)
+	    {
+	      ndlexceptions::StreamFormatError err("");
+	      throw ndlexceptions::FileFormatError(fileName, err);
+	    }
+		      
+	    double featVal = atof(featValStr.c_str());
+	    X.setVal(featVal, pointNo, featNum-1);
+	  }
+	  else
+	  {
+	    y.setVal(atof(token.c_str()), pointNo);
+	    featureRead=true;
+	  }
+	}
+      }
+      
     }
+    pointNo++;
+  }
   // WVB ADDED
-    return -1;
+  return -1;
 }
 
 void CClctrl::readData(CMatrix& X, CMatrix& y, const string fileName)
@@ -178,22 +177,22 @@ void CClctrl::readData(CMatrix& X, CMatrix& y, const string fileName)
   if(verbosity>1)
     cout << "Loading data." << endl;
   switch(fileFormat)
-    {
-    case 0: /// svmlight file format.
-      readSvmlDataFile(X, y, fileName);
-      break;
-    case 1: /// Matlab file format.
+  {
+  case 0: /// svmlight file format.
+    readSvmlDataFile(X, y, fileName);
+    break;
+  case 1: /// Matlab file format.
 #ifdef _NDLMATLAB
-      X.readMatlabFile(fileName, "X");
-      y.readMatlabFile(fileName, "y");
+    X.readMatlabFile(fileName, "X");
+    y.readMatlabFile(fileName, "y");
 #else
-      throw ndlexceptions::MatlabInterfaceError("MATLAB not incorporated at compile time");
+    throw ndlexceptions::MatlabInterfaceError("MATLAB not incorporated at compile time");
 #endif
-      break;
-    default:
-      exitError("Unrecognised file format number.");
-      
-    }
+    break;
+  default:
+    exitError("Unrecognised file format number.");
+    
+  }
   if(verbosity>1)
     cout << "Data set loaded." << endl;
   setMode(m);

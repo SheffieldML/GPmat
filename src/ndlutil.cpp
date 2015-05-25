@@ -198,7 +198,7 @@ namespace ndlutil {
   // Give a random perumation of numbers.
   vector<unsigned long> randpermTrunc(unsigned long maxVal, unsigned long length)
   {
-    assert(length<=maxVal);
+    BOUNDCHECK(length<=maxVal);
     vector<unsigned long> perm;
     vector<unsigned long> indices;
     for(unsigned long i=0; i < maxVal; i++)
@@ -401,7 +401,7 @@ namespace ndlutil {
 
 }
 
-#ifdef _MSC_VER
+//#ifdef _MSC_VER
 extern "C" double rand_(const int &flag)
 {
   // Generate random numbers using MersenneTwister code from 
@@ -414,4 +414,4 @@ extern "C" double rand_(const int &flag)
   }
   return ndlutil::genrand_real2();
 }
-#endif
+//#endif

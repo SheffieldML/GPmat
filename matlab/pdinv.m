@@ -11,6 +11,7 @@ function [Ainv, UC, jitter] = pdinv(A, UC)
 % decomposition.
 % RETURN U : the Cholesky decomposition of A.
 %
+% FORMAT
 % DESC inverts a positive definite matrix given the Cholesky
 % decomposition of A.
 % ARG A : the input positive definite matrix to be inverted.

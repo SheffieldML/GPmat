@@ -38,11 +38,11 @@ if isempty(tickRatio)
   tickRatio = 0.025;
 end
 if isempty(axesHandle)
-  axesHandle = [];
+  axesHandle = gca;
 end
-axis off
 xlim = get(axesHandle, 'xlim');
 ylim = get(axesHandle, 'ylim');
+axis off
 xTickLength = (xlim(2) - xlim(1))*tickRatio;
 yTickLength = (ylim(2) - ylim(1))*tickRatio;
 
@@ -92,7 +92,3 @@ for i = 1:length(ytick)
 		  'horizontalalignment', 'right');
 
 end
-
-
-
-

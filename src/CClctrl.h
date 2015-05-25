@@ -3,6 +3,7 @@
 #define CCLCTRL_H
 #include <iostream>
 #include <ctime>
+#include <cstring>
 #include "ndlstrutil.h"
 #include "ndlutil.h"
 #include "ndlfortran.h"
@@ -100,22 +101,22 @@ class CClctrl {
   // Recover information from the command line arguments.
   string getCurrentArgument() const
     {
-      assert(argNo<argc && argNo>=0);
+      BOUNDCHECK(argNo<argc && argNo>=0);
       return argv[argNo];
     }
   int getIntFromCurrentArgument() const
     {
-      assert(argNo<argc && argNo>=0);
+      BOUNDCHECK(argNo<argc && argNo>=0);
       return atol(argv[argNo]);
     }
   double getDoubleFromCurrentArgument() const
     {
-      assert(argNo<argc && argNo>=0);
+      BOUNDCHECK(argNo<argc && argNo>=0);
       return atof(argv[argNo]);
     }
   bool getBoolFromCurrentArgument() const
     {
-      assert(argNo<argc && argNo>=0);
+      BOUNDCHECK(argNo<argc && argNo>=0);
       // Assume it is a string first.
       string arg = getStringFromCurrentArgument();
       if(arg=="true" || arg=="1")
@@ -127,7 +128,7 @@ class CClctrl {
     }
   string getStringFromCurrentArgument() const
     {
-      assert(argNo<argc && argNo>=0);
+      BOUNDCHECK(argNo<argc && argNo>=0);
       return argv[argNo];
     }
   double getCurrentArgumentLength() const

@@ -178,6 +178,7 @@ extern "C" void dgemm_(
 		       const int &ldc // first dimension of C.
 		       );
 
+
 // Perform one of the symmetric rank K operations C:=alpha*A*A' + beta*C.
 extern "C" void dsyrk_(
 		       const char* type, 

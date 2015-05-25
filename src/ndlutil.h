@@ -3,7 +3,6 @@
 #include <cmath>
 #include <climits>
 #include <cfloat>
-#include <cassert>
 #ifndef M_PI
 #define M_PI 3.1415926535897932384626433832795
 #endif
@@ -19,6 +18,7 @@
 #pragma warning(disable:4800) // forcing double to bool (performance warning)
 #pragma warning(disable:4244) // conversion from difference_type to int
 #endif
+#include "ndlassert.h"
 #include "ndlfortran.h"
 #include "ndlexceptions.h"
 using namespace std;

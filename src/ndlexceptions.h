@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <stdexcept>
 
 namespace ndlexceptions 
 {
@@ -12,7 +13,7 @@ namespace ndlexceptions
   public:
     Error(){}
     virtual ~Error() throw (){}
-    Error(std::string message)
+    Error(std::string message) 
     {
       msg = message;
     }
@@ -32,15 +33,33 @@ namespace ndlexceptions
   private:
     std::string msg;
   };
-
+  class RuntimeError : public ndlexceptions::Error
+  {
+  public:
+  RuntimeError() : Error() {}
+  RuntimeError(std::string message) : Error(message) {}
+    ~RuntimeError() throw() {}
+    virtual const char* what() const throw()
+    {
+      return "Runtime error";
+    }
+  };
+  class TypeError : public ndlexceptions::Error
+  {
+  public:
+  TypeError() : Error() {}
+  TypeError(std::string message) : Error(message) {}
+    ~TypeError() throw() {}
+    virtual const char* what() const throw()
+    {
+      return "Type error";
+    }
+  };
   class MatlabInterfaceError : public ndlexceptions::Error 
   {
   public:
-    MatlabInterfaceError(){}
-    MatlabInterfaceError(std::string message)
-    {
-      setMessage(message);
-    }
+  MatlabInterfaceError() : Error() {}
+  MatlabInterfaceError(std::string message) : Error(message) {}
     ~MatlabInterfaceError() throw() {}
     virtual const char* what() const throw()
     {
@@ -51,8 +70,8 @@ namespace ndlexceptions
   class MatlabInterfaceReadError : public ndlexceptions::MatlabInterfaceError 
   {
   public:
-    MatlabInterfaceReadError(){}
-    MatlabInterfaceReadError(std::string fieldName)
+  MatlabInterfaceReadError() : MatlabInterfaceError() {}
+  MatlabInterfaceReadError(std::string fieldName) : MatlabInterfaceError(fieldName)     
     {
       setFieldName(fieldName);
     }
@@ -79,22 +98,19 @@ namespace ndlexceptions
   class NotImplementedError : public ndlexceptions::Error 
   {
   public:
-    NotImplementedError(){}
-    NotImplementedError(std::string message)
-    {
-      setMessage(message);
-    }
+  NotImplementedError() : Error() {}
+  NotImplementedError(std::string message) : Error(message) {}
     virtual const char* what() const throw()
     {
-      return "Functionality not implemented";
+      return "Functionality not implemented.";
     }
   };
 
   class FileError : public ndlexceptions::Error 
   {
   public:
-    FileError(){}
-    FileError(std::string file) : fileName(file) {}
+  FileError() : Error() {}
+  FileError(std::string file) : fileName(file), Error("File error " + file) {}
     virtual ~FileError() throw() {}
     std::string getMessage() const
     {
@@ -119,11 +135,11 @@ namespace ndlexceptions
   class FileReadError : public ndlexceptions::FileError 
   {  
   public:
-    FileReadError(){}
-    FileReadError(std::string file)
-    {
-      setFileName(file);
-    }
+  FileReadError() : FileError() {}
+  FileReadError(std::string file) : FileError("(reading) " + file)
+      {
+	setFileName(file);
+      }
     virtual ~FileReadError() throw() {}
     virtual  std::string getMessage() const
     {
@@ -139,16 +155,14 @@ namespace ndlexceptions
   class StreamFormatError : public ndlexceptions::Error
   {
   public:
-    StreamFormatError(){}
-    StreamFormatError(std::string field) 
+  StreamFormatError() : Error() {}
+  StreamFormatError(std::string field) : Error("Error when expecting field: " + field)
     {
-      setFieldName(field);
-      setMessage("Error when expecting field: " + field);
+	setFieldName(field);
     }
-    StreamFormatError(std::string field, std::string note) 
+  StreamFormatError(std::string field, std::string note) : Error(field + ": " + note)
     {
       setFieldName(field);
-      setMessage(field + ": " + note);
     }
     virtual ~StreamFormatError() throw() {}
     std::string getFieldName() const
@@ -171,14 +185,11 @@ namespace ndlexceptions
   class StreamVersionError : public ndlexceptions::StreamFormatError 
   {
   public:
-    StreamVersionError() 
-    {
-      setFieldName("version");
-    }
+  StreamVersionError() : StreamFormatError("version") {}
     virtual std::string getMessage() const
-    {
-      return "Incorrect version.";
-    }
+      {
+	return "Incorrect version.";
+      }
     virtual const char* what() const throw()
     {
       return "Stream version error";
@@ -189,15 +200,10 @@ namespace ndlexceptions
   class FileFormatError : public ndlexceptions::FileError
   {
   public:
-    FileFormatError(){}
-    FileFormatError(std::string fileName, ndlexceptions::StreamFormatError& err)
-    {
-      setMessage(err.getMessage() + " in " + fileName);
-    }
-    FileFormatError(std::string fileName, ndlexceptions::MatlabInterfaceReadError& err)
-    {
-      setMessage(err.getMessage() + " in " + fileName);
-    }
+  FileFormatError() : FileError() {}
+  FileFormatError(std::string fileName, ndlexceptions::StreamFormatError& err) : FileError(err.getMessage() + " in " + fileName) {}
+  FileFormatError(std::string fileName, ndlexceptions::MatlabInterfaceReadError& err) : FileError(err.getMessage() + " in " + fileName) {}
+  FileFormatError(std::string fileName) : FileError("File format error in  " + fileName) {}
     virtual ~FileFormatError() throw() {}
     virtual const char* what() const throw()
     {
@@ -208,15 +214,12 @@ namespace ndlexceptions
   class FileWriteError : public ndlexceptions::FileError 
   {  
   public:
-    FileWriteError(){}
-    FileWriteError(std::string file)
-    {
-      setFileName(file);
-    }
-
+  FileWriteError() : FileError() {}
+  FileWriteError(std::string file) : FileError(file) {}
+    
     std::string getMessage() const
     {
-      return "Unable to write to file: " + getFileName();
+	return "Unable to write to file: " + getFileName();
     }
     virtual const char* what() const throw()
     {
@@ -229,11 +232,8 @@ namespace ndlexceptions
   {
 
   public:
-    MatrixError(){}
-    MatrixError(std::string message) 
-    {
-      setMessage(message);
-    }
+  MatrixError() : Error(){}
+  MatrixError(std::string message)  : Error(message) {}
     virtual const char* what() const throw()
     {
       return "Matrix error";
@@ -244,10 +244,7 @@ namespace ndlexceptions
   class MatrixNonPosDef : public MatrixError 
   {
   public:
-    MatrixNonPosDef()
-    {
-      setMessage("Matrix non positive definite error");
-    }
+  MatrixNonPosDef() : MatrixError("Matrix non positive definite error") {}
     virtual const char* what() const throw()
     {
       return "Non positive definite matrix.";
@@ -257,10 +254,7 @@ namespace ndlexceptions
   class MatrixConditionError : public MatrixError 
   {
   public:
-    MatrixConditionError()
-    {
-      setMessage("Matrix has low condition number.");
-    }
+  MatrixConditionError() : MatrixError("Matrix has low condition number.") {}
     virtual const char* what() const throw()
     {
       return "Matrix condition error";
@@ -270,10 +264,7 @@ namespace ndlexceptions
   class MatrixSingular : public MatrixError 
   {
   public:
-    MatrixSingular()
-    {
-      setMessage("Matrix is singular.");
-    }
+  MatrixSingular() : MatrixError("Matrix is singular.") {}
     virtual const char* what() const throw()
     {
       return "Matrix is singular error";
@@ -284,16 +275,13 @@ namespace ndlexceptions
   class CommandLineError : public Error 
   {
   public:
-    CommandLineError(){}
-    CommandLineError(std::string message) 
-    {
-      setMessage(message);
-    }
+  CommandLineError() : Error() {} 
+  CommandLineError(std::string message) : Error(message) {}
     virtual const char* what() const throw()
     {
       return "Command line format error";
     }
- 
+    
   };
 
 }

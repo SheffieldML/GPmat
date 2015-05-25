@@ -14,6 +14,10 @@
 
 /* Table of constant values */
 
+#ifdef _FORTRAN_MAIN_FIX
+    int MAIN__() {return 0;};
+#endif
+
 static integer c__0 = 0;
 
 /* http://jin.ece.uiuc.edu/routines/routines.html */
