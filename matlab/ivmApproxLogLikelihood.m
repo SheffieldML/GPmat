@@ -2,7 +2,7 @@ function L = ivmApproxLogLikelihood(model);
 
 % IVMAPPROXLOGLIKELIHOOD Return the approximate log-likelihood for the IVM.
 % FORMAT
-% DESC evaluates the approximate log likelihood fro the IVM. The
+% DESC evaluates the approximate log likelihood for the IVM. The
 % approximate log likelihood involves only those points in the
 % active set. It is basically the approximate likelihood for EP
 % (see e.g. Kuss and Rasmussen's JMLR paper), but it is missing the

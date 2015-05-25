@@ -4,14 +4,14 @@
 using namespace std;
 
 const double NULOW=1e-16;
-const string IVMVERSION="0.1";
+const string IVMVERSION="0.2";
 
 class CIvm : public CMapModel, public CProbabilisticOptimisable, public CStreamInterface, public CMatInterface
 {
  public:
   CIvm();
   // Constructor given a filename.
-  CIvm(const string modelFileName, int verbos=2);
+  // CIvm(const string modelFileName, int verbos=2);
   // Constructor given a kernel and a noise model.
   CIvm(CMatrix* inData, CMatrix* targetData, 
        CKern* kernel, CNoise* noiseModel, int selectCrit,
@@ -153,7 +153,7 @@ class CIvm : public CMapModel, public CProbabilisticOptimisable, public CStreamI
   }
   void setTypeSelection(unsigned int val)
   {
-    assert(val>=ENTROPY && val<=RANDOM);
+    BOUNDCHECK(val>=ENTROPY && val<=RANDOM);
     selectionCriterion=val;
   }
   

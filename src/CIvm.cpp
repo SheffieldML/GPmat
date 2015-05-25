@@ -24,7 +24,7 @@ CIvm::CIvm(CMatrix* inData, CMatrix* targetData,
   _init();
   if(dVal>numData)
     throw ndlexceptions::Error("Active set is larger than data set.");
-  assert(pX->getRows()==py->getRows());
+  DIMENSIONMATCH(pX->getRows()==py->getRows());
   setVerbosity(verbosity);
   pnoise->setVerbosity(getVerbosity());
   init();
@@ -40,7 +40,7 @@ CIvm::CIvm(CMatrix& actX, CMatrix& actY,
     pkern(pkernel), activeSet(actSet), pnoise(pnoiseModel), 
     selectionCriterion(selectCrit),  activeSetSize(activeSet.size())
 {
-  assert(activeX.getRows()==activeY.getRows());
+  DIMENSIONMATCH(activeX.getRows()==activeY.getRows());
   _init();
   setVerbosity(verbosity);
   pnoise->setVerbosity(getVerbosity());
@@ -70,8 +70,8 @@ void CIvm::init()
 }
 void CIvm::test(const CMatrix& ytest, const CMatrix& Xin) const
 {
-  assert(ytest.getCols()==numTarget);
-  assert(ytest.getRows()==Xin.getRows());
+  DIMENSIONMATCH(ytest.getCols()==numTarget);
+  DIMENSIONMATCH(ytest.getRows()==Xin.getRows());
   CMatrix muout(Xin.getRows(), numTarget);
   CMatrix varSigmaOut(Xin.getRows(), numTarget);
   posteriorMeanVar(muout, varSigmaOut, Xin);
@@ -79,9 +79,9 @@ void CIvm::test(const CMatrix& ytest, const CMatrix& Xin) const
 }
 void CIvm::likelihoods(CMatrix& pout, CMatrix& yTest, const CMatrix& Xin) const
 {
-  assert(pout.getCols()==numTarget);
-  assert(pout.getRows()==Xin.getRows());
-  assert(yTest.dimensionsMatch(pout));
+  DIMENSIONMATCH(pout.getCols()==numTarget);
+  DIMENSIONMATCH(pout.getRows()==Xin.getRows());
+  DIMENSIONMATCH(yTest.dimensionsMatch(pout));
   CMatrix muout(Xin.getRows(), numTarget);
   CMatrix varSigmaOut(Xin.getRows(), numTarget);
   posteriorMeanVar(muout, varSigmaOut, Xin);
@@ -89,9 +89,9 @@ void CIvm::likelihoods(CMatrix& pout, CMatrix& yTest, const CMatrix& Xin) const
 }
 double CIvm::logLikelihood(const CMatrix& yTest, const CMatrix& Xin) const
 {
-  assert(yTest.getRows()==Xin.getRows());
-  assert(getInputDim()==Xin.getCols());
-  assert(getOutputDim()==yTest.getCols());
+  DIMENSIONMATCH(yTest.getRows()==Xin.getRows());
+  DIMENSIONMATCH(getInputDim()==Xin.getCols());
+  DIMENSIONMATCH(getOutputDim()==yTest.getCols());
   CMatrix muout(Xin.getRows(), numTarget);
   CMatrix varSigmaOut(Xin.getRows(), numTarget);
   posteriorMeanVar(muout, varSigmaOut, Xin);
@@ -99,8 +99,8 @@ double CIvm::logLikelihood(const CMatrix& yTest, const CMatrix& Xin) const
 }
 void CIvm::out(CMatrix& yout, const CMatrix& Xin) const
 {
-  assert(yout.getCols()==numTarget);
-  assert(yout.getRows()==Xin.getRows());
+  DIMENSIONMATCH(yout.getCols()==numTarget);
+  DIMENSIONMATCH(yout.getRows()==Xin.getRows());
   CMatrix muout(Xin.getRows(), numTarget);
   CMatrix varSigmaOut(Xin.getRows(), numTarget);
   posteriorMeanVar(muout, varSigmaOut, Xin);
@@ -108,8 +108,8 @@ void CIvm::out(CMatrix& yout, const CMatrix& Xin) const
 }
 void CIvm::out(CMatrix& yout, CMatrix& probout, const CMatrix& Xin) const
 {
-  assert(yout.getCols()==numTarget);
-  assert(yout.getRows()==Xin.getRows());
+  DIMENSIONMATCH(yout.getCols()==numTarget);
+  DIMENSIONMATCH(yout.getRows()==Xin.getRows());
   CMatrix muout(Xin.getRows(), numTarget);
   CMatrix varSigmaOut(Xin.getRows(), numTarget);
   posteriorMeanVar(muout, varSigmaOut, Xin);
@@ -125,8 +125,8 @@ double CIvm::outGradX(CMatrix& g, const CMatrix &Xin, unsigned int pointNo, unsi
 }
 void CIvm::posteriorMeanVar(CMatrix& mu, CMatrix& varSigma, const CMatrix& Xin) const
 {
-  assert(mu.getCols()==numTarget);
-  assert(varSigma.getCols()==numTarget);
+  DIMENSIONMATCH(mu.getCols()==numTarget);
+  DIMENSIONMATCH(varSigma.getCols()==numTarget);
   CMatrix kX(activeSetSize, Xin.getRows());
   pkern->compute(kX, activeX, Xin);
   if(numCovStruct==1)
@@ -135,7 +135,7 @@ void CIvm::posteriorMeanVar(CMatrix& mu, CMatrix& varSigma, const CMatrix& Xin) 
     for(unsigned int i=0; i<Xin.getRows(); i++)
     {
       double vsVal = pkern->diagComputeElement(Xin, i) - kX.norm2Col(i);
-      assert(vsVal>=0);
+      CHECKZEROORPOSITIVE(vsVal>=0);
       for(unsigned int j=0; j<numTarget; j++)
 	varSigma.setVal(vsVal, i, j);	    
     }
@@ -153,7 +153,7 @@ void CIvm::posteriorMeanVar(CMatrix& mu, CMatrix& varSigma, const CMatrix& Xin) 
       for(unsigned int i=0; i<Xin.getRows(); i++)
       {
 	double vsVal=pkern->diagComputeElement(Xin, i) - Lk.norm2Col(i);
-	assert(vsVal>=0);
+	CHECKZEROORPOSITIVE(vsVal>=0);
 	varSigma.setVal(vsVal, i, k);
       }
       Lk.trsm(L[k], 1.0, "L", "L", "T", "N"); // now it is Kinvk
@@ -262,7 +262,7 @@ void CIvm::selectPoints()
 void CIvm::addPoint(unsigned int index)
 {
   // check index is in inactive set
-  assert(find(inactiveSet.begin(), inactiveSet.end(), index)!=inactiveSet.end());
+  SANITYCHECK(find(inactiveSet.begin(), inactiveSet.end(), index)!=inactiveSet.end());
   vector<unsigned int>::iterator pos = find(inactiveSet.begin(), inactiveSet.end(), index);
   updateSite(index);
   updateM(index);
@@ -410,7 +410,7 @@ double CIvm::entropyChangeAdd(unsigned int index) const
 {
   // compute the entropy change associated with point addition.
   // make sure that index is in the inactive set.
-  assert(find(inactiveSet.begin(), inactiveSet.end(), index)!=inactiveSet.end());
+  SANITYCHECK(find(inactiveSet.begin(), inactiveSet.end(), index)!=inactiveSet.end());
   double entChange=0.0;
   if(pnoise->isSpherical())
   {
@@ -468,7 +468,7 @@ double CIvm::entropyChangeRemove(unsigned int index) const
 {
   // compute entropy change associated with point removal.
   // make sure that index is in the active set.
-  assert(find(activeSet.begin(), activeSet.end(), index)!=activeSet.end());
+  SANITYCHECK(find(activeSet.begin(), activeSet.end(), index)!=activeSet.end());
   double entChange = 0.0;
   if(pnoise->isSpherical())
   {
@@ -536,8 +536,8 @@ double CIvm::logLikelihood() const
 }  
 double CIvm::logLikelihoodGradient(CMatrix& g) const
 {
-  assert(g.getRows()==1);
-  assert(g.getCols()==getOptNumParams());
+  DIMENSIONMATCH(g.getRows()==1);
+  DIMENSIONMATCH(g.getCols()==getOptNumParams());
   g.zeros();
   CMatrix tempG(1, getOptNumParams());
   updateK();
@@ -577,7 +577,7 @@ CIvm::CIvm(CMatrix* inData,
   numTarget(py->getCols()), numData(py->getRows())
 {
   _init();
-  assert(pX->getRows()==py->getRows());
+  DIMENSIONMATCH(pX->getRows()==py->getRows());
   setVerbosity(verbos);
   readMatlabFile(ivmInfoFile, ivmInfoVariable);
   initStoreage(); // storeage has to be allocated after finding active set size.
@@ -673,9 +673,9 @@ void CIvm::fromMxArray(const mxArray* matlabArray)
     m.copyRowRow(i, tempM, activeSet[i]);
     beta.copyRowRow(i, tempB, activeSet[i]);
   }
-  assert(activeSetSize<numData);
-  assert(m.getCols()==numTarget);
-  assert(beta.dimensionsMatch(m));
+  BOUNDCHECK(activeSetSize<numData);
+  DIMENSIONMATCH(m.getCols()==numTarget);
+  DIMENSIONMATCH(beta.dimensionsMatch(m));
   // TODO check that I and J cover 1:numData
 }
 #else /* not _NDLMATLAB */

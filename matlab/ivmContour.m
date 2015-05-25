@@ -16,7 +16,9 @@ function h = ivmContour(X, Y, Z, lineWidth)
 
 % IVM
 
-[void, clines1] =contour(X, Y, Z, [0.25 .75], 'b--');
-[void, clines2] =contour(X, Y, Z, [0.5 0.5], 'r-');
-h = [clines1; clines2];
-set(h, 'linewidth', lineWidth)
+[void, clines1] = contour(X, Y, Z, [0.25 .75], 'b--');
+[void, clines2] = contour(X, Y, Z, [0.5 0.5], 'r-');
+set(clines1, 'linewidth', lineWidth)
+if ~isempty(clines2)
+  set(clines2, 'linewidth', lineWidth)
+end

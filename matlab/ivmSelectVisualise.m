@@ -49,14 +49,20 @@ if display > 1
      case {'probit', 'ordered', 'ncnm'}
       figure(1)
       a = plot(model.X(dataIndexSelect, 1), ...
-               model.X(dataIndexSelect, 2), '.', 'erasemode', 'xor', ...
+               model.X(dataIndexSelect, 2), '.', ...
                'markersize', 20);
+      if ~isoctave
+        set(a, 'eraseMode', 'xor');
+      end
       drawnow
      case {'gaussian', 'ngauss'}
       figure(1)
-      a = plot3(model.X(dataIndexSelect, 1), ...
+        a = plot3(model.X(dataIndexSelect, 1), ...
                 model.X(dataIndexSelect, 2), model.y(dataIndexSelect), ...
-                '.', 'erasemode', 'xor', 'markersize', 20);
+                '.', 'markersize', 20);
+        if ~isoctave
+          set(a, 'erasemode', 'xor');
+        end
       %      xlim = get(gca, 'xlim');
       %      labelGap = (xlim(2) - xlim(1)) * 0.025;
       %      b = text(model.X(dataIndexSelect, 1)+labelGap, ...
