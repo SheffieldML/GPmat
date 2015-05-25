@@ -8,7 +8,7 @@ function modelRet = fgplvmTest
 %
 % SEEALSO : modelTest
 %
-% COPYRIGHT : Neil D. Lawrence, 2005, 2006
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006, 2009
 
 
 % FGPLVM
@@ -21,8 +21,8 @@ k = 5;
 kernType = {'rbf', 'lin', 'rbfard', 'mlp', 'mlpard', 'white'};
 kernType = {'rbf', 'white'};
 backType = 'mlp';
-%dynType = 'gp';
-dynType = 'gpTime';
+dynType = 'gp';
+%dynType = 'gpTime';
 learn = true; % dont' test learning of dynamics.
 learn = false;
 diff = false; % Use diffs for generating dynamics.
@@ -33,12 +33,13 @@ learnScales = true; % test learning of output scales.
 Yorig = randn(N, d);
 indMissing = find(rand(N, d)>0.7);
 %indMissing = [9 19 29];
-approxType = {'ftc', 'dtc', 'fitc', 'pitc'};
+approxType = {'ftc', 'dtc', 'dtcvar', 'fitc', 'pitc'};
+approxType = {'ftc'}
 counter = 0;
-for back = false
+for back = true
 %for back = [false true]
-%  for missing = [false true] 
-    for missing = false
+  for missing = [false] 
+%    for missing = false
       for fixInducing = true
 %      for fixInducing = [false true] 
       Y = Yorig;
@@ -48,7 +49,7 @@ for back = false
       if back & missing
         continue
       end
-      for dyn = true
+      for dyn = false %true
 %      for dyn = [false true];
         for a = 1:length(approxType)
           options = fgplvmOptions(approxType{a});
@@ -132,17 +133,20 @@ for back = false
           end
           fprintf('Check learning gradients\n');
           modelGradientCheck(model);
-          if ~missing
+%          if ~missing
             seqX = randn(Nseq, model.q);
             seqY = randn(Nseq, model.d);
             seqY(find(rand(Nseq, model.d)>0.7)) = NaN;
             fprintf('Checking Sequence gradients\n');
+            if isfield(model, 'alphas')
+              model = rmfield(model, 'alphas');
+            end
             gradientCheck(seqX(:)', 'fgplvmSequenceObjective', 'fgplvmSequenceGradient', ...
                           model, seqY, argin{:});
-          else
-            warning(['Not checking sequence optimisation for missing ' ...
-                     'data.']);
-          end
+%          else
+%            warning(['Not checking sequence optimisation for missing ' ...
+  %                   'data.']);
+%          end
           counter = counter + 1;
           modelRet{counter} = model;
         end

@@ -7,5 +7,6 @@ importLatest('datasets');
 importLatest('mltools');
 importLatest('kern');
 importLatest('ndlutil');
+importLatest('noise');
 importLatest('mocap');
 importLatest('gp');

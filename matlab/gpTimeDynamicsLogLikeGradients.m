@@ -11,7 +11,7 @@ function g = gpTimeDynamicsLogLikeGradients(model)
 %
 % SEEALSO : gpLogLikeGradients, gpTimeDynamicsCreate, gpTimeDynamicsLogLikelihood, modelLogLikelihood
 %
-% COPYRIGHT : Neil D. Lawrence, 2006
+% COPYRIGHT : Neil D. Lawrence, 2006, 2009
 
 % FGPLVM
 
@@ -35,7 +35,7 @@ if ~model.learn
     switch model.approx
      case 'ftc'
       g =  [g(end-model.d + 1:end)];
-     case {'dtc', 'fitc', 'pitc'}
+     case {'dtc', 'dtcvar', 'fitc', 'pitc'}
       if isfield(model, 'fixInducing') & model.fixInducing
         g = g(end-model.d:end-1);
       else

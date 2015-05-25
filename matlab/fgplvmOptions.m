@@ -4,7 +4,8 @@ function options = fgplvmOptions(varargin);
 % FORMAT
 % DESC returns the default options in a structure for a FGPLVM model.
 % ARG approx : approximation type, either 'ftc' (no approximation),
-% 'dtc' (deterministic training conditional), 'fitc' (fully
+% 'dtc' (deterministic training conditional), 'dtcvar', variational
+% sparse approximation, 'fitc' (fully
 % independent training conditional) or 'pitc' (partially
 % independent training conditional.
 % RETURN options : structure containing the default options for the
@@ -12,7 +13,7 @@ function options = fgplvmOptions(varargin);
 %
 % SEEALSO : fgplvmCreate
 %
-% COPYRIGHT : Neil D. Lawrence, 2006, 2005
+% COPYRIGHT : Neil D. Lawrence, 2005, 2009
 
 % FGPLVM
 

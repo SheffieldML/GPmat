@@ -1,4 +1,4 @@
-function gX = gpDynamicsSequenceLogLikeGradient(model, Xraw)
+function gX = gpDynamicsSequenceLogLikeGradient(model, Xraw,varargin)
 
 % GPDYNAMICSSEQUENCELOGLIKEGRADIENT Log-likelihood gradient for of a sequence of the GP-LVM dynamics.
 % FORMAT
@@ -14,8 +14,14 @@ function gX = gpDynamicsSequenceLogLikeGradient(model, Xraw)
 % SEEALSO : gpDynamicsSequenceLogLikelihood, fgplvmOptimiseSequence, fgplvmSequenceLogLikeGradient
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
+%
+% COPYRIGHT : Carl Henrik Ek, 2008
 
 % FGPLVM
+
+if(isfield(model,'indexIn')&&~isempty(model.indexIn)&&length(model.indexIn)~=size(Xraw,2))
+  Xraw = Xraw(:,model.indexIn);
+end
 
 ind_in = 1:size(Xraw, 1)-1;
 ind_out = 2:size(Xraw, 1);
@@ -49,3 +55,9 @@ gX(ind_in,:) = gX(ind_in,:) + gDynX;
 if isfield(model, 'prior') &  ~isempty(model.prior)
   gX(1,:) = gX(1,:) + priorGradient(model.prior, model.X(1,:));
 end
+
+tmp = zeros(size(gX,1),length(model.indexAll));
+tmp(:,model.indexOut) = gX;
+gX = tmp;
+
+return

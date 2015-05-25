@@ -7,7 +7,7 @@ function fgplvmCovGradsTest(model)
 switch model.approx
  case 'ftc'
   
- case {'dtc', 'fitc', 'pitc'}
+ case {'dtc', 'dtcvar', 'fitc', 'pitc'}
   for i =1 :size(model.K_uu, 1)
     for j=1:i
       origK = model.K_uu(i, j);
@@ -73,11 +73,15 @@ function model = localUpdateAD(model)
 
 switch model.approx
  
- case 'dtc'
+ case {'dtc', 'dtcvar'}
   K_uf2 = model.K_uf*model.K_uf';
   model.A = (1/model.beta)*model.K_uu+ K_uf2;
   [model.Ainv, U] = pdinv(model.A);
   model.logdetA = logdet(model.A, U);
+  if strcmp(model.approx, 'dtcvar')
+    model.diagD = model.beta*(model.diagK ...
+                              - sum(model.K_uf.*(model.invK_uu*model.K_uf), 1)');
+  end
   
  case 'fitc'
   model.diagD = (1/model.beta) + model.diagK - sum(model.K_uf.*(model.invK_uu*model.K_uf), 1)';

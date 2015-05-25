@@ -19,7 +19,7 @@ function g = fgplvmSequenceLogLikeGradient(model, X, Y, varargin)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 %
-% MODIFICATIONS : Cark Henrik Ek, 2007
+% MODIFICATIONS : Carl Henrik Ek, 2008
 
 % FGPLVM
 if(nargin<3)
@@ -30,10 +30,16 @@ g = gpSequenceLogLikeGradient(model, X, Y);
 
 if isfield(model, 'dynamics') & ~isempty(model.dynamics)
   % A dynamics model is being used.
-  feval = str2func([model.dynamics.type 'SequenceLogLikeGradient']);
+  feval = str2func([model.dynamics.type ...
+		    'SequenceLogLikeGradient']);
+  if(isfield(model.dynamics,'indexIn')&&~isempty(model.dynamics.indexIn))
+    dim = model.dynamics.indexIn;
+  else
+    dim = 1:1:size(g,2);
+  end
   % 'balancing' of the dynamics alla Urtasun.
   if isfield(model, 'balancing') & ~isempty(model.balancing)
-    g = g + model.balancing*feval(model.dynamics, X);
+    g(:,dim) = g(:,dim) + model.balancing*feval(model.dynamics, X);
   else
     g = g + feval(model.dynamics, X);
   end

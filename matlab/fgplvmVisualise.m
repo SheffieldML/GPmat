@@ -2,6 +2,24 @@ function fgplvmVisualise(model, YLbls, ...
 			visualiseFunction, visualiseModify, varargin)
 
 % FGPLVMVISUALISE Visualise the manifold.
+% FORMAT
+% DESC visualises a two dimensional manifold in data space using commands
+% passed as argument.
+% ARG model : the model to visualise (of type fgplvm).
+% ARG Ylbls : any labels for the training data to improve the
+% visualisation.
+% ARG visualiseFunction : the function that draws the visualisation (in
+% data space) when the graphs are first drawn.
+% ARG visualiseModify : the function that modifies the visualisation as
+% you move around the latent space.
+% ARG arg1, arg2, arg3, ... : various additional arguments to be passed to the
+% visualisation commands.
+%
+% SEEALSO : lvmScatterPlot, lvmResultsDynamic
+%
+% COPYRIGHT : Neil D. Lawrence, 2003, 2004, 2005, 2006, 2008
+%
+% MODIFICATIONS : Carl Henrik Ek, 2008
 
 % FGPLVM
 
@@ -103,7 +121,11 @@ else
 end
 visualiseInfo.visualiseFunction = str2func(visualiseFunction);
 visHandle = visualiseInfo.visualiseFunction(visData, varargin{:});
-set(visHandle, 'erasemode', 'xor')
+if(iscell(visHandle))
+  set(visHandle{1}, 'erasemode', 'xor')
+else
+  set(visHandle, 'erasemode', 'xor')
+end
 colormap gray
 
 % Pass the data to visualiseInfo
