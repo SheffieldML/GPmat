@@ -1,7 +1,18 @@
 function rotMat = rotationMatrix(xangle, yangle, zangle, order);
 
 % ROTATIONMATRIX Compute the rotation matrix for an angle in each direction.
-
+% FORMAT
+% DESC is a helper function for computing the rotation matrix for a given
+% set of angles in a given order.
+% ARG xangle : rotation for x-axis.
+% ARG yangle : rotation for y-axis.
+% ARG zangle : rotation for z-axis.
+% ARG order : the order for the rotations.
+%
+% SEEALSO : bvh2xyz, acclaim2xyz
+%
+% COPYRIGHT : Neil D. Lawrence, 2005, 2006
+  
 % MOCAP
 
 if nargin < 4

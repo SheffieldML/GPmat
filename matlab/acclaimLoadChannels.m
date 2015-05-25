@@ -1,7 +1,17 @@
 function [channels, skel] = acclaimLoadChannels(fileName, skel)
 
 % ACCLAIMLOADCHANNELS Load the channels from an AMC file.
-
+% FORMAT
+% DESC loads channels from an acclaim motion capture file.
+% ARG fileName : the file name to load in.
+% ARG skel : the skeleton structure for the file.
+% RETURN channels : the channels read in for the file.
+% RETURN skel : the skeleton for the file.
+% 
+% COPYRIGHT : Neil D. Lawrence, 2006
+% 
+% SEEALSO : acclaimReadSkel
+  
 % MOCAP
 
 fid=fopen(fileName, 'rt');

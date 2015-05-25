@@ -1,6 +1,15 @@
 function skelPlayData(skelStruct, channels, frameLength)
 
 % SKELPLAYDATA Play skel motion capture data.
+% FORMAT 
+% DESC plays channels from a motion capture skeleton and channels.
+% ARG skel : the skeleton for the motion.
+% ARG channels : the channels for the motion.
+% ARG frameLength : the framelength for the motion.
+%
+% COPYRIGHT : Neil D. Lawrence, 2006
+%
+% SEEALSO : bvhPlayData, acclaimPlayData
 
 % MOCAP
 
@@ -42,5 +51,6 @@ set(gca, 'xlim', xlim, ...
 % Play the motion
 for j = 1:size(channels, 1)
   pause(frameLength)
+ % fprintf('%d ', j)
   skelModify(handle, channels(j, :), skelStruct);
 end

@@ -1,7 +1,17 @@
 function bvhWriteFile(fileName, skel, channels, frameLength)
 
 % BVHWRITEFILE Write a bvh file from a given structure and channels.
-
+% FORMAT
+% DESC writes a bvh file from a given structure and channels.
+% ARG fileName : the file name to use.
+% ARG skel : the skeleton structure to use.
+% ARG channels : the channels to use.
+% ARG frameLength : the length of a frame.
+%
+% COPYRIGHT : Neil D. Lawrence, 2006
+%
+% SEEALSO : bvhReadFile
+ 
 % MOCAP
 
 if nargin < 4

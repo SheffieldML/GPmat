@@ -1,13 +1,17 @@
 function skel = acclaimReadSkel(fileName)
 
 % ACCLAIMREADSKEL Reads an ASF file into a skeleton structure.
+% FORMAT
+% DESC loads skeleton structure from an acclaim skeleton file.
+% ARG fileName : the file name to load in.
+% RETURN skel : the skeleton for the file.
+% 
+% COPYRIGHT : Neil D. Lawrence, 2006
+% 
+% SEEALSO : acclaimLoadChannels
 
 % MOCAP
 
-% a regular expression for floats
-numPat = '(-?[0-9]*\.?[0-9]*)';
-% a regular expression for positive ints
-intPat = '([0-9]+)';
 
 boneCount = 0;
 fid = fopen(fileName, 'r');
