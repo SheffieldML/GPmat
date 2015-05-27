@@ -36,8 +36,8 @@ if exist('printDiagram') & printDiagram
   lvmPrintPlot(model, lbls, dataSetName, experimentNo);
 end
 
-% Load the results and display dynamically.
-lvmResultsDynamic(model.type, dataSetName, experimentNo, 'vector')
+% Load the results and display them.
+lvmScatterPlot(model, lbls);
 
 % compute the nearest neighbours errors in latent space.
 errors = fgplvmNearestNeighbour(model, lbls);
