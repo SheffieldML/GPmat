@@ -73,3 +73,5 @@ for i = 1:size(data, 1);
   time(data(i, 1), 1) = data(i, 3);
   strength(data(i, 1), data(i, 2)) = data(i, 6);
 end
+[storedMacs, ind] = sort(storedMacs);
+strength = strength(:, ind);
