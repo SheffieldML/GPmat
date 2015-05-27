@@ -20,7 +20,6 @@ function gX = linard2KernGradX(kern, X, X2)
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006
 %
 % COPYRIGHT : Michalis K. Titsias, 2009
-%
 % MODIFICATIONS: Andreas C. Damianou, 2012
 
 % KERN
