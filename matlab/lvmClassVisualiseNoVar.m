@@ -14,7 +14,7 @@ function lvmClassVisualiseNoVar(call)
 %
 % SEEALSO : lvmResultsDynamic
 
-% MLTOOLS 
+% SHEFFIELDML
 
 global visualiseInfo
 

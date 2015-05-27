@@ -10,7 +10,7 @@
 
 % COPYRIGHT: Andreas C. Damianou, 2011
 % SEEALSO: dist2
-% MLTOOLS
+% SHEFFIELDML
 
 function dst = weightedDist2(v, X, w)
 

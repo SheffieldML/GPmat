@@ -30,9 +30,9 @@ function [ax, data] = lvmScatterPlotNoVar(model, YLbls, ax, dims, defaultVals)
 % MODIFICATIONS : Andreas Damianou, 2012
 
 % SEEALSO lvmScatterPlot, lvmVisualise, lvmVisualiseGeneral
-
+%
 % MLTOOLS
-if nargin < 5
+  if nargin < 5
     defaultVals = zeros(1, size(model.X, 2));
     
     if nargin < 4

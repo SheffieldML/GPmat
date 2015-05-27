@@ -4,7 +4,7 @@ function [X, sigma2] = isomap2Embed(Y, dims)
 
 % ISOMAP2EMBED Embed data set with Isomap.
 
-% MLTOOLS
+% SHEFFIELDML
 
 % Note: isomap code uses the transpose of a design matrix.
 if any(any(isnan(Y)))

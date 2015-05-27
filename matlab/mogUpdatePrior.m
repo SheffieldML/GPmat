@@ -1,6 +1,6 @@
 function model = mogUpdatePrior(model)
 
-% MOGUPDATEPRIOR Update the priors of an MOG model.
+% MOGUPDATEPRIORML Update the priors of an MOG model.
 % FORMAT
 % DESC updates the prior probabilities of a mixtures of
 % Gaussians model. 

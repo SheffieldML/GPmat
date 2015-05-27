@@ -33,7 +33,7 @@ if negative
   imageValues = -imageValues;
 end
 if transpose
-  set(handle, 'CData', reshape(imageValues, imageSize(1), imageSize(2))');
+  set(handle, 'CData', reshape(imageValues(1:imageSize(1)*imageSize(2)), imageSize(1), imageSize(2))');
 else
-  set(handle, 'CData', reshape(imageValues, imageSize(1), imageSize(2)));
+  set(handle, 'CData', reshape(imageValues(1:imageSize(1)*imageSize(2)), imageSize(1), imageSize(2)));
 end
