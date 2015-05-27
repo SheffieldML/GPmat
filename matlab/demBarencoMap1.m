@@ -1,6 +1,6 @@
 % DEMBARENCOMAP1 Optimise model using MAP approximation with MLP kernel and MM activation response, using SCG optimisation and new PUMA processed data.
 
-% GPSIM
+% SHEFFIELDML
 clear,clc
 expNo = 3;
 type = 'mapMLPAct';

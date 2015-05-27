@@ -16,7 +16,7 @@ function gpsimMapEcoliResults(model, type, expNo, scale, printResults)
 %
 % SEEALSO : demEcoliMap1
 
-% GPSIM
+% SHEFFIELDML
 
 type(1) = upper(type(1));
 switch nargin

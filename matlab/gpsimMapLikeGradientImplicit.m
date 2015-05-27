@@ -12,7 +12,7 @@ function [g dlogPdf] = gpsimMapLikeGradientImplicit(model)
 %
 % COPYRIGHT : Pei Gao, Magnus Rattray and Neil D. Lawrence, 2008
 
-% GPSIM
+% SHEFFIELDML
   
 g1 = zeros(1, model.kern.nParams);
 g2 = zeros(1, model.numParams-model.kern.nParams);

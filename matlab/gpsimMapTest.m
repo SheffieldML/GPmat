@@ -10,7 +10,7 @@ function model = gpsimMapTest
 % 
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% GPSIM
+% SHEFFIELDML
 
 colordef white
 load demBarenco1;

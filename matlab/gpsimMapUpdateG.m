@@ -13,7 +13,7 @@ function model = gpsimMapUpdateG(model)
 %
 % SEEALSO : gpsimMapFunctionalExpandParam, gpsimMapCreate
 
-% GPSIM
+% SHEFFIELDML
 
 % Remove mean function value from m (if mean function present).
 if isfield(model, 'meanFunction') & ~isempty(model.meanFunction)

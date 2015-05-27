@@ -17,7 +17,7 @@ function model = gpdisimOptimise(model, display, iters);
 %
 % COPYRIGHT : Antti Honkela, 2007
 
-% GPSIM
+% SHEFFIELDML
 
 
 if nargin < 3

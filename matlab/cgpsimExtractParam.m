@@ -11,7 +11,7 @@ function [param, names] = cgpsimExtractParam(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% GPSIM
+% SHEFFIELDML
 
 if nargout == 1,
   param = gpsimExtractParam(model.comp{1});

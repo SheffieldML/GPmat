@@ -15,7 +15,7 @@ function model = gpsimCandidateOptimise(model, display, iters);
 %
 % COPYRIGHT : Neil D. Lawrence, 2007
 
-% GPSIM
+% SHEFFIELDML
 
 
 if nargin < 3

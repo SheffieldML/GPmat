@@ -11,7 +11,7 @@ function options = gpsimOptions
 %
 % MODIFICATIONS : Pei Gao, 2008
   
-% GPSIM
+% SHEFFIELDML
 
 options.optimiser = 'conjgrad';
 options.includeNoise = 0;

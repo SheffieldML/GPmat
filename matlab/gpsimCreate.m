@@ -35,7 +35,7 @@ function model = gpsimCreate(numGenes, numProteins, times, geneVals, ...
 % MODIFIED : Pei Gao, 2008
 % MODIFIED : Antti Honkela, 2008, 2009
 
-% GPSIM
+% SHEFFIELDML
 
 if any(size(geneVars)~=size(geneVals))
   error('The gene variances have a different size matrix to the gene values.');
@@ -105,7 +105,7 @@ if model.includeNoise
     end
   end
   if isfield(options, 'singleNoise') & options.singleNoise
-    tieParam{2} = 'white . variance';
+    tieParam{2} = 'white \d+ variance';
   end
             
   

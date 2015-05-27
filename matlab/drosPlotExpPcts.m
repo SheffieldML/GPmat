@@ -5,7 +5,7 @@ function drosPlotExpPcts(drosexp, genes),
 %   drosPlotExpPcts(drosexp, genes)
 % COPYRIGHT : Antti Honkela, 2007
   
-% GPSIM 
+% SHEFFIELDML
 
 if iscell(genes),
   genes = drosGetGeneinds(drosexp, genes);

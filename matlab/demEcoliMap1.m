@@ -1,6 +1,6 @@
 % DEMECOLIMAP1 Optimise model using MAP approximation with MLP kernel and multiple repression response, using SCG optimisation and Ecoli data set.
 
-% GPSIM
+% SHEFFIELDML
 
 clear;
 expNo = 4;

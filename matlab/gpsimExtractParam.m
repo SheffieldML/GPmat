@@ -13,7 +13,7 @@ function [param, names] = gpsimExtractParam(model)
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% GPSIM
+% SHEFFIELDML
 
 if nargout>1
   [param, names] = kernExtractParam(model.kern);

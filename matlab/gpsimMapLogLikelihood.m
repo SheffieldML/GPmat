@@ -13,7 +13,7 @@ function ll = gpsimMapLogLikelihood(model, df)
 %  
 % MODIFIED : Pei Gao, 2008
 
-% GPSIM
+% SHEFFIELDML
 
 numData = length(model.t);
 

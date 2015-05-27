@@ -16,7 +16,7 @@ function [model, ll] = gpsimMapUpdateF(model, options)
 %  
 % MODIFIED : Pei Gao, 2008
 
-% GPSIM
+% SHEFFIELDML
 
 display = options(1);
 tolf = options(2);

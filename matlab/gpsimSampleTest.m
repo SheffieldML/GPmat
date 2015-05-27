@@ -5,7 +5,7 @@
 % differential equation numerically for each gene and comparing to
 % f.
 
-% GPSIM
+% SHEFFIELDML
 
 randn('seed', 1e5);
 rand('seed', 1e5);

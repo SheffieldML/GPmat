@@ -11,7 +11,7 @@ function model = gpsimMapUpdateYpredVar (model)
   
 % COPYRIGHT : Pei Gao, Magnus Rattray and Neil D. Lawrence, 2008
 
-% GPSIM
+% SHEFFIELDML
   
   iter = 100;
 

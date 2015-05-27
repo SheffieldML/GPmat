@@ -1,6 +1,6 @@
 % DEMTOYPROBLEM1 Generate an artifical data set and solve with GPSIM.
 
-% GPSIM
+% SHEFFIELDML
 
 maxPredVal = 18;
 bw = true;

@@ -14,7 +14,7 @@ function [theta, rval] = distfit(data, dist, verbose),
 %
 % COPYRIGHT : Antti Honkela, 2007
   
-% GPSIM
+% SHEFFIELDML
 
 
 if size(data, 1) > size(data, 2),

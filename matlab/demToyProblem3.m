@@ -1,6 +1,6 @@
 % DEMTOYPROBLEM3 Generate an artifical data set and solve with GPSIM.
 
-% GPSIM
+% SHEFFIELDML
 
 set(0,'DefaultLineLineWidth',2);
 set(0,'DefaultTextFontSize',20);

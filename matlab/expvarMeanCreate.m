@@ -21,7 +21,7 @@ function model = expvarMeanCreate(inputDim, outputDim, options)
 %
 % SEEALSO : expvarMeanOptions
 
-% GPSIM
+% SHEFFIELDML
 
 model.type = 'expvarMean';
 if isstruct(options.kern) 

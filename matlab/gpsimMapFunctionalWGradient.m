@@ -14,7 +14,7 @@ function dWdf =  gpsimMapFunctionalWGradient(model, l)
 %
 % COPYRIGHT : Pei Gao, Magnus Rattray and Neil D. Lawrence, 2008
   
-% GPSIM
+% SHEFFIELDML
 
 intPoints = model.times_index(1)+1:(model.numMapPts);
 step2 = model.step*model.step;

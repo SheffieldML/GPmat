@@ -21,7 +21,7 @@ function g = gpsimMapLogLikeGradients(model, gfdata)
 %  
 % MODIFIED : Pei Gao, 2008
 
-% GPSIM
+% SHEFFIELDML
 
 % kernel parameters
 dataRespond = false;

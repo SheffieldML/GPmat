@@ -5,7 +5,7 @@ function I = drosGetGeneinds(drosdata, genes),
 %   I = drosGetGeneinds(drosdata, genes)
 % COPYRIGHT : Antti Honkela, 2007
   
-% GPSIM 
+% SHEFFIELDML
 
 I = [];
 

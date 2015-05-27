@@ -17,7 +17,7 @@ function gpsimMapBarencoResults(model, type, expNo, printResults, scale)
 %
 % SEEALSO : demBarencoMap1
 
-% GPSIM
+% SHEFFIELDML
 
 for j = 1:length(model.comp)
   model.comp{j} = gpsimMapUpdateYpredVar(model.comp{j});

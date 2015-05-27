@@ -34,7 +34,7 @@ function model = gpdisimCreate(numGenes, numProteins, times, geneVals, ...
 %
 % COPYRIGHT : Antti Honkela, 2007
 
-% GPSIM
+% SHEFFIELDML
 
 if any(size(geneVars)~=size(geneVals))
   error('The gene variances have a different size matrix to the gene values.');
@@ -79,7 +79,7 @@ if model.includeNoise
     kernType2{i+1} = 'white';
   end
   if isfield(options, 'singleNoise') & options.singleNoise
-    tieParam{5} = 'white . variance';
+    tieParam{5} = 'white \d+ variance';
   end
   
   % Now create model with a 'cmpnd' (compound) kernel build from two

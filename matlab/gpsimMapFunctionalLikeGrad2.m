@@ -12,7 +12,7 @@ function [dfuncGrad] = gpsimMapFunctionalLikeGrad2(model, p)
 %
 % COPYRIGHT : Pei Gao, Magnus Rattray and Neil D. Lawrence, 2008
 
-% GPSIM
+% SHEFFIELDML
   
 dfuncGrad = zeros(1, model.numParams-model.kern.nParams);
 gB = zeros(model.numGenes, 1);
