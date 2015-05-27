@@ -15,7 +15,7 @@ function [r, lls, fitparams] = drosODERank(drosexp, drosTF, tf, probes, t, doPlo
 %
 % COPYRIGHT : Antti Honkela, 2010
 
-% DISIMRANK
+% SHEFFIELDML
 
 if nargin < 5,
   t = 1:12;

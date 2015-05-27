@@ -5,7 +5,7 @@
 %
 % COPYRIGHT : Antti Honkela, 2010
 
-% DISIMRANK
+% SHEFFIELDML
 
 drosLoadData
 z_scores = drosexp.fitmean ./ sqrt(drosexp.fitvar);

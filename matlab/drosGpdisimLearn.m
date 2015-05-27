@@ -21,7 +21,7 @@ function model = drosGpdisimLearn(drosexp, drosTF, tf, targets, varargin),
 %
 % COPYRIGHT : Antti Honkela, 2009
 
-% DISIMRANK
+% SHEFFIELDML
 
 % Read the arguments
 if (length(varargin) == 1) & (isstruct(varargin{1})),

@@ -4,7 +4,7 @@
 %
 % COPYRIGHT : Antti Honkela, 2009
 
-% DISIMRANK
+% SHEFFIELDML
 
 if exist('drosophila_data.mat', 'file'),
   load('drosophila_data.mat');

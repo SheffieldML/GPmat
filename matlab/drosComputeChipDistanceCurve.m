@@ -20,7 +20,7 @@ function r = drosComputeChipDistanceCurve(chipdata, drosexp, drosinsitu, ranking
 %
 % COPYRIGHT : Antti Honkela, 2009
 
-% DISIMRANK
+% SHEFFIELDML
 
 if nargin < 5,
   t = 100;

@@ -19,7 +19,7 @@ function [y, yvar, gene, times, scale, rawExp, rawVar] = drosGetData(drosexp, ge
 % COPYRIGHT : Neil D. Lawrence, 2006
 % COPYRIGHT : Antti Honkela, 2007
 
-% DISIMRANK
+% SHEFFIELDML
 
 if nargin < 3,
   getmedians = 0;

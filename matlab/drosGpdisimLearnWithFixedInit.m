@@ -18,7 +18,7 @@ function model = drosGpdisimLearnWithFixedInit(drosexp, drosTF, tf, targets, ini
 %
 % COPYRIGHT : Antti Honkela, 2009
 
-% DISIMRANK
+% SHEFFIELDML
 
 if nargin < 7,
   randomize = 0;

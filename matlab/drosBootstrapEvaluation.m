@@ -22,7 +22,7 @@ function [res, accs] = drosBootstrapEvaluation(drosexp, drosinsitu, rankings, va
 %
 % COPYRIGHT : Antti Honkela, 2009
 
-% DISIMRANK
+% SHEFFIELDML
 
 res = zeros([length(rankings), length(rankings), length(threshold)]);
 accs = zeros([repeats, length(rankings), length(threshold)]);
