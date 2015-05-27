@@ -8,7 +8,7 @@ function l = logisticNormalPriorLogProb(prior, x)
 
 y = invSigmoid((x - prior.a) / (prior.b - prior.a));
 %g = sigmoid(y) .* sigmoid(-y) / (prior.b - prior.a);
-g = (x - prior.a) .* (prior.b - x) / (prior.b - prior.a)^3;
+g = (x - prior.a) .* (prior.b - x) / (prior.b - prior.a);
 
 if any(x <= prior.a | x >= prior.b),
   l = -Inf;

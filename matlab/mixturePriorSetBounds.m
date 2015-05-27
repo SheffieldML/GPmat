@@ -4,7 +4,7 @@ function prior = mixturePriorSetBounds(prior, bounds)
 
 % COPYRIGHT : Antti Honkela, 2013
 
-% PRIOR
+% SHEFFIELDML
 
 if prior.isBounded,
   for k=1:length(prior.comp),

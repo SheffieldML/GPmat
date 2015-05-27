@@ -4,7 +4,7 @@ function prior = mixturePriorExpandParam(prior, params)
 
 % COPYRIGHT : Antti Honkela, 2013
 
-% PRIOR
+% SHEFFIELDML
 
 begindex = 1;
 for k=1:length(prior.comp),

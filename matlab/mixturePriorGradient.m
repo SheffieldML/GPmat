@@ -4,7 +4,7 @@ function g = mixturePriorGradient(prior, x)
 
 % COPYRIGHT : Antti Honkela, 2013
 
-% PRIOR
+% SHEFFIELDML
 
 grads = cellfun(@(p) priorGradient(p, x), prior.comp, 'UniformOutput', false);
 logprobs = cellfun(@(p) priorLogProb(p, x), prior.comp) + log(prior.weights);

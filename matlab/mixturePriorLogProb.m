@@ -4,7 +4,7 @@ function l = mixturePriorLogProb(prior, x)
 
 % COPYRIGHT : Antti Honkela, 2013
 
-% PRIOR
+% SHEFFIELDML
 
 % Compute log prior
 

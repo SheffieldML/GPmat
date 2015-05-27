@@ -13,7 +13,7 @@ function prior = mixturePriorParamInit(prior, options)
 %
 % COPYRIGHT : Antti Honkela, 2013
 
-% PRIOR
+% SHEFFIELDML
 
 if isfield(options, 'weights'),
   prior.weights = options.weights;

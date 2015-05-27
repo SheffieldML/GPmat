@@ -4,7 +4,7 @@ function [params, names] = mixturePriorExtractParam(prior)
 
 % COPYRIGHT : Antti Honkela, 2013
 
-% PRIOR
+% SHEFFIELDML
 
 params = zeros(1, prior.nParams);
 if nargout > 1
