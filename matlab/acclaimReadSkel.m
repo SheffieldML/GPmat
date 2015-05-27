@@ -12,6 +12,10 @@ function skel = acclaimReadSkel(fileName)
 
 % MOCAP
 
+% a regular expression for floats
+numPat = '(-?[0-9]*\.?[0-9]*)';
+% a regular expression for positive ints
+intPat = '([0-9]+)';
 
 boneCount = 0;
 fid = fopen(fileName, 'r');
