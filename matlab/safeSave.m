@@ -11,7 +11,7 @@ function safeSave(fname, varargin)
 %
 % SEEALSO save
 %
-% COPYRIGHT : Antti Honkela, 2010-2013
+% COPYRIGHT : Antti Honkela, 2010
 
 % NDLUTIL
 

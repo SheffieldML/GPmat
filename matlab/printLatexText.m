@@ -13,7 +13,7 @@ function printLatexText(textString, fileName, directory)
 % NDLUTIL
 
   baseName = [directory filesep fileName];
-
+  
   FID = fopen(baseName, 'w');    
   fprintf(FID, '%s', textString);
   fclose(FID);
