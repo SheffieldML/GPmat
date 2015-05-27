@@ -27,7 +27,7 @@ function y = doTransform(x, type, transform)
 %
 % COPYRIGHT : Antti Honkela, 2013
 
-% OPTIMI
+% SHEFFIELDML
 
 fhandle = str2func([transform.type 'Transform']);
 if isfield(transform, 'transformsettings'),

@@ -40,6 +40,6 @@ switch transform
   index = find(x>limVal);
   y(index) = 1;
   index = find(x<=limVal);
-  y(index) = (exp(x(index))-1)./exp(x(index));
+  y(index) = 1-exp(-x(index));
 end
   

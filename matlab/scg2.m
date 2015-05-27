@@ -95,11 +95,7 @@ nparams = length(x);
 
 %  Check gradients
 if (gradcheck)
-    if exist('gradchek3', 'file')
-        feval('gradchek3', x, f, gradf, varargin{:});
-    else
-        feval('gradchek', x, f, gradf, varargin{:});
-    end
+  feval('gradchek', x, f, gradf, varargin{:});
 end
 
 sigma0 = 1.0e-4;

@@ -3,7 +3,7 @@ function str = optimiDefaultConstraint(constraint)
 % OPTIMIDEFAULTCONSTRAINT Returns function for parameter constraint.
 % FORMAT
 % DESC returns the current default function for constraining a
-% parameter. Formerly (up to version KERN 0.163) this was
+% parameter. Formerly (up to version OPTIMI 0.163) this was
 % 'negLogLogit' for positive constraints, as this keeps things roughly linear in the
 % positive half space, however, it is more standard to use 'exp'
 % (i.e. optimise in the log space). This function allows you to
