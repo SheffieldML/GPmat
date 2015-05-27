@@ -33,6 +33,6 @@ display = 1;
 model = gpOptimise(model, display, iters);
 
 % Save the results.
-fileName = modelWriteResult(model, dataSetName, experimentNo);
+%fileName = modelWriteResult(model, dataSetName, experimentNo);
 
-demSpgp1dPlot
+%demSpgp1dPlot

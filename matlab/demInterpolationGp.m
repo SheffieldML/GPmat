@@ -1,8 +1,8 @@
-% DEMINTERPOLATION Demonstrate Gaussian processes for interpolation.
+% DEMINTERPOLATIONGP Demonstrate Gaussian processes for interpolation.
 % FORMAT
 % DESC runs a simple one-D Gaussian process displaying errorbars.
 %
-% SEEALSO : gpCreate, demRegression
+% SEEALSO : gpCreate, demRegressionGp
 % 
 % COPYRIGHT : Neil D. Lawrence, 2006, 2008
 

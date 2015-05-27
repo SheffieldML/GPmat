@@ -7,7 +7,7 @@
 % COPYRIGHT: Andreas C. Damianou, 2011, 2012
 % COPYRIGHT: Neil Lawrence 2006
 
-% GP
+% SHEFFIELDML
 
 % Uncomment to fix seeds so that every run will reproduce the same results
 %randn('seed', 1e7)

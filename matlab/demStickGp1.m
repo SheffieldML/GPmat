@@ -67,12 +67,10 @@ for i = 1:length(outputIndex);
   hold on;
   plot(t(testIndex), y(testIndex, outputIndex(i)), 'ko');
   b=plot(tTrain, yTrain(:, i), 'k.');
-  set(b, 'Markersize', 15);
   a = plot(tTest, mu(:, i), 'k-');
   set(gca, 'xlim', [0 2])
   set(a, 'linewidth', 2);
   
-  zeroAxes(gca, [], 10, 'arial')
   if exist('printDiagram') && printDiagram
     fileName = ['dem' capName 'Gp' num2str(experimentNo) 'Out' num2str(i)];
     printPlot(fileName, '../tex/diagrams', '../html');
