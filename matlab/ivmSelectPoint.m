@@ -9,7 +9,7 @@ function [indexSelect, infoChange] = ivmSelectPoint(model, add);
 % point. If we are not adding we are assumed to be removing a point
 % (default is true).
 %
-% SEEALSO : ivmOptimiseIVM, ivmSelectPoints, ivmCreate
+% SEEALSO : ivmOptimiseIvm, ivmSelectPoints, ivmCreate
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2007
 

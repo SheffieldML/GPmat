@@ -1,4 +1,4 @@
-% DEMREGRESSION1 The data-set is sampled from a GP with known parameters.
+% DEMREGRESSIONONEIVM1 The data-set is sampled from a GP with known parameters.
 
 % IVM
 
@@ -33,7 +33,7 @@ end
 for i = 1:options.extIters
   % Plot the data.
   % Select the active set.
-  model = ivmOptimiseIVM(model, options.display);
+  model = ivmOptimiseIvm(model, options.display);
   if options.display > 1
     delete(h2)
     [h1, h2] = ivm3dPlot(model, 'mesh', i);
@@ -43,13 +43,13 @@ for i = 1:options.extIters
   model = ivmOptimiseKernel(model, options.display, options.kernIters);
 
 end
-model = ivmOptimiseIVM(model, options.display);
+model = ivmOptimiseIvm(model, options.display);
 if options.display > 1
   delete(h2)
   [h1, h2] = ivm3dPlot(model, 'mesh', i);
 end
 % Show the active points.
-model = ivmOptimiseIVM(model, options.display);
+model = ivmOptimiseIvm(model, options.display);
 
 ivmDisplay(model);
 
@@ -62,7 +62,7 @@ save(['dem' capName num2str(experimentNo) '.mat'], ...
      'noise', ...
      'ivmInfo');
 
-if exist('printDiagram') & printDiagram
+if exist('printDiagram') && printDiagram
   ivmPrintPlot(model, 'mesh', [], [], [], capName, experimentNo);
 end
 

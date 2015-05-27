@@ -31,22 +31,7 @@ function [h1, h2] = ivmPrintPlot(model, plotType, iter, X, ...
 
 ivm3dPlot(model, plotType, iter, X, y);
 % display active points.
-model = ivmOptimiseIVM(model, 2);
+model = ivmOptimiseIvm(model, 2);
+fileName = ['dem' capName 'Ivm' num2str(experimentNo)];
 
-fileName = ['dem' capName num2str(experimentNo)];
-print('-depsc', ['../tex/diagrams/' fileName])
-print('-deps', ['../tex/diagrams/' fileName 'NoColour'])
-
-% make smaller for PNG plot.
-pos = get(gcf, 'paperposition')
-origpos = pos;
-pos(3) = pos(3)/2;
-pos(4) = pos(4)/2;
-set(gcf, 'paperposition', pos);
-fontsize = get(gca, 'fontsize');
-set(gca, 'fontsize', fontsize/2);
-lineWidth = get(gca, 'lineWidth');
-set(gca, 'lineWidth', lineWidth*2);
-print('-dpng', ['../html/' fileName])
-set(gcf, 'paperposition', origpos);
-
+printPlot(fileName, '../tex/diagrams', '../html');

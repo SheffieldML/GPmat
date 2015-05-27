@@ -5,6 +5,7 @@ function model = ivm(X, y, kernelType, noiseType, selectionCriterion, d)
 % DESC this function is now deprecated, please use ivmCreate.
 %
 % SEEALSO : ivmCreate
+
 % IVM
 
 model.type = 'ivm';

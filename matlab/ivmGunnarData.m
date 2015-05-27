@@ -44,13 +44,13 @@ ivmDisplay(model);
 % Do 15 iterations
 for i = 1:15
     % Select the active set.
-  model = ivmOptimiseIVM(model, options.display);
+  model = ivmOptimiseIvm(model, options.display);
   % Optimise the kernel parameters.
   model = ivmOptimiseKernel(model, options.display, 100);
   fprintf('Iteration %d\n', i);
   ivmDisplay(model);
 end
-model = ivmOptimiseIVM(model, options.display);
+model = ivmOptimiseIvm(model, options.display);
 % Display the final model.
 fprintf('Final model:\n');
 ivmDisplay(model);

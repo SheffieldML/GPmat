@@ -1,4 +1,4 @@
-% DEMUSPS3 Try the ARD IVM on some digits data.
+% DEMUSPSIVM3 Try the ARD IVM on some digits data.
 
 % IVM
 

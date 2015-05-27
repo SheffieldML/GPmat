@@ -1,4 +1,4 @@
-% DEMUSPS1 Try the IVM on the USPS digits data with RBF kernel.
+% DEMUSPSIVM1 Try the IVM on the USPS digits data with RBF kernel.
 
 % IVM
 

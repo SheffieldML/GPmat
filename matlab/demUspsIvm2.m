@@ -1,4 +1,4 @@
-% DEMUSPS2 Try the IVM on the USPS digits data with MLP kernel.
+% DEMUSPSIVM2 Try the IVM on the USPS digits data with MLP kernel.
 
 % IVM
 

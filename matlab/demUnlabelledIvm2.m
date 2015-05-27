@@ -1,4 +1,4 @@
-% DEMUNLABELLED2 Test IVM code on a toy crescent data.
+% DEMUNLABELLEDIVM2 Test IVM code on a toy crescent data.
 %
 % Recreates the toy crescent data example shown in the NIPS paper.
 
@@ -44,7 +44,7 @@ for i = 1:15
   
   % Plot the data.
   % Select the active set.
-  model = ivmOptimiseIVM(model, options.display);
+  model = ivmOptimiseIvm(model, options.display);
   if options.display > 1
     ivm3dPlot(model, 'ncnmContour', i); %incnmTwoDPlot(model, i);
   end
@@ -53,11 +53,11 @@ for i = 1:15
   ivmDisplay(model);
 
 end
-model = ivmOptimiseIVM(model, options.display);
+model = ivmOptimiseIvm(model, options.display);
 if options.display > 1
   ivm3dPlot(model, 'ncnmContour', i); %incnmTwoDPlot(model, i);
 end
-model = ivmOptimiseIVM(model, options.display);
+model = ivmOptimiseIvm(model, options.display);
 % Display the final model.
 ivmDisplay(model);
 

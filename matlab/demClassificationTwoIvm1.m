@@ -1,4 +1,4 @@
-% DEMCLASSIFICATION2 IVM for classification on a data-set sampled from a GP
+% DEMCLASSIFICATIONTWOIVM1 IVM for classification on a data-set sampled from a GP
 
 % IVM
 
@@ -7,7 +7,7 @@ randn('seed', 1e5);
 rand('seed', 1e5);
 
 dataSetName = 'classificationTwo';
-experimentNo = 2;
+experimentNo = 1;
 
 % load data
 [X, y] = mapLoadData(dataSetName);
@@ -27,7 +27,7 @@ end
 for i = 1:options.extIters;
 
   % Select the active set.
-  model = ivmOptimiseIVM(model, options.display);
+  model = ivmOptimiseIvm(model, options.display);
   % Plot the data.
   if options.display > 1
     ivm3dPlot(model, 'ivmContour', i);
@@ -35,12 +35,12 @@ for i = 1:options.extIters;
   % Optimise the kernel parameters.
   model = ivmOptimiseKernel(model, options.display, options.kernIters);
 end
-model = ivmOptimiseIVM(model, options.display);
+model = ivmOptimiseIvm(model, options.display);
 if options.display > 1
   ivm3dPlot(model, 'ivmContour', i);
 end
 % display active points.
-model = ivmOptimiseIVM(model, options.display);
+model = ivmOptimiseIvm(model, options.display);
 
 % Display the final model.
 ivmDisplay(model);

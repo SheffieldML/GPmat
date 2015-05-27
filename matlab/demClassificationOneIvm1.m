@@ -1,4 +1,4 @@
-% DEMCLASSIFICATION1 Test IVM code on a toy feature selection.
+% DEMCLASSIFICATIONIVM1 Test IVM code on a toy feature selection.
 
 % IVM
 
@@ -31,7 +31,7 @@ end
 for i = 1:options.extIters;
 
   % Select the active set.
-  model = ivmOptimiseIVM(model, options.display);
+  model = ivmOptimiseIvm(model, options.display);
   % Plot the data.
   if options.display > 1
     ivm3dPlot(model, 'ivmContour', i);
@@ -39,12 +39,12 @@ for i = 1:options.extIters;
   % Optimise the kernel parameters.
   model = ivmOptimiseKernel(model, options.display, options.kernIters);
 end
-model = ivmOptimiseIVM(model, options.display);
+model = ivmOptimiseIvm(model, options.display);
 if options.display > 1
   ivm3dPlot(model, 'ivmContour', i);
 end
 % display active points.
-model = ivmOptimiseIVM(model, options.display);
+model = ivmOptimiseIvm(model, options.display);
 
 % Display the final model.
 ivmDisplay(model);

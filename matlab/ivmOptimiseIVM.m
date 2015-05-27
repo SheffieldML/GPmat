@@ -1,4 +1,4 @@
-function model = ivmOptimiseIVM(model, display)
+function model = ivmOptimiseIvm(model, display)
 
 % IVMOPTIMISEIVM Selects the points for an IVM model.
 % FORMAT

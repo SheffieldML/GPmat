@@ -7,7 +7,7 @@ function model = ivmOptimise(model, options);
 % ARG model : the model to be optimised.
 % ARG options : options structure as returned by ivmOptions.
 %
-% SEEALSO : ivmOptimiseIVM, ivmOptimiseKernel, ivmOptimiseNoise
+% SEEALSO : ivmOptimiseIvm, ivmOptimiseKernel, ivmOptimiseNoise
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
  
@@ -16,12 +16,12 @@ function model = ivmOptimise(model, options);
 for i = 1:options.extIters
   if options.kernIters
     % Update the kernel if required.
-    model = ivmOptimiseIVM(model, options.display);
+    model = ivmOptimiseIvm(model, options.display);
     model = ivmOptimiseKernel(model, options.display, options.kernIters);
   end
   if options.noiseIters
     % Update the noise model if required.
-    model = ivmOptimiseIVM(model, options.display);
+    model = ivmOptimiseIvm(model, options.display);
     model = ivmOptimiseNoise(model, options.display, options.noiseIters);
   end
   if options.display

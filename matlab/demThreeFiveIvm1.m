@@ -1,4 +1,4 @@
-% DEMTHREEFIVE Try the IVM & NCNM on 3 vs 5.
+% DEMTHREEFIVEIVM1 Try the IVM & NCNM on 3 vs 5.
 
 % IVM
 
@@ -58,16 +58,16 @@ for i = 1:10
     % Optimise the IVM but don't change noise params.
     model = ivmOptimise(model, optionsIvm)
     % Select data-points in an IVM with those kernel parameters.
-    model = ivmOptimiseIVM(model, optionsIvm.display);
+    model = ivmOptimiseIvm(model, optionsIvm.display);
     % Display the final model.
     ivmDisplay(model);
     [mu, varSigma] = ivmPosteriorMeanVar(model, XTest);
-    areaIVM(i, j) = rocCurve(mu, yTest);
-    fprintf('IVM %d, %d: Area under ROC curve: %2.4f\n', i, j, areaIVM(i, j));
+    areaIvm(i, j) = rocCurve(mu, yTest);
+    fprintf('IVM %d, %d: Area under ROC curve: %2.4f\n', i, j, areaIvm(i, j));
     % Store the results.
-    [kernIVM(i, j), noiseIVM(i, j), ivmInfoIVM(i, j)] = ivmDeconstruct(model);
+    [kernIvm(i, j), noiseIvm(i, j), ivmInfoIvm(i, j)] = ivmDeconstruct(model);
     
-    % Run NCNM IVM on data.
+    % Run NCNM Ivm on data.
     optionsIvm.noise = 'ncnm';
     optionsIvm.numActive = dVal;
     yunlab(unlabelled) = NaN;
@@ -82,7 +82,7 @@ for i = 1:10
     % Optimise the NCNM but don't change noise params.
     model = ivmOptimise(model, optionsIvm);
     % Select data-points in an NCNM with those kernel parameters.
-    model = ivmOptimiseIVM(model, optionsIvm.display);
+    model = ivmOptimiseIvm(model, optionsIvm.display);
     % Display the final model.
     ivmDisplay(model);
     [mu, varSigma] = ivmPosteriorMeanVar(model, XTest);
@@ -92,7 +92,7 @@ for i = 1:10
     [kernNCNM(i, j), noiseNCNM(i, j), ivmInfoNCNM(i, j)] = ivmDeconstruct(model);
     
     % Run SVM on labelled data.
-    optionsSvm.KernelParam = kernIVM(i, j).comp{1}.inverseWidth/2;
+    optionsSvm.KernelParam = kernIvm(i, j).comp{1}.inverseWidth/2;
     model = svml([dataSetName num2str(i) num2str(j)], optionsSvm);
     model = svmltrain(model, Xlab, ylab);
     [alpha, Xactive] = svmlread(model.fname);
@@ -108,7 +108,7 @@ for i = 1:10
     
     % Run Transductive SVM on data.
     yunlab(unlabelled) = 0;
-    optionsSvm.KernelParam = max([kernNCNM(i, j).comp{1}.inverseWidth kernIVM(i, j).comp{1}.inverseWidth])/2;
+    optionsSvm.KernelParam = max([kernNCNM(i, j).comp{1}.inverseWidth kernIvm(i, j).comp{1}.inverseWidth])/2;
     model = svml([dataSetName num2str(i) num2str(j)], optionsSvm);
     model = svmltrain(model, X, yunlab);
     [alpha, Xactive] = svmlread(model.fname);
@@ -123,9 +123,9 @@ for i = 1:10
     fprintf('T-SVM %d, %d, Area under ROC curve: %2.4f\n', i, j, areaTSVM(i, j));
     capName = dataSetName;
     capName(1) = upper(capName(1));
-    save(['dem' capName '.mat'], ...
-         'kernIVM', 'noiseIVM', ...
-         'ivmInfoIVM', 'areaIVM', ...
+    save(['dem' capName 'Ivm1.mat'], ...
+         'kernIvm', 'noiseIvm', ...
+         'ivmInfoIvm', 'areaIvm', ...
          'kernNCNM', 'noiseNCNM', ...
          'ivmInfoNCNM', 'areaNCNM', ...
          'probLabelled', 'areaSVM', 'areaTSVM');

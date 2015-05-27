@@ -9,7 +9,7 @@ function model = ivmInit(model, d)
 % model.d is used).
 % RETURN model : model with various matrices set up for learning.
 %
-% SEEALSO : ivmOptimiseIVM, ivmSelectPoints
+% SEEALSO : ivmOptimiseIvm, ivmSelectPoints
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005
 

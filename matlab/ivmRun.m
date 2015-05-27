@@ -42,4 +42,4 @@ end
 model = ivmOptimise(model, options);
 
 % Select data-points in an IVM with the given parameters.
-model = ivmOptimiseIVM(model, options.display);
+model = ivmOptimiseIvm(model, options.display);

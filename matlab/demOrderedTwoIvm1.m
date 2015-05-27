@@ -1,4 +1,4 @@
-% DEMORDERED2 Run a demonstration of the ordered categories noise model (circular data).
+% DEMORDEREDTWOIVM1 Run a demonstration of the ordered categories noise model (circular data).
 
 % IVM
 
@@ -6,7 +6,7 @@ randn('seed', 1e5);
 rand('seed', 1e5);
 
 dataSetName = 'orderedTwo';
-experimentNo = 2;
+experimentNo = 1;
 
 % load data
 [X, y] = mapLoadData(dataSetName);
@@ -32,7 +32,7 @@ if options.display > 1
 end
 for i = 1:options.extIters
   % Select active set.
-  model = ivmOptimiseIVM(model, options.display);
+  model = ivmOptimiseIvm(model, options.display);
   if options.display > 1
     ivm3dPlot(model, 'ivmContour', i);
   end
@@ -40,7 +40,7 @@ for i = 1:options.extIters
   model = ivmOptimiseNoise(model, options.display, options.noiseIters);
   
   % Select active set.
-  model = ivmOptimiseIVM(model, options.display);
+  model = ivmOptimiseIvm(model, options.display);
   if options.display > 1
     ivm3dPlot(model, 'ivmContour', i);
   end
@@ -48,12 +48,12 @@ for i = 1:options.extIters
   model = ivmOptimiseKernel(model, options.display, options.kernIters);
 end
 % Select active set.
-model = ivmOptimiseIVM(model, options.display);
+model = ivmOptimiseIvm(model, options.display);
 if options.display > 1
   ivm3dPlot(model, 'ivmContour', i);
 end
 % Display active points
-model = ivmOptimiseIVM(model, options.display);
+model = ivmOptimiseIvm(model, options.display);
 % Display parameters of end model.
 ivmDisplay(model);
 

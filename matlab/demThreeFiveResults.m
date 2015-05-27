@@ -5,7 +5,7 @@
 
 % IVM
 
-load demThreeFive
+load demThreeFiveIvm1
 clf
 hold on
 lineA = errorbar(probLabelled, mean(areaIVM), std(areaIVM), 'rx-');

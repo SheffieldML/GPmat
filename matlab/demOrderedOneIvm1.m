@@ -1,4 +1,4 @@
-% DEMORDERED1 Run a demonstration of the ordered categories noise model (linear data).
+% DEMORDEREDONEIVM1 Run a demonstration of the ordered categories noise model (linear data).
 
 % IVM
 % Fix seeds
@@ -34,7 +34,7 @@ if options.display > 1
 end
 for i = 1:options.extIters
   % Select active set.
-  model = ivmOptimiseIVM(model, options.display);
+  model = ivmOptimiseIvm(model, options.display);
   if options.display > 1
     ivm3dPlot(model, 'ivmContour', i);
   end
@@ -42,7 +42,7 @@ for i = 1:options.extIters
   model = ivmOptimiseNoise(model, options.display, options.noiseIters);
   
   % Select active set.
-  model = ivmOptimiseIVM(model, options.display);
+  model = ivmOptimiseIvm(model, options.display);
   if options.display > 1
     ivm3dPlot(model, 'ivmContour', i);
   end
@@ -50,12 +50,12 @@ for i = 1:options.extIters
   model = ivmOptimiseKernel(model, options.display, options.kernIters);
 end
 % Select active set.
-model = ivmOptimiseIVM(model, options.display);
+model = ivmOptimiseIvm(model, options.display);
 if options.display > 1
   ivm3dPlot(model, 'ivmContour', i);
 end
 % Display active points
-model = ivmOptimiseIVM(model, options.display);
+model = ivmOptimiseIvm(model, options.display);
 % Display parameters of end model.
 ivmDisplay(model);
 
