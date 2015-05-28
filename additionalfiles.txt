@@ -1,3 +1,0 @@
-# These are files that should be packaged for the drawing software
-dir: html
-~/mlprojects/ndlutil/html/index.html
