@@ -42,4 +42,5 @@ if isempty(UC)
     UC = jitChol(A);
   end
 end
-ld = 2*sum(log(abs(diag(UC))));
+
+ld = 2*sum(log(diag(UC)));
