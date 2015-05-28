@@ -52,7 +52,7 @@ model.kern = cmpndTieParameters(model.kern, {[4, 7], [5, 8]});
 
 The resulting classification is shown below.
 
-![](demClassificationOne1.png)
+![](./diagrams/demClassificationOne1.png)
 
 ecision boundary from the `demClassification1.m` example. Postive class is red circles, negative class green crosses and active points are yellow dots. Decision boundary shown in red, contours at 0.25 and 0.75 probability shown in blue.
 
@@ -61,7 +61,7 @@ ecision boundary from the `demClassification1.m` example. Postive class is red c
 
 The second example attempts to learn a Gaussian process give data that is sampled from a Gaussian process. The code is `demClassification2`. The underlying Gaussian process is based on an RBF kernel with variance inverse width 10. The IVM learns an inverse width of 15 and gives the classification is shown below.
 
-![](demClassificationTwo2.png)
+![](./diagrams/demClassificationTwo2.png)
 
 Decision boundary from the `demClassification2.m` example. Postive class is red circles, negative class green crosses and active points are yellow dots. Decision boundary shown in red, contours at 0.25 and 0.75 probability shown in blue.
 
@@ -70,7 +70,7 @@ Decision boundary from the `demClassification2.m` example. Postive class is red 
 
 This example is similar to `demClassification2`, only now there is a null category region in the data (a region of low data density between the classes). The example is for comparison with the null category noise model.
 
-![](demClassificationThree3.png)
+![](./diagrams/demClassificationThree3.png)
 
 Decision boundary from the `demClassification3.m` example. Postive class is red circles, negative class green crosses and active points are yellow dots. Decision boundary shown in red, contours at 0.25 and 0.75 probability shown in blue.
 
@@ -79,7 +79,7 @@ Decision boundary from the `demClassification3.m` example. Postive class is red 
 
 In this example the ordered categorical noise model is used (ordinal regression). The data is a simple data set for which a linear one dimensional model suffices. The IVM is given a combination of an RBF and linear kernel with ARD.For the ordered categorical case there are several parameters associated with the noise model (in particular the category widths), these are learnt too. The model learns that the system is linear and only one direction is important. The resulting classification is given below.
 
-![](demOrderedOne1.png)
+![](./diagrams/demOrderedOne1.png)
 
 Decision boundary from the `demOrdered1.m` example. Class 0 - red cross, Class 1 - green circles, Class 2 - blue crosses, Class 3 - cyan asterisks, Class 4 - pink squares, Class 5 - yellow diamonds. Class 6 - red triangles. Active points are yellow dots, note that because the kernel is linear by now the most informative points tend to be at the extrema. Decision boundaries shown in red, contours at 0.25 and 0.75 probability shown in blue.
 
@@ -88,7 +88,7 @@ Decision boundary from the `demOrdered1.m` example. Class 0 - red cross, Class 1
 
 Another example with the ordered categorical noise model, here the data is radial, the categories being along the radius of a circle. The IVM is given a combination of an RBF and linear kernel with ARD. Again there are several parameters associated with the noise model, and these are learnt using `ivmOptimiseNoise`. The resulting classification is given below.
 
-![](demOrderedTwo2.png)
+![](./diagrams/demOrderedTwo2.png)
 
 Decision boundary from the `demOrdered1.m` example. Class 0 - red cross, Class 1 - green circles, Class 2 - blue crosses, Class 3 - cyan asterisks, Class 4 - pink squares, Class 5 - yellow diamonds. Class 6 - red triangles. Active points are yellow dots, note that because the kernel is linear by now the most informative points tend to be at the extrema. Decision boundaries shown in red, contours at 0.25 and 0.75 probability shown in blue.
 
@@ -97,7 +97,7 @@ Decision boundary from the `demOrdered1.m` example. Class 0 - red cross, Class 1
 
 In this example the Gaussian noise model is used (standard regression). The data is sampled from a Gaussian process, only one input dimension is important. The IVM is given a combination of an RBF and linear kernel with ARD. The resulting regression is given below.
 
-![](demRegressionOne1.png)
+![](./diagrams/demRegressionOne1.png)
 
 Regression from the example `demRegression1.m`. Targets are red dots and active points are yellow dots.
 
@@ -106,7 +106,7 @@ Regression from the example `demRegression1.m`. Targets are red dots and active 
 
 A second example with Gaussian noise, sampled from a Gaussian process, but this time with differing length scales.
 
-![](demRegressionTwo2.png)
+![](./diagrams/demRegressionTwo2.png)
 
 Regression from the example `demRegression2.m`. Targets are red dots and active points are yellow dots.
 
@@ -133,7 +133,7 @@ Test Error 0.1129
 Model likelihood 175.3588
 ```
 
-![](demBanana1.png)
+![](./diagrams/demBanana1.png)
 
 Decision boundary from the banana example. Postive class is red circles, negative class green crosses and active points are yellow dots. Decision boundary shown in red, contours at 0.25 and 0.75 probability shown in blue.
 
@@ -155,7 +155,7 @@ and leads to the decision boundary given below. A standard IVM based classifier 
 >> demUnlabelled2
 ```
 
-![](demUnlabelledOne1.png)![](demUnlabelledOne2.png)
+![](./diagrams/demUnlabelledOne1.png)![](./diagrams/demUnlabelledOne2.png)
 
 The null category noise model run on toy data. *Top*: using the null category, the true nature of the decision boundary is recovered. *Bottom*: the standard IVM, does not recover the true decision boundary.
 The other USPS digit classification example given in the NIPS paper can be re-run with:
