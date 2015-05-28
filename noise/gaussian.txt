@@ -1,0 +1,4 @@
+% The noiseless Gaussian noise model is simply the Gaussian noise model with 
+% the variance of the Gaussian set very small.
+%
+% SEEALSO : gaussianParamInit
