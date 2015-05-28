@@ -9,26 +9,26 @@ You need the following additional pieces of software to operate mltools.
 
 For general utilities
 
-- [NDLUTIL](https://github.com/SheffieldML/ndlutil/)
+- [ndlutil](https://github.com/SheffieldML/ndlutil/)
 
 For optimization 
 
-- [OPTIMI](https://github.com/SheffieldML/ndlutil/)
-- [NETLAB](https://github.com/sods/netlab/)
+- [optimi](https://github.com/SheffieldML/ndlutil/)
+- [netlab](https://github.com/sods/netlab/)
 
 For downloading datasets
 
-- [DATASETS](https://github.com/SheffieldML/datasets/) 
+- [datasets](https://github.com/SheffieldML/datasets/) 
 
 For spectral dimensionality reduction functionality
 
-- [MVU](http://www.cse.wustl.edu/~kilian/code/files/mvu2012.zip)
-- [LLE](https://www.cs.nyu.edu/~roweis/lle/code.html)
-- [JDQR](http://www.staff.science.uu.nl/~vorst102/JDQR.html)
-- [ISOMAP](http://isomap.stanford.edu/)        
-- [SEDUMI](https://github.com/sqlp/sedumi/)      
+- [mvu](http://www.cse.wustl.edu/~kilian/code/files/mvu2012.zip)
+- [lle](https://www.cs.nyu.edu/~roweis/lle/code.html)
+- [jdqr](http://www.staff.science.uu.nl/~vorst102/JDQR.html)
+- [isomap](http://isomap.stanford.edu/)        
+- [sedumi](https://github.com/sqlp/sedumi/)      
 
-Fix to re-enable HGPLVM visualization.
+Fix to re-enable `hgplvm` visualization.
 
 #### Version 0.138
 
@@ -36,7 +36,7 @@ Minor tweak of model write result and model load result to allow specification o
 
 #### Version 0.137
 
-Release for release of VARGPLVM with dynamics.
+Release for release of `vargplvm` with dynamics.
 
 #### Version 0.136
 
@@ -52,7 +52,7 @@ Added pmvu model.
 
 #### Version 0.133
 
-Added functionality for writing model files using modelDeconstruct commands to keep written files smaller.
+Added functionality for writing model files using `modelDeconstruct` commands to keep written files smaller.
 
 #### Version 0.132
 
@@ -68,13 +68,13 @@ Minor changes to toolbox to fix reading in of C++ code.
 
 #### Version 0.13
 
-Added paramNameRegularExpressionLookup.m to regular expression match a parameter name in a model and return the associated indices. paramNameReverseLookup.m does the same thing but for the specific parameter name. Also added multimodel type, which allows for multi-task style learning of existing models. Added linear mapping type of model.
+Added `paramNameRegularExpressionLookup.m` to regular expression match a parameter name in a model and return the associated indices. `paramNameReverseLookup.m` does the same thing but for the specific parameter name. Also added multimodel type, which allows for multi-task style learning of existing models. Added linear mapping type of model.
 
 #### Version 0.1291
 
-Changes to modelOutputGrad.m, modelOut.m, kbrOutputGrad.m, kbrExpandParam.m, modelOptimise.m to allow compatibility with SGPLVM and NCCA toolboxes. Added a preliminary coding of LLE.
+Changes to `modelOutputGrad.m`, `modelOut.m`, `kbrOutputGrad.m`, `kbrExpandParam.m`, `modelOptimise.m` to allow compatibility with `sgplvm` and `ncca` toolboxes. Added a preliminary coding of LLE.
 
-Note that to run the LLE code you will need to download the file "eigs\_r11.m"
+Note that to run the LLE code you will need to download the file `eigs_r11.m`
 
 #### Version 0.129
 
