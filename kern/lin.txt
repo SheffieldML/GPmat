@@ -1,0 +1,9 @@
+% The linear kernel (LIN) is the simple inner product
+% kernel. Sampling from this kernel produces linear functions.
+%
+% k(x_i, x_j) = sigma2 * x_i'*x_j
+%
+% There is one parameter, sigma2, which is stored in the field
+% kern.variance.
+%
+% SEEALSO : linardKernParamInit

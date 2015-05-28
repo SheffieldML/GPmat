@@ -1,0 +1,22 @@
+% The exponentiated kernel is for working with positive constrained
+% data. The assumption is that the function's logarithm is
+% distributed as a Gaussian process. This means that the actual
+% function is not a Gaussian process, but the closest Gaussian
+% process to it can be computed through moment matching (which is
+% equivalent to minimum KL divergence). This is that Gaussian's
+% covariance. It has the form:
+% 
+% k(x_i, x_j) = sigma2 * (exp(0.5*(k'_ii + k'_jj + 2*k'_ij)) 
+%                         -exp(0.5*(k'_ii + k'_jj)))
+% 
+% Where k'_ij is the i, jth element of the covariance function of
+% the function's logarithm. For the special case of stationary
+% kernels this form simplifies to
+% 
+% k(x_i, x_j) = sigma2 * (exp(alpha + k'_ij) - exp(alpha)) 
+%
+% Where alpha = k_ii = k_jj is the value of the diagonal element of
+% the kernel.
+%
+% The parameters are sigma2, the process variance (kern.variance),
+% and also a base kernel(s) needs to be provided (kern.comp{:}).

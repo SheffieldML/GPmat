@@ -1,0 +1,16 @@
+% The RBF-WHITE kernel is a convolutional kernel obtained as the result of
+% convolving a white noise input process with an RBF smoothing kernel with
+% range between zero and t.
+%
+% Although it be used independently, it is mostly intended to be combined
+% with other kernels in a compound kernel. For example, this kernel could
+% be used as variational smoothing kernel for the DTC sparse GP approach.
+%
+% The parameters are sigma2, the process variance (kern.variance), and
+% gamma, the inverse width (kern.inverseWidth). The inverse width controls
+% how wide the basis functions are, the larger gamma, the smaller the basis
+% functions are.
+%
+% It is very similar to the RBF-WHITE-INF kernel.
+%
+% SEEALSO : cmpndKernParamInit, rbfwhiteinfKernParamInit

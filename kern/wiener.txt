@@ -1,0 +1,6 @@
+% The Wiener covariance function is the covariance function associated with
+% the Wiener process. Increments of the Wiener process between two times are
+% sampled as if from a Gaussian distribution with mean zero and standard
+% deviation equal to the time interval.
+%
+% SEEALSO : ouKernCreate

@@ -1,0 +1,11 @@
+% The multiple output block kernel (MULTI) is a wrapper kernel
+% designed to represent the situation where there are several Gaussian
+% processes with correlated outputs. The kernel stores the parameters
+% of the kernels which form the block diagonal of the covariance
+% matrix of the full process. Off diagonal blocks are the computed
+% according to specified calling functions in the structure.
+%
+% The kernel structure was originally desined for operating with
+% single input motif kernels in gene networks, where correlations
+% between genes occur that are induced by an unobserved
+% transcription factor concentration.

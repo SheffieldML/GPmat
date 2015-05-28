@@ -1,0 +1,11 @@
+% The rational quadratic kernel is a scale mixture of radial basis
+% function kernels (RBF). Each component of the mixture has a
+% different length scale. A gamma prior distribution is placed over
+% the inverse scale to obtain the kernel. The a parameter of the
+% gamma prior is given by alpha and the b parameter by
+% 1/(l*l). 
+%
+% k(x_i, x_j) = sigma2 * (1 + (x_i - x_j)'*(x_i - x_j)/(2*alpha*l*l))^-alpha
+%
+% The parameters are sigma2, the process variance (kern.variance),
+% l (kern.lengthScale) and alpha (kern.alpha).

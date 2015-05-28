@@ -49,10 +49,28 @@ elseif (isfield(kern,'options')) && ...
   kern.transforms.index = 1;
   kern.transforms.type = optimiDefaultConstraint('bounded');
   kern.transforms.transformsettings = [0 1e6];
+elseif (isfield(kern,'options')) && ...
+      (isfield(kern.options,'paramTransform')),
+  kern.transforms.index = 1;
+  switch kern.options.paramTransform,
+   case 'sigmoidab',
+    kern.transforms.type = 'sigmoidab';
+    kern.transforms.transformsettings = [0 1e6];
+   case 'bounded',
+    kern.transforms.type = optimiDefaultConstraint('bounded');
+    kern.transforms.transformsettings = [0 1e6];
+   case 'identity',
+    kern.transforms.type = 'identity';
+    kern.transforms.transformsettings = [0 1e6];
+   case 'positive',
+    kern.transforms.type = optimiDefaultConstraint('positive');
+   case 'none',
+   otherwise,
+    error('Unknown paramTransform');
+  end
 else
   kern.transforms.index = 1;
   kern.transforms.type = optimiDefaultConstraint('positive');
 end;  
-  
 
 kern.isStationary = true;
