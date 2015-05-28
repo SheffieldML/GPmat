@@ -1,9 +1,9 @@
-function y = negLogLogitTransform(x, transform)
+function y = expTransform(x, transform)
 
-% NEGLOGLOGITTRANSFORM Constrains a parameter to be positive.
+% EXPTRANSFORM Constrains a parameter to be positive through exponentiation.
 % FORMAT
 % DESC contains commands to constrain parameters to be positive via
-% log(1+exp(x)).
+% exponentiation.
 % ARG x : input argument.
 % ARG y : return argument.
 % ARG transform : type of transform, 'atox' maps a value into
@@ -12,34 +12,29 @@ function y = negLogLogitTransform(x, transform)
 % space. 'gradfact' gives the factor needed to correct gradients
 % with respect to the transformed parameter.
 % 
-% SEEALSO : expTransform, sigmoidTransform
+% SEEALSO : negLogLogitTransform, sigmoidTransform
 %
 % COPYRIGHT : Neil D. Lawrence, 2004, 2005, 2006, 2007
 
-% GPMAT
+% OPTIMI
 
 
-y = zeros(size(x));
 limVal = 36;
+y = zeros(size(x));
 switch transform
  case 'atox'
   index = find(x<-limVal);
-  y(index) = eps;
+  y(index) = exp(-limVal);
   x(index) = NaN;
   index = find(x<limVal);
-  y(index) = log(1+exp(x(index)));
+  y(index) = exp(x(index));
   x(index) = NaN;
   index = find(~isnan(x));
-  y(index) = x(index);
+  if ~isempty(index)
+    y(index) = exp(limVal);
+  end
  case 'xtoa'
-  index = find(x<limVal);
-  y(index) = log(exp(x(index))-1);
-  index = find(x>=limVal);
-  y(index) = x(index);
+  y = log(x);
  case 'gradfact'
-  index = find(x>limVal);
-  y(index) = 1;
-  index = find(x<=limVal);
-  y(index) = 1-exp(-x(index));
+  y = x;
 end
-  

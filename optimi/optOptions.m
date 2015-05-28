@@ -6,7 +6,7 @@ function options = optOptions;
 % RETURN options : a set of options.
 %
 
-% GPMAT
+% OPTIMI
 
 if exist('foptions')
   options = foptions;
