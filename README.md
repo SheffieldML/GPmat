@@ -219,16 +219,16 @@ The code will optimize hyper parameters and show plots of the posterior process 
 
 The result of the script is given in the plot below.
 
-![](demStickGp1Out1.png) ![](demStickGp1Out2.png) ![](demStickGp1Out3.png)
+![](./diagrams/demStickGp1Out1.png) ![](./diagrams/demStickGp1Out2.png) ![](./diagrams/demStickGp1Out3.png)
 
 Gaussian process regression through the x (left), y (middle) and z (right) position of the left ankle. Training data is shown as black spots, test points removed to simulate a lost marker are shown as circles, posterior mean prediction is shown as a black line and two standard deviations are given as grey shading.
 Notice how the error bars are tight except in the region where the training data is missing and in the region where the training data disappears.
 
 ### Sparse Pseudo-input Gaussian Processes
 
-The sparse approximation used in this toolbox is based on the Sparse Pseudo-input Gaussian Process model described by [Snelson and Ghahramani](/neill-bin/publications/bibpage.cgi?keyName=Snelson:pseudo05&printAbstract=1). Also provided are the extensions suggested by [Quiñonero-Candela and Rasmussen](/neill-bin/publications/bibpage.cgi?keyName=Quinonero:unifying05). They provide a unifying terminology for describing these approximations which we shall use in what follows.
+The sparse approximation used in this toolbox is based on the Sparse Pseudo-input Gaussian Process model described by [Snelson and Ghahramani](http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Snelson:pseudo05&printAbstract=1). Also provided are the extensions suggested by [Quiñonero-Candela and Rasmussen](http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Quinonero:unifying05). They provide a unifying terminology for describing these approximations which we shall use in what follows.
 
-There are three demos provided for Gaussian process regression in 1-D. They each use a different form of likelihood approximation. The first demonstration uses the "projected latent variable" approach first described by [Csato and Opper](/neill-bin/publications/bibpage.cgi?keyName=Csato:sparse02&printAbstract=1) and later used by [Seeger *et al.*](/neill-bin/publications/bibpage.cgi?keyName=Seeger:fast03&printAbstract=1). In the terminology of Quiñonero-Candela and Rasmussen (QR-terminology) this is known as the "deterministic training conditional" (DTC) approximation.
+There are three demos provided for Gaussian process regression in 1-D. They each use a different form of likelihood approximation. The first demonstration uses the "projected latent variable" approach first described by [Csato and Opper](http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Csato:sparse02&printAbstract=1) and later used by [Seeger *et al.*](http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Seeger:fast03&printAbstract=1). In the terminology of Quiñonero-Candela and Rasmussen (QR-terminology) this is known as the "deterministic training conditional" (DTC) approximation.
 
 To use this approximation the following script can be run.
 
@@ -238,7 +238,7 @@ To use this approximation the following script can be run.
 
 The result of the script is given in the plot below.
 
-![](demSpgp1dGp1.png)
+![](./diagrams/demSpgp1dGp1.png)
 
 Gaussian process using the DTC approximation with nine inducing variables. Data is shown as black spots, posterior mean prediction is shown as a black line and two standard deviations are given as grey shading.
 The improved approximation suggested by Snelson and Ghahramani, in QR-terminology this is known as the fully independent training conditional (FITC). To try this approximation run the following script
@@ -249,10 +249,10 @@ The improved approximation suggested by Snelson and Ghahramani, in QR-terminolog
 
 The result of the script is given on the left of the plot below.
 
-![](demSpgp1dGp2.png)![](demSpgp1dGp3.png)
+![](./diagrams/demSpgp1dGp2.png)![](./diagrams/demSpgp1dGp3.png)
 
 *Left*: Gaussian process using the FITC approximation with nine inducing variables. Data is shown as black spots, posterior mean prediction is shown as a black line and two standard deviations are given as grey shading. *Right*: Similar but for the PITC approximation, again with nine inducing variables.
-At the [Sheffield Gaussian Process Round Table](http://www.dcs.shef.ac.uk/ml/gprt/) Lehel Csato pointed out that the Bayesian Committee Machine of [Schwaighofer and Tresp](/neill-bin/publications/bibpage.cgi?group=bcm&printAbstract=1) can also be viewed within the same framework. This idea is formalised in [Quiñonero-Candela and Rasmussen's](/neill-bin/publications/bibpage.cgi?keyName=Quinonero:unifying05&printAbstract=1) review. This approximation is known as the "partially independent training conditional" (PITC) in QR-terminology. To try this approximation run the following script
+At the [Sheffield Gaussian Process Round Table](http://gpss.cc/gprt/) Lehel Csato pointed out that the Bayesian Committee Machine of [Schwaighofer and Tresp](http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?group=bcm&printAbstract=1) can also be viewed within the same framework. This idea is formalised in [Quiñonero-Candela and Rasmussen's](http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Quinonero:unifying05&printAbstract=1) review. This approximation is known as the "partially independent training conditional" (PITC) in QR-terminology. To try this approximation run the following script
 
 ```matlab
 >> demSpgp1dGp3
@@ -268,7 +268,7 @@ Finally we can compare these results to the result from the full Gaussian proces
 
 The result of the script is given in the plot below.
 
-![](demSpgp1dGp4.png)
+![](./diagrams/demSpgp1dGp4.png)
 
 Full Gaussian process on the toy data with the correct hyper-parameters. Data is shown as black spots, posterior mean prediction is shown as a black line and two standard deviations are given as grey shaded area.
 
