@@ -1,3 +1,0 @@
-luisaPlot.m
-luisaPlot2.m
-demGpTwoSampleEBsh.m

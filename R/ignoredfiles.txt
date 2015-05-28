@@ -1,4 +1,0 @@
-cmpndNoiseParamInit.R
-cmpndNoiseParamInit.Rd
-gaussianNoiseOut.R
-gaussianNoiseOut.Rd
