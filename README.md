@@ -13,7 +13,7 @@ For general utilities
 
 For optimization 
 
-- [optimi](https://github.com/SheffieldML/ndlutil/)
+- [optimi](https://github.com/SheffieldML/optimi/)
 - [netlab](https://github.com/sods/netlab/)
 
 For downloading datasets
