@@ -2,7 +2,7 @@ function X = rocholMultiply(ch, Y);
 
 % ROCHOLMULTIPLY Multiply by the rank one Cholesky.
 
-% GPMAT
+% ROCHOL
 
 %/~
 % This would be the long way of doing it.

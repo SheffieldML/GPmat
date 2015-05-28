@@ -2,7 +2,7 @@ function L = rocholExtract(ch)
 
 % ROCHOLEXTRACT Extract the lower triangular matrix from the Cholesky structure.
 
-% GPMAT
+% ROCHOL
 
 L = diag(ch.s);
 for j = 1:ch.n
