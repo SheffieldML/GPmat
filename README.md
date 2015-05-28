@@ -15,17 +15,16 @@ Release Information
 
 **Current release is 0.11**.
 
-As well as downloading the DISIMRANK software you need to obtain the toolboxes specified below. **These can be downloaded using the *same* password you get from registering for the DISIMRANK software.**
+- [netlab](https://github.com/sods/netlab) mainly used for optimization utilities (like scg).
 
-| **Toolbox**                                | **Version** |
-|--------------------------------------------|-------------|
-| [NETLAB](/netlab/downloadFiles/vrs3p3)     | 3.3         |
-| [OPTIMI](/optimi/downloadFiles/vrs0p132)   | 0.132       |
-| [NDLUTIL](/ndlutil/downloadFiles/vrs0p161) | 0.161       |
-| [MLTOOLS](/mltools/downloadFiles/vrs0p134) | 0.134       |
-| [KERN](/kern/downloadFiles/vrs0p225)       | 0.225       |
-| [PRIOR](/prior/downloadFiles/vrs0p22)      | 0.22        |
-| [GPSIM](/gpsim/downloadFiles/vrs0p1211)    | 0.1211      |
+- [prior](https://github.com/SheffieldML/prior) prior distributions.
+- [optimi](https://github.com/SheffieldML/optimi) optimization constriant mappings.
+- [kern](https://github.com/SheffieldML/kern) covariance functions.
+- [ndlutil](https://github.com/SheffieldML/ndlutil) various utility functions.
+- [mltools](https://github.com/SheffieldML/mltools) machine learning models.
+
+- [gpsim](https://github.com/SheffieldML/gpsim) Gaussian process single input motif software.
+
 
 Minor fix to demPlotMef2Models.m.
 
