@@ -10,9 +10,7 @@ Release Information
 
 As well as downloading the DATASETS software you need to obtain the toolboxes specified below. 
 
-| **Toolbox**                                | **Version** |
-|--------------------------------------------|-------------|
-| [NDLUTIL](/ndlutil/downloadFiles/vrs0p162) | 0.162       |
+- [ndlutil](https://github.com/SheffieldML/ndlutil/) some general untilities.
 
 Minor mods to lvmLoadData for Spellman data.
 
