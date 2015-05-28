@@ -59,8 +59,7 @@ else
 end
 
 if iscell(kernelType) && strcmp(kernelType{1}, 'parametric'),
-    switch kernelType{2}
-      case 'path'
+    if ~isstruct(kernelType{2}) && strcmp(kernelType{2}, 'path'),
         kern = pathKernCreate(X,kernelType{3});
         kern = kernParamInit(kern);
         kern.Kstore = [];
