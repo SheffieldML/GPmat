@@ -105,7 +105,7 @@ if model.includeNoise
     end
   end
   if isfield(options, 'singleNoise') & options.singleNoise
-    tieParam{2} = 'white \d+ variance';
+    tieParam{2} = 'white . variance';
   end
             
   
