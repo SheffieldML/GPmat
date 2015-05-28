@@ -86,20 +86,20 @@ Release 0.11 is the first release that contains the fully independent training c
 
 Release 0.1 is a pre-release to make some of the model functionality available. The some of the different approximations (such as fully independent training conditional and partially independent training conditional) are not yet implemented and the dynamics currently has no sparse approximations associated.
 
-This toolbox also implements back constraints (joint work with Joaquin Quinonero Candela). The mappings that can be used as back constraints are those described in [the MLTOOLS toolbox](/mltools/downloadFiles/).
+This toolbox also implements back constraints (joint work with Joaquin Quinonero Candela). The mappings that can be used as back constraints are those described in [the MLTOOLS toolbox](http://github.com/SheffieldML/mltools/).
 
 Alternative GP-LVM implementations from this site:
 
-The GP-LVM C++ software is available from [here](/gplvmcpp/).
+The GP-LVM C++ software is available from [here](http://github.com/SheffieldML/gplvmcpp/).
 
-The original MATLAB version of the toolbox is available here [here](/gplvm/).
+The original MATLAB version of the toolbox is available here [here](http://github.com/SheffieldML/gplvm/).
 
 Examples
 --------
 
 ### GP-LVM
 
-The three approximations outlined above can be used to speed up learning in the GP-LVM. They have the advantage over the IVM approach taken in the [original GP-LVM toolbox](/gplvm/) that the algorithm is fully convergent and the final mapping from latent space to data space takes into account all of the data (not just the points in the active set).
+The three approximations outlined above can be used to speed up learning in the GP-LVM. They have the advantage over the IVM approach taken in the [original GP-LVM toolbox](http://github.com/SheffieldML/gplvm/) that the algorithm is fully convergent and the final mapping from latent space to data space takes into account all of the data (not just the points in the active set).
 
 As well as the new sparse approximation the new toolbox allows the GP-LVM to be run with dynamics as suggested by [Wang *et al.*](http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Wang:gpdm05&printAbstract=1).
 
@@ -109,9 +109,9 @@ Various combinations of back constraints and different approximations are used i
 
 ### Oil Data
 
-The 'oil data' is commonly used as a bench mark for visualisation algorithms. For more details on the data see [this page](/3PhaseData.html).
+The 'oil data' is commonly used as a bench mark for visualisation algorithms. For more details on the data see [this page](http://inverseprobability.com/3PhaseData.html).
 
-The [C++ implementation of the GP-LVM](/gplvmcpp) has details on training the full GP-LVM with this data set. Here we will consider the three different approximations outlined above.
+The [C++ implementation of the GP-LVM](http://github.com/SheffieldML/gplvmcpp) has details on training the full GP-LVM with this data set. Here we will consider the three different approximations outlined above.
 
 #### FITC Approximation
 
@@ -203,7 +203,7 @@ Another ongoing piece of work with Jeff Bilmes and Jon Malkin involves embedding
 
 ### Larger Human Motion Data Sets
 
-For [an AISTATS paper](http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Lawrence:larger07&printAbstract=1) we recreated an experiment from [Taylor *et al.*'s NIPS paper](http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Taylor:motion06&printAbstract=1). They created a data set from a motion capture data in the [CMU data base](http://mocap.cs.cmu.edu) of running and walking. The data set can now be recreated using the [DATASETS toolbox](/datasets/). We repeated missing data experiments by Taylor et al.. The model learning for these experiments can be recreated with:
+For [an AISTATS paper](http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Lawrence:larger07&printAbstract=1) we recreated an experiment from [Taylor *et al.*'s NIPS paper](http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Taylor:motion06&printAbstract=1). They created a data set from a motion capture data in the [CMU data base](http://mocap.cs.cmu.edu) of running and walking. The data set can now be recreated using the [DATASETS toolbox](http://github.com/SheffieldML/datasets/). We repeated missing data experiments by Taylor et al.. The model learning for these experiments can be recreated with:
 
 ```matlab
 >> demCmu35gplvm1
