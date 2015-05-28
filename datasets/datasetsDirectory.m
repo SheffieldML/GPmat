@@ -17,4 +17,4 @@ function dir = datasetsDirectory
 % by default return the directory where this file is.
 fullSpec = which('datasetsDirectory');
 ind = max(find(fullSpec == filesep));
-dir = fullSpec(1:ind);
+dir = [fullSpec(1:ind) filesep data];
