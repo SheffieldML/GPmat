@@ -2,7 +2,7 @@ function X = rocholBackSub(ch, Y);
 
 % ROCHOLBACKSUB Backsubstitute the representation of the rank one Cholesky.
 
-% GPMAT
+% ROCHOL
 
 %/~
 % This would be the long way of doing it.

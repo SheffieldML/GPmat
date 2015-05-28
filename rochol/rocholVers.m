@@ -2,7 +2,7 @@ function [vers, depend] = rocholVers
 
 % ROCHOLPATH Brings dependent toolboxes into the path.
 
-% GPMAT
+% ROCHOL
 
 vers = 0.13;
 if nargout > 2
