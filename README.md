@@ -23,7 +23,7 @@ For core functionality
 - [mltools](https://github.com/SheffieldML/mltools) machine learning models.
 - [rochol](https://github.com/SheffieldML/rochol) rank one Cholesky update.
 
-- [Carl Rasmussen's minimize](http://learning.eng.cam.ac.uk/carl/code/minimize/m
+- [Carl Rasmussen's minimize](http://learning.eng.cam.ac.uk/carl/code/minimize/)
 
 For loading in data for demos
 
