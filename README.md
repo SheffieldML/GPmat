@@ -11,18 +11,31 @@ Current release is 0.4.
 
 As well as downloading the IVM software you need to obtain the toolboxes specified below.
 
-| **Toolbox**                                  | **Version** |
-|----------------------------------------------|-------------|
-| [KERN](/kern/downloadFiles/vrs0p165)         | 0.165       |
-| [PRIOR](/prior/downloadFiles/vrs0p131)       | 0.131       |
-| [OPTIMI](/optimi/downloadFiles/vrs0p132)     | 0.132       |
-| [ROCHOL](/rochol/downloadFiles/vrs0p12)      | 0.12        |
-| [NDLUTIL](/ndlutil/downloadFiles/vrs0p155)   | 0.155       |
-| [MLTOOLS](/mltools/downloadFiles/vrs0p123)   | 0.123       |
-| [DATASETS](/datasets/downloadFiles/vrs0p131) | 0.131       |
-| [NOISE](/noise/downloadFiles/vrs0p14)        | 0.14        |
+For core functionality
 
-Finally you will also need the [NETLAB toolbox](http://www.aston.ac.uk/eas/research/groups/ncrg/resources/netlab/downloads/) in your path and Anton Schwaighofer's SVM light MATLAB interface, available [here](http://staffwww.dcs.shef.ac.uk/people/N.Lawrence/software/svml_toolbox.html) to run the `demThreeFive` example which compares with [SVM light](http://svmlight.joachims.org/) version 5.00.
+- [netlab](https://github.com/sods/netlab) mainly used for optimization utilities (like scg).
+
+- [prior](https://github.com/SheffieldML/prior) prior distributions.
+- [optimi](https://github.com/SheffieldML/optimi) optimization constriant mappings.
+- [kern](https://github.com/SheffieldML/kern) covariance functions.
+- [ndlutil](https://github.com/SheffieldML/ndlutil) various utility functions.
+- [noise](https://github.com/SheffieldML/noise) noise models.
+- [mltools](https://github.com/SheffieldML/mltools) machine learning models.
+- [rochol](https://github.com/SheffieldML/rochol) rank one Cholesky update.
+
+- [Carl Rasmussen's minimize](http://learning.eng.cam.ac.uk/carl/code/minimize/m
+
+For loading in data for demos
+
+- [datasets](https://github.com/SheffieldML/datasets/)
+
+For motion capture experiments
+
+- [mocap](https://github.com/SheffieldML/mocap/)
+
+For the demThreeFive example which compares with [SVM light](http://svmlight.joachims.org/) you need Anton Schwaighofer's SVML light interface
+
+- [svml](https://github.com/sods/svml/)
 
 Examples
 --------
