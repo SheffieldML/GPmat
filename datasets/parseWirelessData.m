@@ -21,7 +21,7 @@ function [strength, time, x, y, storedMacs] = parseWirelessData(fileName)
 %
 % MODIFICATIONS : Neil D. Lawrence, 2009
 
-% GPMAT
+% DATASETS
 
 fid = fopen(fileName);
 if fid == -1
