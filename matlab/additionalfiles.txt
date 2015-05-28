@@ -1,5 +1,0 @@
-# These are files that should be packaged for the drawing software
-dir: html
-~/mlprojects/noise/html/index.html
-dir: util
-~/mlprojects/noise/matlab/noiseGenerator.py
