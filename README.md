@@ -1,6 +1,12 @@
 GPmat
 ====
 
+The GPmat toolbox is the 'one stop shop' on github for a number of dependent toolboxes, each of which used to be released independently. Since May 2015 each toolbox is a sub-directory within GPmat. They are included as subtrees from the relevant repositories.
+
+The summary of demos from each toolbox is given below.
+
+The first release of the full GPmat toolbox is version 0.1, released on 28th May 2015 to coincide with the reformatting of the toolbox as sub-trees.
+
 GP
 ==
 
