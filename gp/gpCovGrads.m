@@ -23,7 +23,7 @@ function [gK_uu, gK_uf, g_Lambda, gBeta] = gpCovGrads(model, M)
 % SEEALSO : gpCreate, gpLogLikeGradient
 
 % GP
-qr_decomposition = false; % not yet implemented
+
 switch model.approx
  case {'dtc', 'dtcvar'}
   % Deterministic training conditional.
@@ -33,30 +33,28 @@ switch model.approx
     dtcvar = false;
   end
   if ~isfield(model, 'isSpherical') | model.isSpherical
-    if ~qr_decomposition
-      E = model.K_uf*M;
-      EET = E*E';
-      AinvEET = model.Ainv*EET;
-      AinvEETAinv = AinvEET*model.Ainv;
-      gK_uu = 0.5*(model.d*(model.invK_uu-(1/model.beta)*model.Ainv) ...
-                   - AinvEETAinv);
-      if dtcvar
-        K_uuInvK_uf = model.invK_uu*model.K_uf;
-        gK_uu = gK_uu - 0.5*model.d*model.beta...
-                *K_uuInvK_uf*K_uuInvK_uf';
-      end
-      AinvK_uf = model.Ainv*model.K_uf;
-      gK_uf = -model.d*AinvK_uf-model.beta*(AinvEET*AinvK_uf-(model.Ainv*E*M'));
-      if dtcvar
-        gK_uf = gK_uf + model.d*model.beta*K_uuInvK_uf;
-      end
-      gBeta = 0.5*(model.d*((model.N-model.k)/model.beta ...
+    E = model.K_uf*M;
+    EET = E*E';
+    AinvEET = model.Ainv*EET;
+    AinvEETAinv = AinvEET*model.Ainv;
+    gK_uu = 0.5*(model.d*(model.invK_uu-(1/model.beta)*model.Ainv) ...
+                 - AinvEETAinv);
+    if dtcvar
+      K_uuInvK_uf = model.invK_uu*model.K_uf;
+      gK_uu = gK_uu - 0.5*model.d*model.beta...
+              *K_uuInvK_uf*K_uuInvK_uf';
+    end
+    AinvK_uf = model.Ainv*model.K_uf;
+    gK_uf = -model.d*AinvK_uf-model.beta*(AinvEET*AinvK_uf-(model.Ainv*E*M'));
+    if dtcvar
+      gK_uf = gK_uf + model.d*model.beta*K_uuInvK_uf;
+    end
+    gBeta = 0.5*(model.d*((model.N-model.k)/model.beta ...
                               +sum(sum(model.Ainv.*model.K_uu))/(model.beta*model.beta))...
-                   +sum(sum(AinvEETAinv.*model.K_uu))/model.beta ...
-                   +(trace(AinvEET)-sum(sum(M.*M))));
-      if dtcvar
-        gBeta = gBeta -0.5*model.d*sum(model.diagD)/model.beta;
-      end
+                     +sum(sum(AinvEETAinv.*model.K_uu))/model.beta ...
+                     +(trace(AinvEET)-sum(sum(M.*M))));
+    if dtcvar
+      gBeta = gBeta -0.5*model.d*sum(model.diagD)/model.beta;
     end
     fhandle = str2func([model.betaTransform 'Transform']);
     gBeta = gBeta*fhandle(model.beta, 'gradfact');
