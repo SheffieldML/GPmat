@@ -2,7 +2,7 @@
 Faster GP-LVM Software
 ======================
 
-This page describes examples of how to use the fast Gaussian process latent variable model Software (FGPLVM). This toolbox allows for larger GP-LVM models through using the sparse approximations suggested in papers by authors including Titsias, Snelson, Ghahramani, Seeger, and Lawrence.
+This page describes examples of how to use the fast Gaussian process latent variable model Software (`fgplvm`). This toolbox allows for larger GP-LVM models through using the sparse approximations suggested in papers by authors including Titsias, Snelson, Ghahramani, Seeger, and Lawrence.
 
 
 Release Information
@@ -10,8 +10,7 @@ Release Information
 
 **Current release is 0.163**.
 
-As well as downloading the FGPLVM software you need to obtain the toolboxes specified below.
-
+As well as downloading the `fgplvm` software you need to obtain the toolboxes specified below.
 
 - [netlab](https://github.com/sods/netlab) mainly used for optimization utilities (like scg).
 
@@ -28,16 +27,6 @@ Required for demos
 Optional for motion capture experiments.
 
 - [mocap](https://github.com/SheffieldML/mocap) loading in motion capture data.
-| **Toolbox**                                   | **Version** |
-|-----------------------------------------------|-------------|
-| [NETLAB](/netlab/downloadFiles/vrs3p3)        | 3.3         |
-| [PRIOR](/prior/downloadFiles/vrs0p22)         | 0.22        |
-| [OPTIMI](/optimi/downloadFiles/vrs0p132)      | 0.132       |
-| [DATASETS](/datasets/downloadFiles/vrs0p1371) | 0.1371      |
-| [KERN](/kern/downloadFiles/vrs0p225)          | 0.225       |
-| [NDLUTIL](/ndlutil/downloadFiles/vrs0p162)    | 0.162       |
-| [NOISE](/noise/downloadFiles/vrs0p141)        | 0.141       |
-| [MOCAP](/mocap/downloadFiles/vrs0p136)        | 0.136       |
 
 Changes for compatibility with new SGPLVM toolbox by Carl Henrik Ek.
 
