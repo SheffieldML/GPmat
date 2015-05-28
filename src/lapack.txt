@@ -1,1 +1,0 @@
-This file contains header information for the LAPACK and BLAS libraries. 

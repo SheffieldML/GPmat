@@ -1,3 +1,0 @@
-This file contains interfaces to various useful FORTRAN functions which are called in the code. Many of the FORTRAN functions are from ACM transactions, others are from the book Computation of Special Functions by Zhang and Jin. See copyright messages below and in the FORTRAN code for further information. The ACM Transactions have the associated algorithm numbers. Also provided are various erf implementations by William J. Cody.
-
-21/10/05 bool* work changed to int* work in dxpose

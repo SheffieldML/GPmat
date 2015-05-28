@@ -1,7 +1,0 @@
-This file contains various useful functions and random number generators. The random number generators are based on the Mersenne Twister: see the additional copyright messages below.
-
-10/10/2005 Fixed sign error in lnDiffCumGaussian.
-
-20/10/2005 William V. Baxter made additions to the file for compilation under MSVC. When the appropriate flag is declared versions of erf and rand_ are declared which were previously being called through FORTRAN. Interfacing to FORTRAN is far harder/more expensive under MSVC than gcc. 
-
-20/10/2005 There are also a couple of other functions added for various Gaussian/erf ratios.

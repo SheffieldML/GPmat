@@ -1,8 +1,0 @@
-This file provides a base class for command line control. Various functionality such as parsing arguments and reading input files is provided.
-
-File Notes
-
-21/10/2005 Incorporated William Baxter's isCurrentArg modification.
-
-20/10/2005 Minor modifications by William V. Baxter as part of the porting to Microsoft Visual C++.
-
