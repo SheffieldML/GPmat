@@ -1,5 +1,0 @@
-This file contains classes for representing Gaussian processes using the IVM. The model relies on the CKern class and the CNoise class to define the kernel and the noise model.
-
-01/03/2005 Gregg Keller had problems loading in a data set. It turned out it was when the last feature in an active point was 0 no end of line character was placed on the file. This is fixed as part of release 0.12.
-
-23/10/2005 Modifications for compiling under Visual C++, by Neil.
