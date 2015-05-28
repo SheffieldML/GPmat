@@ -1,0 +1,6 @@
+% This kernel is a 'pre-packaged' compound kernel of the form
+% {'rbf', 'bias', 'white'}. This is a common combination of
+% kernels, and using it in this form removes the overhead of
+% mutliple calls through the 'cmpnd' kernel.
+% 
+% SEEALSO ardKernParamInit

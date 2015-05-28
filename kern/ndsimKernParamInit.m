@@ -72,11 +72,40 @@ else
   positiveparams = 1:kern.nParams;
 end
 
-for k=1:length(positiveparams),
-  kern.transforms(k).type = 'sigmoidab';
-  kern.transforms(k).index = positiveparams(k);
-  kern.transforms(k).transformsettings = [0 1e6];
-end;
+if isfield(kern, 'options') && isfield(kern.options, 'paramTransform'),
+  paramTransform = kern.options.paramTransform;
+else
+  paramTransform = 'sigmoidab';
+end
+
+switch paramTransform,
+ case 'sigmoidab',
+  for k=1:length(positiveparams),
+    kern.transforms(k).type = 'sigmoidab';
+    kern.transforms(k).index = positiveparams(k);
+    kern.transforms(k).transformsettings = [0 1e6];
+  end;
+ case 'bounded',
+  for k=1:length(positiveparams),
+    kern.transforms(k).type = optimiDefaultConstraint('bounded');
+    kern.transforms(k).index = positiveparams(k);
+    kern.transforms(k).transformsettings = [0 1e6];
+  end;
+ case 'identity',
+ for k=1:length(positiveparams),
+    kern.transforms(k).type = 'identity';
+    kern.transforms(k).index = positiveparams(k);
+    kern.transforms(k).transformsettings = [0 1e6];
+  end;
+ case 'positive',
+  for k=1:length(positiveparams),
+    kern.transforms(k).type = optimiDefaultConstraint('positive');
+    kern.transforms(k).index = positiveparams(k);
+  end;
+ case 'none',
+ otherwise,
+  error('Unknown paramTransform');
+end
 
 kern.isStationary = false;
 kern.isNormalised = false;

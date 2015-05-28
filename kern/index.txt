@@ -1,0 +1,8 @@
+% The index covariance function returns a similarity if two indices from the input match. In other words if x_i is one index and x_j is another index then
+%
+% k(x_i, x_j) = sigma2_{x_i} * \delta_{x_i, x_j}
+%
+% where \delta_{k, l} is the Kronecker delta which is one if k=l and
+%  zero otherwise. The value of the variance can also be index dependent.
+%
+% SEEALSO : linKernParamInit

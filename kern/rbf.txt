@@ -1,0 +1,15 @@
+% The fixed basis RBF kernel is a covariance function derived from considering a radial basis function style network with a Gaussian style basis and integrating out the weights of the basis. radial basis function kernel (RBF) is sometimes also known as
+% the squared exponential kernel. It is a very smooth non-linear
+% kernel and is a popular choice for generic use.
+%
+% k(x_i, x_j) = sigma2 * exp(-gamma/2 *(x_i - x_j)'*(x_i - x_j))
+%
+% The parameters are sigma2, the process variance (kern.variance)
+% and gamma, the inverse width (kern.inverseWidth). The inverse
+% width controls how wide the basis functions are, the larger
+% gamma, the smaller the basis functions are.
+%
+% There is also an automatic relevance determination version of
+% this kernel provided.
+%
+% SEEALSO : rbfardKernParamInit

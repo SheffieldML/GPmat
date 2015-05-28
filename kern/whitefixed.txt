@@ -1,0 +1,12 @@
+% The white noise kernel arises from assuming independent Gaussian
+% noise for each point in the function. The variance of the noise is
+% given by the kern.variance parameter. The fixed white noise kernel
+% is a simple variant of the white kernel that doesn't allow the noise
+% parameter to be optimised. It is useful when the level of noise is
+% known a priori.
+% 
+% This kernel is not intended to be used independently, it is provided
+% so that it may be combined with other kernels in a compound
+% kernel.
+%
+% SEEALSO : cmpndKernParamInit
