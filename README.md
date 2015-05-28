@@ -5,22 +5,31 @@ The main objective of this toolbox is to integrate several machine learning meth
 
 Background details for submitted software.
 
-We made use of software available from the University of Manchester. To operate our software you must also download the following toolboxes from that site.
+You need the following additional pieces of software to operate mltools.
 
-| **Toolbox**                                   | **Version** |
-|-----------------------------------------------|-------------|
-| [DATASETS](/datasets/downloadFiles/vrs0p1371) | 0.1371      |
-| [OPTIMI](/optimi/downloadFiles/vrs0p132)      | 0.132       |
-| [NDLUTIL](/ndlutil/downloadFiles/vrs0p163)    | 0.163       |
-| [NETLAB](/netlab/downloadFiles/vrs3p3)        | 3.3         |
-| [MVU](/mvu/downloadFiles/vrs1p3)              | 1.3         |
-| [LMVU](/lmvu/downloadFiles/vrs1p3)            | 1.3         |
-| [LLE](/lle/downloadFiles/vrs1p0)              | 1.0         |
-| [JDQR](/jdqr/downloadFiles/vrs1p0)            | 1.0         |
-| [ISOMAP](/isomap/downloadFiles/vrs1p0)        | 1.0         |
-| [SEDUMI](/sedumi/downloadFiles/vrs1p21)       | 1.21        |
+For general utilities
+
+- [NDLUTIL](/SheffieldML/ndlutil/)
+
+For optimization 
+
+- [OPTIMI](/SheffieldML/ndlutil/)
+- [NETLAB](/sods/netlab/)
+
+For downloading datasets
+
+- [DATASETS](/SheffieldML/datasets/) 
+
+For spectral dimensionality reduction functionality
+
+- [MVU](http://www.cse.wustl.edu/~kilian/code/files/mvu2012.zip)
+- [LLE](https://www.cs.nyu.edu/~roweis/lle/code.html)
+- [JDQR](http://www.staff.science.uu.nl/~vorst102/JDQR.html)
+- [ISOMAP](http://isomap.stanford.edu/)        
+- [SEDUMI](https://github.com/sqlp/sedumi/)      
 
 Fix to re-enable HGPLVM visualization.
+
 #### Version 0.138
 
 Minor tweak of model write result and model load result to allow specification of the data loading function.
