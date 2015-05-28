@@ -9,13 +9,14 @@ Release Information
 
 As well as downloading the KERN software you need to obtain the toolboxes specified below. 
 
-| **Toolbox**                                | **Version** |
-|--------------------------------------------|-------------|
-| [OPTIMI](/optimi/downloadFiles/vrs0p132)   | 0.132       |
-| [NDLUTIL](/ndlutil/downloadFiles/vrs0p162) | 0.162       |
-| [NETLAB](/netlab/downloadFiles/vrs3p3)     | 3.3         |
-| [ERFCXZ](/erfcxz/downloadFiles/vrs0p001)   | 0.001       |
-| [ERFZ](/erfz/downloadFiles/vrs0p001)       | 0.001       |
+- [optimi](https://github.com/SheffieldML/optimi) optimization constriant mappings.
+- [ndlutil](https://github.com/SheffieldML/ndlutil) various utility functions.
+
+- [netlab](https://github.com/sods/netlab) Ian Nabney's Netlab toolbox.
+
+- [erfcxz](http://www.mathworks.com/matlabcentral/fileexchange/12091-complex-scaled-complementary-error-function) Thomas Winiecki's erfcxz function. You need to rename W() to erfcxz to ensure it runs. It is available from the MATLAB central file exchange.
+
+- [erfz](http://www.mathworks.com/matlabcentral/fileexchange/3574-erfz) Paul Godfrey's erfz Function. It is available from the MATLAB central file exchange.
 
 Added diag covariance which uses the inputs as a diagonal covariance function (takes a one dimensional input only). Useful for having heteroschedastic noise. And index covariance functions which return a value if the two input indices are identical, and zero otherwise. Also includes Jaakko's NDDISIM and NDSIM covariance functions.
 
