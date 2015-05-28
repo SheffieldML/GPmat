@@ -1,0 +1,14 @@
+# These are files that should be packaged for the IVM software
+dir: html
+~/mlprojects/ivm/html/index.html
+~/mlprojects/ivm/html/demBanana1.png
+~/mlprojects/ivm/html/demClassificationOne1.png
+~/mlprojects/ivm/html/demClassificationTwo2.png
+~/mlprojects/ivm/html/demClassificationThree3.png
+~/mlprojects/ivm/html/demOrderedOne1.png
+~/mlprojects/ivm/html/demOrderedTwo2.png
+~/mlprojects/ivm/html/demRegressionOne1.png
+~/mlprojects/ivm/html/demRegressionTwo2.png
+~/mlprojects/ivm/html/demUnlabelledOne1.png
+~/mlprojects/ivm/html/demUnlabelledOne2.png
+~/mlprojects/ivm/html/demThreeFive.png
