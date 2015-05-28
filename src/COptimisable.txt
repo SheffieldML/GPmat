@@ -1,7 +1,0 @@
-This file contains a base class for optimisation. In particular it contains an implementation of the Scaled Conjugate Gradient optimisation routine.
-
-05/11/2005 Changed use of abs (which was calling f2c code) to fabs to improve compatability with MSVC.
-
-21/10/2005 More minor changes from Bill. 
-
-20/10/2005 Minor changes by William V. Baxter for MSVC compatibility. This principally removing an unused variable and changing the file in which the constants were declared.

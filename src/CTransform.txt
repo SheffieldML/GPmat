@@ -1,7 +1,0 @@
-This file contains classes that enable non-linear transformation of parameters. This is so that in the space where these parameters are optimised they can be optimised in a unconstrained way, but in the real parameter space they are effectively constrained. The `right' way to do this is through constrained optimisation, but this approach allows for the use of simple, effective algorithms such as scaled conjugate gradient. One commonly used transformation is a log transformation of a positive parameter. 
-
-16/3/2007 Added CExpTransform for performing logarithmic transformations of kernel parameters in line with the new default in the MATLAB optimi toolbox.
-
-21/10/2005 More minor changes to do with removing redundant const modifiers.
-
-20/10/2005 Changes from William V. Baxter for compilation under MSVC. The psoition of a couple of declarations has been changed and redundant consts have been removed.
