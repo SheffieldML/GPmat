@@ -1,0 +1,7 @@
+% The MULTIMODEL is a way of performing multi-task learning by sharing
+% model parameters across a range of models. The default (simple)
+% assumption is that the data is conditionally independent given the
+% parameters, i.e. the log likelihood is the sum of the log likelihood of
+% the models.
+%
+% SEEALSO : modelCreate
