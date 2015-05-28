@@ -11,10 +11,8 @@ Release Information
 
 As well as downloading the PRIOR software you need to obtain the toolboxes specified below. 
 
-| **Toolbox**                               | **Version** |
-|-------------------------------------------|-------------|
-| [OPTIMI](/optimi/downloadFiles/vrs0p132)  | 0.132       |
-| [NDLUTIL](/ndlutil/downloadFiles/vrs0p16) | 0.16        |
+- [optimi](https://github.com/SheffieldML/optimi) optimization constriant mappings.
+- [ndlutil](https://github.com/SheffieldML/ndlutil) various utility functions.
 
 Release Notes
 -------------
