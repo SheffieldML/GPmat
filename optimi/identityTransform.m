@@ -4,7 +4,7 @@ function x = identityTransform(x, transform, varargin)
 %
 % COPYRIGHT : Patrick Sauer 2011
 
-% GPMAT
+% OPTIMI
 switch transform
  case 'atox'
   

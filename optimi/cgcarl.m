@@ -2,7 +2,7 @@ function [x, options, flog, pointlog] = cgcarl(f, x, options, gradf, varargin)
 
 % CGCARL Wrapper for Carl Rasmussen's conjugate gradient implemntation.
 
-% GPMAT
+% OPTIMI
 
 
 length = options(14);

@@ -12,7 +12,7 @@ function str = optimiDefaultOptimiser
 %
 % COPYRIGHT : Neil D. Lawrence, 2006
 
-% GPMAT
+% OPTIMI
 
 str = 'scg';
 
