@@ -1,0 +1,4 @@
+% This noise model is simply a Gaussian noise that allows different
+% variances when multiple outputs are used.  
+% 
+% SEEALSO : gaussianNoiseParamInit
