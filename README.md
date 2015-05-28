@@ -1,4 +1,4 @@
-Matlab MLTOOLS Toolbox
+Matlab mltools Toolbox
 ======================
 
 The main objective of this toolbox is to integrate several machine learning methods with in a consistent framework which is coded in a compatible way with the methods available in the other toolboxes on this site. Whilst the other toolboxes typically reflect research projects, this toolbox reflects other researchers work or known algorithms. The code either provides 'wrappers' for other researchers code or independent implementations. Examples of code that is wrapped include Isomap, MVU and NETLAB.
