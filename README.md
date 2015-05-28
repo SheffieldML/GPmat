@@ -13,8 +13,7 @@ For general utilities
 
 For optimization 
 
-- [optimi](https://github.com/SheffieldML/optimi/)
-- [netlab](https://github.com/sods/netlab/)
+- [optimi](https://github.com/SheffieldML/optimi) optimization constriant mappin- [netlab](https://github.com/sods/netlab) mainly used for optimization utilities (like scg).
 
 For downloading datasets
 
@@ -22,10 +21,10 @@ For downloading datasets
 
 For spectral dimensionality reduction functionality
 
-- [mvu](http://www.cse.wustl.edu/~kilian/code/files/mvu2012.zip)
-- [lle](https://www.cs.nyu.edu/~roweis/lle/code.html)
-- [jdqr](http://www.staff.science.uu.nl/~vorst102/JDQR.html)
-- [isomap](http://isomap.stanford.edu/)        
+- [mvu](http://www.cse.wustl.edu/~kilian/code/files/mvu2012.zip) Kilian Weinberger's MVU code.
+- [lle](https://www.cs.nyu.edu/~roweis/lle/code.html) Sam Roweis's LLE code.
+- [jdqr](http://www.staff.science.uu.nl/~vorst102/JDQR.html) 
+- [isomap](http://isomap.stanford.edu/) 
 - [sedumi](https://github.com/sqlp/sedumi/)      
 
 Fix to re-enable `hgplvm` visualization.
