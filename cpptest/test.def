@@ -1,2 +1,0 @@
-; dlltool -z --exportallsymbols --output-def test.def /usr/lib/libblas.a
-EXPORTS
