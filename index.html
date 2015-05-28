@@ -6,8 +6,7 @@
     <title>GPmat by SheffieldML</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="javascripts/scale.fix.js"></script>
+    <link rel="stylesheet" href="stylesheets/github-light.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -16,24 +15,21 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1 class="header">GPmat</h1>
-        <p class="header">Matlab implementations of Gaussian processes and other machine learning tools.</p>
+        <h1>GPmat</h1>
+        <p>Matlab implementations of Gaussian processes and other machine learning tools.</p>
+
+        <p class="view"><a href="https://github.com/SheffieldML/GPmat">View the Project on GitHub <small>SheffieldML/GPmat</small></a></p>
+
 
         <ul>
-          <li class="download"><a class="buttons" href="https://github.com/SheffieldML/GPmat/zipball/master">Download ZIP</a></li>
-          <li class="download"><a class="buttons" href="https://github.com/SheffieldML/GPmat/tarball/master">Download TAR</a></li>
-          <li><a class="buttons github" href="https://github.com/SheffieldML/GPmat">View On GitHub</a></li>
+          <li><a href="https://github.com/SheffieldML/GPmat/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/SheffieldML/GPmat/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/SheffieldML/GPmat">View On <strong>GitHub</strong></a></li>
         </ul>
-
-        <p class="header">This project is maintained by <a class="header name" href="https://github.com/SheffieldML">SheffieldML</a></p>
-
-
       </header>
       <section>
         <h1>
 <a id="gpmat" class="anchor" href="#gpmat" aria-hidden="true"><span class="octicon octicon-link"></span></a>GPmat</h1>
-
-<p>Matlab implementations of Gaussian processes and other machine learning tools.</p>
 
 <h1>
 <a id="gp" class="anchor" href="#gp" aria-hidden="true"><span class="octicon octicon-link"></span></a>GP</h1>
@@ -120,7 +116,7 @@ dimensional and is from a Gaussian with a particular covariance.</p>
 
 <div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt; </span>demGpSample</pre></div>
 
-<p></p><img src="./html/gpSample.png" width="50%"><img src="./html/gpCovariance.png" width="50%"><br> <i>Left</i> A single, 25
+<p></p><img src="./diagrams/gpSample.png" width="50%"><img src="./diagrams/gpCovariance.png" width="50%"><br> <i>Left</i> A single, 25
 dimensional, sample from a Gaussian distribution. <i>Right</i> the
 covariance matrix of the Gaussian distribution..  
 
@@ -138,7 +134,7 @@ process, we can look at the joint distribution over two variables.</p>
 as the conditional for <i>f</i><sub>2</sub> given
 <i>f</i><sub>1</sub>.</p>
 
-<p></p><img src="./html/demGpCov2D1_2_3.png" width="50%"><img src="./html/demGpCov2D1_5_3.png" width="50%"><br> <i>Left</i> Blue line is
+<p></p><img src="./diagrams/demGpCov2D1_2_3.png" width="50%"><img src="./diagrams/demGpCov2D1_5_3.png" width="50%"><br> <i>Left</i> Blue line is
 contour of joint distribution over the variables <i>f</i><sub>1</sub>
 and <i>f</i><sub>2</sub>. Green line indicates an observation of
 <i>f</i><sub>1</sub>. Red line is conditional distribution of
@@ -162,7 +158,7 @@ the range -3 to 3 on the <i>x</i>-axis. The random seed will be set to
 
 <p>is similar, but the inverse width is now set to 16 (length scale 0.25).</p>
 
-<p></p><img src="./html/gpSampleRbfSamples10Seed100000InverseWidth1Variance1.png" width="50%"><img src="./html/gpSampleRbfSamples10Seed100000InverseWidth16Variance1.png" width="50%"><br> <i>Left</i> samples from an RBF style covariance function
+<p></p><img src="./diagrams/gpSampleRbfSamples10Seed100000InverseWidth1Variance1.png" width="50%"><img src="./diagrams/gpSampleRbfSamples10Seed100000InverseWidth16Variance1.png" width="50%"><br> <i>Left</i> samples from an RBF style covariance function
 with length scale 1. <i>Right</i> samples from an RBF style covariance
 function with length scale 0.25.  
 
@@ -183,7 +179,7 @@ with standard deviation of 10) and the "weight variance" is
 variance" is approximately zero (basis functions are placed on
 the origin) and the "weight variance" is 100.</p>
 
-<p></p><img src="./html/gpSampleMlpSamples10Seed100000WeightVariance100BiasVariance100Variance1.png" width="50%"><img src="./html/gpSampleMlpSamples10Seed100000WeightVariance100BiasVariance1e-16Variance1.png" width="50%"><br> <i>Left</i> samples from an MLP style covariance
+<p></p><img src="./diagrams/gpSampleMlpSamples10Seed100000WeightVariance100BiasVariance100Variance1.png" width="50%"><img src="./diagrams/gpSampleMlpSamples10Seed100000WeightVariance100BiasVariance1e-16Variance1.png" width="50%"><br> <i>Left</i> samples from an MLP style covariance
 function with bias and weight variances set to 100. <i>Right</i>
 samples from an MLP style covariance function with weight variance 100
 and bias variance approximately zero.  
@@ -199,7 +195,7 @@ and bias variance approximately zero.
 
 <div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt;  </span>gpPosteriorSample(<span class="pl-s"><span class="pl-pds">'</span>rbf<span class="pl-pds">'</span></span>, <span class="pl-c1">5</span>, [<span class="pl-c1">16</span> <span class="pl-c1">1</span>], [<span class="pl-k">-</span><span class="pl-c1">3</span> <span class="pl-c1">3</span>], <span class="pl-c1">1e5</span>)</pre></div>
 
-<p></p><img src="./html/gpPosteriorSampleRbfSamples5Seed100000InverseWidth1Variance1bw.png" width="50%"><img src="./html/gpPosteriorSampleRbfSamples5Seed100000InverseWidth16Variance1bw.png" width="50%"><br> <i>Left</i> samples from the posterior induced by an RBF style covariance function
+<p></p><img src="./diagrams/gpPosteriorSampleRbfSamples5Seed100000InverseWidth1Variance1bw.png" width="50%"><img src="./diagrams/gpPosteriorSampleRbfSamples5Seed100000InverseWidth16Variance1bw.png" width="50%"><br> <i>Left</i> samples from the posterior induced by an RBF style covariance function
 with length scale 1 and 5 "training" data points taken from a sine wave. <i>Right</i> Similar but for a length scale of 0.25.  
 
 <h3>
@@ -214,13 +210,13 @@ points are included. The code is run with</p>
 
 <div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt; </span>demInterpolation</pre></div>
 
-<p></p><img src="./html/demInterpolation3.png" width="50%"><img src="./html/demInterpolation4.png" width="50%"><br>
+<p></p><img src="./diagrams/demInterpolation3.png" width="50%"><img src="./diagrams/demInterpolation4.png" width="50%"><br>
 
 <p>Gaussian process prediction <i>left</i> after two points with a new
 data point sampled <i>right</i> after the new data point is included
 in the prediction.<br> </p>
 
-<p><img src="./html/demInterpolation7.png" width="50%"><img src="./html/demInterpolation8.png" width="50%"><br></p>
+<p><img src="./diagrams/demInterpolation7.png" width="50%"><img src="./diagrams/demInterpolation8.png" width="50%"><br></p>
 
 <p>Gaussian process prediction <i>left</i> after five points with a four
 new data point sampled <i>right</i> after all nine data points are
@@ -238,11 +234,11 @@ not necessarily pass right through each data point.</p>
 
 <div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt; </span>demRegression</pre></div>
 
-<p></p><img src="./html/demRegression3.png" width="50%"><img src="./html/demRegression4.png" width="50%"><br>
+<p></p><img src="./diagrams/demRegression3.png" width="50%"><img src="./diagrams/demRegression4.png" width="50%"><br>
 
 <p>Gaussian process prediction <i>left</i> after two points with a new
 data point sampled <i>right</i> after the new data point is included
-in the prediction.<br> <img src="./html/demRegression7.png" width="50%"><img src="./html/demRegression8.png" width="50%"><br></p>
+in the prediction.<br> <img src="./diagrams/demRegression7.png" width="50%"><img src="./diagrams/demRegression8.png" width="50%"><br></p>
 
 <p>Gaussian process prediction <i>left</i> after five points with a four
 new data point sampled <i>right</i> after all nine data points are
@@ -263,10 +259,10 @@ corresponding plot of the log likelihood. The log likelihood peaks for
 a length scale equal to 1. This was the length scale used to generate
 the data.</p>
 
-<p></p><img src="./html/demOptimiseGp1.png" width="33%"><img src="./html/demOptimiseGp3.png" width="33%"><img src="./html/demOptimiseGp5.png" width="33%"><br><img src="./html/demOptimiseGp7.png" width="33%"><img src="./html/demOptimiseGp9.png" width="33%"><img src="./html/demOptimiseGp11.png" width="33%"><br><img src="./html/demOptimiseGp13.png" width="33%"><img src="./html/demOptimiseGp15.png" width="33%"><img src="./html/demOptimiseGp17.png" width="33%"><br>From top left to bottom right, Gaussian process
+<p></p><img src="./diagrams/demOptimiseGp1.png" width="33%"><img src="./diagrams/demOptimiseGp3.png" width="33%"><img src="./diagrams/demOptimiseGp5.png" width="33%"><br><img src="./diagrams/demOptimiseGp7.png" width="33%"><img src="./diagrams/demOptimiseGp9.png" width="33%"><img src="./diagrams/demOptimiseGp11.png" width="33%"><br><img src="./diagrams/demOptimiseGp13.png" width="33%"><img src="./diagrams/demOptimiseGp15.png" width="33%"><img src="./diagrams/demOptimiseGp17.png" width="33%"><br>From top left to bottom right, Gaussian process
 regression applied to the data with an increasing length scale. The
 length scales used were 0.05, 0.1, 0.25, 0.5, 1, 2, 4, 8 and
-16.<br><img src="./html/demOptimiseGp18.png" width="50%"><br>Log-log plot of
+16.<br><img src="./diagrams/demOptimiseGp18.png" width="50%"><br>Log-log plot of
 the log likelihood of the data against the length scales. The log
 likelihood is shown as a solid line. The log likelihood is made up of
 a data fit term (the quadratic form) shown by a dashed line and a
@@ -286,7 +282,7 @@ length scale value of 1.
 
 <p>The result of the script is given in the plot below.  </p>
 
-<p></p><img src="./html/demStickGp1Out1.png" width="30%"> <img src="./html/demStickGp1Out2.png" width="30%"> <img src="./html/demStickGp1Out3.png" width="30%"><br> Gaussian process regression through the x (left), y (middle) and z (right) position of the left ankle. Training data is shown as black spots, test points removed to simulate a lost marker are shown as circles, posterior mean
+<p></p><img src="./diagrams/demStickGp1Out1.png" width="30%"> <img src="./diagrams/demStickGp1Out2.png" width="30%"> <img src="./diagrams/demStickGp1Out3.png" width="30%"><br> Gaussian process regression through the x (left), y (middle) and z (right) position of the left ankle. Training data is shown as black spots, test points removed to simulate a lost marker are shown as circles, posterior mean
 prediction is shown as a black line and two standard deviations are
 given as grey shading.
 
@@ -317,7 +313,7 @@ training conditional" (DTC) approximation.</p>
 <p>The result of the script is
 given in the plot below.  </p>
 
-<p></p><img src="./html/demSpgp1dGp1.png" width="50%"><br> Gaussian process using the DTC approximation with nine
+<p></p><img src="./diagrams/demSpgp1dGp1.png" width="50%"><br> Gaussian process using the DTC approximation with nine
 inducing variables. Data is shown as black spots, posterior mean
 prediction is shown as a black line and two standard deviations are
 given as grey shading.
@@ -330,7 +326,7 @@ conditional (FITC). To try this approximation run the following script</p>
 
 <p>The result of the script is given on the left of the plot below.</p>
 
-<p></p><img src="./html/demSpgp1dGp2.png" width="49%"><img src="./html/demSpgp1dGp3.png" width="49%"><br>
+<p></p><img src="./diagrams/demSpgp1dGp2.png" width="49%"><img src="./diagrams/demSpgp1dGp3.png" width="49%"><br>
 
 <p><i>Left</i>: Gaussian process using the FITC approximation with nine
 inducing variables. Data is shown as black spots, posterior mean
@@ -359,7 +355,7 @@ this the following script can be run.</p>
 
 <p>The result of the script is given in the plot below.</p>
 
-<p></p><img src="./html/demSpgp1dGp4.png" width="50%"><br> Full Gaussian
+<p></p><img src="./diagrams/demSpgp1dGp4.png" width="50%"><br> Full Gaussian
 process on the toy data with the correct hyper-parameters. Data is
 shown as black spots, posterior mean prediction is shown as a black
 line and two standard deviations are given as grey shaded
@@ -472,7 +468,7 @@ fix reading of GPLVM files from latest C++ code.</p>
 
 <p>In all the examples we give there will be 100 points in the active set. We first considered the FITC approximation. The script <code>demOilFgplvm1.m</code> runs the FITC approximation giving the result on the left of the figure shown below.</p>
 
-<p></p><img src="./html/demOilFgplvm1.png" width="49%"><img src="./html/demOilFgplvm2.png" width="49%"><br>
+<p></p><img src="./diagrams/demOilFgplvm1.png" width="49%"><img src="./diagrams/demOilFgplvm2.png" width="49%"><br>
 <i>Left</i>: GP-LVM on the oil data using the FITC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses.  One hundred inducing variables are used. <i>Right</i>: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.
 
 <p>Back constraints can be added to each of these approximations. In the example on the right we used a back constraint given by a multi-layer perceptron with 15 hidden nodes. This example can be recreated with <code>demOilFgplvm2.m</code>.</p>
@@ -482,7 +478,7 @@ fix reading of GPLVM files from latest C++ code.</p>
 
 <p>The other approximations can also be used, in the figures below we give results from the DTC approximation. The can be recreated using <code>demOil3.m</code> and <code>demOil4.m</code>.</p>
 
-<p></p><img src="./html/demOilFgplvm3.png" width="49%"><img src="./html/demOilFgplvm4.png" width="49%"><br>
+<p></p><img src="./diagrams/demOilFgplvm3.png" width="49%"><img src="./diagrams/demOilFgplvm4.png" width="49%"><br>
 <i>Left</i>: GP-LVM on the oil data using the DTC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses.  One hundred inducing variables are used. <i>Right</i>: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.
 
 <h4>
@@ -490,7 +486,7 @@ fix reading of GPLVM files from latest C++ code.</p>
 
 <p>We also show results using the PITC approximation, these results can be recreated using the scripts <code>demOilFgplvm5.m</code> and <code>demOilFgplvm6.m</code>.</p>
 
-<p></p><img src="./html/demOilFgplvm5.png" width="49%"><img src="./html/demOilFgplvm6.png" width="49%"><br>
+<p></p><img src="./diagrams/demOilFgplvm5.png" width="49%"><img src="./diagrams/demOilFgplvm6.png" width="49%"><br>
 <i>Left</i>: GP-LVM on the oil data using the PITC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses.  One hundred inducing variables are used. <i>Right</i>: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.
 
 <h4>
@@ -498,7 +494,7 @@ fix reading of GPLVM files from latest C++ code.</p>
 
 <p>Finally we also show results using the variational DTC approximation of Titsias, these results can be recreated using the scripts <code>demOilFgplvm7.m</code> and <code>demOilFgplvm8.m</code>.</p>
 
-<p></p><img src="./html/demOilFgplvm7.png" width="49%"><img src="./html/demOilFgplvm8.png" width="49%"><br>
+<p></p><img src="./diagrams/demOilFgplvm7.png" width="49%"><img src="./diagrams/demOilFgplvm8.png" width="49%"><br>
 <i>Left</i>: GP-LVM on the oil data using the variational DTC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses.  One hundred inducing variables are used. <i>Right</i>: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.
 
 <h3>
@@ -510,20 +506,20 @@ fix reading of GPLVM files from latest C++ code.</p>
 
 <p>The results are given on the left of the figure below.</p>
 
-<p></p><img src="./html/demStickFgplvm1.png" width="49%"><br>
+<p></p><img src="./diagrams/demStickFgplvm1.png" width="49%"><br>
 GP-LVM on the motion capture data without dynamics in the latent space. 
 
 <p>Notice that the sequence (which is a few strides of a man running) is split into several sub-sequences. These sub-sequences are aligned to the strides of the man. By introducing a dynamics prior, we can force the sequence to link up. Samples from the dynamics prior used are shown in the plot below.</p>
 
-<p></p><img src="./html/dynamicsSamp1.png" width="49%"><img src="./html/dynamicsSamp2.png" width="49%"><br>
-<img src="./html/dynamicsSamp3.png" width="49%"><img src="./html/dynamicsSamp4.png" width="49%">
+<p></p><img src="./diagrams/dynamicsSamp1.png" width="49%"><img src="./diagrams/dynamicsSamp2.png" width="49%"><br>
+<img src="./diagrams/dynamicsSamp3.png" width="49%"><img src="./diagrams/dynamicsSamp4.png" width="49%">
 Samples from the dynamics prior which is placed over the latent space. This prior has <i>Left</i>: GP-LVM on the motion capture data without dynamics in the latent space. <i>Right</i>: GP-LVM with dynamics. Samples from the dynamics prior used are given in the figure above.
 
 <p>This prior is used in the model to obtain the results below,</p>
 
 <div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt; </span>demStickFgplvm2</pre></div>
 
-<p></p><img src="./html/demStickFgplvm2.png" width="49%"><br>
+<p></p><img src="./diagrams/demStickFgplvm2.png" width="49%"><br>
 GP-LVM with dynamics. Samples from the dynamics prior used are given in the figure above.
 
 <p>Note now the circular form of the latent space. </p>
@@ -532,7 +528,7 @@ GP-LVM with dynamics. Samples from the dynamics prior used are given in the figu
 
 <div class="highlight highlight-matlab"><pre><span class="pl-k">&gt;&gt; </span>demStickFgplvm3</pre></div>
 
-<p></p><img src="./html/demStickFgplvm3.png" width="49%"><br>
+<p></p><img src="./diagrams/demStickFgplvm3.png" width="49%"><br>
 GP-LVM with back constraints. A RBF kernel mapping was used to form the back constraints with the inverse width set to 1e-4 (<i>i.e.</i>length scale set to 100).
 
 <h3>
@@ -540,8 +536,8 @@ GP-LVM with back constraints. A RBF kernel mapping was used to form the back con
 
 <p>In on-going work with Dieter Fox and Brian Ferris at the University of Washington we are interested in loop closure for robotic navigation, included as an example is a data set of a robot completing a loop while reading wireless access point signal strengths. To produce a neat track and close the loop it turns out it is necessary to use dynamics and back constraints as seen in the images below. These results can be recreated with <code>demRobotWireless1.m</code> through <code>demRobotWireless4.m</code>.</p>
 
-<p></p><img src="./html/demRobotWireless1.png" width="49%"><img src="./html/demRobotWireless2.png" width="49%"><br>
-<img src="./html/demRobotWireless3.png" width="49%"><img src="./html/demRobotWireless4.png" width="49%"><br>
+<p></p><img src="./diagrams/demRobotWireless1.png" width="49%"><img src="./diagrams/demRobotWireless2.png" width="49%"><br>
+<img src="./diagrams/demRobotWireless3.png" width="49%"><img src="./diagrams/demRobotWireless4.png" width="49%"><br>
 Use of back constraints and dynamics to obtain loop closure in a robot navigation example. <i>Top Left</i>: GP-LVM without back constraints or dynamics, <i>Top right</i>: GP-LVM with back constraints, no dynamics, <i>Bottom Left</i>: GP-LVM with dynamics, no back constraints, <i>Bottom right</i>: GP-LVM with back constraints and dynamics. 
 
 <h3>
@@ -549,7 +545,7 @@ Use of back constraints and dynamics to obtain loop closure in a robot navigatio
 
 <p>Another ongoing piece of work with Jeff Bilmes and Jon Malkin involves embedding vowel sounds in a two dimensional space as part of <a href="http://ssli.ee.washington.edu/vj">vocal joystick</a> system. Jon has provided a simple data set of 2,700 examples of different vowels. These are embedded in a two dimensional latent space with and without back constraints.</p>
 
-<p></p><img src="./html/demVowels2.png" width="49%"><img src="./html/demVowels3.png" width="49%"><br>
+<p></p><img src="./diagrams/demVowels2.png" width="49%"><img src="./diagrams/demVowels3.png" width="49%"><br>
 <i>Left</i>: embedding of the vowel data without back constraints, <i>Right</i>: embedding of the vowel data with back constraints. <i>/a/</i> - red cross, <i>/ae/</i> - green circle, <i>/ao/</i> - blue plus, <i>/e/</i> - cyan asterix, <i>/i/</i> - magenta square, <i>/ibar/</i> - yellow diamond, <i>/o/</i> - red down triangle, <i>/schwa/</i> - green up triangle, <i>/u/</i> - blue left triangle.
 
 
@@ -673,7 +669,7 @@ process dynamics to fully recreate the data set. There results are given in thei
 <p></p>
 Finally we show a plot of reconstructions of two of the angles in the data.
 
-<p></p><img src="./html/demCmu35gplvmLegReconstruct1_8.png" width="50%"><img src="./html/demCmu35gplvmLegReconstruct1_9.png" width="50%">
+<p></p><img src="./diagrams/demCmu35gplvmLegReconstruct1_8.png" width="50%"><img src="./diagrams/demCmu35gplvmLegReconstruct1_9.png" width="50%">
 Prediction for first two angles of the right hip joint (see plots in <a href="http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Taylor:motion06&amp;printAbstract=1">Taylor <i>et al.</i></a> for comparison). Dotted line is nearest neighour in scaled space, dashed line is GP-LVM with 4-D latent space.
 
 <h1>
@@ -694,7 +690,7 @@ model.kern = cmpndTieParameters(model.kern, {[<span class="pl-c1">4</span>, <spa
 
 <p>The resulting classification is shown below.</p>
 
-<p></p><img src="./html/demClassificationOne1.png"><br>
+<p></p><img src="./diagrams/demClassificationOne1.png"><br>
 
 <p>Decision boundary from the <code>demClassification1.m</code> example. Postive class is red circles, negative class green crosses and active points are yellow dots. Decision boundary shown in red, contours at 0.25 and 0.75 probability shown in blue.</p>
 
@@ -704,7 +700,7 @@ model.kern = cmpndTieParameters(model.kern, {[<span class="pl-c1">4</span>, <spa
 
 <p>The second example attempts to learn a Gaussian process give data that is sampled from a Gaussian process. The code is <code>demClassification2</code>. The underlying Gaussian process is based on an RBF kernel with variance inverse width 10. The IVM learns an inverse width of 15 and gives the classification is shown below.</p>
 
-<p></p><img src="./html/demClassificationTwo2.png"><br>
+<p></p><img src="./diagrams/demClassificationTwo2.png"><br>
 
 <p>Decision boundary from the <code>demClassification2.m</code> example. Postive class is red circles, negative class green crosses and active points are yellow dots. Decision boundary shown in red, contours at 0.25 and 0.75 probability shown in blue.</p>
 
@@ -714,7 +710,7 @@ model.kern = cmpndTieParameters(model.kern, {[<span class="pl-c1">4</span>, <spa
 
 <p>This example is similar to <code>demClassification2</code>, only now there is a null category region in the data (a region of low data density between the classes). The example is for comparison with the null category noise model.</p>
 
-<p></p><img src="./html/demClassificationThree3.png"><br>
+<p></p><img src="./diagrams/demClassificationThree3.png"><br>
 
 <p>Decision boundary from the <code>demClassification3.m</code> example. Postive class is red circles, negative class green crosses and active points are yellow dots. Decision boundary shown in red, contours at 0.25 and 0.75 probability shown in blue.</p>
 
@@ -724,7 +720,7 @@ model.kern = cmpndTieParameters(model.kern, {[<span class="pl-c1">4</span>, <spa
 
 <p>In this example the ordered categorical noise model is used (ordinal regression). The data is a simple data set for which a linear one dimensional model suffices. The IVM is given a combination of an RBF and linear kernel with ARD.For the ordered categorical case there are several parameters associated with the noise model (in particular the category widths), these are learnt too. The model learns that the system is linear and only one direction is important. The resulting classification is given below.</p>
 
-<p></p><img src="./html/demOrderedOne1.png"><br>
+<p></p><img src="./diagrams/demOrderedOne1.png"><br>
 
 <p>Decision boundary from the <code>demOrdered1.m</code> example. Class 0 - red cross, Class 1 - green circles, Class 2 - blue crosses, Class 3 - cyan asterisks, Class 4 - pink squares, Class 5 - yellow diamonds. Class 6 - red triangles. Active points are yellow dots, note that because the kernel is linear by now the most informative points tend to be at the extrema. Decision boundaries shown in red, contours at 0.25 and 0.75 probability shown in blue.</p>
 
@@ -734,7 +730,7 @@ model.kern = cmpndTieParameters(model.kern, {[<span class="pl-c1">4</span>, <spa
 
 <p>Another example with the ordered categorical noise model, here the data is radial, the categories being along the radius of a circle. The IVM is given a combination of an RBF and linear kernel with ARD. Again there are several parameters associated with the noise model, and these are learnt using <code>ivmOptimiseNoise</code>. The resulting classification is given below.</p>
 
-<p></p><img src="./html/demOrderedTwo2.png"><br>
+<p></p><img src="./diagrams/demOrderedTwo2.png"><br>
 
 <p>Decision boundary from the <code>demOrdered1.m</code> example. Class 0 - red cross, Class 1 - green circles, Class 2 - blue crosses, Class 3 - cyan asterisks, Class 4 - pink squares, Class 5 - yellow diamonds. Class 6 - red triangles. Active points are yellow dots, note that because the kernel is linear by now the most informative points tend to be at the extrema. Decision boundaries shown in red, contours at 0.25 and 0.75 probability shown in blue.</p>
 
@@ -744,7 +740,7 @@ model.kern = cmpndTieParameters(model.kern, {[<span class="pl-c1">4</span>, <spa
 
 <p>In this example the Gaussian noise model is used (standard regression). The data is sampled from a Gaussian process, only one input dimension is important. The IVM is given a combination of an RBF and linear kernel with ARD. The resulting regression is given below.</p>
 
-<p></p><img src="./html/demRegressionOne1.png"><br>
+<p></p><img src="./diagrams/demRegressionOne1.png"><br>
 
 <p>Regression from the example <code>demRegression1.m</code>. Targets are red dots and active points are yellow dots.</p>
 
@@ -754,7 +750,7 @@ model.kern = cmpndTieParameters(model.kern, {[<span class="pl-c1">4</span>, <spa
 
 <p>A second example with Gaussian noise, sampled from a Gaussian process, but this time with differing length scales.</p>
 
-<p></p><img src="./html/demRegressionTwo2.png"><br>
+<p></p><img src="./diagrams/demRegressionTwo2.png"><br>
 
 <p>Regression from the example <code>demRegression2.m</code>. Targets are red dots and active points are yellow dots.</p>
 
@@ -831,7 +827,7 @@ Test Error <span class="pl-c1">0.1129</span>
 <span class="pl-c1">Model</span> likelihood <span class="pl-c1">175.3588</span>
 </pre></div>
 
-<p></p><img src="./html/demBanana1.png"><br>
+<p></p><img src="./diagrams/demBanana1.png"><br>
 
 <p>Decision boundary from the banana example. Postive class is red circles, negative class green crosses and active points are yellow dots. Decision boundary shown in red, contours at 0.25 and 0.75 probability shown in blue.</p>
 
@@ -853,7 +849,7 @@ Test Error <span class="pl-c1">0.1129</span>
 <span class="pl-k">&gt;&gt; </span>demUnlabelled2
 </pre></div>
 
-<p></p><img src="./html/demUnlabelledOne1.png"><img src="./html/demUnlabelledOne2.png"><br>
+<p></p><img src="./diagrams/demUnlabelledOne1.png"><img src="./diagrams/demUnlabelledOne2.png"><br>
 
 <p>The null category noise model run on toy data. <i>Top</i>: using the null category, the true nature of the decision boundary is recovered. <i>Bottom</i>: the standard IVM, does not recover the true decision boundary.</p>
 
@@ -1018,12 +1014,12 @@ Added rbfOutputGradX and visualisation for spring dampers type.</p>
 
 <p>In the first examples we use 1000 data points to represent the swiss roll,  <code>demSwissRollLle1.m</code> and  <code>demSwissRollLle2.m</code>.</p>
 
-<p></p><img src="./html/demSwissRollLle1.png" width="49%"><img src="./html/demSwissRollLle2.png" width="49%"><br>
+<p></p><img src="./diagrams/demSwissRollLle1.png" width="49%"><img src="./diagrams/demSwissRollLle2.png" width="49%"><br>
 <i>Left</i>:  LLE on the swiss roll data using 4 neighbours. <i>Right</i>: LLE on the swiss roll data using 8 neighbours.
 
 <p>In the next examples we use 3000 data points to represent the swiss roll,  <code>demSwissRollFullLle1.m</code> and  <code>demSwissRollFullLle2.m</code>.</p>
 
-<p></p><img src="./html/demSwissRollFullLle1.png" width="49%"><img src="./html/demSwissRollFullLle2.png" width="49%"><br>
+<p></p><img src="./diagrams/demSwissRollFullLle1.png" width="49%"><img src="./diagrams/demSwissRollFullLle2.png" width="49%"><br>
 <i>Left</i>:  LLE on the full swiss roll data using 4 neighbours. <i>Right</i>: LLE on the full swiss roll data using 8 neighbours.
 
 <h4>
@@ -1033,15 +1029,16 @@ Added rbfOutputGradX and visualisation for spring dampers type.</p>
 
 <p>In these examples we used the 1000 data points from the training data for the oil,  <code>demOilLle1.m</code> and  <code>demOilLle2.m</code>.</p>
 
-<p></p><img src="./html/demOilLle1.png" width="49%"><img src="./html/demOilLle2.png" width="49%"><br>
+<p></p><img src="./diagrams/demOilLle1.png" width="49%"><img src="./diagrams/demOilLle2.png" width="49%"><br>
 <i>Left</i>:  LLE on the oil data using 4 neighbours, 9 errors when using classification by nearest neighbour in the latent space. <i>Right</i>: LLE on the oil data using 8 neighbours, 151 errors when using classification by nearest neighbour in the latent space.
       </section>
       <footer>
-        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+        <p>This project is maintained by <a href="https://github.com/SheffieldML">SheffieldML</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
       </footer>
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-		          <script type="text/javascript">
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
           </script>
