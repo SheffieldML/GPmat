@@ -14,7 +14,7 @@ function model = ivmOptimiseIvm(model, display)
 % 
 % COPYRIGHT : Neil D. Lawrence, 2003, 2004, 2005
 
-% GPMAT
+% IVM
 
 if nargin < 2
   display = 1;
