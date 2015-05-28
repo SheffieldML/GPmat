@@ -1,7 +1,0 @@
-% The FMVU model is an implementation of maximum variance unfolding
-% that avoids the semi-definite program by parameterizing the
-% covariance matrix through the latent variables. The distance
-% constraints are then implemented by Lagrange multipliers. This leads
-% to an interesting model where the gradients are given through a
-% Laplacian matrix formed by the Lagrange multipliers. This makes the
-% connections to models like LLE and LE much clearer.

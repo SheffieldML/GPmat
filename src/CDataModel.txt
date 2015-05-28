@@ -1,2 +1,0 @@
-Interfaces classes for data sets and mapping models. Long term these classes are expected to be extended. An early set of extensions was rolled back to incorporate William V. Baxter's port to MSVC.
-

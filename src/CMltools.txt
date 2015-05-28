@@ -1,1 +1,0 @@
-This file contains classes for general machine learning models such as multi-layer perceptrons.
