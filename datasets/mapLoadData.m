@@ -26,7 +26,7 @@ function [X, y, XTest, yTest] = mapLoadData(dataset, seedVal)
 %
 % MODIFICATIONS : Mauricio A. Alvarez, 2009
 
-% GPMAT
+% DATASETS
 
 if nargin < 2
     seedVal = 1e5;

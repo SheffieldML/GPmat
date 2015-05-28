@@ -12,7 +12,7 @@ function connect = mocapConnections(fileName, pointNames);
 %
 % COPYRIGHT : Neil D. Lawrence, 2005, 2006
 
-% GPMAT
+% DATASETS
 
 
 fid = fopen(fileName);
