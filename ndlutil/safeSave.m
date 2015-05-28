@@ -33,8 +33,8 @@ function safeSave(fname, varargin)
   end
   
   % If file exists, first write to a different name
-  [pathstr, name, ext, versn] = fileparts(fname);
-  tmpfname = fullfile(pathstr,[name '_tmp' ext versn]);
+  [pathstr, name, ext] = fileparts(fname);
+  tmpfname = fullfile(pathstr,[name '_tmp' ext]);
   callstr = sprintf('save(''%s''%s)', tmpfname, argstring);
   evalin('caller', callstr);
   

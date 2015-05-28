@@ -79,7 +79,7 @@ if model.includeNoise
     kernType2{i+1} = 'white';
   end
   if isfield(options, 'singleNoise') & options.singleNoise
-    tieParam{5} = 'white \d+ variance';
+    tieParam{5} = 'white . variance';
   end
   
   % Now create model with a 'cmpnd' (compound) kernel build from two

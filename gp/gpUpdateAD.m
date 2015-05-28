@@ -21,6 +21,8 @@ if nargin < 2
   X = model.X;
 end
 
+qr_decomposition = true;
+
 switch model.approx
  case 'ftc'
   % Compute the inner product values.
@@ -41,18 +43,36 @@ switch model.approx
  case {'dtc', 'dtcvar'}
   if ~isfield(model, 'isSpherical') | model.isSpherical
     % Compute A = invBetaK_uu + K_uf*K_uf'
-    K_uf2 = model.K_uf*model.K_uf';
-    model.A = (1/model.beta)*model.K_uu+ K_uf2;
-    % This can become unstable when K_uf2 is low rank.
-    [model.Ainv, U] = pdinv(model.A);
-    model.logdetA = logdet(model.A, U);
+
+    if ~qr_decomposition 
+      % This can become unstable when K_uf2 is low rank.
+      K_uf2 = model.K_uf*model.K_uf';
+      model.A = (1/model.beta)*model.K_uu+ K_uf2;
+      [model.Ainv, U] = pdinv(model.A);
+      model.logdetA = logdet(model.A, U);
+    else
+      Ruu = jitChol(model.K_uu);
+      sqrtBeta = sqrt(model.beta);
+      [Q, R] = qr([Ruu; sqrt(model.beta)*model.K_uf'],  '0');
+      RA = 1/sqrtBeta*R;
+      model.A = RA'*RA;
+      model.Ainv = pdinv(model.A, RA);
+      model.logdetA = logdet(model.A, RA);
+    end
  
     % compute inner products
     for i = 1:model.d
-      E = model.K_uf*model.m(:, i);    
-      model.innerProducts(1, i) = ...
-          model.beta*(model.m(:, i)'*model.m(:, i) ...
-                      - E'*model.Ainv*E);
+      if ~qr_decomposition
+        E = model.K_uf*model.m(:, i);    
+        model.innerProducts(1, i) = ...
+            model.beta*(model.m(:, i)'*model.m(:, i) ...
+                        - E'*model.Ainv*E);
+      else
+        Z = Q(size(model.K_uu, 1)+1:end, :)'*model.m(:, i);
+        model.innerProducts(1, i) = ...
+            model.beta*(model.m(:, i)'*model.m(:, i) ...
+                        - Z'*Z);
+      end
     end
     if strcmp(model.approx, 'dtcvar')
       model.diagD = model.beta*(model.diagK ...
