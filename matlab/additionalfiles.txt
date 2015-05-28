@@ -1,4 +1,0 @@
-dir: html
-~/mlprojects/disimrank/html/index.html
-~/mlprojects/disimrank/html/twi_singletarget.png
-~/mlprojects/disimrank/html/twi_multitarget.png

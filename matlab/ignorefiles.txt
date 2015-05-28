@@ -1,5 +1,0 @@
-drosPlotEvaluationFull.m
-drosPlotEvaluationMultitf.m
-drosLoadDataFull.m
-drosRunMLRankings.m
-drosMLRank.m
