@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-    <classpathentry kind="src" path=""/>
-    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-    <classpathentry kind="lib" path="C:/Documents and Settings/Örn/My Documents/IBM/WS51 Workspaces/Sheffield/3D/SkeletonParser/Jama-1.0.1.jar"/>
-    <classpathentry kind="output" path=""/>
-</classpath>
