@@ -63,7 +63,7 @@ Bug fix from fgplvmReadFromFID where the values of model.m weren't being compute
 
 #### Version 0.151
 
-In this version results for the CMU Mocap data set from [Taylor et al.](http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Taylor:motion06&printAbstract=1) of subject 35 running and walking are included, as well as some minor changes to allow hierarchical GP-LVMs to be used.
+In this version results for the CMU Mocap data set from [Taylor et al.](http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Taylor:motion06&printAbstract=1) of subject 35 running and walking are included, as well as some minor changes to allow hierarchical GP-LVMs to be used.
 
 #### Version 0.15
 
@@ -112,7 +112,7 @@ Examples
 
 The three approximations outlined above can be used to speed up learning in the GP-LVM. They have the advantage over the IVM approach taken in the [original GP-LVM toolbox](/gplvm/) that the algorithm is fully convergent and the final mapping from latent space to data space takes into account all of the data (not just the points in the active set).
 
-As well as the new sparse approximation the new toolbox allows the GP-LVM to be run with dynamics as suggested by [Wang *et al.*](http://www.cs.man.ac.uk/neill-bin/publications/bibpage.cgi?keyName=Wang:gpdm05&printAbstract=1).
+As well as the new sparse approximation the new toolbox allows the GP-LVM to be run with dynamics as suggested by [Wang *et al.*](http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Wang:gpdm05&printAbstract=1).
 
 Finally, the new toolbox allows the incorporation of 'back constraints' in learning. Back constraints force the latent points to be a smooth function of the data points. This means that points that are close in data space are constrained to be close in latent space. For the standard GP-LVM points close in latent space are constrained to be close in data space, but the converse is not true.
 
@@ -214,7 +214,7 @@ Another ongoing piece of work with Jeff Bilmes and Jon Malkin involves embedding
 
 ### Larger Human Motion Data Sets
 
-For [an AISTATS paper](http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Lawrence:larger07&printAbstract=1) we recreated an experiment from [Taylor *et al.*'s NIPS paper](/neill-bin/publications/bibpage.cgi?keyName=Taylor:motion06&printAbstract=1). They created a data set from a motion capture data in the [CMU data base](http://mocap.cs.cmu.edu) of running and walking. The data set can now be recreated using the [DATASETS toolbox](/datasets/). We repeated missing data experiments by Taylor et al.. The model learning for these experiments can be recreated with:
+For [an AISTATS paper](http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Lawrence:larger07&printAbstract=1) we recreated an experiment from [Taylor *et al.*'s NIPS paper](http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Taylor:motion06&printAbstract=1). They created a data set from a motion capture data in the [CMU data base](http://mocap.cs.cmu.edu) of running and walking. The data set can now be recreated using the [DATASETS toolbox](/datasets/). We repeated missing data experiments by Taylor et al.. The model learning for these experiments can be recreated with:
 
 ```matlab
 >> demCmu35gplvm1
@@ -312,7 +312,7 @@ Finally we show a plot of reconstructions of two of the angles in the data.
 
 ![](./diagrams/demCmu35gplvmLegReconstruct1_8.png)![](./diagrams/demCmu35gplvmLegReconstruct1_9.png)
 
-Prediction for first two angles of the right hip joint (see plots in [Taylor *et al.*](/neill-bin/publications/bibpage.cgi?keyName=Taylor:motion06&printAbstract=1) for comparison). Dotted line is nearest neighour in scaled space, dashed line is GP-LVM with 4-D latent space.
+Prediction for first two angles of the right hip joint (see plots in [Taylor *et al.*](http://ml.sheffield.ac.uk/~neil/cgi-bin/publications/bibpage.cgi?keyName=Taylor:motion06&printAbstract=1) for comparison). Dotted line is nearest neighour in scaled space, dashed line is GP-LVM with 4-D latent space.
 
 Page updated on Wed May 19 10:04:54 2010
 
