@@ -11,18 +11,28 @@ Release Information
 
 As well as downloading the GP software you need to obtain the toolboxes specified below. 
 
-| **Toolbox**                                   | **Version** |
-|-----------------------------------------------|-------------|
-| [NETLAB](/netlab/downloadFiles/vrs3p3)        | 3.3         |
-| [MOCAP](/mocap/downloadFiles/vrs0p136)        | 0.136       |
-| [NDLUTIL](/ndlutil/downloadFiles/vrs0p162)    | 0.162       |
-| [PRIOR](/prior/downloadFiles/vrs0p22)         | 0.22        |
-| [MLTOOLS](/mltools/downloadFiles/vrs0p138)    | 0.138       |
-| [MOCAP](/mocap/downloadFiles/vrs0p136)        | 0.136       |
-| [OPTIMI](/optimi/downloadFiles/vrs0p132)      | 0.132       |
-| [DATASETS](/datasets/downloadFiles/vrs0p1371) | 0.1371      |
-| [KERN](/kern/downloadFiles/vrs0p226)          | 0.226       |
-| [NOISE](/noise/downloadFiles/vrs0p141)        | 0.141       |
+
+For core functionality
+
+- [netlab](https://github.com/sods/netlab) mainly used for optimization utilities (like scg).
+
+- [prior](https://github.com/SheffieldML/prior) prior distributions.
+- [optimi](https://github.com/SheffieldML/optimi) optimization constriant mappings.
+- [kern](https://github.com/SheffieldML/kern) covariance functions.
+- [ndlutil](https://github.com/SheffieldML/ndlutil) various utility functions.
+- [noise](https://github.com/SheffieldML/noise) noise models.
+- [mltools](https://github.com/SheffieldML/mltools) machine learning models.
+
+- [Carl Rasmussen's minimize](http://learning.eng.cam.ac.uk/carl/code/minimize/m
+
+For loading in data for demos
+
+- [mocap](https://github.com/SheffieldML/datasets/)
+
+For motion capture experiments
+
+- [mocap](https://github.com/SheffieldML/mocap/)
+
 
 Minor updates to gpLoadResult for allowing different functions for loading in data.
 
