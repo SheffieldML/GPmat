@@ -1,1 +1,0 @@
-function model = mogUpdatePrior(model)
