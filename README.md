@@ -90,7 +90,7 @@ This example shows how points which look like they come from a function to be sa
 >> demGpSample
 ```
 
-![](gpSample.png)![](gpCovariance.png)
+![](./diagrams/gpSample.png)![](./diagrams/gpCovariance.png)
 
 *Left* A single, 25 dimensional, sample from a Gaussian distribution. *Right* the covariance matrix of the Gaussian distribution..
 ### Joint Distribution over two Variables
@@ -103,7 +103,7 @@ Gaussian processes are about conditioning a Gaussian distribution on the trainin
 
 Gives the joint distribution for *f*<sub>1</sub> and *f*<sub>2</sub>. The plots show the joint distributions as well as the conditional for *f*<sub>2</sub> given *f*<sub>1</sub>.
 
-![](demGpCov2D1_2_3.png)![](demGpCov2D1_5_3.png)
+![](./diagrams/demGpCov2D1_2_3.png)![](./diagrams/demGpCov2D1_5_3.png)
 
 *Left* Blue line is contour of joint distribution over the variables *f*<sub>1</sub> and *f*<sub>2</sub>. Green line indicates an observation of *f*<sub>1</sub>. Red line is conditional distribution of *f*<sub>2</sub> given *f*<sub>1</sub>. *Right* Similar for *f*<sub>1</sub> and *f*<sub>5</sub>.
 ### Different Samples from Gaussian Processes
@@ -121,7 +121,7 @@ will give 10 samples from an RBF covariance function with a parameter vector giv
 ```
 is similar, but the inverse width is now set to 16 (length scale 0.25).
 
-![](gpSampleRbfSamples10Seed100000InverseWidth1Variance1.png)![](gpSampleRbfSamples10Seed100000InverseWidth16Variance1.png)
+![](./diagrams/gpSampleRbfSamples10Seed100000InverseWidth1Variance1.png)![](./diagrams/gpSampleRbfSamples10Seed100000InverseWidth16Variance1.png)
 
 *Left* samples from an RBF style covariance function with length scale 1. *Right* samples from an RBF style covariance function with length scale 0.25.
 Other covariance functions can be sampled, an interesting one is the MLP covariance which is non stationary and can produce point symmetric functions,
@@ -138,7 +138,7 @@ gives 10 samples from the MLP covariance function where the "bias variance" is 1
 
 gives 10 samples from the MLP covariance function where the "bias variance" is approximately zero (basis functions are placed on the origin) and the "weight variance" is 100.
 
-![](gpSampleMlpSamples10Seed100000WeightVariance100BiasVariance100Variance1.png)![](gpSampleMlpSamples10Seed100000WeightVariance100BiasVariance1e-16Variance1.png)
+![](./diagrams/gpSampleMlpSamples10Seed100000WeightVariance100BiasVariance100Variance1.png)![](./diagrams/gpSampleMlpSamples10Seed100000WeightVariance100BiasVariance1e-16Variance1.png)
 
 *Left* samples from an MLP style covariance function with bias and weight variances set to 100. *Right* samples from an MLP style covariance function with weight variance 100 and bias variance approximately zero.
 ### Posterior Samples
@@ -155,7 +155,7 @@ and
 >> gpPosteriorSample('rbf', 5, [16 1], [-3 3], 1e5)
 ```
 
-![](gpPosteriorSampleRbfSamples5Seed100000InverseWidth1Variance1bw.png)![](gpPosteriorSampleRbfSamples5Seed100000InverseWidth16Variance1bw.png)
+![](./diagrams/gpPosteriorSampleRbfSamples5Seed100000InverseWidth1Variance1bw.png)![](./diagrams/gpPosteriorSampleRbfSamples5Seed100000InverseWidth16Variance1bw.png)
 
 *Left* samples from the posterior induced by an RBF style covariance function with length scale 1 and 5 "training" data points taken from a sine wave. *Right* Similar but for a length scale of 0.25.
 
@@ -167,9 +167,9 @@ This simple demonstration plots, consecutively, an increasing number of data poi
 >> demInterpolation
 ```
 
-![](demInterpolation3.png)![](demInterpolation4.png)
+![](./diagrams/demInterpolation3.png)![](./diagrams/demInterpolation4.png)
  Gaussian process prediction *left* after two points with a new data point sampled *right* after the new data point is included in the prediction.
- ![](demInterpolation7.png)![](demInterpolation8.png)
+ ![](./diagrams/demInterpolation7.png)![](./diagrams/demInterpolation8.png)
 
 Gaussian process prediction *left* after five points with a four new data point sampled *right* after all nine data points are included.
 
@@ -181,9 +181,9 @@ The regression demo very much follows the format of the interpolation demo. Here
 >> demRegression
 ```
 
-![](demRegression3.png)![](demRegression4.png)
+![](./diagrams/demRegression3.png)![](./diagrams/demRegression4.png)
  Gaussian process prediction *left* after two points with a new data point sampled *right* after the new data point is included in the prediction.
- ![](demRegression7.png)![](demRegression8.png)
+ ![](./diagrams/demRegression7.png)![](./diagrams/demRegression8.png)
 
 Gaussian process prediction *left* after five points with a four new data point sampled *right* after all nine data points are included.
 
@@ -197,13 +197,13 @@ One of the advantages of Gaussian processes over pure kernel interpretations of 
 
 shows a series of plots of a Gaussian process with different length scales fitted to six data points. For each plot there is a corresponding plot of the log likelihood. The log likelihood peaks for a length scale equal to 1. This was the length scale used to generate the data.
 
-![](demOptimiseGp1.png)![](demOptimiseGp3.png)![](demOptimiseGp5.png)
-![](demOptimiseGp7.png)![](demOptimiseGp9.png)![](demOptimiseGp11.png)
-![](demOptimiseGp13.png)![](demOptimiseGp15.png)![](demOptimiseGp17.png)
+![](./diagrams/demOptimiseGp1.png)![](./diagrams/demOptimiseGp3.png)![](./diagrams/demOptimiseGp5.png)
+![](./diagrams/demOptimiseGp7.png)![](./diagrams/demOptimiseGp9.png)![](./diagrams/demOptimiseGp11.png)
+![](./diagrams/demOptimiseGp13.png)![](./diagrams/demOptimiseGp15.png)![](./diagrams/demOptimiseGp17.png)
 
 From top left to bottom right, Gaussian process regression applied to the data with an increasing length scale. The length scales used were 0.05, 0.1, 0.25, 0.5, 1, 2, 4, 8 and 16.
 
-![](demOptimiseGp18.png)
+![](./diagrams/demOptimiseGp18.png)
 
 Log-log plot of the log likelihood of the data against the length scales. The log likelihood is shown as a solid line. The log likelihood is made up of a data fit term (the quadratic form) shown by a dashed line and a complexity term (the log determinant) shown by a dotted line. The data fit is larger for short length scales, the complexity is larger for long length scales. The combination leads to a maximum around the true length scale value of 1.
 
