@@ -12,6 +12,22 @@ Release Information
 
 As well as downloading the FGPLVM software you need to obtain the toolboxes specified below.
 
+
+- [netlab](https://github.com/sods/netlab) mainly used for optimization utilities (like scg).
+
+- [prior](https://github.com/SheffieldML/prior) prior distributions.
+- [optimi](https://github.com/SheffieldML/optimi) optimization constriant mappings.
+- [kern](https://github.com/SheffieldML/kern) covariance functions.
+- [ndlutil](https://github.com/SheffieldML/ndlutil) various utility functions.
+- [noise](https://github.com/SheffieldML/noise) noise models.
+
+Required for demos
+
+- [datasets](https://github.com/SheffieldML/datasets) dataset access.
+
+Optional for motion capture experiments.
+
+- [mocap](https://github.com/SheffieldML/mocap) loading in motion capture data.
 | **Toolbox**                                   | **Version** |
 |-----------------------------------------------|-------------|
 | [NETLAB](/netlab/downloadFiles/vrs3p3)        | 3.3         |
@@ -112,7 +128,7 @@ The [C++ implementation of the GP-LVM](/gplvmcpp) has details on training the fu
 
 In all the examples we give there will be 100 points in the active set. We first considered the FITC approximation. The script `demOilFgplvm1.m` runs the FITC approximation giving the result on the left of the figure shown below.
 
-![](demOilFgplvm1.png)![](demOilFgplvm2.png)
+![](./diagrams/demOilFgplvm1.png)![](./diagrams/demOilFgplvm2.png)
 
 *Left*: GP-LVM on the oil data using the FITC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses. One hundred inducing variables are used. *Right*: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.
 Back constraints can be added to each of these approximations. In the example on the right we used a back constraint given by a multi-layer perceptron with 15 hidden nodes. This example can be recreated with `demOilFgplvm2.m`.
@@ -121,14 +137,14 @@ Back constraints can be added to each of these approximations. In the example on
 
 The other approximations can also be used, in the figures below we give results from the DTC approximation. The can be recreated using `demOil3.m` and `demOil4.m`.
 
-![](demOilFgplvm3.png)![](demOilFgplvm4.png)
+![](./diagrams/demOilFgplvm3.png)![](./diagrams/demOilFgplvm4.png)
 
 *Left*: GP-LVM on the oil data using the DTC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses. One hundred inducing variables are used. *Right*: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.
 #### PITC Approximation
 
 We also show results using the PITC approximation, these results can be recreated using the scripts `demOilFgplvm5.m` and `demOilFgplvm6.m`.
 
-![](demOilFgplvm5.png)![](demOilFgplvm6.png)
+![](./diagrams/demOilFgplvm5.png)![](./diagrams/demOilFgplvm6.png)
 
 *Left*: GP-LVM on the oil data using the PITC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses. One hundred inducing variables are used. *Right*: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.
 
@@ -136,7 +152,7 @@ We also show results using the PITC approximation, these results can be recreate
 
 Finally we also show results using the variational DTC approximation of Titsias, these results can be recreated using the scripts `demOilFgplvm7.m` and `demOilFgplvm8.m`.
 
-![](demOilFgplvm7.png)![](demOilFgplvm8.png)
+![](./diagrams/demOilFgplvm7.png)![](./diagrams/demOilFgplvm8.png)
 
 *Left*: GP-LVM on the oil data using the variational DTC approximation without back constraints. The phases of flow are shown as green circles, red crosses and blue plusses. One hundred inducing variables are used. *Right*: Similar but for a back-constrained GP-LVM, the back constraint is provided by a multi-layer perceptron with 15 hidden nodes.
 
@@ -150,13 +166,13 @@ First we will demonstrate the dynamics functionality of the toolbox. We raw x-y-
 
 The results are given on the left of the figure below.
 
-![](demStickFgplvm1.png)
+![](./diagrams/demStickFgplvm1.png)
 
 GP-LVM on the motion capture data without dynamics in the latent space.
 Notice that the sequence (which is a few strides of a man running) is split into several sub-sequences. These sub-sequences are aligned to the strides of the man. By introducing a dynamics prior, we can force the sequence to link up. Samples from the dynamics prior used are shown in the plot below.
 
-![](dynamicsSamp1.png)![](dynamicsSamp2.png)
- ![](dynamicsSamp3.png)![](dynamicsSamp4.png)
+![](./diagrams/dynamicsSamp1.png)![](./diagrams/dynamicsSamp2.png)
+ ![](./diagrams/dynamicsSamp3.png)![](./diagrams/dynamicsSamp4.png)
 
 Samples from the dynamics prior which is placed over the latent space. This prior has *Left*: GP-LVM on the motion capture data without dynamics in the latent space. *Right*: GP-LVM with dynamics. Samples from the dynamics prior used are given in the figure above.
 This prior is used in the model to obtain the results below,
@@ -165,7 +181,7 @@ This prior is used in the model to obtain the results below,
 >> demStickFgplvm2
 ```
 
-![](demStickFgplvm2.png)
+![](./diagrams/demStickFgplvm2.png)
 
 GP-LVM with dynamics. Samples from the dynamics prior used are given in the figure above.
 Note now the circular form of the latent space. Back constraints can also be used to achieve a similar effect,
@@ -174,7 +190,7 @@ Note now the circular form of the latent space. Back constraints can also be use
 >> demStickFgplvm3
 ```
 
-![](demStickFgplvm3.png)
+![](./diagrams/demStickFgplvm3.png)
 
 GP-LVM with back constraints. A RBF kernel mapping was used to form the back constraints with the inverse width set to 1e-4 (*i.e.*length scale set to 100).
 
@@ -183,8 +199,8 @@ GP-LVM with back constraints. A RBF kernel mapping was used to form the back con
 In on-going work with Dieter Fox and Brian Ferris at the University of Washington we are interested in loop closure for robotic navigation, included as an example is a data set of a robot completing a loop while reading wireless access point signal strengths. To produce a neat track and close the loop it turns out it is necessary to use dynamics and back constraints as seen in the images below. These results can be recreated with
 `demRobotWireless1.m` through `demRobotWireless4.m`.
 
-![](demRobotWireless1.png)![](demRobotWireless2.png)
-![](demRobotWireless3.png)![](demRobotWireless4.png)
+![](./diagrams/demRobotWireless1.png)![](./diagrams/demRobotWireless2.png)
+![](./diagrams/demRobotWireless3.png)![](./diagrams/demRobotWireless4.png)
 
 Use of back constraints and dynamics to obtain loop closure in a robot navigation example. *Top Left*: GP-LVM without back constraints or dynamics, *Top right*: GP-LVM with back constraints, no dynamics, *Bottom Left*: GP-LVM with dynamics, no back constraints, *Bottom right*: GP-LVM with back constraints and dynamics.
 
@@ -192,7 +208,7 @@ Use of back constraints and dynamics to obtain loop closure in a robot navigatio
 
 Another ongoing piece of work with Jeff Bilmes and Jon Malkin involves embedding vowel sounds in a two dimensional space as part of [vocal joystick](http://ssli.ee.washington.edu/vj) system. Jon has provided a simple data set of 2,700 examples of different vowels. These are embedded in a two dimensional latent space with and without back constraints.
 
-![](demVowels2.png)![](demVowels3.png)
+![](./diagrams/demVowels2.png)![](./diagrams/demVowels3.png)
 
 *Left*: embedding of the vowel data without back constraints, *Right*: embedding of the vowel data with back constraints. */a/* - red cross, */ae/* - green circle, */ao/* - blue plus, */e/* - cyan asterix, */i/* - magenta square, */ibar/* - yellow diamond, */o/* - red down triangle, */schwa/* - green up triangle, */u/* - blue left triangle.
 
@@ -294,7 +310,7 @@ Taylor *et al.* used a slightly different representation of the data set which i
 
 Finally we show a plot of reconstructions of two of the angles in the data.
 
-![](demCmu35gplvmLegReconstruct1_8.png)![](demCmu35gplvmLegReconstruct1_9.png)
+![](./diagrams/demCmu35gplvmLegReconstruct1_8.png)![](./diagrams/demCmu35gplvmLegReconstruct1_9.png)
 
 Prediction for first two angles of the right hip joint (see plots in [Taylor *et al.*](/neill-bin/publications/bibpage.cgi?keyName=Taylor:motion06&printAbstract=1) for comparison). Dotted line is nearest neighour in scaled space, dashed line is GP-LVM with 4-D latent space.
 
