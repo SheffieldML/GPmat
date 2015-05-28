@@ -9,16 +9,16 @@ You need the following additional pieces of software to operate mltools.
 
 For general utilities
 
-- [NDLUTIL](/SheffieldML/ndlutil/)
+- [NDLUTIL](https://github.com/SheffieldML/ndlutil/)
 
 For optimization 
 
-- [OPTIMI](/SheffieldML/ndlutil/)
-- [NETLAB](/sods/netlab/)
+- [OPTIMI](https://github.com/SheffieldML/ndlutil/)
+- [NETLAB](https://github.com/sods/netlab/)
 
 For downloading datasets
 
-- [DATASETS](/SheffieldML/datasets/) 
+- [DATASETS](https://github.com/SheffieldML/datasets/) 
 
 For spectral dimensionality reduction functionality
 
