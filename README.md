@@ -81,13 +81,13 @@ Release 0.1 splits away the Gaussian process section of the FGPLVM toolbox into 
 Other GP related software
 -------------------------
 
-The GP-LVM C++ software is available from [here](/gplvmcpp/).
+The GP-LVM C++ software is available from [here](http://github.com/SheffieldML/gplvmcpp/).
 
-The IVM C++ software is available from [here](/ivmcpp/).
+The IVM C++ software is available from [here](http://github.com/SheffieldML/ivmcpp/).
 
-The MATLAB IVM toolbox is available here [here](/ivm/).
+The MATLAB IVM toolbox is available here [here](http://github.com/SheffieldML/ivm/).
 
-The original MATLAB GP-LVM toolbox is available here [here](/gplvm/).
+The original MATLAB GP-LVM toolbox is available here [here](http://github.com/SheffieldML/gplvm/).
 
 Examples
 --------
