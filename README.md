@@ -5,7 +5,9 @@ Matlab Optimi Toolbox
 This page describes the optimi toolbox for MATLAB available for [download here](http://www.cs.man.ac.uk/neill-bin/software/downloadForm.cgi?toolbox=optimi).
 ### Dependencies
 
-The optimi toolbox depends on the [`ndlutil` toolbox](/ndlutil/downloadFiles/). You can use your user name and password for accessing these toolboxes.
+The optimi toolbox depends on
+
+- [ndlutil](https://github.com/SheffieldML/ndlutil) various utility functions.
 
 ### Release Information
 
