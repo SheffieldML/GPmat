@@ -5,7 +5,7 @@ The GPmat toolbox is the 'one stop shop' on github for a number of dependent too
 
 The summary of demos from each toolbox is given below.
 
-The first release of the full GPmat toolbox is version 0.1, released on 28th May 2015 to coincide with the reformatting of the toolbox as sub-trees.
+The first release of the full GPmat toolbox is version 1.0.0, released on 28th May 2015 to coincide with the reformatting of the toolbox as sub-trees.
 
 GP
 ==
