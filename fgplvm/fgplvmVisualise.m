@@ -55,7 +55,10 @@ ySpan = yLim(2) - yLim(1);
 
 set(visualiseInfo.plotAxes, 'XLim', xLim)
 set(visualiseInfo.plotAxes, 'YLim', yLim)
-
+if ~verLessThan('matlab', 'R2014a')
+  ylim(visualiseInfo.plotAxes, 'manual')
+  xlim(visualiseInfo.plotAxes, 'manual')
+end
 visualiseInfo.clicked = 0;
 
 visualiseInfo.digitAxes = [];
