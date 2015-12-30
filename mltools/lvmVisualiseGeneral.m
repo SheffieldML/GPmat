@@ -18,7 +18,7 @@ function lvmVisualiseGeneral(model, YLbls, ...
 global visualiseInfo
 
 if nargin < 5
-	showVariance = 1;
+  showVariance = 1;
 end
 
 visualiseInfo.showVariance = showVariance;
@@ -64,10 +64,15 @@ if showVariance
 else
     lvmSetPlotNoVar(lvmClassVisualiseFunc);
 end
-visualiseInfo.latentHandle = line(0, 0, 'markersize', 20, 'color', ...
-                                  [0 0 0], 'marker', '.', 'visible', ...
-                                  'on', 'erasemode', 'xor');
-
+if verLessThan('matlab', 'R2014a')
+  visualiseInfo.latentHandle = line(0, 0, 'markersize', 20, 'color', ...
+                                    [0 0 0], 'marker', '.', 'visible', ...
+                                    'on', 'erasemode', 'xor');
+else
+  visualiseInfo.latentHandle = line(0, 0, 'markersize', 20, 'color', ...
+                                    [0 0 0], 'marker', '.', 'visible', ...
+                                    'on');
+end
 visualiseInfo.clicked = 0;
 visualiseInfo.digitAxes = [];
 visualiseInfo.digitIndex = [];
@@ -149,8 +154,8 @@ set(visualiseInfo.visualiseAxes, 'position', [0.05 0.05 0.9 0.8]);
 visualiseInfo.visualiseFunction = str2func(visualiseFunction);
 visHandle = visualiseInfo.visualiseFunction(visData, varargin{:});
 handleType = get(visHandle, 'type');
-if ~strcmp(handleType, 'figure')
-    set(visHandle, 'erasemode', 'xor');
+if ~strcmp(handleType, 'figure') & verLessThan('matlab', 'R2014a')
+  set(visHandle, 'erasemode', 'xor');
 end
 % Pass the data to visualiseInfo
 visualiseInfo.model = model;
