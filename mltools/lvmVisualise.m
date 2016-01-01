@@ -32,10 +32,15 @@ visualiseInfo.model = model;
 visualiseInfo.lbls = YLbls;
 visualiseInfo.plotAxes = lvmScatterPlot(model, YLbls);
 lvmSetPlot;
-visualiseInfo.latentHandle = line(0, 0, 'markersize', 20, 'color', ...
-                                  [0 0 0], 'marker', '.', 'visible', ...
-                                  'on', 'erasemode', 'xor');
-
+if verLessThan('matlab', 'R2014a')
+  visualiseInfo.latentHandle = line(0, 0, 'markersize', 20, 'color', ...
+                                    [0 0 0], 'marker', '.', 'visible', ...
+                                    'on', 'erasemode', 'xor');
+else
+  visualiseInfo.latentHandle = line(0, 0, 'markersize', 20, 'color', ...
+                                    [0 0 0], 'marker', '.', 'visible', ...
+                                    'on');
+end
 visualiseInfo.clicked = 0;
 visualiseInfo.digitAxes = [];
 visualiseInfo.digitIndex = [];
@@ -117,7 +122,9 @@ set(visualiseInfo.visualiseAxes, 'position', [0.05 0.05 0.9 0.8]);
 
 visualiseInfo.visualiseFunction = str2func(visualiseFunction);
 visHandle = visualiseInfo.visualiseFunction(visData(1:dim), varargin{:});
-set(visHandle, 'erasemode', 'xor')
+if verLessThan('matlab', 'R2014a')
+  set(visHandle, 'erasemode', 'xor')
+end
 
 % Pass the data to visualiseInfo
 visualiseInfo.model = model;
