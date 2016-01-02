@@ -33,10 +33,6 @@ clf
 f1 = linspace(-range, range, 200);
 f2 = linspace(-range, range, 200);
 ax = axes('position', [0.15 0.15 0.75 0.75]);
-hold on
-sizeBack = 200;
-mapBack = repmat([0.9 0.9 0.9], sizeBack*sizeBack , 1);
-hold off
 f1Lim = [min(f1) max(f1)];
 f2Lim = [min(f2) max(f2)];
 set(ax, 'xLim', f1Lim);
@@ -56,9 +52,9 @@ for i = 2:length(varargin{4}{1})
   arrow([varargin{4}{1}(i-1) varargin{4}{1}(i)], ...
         [varargin{4}{2}(i-1) varargin{4}{2}(i)], [], 'r', 2);
 end
-a = text(varargin{3}{1}(1), varargin{3}{2}(1), ' Motion 18')
+a = text(varargin{3}{1}(1), varargin{3}{2}(1), ' Motion 18');
 set(a, 'horizontalalignment', 'left', 'color', [0 0 1], 'fontsize', 16) 
-a = text(varargin{4}{1}(1), varargin{4}{2}(1), 'Motion 19 ')
+a = text(varargin{4}{1}(1), varargin{4}{2}(1), 'Motion 19 ');
 set(a, 'horizontalalignment', 'right', 'color', [1 0 0], 'fontsize', 16) 
 xlabel('f_1(t)')
 ylabel('f_2(t)')

@@ -127,7 +127,7 @@ else
 end
 clf
 
-if length(visualiseFunction)>4 & strcmp(visualiseFunction(1:5), 'image') & length(varargin)>0
+if length(visualiseFunction)>4 & strcmp(visualiseFunction(1:5), 'image') & ~isempty(varargin)
   set(gcf, 'menubar', 'none')
   xPixels = 115;
   yPixels = 115;
@@ -144,7 +144,7 @@ if(length(visualiseFunction)>4 & strcmp(visualiseFunction(1:5), 'image'))
   visData(1) = min(min(model.y));
   visData(end) = max(max(model.y));
 else
-  [void, indMax]= max(sum((model.y.*model.y), 2));
+  [~, indMax]= max(sum((model.y.*model.y), 2));
   visData = model.y(indMax, :);
 end
 
