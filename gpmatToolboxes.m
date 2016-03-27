@@ -2,4 +2,4 @@
 
 importLatest('netlab');
 importLatest('svml');
-importLatest('minimize');
+%importLatest('minimize');

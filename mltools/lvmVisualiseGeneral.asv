@@ -1,37 +1,69 @@
-function lvmVisualise(model, YLbls, ...
-			visualiseFunction, visualiseModify, varargin)
+function lvmVisualiseGeneral(model, YLbls, ...
+			visualiseFunction, visualiseModify, showVariance, varargin)
 
-% LVMVISUALISE Visualise the manifold.
-% FORMAT
-% DESC visualises a two dimensional manifold in data space using commands
-% passed as argument.
-% ARG model : the model to visualise (of type lvm).
-% ARG Ylbls : any labels for the training data to improve the
-% visualisation.
-% ARG visualiseFunction : the function that draws the visualisation (in
-% data space) when the graphs are first drawn.
-% ARG visualiseModify : the function that modifies the visualisation as
-% you move around the latent space.
-% ARG arg1, arg2, arg3, ... : various additional arguments to be passed to the
-% visualisation commands.
+% LVMVISUALISEGENERAL Visualise the manifold.
+% This is a copy of lvmVisualise where the classVisualise function depends on the
+% model type. Additionally, there is a flag showVariance which, when set to
+% false, does not plot the variance of the inputs in the scatter plot,
+% something which saves a lot of computational time for high-dimensional
+% data.
+% 
+% COPYRIGHT: Neil D. Lawrence, Andreas C, Damianou, 2012
+% SEEALSO : lvmVisualise, lvmClassVisualise, lvmScatterPlot,
+% lvmScatterPlotNoVar
 %
-% SEEALSO : lvmScatterPlot, lvmResultsDynamic
-%
-% COPYRIGHT : Neil D. Lawrence, 2003, 2004, 2005, 2006, 2008
 
 % MLTOOLS
 
 global visualiseInfo
 
-figure(1)
+if nargin < 5
+  showVariance = 1;
+end
+
+visualiseInfo.showVariance = showVariance;
+
+lvmClassVisualiseFunc = [model.type 'ClassVisualise'];
+if ~exist(lvmClassVisualiseFunc)
+	if showVariance
+		lvmClassVisualiseFunc = 'lvmClassVisualise';
+	else
+		lvmClassVisualiseFunc = 'lvmClassVisualiseNoVar';
+	end
+end
+
+if isfield(model, 'vis') && isfield(model.vis, 'figHandle')
+    figure(model.vis.figHandle{1});
+else
+    figure(1)
+end
+
 clf
-visualiseInfo.dim1 = 1;
-visualiseInfo.dim2 = 2;
-visualiseInfo.latentPos = zeros(1, model.q);
+if isfield(model, 'vis') && isfield(model.vis, 'startDim')
+    visualiseInfo.dim1 = model.vis.startDim{1};
+    visualiseInfo.dim2 = model.vis.startDim{2};
+else
+    visualiseInfo.dim1 = 1;
+    visualiseInfo.dim2 = 2;
+end
+if isfield(model, 'vis') && isfield(model.vis, 'startPos')
+    visualiseInfo.latentPos = model.vis.startPos;
+else
+    visualiseInfo.latentPos = zeros(1, model.q);
+end
 visualiseInfo.model = model;
 visualiseInfo.lbls = YLbls;
-visualiseInfo.plotAxes = lvmScatterPlot(model, YLbls);
-lvmSetPlot;
+if showVariance
+    visualiseInfo.plotAxes = lvmScatterPlot(model, YLbls);
+else
+    visualiseInfo.plotAxes = lvmScatterPlotNoVar(model, YLbls);
+end
+
+if showVariance
+    lvmSetPlot;
+else
+    lvmSetPlotNoVar(lvmClassVisualiseFunc);
+end
 if verLessThan('matlab', 'R2014a')
   visualiseInfo.latentHandle = line(0, 0, 'markersize', 20, 'color', ...
                                     [0 0 0], 'marker', '.', 'visible', ...
@@ -50,7 +82,7 @@ visualiseInfo.dynamicsRadio = ...
               'String', 'Run Dynamics', ...
               'units', 'normalized', ...
               'position', [0 0 0.2 0.05], ...
-              'Callback', 'lvmClassVisualise(''toggleDynamics'')', ...
+              'Callback', [lvmClassVisualiseFunc '(''toggleDynamics'')'], ...
               'value', 0);
 
 visualiseInfo.dynamicsSlider = ...
@@ -59,7 +91,7 @@ visualiseInfo.dynamicsSlider = ...
               'sliderStep', [0.01, 0.1], ...
               'units', 'normalized', ...
               'position', [0 0.95 1 0.05], ...
-              'callback', 'lvmClassVisualise(''dynamicsSliderChange'')');
+              'callback', [lvmClassVisualiseFunc '(''dynamicsSliderChange'')']);
 
 if ~isfield(model, 'dynamics') | isempty(model.dynamics)
   set(visualiseInfo.dynamicsRadio, 'visible', 'off');
@@ -85,13 +117,17 @@ end
 visualiseInfo.runDynamics = false;
 
 % Set the callback function
-set(gcf, 'WindowButtonMotionFcn', 'lvmClassVisualise(''move'')')
-set(gcf, 'WindowButtonDownFcn', 'lvmClassVisualise(''click'')')
+set(gcf, 'WindowButtonMotionFcn', [lvmClassVisualiseFunc '(''move'')'])
+set(gcf, 'WindowButtonDownFcn', [lvmClassVisualiseFunc '(''click'')'])
 
-figure(2)
+if isfield(model, 'vis') && isfield(model.vis, 'figHandle')
+    figure(model.vis.figHandle{2});
+else
+    figure(2)
+end
 clf
 
-if length(visualiseFunction)>4 & strcmp(visualiseFunction(1:5), 'image') & ~isempty(varargin)
+if length(visualiseFunction)>4 & strcmp(visualiseFunction(1:5), 'image') & ~length(varargin)>0
   set(gcf, 'menubar', 'none')
   xPixels = 115;
   yPixels = 115;
@@ -103,12 +139,7 @@ if length(visualiseFunction)>4 & strcmp(visualiseFunction(1:5), 'image') & ~isem
 else
   visualiseInfo.visualiseAxes =subplot(1, 1, 1);
 end
-if exist('varargin','var')
-   dim = varargin{1}(1)*varargin{1}(2);
-else
-   dim = model.d;
-end
-visData = zeros(1,dim);
+visData = zeros(1,model.d);
 if(length(visualiseFunction)>4 & strcmp(visualiseFunction(1:5), 'image'))
   visData(1) = min(min(model.y));
   visData(end) = max(max(model.y));
@@ -121,11 +152,11 @@ set(get(visualiseInfo.visualiseAxes, 'title'), 'string', 'Y', 'fontsize', 30);
 set(visualiseInfo.visualiseAxes, 'position', [0.05 0.05 0.9 0.8]);
 
 visualiseInfo.visualiseFunction = str2func(visualiseFunction);
-visHandle = visualiseInfo.visualiseFunction(visData(1:dim), varargin{:});
-if verLessThan('matlab', 'R2014a')
-  set(visHandle, 'erasemode', 'xor')
+visHandle = visualiseInfo.visualiseFunction(visData, varargin{:});
+handleType = get(visHandle, 'type');
+if ~strcmp(handleType, 'figure') & verLessThan('matlab', 'R2014a')
+  set(visHandle, 'erasemode', 'xor');
 end
-
 % Pass the data to visualiseInfo
 visualiseInfo.model = model;
 visualiseInfo.varargin = varargin;

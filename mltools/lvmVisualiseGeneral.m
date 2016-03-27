@@ -18,7 +18,7 @@ function lvmVisualiseGeneral(model, YLbls, ...
 global visualiseInfo
 
 if nargin < 5
-	showVariance = 1;
+  showVariance = 1;
 end
 
 visualiseInfo.showVariance = showVariance;
@@ -64,10 +64,15 @@ if showVariance
 else
     lvmSetPlotNoVar(lvmClassVisualiseFunc);
 end
-visualiseInfo.latentHandle = line(0, 0, 'markersize', 20, 'color', ...
-                                  [0 0 0], 'marker', '.', 'visible', ...
-                                  'on', 'erasemode', 'xor');
-
+if verLessThan('matlab', 'R2014a')
+  visualiseInfo.latentHandle = line(0, 0, 'markersize', 20, 'color', ...
+                                    [0 0 0], 'marker', '.', 'visible', ...
+                                    'on', 'erasemode', 'xor');
+else
+  visualiseInfo.latentHandle = line(0, 0, 'markersize', 20, 'color', ...
+                                    [0 0 0], 'marker', '.', 'visible', ...
+                                    'on');
+end
 visualiseInfo.clicked = 0;
 visualiseInfo.digitAxes = [];
 visualiseInfo.digitIndex = [];
@@ -122,7 +127,7 @@ else
 end
 clf
 
-if length(visualiseFunction)>4 & strcmp(visualiseFunction(1:5), 'image') & length(varargin)>0
+if length(visualiseFunction)>4 & strcmp(visualiseFunction(1:5), 'image') & ~isempty(varargin)
   set(gcf, 'menubar', 'none')
   xPixels = 115;
   yPixels = 115;
@@ -139,7 +144,7 @@ if(length(visualiseFunction)>4 & strcmp(visualiseFunction(1:5), 'image'))
   visData(1) = min(min(model.y));
   visData(end) = max(max(model.y));
 else
-  [void, indMax]= max(sum((model.y.*model.y), 2));
+  [~, indMax]= max(sum((model.y.*model.y), 2));
   visData = model.y(indMax, :);
 end
 
@@ -149,8 +154,8 @@ set(visualiseInfo.visualiseAxes, 'position', [0.05 0.05 0.9 0.8]);
 visualiseInfo.visualiseFunction = str2func(visualiseFunction);
 visHandle = visualiseInfo.visualiseFunction(visData, varargin{:});
 handleType = get(visHandle, 'type');
-if ~strcmp(handleType, 'figure')
-    set(visHandle, 'erasemode', 'xor');
+if ~strcmp(handleType, 'figure') & verLessThan('matlab', 'R2014a')
+  set(visHandle, 'erasemode', 'xor');
 end
 % Pass the data to visualiseInfo
 visualiseInfo.model = model;

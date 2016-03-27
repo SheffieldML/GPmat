@@ -21,8 +21,11 @@ function [k, sk, n2] = rbfperiodicKernCompute(kern, x, x2)
 % COPYRIGHT : Neil D. Lawrence, 2007, 2009
 
 % KERN
-
-factor = 2*pi/kern.period;
+if isfield(kern, 'period')
+  factor = 2*pi/kern.period;
+else
+  factor = 1;
+end
 if nargin < 3
   n2 = sin(0.5*factor*(repmat(x, 1, size(x, 1)) - repmat(x', size(x, 1), 1)));
   n2 = n2.*n2;

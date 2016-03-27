@@ -28,10 +28,17 @@ global visualiseInfo
 figure(1)
 clf
 visualiseInfo.plotAxes = lvmScatterPlot(model, YLbls);
-
-visualiseInfo.latentHandle = line(0, 0, 'markersize', 20, 'color', ...
-                                  [0 0 0], 'marker', '.', 'visible', ...
-                                  'on', 'erasemode', 'xor');
+if verLessThan('matlab', 'R2014a')
+  visualiseInfo.latentHandle = line(0, 0, 'markersize', 20, 'color', ...
+                                    [0 0 0], 'marker', '.', 'visible', ...
+                                    'on', 'erasemode', 'xor');
+  % Put code to run under MATLAB older than MATLAB R2014a here
+else
+  visualiseInfo.latentHandle = line(0, 0, 'markersize', 20, 'color', ...
+                                    [0 0 0], 'marker', '.', 'visible', ...
+                                    'on');
+end
+ 
 
 % Set up the X limits and Y limits of the main plot
 xLim = [min(model.X(:, 1)) max(model.X(:, 1))];
@@ -48,7 +55,10 @@ ySpan = yLim(2) - yLim(1);
 
 set(visualiseInfo.plotAxes, 'XLim', xLim)
 set(visualiseInfo.plotAxes, 'YLim', yLim)
-
+if ~verLessThan('matlab', 'R2014a')
+  ylim(visualiseInfo.plotAxes, 'manual')
+  xlim(visualiseInfo.plotAxes, 'manual')
+end
 visualiseInfo.clicked = 0;
 
 visualiseInfo.digitAxes = [];
@@ -121,10 +131,12 @@ else
 end
 visualiseInfo.visualiseFunction = str2func(visualiseFunction);
 visHandle = visualiseInfo.visualiseFunction(visData, varargin{:});
-if(iscell(visHandle))
-  set(visHandle{1}, 'erasemode', 'xor')
-else
-  set(visHandle, 'erasemode', 'xor')
+if verLessThan('matlab', 'R2014a')
+  if(iscell(visHandle))
+    set(visHandle{1}, 'erasemode', 'xor')
+  else
+    set(visHandle, 'erasemode', 'xor')
+  end
 end
 colormap gray
 
