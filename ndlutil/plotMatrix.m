@@ -179,7 +179,7 @@ function handle =  plotMatrix(A, ax, bracketStyle, type, options)
       if length(zRow) == 1
           zRow = [zRow zRow];
       end
-      if length(hCol) == 1
+      if length(zCol) == 1
           zCol = [zCol zCol];
       end
       zCol = sort(zCol);
