@@ -56,7 +56,14 @@ for j = 1:size(model.X_u, 1)
 end
 [void, ind] = max(ll, [], 2);
 Xinit = model.X_u(ind, :);
-Xpred = fgplvmOptimiseSequence(model, Xinit, Ytest, 1, 1000);
+try
+  Xpred = fgplvmOptimiseSequence(model, Xinit, Ytest, 1, 1000);
+catch e
+  % Warning: This is a work-around because fgplvmOptimiseSequence seems to be missing!! The following doesn not take sequential correlations into account!
+  warning('fgplvmOptimiseSequence cannot be used... reverting to fgplvmOptimisePoint.')
+  Xpred = fgplvmOptimisePoint(model, Xinit, Ytest, 1, 1000);
+end
+
 Xpred = Xpred(startInd:end, :);
 Ytest = Ytest(startInd:end, :);
 Ypred = gpOut(model, Xpred);
