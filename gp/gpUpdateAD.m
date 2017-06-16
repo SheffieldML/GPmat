@@ -53,7 +53,7 @@ switch model.approx
     else
       Ruu = jitChol(model.K_uu);
       sqrtBeta = sqrt(model.beta);
-      [Q, R] = qr([Ruu; sqrt(model.beta)*model.K_uf'],  '0');
+      [Q, R] = qr([Ruu; sqrt(model.beta)*model.K_uf'],0);
       RA = 1/sqrtBeta*R;
       model.A = RA'*RA;
       model.Ainv = pdinv(model.A, RA);
