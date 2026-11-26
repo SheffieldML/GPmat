@@ -91,8 +91,9 @@ switch model.approx
         
         ll = ll - 0.5*model.N*model.d*log(2*pi);
       else
-        % This is objective to match Ed Snelson's code
-        ll =  - model.d*(sum(log(diag(model.Lm))) + 0.5*(-(model.N - model.k)*log(model.beta)+(model.N*log(2*pi)+sum(log(model.diagD)))));
+        % This is objective to match Ed Snelson's code (the 2*pi constant is
+        % added once at the end of the function).
+        ll =  - model.d*(sum(log(diag(model.Lm))) + 0.5*(-(model.N - model.k)*log(model.beta)+sum(log(model.diagD))));
         for i = 1:model.d
           ll = ll - 0.5*model.beta*(model.scaledM(:, i)'*model.scaledM(:, i) ...
                                     - model.bet(:, i)'*model.bet(:, i));
@@ -118,13 +119,14 @@ switch model.approx
                         +length(ind)*log(2*pi));
         end
       else
-        % This is objective to match Ed Snelson's code
+        % This is objective to match Ed Snelson's code (the 2*pi constant is
+        % added once at the end of the function).
         ll = 0;
         for i = 1:model.d
           ind = gpDataIndices(model, i);
           ll =  ll - (sum(log(diag(model.Lm{i}))) ...
                       + 0.5*(-(length(ind) - model.k)*log(model.beta) ...
-                             +(length(ind)*log(2*pi)+sum(log(model.diagD{i})))));
+                             +sum(log(model.diagD{i}))));
           ll = ll - 0.5*model.beta*(model.scaledM{i}'*model.scaledM{i} ...
                                     - model.bet{i}'*model.bet{i});
         end
