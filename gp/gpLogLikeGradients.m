@@ -152,14 +152,22 @@ function [gParam, gX_u, gX, g_beta] = gpLogLikeGradients(model, X, M, X_u)
         end
       end
       if isfield(model, 'beta') && model.optimiseBeta
+        % gK is the gradient with respect to the covariance, whose diagonal
+        % carries the noise variance 1/beta, so dK/dbeta = -I/beta^2. The
+        % result is then taken to the optimised (transformed) beta, as the
+        % sparse approximations do in gpCovGrads.
+        fhandle = str2func([model.betaTransform 'Transform']);
         if size(model.beta, 1) == 1
-          g_beta = g_beta + sum(diag(gK));
+          g_beta = g_beta - sum(diag(gK))/(model.beta*model.beta) ...
+                   *fhandle(model.beta, 'gradfact');
         elseif size(model.beta, 2)==1 ...
               & size(model.beta, 1)==model.N
-          g_beta = g_beta + diag(gK);
+          g_beta = g_beta - diag(gK)./(model.beta.*model.beta) ...
+                   .*fhandle(model.beta, 'gradfact');
         elseif size(model.beta, 2) == model.d ...
               & size(model.beta, 1) == model.N
-          g_beta(:, k) = diag(gK);
+          g_beta(:, k) = -diag(gK)./(model.beta(:, k).*model.beta(:, k)) ...
+                         .*fhandle(model.beta(:, k), 'gradfact');
         else
           error('Unusual dimensions for model.beta.');
         end
